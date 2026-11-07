@@ -228,6 +228,25 @@ def count_words(n):
     return ', '.join(F[i] for i in range(1, n + 1))
 
 
+def count_short(n, first=3):
+    """count_words(n) in a short form: the first `first` numbers, an ellipsis and the last (QA hint-3 overflow, 2026-11-07).
+    A count of `first` + 1 or fewer, or of more than ten (already 'from one to N'), is said as count_words says it."""
+    if n > 10 or n <= first + 1:
+        return count_words(n)
+    return '%s… %s' % (', '.join(F[k] for k in range(1, first + 1)), F[n])
+
+
+HINT_WORDS = 14  # a hint longer than this covers the answer tiles on a phone (QA-C1-3, and hint 3 of Band A and B)
+
+
+def hint_fit(*options):
+    """The first option of at most HINT_WORDS words (a dash is no word); the last one is taken as it is."""
+    for o in options:
+        if len(o.replace('—', ' ').split()) <= HINT_WORDS:
+            return o
+    return options[-1]
+
+
 def tag_line(tag, size_cue=None, own=None, rule=None):
     """The line said for a tag: the item's own (G4, `tag_lines`), the cue line of M-CNT-SIZE, the rule line of
     M-SORT-SHIFT for a shape or kind rule (A5), else the shared line."""
@@ -491,8 +510,8 @@ def k_count_tap(a, ctx):
         choice(opts, cid), tags,
         hints(a['id'], 'נוֹגְעִים %s %s, וְאוֹמְרִים מִסְפָּר אֶחָד.' % (prefix('ב', obj['one']), F[1] if obj['g'] == 'f' else M[1]),
               'בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: %s…' % count_words(3),
-              a.get('h3') or '%s. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: %s! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
-                  count_words(n), F[n], F[n]),
+              a.get('h3') or hint_fit(*['%s. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: %s! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
+                  c, F[n], F[n]) for c in (count_words(n), count_short(n))]),
               shared=(None, 'ucount')),
         'child touches each one once and answers with the last number counted',
         extra={'traceClassifiers': [{'when': 'same_object_tapped_twice', 'misconception': 'M-CNT-DOUBLE'},

@@ -846,6 +846,12 @@ _C1_TAGS = 'M-HC-ROW|M-OP-SWAP|M-PV-FACE|M-PV-ZERO|M-SIGN-DIR|M-SUB-SMALLBIG|M-S
 READ_OLD_DAY = '2026-11-06'
 READ_NEW = "2026-11-07 (the 35 C1 items of commit 98f57707, blocks, keypad, pay and the middle of two marks; hebrew-notes.md section 11.9)"
 READ = [
+    # Hint 3 of 37 Band A and B items, shortened to 14 words or fewer (QA, the hint bubble covered the answer tiles on the phone SE;
+    # hebrew-notes.md section 11.13): the count says its first three numbers, an ellipsis and the last; a count-on says "עַד" the total.
+    ('3', r'^hints\.2\.caption', r'^activity\.(b|b15|count)\.', 'Hint 3 shortened to 14 words or fewer (QA, 2026-11-07; hebrew-notes.md section 11.13): '
+     'the editor read it (the count keeps its first three numbers, an ellipsis and the last; number agreement, plural address and the '
+     'teaching move are as before); waits for the owner.',
+     r'^(אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… |מֵאַחַת עַד \S+ עֶשְׂרֵה\. עֶשֶׂר, וְעוֹד אַחַת, שְׁתַּיִם… |\S+… וּמַמְשִׁיכִים עַד )'),
     ('1', r'^keypad(Delete|Done)Semantics$', r'he\.dart$', 'M10 C1 keypad (read by the editor on 2026-11-07): the screen-reader labels of the number keypad, plain adult text '
      '(an infinitive for the key that deletes a digit, "זה המספר" for the key that sends the number); correct as written.'),
     # The pass of 2026-11-07 (hebrew-notes.md 11.12). The first 60 characters of each comment are the same as C1's, so a row that was
@@ -1019,8 +1025,10 @@ def missing_addend_count_on(r, ctx):
         return None
     x, total = WORD2N[words[0]], WORD2N[words[1]]
     k = total - x
-    return '%s… וּמַמְשִׁיכִים: %s. הֵרַמְנוּ %s אֶצְבָּעוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
-        F[x], ', '.join(F[i] for i in range(x + 1, total + 1)), fem_before_noun(k), F[k])
+    text = '%s… וּמַמְשִׁיכִים%%s. הֵרַמְנוּ %s אֶצְבָּעוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], fem_before_noun(k), F[k])
+    full = text % (': ' + ', '.join(F[i] for i in range(x + 1, total + 1)))
+    # a hint of more than 14 words covers the answer tiles on a phone (QA, 2026-11-07): the same short form as band_b.py
+    return full if len(full.replace('—', ' ').split()) <= 14 else text % (' עַד ' + F[total])
 
 
 COIN_PLAIN = [('שקל אחד', 1), ('שני שקלים', 2), ('חמשה שקלים', 5), ('עשרה שקלים', 10)]  # plain() of pointed text is ktiv chaser

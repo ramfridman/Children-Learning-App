@@ -12,7 +12,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.argv = sys.argv[:1] + ['-']  # author.py is imported, never run
-from author import F, M, count_words, from_, place, prefix, qty, vav  # noqa: E402
+from author import F, M, count_short, count_words, from_, hint_fit, place, prefix, qty, vav  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 UNITS = os.path.join(ROOT, 'content', 'units')
@@ -218,8 +218,9 @@ def missing_addend(u, skill, x, total, i, flipped=False, **kw):
     return numpick3(u, skill, prompt, r, {total: 'M-EQ-OPER', x + total: 'M-PART-MISS'}, i, row=row, tag_lines=part_miss_line(x, total),
                     correct_text=text,
                     h2='%s כְּבָר יֵשׁ. מוֹסִיפִים אַחַת אַחַת עַד %s, וְסוֹפְרִים כַּמָּה הוֹסַפְנוּ.' % (F[x], F[total]),
-                    h3='%s… וּמַמְשִׁיכִים: %s. הֵרַמְנוּ %s אֶצְבָּעוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
-                        F[x], ', '.join(F[k] for k in range(x + 1, total + 1)), 'שְׁתֵּי' if r == 2 else F[r], F[r]), **kw)
+                    h3=hint_fit(*['%s… וּמַמְשִׁיכִים%s. הֵרַמְנוּ %s אֶצְבָּעוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
+                        F[x], steps, 'שְׁתֵּי' if r == 2 else F[r], F[r]) for steps in (
+                            ': ' + ', '.join(F[k] for k in range(x + 1, total + 1)), ' עַד ' + F[total])]), **kw)
 
 
 # ======================================================================================== NUMBERS
@@ -380,7 +381,8 @@ def numbers():
                 [total, part] if rest not in (total, part) else [total + 1, part + 1], i, tags={total: 'M-PART-MISS'},
                 group={'sprite': obj, 'count': total},
                 text='%s! %s וְעוֹד %s הֵם %s.' % (F[rest], F[rest], F[part], F[total]),
-                h3='%s. הִכְנַסְנוּ %s, אָז נִשְׁאֲרוּ %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(total), F[part], F[rest], F[rest]))
+                h3=hint_fit(*['%s. הִכְנַסְנוּ %s, אָז נִשְׁאֲרוּ %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (c, F[part], F[rest], F[rest])
+                              for c in (count_words(total), count_short(total))]))
 
     # B-15 §1 (H4): the parts put back together
     for i, (obj, a, b) in enumerate([('apple', 4, 2), ('fish', 5, 3)]):
@@ -401,7 +403,8 @@ def numbers():
                         h2='עֶשֶׂר אֶצְבָּעוֹת, וְעוֹד כַּמָּה? נִסְפֹּר רַק אֶת הָאֶצְבָּעוֹת שֶׁאַחֲרֵי הָעֶשֶׂר.', h2_action='show_fingers')
         numpick(u, 'NUM-B-16', '%s זֶה עֶשֶׂר וְעוֹד כַּמָּה?' % F[n], n - 10, list(others), i,
                 tags=others, text='%s! עֶשֶׂר וְעוֹד %s הֵם %s.' % (F[n - 10], F[n - 10], F[n]),
-                h3='%s. עֶשֶׂר, וְעוֹד %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(n), count_words(n - 10), F[n - 10]), **kind)
+                h3=hint_fit(*['%s. עֶשֶׂר, וְעוֹד %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(n), c, F[n - 10])
+                              for c in (count_words(n - 10), count_short(n - 10), count_short(n - 10, 2))]), **kind)
 
     # B-15 §4 (H34): two frames and the question the other way round
     for i, (obj, k) in enumerate([('duck', 4), ('star', 7)]):

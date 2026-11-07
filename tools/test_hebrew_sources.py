@@ -142,7 +142,9 @@ class HebrewMasterTableTest(unittest.TestCase):
         # 15839 since the lesson field `demo` (vo:demo.ten_is_rod, one row in each of the lessons blocks-tens-and-ones, compare-to-100-more, whole-tens-more)
         self.assertEqual(len(self.rows), 15839)
         # 1308 before C1: 19 corrections (מֵאֶפֶס, מֵאַחַת …) are now in the sources; 1296 after the 7 of the deferred items (מַה שֶּׁ, מַה מִּסְתַּתֵּר)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1296)
+        # 1289 after the hint 3 of 37 Band A and B items was shortened to 14 words (2026-11-07): the 7 rows of b.numb14.1-.4, .7, .8 and b.mathb18.3
+        # whose old text still needed a correction (שְׁנַיִם, שְׁלוֹשָׁה, חֲמִשָּׁה …) are now written right by the generator
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1289)
         self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 44)  # 88 before the owner's V1 for M-NL-DIR (2026-11-06): its 44 rows now have the source's final nikud
 
     def test_done_rows_have_ui_text(self):
