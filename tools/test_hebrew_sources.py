@@ -133,9 +133,14 @@ class HebrewMasterTableTest(unittest.TestCase):
         # pinned at the regeneration of B-15 part 2 (200 new activities, the alert texts and word lists of main)
         # 12645 since B-39 (16 bottle and land-name rows added by the hebrew-text-editor)
         # 12757 since L0 (112 rows of he.dart added with the Languages screens: the island, the doors, the parent pages)
-        self.assertEqual(len(self.rows), 12757)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1308)
-        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 64)
+        # 12777 since the editor's pass of 2026-11-06 (20 more he.dart rows: the Languages course screens, L1 to L4)
+        # 12751 since the maths check fixes of 2026-11-06 (Band A shows at most 3 options, LOG-A-01 and LOG-B-06 offer two:
+        # 26 option rows fewer; 12 corrected rows of NUM-B-05, NUM-B-08, NUM-B-10 and CS-A-04 now have a new text that the
+        # corrected templates give, so the done-and-changed count was 1296; 1290 since the editor's read of the 59 rows: the 6
+        # LOG-A-01 rows with an M-COL-ONEATTR line now carry the line as the pack gives it (a correction no more))
+        self.assertEqual(len(self.rows), 12751)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1290)
+        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 55)
 
     def test_done_rows_have_ui_text(self):
         want = lambda r: HELD[(r['source'], r['id'])][0] if (r['source'], r['id']) in HELD else r['ui_text']

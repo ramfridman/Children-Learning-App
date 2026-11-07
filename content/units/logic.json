@@ -269,7 +269,7 @@
     }
   },
   "tagFeedback": {
-    "M-SORT-SHIFT": "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק.",
+    "M-SORT-SHIFT": "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, גַּם אִם הַדָּבָר שׁוֹנֶה. בּוֹאוּ נִבְדֹּק.",
     "M-PAT-NEXT": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא.",
     "M-SEQ-CAUSE": "בּוֹאוּ נַחְשֹׁב: מַה קּוֹרֶה קֹדֶם, וּמָה אַחַר כָּךְ?",
     "M-SER-ENDS": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל.",
@@ -484,14 +484,18 @@
       },
       "options": [
         "dog",
-        "cat",
-        "duck"
+        "cat"
       ],
       "correct": "cat",
       "difficulty": 0.05,
       "tags": {
-        "dog": "M-COL-ONEATTR",
-        "duck": "M-COL-ONEATTR"
+        "dog": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.same_similar",
+          "זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
@@ -505,14 +509,18 @@
       },
       "options": [
         "ball_yellow",
-        "balloon_yellow",
         "star"
       ],
       "correct": "star",
       "difficulty": 0.05,
       "tags": {
-        "ball_yellow": "M-COL-ONEATTR",
-        "balloon_yellow": "M-COL-ONEATTR"
+        "ball_yellow": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
@@ -526,14 +534,18 @@
       },
       "options": [
         "duck",
-        "bird",
         "ball_yellow"
       ],
       "correct": "duck",
       "difficulty": 0.1,
       "tags": {
-        "bird": "M-COL-ONEATTR",
         "ball_yellow": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
@@ -1295,14 +1307,18 @@
       "skill": "LOG-A-01",
       "ref": "apple",
       "others": [
-        "ball_red",
-        "balloon_red"
+        "ball_red"
       ],
-      "pos": 2,
+      "pos": 1,
       "difficulty": 0.1,
       "tags": {
-        "ball_red": "M-COL-ONEATTR",
-        "balloon_red": "M-COL-ONEATTR"
+        "ball_red": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
@@ -1311,14 +1327,18 @@
       "skill": "LOG-A-01",
       "ref": "bird",
       "others": [
-        "duck",
         "ball_blue"
       ],
       "pos": 0,
       "difficulty": 0.15,
       "tags": {
-        "duck": "M-COL-ONEATTR",
         "ball_blue": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
@@ -1327,14 +1347,18 @@
       "skill": "LOG-A-01",
       "ref": "balloon_red",
       "others": [
-        "balloon_blue",
         "ball_red"
       ],
       "pos": 1,
       "difficulty": 0.2,
       "tags": {
-        "balloon_blue": "M-COL-ONEATTR",
         "ball_red": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
@@ -1692,6 +1716,12 @@
       "tags": {
         "ball_red": "M-COL-ONEATTR"
       },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
+      },
       "difficulty": 0.4
     },
     {
@@ -1711,6 +1741,12 @@
       "correct": "balloon_blue",
       "tags": {
         "ball_red": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       },
       "difficulty": 0.4
     },
@@ -2117,7 +2153,7 @@
   "lessons": [
     {
       "id": "same-and-different",
-      "title": "זֶהֶה וְשׁוֹנֶה",
+      "title": "זֵהֶה וְשׁוֹנֶה",
       "skills": [
         "LOG-A-01",
         "LOG-A-02"
@@ -2130,7 +2166,7 @@
         "log.odd.animal",
         "log.odd.thing"
       ],
-      "done": "כׇּל הַכָּבוֹד! מְצָאתֶם מִי זֶהֶה וּמִי שׁוֹנֶה."
+      "done": "כׇּל הַכָּבוֹד! מְצָאתֶם מִי זֵהֶה וּמִי שׁוֹנֶה."
     },
     {
       "id": "sorting-groups",
@@ -2249,7 +2285,7 @@
     },
     {
       "id": "same-and-different-again",
-      "title": "עוֹד זֶהֶה וְשׁוֹנֶה",
+      "title": "עוֹד זֵהֶה וְשׁוֹנֶה",
       "skills": [
         "LOG-A-01",
         "LOG-A-02"
@@ -2265,7 +2301,7 @@
         "b15.loga01.2"
       ],
       "minutes": 4,
-      "done": "כׇּל הַכָּבוֹד! מְצָאתֶם מִי זֶהֶה וּמִי שׁוֹנֶה."
+      "done": "כׇּל הַכָּבוֹד! מְצָאתֶם מִי זֵהֶה וּמִי שׁוֹנֶה."
     },
     {
       "id": "patterns-again",
@@ -2341,7 +2377,7 @@
     },
     {
       "id": "same-and-different-again-1-b15",
-      "title": "זֶהֶה אוֹ שׁוֹנֶה?",
+      "title": "זֵהֶה אוֹ שׁוֹנֶה?",
       "skills": [
         "LOG-A-01",
         "LOG-A-02"

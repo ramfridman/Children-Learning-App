@@ -883,8 +883,7 @@
       "line": [
         "cat",
         "duck",
-        "dog",
-        "fish"
+        "dog"
       ],
       "pick": -1,
       "difficulty": 0.35
@@ -896,8 +895,7 @@
       "line": [
         "fish",
         "dog",
-        "cat",
-        "duck"
+        "cat"
       ],
       "pick": 2,
       "difficulty": 0.45
@@ -1448,8 +1446,7 @@
       "line": [
         "duck",
         "fish",
-        "cat",
-        "dog"
+        "cat"
       ],
       "pick": 1,
       "difficulty": 0.4
@@ -1461,8 +1458,7 @@
       "line": [
         "dog",
         "cat",
-        "duck",
-        "fish"
+        "duck"
       ],
       "pick": 0,
       "difficulty": 0.3
@@ -1936,11 +1932,8 @@
       "options": [
         3,
         2,
-        1
+        4
       ],
-      "tags": {
-        "1": "M-CNT-SKIP"
-      },
       "difficulty": 0.35
     },
     {
@@ -2087,8 +2080,7 @@
       "line": [
         "frog",
         "chick",
-        "bird",
-        "fish"
+        "bird"
       ],
       "pick": 1,
       "check": "transfer",
@@ -2101,8 +2093,7 @@
       "line": [
         "frog",
         "chick",
-        "bird",
-        "fish"
+        "bird"
       ],
       "pick": -1,
       "check": "transfer",

@@ -53,11 +53,6 @@
         "sprite": "asset:balloon_red",
         "label": "בָּלוֹן אָדֹם",
         "misconception": "M-COL-ONEATTR"
-      },
-      {
-        "id": "o4",
-        "sprite": "asset:bloom_blue",
-        "label": "פֶּרַח כָּחֹל"
       }
     ],
     "correct": "o1",
@@ -92,7 +87,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
           }
         ]
       }

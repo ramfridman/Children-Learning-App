@@ -128,7 +128,7 @@ TAG_FEEDBACK = {
     'M-CNT-SIZE': ('vo:fb.size', 'יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד.'),
     'M-NUM-ZERO': ('vo:fb.zero', 'גַּם אֶפֶס הוּא מִסְפָּר: כְּשֶׁאֵין כְּלוּם, יֵשׁ אֶפֶס.'),
     # G8 ("אֵינוֹ" → "הוּא לֹא") waits: its 7 rows are V1 rows the owner has not approved yet
-    'M-ORD-CARD': ('vo:fb.ord', 'הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה.'),
+    'M-ORD-CARD': ('vo:fb.ord', 'הַמָּקוֹם בַּתּוֹר אוֹמֵר מִי בָּא קֹדֶם. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה.'),
 }
 # D1 (owner Q2, 2026-10-29): the M-CNT-SIZE line names the cue that misled the child, then the strategy
 SIZE_BY_CUE = {
@@ -147,7 +147,8 @@ SORT_SHIFT_BY_RULE = {
     'size': ('vo:fb.sort_shift.size', 'זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַגֹּדֶל. בּוֹאוּ נִבְדֹּק.'),
 }
 SORT_RULES = ('colour', 'shape', 'kind', 'size')
-ALMOST = ('vo:fb.almost', 'כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב.')
+# owner, 2026-11-06: no "almost" (the app does not know how close the answer was); the id stays vo:fb.almost
+ALMOST = ('vo:fb.almost', 'בּוֹאוּ נְנַסֶּה שׁוּב.')
 UNSURE = ('vo:fb.unsure', 'שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד.')
 
 lines = {}  # voice id -> caption: one text for every id, checked below
@@ -995,9 +996,13 @@ def k_shape(a, ctx):
         sh = sp.split('_')[1]
         names.setdefault(sp, {'one': SHAPE_NAME[sh][0], 'g': 'm'})
     tags = dict(a.get('tags', {}))
-    if a['shape'] in ('square', 'rect'):
+    # A rectangle offered for "the square" is M-SHP-SQRECT (a long rectangle taken for a square). A square is never
+    # wrong for "the rectangle" (owner, W3 of docs/knowledge/maths/check-2026-11-06.md): a square is a rectangle.
+    assert not (a['shape'] == 'rect' and any(sp.split('_')[1] == 'square' for sp in wrong)), (
+        '%s: a square is a rectangle, so it cannot be the wrong answer to "where is the rectangle?"' % a['id'])
+    if a['shape'] == 'square':
         for sp in wrong:
-            if sp.split('_')[1] in ('square', 'rect') and sp not in tags:
+            if sp.split('_')[1] == 'rect' and sp not in tags:
                 tags[sp] = 'M-SHP-SQRECT'
     if a['mode'] == 'match':
         ref = 'shape_%s_%s' % (a['shape'], a['refColour'])

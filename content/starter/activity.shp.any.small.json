@@ -62,13 +62,13 @@
       {
         "id": "o3",
         "set": {
-          "sprite": "asset:shape_square",
+          "sprite": "asset:shape_curved",
           "count": 1,
           "arrangement": "line",
           "seed": 3
         },
-        "label": "רִבּוּעַ",
-        "misconception": "M-SHP-SIZE"
+        "label": "צוּרָה עֲקֻמָּה",
+        "misconception": "M-SHP-CLOSED"
       }
     ],
     "correct": "o2",
@@ -88,6 +88,16 @@
     },
     "incorrect": [
       {
+        "when": "misconception:M-SHP-CLOSED",
+        "vo": "vo:fb.shp_closed",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
         "when": "misconception:M-SHP-SIZE",
         "vo": "vo:fb.shp_size",
         "caption": [
@@ -103,7 +113,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
           }
         ]
       }

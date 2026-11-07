@@ -52,17 +52,11 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:balloon_yellow",
-        "label": "בָּלוֹן צָהֹב",
-        "misconception": "M-COL-ONEATTR"
-      },
-      {
-        "id": "o3",
         "sprite": "asset:star",
         "label": "כּוֹכָב"
       }
     ],
-    "correct": "o3",
+    "correct": "o2",
     "shuffle": false,
     "unsureAllowed": true
   },
@@ -80,11 +74,11 @@
     "incorrect": [
       {
         "when": "misconception:M-COL-ONEATTR",
-        "vo": "vo:fb.col_oneattr",
+        "vo": "vo:fb.sort_shift.kind",
         "caption": [
           {
             "t": "he",
-            "v": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע."
+            "v": "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
           }
         ]
       },
@@ -94,7 +88,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
           }
         ]
       }

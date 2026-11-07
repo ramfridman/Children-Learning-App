@@ -559,3 +559,64 @@ Scope: the `needs-editor` drafts that the three Band A batches and the design-di
 **Counts.** Voice-text characters: English 52 lines 1,207 (+44; with the 68 glosses 1,667); Russian 40 lines 979 (+41); Hebrew Band A 4,035 (was 4,093: the three rows were counted pointed before they had a voice text). Checks: `tools/check_hebrew_course_words.py --text` on the four files (3,505 Hebrew words; the one note is the teacher's suffix in a grammar remark), `tools/test_hebrew_sources.py` (10 tests, OK).
 
 **Not decided here (the owner, `island-texts.md` §6):** the door line with or without the question, the Hebrew bottle line, the three route names of the Russian stress setting, how the Hebrew "parent check of reading aloud" works (the help text says only what is certain), and the status words of the parent progress page.
+
+## 11. The editor's full pass of 2026-11-06 (owner: "the Hebrew review now, voices later")
+
+Scope and counts, the 38 changed rows with before and after, the 5 questions for the owner and the verification are in
+`docs/review/hebrew-review-2026-11-06.md`. The sources were changed directly (`he.dart`, `content/units/{colours,logic,robots}.json`,
+`tools/band_b2.py`, `tools/band_b3.py`), the pack regenerated with `tools/regen_content.py`, and each change is recorded in
+`ROW_RULES` of `tools/hebrew_voice_review.py` ("Editor's second pass, 2026-11-06"). Everything is `text-ready`, waiting for the owner.
+
+**Rules learned in this pass** (add to sections 2 and 3 when the rules are next folded together):
+
+1. **`צָרִיךְ` is "needs", not "is needed".** `מִבְרֶשֶׁת לֹא צְרִיכָה לִרְחִיצַת יָדַיִם` says the brush needs nothing. Put the purpose first and
+   the thing after, as the hints do: `לִרְחִיצַת יָדַיִם לֹא צְרִיכָה מִבְרֶשֶׁת` (the verb agrees with the thing: `צָרִיךְ סַבּוֹן`, `צְרִיכָה מַגֶּבֶת`).
+2. **A question about a colour or a property of a thing needs a verb or `מַה`**: `מַה צֶּבַע הַשֶּׁמֶשׁ?`, not `אֵיזֶה צֶבַע הַשֶּׁמֶשׁ?`
+   (the dagesh follows `מַה`; `מָה` stays before א ה ח ע ר, as in the lesson title `מָה חָסֵר בַּתַּעֲרוֹבֶת`).
+3. **Sin or shin by the root.** `שׂחק` (play) is a sin everywhere: `לְשַׂחֵק`, `מִשְׂחָק`, `נִשְׂחַק`. A shin dot on it means "worn down". The
+   scan lists every sin-dot word of the table (30 words) and every shin-dot word of a sin root; run it when a verb of play is added.
+4. **Prizes are won, not earned**: `לִזְכּוֹת בָּהּ`, `שֶׁעוֹד לֹא זָכִינוּ בּוֹ`. `לְהַרְוִיחַ` is for money.
+5. **`זֵהֶה`** (tsere) is the one pointing for "identical" (`הַזֵּהֶה`, `זֵהָה`, `זֵהִים`).
+6. **Written words stay out of the pack**: `מֵאֲשֶׁר` (use two short sentences), `אֶלָּא`, `זֹאת` (use `זוֹ`). The register list of the scan: `האם`,
+   `אחרת` (as "otherwise"), `כאשר`, `בלבד`, `אינו`, `אולם`, `עליכם`, `ניתן`, `מאשר`, `אלא`, `זאת`.
+7. **A misconception line has no `לֹא`** (Q2) in all bands: what the eye caught, then the strategy (`הַמַּטְבֵּעַ גָּדוֹל אוֹ קָטָן, אֲבָל כַּמָּה הוּא שָׁוֶה?`).
+   Four lines in the pack still break this rule and wait for the owner (review log, question 2).
+
+**For the app-developer.** Nothing to bring in: the sources hold the corrected text and `tools/test_hebrew_sources.py` passes (pin: 12,777 rows).
+`content/starter` changed in 24 files, so `starter_pack_test` › "the pack was built from the sources" stays red until the owner builds the
+next pack version. **For the voice director.** The 21 changed texts need no direction; the spoken ones are re-voiced from `voice_text`.
+
+**Update, 2026-11-06 (the owner's answers, in chat).** Rule 7 now holds in the pack: the four `לֹא` misconception lines are reworded (`M-MEAS-BIG`, `M-SORT-SHIFT` colour line, the chart `M-CNT-SIZE` line with its own clip `vo:fb.size.chart`, `M-ORD-CARD`); the B-15 title is `זֵהֶה אוֹ שׁוֹנֶה?` (owner-approved in chat). **No line says `כִּמְעַט`** (owner: do not mislead a child who is not close): the default wrong-answer line is `בּוֹאוּ נְנַסֶּה שׁוּב.` (id `vo:fb.almost` kept) and `core.encourage.almost` is `עוֹד לֹא — בּוֹאוּ נְנַסֶּה שׁוּב.`. Add `כִּמְעַט` and `כמעט` to the register scan as "only when the app knows the answer was close". Details: `docs/review/hebrew-review-2026-11-06.md` section 7.
+
+## 12. The editor's read of the 59 maths-check rows, 2026-11-06
+
+Scope: the 59 rows that the Maths and CS teachers' fixes left `proposed` (`docs/knowledge/maths/check-2026-11-06-fixes.md` section 8.8), read for grammar,
+nikud, the plural address rule (9.1), the owner's decision that a square is a rectangle, and clarity at ages 3 to 8. All are `text-ready`, waiting for the owner;
+`MATHS_CHECK_ROWS` in `tools/hebrew_voice_review.py` is empty. Sources changed: `tools/band_b2.py`, `content/units/logic.json`; the pack and the tables regenerated.
+
+**Read and kept (57 rows).** The new numbers in reviewed templates (`b.numb05.8` with `תִּשְׁעָה עָשָׂר דָּגִים` and the bare `תְּשַׁע עֶשְׂרֵה`; `b.numb10.*` with bare
+feminine numbers and `וְשֵׁשׁ` / `וּשְׁמוֹנֶה`; `b.mathb08.13` and `.14`, where the finger count in the hint is true: 7 to 11 is five, 9 to 12 is four, with `חָמֵשׁ` and
+`אַרְבַּע אֶצְבָּעוֹת`; `b.mathb07.6`; the robot hints of `b.csb01.6` and `cs.robot.plan.6`), the MATH-B-09 caption `חָבֵר כָּתַב תַּרְגִּיל, וְהַתְּשׁוּבָה לֹא נְכוֹנָה. אֵיפֹה הַטָּעוּת?`
+(MATH-B-03's reviewed caption; it reads right with the answer written first, because the correct line and the hint say `שֶׁבַע שָׁוֶה שָׁלוֹשׁ וְעוֹד אַרְבַּע`) and the
+shared M-SHP-SQRECT line `בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בַּמַּלְבֵּן הַזֶּה יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת.` (13 rows). The W3 lines never say that a rectangle has long and
+short sides in general, and never that a square is not a rectangle: `הַזֶּה` points at the picture the child touched. No row addresses one child.
+
+**Changed (2 texts, 4 rows).**
+
+| Row | Was | Now | Why |
+|---|---|---|---|
+| `b.shpb03.7` › wrong tap (`vo:fb.sqrect.square_is_rect`) | גַּם רִבּוּעַ הוּא מַלְבֵּן: מַלְבֵּן שֶׁכׇּל הַצְּלָעוֹת שֶׁלּוֹ שָׁווֹת. בּוֹאוּ נִסְפֹּר אֶת הַצְּלָעוֹת בְּכׇל צוּרָה. | רִבּוּעַ הוּא גַּם מַלְבֵּן: מַלְבֵּן מְיֻחָד, שֶׁכׇּל הַצְּלָעוֹת שֶׁלּוֹ שָׁווֹת. בּוֹאוּ נִסְפֹּר אֶת הַצְּלָעוֹת בְּכׇל צוּרָה. | "a square is also a rectangle" is the natural order; `מְיֻחָד` is the owner's "special rectangle" in a word a child knows |
+| `b.shpb03.2/.4/.6` › hint 3 | בַּמַּלְבֵּן הַזֶּה שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. | בַּמַּלְבֵּן הַזֶּה **יֵשׁ** שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. | a verbless sentence with `הַזֶּה` reads like a label; the correct line already has `יֵשׁ` |
+
+**LOG-A-01 has its own feedback line.** M-COL-ONEATTR says `יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע.` That is right for COL-A (find the red ball), but in LOG-A-01 colour does not
+matter (a green apple is "the same thing"), so the line sent the child to a check that can make a right answer look wrong. The 7 items whose lure has the colour of the
+picture (`log.same.star`, `.duck`, `.apple`, `.bird`, `.balloon`, `b15.loga01.3`, `.4`) now say the owner-approved kind line `זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק.`
+(`vo:fb.sort_shift.kind`, one clip, no new text). `log.same.cat` offers a brown dog for a grey cat, so "same colour" would be false there; it says the new
+`זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק.` (`vo:fb.same_similar`, the wording of the approved size line). Done with `tag_lines` in `content/units/logic.json`.
+Open for the maths teacher: the dog is not a same-colour lure, so M-COL-ONEATTR on it is not honest; an untagged dog or a grey animal would be.
+
+**Square and rectangle, wording rule.** Say "this rectangle" for the picture shown, and "a square is also a rectangle" only where the item teaches it (SHP-B-03 spot, Band B).
+Never "a rectangle has long and short sides" as a general claim, and never `רִבּוּעַ וּמַלְבֵּן` or `רִבּוּעַ אוֹ מַלְבֵּן` as a title (two kinds). The proposal for the SHP-B-03
+lesson title and celebration is in the review report for the owner (not applied).
+
+**Pins.** `tools/test_hebrew_sources.py`: done-and-changed rows 1,290 (was 1,296: six LOG-A-01 rows whose corrected text is now the text the pack gives). Rows 12,751 and proposed 55 are unchanged.

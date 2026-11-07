@@ -38,14 +38,14 @@
       "asset:star",
       "asset:apple",
       "asset:fish",
-      "asset:apple",
-      "asset:apple",
+      "asset:star",
+      "asset:star",
       "asset:fish"
     ]
   },
   "answer": {
     "type": "spot",
-    "wrong": 5,
+    "wrong": 6,
     "misconception": "M-PAT-UNIT"
   },
   "voiceAnswer": false,
@@ -76,7 +76,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
           }
         ]
       }
