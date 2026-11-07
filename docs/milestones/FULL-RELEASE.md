@@ -9,14 +9,17 @@ This file orders the work that is left. Each part already has its own approved p
 | # | Part | Plan (approved) | Size |
 |---|---|---|---|
 | 0 | **Close the open work**: the riddles-island sweep, the Hebrew review (PR 39), M10 C1 | sweep-2026-11-06, M10 | 3 PRs |
-| 1 | **Languages Band A**: ENG-1, HEB-1, RUS-1 and the language packs, so the Languages island can be played | frame.md §6, `docs/languages/*/band-a-content.md` | 3 courses |
-| 2 | **L5**: the Band B activity types (sound boxes, change one part, blend slide, build a word, follow and echo, co-play cards), then ENG-2, HEB-2, RUS-2 | L5.md | 6 templates, 76 skills |
+| 1 | **Languages Band A** of all three courses (English, Hebrew, Russian; ENG-1, HEB-1, RUS-1) and the language packs, so the Languages island can be played | frame.md §6, `docs/languages/*/band-a-content.md` | 3 courses |
+| 2 | **L5**: the Band B activity types (sound boxes, change one part, blend slide, build a word, follow and echo, co-play cards), then **Languages Band B** of all three courses (ENG-2, HEB-2, RUS-2) | L5.md | 6 templates, 76 skills |
 | 3 | **M10**: Band C of the six lands, C2 to C9 (C9 needs the owner's choice) | M10.md | about 1,100 activities |
-| 4 | **L6**: the Band C activity types, then ENG-3, HEB-3, RUS-3 | L6.md | 3 templates, about 80 skills |
+| 4 | **L6**: the Band C activity types, then **Languages Band C** of all three courses (ENG-3, HEB-3, RUS-3) | L6.md | 3 templates, about 80 skills |
+| 4b | **The head of the line** in the ordinal items (NUM-A-13: first, third, last): the start flag drawn from the first view, and the animals facing it (math-teacher's finding, 2026-11-07; app-developer, design-director) | — | 6 items |
 | 5 | **B-29 steps 5 to 9**: the parent's month and year and school stage screens, the look by age, the languages' gates, Today's Adventure | B29.md | 5 steps |
 | 6 | **The full Hebrew sweep**: every text read again for grammar, nikud and wording (hebrew-text-editor), and for how the voice will say it (voice-and-sound-director: the pronunciation list, the words kept pointed for the voice, a listening pilot) | owner, 2026-11-07 | every Hebrew line |
 | 7 | **The voices**: one voicing batch of every line, planned with its character count and cost; **the owner runs and pays** | B-45 | owner |
 | 8 | **The release**: the open security findings (SEC-6, SEC-7, SEC-M10-6 and -7), a full QA audit on the four boards, a release build, the owner signs the final packs, install on the owner's phone, the phone check | release gate | owner |
+
+**Every band of every island is built:** the six lands (Bands A and B are there; Band C is part 3) and the Languages island's three courses (Band A part 1, Band B part 2, Band C part 4).
 
 Parts 1, 2 and 3 run side by side: the lands' Band C and the language courses touch different files. Part 4 follows part 2 (L6 builds on L5). Part 6 starts only when every text is final, and part 7 only after part 6, so every line is voiced once.
 
