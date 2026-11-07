@@ -622,9 +622,35 @@ def mika_leave():
 
 
 def mika_gift():
-    apple = '<g transform="translate(-24 -102) scale(0.19)">%s</g>' % prefixed(m.apple().parts, 'ap')
-    giver = [L('M 140 -80 L 52 -86', INK, 22 + 6), L('M 140 -80 L 52 -86', '#2F7FE0', 22), E(44, -86, 13, 12, ch.SKIN[2])]
-    return canvas(posed(MIKA, arms=((20, -100), (20, -100)), expr='laugh') + [apple] + giver, crop=(-100, -196, 220, 212))
+    """Mika is given an apple (Russian spasibo): the neighbour, a whole grown-up, bends a little toward Mika and holds the apple
+    out at Mika's chest height, and Mika reaches up for it. (Redrawn 2026-11-07: the old picture had only a long blue arm coming
+    in from the edge, which read oddly.) References: tools/make_language_pictures_band_a.py, "Giving an apple"."""
+    n = EXTRA['neighbour']
+    giver = posed(n, view='side', arms=((-6, 8), GIFT_ARM), lean=-8, expr='happy')
+    hand = gift_hand()
+    apple = '<g transform="translate(%s %s) scale(0.17)">%s</g>' % (f(hand[0] - 6 - 128 * 0.17), f(hand[1] - 12 - 150 * 0.17),
+                                                                     prefixed([q for q in m.apple().parts if 'opacity="0.12"' not in q], 'ap'))
+    kid = posed(MIKA, arms=((10, 0), GIFT_REACH), expr='laugh')
+    return canvas(ground(0, 250) + ['<g transform="translate(%s 0)">%s</g>' % (f(GIFT_X), ''.join(giver))]
+                  + ['<g transform="translate(-64 0)">%s</g>' % ''.join(kid)] + [apple], crop=(-122, -232, 244, 246))
+
+
+GIFT_X = 58             # where the neighbour stands
+GIFT_ARM = (46, 22)     # the neighbour's near arm, forward and down to Mika's chest, holding the apple out
+GIFT_REACH = (100, -6) # Mika's arm on the neighbour's side, up and out toward the apple
+
+
+def gift_hand():
+    """Where the neighbour's near hand is, in the picture's coordinates (the apple sits in it)."""
+    n = EXTRA['neighbour']
+    H, r, hc, body, sh, hip, tw, lw, aw, arm = ch.geometry(n)
+    x0, y0 = -aw * 0.1, sh + aw * 0.55
+    pts = chain(x0, y0, [(arm * 0.52, GIFT_ARM[0]), (arm * 0.5, GIFT_ARM[1])], 1, 'side')
+    hx, hy = pts[-1]
+    a = math.radians(-8)   # the lean turns the arm about the hip
+    rx, ry = hx, hy - hip
+    hx, hy = rx * math.cos(a) - ry * math.sin(a), rx * math.sin(a) + ry * math.cos(a) + hip
+    return GIFT_X + hx, hy
 
 
 def mika_nod(yes):

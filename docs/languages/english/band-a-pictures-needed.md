@@ -13,3 +13,11 @@ The items that wait for a template recipe (the `waiting` lists of the units, and
 | tap areas on `story-bounce-2` to `-5` | ENG-A-15 s01 (a word said when its picture is touched) | the cat, the duck, the frog, the dog and the ball on their pages |
 
 Answers to `pictures.md` §6 for the English teacher: Pip is the budgerigar host (yes); the family is Mika's, and Pip's own family is the one budgerigar picture `pip-family` for the personal turn (yes: no English line says whose family it is); the sad faces with a soft frown and no tear are right (the word "sad" does not need a tear).
+
+## Drawn (design-director, 2026-11-07)
+
+All three rows are done, in `content/languages/pictures` (generator `tools/make_language_pictures_band_a.py`, sheet `docs/design/languages/pictures_batch5c.png`):
+
+- `duckling-lit.svg`, `ball-lit.svg`: the same drawing in the same place as `duckling` and `ball`, with a soft gold glow behind (as `content/starter/*_lit.svg`), so swapping the sprite on a touch moves nothing.
+- `dog-big.hotspots.json`, `ball-pair.hotspots.json`: two areas each, `big` and `small`, at least 72 of 256 units (65.5 pt on the phone SE), not overlapping. **`dog-big` no longer has the gold glow behind the big dog**: in a hotspot item that asks for the small dog it would point at the wrong one.
+- `story-bounce-2.hotspots.json` to `-5`: `cat` and `ball` (2), `duck` and `ball` (3), `frog` and `ball` (4), `dog` and `ball` (5), shares of the page's width and height, at least 96 of the 384 x 216 units (64.5 pt on the SE's tall stage), not overlapping. On page 5 the ball now flies just in front of the dog's nose (it was inside the dog's outline, so the two could not have separate areas).

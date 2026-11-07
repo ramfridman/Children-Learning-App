@@ -197,7 +197,7 @@ def en_story():
     out['story-bounce-3'] = page(pond + [obj(m.duck(), 200, 200, 0.4), red_ball(80, 104)] + bounce([(330, 150), (230, 110), (80, 80)]), garden())
     out['story-bounce-4'] = page([obj(b2.frog(), 200, 204, 0.5), red_ball(200, 40)] + bounce([(330, 150), (200, 20), (70, 150)]), garden())
     dog_jump = obj(m.dog(), 200, 170, 0.5, rot=-16, air=True)
-    out['story-bounce-5'] = page([shadow_at(206, 200, 56), dog_jump, red_ball(140, 112, 0.14)] + lines(250, 130) + bounce([(340, 120), (146, 96)]),
+    out['story-bounce-5'] = page([shadow_at(206, 200, 56), dog_jump, red_ball(106, 106, 0.14)] + lines(250, 130) + bounce([(340, 120), (110, 90)]),
                                  garden(True))
     out['story-bounce-6'] = page([obj(m.dog(), 160, 200, 0.5), asset(PIP, 262, 200, 0.3, flip=True), red_ball(214, 202, 0.12, air=False)]
                                  + hearts(214, 70) + hearts(236, 52), garden(True))
@@ -622,8 +622,9 @@ def composites():
         gap = 92
         x0 = 192 - gap * (n - 1) / 2
         out['drum-strip-%d' % n] = composite([obj(m.drum(), x0 + k * gap, 156, 0.36) for k in range(n)], 384, 216)
-    out['dog-big'] = composite(['<ellipse cx="96" cy="150" rx="88" ry="74" fill="#FFC83D" opacity="0.25"/>',
-                                obj(m.dog(), 96, 226, 0.66), obj(m.dog(), 204, 226, 0.3)])
+    # no glow behind either dog: the picture is the scene of ENG-A-10's hotspot items, which ask for the big one and for the
+    # small one, so neither may be marked (dog-big.hotspots.json, tools/make_language_pictures_band_a.py)
+    out['dog-big'] = composite([obj(m.dog(), 96, 226, 0.66), obj(m.dog(), 204, 226, 0.3)])
     out['ball-pair'] = composite([obj(m.ball('red'), 92, 226, 0.58), obj(m.ball('red'), 204, 226, 0.26)])
     return out
 

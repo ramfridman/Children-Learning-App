@@ -20,3 +20,9 @@ Only skill HEB-A-05 (one and many, `band-a-content.md` A-05) is waiting for pict
 | `set-apples` | many apples (תַּפּוּחִים) | `apple.svg` | A-05.8 check (SEM) |
 
 A-05.2 (many balls) uses the existing `set-balls-4.svg`.
+
+## Drawn (design-director, 2026-11-07)
+
+All twelve are done, in `content/languages/pictures` (generator `tools/make_language_pictures_band_a.py`, sheet `docs/design/languages/pictures_batch5a.png`): each set is the singular picture's own drawing, all copies the same size, in one loose group of a back row and a front row that overlap a little (no row, grid or dice layout). Counts: `set-cats` 4, `set-dogs` 3, `set-dolls` 4, `set-teddies` 3, `set-cakes` 3, `set-pizzas` 3, `set-horses` 3, `set-donkeys` 3, `set-boats` 4, `set-planes` 3, `set-eggs` 5, `set-apples` 5, so "many" is never tied to one number.
+
+Also for this course: the HEB-A-10 marks ● ○ ▲ △ (`text:●` and so on in `units/08-letters-or-not.json`) **are not in Heebo** (nor in Secular One): the font has no glyph for U+25CF, U+25CB, U+25B2 or U+25B3, so the app would draw them in a fallback system font that differs per phone. They are drawn as shape cards for the app-developer to use instead: `shape-dot`, `shape-ring`, `shape-triangle`, `shape-triangle-open` (ink, the weight of a bold letter, centred; sheet `pictures_batch5c.png`).
