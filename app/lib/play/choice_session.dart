@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
@@ -89,30 +87,6 @@ abstract class ChoiceSession extends TemplateSession {
 
   void sayOption(ChoiceOption o) {
     if (o.clip != null) playClips?.call(<String>[o.clip!], replace: true);
-  }
-
-  // ---- waiting ----
-
-  /// Waits [d], and never fires after the session has gone (the timer is the session's own).
-  Future<void> pause(Duration d) {
-    final Completer<void> c = Completer<void>();
-    later(d, c.complete);
-    return c.future;
-  }
-
-  /// Plays [ids] and waits until they have been played (at most [atMost]); with no player (a test) it waits [without] instead.
-  Future<void> sayAndWait(
-    List<String> ids, {
-    bool replace = false,
-    Duration without = const Duration(milliseconds: 700),
-    Duration atMost = const Duration(seconds: 8),
-  }) async {
-    final FutureOr<void> played = playClips?.call(ids, replace: replace);
-    if (played is Future<void>) {
-      await Future.any(<Future<void>>[played, pause(atMost)]);
-    } else {
-      await pause(without);
-    }
   }
 
   // ---- hints and replay ----

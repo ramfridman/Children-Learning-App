@@ -22,6 +22,8 @@
 /// | clock_set | the time set, `3.00` or `3.30` | the time |
 /// | trace | `trace` | `direction` (the right path from the other end) or `off` |
 /// | trace 2.0 (LS02, write a letter) | `ok` when the letter or the word is written; a trace keeps `trace` | an error it named: the stroke and what, `s2.dir` (`start`, `dir`, `lines`, `mirror`, `partner`), in a word the box first, `b2.s1.start`; a miss it cannot name writes nothing |
+/// | sound_boxes 1.1 (LS03 boxes) | the steps' right values, `n=3.c=brb.s=1.w=2` (the count, the colours as `r` vowel `b` hard `g` soft, the place of the stress, the place of the sound; only the steps the item has) | the same up to the step that was wrong, with the wrong value in its place, `n=4`, `n=3.c=bbb`, `n=3.s=2` |
+/// | change_part (LS05, make) | the parts that made it, `p1.p4` (one id for each place) | the parts the child made |
 /// | say_it | `said` (the child was heard, speech evidence) or `picture` (the scored tap on the picture) | (none: nothing is wrong) |
 /// | "I'm not sure" | (empty) | |
 ///
@@ -61,6 +63,18 @@ abstract final class ResponseCode {
   static const String move = 'move';
 
   static String count(int n) => 'n=$n';
+
+  /// LS03 boxes: the count, the colours, the place of the stress and the place of the sound, each only when the step has one: `n=3.c=brb.s=1.w=2`.
+  /// Numbers and three colour letters, never a word.
+  static String boxes({int? n, String? colours, int? stress, int? which}) => <String>[
+    if (n != null) 'n=$n',
+    if (colours != null) 'c=$colours',
+    if (stress != null) 's=$stress',
+    if (which != null) 'w=$which',
+  ].join('.');
+
+  /// LS05: the ids of the parts the child made, one for each place of the frame: `p1.p4`.
+  static String parts(Iterable<String> ids) => ids.join('.');
 
   /// LS02: the [stroke]th stroke (from 1) of the letter was an error that was named: `s2.dir`. Numbers and a short word, never a point.
   static String strokeFault(int stroke, String what) => 's$stroke.$what';

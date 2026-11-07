@@ -72,6 +72,9 @@ import 'listen_do_session.dart';
 import 'puppet_talk_session.dart';
 import 'sing_along_session.dart';
 import 'sound_boxes_session.dart';
+import 'blend_slide_session.dart';
+import 'boxes_session.dart';
+import 'change_part_session.dart';
 import 'story_session.dart';
 import 'template_session.dart';
 
@@ -489,6 +492,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         ListenDoActivity() => ListenDoSession(c, a, band: _presentationBand(a), stress: caption.stress),
         SingAlongActivity() => SingAlongSession(c, a, stress: caption.stress),
         SoundBoxesActivity() => SoundBoxesSession(c, a),
+        BoxesActivity() => BoxesSession(c, a, band: _presentationBand(a)),
+        ChangePartActivity() => ChangePartSession(c, a, band: _presentationBand(a)),
+        BlendSlideActivity() => BlendSlideSession(c, a, band: _presentationBand(a), stress: caption.stress),
         PuppetTalkActivity() => PuppetTalkSession(
           c,
           a,

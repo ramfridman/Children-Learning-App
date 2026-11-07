@@ -78,6 +78,8 @@ abstract final class TokenColors {
   static const Color teachBlackLip = Color(0xFF000000);
   static const Color teachWhite = Color(0xFFFFFFFF);
   static const Color teachWhiteLip = Color(0xFFD9D4E6);
+  static const Color languagesToken = Color(0xFFF2C894);
+  static const Color languagesTokenLip = Color(0xFFC98B4E);
   static const Color worldSkyTop = Color(0xFFCDEFFF);
   static const Color worldSkyBottom = Color(0xFFFFF1D6);
   static const Color worldDuskTop = Color(0xFF3B2C85);

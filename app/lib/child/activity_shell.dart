@@ -76,11 +76,15 @@ class ActivitySpec {
   final double tileFont;
 
   /// The same board with another stage and another box for the answer tiles (the numbers of the rest stay).
+  ///
+  /// [card] says whether the stage stands on a white card; it defaults to what the board has (a tablet's). The wheel of LS05 stands on the board
+  /// itself on a tablet, so it turns the card off.
   ActivitySpec withStageAndTiles({
     required Rect stage,
     required double tilesLeft,
     required double tilesTop,
     required double tilesWidth,
+    bool? card,
   }) => ActivitySpec(
     boardHeight: boardHeight,
     bubbleMaxWidth: bubbleMaxWidth,
@@ -103,7 +107,7 @@ class ActivitySpec {
     bubbleTop: bubbleTop,
     bubbleFont: bubbleFont,
     stage: stage,
-    stageIsCard: stageIsCard,
+    stageIsCard: card ?? stageIsCard,
     tilesLeft: tilesLeft,
     tilesTop: tilesTop,
     tilesWidth: tilesWidth,

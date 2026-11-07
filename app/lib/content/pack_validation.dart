@@ -10,7 +10,11 @@ import 'capabilities.dart' show compareTemplateVersion;
 import 'hint_ladder.dart';
 import 'language_checks.dart';
 import 'ls01_checks.dart';
+import 'l5_hint_checks.dart';
 import 'ls02_checks.dart';
+import 'ls03_checks.dart';
+import 'ls04_checks.dart';
+import 'ls05_checks.dart';
 import 'row_width.dart';
 import 'schema.dart';
 import 'schemas.dart';
@@ -387,6 +391,41 @@ List<Problem> validatePack({
       case 'puppet_talk':
         checkAsset(file, 'scene.background', scene['background']);
         _puppetTalk(file, a, say, checkAsset: checkAsset, checkVo: checkVo, checkTag: checkTag);
+      case 'sound_boxes' when isBoxes(a):
+        // LS03 boxes: the steps, the units and the keys of `classify` are `ls03_checks.dart`'s; here only what a file of the pack can point at.
+        checkAsset(file, 'scene.background', scene['background']);
+        final Map<String, Object?> boxWord = _mapOf(scene['word']);
+        checkAsset(file, 'scene.word.sprite', boxWord['sprite']);
+        checkVo(file, 'scene.word.clip', boxWord['clip']);
+        checkVo(file, 'scene.word.slow', boxWord['slow']);
+        checkVo(file, 'scene.tok', scene['tok']);
+        for (final (int i, Map<String, Object?> u) in _maps(boxWord['units']).indexed) {
+          checkVo(file, 'scene.word.units[$i].clip', u['clip']);
+          checkAsset(file, 'scene.word.units[$i].mouth', u['mouth']);
+        }
+        for (final MapEntry<String, Object?> c in _mapOf(answer['classify']).entries) {
+          checkTag(file, 'answer.classify.${c.key}', c.value);
+        }
+      case 'change_part':
+        checkAsset(file, 'scene.background', scene['background']);
+        for (final (int i, Map<String, Object?> p) in _maps(scene['parts']).indexed) {
+          checkTag(file, 'scene.parts[$i].tag', p['tag']);
+        }
+        for (final (int i, Map<String, Object?> r) in _maps(scene['results']).indexed) {
+          checkVo(file, 'scene.results[$i].clip', r['clip']);
+          checkAsset(file, 'scene.results[$i].sprite', r['sprite']);
+        }
+        if (scene['mode'] == 'explore') _unscored(file, a, say, 'a teaching screen');
+      case 'blend_slide':
+        checkAsset(file, 'scene.background', scene['background']);
+        final Map<String, Object?> blendWord = _mapOf(scene['word']);
+        checkVo(file, 'scene.word.whole', blendWord['whole']);
+        checkVo(file, 'scene.word.stretched', blendWord['stretched']);
+        for (final (int i, Map<String, Object?> p) in _maps(blendWord['parts']).indexed) {
+          checkVo(file, 'scene.word.parts[$i].clip', p['clip']);
+          checkAsset(file, 'scene.word.parts[$i].mouth', p['mouth']);
+        }
+        _l4Options(file, answer, say, checkAsset, checkVo, checkTag, faceless: scene['mode'] == 'merge');
       case 'sound_boxes':
         checkAsset(file, 'scene.background', scene['background']);
         checkAsset(file, 'scene.picture', scene['picture']);
@@ -806,6 +845,10 @@ List<Problem> validatePack({
       },
       say: say,
     );
+    checkLs03Activity(file, a, language: Course.isLanguage(course), course: course, skills: skills, say: say);
+    checkLs04Activity(file, a, language: Course.isLanguage(course), course: course, say: say);
+    checkLs05Activity(file, a, language: Course.isLanguage(course), course: course, say: say);
+    checkBorrowedHints(file, a, language: Course.isLanguage(course), course: course, say: say);
     _languageOnlyTemplate(file, a, say, language: Course.isLanguage(course));
     _hebrew(file, a, say, pointed: a['band'] != 'C');
     _voiceAnswer(file, a, say, starter: manifest['id'] == 'starter');
@@ -1433,6 +1476,8 @@ const Set<String> languageTemplates = <String>{
   'sing_along',
   'puppet_talk',
   'sound_boxes',
+  'change_part',
+  'blend_slide',
 };
 
 void _languageOnlyTemplate(
