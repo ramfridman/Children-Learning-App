@@ -65,7 +65,8 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-M10-5 | An activity's `templateVersion` is not checked against the manifest's template version | info | closed (validator rule; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-M10-6 | `content-publish` caps are not tied to `PackLimits` (items by comment only; misconceptions 200 against the pack's 400) | info | open | 2026-11-06 |
 | SEC-M10-7 | PLAN.md still gives the pack reader's old limits in the pack format section | info | open | 2026-11-06 |
-| SEC-M10-8 | The coin hint reads a coin's worth from its sprite id with `int.parse`, which throws on a long run of digits | info | open | 2026-11-07 |
+| SEC-M10-8 | The coin hint reads a coin's worth from its sprite id with `int.parse`, which throws on a long run of digits | info | fix on `m10-c1` (`f02c57f9`: `coin_s(\d{1,3})$`, `int.tryParse`, only the eight shekel values; proof `hint_tap_c1_test.dart` "SEC-M10-8"); closes once the security-engineer has seen its proof run green | 2026-11-07 |
+| SEC-M10-9 | A deleted child's block-demonstration count (`blocks.demo.<profileId>`, a local setting) stays on the phone | info | open | 2026-11-07 |
 | SEC-B29-1 | School stage: a `child-put` with another band and no stage keeps the stored stage, so the server can hold and send a stage that disagrees with the band | low | fixed (`b29-profile`: the upsert keeps a stored stage only while its band is the saved band, a table check ties stage to band, the app clears a stage of another band on pull; proofs `sync_test.ts`, `11_school_stage.test.sql`, `profile_sync_test.dart`) | 2026-11-06 |
 | SEC-B29-2 | iOS local data: no backup-excluded data folder yet, and secure-storage items are not `ThisDeviceOnly` (not reachable: no iOS build can open the database today) | low | Dart part fixed (`b29-profile`: every item is `first_unlock_this_device`, not synchronizable; proof `secure_store_test.dart`); the Swift part (exclude the iOS database folder from backup) gates any iOS build and waits for the iOS platform channel | 2026-11-06 |
 | SEC-B29-3 | The birth-month source rule scans 7 of the `lib/` folders and misses some names (`childAgeProvider`, `ageInMonths`, `assumedMonths`) | low | fixed (`b29-profile`: an allowlist over all of `lib/`, and only `show SchoolStage` imports of `engine/age.dart` outside it; proof `profile_sync_test.dart`) | 2026-11-06 |
@@ -483,3 +484,25 @@ this check, a format mismatch between a deployed gateway and an installed app, i
     standard-library Python steps with `-I`, no secret and no new action.
   - New: SEC-M10-8 (info), in the table above. No dependency changed, so the advisory check was not run again. Tests were not
     run by the security-engineer: the tree holds uncommitted work, and the review read the committed HEAD.
+- **M10 C1 second light review, `m10-c1` (`98f57707..efc0f0e3`; 2026-11-07): safe to merge; one new info finding.** In scope:
+  `prompt.math` (schema, `_promptMath`, `MathRun`, `LessonController.bubbleMath`), the lesson field `demo` and the local setting
+  `blocks.demo.<profileId>`, `blockLimits` and `block_geometry.dart`, `number_line` 1.1 (`tolerance`, `tickStep`), `give_n` 1.1
+  (`frame`), the bubble's text scaler, and the new code in `tools/author.py`, `tools/band_c.py` and `tools/check_maths.py`. Not in
+  scope: the Hebrew rows, the goldens, the design mockups and QA's uncommitted test file.
+  - `prompt.math`: 3 to 9 tokens of at most 10 characters, each matched in full (`?`, `n:0` to `n:10000` with no leading zero, the
+    signs of a row), at most one `?`, a four-digit number only in Band C, at most 7 em wide, and tap_answer 1.4. It is drawn as one
+    plain `Text` (no semantics, no link). It is not in the publish body (`publish_lib.dart` sends only the caption as
+    `prompt_text`), so it never reaches the server's prompt, and nothing in the tutor request changed.
+  - `demo`: `kind` is an enum of one value, the line a voice id and a caption, shown as plain text; the validator asks for an item
+    with blocks. `blocks.demo.<profileId>` is a count in the encrypted database's settings table, read with `int.tryParse`; it is
+    not among the settings `settings-put` sends and is never synced or logged. It is not erased with the child (SEC-M10-9).
+  - Bounds: the semantic checks run only on schema-valid documents, so `tickStep` (1 to 25) is never 0 in `% step` or the hint
+    walk, and every new loop is bounded by schema numbers (blocks 0 to 9 of each kind, lines 0 to 100, at most 20 objects in
+    `give_n`, two ten-frames) or by the board's fixed sizes (the bubble-width search). `blockLimits` reads with type checks and
+    cannot throw. The text scaler is clamped to 1.3.
+  - Tools: `has_blocks` in `author.py` reads `content/starter/activity.<id>.json` for ids from the repository's own unit files (as
+    the existing writers do); `check_maths.py` only reads the content folder. No network, subprocess, eval or deletion. The CI
+    step added is standard-library Python with `-I`.
+  - No dependency, lock file, workflow permission, network host or gateway function changed since `98f57707`, so the advisory
+    check was not run again. No secret pattern or personal file in the new commits (a grep; gitleaks runs in CI). Tests were
+    not run by the security-engineer: the worktree's build folder was locked by another run.
