@@ -273,6 +273,22 @@ class BandCTest(unittest.TestCase):
             author.TAG_FEEDBACK.setdefault(tag, ('vo:fb.' + tag[2:].lower().replace('-', '_'), 'line for ' + tag))
         return author.k_number(a, {'names': {}, 'objects': {}})
 
+    def test_the_bubble_shows_the_sentence_a_question_says_over_blocks(self):
+        """prompt.math (owner, 2026-11-07): the four items of MATH-C-03 that say a sentence over rods ('אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים') carry
+        it as the tokens of a row; the generator refuses a run beside a row (the row already shows it)."""
+        runs = {d['id']: d['prompt'].get('math') for d in load('activity.c.mathc03.1[5-8].json')}
+        self.assertEqual(runs, {
+            'c.mathc03.15': ['n:40', 'op:+', 'n:30', 'op:=', '?'], 'c.mathc03.16': ['n:30', 'op:+', 'n:50', 'op:=', '?'],
+            'c.mathc03.17': ['n:70', 'op:-', 'n:40', 'op:=', '?'], 'c.mathc03.18': ['n:60', 'op:-', 'n:20', 'op:=', '?']})
+        self.assertEqual({d['templateVersion'] for d in load('activity.c.mathc03.1[5-8].json')}, {'1.4'})
+        # no other item has one (the field is for a sentence said and not drawn in a row)
+        with_run = [d['id'] for d in load('activity.*.json') if 'math' in d['prompt']]
+        self.assertEqual(sorted(with_run), sorted(runs))
+        a = {'kind': 'pick', 'id': 'c.mathc03.99', 'skill': 'MATH-C-03', 'band': 'C', 'prompt': 'q', 'options': ['n:7', 'n:8'],
+             'correct': 'n:7', 'row': band_c.tokens(3, '+', 4, '=', '?'), 'math': band_c.tokens(3, '+', 4, '=', '?')}
+        with self.assertRaises(AssertionError):
+            author.k_pick(a, {'names': {}, 'objects': {}})
+
     def test_tokens_are_numbers_signs_and_the_gap(self):
         self.assertEqual(band_c.tokens(52, '-', 27, '=', '?'), ['n:52', 'op:-', 'n:27', 'op:=', '?'])
         self.assertEqual(band_c.tokens('(', 2, '+', 3, ')', 'x', 4), ['op:(', 'n:2', 'op:+', 'n:3', 'op:)', 'op:x', 'n:4'])

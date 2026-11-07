@@ -433,6 +433,7 @@ class Item:
         self.words = tokens(self.caption)
         self.options = self.answer.get('options') or []
         self.correct = self.answer.get('correct')
+        self.math_read = False  # set by math_run once `prompt.math` has been matched to the sentence the question says
 
     def has(self, *phrases):
         return any(p in self.cap for p in phrases)
@@ -833,6 +834,20 @@ def said_sentence(it, pic):
     return (nums[0], '+' if plus else '-', nums[1]) if len(nums) == 2 else None
 
 
+def math_run(it, seq):
+    """The findings of `prompt.math`, the number sentence the bubble shows under the question (owner, 2026-11-07): over blocks with a
+    sentence said in the question, it must be there and be that sentence ('אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים' is `40 + 30 = ?`); the pictures are
+    checked against the same sentence (sentence_blocks), so a run that matches the said sentence matches the blocks too."""
+    run = it.doc.get('prompt', {}).get('math')
+    it.math_read = True
+    if run is None:
+        return [('WRONG', 'math', 'a sentence said over blocks shows its numbers in the bubble too: prompt.math is missing')]
+    shown = parse_cells(run) if isinstance(run, list) else None
+    if shown != seq:
+        return [('WRONG', 'math', 'the bubble shows %s, the question says %s' % (run, seq))]
+    return []
+
+
 def sentence_blocks(pic, pic2, seq, row, given, x):
     """The findings of base-ten blocks over a number sentence: the blocks show a number of the sentence; a second picture is the
     second number of a sum (40 + 30: 4 rods beside 3); rods crossed out are the number taken away (70 - 40: 7 rods, the last 4
@@ -1003,6 +1018,7 @@ def recognise_choice(it, svg):
         ask = 'כמה זה' if op == '+' else 'כמה נשאר'
         if not it.has(ask):
             out.append(('WRONG', 'picture', 'a sentence with %s asks "%s"' % (op, ask)))
+        out.extend(math_run(it, seq))
         return numeric('sentence', x, {'given': [a, b], 'op': op, 'sentence': True, 'a': a, 'b': b}, [a, b]), out
     if pic2 and not (seq and None in seq):  # two numbers of blocks side by side: which is bigger (or smaller)?
         shown = [base_ten(pic), base_ten(pic2)]
@@ -2030,6 +2046,8 @@ def check_docs(docs, records, skills, catalogue, svg, band=None, ids=None):
         except (KeyError, IndexError, TypeError, ValueError, ZeroDivisionError) as e:
             f.add('UNCHECKED', it, 'error', 'the checker could not read the item (%s: %s)' % (type(e).__name__, e))
             kind = None
+        if (it.doc.get('prompt') or {}).get('math') is not None and not it.math_read:
+            f.add('WRONG', it, 'math', 'prompt.math shows a sentence, and the question says none over blocks to match it')
         if kind is None:
             f.add('UNCHECKED', it, 'no-rule', 'no rule of this checker understands the item (%s)' % it.template)
         else:

@@ -56,7 +56,8 @@ abstract final class SchemaIds {
 /// Templates this app can play, and the version of each (what `templateVersion` must not exceed).
 const Map<String, String> supportedTemplates = <String, String>{
   // 1.4: the language fields of LS01 (L5-1: stem, cloze, tap-all, text faces) and, for M10 step 0.4, stage pictures, the row signs `<` `>`
-  // `(` `)`, numbers to 10,000, five choices in Band C and the number answer. One version carries both.
+  // `(` `)`, numbers to 10,000, five choices in Band C and the number answer, and `prompt.math`, the number sentence shown in the bubble
+  // (owner, 2026-11-07). One version carries them all: no app has had 1.4 yet.
   'tap_answer': '1.4',
   'story': '1.0',
   'listen_do': '1.0',
@@ -197,6 +198,14 @@ const Map<String, SField> _lineExtras = <String, SField>{
 
 /// The most characters of the text of a tile, a word on show or a revealed word.
 const int _targetTextMax = 40;
+
+/// The number sentence a `tap_answer` shows in the speech bubble under the line it says (1.4; owner, 2026-11-07): the tokens of a row
+/// (`n:40`, `op:+`, `op:=`, `?`), drawn as one left-to-right run with the signs of the app's equation rows. No picture cell.
+const SArray _mathRun = SArray(
+  SString(minLength: 1, maxLength: 10, pattern: r'\?|n:(?:0|[1-9][0-9]{0,3}|10000)|op:[+=x:<>()-]'),
+  minItems: 3,
+  maxItems: 9,
+);
 
 /// A rectangle in a picture, as shares of the picture's width and height (a hotspot, a place, a thing in a room).
 const SObject _at = SObject(<String, SField>{
@@ -936,6 +945,16 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
   'trace' when version != null && version.startsWith('2.') => letterWriteSchema,
   'tap_answer' => SObject(
     _base(<String, SField>{
+      // The question; its `math` is the number sentence it says, shown in numbers in the bubble (1.4).
+      'prompt': const SField(
+        SObject(<String, SField>{
+          'vo': SField(_vo),
+          'caption': SField(_caption),
+          'replayButton': SField(SBool()),
+          'math': SField(_mathRun, required: false),
+          ..._lineExtras,
+        }),
+      ),
       'scene': const SField(
         SObject(<String, SField>{
           'background': SField(_asset, required: false),

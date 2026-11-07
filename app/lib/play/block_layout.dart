@@ -8,6 +8,7 @@ import '../design/token_types.dart' show Band;
 import '../design/tokens.g.dart';
 import 'activity_frame.dart' show ActivityFrame;
 import 'hints/tap_geometry.dart';
+import 'math_run.dart';
 import 'stage_pictures.dart';
 
 // The two layouts of an item that has blocks (docs/design/c1-blocks.md section 5), as board numbers: the owner chose them on 2026-11-07 from
@@ -62,20 +63,30 @@ abstract final class BlockLayout {
   // (phone: stage 330 by 165 at y 88, tiles at 265; SE: 270 by 155 at y 80, tiles at 247). A tablet keeps its card.
   static ActivitySpec forStage(ActivitySpec base) {
     final double? top = base.blocksStageTop;
-    if (top == null) return base;
+    if (top == null) {
+      return base.withStageAndTiles(
+        stage: base.stage,
+        tilesLeft: base.tilesLeft,
+        tilesTop: base.tilesTop,
+        tilesWidth: base.tilesWidth,
+        tailAtMouth: true,
+      );
+    }
     final double tiles = bottomLine(base) - 96;
     return base.withStageAndTiles(
       stage: Rect.fromLTWH(base.stage.left, top, base.stage.width, tiles - stageGap - top),
       tilesLeft: base.tilesLeft,
       tilesTop: tiles,
       tilesWidth: base.tilesWidth,
+      tailAtMouth: true,
     );
   }
 
   // Layout T. The tiles are as tall as their blocks need (a cube of the item's size, ten of them, and the room round them), all alike;
-  // on a phone they stand on the bottom line, on a tablet they are centred in the room of the card. The bubble stands at the old stage's
-  // top line, and the tiles begin where it ends, with the frame's clearance; what a hint draws (a card of blocks) keeps the room left of
-  // the bubble, over the tiles' top, and is not drawn on a card.
+  // on a phone they stand on the bottom line, on a tablet they are centred in the room of the card, or lower when the hint's card would
+  // not have [tabletCardRoom] above them. The bubble stands at the old stage's top line, and the tiles begin where it ends, with the
+  // frame's clearance. What a hint draws (a card of blocks) keeps the room left of the bubble (a phone: from the top bar down), or, on a
+  // tablet, the room between the tallest line the bubble says and the tiles; it is not drawn on a card of its own.
   static ActivitySpec _tiles(TapAnswerActivity a, ActivitySpec base) {
     final double bubbleTop = base.blocksBubbleTop ?? base.bubbleTop;
     final bool card = base.stageIsCard;
@@ -88,9 +99,16 @@ abstract final class BlockLayout {
       tilesWidth: base.tilesWidth,
       bubbleTop: bubbleTop,
       bubbleWidth: bubbleWidth,
+      tailAtMouth: true,
     );
+    // On a tablet the box for a hint's card is all that is left above the tiles, from under the tallest line the bubble says (a hint's line
+    // is longer than the question, and the card must not lie under it); a phone's starts at the top bar's height, left of the bubble.
+    final double stageTop = card
+        ? base.bubbleTop + _tallestLine(a, raised) + 12
+        : base.blocksStageTop ?? bubbleTop;
+    // The highest the tiles may stand: under the question (a phone), or with the card's room between them and its box (a tablet).
     final double top = card
-        ? base.stage.top
+        ? stageTop + tabletCardRoom + ActivityFrame.tileClear
         : bubbleTop + ActivityFrame.fitBubble(a.promptLine.caption, raised).height + ActivityFrame.tileClear;
     final double edge = BaseTenLayout.tileEdge;
     final List<BaseTen> pictures = <BaseTen>[
@@ -103,12 +121,10 @@ abstract final class BlockLayout {
     ], maxUnit: BaseTenLayout.unitCap(tablet: card))!;
     final double tall = pictures.map((BaseTen p) => BaseTenLayout.roomOf(p).height).reduce(math.max);
     final double height = math.min(bottom - top, tall * unit + 2 * edge);
-    final double tilesTop = card ? top + (bottom - top - height) / 2 : bottom - height;
-    // On a tablet the tiles stand in the middle of the card's room and the box for a hint's card is all that is left above them, from under
-    // the bubble.
-    final double stageTop = card
-        ? base.bubbleTop + ActivityFrame.fitBubble(a.promptLine.caption, raised).height + 12
-        : bubbleTop;
+    // A tablet's tiles stand in the middle of the card's room, or lower when the hint's card needs the room above them.
+    final double tilesTop = card
+        ? math.max(base.stage.top + (bottom - base.stage.top - height) / 2, top)
+        : bottom - height;
     // What a hint draws keeps the room left of the bubble (a phone) or over the tiles (a tablet).
     final double stageWidth = card
         ? base.stage.width
@@ -131,6 +147,27 @@ abstract final class BlockLayout {
       tileHeight: height,
       stageDrawn: false,
     );
+  }
+
+  /// The room a tablet's hint card has above the tiles at least (its box, with the card's own margin of 16): ten cubes of 19 points, the
+  /// tablets' target (docs/design/c1-blocks.md section 2), and the card's padding.
+  static const double tabletCardRoom = 264;
+
+  /// How tall the bubble is at its tallest line of [a], of the lines it says while the item is worked on: the question and the number
+  /// sentence under it, a hint, a "not yet" and the welcome of "not sure". It sets where the box of a hint's card may begin.
+  static double _tallestLine(TapAnswerActivity a, ActivitySpec s) {
+    double height(Spoken line, {double reserve = 0}) => ActivityFrame.fitBubble(
+      line.caption,
+      s,
+      reserve: reserve,
+      maxHeight: s.bubbleMaxHeight + reserve,
+    ).height;
+    return <double>[
+      height(a.promptLine, reserve: a.promptMath == null ? 0 : MathRun.reserveFor(s.bubbleFont)),
+      for (final Hint h in a.hints) height(h.say),
+      for (final IncorrectRule r in a.feedback.incorrect) height(r.say),
+      height(a.feedback.unsure),
+    ].reduce(math.max);
   }
 
   /// The width a phone's bubble needs for [text] to fit two lines at the band's size (it stays the board's own when it already does),

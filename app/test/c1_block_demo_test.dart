@@ -160,7 +160,14 @@ void main() {
         await _openLesson(t, 'blocks-tens-and-ones');
         expect(find.byKey(const Key('block-demo')), findsOneWidget, reason: 'the first item has rods');
         expect(find.byKey(const Key('stage-blocks')), findsNothing, reason: 'the picture of the item waits');
-        await waitSteps(t, 4000);
+        // The rig turns "reduce motion" on: the demonstration keeps its own reduced length (about seven seconds), it is not cut to a twentieth.
+        await waitSteps(t, 3000);
+        expect(
+          find.byKey(const Key('block-demo')),
+          findsOneWidget,
+          reason: 'QA-C1c-2: still on after three seconds',
+        );
+        await waitSteps(t, 5000);
         expect(find.byKey(const Key('block-demo')), findsNothing, reason: 'it ends by itself');
         expect(find.byKey(const Key('stage-blocks')), findsOneWidget, reason: 'and the item begins');
         expect(await rig.db.setting('blocks.demo.p-1'), '1');
@@ -197,10 +204,73 @@ void main() {
       await t.tap(find.byKey(const Key('lesson-show-me')));
       await t.pump(const Duration(milliseconds: 200));
       expect(find.byKey(const Key('block-demo')), findsOneWidget);
-      await waitSteps(t, 3000);
+      await waitSteps(t, 8000);
       expect(find.byKey(const Key('block-demo')), findsNothing);
       await closeOne(t);
     });
+
+    testWidgets(
+      'QA-C1c-1: a touch anywhere ends it: the stage, the guide, the bubble, the replay button, an empty corner',
+      (WidgetTester t) async {
+        final AppRig rig = await startOn(t, content, const Size(852, 393));
+        final Map<String, Offset Function()> places = <String, Offset Function()>{
+          'the stage picture': () => t.getCenter(find.byKey(const Key('block-demo'))),
+          'the guide': () => t.getCenter(find.byKey(const Key('activity-nitzi'))),
+          'the bubble': () => t.getCenter(find.byKey(const Key('bubble-body'))),
+          'the replay button': () => t.getCenter(find.byKey(const Key('lesson-replay'))),
+          'an empty corner': () => const Offset(260, 50),
+        };
+        for (final MapEntry<String, Offset Function()> place in places.entries) {
+          await rig.db.putSetting('blocks.demo.p-1', '0');
+          await _openLesson(t, 'blocks-tens-and-ones');
+          expect(find.byKey(const Key('block-demo')), findsOneWidget, reason: place.key);
+          await waitSteps(t, 500);
+          await t.tapAt(place.value());
+          await t.pump(const Duration(milliseconds: 100));
+          expect(
+            find.byKey(const Key('block-demo')),
+            findsNothing,
+            reason: 'a touch on ${place.key} ends it',
+          );
+          expect(
+            find.byKey(const Key('stage-blocks')),
+            findsOneWidget,
+            reason: 'and the item begins (${place.key})',
+          );
+          await waitSteps(t, 2000);
+          t.state<NavigatorState>(find.byType(Navigator).first).pop();
+          await t.pump(const Duration(milliseconds: 400));
+        }
+      },
+    );
+
+    testWidgets(
+      'QA-C1c-4: the line of the demonstration is in the bubble at the snap, and the question is back when it ends',
+      (WidgetTester t) async {
+        await startOn(t, content, const Size(852, 393));
+        await _openLesson(t, 'blocks-tens-and-ones');
+        final TapAnswerActivity first = content.activities['c.numc03.18']! as TapAnswerActivity;
+        String said() => t
+            .widgetList<Text>(
+              find.descendant(of: find.byKey(const Key('bubble-body')), matching: find.byType(Text)),
+            )
+            .first
+            .data!;
+        final String caption = content.lessons['blocks-tens-and-ones']!.demo!.caption;
+        expect(caption, 'עֶשֶׂר קֻבִּיּוֹת הֵן מוֹט אֶחָד.');
+        expect(said(), isNot(caption), reason: 'before the snap the bubble has the question');
+        // Reduced motion: the rod is whole at the snap, 6.4 s in.
+        await waitSteps(t, 6600);
+        expect(said(), caption, reason: 'at the snap');
+        await waitSteps(t, 1500);
+        expect(find.byKey(const Key('block-demo')), findsNothing);
+        expect(
+          said(),
+          first.promptLine.caption,
+          reason: 'the question is back when the demonstration has ended',
+        );
+      },
+    );
 
     testWidgets('an item with no rod has no demonstration, and the eye does not make one', (
       WidgetTester t,

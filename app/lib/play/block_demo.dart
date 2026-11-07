@@ -202,7 +202,13 @@ class _BlockDemoState extends State<BlockDemo> with SingleTickerProviderStateMix
   void initState() {
     super.initState();
     _script = BlockDemoScript(widget.kind, reduced: widget.reduce);
-    _clock = AnimationController(vsync: this, duration: _script.length)..addListener(_tick);
+    // With the system's "reduce motion" a controller runs 20 times faster unless it is told to keep its time: the demonstration's own reduced form
+    // (the cubes light in place, the picture fades to the rod) has its own length and keeps it (QA-C1c-2).
+    _clock = AnimationController(
+      vsync: this,
+      duration: _script.length,
+      animationBehavior: AnimationBehavior.preserve,
+    )..addListener(_tick);
     _clock.forward().whenComplete(_finish);
   }
 

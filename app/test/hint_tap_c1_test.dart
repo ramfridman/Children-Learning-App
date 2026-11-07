@@ -1,10 +1,13 @@
 // QA-C1-4: every Band C `tap_answer` item of batch C1 has a hint at levels 1 to 3 (M10 section 7.2), built by the rules of B-40
 // (docs/design/b40-visual-hints.md, and Appendix B of docs/curriculum/b40-visual-hint-ladder.md: nothing marks the answer before level 3).
 // The source-built pack is read, as `mastery_reachable_test.dart` does, so the items that are not in a signed pack yet are checked too.
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/play/activity_frame.dart';
 import 'package:nitznutz/play/block_layout.dart';
 import 'package:nitznutz/play/hints/hint_marks.dart';
 import 'package:nitznutz/play/hints/tap_geometry.dart';
@@ -193,6 +196,114 @@ void main() {
       expect(last.cells, hasLength(10));
       expect(last.cells.map((Rect c) => c.width).toSet(), hasLength(1), reason: 'ten cubes of one size');
       expect(last.cells.first.top, lessThan(last.cells.last.top), reason: 'counted from the top down');
+    }
+  });
+
+  List<TapAnswerActivity> whereIs() => <TapAnswerActivity>[
+    for (final TapAnswerActivity a in items)
+      if (BlockLayout.onTiles(a)) a,
+  ];
+
+  test('QA-C1c-6: level 2 of "where is 34?" splits the number, and draws no picture that a tile has (nothing marks the answer before level 3)', () {
+    expect(
+      whereIs().map((TapAnswerActivity a) => a.id),
+      containsAll(<String>['c.numc03.25', 'c.numc02.18', 'c.numc02.19', 'c.numc02.20']),
+    );
+    for (final ActivitySpec board in boards) {
+      for (final TapAnswerActivity a in whereIs()) {
+        final HintPlan plan = planOf(a, 2, board)!;
+        final Set<(int, int)> tiles = <(int, int)>{
+          for (final ChoiceOption o in a.options)
+            (BaseTen.fromScene(o.picture!).tens, BaseTen.fromScene(o.picture!).ones),
+        };
+        final BaseTen right = BaseTen.fromScene(
+          a.options.firstWhere((ChoiceOption o) => o.id == a.correctId).picture!,
+        );
+        final List<HintMark> all = marksOf(plan).toList();
+        final List<BlocksMark> blocks = all.whereType<BlocksMark>().toList();
+        for (final BlocksMark m in blocks) {
+          expect(
+            tiles,
+            isNot(contains((m.full.tens, m.full.ones))),
+            reason: '${a.id} on ${board.stage}: a card that is a tile',
+          );
+        }
+        // One rod and one cube, as labels; and the digits of the number beside them, the tens first.
+        expect(blocks.map((BlocksMark m) => (m.full.tens, m.full.ones)).toSet(), <(int, int)>{
+          (1, 0),
+          (0, 1),
+        }, reason: a.id);
+        final List<BadgeMark> digits = all.whereType<BadgeMark>().toList();
+        expect(
+          digits.map((BadgeMark d) => d.n).toList(),
+          containsAllInOrder(<int>[right.tens, right.ones]),
+          reason: a.id,
+        );
+        expect(digits.every((BadgeMark d) => d.big), isTrue, reason: a.id);
+        final BadgeMark tens = digits.firstWhere((BadgeMark d) => d.n == right.tens);
+        final BadgeMark ones = digits.lastWhere((BadgeMark d) => d.n == right.ones);
+        expect(tens.at.dx, lessThan(ones.at.dx), reason: '${a.id}: left to right as the digits are written');
+        expect(plan.frames.length, 2, reason: 'the tens, then the ones');
+        expect(plan.endsDemo, isFalse);
+      }
+    }
+  });
+
+  test('the hint card of "where is 34?" and its demonstration: cubes of 19 points or more on a tablet, on a phone the card is a reference picture (measured)', () {
+    final Map<String, double> unit = <String, double>{};
+    for (final ActivitySpec board in boards) {
+      double least = 99;
+      for (final TapAnswerActivity a in whereIs()) {
+        final HintPlan plan = planOf(a, 3, board)!;
+        final List<BlocksMark> counted = <BlocksMark>[
+          for (final HintFrame f in plan.frames) ...f.marks.whereType<BlocksMark>(),
+        ];
+        final BlocksMark whole = counted.firstWhere((BlocksMark m) => m.full.tens > 0);
+        final double u = BaseTenLayout.forBox(whole.full, whole.rect.size).unit;
+        least = math.min(least, u);
+      }
+      unit['${board.stage.width}x${board.stage.height}'] = least;
+      if (board.stageIsCard) {
+        expect(least, greaterThanOrEqualTo(19), reason: 'a tablet has the room: $least');
+      } else {
+        expect(least, greaterThan(7), reason: 'a phone: $least');
+      }
+    }
+    // ignore: avoid_print
+    print('HINT CARD CUBES $unit');
+  });
+
+  test('on a tablet the box of the hint card starts under the tallest line the bubble says, and the tiles stand lower when it needs the room', () {
+    for (final ActivitySpec base in <ActivitySpec>[
+      ActivitySpec.tabletLandscape,
+      ActivitySpec.tabletPortrait,
+    ]) {
+      for (final TapAnswerActivity a in whereIs()) {
+        final ActivitySpec laid = BlockLayout.of(a, base);
+        expect(
+          laid.stage.height - 32,
+          greaterThanOrEqualTo(264 - 32),
+          reason: '${a.id}: the card box ${laid.stage}',
+        );
+        expect(
+          laid.tilesTop,
+          greaterThanOrEqualTo(laid.stage.bottom + ActivityFrame.tileClear - 0.01),
+          reason: a.id,
+        );
+        expect(
+          laid.tilesTop + laid.tileHeight,
+          lessThanOrEqualTo(BlockLayout.bottomLine(base) + 0.01),
+          reason: a.id,
+        );
+        // No line of the item is taller than the room above the card's box.
+        for (final Spoken line in <Spoken>[a.promptLine, for (final Hint h in a.hints) h.say]) {
+          expect(
+            base.bubbleTop + ActivityFrame.fitBubble(line.caption, laid).height,
+            lessThanOrEqualTo(laid.stage.top),
+            reason: '${a.id}: "${line.caption}" lies over the card',
+          );
+        }
+      }
     }
   });
 

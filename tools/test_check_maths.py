@@ -526,6 +526,7 @@ class Pictures(BatchC1):
         plus = c1_item('אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים. כַּמָּה זֶה?', [(70, None), (7, 'M-PV-FACE'), (700, 'M-PV-ZERO'), (10, 'M-OP-SWAP')],
                        scene={'picture': {'kind': 'base_ten', 'tens': 4}, 'picture2': {'kind': 'base_ten', 'tens': 3}},
                        skill='MATH-C-03')
+        plus['prompt']['math'] = ['n:40', 'op:+', 'n:30', 'op:=', '?']
         self.assertEqual(self.failing(plus), [])
         off = copy.deepcopy(plus)
         off['scene']['picture2']['tens'] = 2  # 4 rods and 2 rods are not 40 + 30
@@ -536,6 +537,7 @@ class Pictures(BatchC1):
         minus = c1_item('שִׁבְעִים פָּחוֹת אַרְבָּעִים. כַּמָּה נִשְׁאַר?',
                         [(30, None), (3, 'M-PV-FACE'), (300, 'M-PV-ZERO'), (110, 'M-OP-SWAP')],
                         scene={'picture': {'kind': 'base_ten', 'tens': 7, 'crossedRods': 4}}, skill='MATH-C-03')
+        minus['prompt']['math'] = ['n:70', 'op:-', 'n:40', 'op:=', '?']
         self.assertEqual(self.failing(minus), [])
         three = copy.deepcopy(minus)
         three['scene']['picture']['crossedRods'] = 3
@@ -543,6 +545,33 @@ class Pictures(BatchC1):
         asked = copy.deepcopy(minus)
         asked['prompt']['caption'][0]['v'] = 'שִׁבְעִים פָּחוֹת אַרְבָּעִים. כַּמָּה זֶה?'
         self.assertIn(('WRONG', 'picture'), codes(self.c1run(asked)), 'a take-away asks how many are left')
+
+    def test_the_number_run_in_the_bubble(self):
+        """prompt.math (owner, 2026-11-07): a sentence said over blocks also shows in numbers, and the run is that sentence: the same
+        numbers, the same sign, the gap last (so it matches the blocks too, which are checked against the sentence said)."""
+        plus = c1_item('אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים. כַּמָּה זֶה?', [(70, None), (7, 'M-PV-FACE'), (700, 'M-PV-ZERO'), (10, 'M-OP-SWAP')],
+                       scene={'picture': {'kind': 'base_ten', 'tens': 4}, 'picture2': {'kind': 'base_ten', 'tens': 3}},
+                       skill='MATH-C-03')
+        plus['prompt']['math'] = ['n:40', 'op:+', 'n:30', 'op:=', '?']
+        self.assertEqual(self.failing(plus), [])
+        missing = copy.deepcopy(plus)
+        del missing['prompt']['math']
+        self.assertIn(('WRONG', 'math'), codes(self.c1run(missing)), 'a sentence said over blocks shows its numbers too')
+        for wrong in (['n:40', 'op:+', 'n:20', 'op:=', '?'], ['n:40', 'op:-', 'n:30', 'op:=', '?'], ['n:30', 'op:+', 'n:40', 'op:=', '?'],
+                      ['n:40', 'op:+', 'n:30', 'op:=', 'n:70']):
+            bad = copy.deepcopy(plus)
+            bad['prompt']['math'] = wrong
+            self.assertIn(('WRONG', 'math'), codes(self.c1run(bad)), '%s is not the sentence said' % wrong)
+        minus = c1_item('שִׁשִּׁים פָּחוֹת עֶשְׂרִים. כַּמָּה נִשְׁאַר?', [(40, None), (4, 'M-PV-FACE'), (400, 'M-PV-ZERO'), (80, 'M-OP-SWAP')],
+                        scene={'picture': {'kind': 'base_ten', 'tens': 6, 'crossedRods': 2}}, skill='MATH-C-03')
+        minus['prompt']['math'] = ['n:60', 'op:-', 'n:20', 'op:=', '?']
+        self.assertEqual(self.failing(minus), [])
+        minus['prompt']['math'] = ['n:60', 'op:+', 'n:20', 'op:=', '?']
+        self.assertIn(('WRONG', 'math'), codes(self.c1run(minus)), 'the other operation')
+        loose = c1_item('כַּמָּה קֻבִּיּוֹת יֵשׁ כָּאן?', [(34, None), (7, 'M-PV-FACE')], scene={'picture': {'kind': 'base_ten', 'tens': 3, 'ones': 4}},
+                        skill='NUM-C-03')
+        loose['prompt']['math'] = ['n:30', 'op:+', 'n:4', 'op:=', '?']
+        self.assertIn(('WRONG', 'math'), codes(self.c1run(loose)), 'a run for a question that says no sentence')
 
     def test_blocks_on_the_tiles(self):
         """answer.options[].picture: "where is thirty-four?" with blocks on the tiles; the label names the blocks' number;

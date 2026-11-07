@@ -50,26 +50,46 @@ void main() {
 
   for (final (String board, Size size) in boards.take(2)) {
     testWidgets(
-      'on the $board board the raised bubble of a where-is item still points at the mouth of the guide (B-34)',
+      'on the $board board the tail of the bubble of every item of blocks meets the mouth of the guide (B-34, QA-C1c-3)',
       (WidgetTester t) async {
         await startOn(t, content, size);
-        await openOne(t, content, content.activities['c.numc03.25']!);
-        final Rect bubble = t.getRect(find.byKey(const Key('bubble-body')));
-        final Rect guide = t.getRect(find.byKey(const Key('activity-nitzi')));
-        // The tail is a wedge at the bubble's lower end side, 29 points up from its bottom, and sticks out 10 beyond the bubble; the mouth
-        // of Nitzi is at 0.576 of the picture's height (the svg's mouth at 295 of 512).
-        final double tail = bubble.bottom - 29;
-        final double mouth = guide.top + 0.576 * guide.height;
-        expect((tail - mouth).abs(), lessThanOrEqualTo(12), reason: 'the tail at $tail, the mouth at $mouth');
-        expect(guide.left - bubble.right, inInclusiveRange(0, 16), reason: 'the tail reaches the guide');
-        // It does not lie over a tile, and the question keeps the band's size on two lines.
-        expect(problemsOnScreen(t, <FlutterErrorDetails>[]), isEmpty);
+        final List<TapAnswerActivity> withBlocks = <TapAnswerActivity>[
+          for (final Activity a in bandCActivities(content))
+            if (a is TapAnswerActivity && BlockLayout.hasBlocks(a)) a,
+        ];
+        expect(withBlocks.length, greaterThanOrEqualTo(15));
         expect(
-          bubble.bottom,
-          lessThanOrEqualTo(t.getRect(find.byKey(const Key('tile-o1'))).top),
-        ); // the box of a tile is 12 above its drawn top
-        await closeOne(t);
+          withBlocks.map((TapAnswerActivity a) => a.id),
+          containsAll(<String>[
+            'c.mathc03.15',
+            'c.mathc03.16',
+            'c.mathc03.17',
+            'c.mathc03.18',
+            'c.numc03.25',
+          ]),
+        );
+        final List<String> off = <String>[];
+        for (final TapAnswerActivity a in withBlocks) {
+          await openOne(t, content, a);
+          final Rect bubble = t.getRect(find.byKey(const Key('bubble-body')));
+          final Rect guide = t.getRect(find.byKey(const Key('activity-nitzi')));
+          // The tail is the small wedge on the bubble's end side; its centre is where it points. Nitzi's mouth is at 0.576 of the picture's
+          // height (the svg's mouth at 295 of 512), wherever the bubble stands and however tall it is.
+          final double tail = t.getRect(find.byKey(const Key('bubble-pointer'))).center.dy;
+          final double mouth = guide.top + ActivitySpec.mouthShare * guide.height;
+          if ((tail - mouth).abs() > 12) off.add('${a.id}: the tail at $tail, the mouth at $mouth');
+          expect(
+            guide.left - bubble.right,
+            inInclusiveRange(0, 16),
+            reason: '${a.id}: the tail reaches the guide',
+          );
+          // It does not lie over a tile, and the question keeps the band's size.
+          expect(problemsOnScreen(t, <FlutterErrorDetails>[]), isEmpty, reason: a.id);
+          await closeOne(t);
+        }
+        expect(off, isEmpty);
       },
+      timeout: const Timeout(Duration(minutes: 5)),
     );
   }
 

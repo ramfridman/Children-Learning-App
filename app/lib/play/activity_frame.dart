@@ -11,6 +11,8 @@ import '../design/layout.dart';
 import '../design/tokens.g.dart';
 import '../rewards/sticker_design.dart';
 import '../strings/he.dart';
+import 'math_run.dart';
+import 'math_signs.dart';
 
 /// The frame of a playable activity: the same positions as the boards (the [ActivitySpec] numbers),
 /// with the real question in the bubble, the template's stage, its answer tiles, the progress trail,
@@ -37,6 +39,7 @@ class ActivityFrame extends StatelessWidget {
     this.onConfirmYes,
     this.onConfirmAgain,
     this.bubbleTarget,
+    this.bubbleMath,
     this.bubbleAboveTiles = false,
     this.showHelp = true,
     this.boardLayer,
@@ -59,6 +62,10 @@ class ActivityFrame extends StatelessWidget {
   /// A target word on show with the line: it stands in a [TargetChip] on a row of its own under the line, never inside it
   /// (fonts.md section 6), in the teaching font of its [course].
   final ({String text, String course})? bubbleTarget;
+
+  /// The number sentence of the question (the tokens of a row), shown in numbers under the line as one left-to-right run (`MathRun`); null
+  /// when the question has none. Its room is taken off the line's, so the bubble keeps clear of the tiles all the same.
+  final List<String>? bubbleMath;
 
   /// The bubble keeps clear of the tiles under it: its text shrinks to the room and, when it must, it stands higher. Always so when the
   /// frame has answer tiles (a hint's longer line must never lie over one, in any land); this switch is for a bubble over something
@@ -138,6 +145,10 @@ class ActivityFrame extends StatelessWidget {
     // The chip's word is a tenth larger than the Hebrew beside it (fonts.md section 6); its room is taken off the line's.
     final double chipSize = s.bubbleFont * 1.1;
     final ({String text, String course})? target = bubbleTarget;
+    final List<String>? run = bubbleMath;
+    // The number sentence has a row of its own under the line, and its room is added to the board's limit for the bubble: the line keeps the
+    // room it has without one (the band's size on three lines), and the bubble stands higher by the run's row.
+    final double mathRoom = run == null ? 0 : MathRun.reserveFor(s.bubbleFont);
     // The bubble keeps clear of the tiles under it: its text shrinks to the room there is between the progress trail and the tiles
     // (never below the minimum), and a bubble that is still too tall (a long line with a chip) stands higher, not over the tiles.
     final double floorTop = s.trailTop + 36 + 4;
@@ -146,8 +157,8 @@ class ActivityFrame extends StatelessWidget {
     final ({double font, double height}) fit = fitBubble(
       bubbleText,
       s,
-      reserve: target == null ? 0 : 6 + TargetChip.heightFor(chipSize),
-      maxHeight: math.min(s.bubbleMaxHeight, ceiling - floorTop),
+      reserve: (target == null ? 0 : 6 + TargetChip.heightFor(chipSize)) + mathRoom,
+      maxHeight: math.min(s.bubbleMaxHeight + mathRoom, ceiling - floorTop),
     );
     final double font = fit.font;
     final double bubbleTop = clear
@@ -174,8 +185,15 @@ class ActivityFrame extends StatelessWidget {
                 key: const Key('lesson-bubble'),
                 text: bubbleText,
                 fontSize: font,
+                // The board is a fixed canvas, scaled as a whole: the line is as big as the board says, whatever the system's text size.
+                textScaler: TextScaler.noScaling,
                 maxWidth: s.bubbleMaxWidth,
                 chip: target == null ? null : TargetChip(target.text, course: target.course, size: chipSize),
+                math: run == null ? null : MathRun(run, size: s.bubbleFont, division: MathSigns.of(context)),
+                // A bubble that stands off its board's place points at the guide's mouth: the tail meets it from the top.
+                pointerAt: s.tailAtMouth
+                    ? (s.mouthY - bubbleTop).clamp(24.0, math.max(24.0, fit.height - 24))
+                    : null,
               ),
             ),
           Positioned(

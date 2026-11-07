@@ -20,6 +20,10 @@ List<Map<String, Object?>> _maps(Object? o) => <Map<String, Object?>>[
   for (final Object? e in (o as List<Object?>? ?? const <Object?>[])) _map(e),
 ];
 
+/// A list of tokens (strings), or null when there is none.
+List<String>? _tokens(Object? o) =>
+    o == null ? null : <String>[for (final Object? t in o as List<Object?>) t! as String];
+
 /// The Hebrew of a caption list (exactly one element, `t` is always `he`).
 String _caption(Object? o) => _map((o! as List<Object?>).single)['v']! as String;
 
@@ -119,6 +123,7 @@ sealed class Activity {
       contradicts = json['contradicts'] as String?,
       voiceAnswer = json['voiceAnswer'] == true,
       promptLine = Spoken.fromJson(json['prompt']),
+      promptMath = _tokens(_map(json['prompt'])['math']),
       feedback = ActivityFeedback(
         correct: Spoken.fromJson(_map(json['feedback'])['correct']),
         incorrect: <IncorrectRule>[
@@ -208,6 +213,10 @@ sealed class Activity {
   bool get isLanguage => Course.isLanguage(course);
   final List<Skill> skills;
   final Spoken promptLine;
+
+  /// The number sentence the question says, as the tokens of a row (`n:40`, `op:+`, `op:=`, `?`), which the bubble shows in numbers under
+  /// the line (`tap_answer` 1.4, owner 2026-11-07); null when the question has none.
+  final List<String>? promptMath;
   final ActivityFeedback feedback;
   final List<Hint> hints;
   final int maxAttempts;

@@ -28,7 +28,14 @@
         "v": "שְׁלוֹשִׁים וְעוֹד חֲמִשִּׁים. כַּמָּה זֶה?"
       }
     ],
-    "replayButton": true
+    "replayButton": true,
+    "math": [
+      "n:30",
+      "op:+",
+      "n:50",
+      "op:=",
+      "?"
+    ]
   },
   "scene": {
     "background": "asset:meadow",

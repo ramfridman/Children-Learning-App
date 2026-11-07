@@ -1063,7 +1063,8 @@ def math_c1_waiting(u):
     # MATH-C-03 with blocks (c1-deferred.md §1, the fields of step 3): two groups of rods (picture, picture2) and rods crossed out
     # (crossedRods), each with its number sentence; the distractors of the keypad rows (M-PV-FACE, M-PV-ZERO, M-OP-SWAP). The sentence
     # is said in the question, not drawn in a row under the rods: a row takes the stage's height and the cubes fall to 8 pt on a phone
-    # (docs/design/c1-blocks.md section 5); the same sentences are written in symbols in the lesson before (whole-tens: 40 + 30, 70 - 40).
+    # (docs/design/c1-blocks.md section 5); the bubble shows it in numbers under the line (`prompt.math`, the owner, 2026-11-07: 40 + 30 = ?),
+    # and the same sentences are written in symbols in the lesson before (whole-tens: 40 + 30, 70 - 40).
     pictured = []
     for i, (a, op, b) in enumerate([(40, '+', 30), (30, '+', 50), (70, '-', 40), (60, '-', 20)]):
         ans = a + b if op == '+' else a - b
@@ -1074,7 +1075,7 @@ def math_c1_waiting(u):
         pictured.append(choose(
             u, 'MATH-C-03', '%s %s %s. %s' % (F[a], word(op), F[b], 'כַּמָּה זֶה?' if op == '+' else 'כַּמָּה נִשְׁאַר?'), ans,
             {ans // 10: 'M-PV-FACE', ans * 10: 'M-PV-ZERO', swap: 'M-OP-SWAP'}, i, variantGroup='tens-blocks',
-            tag_lines=RODS,
+            tag_lines=RODS, math=tokens(a, op, b, '=', '?'),
             **({'check': 'transfer', 'difficulty': 0.6} if i == 3 else {}), **pics,
             h2='חוֹשְׁבִים בַּעֲשָׂרוֹת: %s %s %s — כְּמוֹ %s %s %s.' % (
                 tens_words(a // 10), word(op), tens_words(b // 10), F[a // 10], word(op), F[b // 10]),

@@ -342,9 +342,10 @@ def template_version(template, scene, answer):
 
 
 def activity(a, template, skills, purpose, check, scene, answer, fb_tags, h, goal, extra=None, prompt=None,
-             answer_prompt=None, correct=None, size_cue=None, alt=None, rep=None):
+             answer_prompt=None, correct=None, size_cue=None, alt=None, rep=None, prompt_math=None):
     """One activity file. The item may set its own `check` (else the kind's) and `rep` (else the kind's `rep`, else the
-    rule of `representation`); `tag_lines` gives a tag a line of its own, `rule` picks the M-SORT-SHIFT line."""
+    rule of `representation`); `tag_lines` gives a tag a line of its own, `rule` picks the M-SORT-SHIFT line. `prompt_math` is the
+    number sentence the bubble shows in numbers under the question (tap_answer 1.4: tokens of a row, `n:40`, `op:+`, `op:=`, `?`)."""
     i = a['id']
     voice = voice_answer(a)
     assert not voice or template in VOICE_TEMPLATES, '%s: a %s is never answered by voice' % (i, template)
@@ -360,6 +361,9 @@ def activity(a, template, skills, purpose, check, scene, answer, fb_tags, h, goa
         'prompt': {**say('vo:%s.prompt' % i, prompt), 'replayButton': True},
         'scene': scene, 'answer': answer, 'voiceAnswer': voice,
     }
+    if prompt_math:
+        assert template == 'tap_answer' and not scene.get('row'), '%s: a number sentence in the bubble is for a tap_answer with no row' % i
+        d['prompt']['math'] = list(prompt_math)
     if answer_prompt:
         d['answerPrompt'] = say('vo:%s.how_many' % i, answer_prompt)
     d['feedback'] = {
@@ -726,7 +730,7 @@ def k_pick(a, ctx):
               actions=('replay_prompt_slow', a.get('h2_action', 'highlight_objects_sequentially'), 'worked_example'),
               shared=('pick', None if a.get('h2') else 'pick')),
         a.get('goal', 'child picks the right picture'),
-        prompt=a['prompt'], correct=a.get('correct_text') or ('כֵּן! %s.' % right))
+        prompt=a['prompt'], correct=a.get('correct_text') or ('כֵּן! %s.' % right), prompt_math=a.get('math'))
 
 
 NUMBER_RULES = ('smaller_from_larger', 'forgot_the_ten', 'added_instead', 'off_by_ten', 'face_value')

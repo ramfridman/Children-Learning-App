@@ -177,7 +177,49 @@ extension _BandC on _Plans {
     final int? v = _answerValue;
     if (v == null || v > 9999) return generic(level);
     if (a.row.isNotEmpty) return _sentenceBlocks(level);
+    if (level == 2 && v < 100 && _optionsAreBlocks) return _tensAndOnes(v);
     return _cardBlocks(level, v);
+  }
+
+  /// "Where is thirty-four?": the number's picture is on the tiles, as blocks (and nothing marks the answer before level 3).
+  bool get _optionsAreBlocks =>
+      a.picture == null && a.options.isNotEmpty && a.options.every((ChoiceOption o) => o.picture != null);
+
+  /// Level 2 of "where is thirty-four?" (QA-C1c-6): the blocks of the number would be the answer's picture, a picture to match against the tiles
+  /// before level 3, so the number is split instead: the digit of the tens beside ONE rod, then the digit of the ones beside ONE cube, as
+  /// labels that say what each digit counts. The tens come first, as in the number. No card equals a tile's picture.
+  HintPlan _tensAndOnes(int v) {
+    final BaseTen n = BaseTen.of(v);
+    final Rect card = _blocksCard;
+    final Rect inner = card.deflate(8 * k);
+    final double u = math.min(22.0, inner.height / 10);
+    final double badge = 64 * k, gap = 8 * k;
+    final Size rod = BaseTenLayout.extentOf(const BaseTen(tens: 1)) * u;
+    final Size cube = BaseTenLayout.extentOf(const BaseTen(ones: 1)) * u;
+    // One digit with its block, the group centred on [middle]; the block stands on the card's floor.
+    List<HintMark> group(double middle, int digit, BaseTen block, Size size) {
+      final double left = middle - (badge + gap + size.width) / 2;
+      return <HintMark>[
+        BadgeMark(Offset(left + badge / 2, inner.center.dy), digit, big: true),
+        BlocksMark(
+          Rect.fromLTWH(left + badge + gap, inner.bottom - size.height, size.width, size.height),
+          block,
+        ),
+      ];
+    }
+
+    final List<HintMark> tens = <HintMark>[
+      CardMark(card, const SizedBox.shrink()),
+      ...group(inner.left + inner.width * 0.27, n.tens, const BaseTen(tens: 1), rod),
+    ];
+    final List<HintMark> both = <HintMark>[
+      ...tens,
+      ...group(inner.left + inner.width * 0.73, n.ones, const BaseTen(ones: 1), cube),
+    ];
+    return HintPlan(<HintFrame>[
+      HintFrame(tens, hold: _ms(1500)),
+      HintFrame(both, hold: _ms(2000)),
+    ], rest: both);
   }
 
   /// A number said in words (or its tens and ones said): level 2 builds its blocks in a card, the tens and then the ones; level 3 counts

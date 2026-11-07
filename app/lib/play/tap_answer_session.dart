@@ -46,23 +46,35 @@ class TapAnswerSession extends TemplateSession {
     this.stress = true,
     this.band,
     BlockDemoKind? demo,
-    this.demoVo,
+    this.demoLine,
   }) : _demo = demo;
 
   final TapAnswerActivity activity;
 
   /// The demonstration of blocks that is on the stage now (the opening of a lesson, or the eye pressed on an item with rods), or null; and
-  /// the line of the lesson that is said at its snap (the pack's own id, `vo:demo.ten_is_rod`, when a lesson has none).
+  /// the line of the lesson that is said and shown in the bubble at its snap (null for a lesson with none: the pack's own id,
+  /// `vo:demo.ten_is_rod`, is said and the bubble keeps the question).
   BlockDemoKind? _demo;
-  final String? demoVo;
+  final Spoken? demoLine;
   BlockDemoKind? get demo => _demo;
 
-  /// The demonstration ends: at its own end, at any touch of the item, and when a hint begins.
+  /// The caption of the demonstration's line that the bubble shows now, until the demonstration ends.
+  String? _demoCaption;
+
+  /// The demonstration ends: at its own end, at any touch of the screen, and when a hint begins. The bubble has its question back.
   void endDemo() {
     if (_demo == null) return;
     _demo = null;
+    final String? shown = _demoCaption;
+    _demoCaption = null;
+    if (shown != null) controller.restoreQuestion(shown);
     notify();
   }
+
+  /// Any touch of the screen ends the demonstration (the stage, the guide, the bubble, the pebbles, an empty corner): it is a thing to watch,
+  /// never something a child has to sit through (QA-C1c-1).
+  @override
+  void onScreenTouch() => endDemo();
 
   /// The eye on an item with rods shows the demonstration (the child may see again why a rod is ten) in place of the picture of the hint that
   /// the eye brings with it (the lamp still has all of its own): [_eyeHint] is the hint of the eye, which draws nothing on the stage.
@@ -76,9 +88,15 @@ class TapAnswerSession extends TemplateSession {
 
   int? _eyeHint;
 
-  /// The voice says that ten cubes are one rod, once the ten have snapped together (nothing is said by a short demonstration).
+  /// The voice says that ten cubes are one rod, once the ten have snapped together (nothing is said by a short demonstration), and the bubble
+  /// shows the words of the line, the lesson's own (QA-C1c-4).
   void sayDemoLine() {
-    if (_demo == BlockDemoKind.full) playClips?.call(<String>[demoVo ?? blockDemoLine], replace: false);
+    if (_demo != BlockDemoKind.full) return;
+    playClips?.call(<String>[demoLine?.vo ?? blockDemoLine], replace: false);
+    final String? caption = demoLine?.caption;
+    if (caption == null) return;
+    _demoCaption = caption;
+    controller.showCaption(caption);
   }
 
   /// The presentation band of a language course: its text tiles are read at the reading size of the band (docs/design/languages-l5-ls01.md

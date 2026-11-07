@@ -526,7 +526,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           stress: caption.stress,
           band: a.isLanguage ? _presentationBand(a) : null,
           demo: _openingDemo(c, a),
-          demoVo: c.lesson.demo?.vo,
+          demoLine: c.lesson.demo,
         ),
         StoryActivity() => StorySession(c, a, stress: caption.stress),
         ListenDoActivity() => ListenDoSession(c, a, band: _presentationBand(a), stress: caption.stress),
@@ -744,62 +744,71 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             : controller.feedback == FeedbackKind.notYet
             ? CharacterState.encourage
             : CharacterState.idle;
-        return ActivityFrame(
-          spec: spec,
-          guide: SpeakingCharacter(
-            character: guide.character,
-            director: _director,
-            resting: resting,
-            voiceOf: guide.character.id,
-          ),
-          bubbleText: controller.bubble,
-          bubbleAboveTiles: controller.current.isLanguage,
-          bubbleTarget: controller.bubbleShow == null
-              ? null
-              : (
-                  text: withStress(controller.bubbleShow!, show: _captionsFor(controller.current).stress),
-                  course: controller.current.course,
-                ),
-          trailTotal: controller.trailLength,
-          trailDone: controller.finished ? controller.trailLength : controller.index,
-          onHome: _home,
-          showHelp: !controller.noHelp,
-          // A say-it step has nothing to get wrong and so no hints: its lamp says the word again.
-          onHint: controller.finished || controller.noHelp
-              ? null
-              : (session is SayItSession ? session.onReplay : controller.showHint),
-          hintGlow: helpOffered,
-          onShowMe: controller.finished || controller.noHelp
-              ? null
-              : (controller.current is SayItActivity
-                    ? controller.replayPrompt
-                    : () {
-                        session.onShowMe();
-                        unawaited(controller.unsure());
-                      }),
-          onReplay: controller.finished ? null : controller.replayPrompt,
-          mic: controller.finished ? null : _mic(spec, session, controller.current),
-          onConfirmYes: heard == MicState.confirming ? _voice?.answer.confirmYes : null,
-          onConfirmAgain: heard == MicState.confirming ? _voice?.answer.confirmNo : null,
-          stage: (Size room) => session.buildStage(ctx, room, spec),
-          hands: controller.finished
-              ? null
-              : (Size room) => session.buildHands(ctx, room, spec) ?? const SizedBox(),
-          tiles: controller.finished ? null : session.buildTiles(ctx, spec),
-          boardLayer: controller.finished ? null : session.buildBoardLayer(ctx, spec),
-          overlay: controller.finished
-              ? LessonCelebration(
-                  text: controller.endedForRest ? He.restGoodbye.text : controller.lesson.celebration.caption,
-                  sticker: controller.endedForRest ? null : _sticker,
-                  onDone: _home,
-                  cameo: SpeakingCharacter(
-                    character: guide.character,
-                    director: _director,
-                    resting: controller.endedForRest ? CharacterState.idle : CharacterState.celebrate,
-                    voiceOf: guide.character.id,
+        // A touch anywhere on the screen is seen by the session first (it ends a demonstration to watch); it is no answer and goes on to what
+        // was touched.
+        return Listener(
+          behavior: HitTestBehavior.translucent,
+          onPointerDown: (_) => session.onScreenTouch(),
+          child: ActivityFrame(
+            spec: spec,
+            guide: SpeakingCharacter(
+              character: guide.character,
+              director: _director,
+              resting: resting,
+              voiceOf: guide.character.id,
+            ),
+            bubbleText: controller.bubble,
+            bubbleMath: controller.bubbleMath,
+            bubbleAboveTiles: controller.current.isLanguage,
+            bubbleTarget: controller.bubbleShow == null
+                ? null
+                : (
+                    text: withStress(controller.bubbleShow!, show: _captionsFor(controller.current).stress),
+                    course: controller.current.course,
                   ),
-                )
-              : null,
+            trailTotal: controller.trailLength,
+            trailDone: controller.finished ? controller.trailLength : controller.index,
+            onHome: _home,
+            showHelp: !controller.noHelp,
+            // A say-it step has nothing to get wrong and so no hints: its lamp says the word again.
+            onHint: controller.finished || controller.noHelp
+                ? null
+                : (session is SayItSession ? session.onReplay : controller.showHint),
+            hintGlow: helpOffered,
+            onShowMe: controller.finished || controller.noHelp
+                ? null
+                : (controller.current is SayItActivity
+                      ? controller.replayPrompt
+                      : () {
+                          session.onShowMe();
+                          unawaited(controller.unsure());
+                        }),
+            onReplay: controller.finished ? null : controller.replayPrompt,
+            mic: controller.finished ? null : _mic(spec, session, controller.current),
+            onConfirmYes: heard == MicState.confirming ? _voice?.answer.confirmYes : null,
+            onConfirmAgain: heard == MicState.confirming ? _voice?.answer.confirmNo : null,
+            stage: (Size room) => session.buildStage(ctx, room, spec),
+            hands: controller.finished
+                ? null
+                : (Size room) => session.buildHands(ctx, room, spec) ?? const SizedBox(),
+            tiles: controller.finished ? null : session.buildTiles(ctx, spec),
+            boardLayer: controller.finished ? null : session.buildBoardLayer(ctx, spec),
+            overlay: controller.finished
+                ? LessonCelebration(
+                    text: controller.endedForRest
+                        ? He.restGoodbye.text
+                        : controller.lesson.celebration.caption,
+                    sticker: controller.endedForRest ? null : _sticker,
+                    onDone: _home,
+                    cameo: SpeakingCharacter(
+                      character: guide.character,
+                      director: _director,
+                      resting: controller.endedForRest ? CharacterState.idle : CharacterState.celebrate,
+                      voiceOf: guide.character.id,
+                    ),
+                  )
+                : null,
+          ),
         );
       },
     );

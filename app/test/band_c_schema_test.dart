@@ -152,6 +152,80 @@ void main() {
       }
     });
 
+    test('prompt.math, the number sentence of the bubble: the shape, the version, and what it may sit beside', () {
+      const List<Object?> run = <Object?>['n:40', 'op:+', 'n:30', 'op:=', '?'];
+      void say(Map<String, Object?> d) => _m(d['prompt'])['math'] = run;
+      expect(_schema(_tap(say)), isEmpty);
+      expect(_problems(_tap(say)), isEmpty);
+      // Too short, too long, a picture, a number out of range, a sign that is no sign: refused by the schema.
+      for (final List<Object?> bad in <List<Object?>>[
+        <Object?>['n:4', 'op:+'],
+        <Object?>[for (int i = 0; i < 10; i++) 'n:1'],
+        <Object?>['n:4', 'op:+', 'asset:cube'],
+        <Object?>['n:10001', 'op:+', 'n:1'],
+        <Object?>['n:4', 'op:%', 'n:1'],
+        <Object?>['n:04', 'op:+', 'n:1'],
+      ]) {
+        expect(
+          _schema(_tap((Map<String, Object?> d) => _m(d['prompt'])['math'] = bad)),
+          contains(contains('prompt.math')),
+          reason: '$bad',
+        );
+      }
+      // Only a tap_answer has one.
+      final SamplePack other = SamplePack();
+      final Map<String, Object?> story = _m(other.docs[tapFile]);
+      expect(
+        validate(activitySchemaFor('count_tap')!, <String, Object?>{
+          ...story,
+          'template': 'count_tap',
+          'prompt': <String, Object?>{..._m(story['prompt']), 'math': run},
+        }),
+        isNotEmpty,
+      );
+      // An old template version, a row beside it, two gaps, four digits outside Band C, a run too wide for the bubble.
+      expect(_problems(_tap(say, version: '1.1')), contains(contains('needs tap_answer 1.4')));
+      expect(
+        _problems(
+          _tap((Map<String, Object?> d) {
+            say(d);
+            _m(d['scene'])['row'] = <Object?>['n:1', 'op:+', 'n:2', 'op:=', '?'];
+          }),
+        ),
+        contains(contains('already draws the sentence')),
+      );
+      expect(
+        _problems(_tap((Map<String, Object?> d) => _m(d['prompt'])['math'] = <Object?>['?', 'op:+', '?'])),
+        contains(contains('more than one number')),
+      );
+      expect(
+        _problems(
+          _tap((Map<String, Object?> d) {
+            say(d);
+            d['band'] = 'A';
+            _m(d['prompt'])['math'] = <Object?>['n:1000', 'op:+', 'n:1', 'op:=', '?'];
+          }),
+        ),
+        contains(contains('four digits')),
+      );
+      expect(
+        _problems(
+          _tap(
+            (Map<String, Object?> d) => _m(d['prompt'])['math'] = <Object?>[
+              'n:9999',
+              'op:+',
+              'n:9999',
+              'op:=',
+              'n:9999',
+              'op:+',
+              'n:1',
+            ],
+          ),
+        ),
+        contains(contains('too wide')),
+      );
+    });
+
     test('spot_error 1.1 takes the new signs and big numbers, and an item that uses them says so', () {
       SamplePack spot(String version, List<Object?> cells) {
         final SamplePack p = SamplePack();

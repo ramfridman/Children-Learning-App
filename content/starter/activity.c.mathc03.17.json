@@ -28,7 +28,14 @@
         "v": "שִׁבְעִים פָּחוֹת אַרְבָּעִים. כַּמָּה נִשְׁאַר?"
       }
     ],
-    "replayButton": true
+    "replayButton": true,
+    "math": [
+      "n:70",
+      "op:-",
+      "n:40",
+      "op:=",
+      "?"
+    ]
   },
   "scene": {
     "background": "asset:meadow",

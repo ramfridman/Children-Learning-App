@@ -100,6 +100,10 @@ abstract class TemplateSession extends ChangeNotifier {
   /// blocks' demonstration that a rod is ten cubes). Nothing by default.
   void onShowMe() {}
 
+  /// The child touched the screen anywhere (a pointer went down on it): a template with something to watch that a touch ends (the blocks'
+  /// opening demonstration) ends it here. Nothing by default; it is not an answer and takes no part in any.
+  void onScreenTouch() {}
+
   // ---- voice ----
 
   /// The card the voice has understood or half heard: lit like a hint, until the voice lets go of it.

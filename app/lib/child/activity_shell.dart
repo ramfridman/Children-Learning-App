@@ -45,6 +45,7 @@ class ActivitySpec {
     this.blocksBubbleTop,
     this.blocksBubbleEdge,
     this.blocksBubbleRight,
+    this.tailAtMouth = false,
   });
 
   /// The height of the board, in board points.
@@ -99,6 +100,16 @@ class ActivitySpec {
   final double? blocksBubbleEdge;
   final double? blocksBubbleRight;
 
+  /// True when the bubble's tail points at the guide's mouth wherever the bubble stands and however tall it is, not at the place the board's
+  /// own bubble has it (a bubble that stands higher or has a number sentence under its line has its tail somewhere else: QA-C1c-3).
+  final bool tailAtMouth;
+
+  /// How far down the guide's picture its mouth is, as a share of its height (Nitzi's: the svg's mouth at 295 of 512).
+  static const double mouthShare = 0.576;
+
+  /// Where the guide's mouth is on the board, from the top.
+  double get mouthY => nitziTop + mouthShare * nitziSize;
+
   /// The same board with another stage and another box for the answer tiles (the numbers of the rest stay).
   ActivitySpec withStageAndTiles({
     required Rect stage,
@@ -109,6 +120,7 @@ class ActivitySpec {
     double? tileHeight,
     bool? stageDrawn,
     double? bubbleWidth,
+    bool? tailAtMouth,
   }) => ActivitySpec(
     boardHeight: boardHeight,
     bubbleMaxWidth: bubbleWidth ?? bubbleMaxWidth,
@@ -143,6 +155,7 @@ class ActivitySpec {
     blocksBubbleTop: blocksBubbleTop,
     blocksBubbleEdge: blocksBubbleEdge,
     blocksBubbleRight: blocksBubbleRight,
+    tailAtMouth: tailAtMouth ?? this.tailAtMouth,
   );
 
   // Board 13.

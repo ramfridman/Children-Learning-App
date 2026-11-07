@@ -369,6 +369,7 @@ List<Problem> validatePack({
         _tapVersion(file, a, scene, answer, say);
         _tapBigNumbers(file, a, scene, answer, say);
         _tapRowWidth(file, scene, say);
+        _promptMath(file, a, scene, say);
         for (final (int i, Object? r) in ((scene['row'] as List<Object?>?) ?? const <Object?>[]).indexed) {
           if (r is String && r.startsWith('asset:')) checkAsset(file, 'scene.row[$i]', r);
         }
@@ -1320,6 +1321,36 @@ void _tapVersion(
       : null;
   if (feature != null && compareTemplateVersion('${a['templateVersion']}', '1.4') < 0) {
     say(file, 'templateVersion', 'is ${a['templateVersion']}, but $feature needs tap_answer 1.4');
+  }
+}
+
+/// The number sentence of `prompt.math` (`tap_answer` 1.4): shown in the bubble under the line, so the stage has no row of its own for it
+/// (the row already draws a sentence); it asks for one number at most; a number of four digits belongs to Band C; and it is no wider than the
+/// bubble of the smallest phone holds.
+void _promptMath(
+  String file,
+  Map<String, Object?> a,
+  Map<String, Object?> scene,
+  void Function(String, String, String) say,
+) {
+  final List<String>? run = ((a['prompt']! as Map<String, Object?>)['math'] as List<Object?>?)
+      ?.whereType<String>()
+      .toList();
+  if (run == null) return;
+  if (((scene['row'] as List<Object?>?) ?? const <Object?>[]).isNotEmpty) {
+    say(file, 'prompt.math', 'the scene already draws the sentence in a row');
+  }
+  if (run.where((String c) => c == '?').length > 1) say(file, 'prompt.math', 'asks for more than one number');
+  if (run.any((String c) => c.startsWith('n:') && c.length > 5)) {
+    if (a['band'] != 'C') say(file, 'prompt.math', 'a number of four digits belongs to Band C');
+  }
+  if (rowEm(run) > maxPromptMathEm) say(file, 'prompt.math', 'is too wide for the bubble of a small phone');
+  if (compareTemplateVersion('${a['templateVersion']}', '1.4') < 0) {
+    say(
+      file,
+      'templateVersion',
+      'is ${a['templateVersion']}, but a number sentence in the prompt needs tap_answer 1.4',
+    );
   }
 }
 

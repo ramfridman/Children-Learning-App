@@ -216,6 +216,10 @@ class LessonController extends ChangeNotifier {
   /// The line in the guide's bubble, the voice line (`vo:...`) that goes with it, and a counter that changes
   /// whenever the guide has a new line to say (the same line said again counts).
   String bubble = '';
+
+  /// The number sentence the bubble shows in numbers under its line (`prompt.math`, the owner, 2026-11-07), as the tokens of a row: kept
+  /// under every line said while the item is being worked on (its question, a hint, a "not yet"), and gone with the praise and at the end.
+  List<String>? bubbleMath;
   String? voice;
   int voiceNonce = 0;
 
@@ -245,10 +249,26 @@ class LessonController extends ChangeNotifier {
     _tutorToken++;
     tutorThinking = false;
     bubble = line.caption;
+    bubbleMath = solved || finished ? null : current.promptMath;
     voice = line.vo;
     voiceTarget = line.target;
     bubbleShow = line.show;
     voiceNonce++;
+  }
+
+  /// Shows [caption] in the bubble with no voice of its own (the session voices it: the line of the blocks' demonstration), and puts the
+  /// item's question back with [restoreQuestion] when it ends, unless the bubble has moved on to a line of its own by then.
+  void showCaption(String caption) {
+    if (finished || solved) return;
+    bubble = caption;
+    bubbleShow = null;
+    notifyListeners();
+  }
+
+  void restoreQuestion(String shown) {
+    if (finished || solved || bubble != shown) return;
+    bubble = current.promptLine.caption;
+    notifyListeners();
   }
 
   // ---- the AI tutor ----
