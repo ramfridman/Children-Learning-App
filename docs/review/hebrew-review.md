@@ -10,11 +10,11 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 |---|---|
 | 1. App screens and buttons | 536 |
 | 2. Core voice lines (spoken by every friend) | 27 |
-| 3. Lesson content (skills, activities, misconceptions) | 14436 |
+| 3. Lesson content (skills, activities, misconceptions) | 14439 |
 | 4. Reviewed helper (tutor) lines | 66 |
 | 5. Alert word lists (for an editor and someone who works with children) | 649 |
 | 6. Helper lexicon (the words the AI helper may use) | 122 |
-| **Total** | **15836** |
+| **Total** | **15839** |
 
 ## 1. App screens and buttons
 
@@ -7883,7 +7883,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.c.mathc03.14.json | hints.1.caption.0.v | חוֹשְׁבִים בַּעֲשָׂרוֹת: תֵּשַׁע עֲשָׂרוֹת פָּחוֹת חָמֵשׁ עֲשָׂרוֹת — כְּמוֹ תֵּשַׁע פָּחוֹת חָמֵשׁ. | needs-editor |
 | activity.c.mathc03.14.json | hints.2.caption.0.v | תִּשְׁעִים פָּחוֹת חֲמִשִּׁים שָׁוֶה אַרְבָּעִים. כּוֹתְבִים אַרְבָּעִים. | needs-editor |
 | activity.c.mathc03.14.json | a11y.altText | כַּמָּה זֶה? | needs-editor |
-| activity.c.mathc03.15.json | prompt.caption.0.v | כַּמָּה זֶה? | needs-editor |
+| activity.c.mathc03.15.json | prompt.caption.0.v | אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים. כַּמָּה זֶה? | needs-editor |
 | activity.c.mathc03.15.json | answer.options.0.label | שִׁבְעִים | needs-editor |
 | activity.c.mathc03.15.json | answer.options.1.label | שֶׁבַע | needs-editor |
 | activity.c.mathc03.15.json | answer.options.2.label | שְׁבַע מֵאוֹת | needs-editor |
@@ -7897,8 +7897,8 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.c.mathc03.15.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.c.mathc03.15.json | hints.1.caption.0.v | חוֹשְׁבִים בַּעֲשָׂרוֹת: אַרְבַּע עֲשָׂרוֹת וְעוֹד שָׁלוֹשׁ עֲשָׂרוֹת — כְּמוֹ אַרְבַּע וְעוֹד שָׁלוֹשׁ. | needs-editor |
 | activity.c.mathc03.15.json | hints.2.caption.0.v | סוֹפְרִים אֶת כׇּל הַמּוֹטוֹת בַּעֲשָׂרוֹת: עֶשֶׂר, עֶשְׂרִים, שְׁלוֹשִׁים, אַרְבָּעִים, חֲמִשִּׁים, שִׁשִּׁים, שִׁבְעִים. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
-| activity.c.mathc03.15.json | a11y.altText | כַּמָּה זֶה? | needs-editor |
-| activity.c.mathc03.16.json | prompt.caption.0.v | כַּמָּה זֶה? | needs-editor |
+| activity.c.mathc03.15.json | a11y.altText | אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים. כַּמָּה זֶה? | needs-editor |
+| activity.c.mathc03.16.json | prompt.caption.0.v | שְׁלוֹשִׁים וְעוֹד חֲמִשִּׁים. כַּמָּה זֶה? | needs-editor |
 | activity.c.mathc03.16.json | answer.options.0.label | שְׁמוֹנֶה | needs-editor |
 | activity.c.mathc03.16.json | answer.options.1.label | שְׁמוֹנִים | needs-editor |
 | activity.c.mathc03.16.json | answer.options.2.label | שְׁמוֹנֶה מֵאוֹת | needs-editor |
@@ -7912,8 +7912,8 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.c.mathc03.16.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.c.mathc03.16.json | hints.1.caption.0.v | חוֹשְׁבִים בַּעֲשָׂרוֹת: שָׁלוֹשׁ עֲשָׂרוֹת וְעוֹד חָמֵשׁ עֲשָׂרוֹת — כְּמוֹ שָׁלוֹשׁ וְעוֹד חָמֵשׁ. | needs-editor |
 | activity.c.mathc03.16.json | hints.2.caption.0.v | סוֹפְרִים בַּעֲשָׂרוֹת: עֶשֶׂר, עֶשְׂרִים, שְׁלוֹשִׁים, אַרְבָּעִים, חֲמִשִּׁים, שִׁשִּׁים, שִׁבְעִים, שְׁמוֹנִים. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
-| activity.c.mathc03.16.json | a11y.altText | כַּמָּה זֶה? | needs-editor |
-| activity.c.mathc03.17.json | prompt.caption.0.v | כַּמָּה נִשְׁאַר? | needs-editor |
+| activity.c.mathc03.16.json | a11y.altText | שְׁלוֹשִׁים וְעוֹד חֲמִשִּׁים. כַּמָּה זֶה? | needs-editor |
+| activity.c.mathc03.17.json | prompt.caption.0.v | שִׁבְעִים פָּחוֹת אַרְבָּעִים. כַּמָּה נִשְׁאַר? | needs-editor |
 | activity.c.mathc03.17.json | answer.options.0.label | שָׁלוֹשׁ | needs-editor |
 | activity.c.mathc03.17.json | answer.options.1.label | שְׁלֹשׁ מֵאוֹת | needs-editor |
 | activity.c.mathc03.17.json | answer.options.2.label | שְׁלוֹשִׁים | needs-editor |
@@ -7927,8 +7927,8 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.c.mathc03.17.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.c.mathc03.17.json | hints.1.caption.0.v | חוֹשְׁבִים בַּעֲשָׂרוֹת: שֶׁבַע עֲשָׂרוֹת פָּחוֹת אַרְבַּע עֲשָׂרוֹת — כְּמוֹ שֶׁבַע פָּחוֹת אַרְבַּע. | needs-editor |
 | activity.c.mathc03.17.json | hints.2.caption.0.v | נִשְׁאֲרוּ שְׁלוֹשָׁה מוֹטוֹת: עֶשֶׂר, עֶשְׂרִים, שְׁלוֹשִׁים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁלוֹשִׁים. | needs-editor |
-| activity.c.mathc03.17.json | a11y.altText | כַּמָּה נִשְׁאַר? | needs-editor |
-| activity.c.mathc03.18.json | prompt.caption.0.v | כַּמָּה נִשְׁאַר? | needs-editor |
+| activity.c.mathc03.17.json | a11y.altText | שִׁבְעִים פָּחוֹת אַרְבָּעִים. כַּמָּה נִשְׁאַר? | needs-editor |
+| activity.c.mathc03.18.json | prompt.caption.0.v | שִׁשִּׁים פָּחוֹת עֶשְׂרִים. כַּמָּה נִשְׁאַר? | needs-editor |
 | activity.c.mathc03.18.json | answer.options.0.label | אַרְבַּע | needs-editor |
 | activity.c.mathc03.18.json | answer.options.1.label | אַרְבַּע מֵאוֹת | needs-editor |
 | activity.c.mathc03.18.json | answer.options.2.label | שְׁמוֹנִים | needs-editor |
@@ -7942,7 +7942,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.c.mathc03.18.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.c.mathc03.18.json | hints.1.caption.0.v | חוֹשְׁבִים בַּעֲשָׂרוֹת: שֵׁשׁ עֲשָׂרוֹת פָּחוֹת שְׁתֵּי עֲשָׂרוֹת — כְּמוֹ שֵׁשׁ פָּחוֹת שְׁתַּיִם. | needs-editor |
 | activity.c.mathc03.18.json | hints.2.caption.0.v | נִשְׁאֲרוּ אַרְבָּעָה מוֹטוֹת: עֶשֶׂר, עֶשְׂרִים, שְׁלוֹשִׁים, אַרְבָּעִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבָּעִים. | needs-editor |
-| activity.c.mathc03.18.json | a11y.altText | כַּמָּה נִשְׁאַר? | needs-editor |
+| activity.c.mathc03.18.json | a11y.altText | שִׁשִּׁים פָּחוֹת עֶשְׂרִים. כַּמָּה נִשְׁאַר? | needs-editor |
 | activity.c.mathc03.2.json | prompt.caption.0.v | כַּמָּה זֶה? | needs-editor |
 | activity.c.mathc03.2.json | answer.options.0.label | שֶׁבַע | needs-editor |
 | activity.c.mathc03.2.json | answer.options.1.label | שִׁבְעִים | needs-editor |
@@ -9436,17 +9436,17 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.c.numc04.15.json | hints.2.caption.0.v | בַּחֲמִשִּׁים וּשְׁתַּיִם יֵשׁ חֲמִשָּׁה מוֹטוֹת, וּבְאַרְבָּעִים וּשְׁמוֹנֶה יֵשׁ אַרְבָּעָה מוֹטוֹת. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
 | activity.c.numc04.15.json | a11y.altText | אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר? מִסְתַּכְּלִים עַל הַמּוֹטוֹת וְעַל הַקֻּבִּיּוֹת. | needs-editor |
 | activity.c.numc04.16.json | prompt.caption.0.v | אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר? מִסְתַּכְּלִים עַל הַמּוֹטוֹת וְעַל הַקֻּבִּיּוֹת. | needs-editor |
-| activity.c.numc04.16.json | answer.options.0.label | שִׁשִּׁים וְאַרְבַּע | needs-editor |
-| activity.c.numc04.16.json | answer.options.1.label | חֲמִשִּׁים וְתֵשַׁע | needs-editor |
-| activity.c.numc04.16.json | answer.options.2.label | אַרְבָּעִים וְשֵׁשׁ | needs-editor |
-| activity.c.numc04.16.json | feedback.correct.caption.0.v | כֵּן! שִׁשִּׁים וְאַרְבַּע גָּדוֹל יוֹתֵר. | needs-editor |
+| activity.c.numc04.16.json | answer.options.0.label | חֲמִשִּׁים וְשָׁלוֹשׁ | needs-editor |
+| activity.c.numc04.16.json | answer.options.1.label | אַרְבָּעִים וְתֵשַׁע | needs-editor |
+| activity.c.numc04.16.json | answer.options.2.label | שְׁלוֹשִׁים וְחָמֵשׁ | needs-editor |
+| activity.c.numc04.16.json | feedback.correct.caption.0.v | כֵּן! חֲמִשִּׁים וְשָׁלוֹשׁ גָּדוֹל יוֹתֵר. | needs-editor |
 | activity.c.numc04.16.json | feedback.incorrect.0.caption.0.v | הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב. | needs-editor |
 | activity.c.numc04.16.json | feedback.incorrect.1.caption.0.v | הַסִּפְרָה הַזֹּאת עוֹמֶדֶת בַּמָּקוֹם שֶׁל הָעֲשָׂרוֹת. בּוֹאוּ נִבְדֹּק כַּמָּה עֲשָׂרוֹת יֵשׁ. | needs-editor |
 | activity.c.numc04.16.json | feedback.incorrect.2.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
 | activity.c.numc04.16.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.c.numc04.16.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.c.numc04.16.json | hints.1.caption.0.v | מַשְׁוִים קֹדֶם אֶת הָעֲשָׂרוֹת — הַמּוֹטוֹת. רַק אִם יֵשׁ אוֹתוֹ מִסְפָּר מוֹטוֹת, מַשְׁוִים קֻבִּיּוֹת. | needs-editor |
-| activity.c.numc04.16.json | hints.2.caption.0.v | בְּשִׁשִּׁים וְאַרְבַּע יֵשׁ שִׁשָּׁה מוֹטוֹת, וּבַחֲמִשִּׁים וְתֵשַׁע יֵשׁ חֲמִשָּׁה מוֹטוֹת. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.c.numc04.16.json | hints.2.caption.0.v | בַּחֲמִשִּׁים וְשָׁלוֹשׁ יֵשׁ חֲמִשָּׁה מוֹטוֹת, וּבְאַרְבָּעִים וְתֵשַׁע יֵשׁ אַרְבָּעָה מוֹטוֹת. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
 | activity.c.numc04.16.json | a11y.altText | אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר? מִסְתַּכְּלִים עַל הַמּוֹטוֹת וְעַל הַקֻּבִּיּוֹת. | needs-editor |
 | activity.c.numc04.2.json | prompt.caption.0.v | אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר? | needs-editor |
 | activity.c.numc04.2.json | answer.options.0.label | חֲמִשִּׁים וְתֵשַׁע | needs-editor |
@@ -14315,6 +14315,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | lesson.big-small-long-heavy.json | celebration.caption.0.v | חֲכָמִים! הִשְׁוִיתֶם גָּדוֹל וְקָטָן, אָרֹךְ וְקָצָר, כָּבֵד וְקַל. | needs-editor |
 | lesson.blocks-tens-and-ones.json | title.0.v | קֻבִּיּוֹת שֶׁל עֲשָׂרוֹת | needs-editor |
 | lesson.blocks-tens-and-ones.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! סְפַרְתֶּם אֶת הַמּוֹטוֹת בַּעֲשָׂרוֹת. | needs-editor |
+| lesson.blocks-tens-and-ones.json | demo.caption.0.v | עֶשֶׂר קֻבִּיּוֹת הֵן מוֹט אֶחָד. | needs-editor |
 | lesson.broken-pattern.json | title.0.v | מַה נִּשְׁבַּר | needs-editor |
 | lesson.broken-pattern.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַשּׁוֹנֶה. | needs-editor |
 | lesson.build-with-shapes.json | title.0.v | בּוֹנִים מִצּוּרוֹת | needs-editor |
@@ -14353,6 +14354,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | lesson.colours-of-things.json | celebration.caption.0.v | וַאוּ! יְדַעְתֶּם אֵיזֶה צֶבַע יֵשׁ לַדְּבָרִים. | needs-editor |
 | lesson.compare-to-100-more.json | title.0.v | עוֹד מַשְׁוִים | needs-editor |
 | lesson.compare-to-100-more.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! הִשְׁוִיתֶם קֹדֶם אֶת הָעֲשָׂרוֹת. | needs-editor |
+| lesson.compare-to-100-more.json | demo.caption.0.v | עֶשֶׂר קֻבִּיּוֹת הֵן מוֹט אֶחָד. | needs-editor |
 | lesson.compare-to-100.json | title.0.v | מַשְׁוִים מִסְפָּרִים | needs-editor |
 | lesson.compare-to-100.json | celebration.caption.0.v | יָפֶה מְאֹד! הַסִּימָן פּוֹנֶה לַגָּדוֹל. | needs-editor |
 | lesson.copy-patterns.json | title.0.v | מַעֲתִיקִים סֵדֶר | needs-editor |
@@ -14693,6 +14695,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | lesson.who-is-first.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! יְדַעְתֶּם מִי רִאשׁוֹן, שֵׁנִי וּשְׁלִישִׁי. | needs-editor |
 | lesson.whole-tens-more.json | title.0.v | עֲשָׂרוֹת בְּמוֹטוֹת | needs-editor |
 | lesson.whole-tens-more.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! סְפַרְתֶּם אֶת הַמּוֹטוֹת בַּעֲשָׂרוֹת. | needs-editor |
+| lesson.whole-tens-more.json | demo.caption.0.v | עֶשֶׂר קֻבִּיּוֹת הֵן מוֹט אֶחָד. | needs-editor |
 | lesson.whole-tens.json | title.0.v | עֲשָׂרוֹת שְׁלֵמוֹת | needs-editor |
 | lesson.whole-tens.json | celebration.caption.0.v | מְצֻיָּן! חֲשַׁבְתֶּם בַּעֲשָׂרוֹת. | needs-editor |
 | lesson.write-from-the-dot-0-4.json | title.0.v | כּוֹתְבִים מֵהַנְּקֻדָּה | needs-editor |

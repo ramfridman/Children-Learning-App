@@ -139,7 +139,8 @@ class HebrewMasterTableTest(unittest.TestCase):
         # 15704 since the 35 C1 items of 98f57707 (99 new texts, blocks, pay, counting by touch, the middle of two marks), 3 lessons and the he.dart rows of the other agents
         # 15806 since the last C1 items of 2805fbf1 (the estimation line, true-or-false cards, ten-frames, lucky-right items; 144 rows new, 42 gone)
         # 15836 since the two hidden-basket count-on items c.mathb04.11 and .12 (30 rows; the sum-card line replaced vo:fb.card on the sums)
-        self.assertEqual(len(self.rows), 15836)
+        # 15839 since the lesson field `demo` (vo:demo.ten_is_rod, one row in each of the lessons blocks-tens-and-ones, compare-to-100-more, whole-tens-more)
+        self.assertEqual(len(self.rows), 15839)
         # 1308 before C1: 19 corrections (מֵאֶפֶס, מֵאַחַת …) are now in the sources; 1296 after the 7 of the deferred items (מַה שֶּׁ, מַה מִּסְתַּתֵּר)
         self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1296)
         self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 44)  # 88 before the owner's V1 for M-NL-DIR (2026-11-06): its 44 rows now have the source's final nikud

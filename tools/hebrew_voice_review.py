@@ -834,6 +834,8 @@ PENDING = [
 UNREAD = 'NOT READ: new since the last table; the editor has not read it yet (no READ entry in tools/hebrew_voice_review.py covers it).'
 C1 = ('M10 batch C1 (docs/agents/hebrew-notes.md section 10): read by the editor on 2026-11-06, every distinct text (grammar, nikud, '
       'number and gender agreement, plural address, = as שָׁוֶה, < and > as גָּדוֹל מִ / קָטָן מִ, age 6 to 8). Draft of the math-teacher; waits for the owner.')
+C11 = ('M10 batch C1 (docs/agents/hebrew-notes.md section 10): read by the editor on 2026-11-07 (%s), every distinct text (grammar, nikud, number and '
+       'gender agreement, plural address, = as שָׁוֶה, age 6 to 8). Draft of the math-teacher; waits for the owner.')
 _C1_UNITS = ('blocks-tens-and-ones|compare-to-100|count-and-compare-again|count-on-big|count-to-100|fact-families|facts-to-18-again|'
              'facts-to-18-more|facts-to-18|hundred-chart|line-to-100|read-numerals-more|read-numerals|read-to-100|ten-frame-glance|'
              'ten-frame-more|ten-more-ten-less|tens-and-ones-more|tens-and-ones|type-the-answer|whole-tens-more|whole-tens|write-numbers|compare-to-100-more|line-to-100-more|fact-families-more')
@@ -846,6 +848,15 @@ READ_NEW = "2026-11-07 (the 35 C1 items of commit 98f57707, blocks, keypad, pay 
 READ = [
     ('1', r'^keypad(Delete|Done)Semantics$', r'he\.dart$', 'M10 C1 keypad (read by the editor on 2026-11-07): the screen-reader labels of the number keypad, plain adult text '
      '(an infinitive for the key that deletes a digit, "זה המספר" for the key that sends the number); correct as written.'),
+    # The pass of 2026-11-07 (hebrew-notes.md 11.12). The first 60 characters of each comment are the same as C1's, so a row that was
+    # already in the table with the C1 comment takes the new one (the guard in master()).
+    ('3', r'', r'^activity\.c\.(mathc03\.(15|16|17|18)|numc04\.16)\.json$', C11 % (
+        "the math-teacher's changed items: the sentence over the blocks (mathc03.15-.18) and 53 against 49 (numc04.16); hebrew-notes.md section 11.12")),
+    ('3', r'', r'^activity\.c\.mathb04\.(11|12)\.json$', C11 % (
+        "the hidden-basket items (14-word prompt, the gentler recount line); hebrew-notes.md sections 11.11 and 11.12")),
+    ('3', r'', r'^activity\.c\.', C11 % (
+        "the sum-card line vo:fb.sum_card (a wrong answer that is one addend of a sum); hebrew-notes.md sections 11.11 and 11.12"),
+     r'^זֶה רַק אֶחָד מֵהַמִּסְפָּרִים\.'),
     ('3', r'', r'^activity\.c\.', C1),
     ('3', r'', r'^(lesson\.(%s)|skill\.(%s)|misconception\.(%s))\.json$' % (_C1_UNITS, _C1_SKILLS, _C1_TAGS), C1),
     # Band B rows whose text changed because a shared helper or a shared tag line was corrected for C1 (from_: מֵ before a guttural and
@@ -933,7 +944,14 @@ OWNER_APPROVED = [
      'M10 C1 (notes 11.8): the owner confirmed the dagesh after מִ on a letter with a shva, "מִשְּׁלוֹשִׁים" (owner-approved 2026-11-07).'),
     # (2) NUM-C-04 hint 3 says both tens in full, with no "עַכְשָׁו תּוֹרְכֶם" (14 words).
     (r'^activity\.c\.numc04\.(7|8|9|10|11|12)\.json$', r'עֲשָׂרוֹת\. הַצַּד הַפָּתוּחַ פּוֹנֶה לַגָּדוֹל\.$',
-     'M10 C1 (notes 11.8): the owner chose the tens in full, "וּבְאַרְבָּעִים וְשָׁלוֹשׁ … אַרְבַּע עֲשָׂרוֹת" (owner-approved 2026-11-07).', r'^hints\.2'),
+     'M10 C1 (notes 11.8): the owner chose the tens in full, "וּבְאַרְבָּעִים וְשָׁלוֹשׁ … אַרְבַּע עֲשָׂרוֹת" (owner-approved 2026-11-07).', r'^hints\.2'),    # The owner's answers of 2026-11-07 for the C1 blocks (in chat; hebrew-notes.md 11.12). (1) the opening demonstration line, as written.
+    (r'^lesson\.(blocks-tens-and-ones|compare-to-100-more|whole-tens-more)\.json$', r'^עֶשֶׂר קֻבִּיּוֹת הֵן מוֹט אֶחָד\.$',
+     'M10 C1 blocks (notes 11.12): the owner approved the demonstration line as written (owner-approved 2026-11-07). One clip, vo:demo.ten_is_rod.',
+     r'^demo\.caption'),
+    # (2) the full Layout T prompts ("אֵיפֹה הַמִּסְפָּר …?"), kept in place of the shorter form of notes 11.11.
+    (r'^activity\.c\.(numc02\.(18|19|20)|numc03\.25)\.json$', r'^אֵיפֹה הַמִּסְפָּר ',
+     'M10 C1 blocks (notes 11.12): the owner decided to keep the full prompt "אֵיפֹה הַמִּסְפָּר …?" of Layout T, not the shorter form (owner-approved 2026-11-07).',
+     r'^(prompt\.caption\.0\.v|a11y\.altText)$'),
 ]
 
 
@@ -947,6 +965,8 @@ def owner_approved(r):
 
 # Comments the editor leaves on a row that is ready (information for the owner or the voice director): (regex, comment)
 NOTE = [
+    (r'^בלי הסימנים < או > ובלי תווים בלתי נראים', 'B-32 (child-name safety, read by the editor on 2026-11-07): plain adult text for the parent, no nikud, '
+     'correct as written. (Its row had been written by hand with the status in the wrong columns; repaired.)'),
     (r'^שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד\.$', 'said when the child taps "not sure" or "show me": it praises asking, as the brave-asker medal does.'),
     (r'הַתֵּבָה|תֵּבָה', 'Q7 (owner 2026-10-29): "תֵּבָה" is the Band B word, bridged to "קֻפְסָה שֶׁל נַעֲלַיִם" in the '
      'feedback and the worked example; a spoken "קֻפְסָה" is accepted as right (app-developer). Band A says "קֻפְסָה".'),
