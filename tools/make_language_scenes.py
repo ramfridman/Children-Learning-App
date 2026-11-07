@@ -392,6 +392,25 @@ def open_box(front=True, back=True):
     return out
 
 
+# The sorting bin of HEB-A-03 (QA-BA-5, 2026-11-07): an open carton that fills the square, with a big white label on its
+# front in which the app draws the picture of what the bin holds (the classroom convention: a bin is labelled with a picture
+# of its contents; references looked at 2026-11-07: Bing and web search "preschool classroom toy bins labeled with pictures of
+# contents", e.g. childhood101.com's printable toy bin labels and pre-kpages.com's real-photo center labels: one big picture
+# on the front of each bin, for children who cannot read yet). The label is BIN_LABEL, as shares of the square; app/lib/play/tap_answer_session.dart (binLabel) draws
+# the group there, so the two must change together. Nothing of the carton reaches the square's edge, so a stage that shows
+# the whole square cuts nothing off.
+BIN_LABEL = (0.2, 0.41, 0.56, 0.46)
+
+
+def sort_bin():
+    k, s, top, inside = '#D9A866', '#B8874A', '#E8C08A', '#8C6236'
+    lx, ly, lw, lh = (v * 256 for v in BIN_LABEL)
+    return [P('M 40 92 L 206 92 L 222 70 L 56 70 Z', inside),
+            P('M 40 92 L 8 56 L 54 48 L 82 84 Z', top), P('M 206 92 L 240 54 L 196 46 L 168 84 Z', top),
+            P('M 40 92 L 206 92 L 206 232 L 40 232 Z', k), P('M 206 92 L 222 70 L 222 210 L 206 232 Z', s),
+            L('M 48 99 L 198 99', s, 3), RR(lx, ly, lw, lh, 12, WHITE)]
+
+
 def place():
     out = {}
 
@@ -481,7 +500,7 @@ def context_and_pieces():
     sail = m.boat('green')
     sail.parts = [q.replace('Q 186 110 206 160', 'Q 236 96 214 160') for q in sail.parts]
     out['ctx-wind-sail'] = tile(wind + [obj(sail, 140, 236, 0.86)])
-    out['bin-box'] = tile(open_box(front=False) + open_box(back=False) + [RR(84, 134, 88, 64, 8, WHITE)])
+    out['bin-box'] = tile(sort_bin())
     out['thumb-up'] = tile(button('#36A852', '#237A3A', up=True))
     out['thumb-down'] = tile(button('#5C8DDB', '#3E6FC2', up=False))
     return out

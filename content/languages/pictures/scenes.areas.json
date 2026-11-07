@@ -2,6 +2,8 @@
   "note": "Touch areas of the scene pictures that the Band A commands use, as shares of the picture's side (x, y, w, h from the top left). A place is at least 0.2812 (72 of 256 units); the places of one command never overlap. Made by the app-developer by looking at the drawings, so that the commands could be built; the design-director may refine them (docs/design/languages-l4-layout.md section 2). '@target' is where things are dropped (a drag), '@thing' where the one moved thing starts (a place command). The body maps (mika-body, doll-body, dog-big, ball-pair, the bounce story) are the design-director's own *.hotspots.json.",
   "pictures": {
     "pip-happy": {"@target": [0.34, 0.25, 0.38, 0.55]},
+    "pip-feed": {"@target": [0.3125, 0.4688, 0.3906, 0.4922]},
+    "pip-basket": {"@target": [0.3125, 0.4688, 0.3906, 0.4922]},
     "scene-picnic": {"@target": [0.63, 0.52, 0.3, 0.3]},
     "scene-toybox": {"@target": [0.6, 0.42, 0.34, 0.34]},
     "mika-body": {"@target": [0.34, 0.12, 0.34, 0.8]},

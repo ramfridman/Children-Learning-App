@@ -34,6 +34,18 @@ Batch 6 (2026-11-07, contact sheet pictures_batch6a.png):
 - the tap-area maps of the Russian story pages st1-p1 (sobaka, mjach) and st2-p1 (jozhik) for RUS-A-16 01 and 04;
 - shape-heart and shape-flower for HEB-A-10 t05 and s06, in ink at the weight of shape-dot (U+2665 and U+273F as pictures).
 
+Batch 7 (2026-11-07, QA-BA-5 and QA-BA-7, contact sheet pictures_batch7a.png):
+- pip-feed, the scene of ENG-A-08 i09 to i12 ("give Pip the food", listen_do drag): Pip whole, his head bent toward an empty
+  bowl at his feet and his beak open; the food on the rail never touches him and the drop target is the bowl, so the food is
+  put in the bowl, not on his face (the bust pip-happy was cut across the body by the scene square, and its face was the target);
+- pip-basket (ENG-A-03 and A-05 drag-to-Pip items, band-a-build.md 7.3): the same Pip beside an open toy basket, the basket the
+  drop target;
+- the bin signs (band-a-build.md 7.6): sign-one and sign-many (HEB-A-05), the same blue bowl with one orange marble and with a
+  loose heap of seven of the same size, so the amount is all that differs; sign-letters (an open book whose lines of print are
+  too small to read) and sign-other (an open carton with a ball, a crayon drawing and a toy block), HEB-A-10, the same size and
+  weight as each other; no letter or digit in any;
+- the tap-area items of the rooms reused by RUS-A-15 25, 26 and RUS-A-20 23, 24 (ROOM_MORE).
+
 Same house style as batches 1 to 4 (tools/make_language_pictures.py): flat shapes, the ink outline, one soft shade, a white
 highlight, no text, no numeral, no franchise look.
 
@@ -56,6 +68,15 @@ References looked at on 2026-11-07 (facts and photographs; the drawings are ours
     the fringed ends side by side (an S would read as a snake); its colours are scarf.svg's.
   Heart and florette: the glyphs U+2665 and U+273F as Windows draws them (Segoe UI Symbol, rendered in Chrome): a filled heart
     of two round lobes and a point; five round filled petals round a small open centre. Ours are drawn from circles and curves.
+  Budgerigar, whole (batch 7): https://en.wikipedia.org/wiki/Budgerigar (about 18 cm long, a long cobalt tail, blue-grey legs,
+    zygodactyl feet with two toes forward and two back, an olive-grey hooked bill under the cere; it feeds on or near the ground,
+    mostly seeds, also fruit) and its lead photographs; Pip's own colours and head are the model sheet's.
+  One and many (batch 7): the ARASAAC pictograms "many" (7168: a bowl heaped with red balls) and "few" (7209: the same bowl with a
+    few), looked at on static.arasaac.org: an amount sign is the same container with more or fewer of one round thing. Ours is the
+    project's bowl with our own marbles; nothing copied.
+  Open book and box of things (batch 7): https://en.wikipedia.org/wiki/Codex (leaves bound at one edge, a book opened flat on
+    two facing pages), the project's own book.svg (its blue cover) and, for sign-other, its own ball, blocks and the sorting
+    bin's carton; the crayon drawing is a child's sun and house.
   The objects in the sets carry the references of their own drawings (tools/make_language_pictures.py and _b2.py).
 """
 import json
@@ -499,13 +520,29 @@ RU_STORY_AREAS = {
 }
 
 
+# The rooms reused by later Russian items (band-a-build.md 7.12, 2026-11-07): the same three things, each its own target (the
+# areas above are at least 72 units and never meet), shown on the scene. Parts in the item's own order of options.
+ROOM_MORE = {
+    'scene-room-mouse': {'rus.a20.23': ['teddy', 'mouse', 'cat'], 'rus.a20.24': ['mouse', 'teddy', 'cat']},
+    'scene-room-ball': {'rus.a15.25': ['ball', 'balloon', 'doll']},
+    'scene-room-cat': {'rus.a15.26': ['cat', 'dog', 'porridge']},
+}
+
+
 def russian_maps():
     out = {}
     for pid, areas in ROOM_AREAS.items():
         item = ROOMS[pid][0]
         names = [n for n, _ in ROOMS[pid][2]]
         assert sorted(names) == sorted(areas), pid
-        out[pid] = share_map(pid, areas, 256, 256, HIT, ROOM_NOTE % item.split('.')[-1], {item: {'parts': names, 'show': 'body'}})
+        items = {item: {'parts': names, 'show': 'body'}}
+        for more, parts in ROOM_MORE.get(pid, {}).items():
+            assert sorted(parts) == sorted(areas), (pid, more)
+            items[more] = {'parts': parts, 'show': 'body'}
+        note = ROOM_NOTE % item.split('.')[-1]
+        if pid in ROOM_MORE:
+            note += ' Also %s.' % ', '.join(sorted(ROOM_MORE[pid]))
+        out[pid] = share_map(pid, areas, 256, 256, HIT, note, items)
     out['scene-garden-family'] = share_map('scene-garden-family', FAMILY_AREAS, 256, 256, HIT, ROOM_NOTE.replace(
         'the things drawn into the room', 'the family standing in the garden') % '06',
         {'rus.a13.06': {'parts': ['mother', 'father', 'grandmother'], 'show': 'body'}})
@@ -514,8 +551,139 @@ def russian_maps():
     return out
 
 
+# ---- batch 7 (QA-BA-5 and QA-BA-7, 2026-11-07) -----------------------------------------------------------------------
+# pip-feed: the scene of "give Pip the food" (ENG-A-08 i09 to i12, listen_do drag). Pip whole, from his crown to his toes, on
+# the right of the square, his beak open and his head bent toward an empty bowl in front of him: the food on the rail at the
+# left (x 0.02 to 0.31, RAIL in lang_recipes_base.py) never touches him, and the drop target is the bowl (pip-feed's '@target'
+# in scenes.areas.json), so a piece that is put there sits in the bowl under his beak, not on his face.
+# sign-one and sign-many: the picture signs of the HEB-A-05 sort bins (one, many), the same bowl with one marble and with a heap
+# of them, so that only the amount differs (the cards of the sort are words heard, not pictures, so the sign shows no word's thing).
+
+def pip_whole():
+    """Pip from crown to toes in the 512 units of the model sheet: the door host's bird (the same colours, the yellow face and
+    barred crown, the cheek patches and throat spots, the folded barred wings, the long blue tail), standing on two
+    zygodactyl feet (two toes forward to a foot are seen from the front), his head bent toward the left and the beak open."""
+    c = ch.PIP
+    out = ['<ellipse cx="262" cy="636" rx="150" ry="16" fill="%s" opacity="0.12"/>' % INK]
+    # the tail, long and tapered, behind the body to the lower right (cobalt with a lighter middle, as the wild bird)
+    out.append('<path d="M 300 520 L 470 640 Q 466 664 440 660 L 276 560 Z" fill="%s"/>' % c['tail'])
+    out.append('<path d="M 302 540 L 448 642 Q 444 652 432 650 L 290 562 Z" fill="#5B8BEF"/>')
+    # the feet: blue-grey legs, two forward toes each, gripping the ground
+    for x in (222, 300):
+        out.append('<path d="M %d 560 L %d 618 M %d 618 l -26 12 M %d 618 l 4 16 M %d 618 l 22 8" fill="none" stroke="%s" '
+                   'stroke-width="15" stroke-linecap="round"/>' % (x, x, x, x, x, c['feet']))
+    # the body: green, a lighter belly, the folded wings at the sides
+    out.append('<ellipse cx="262" cy="452" rx="138" ry="150" fill="%s"/>' % c['green_d'])
+    out.append('<ellipse cx="266" cy="446" rx="130" ry="144" fill="%s"/>' % c['green'])
+    out.append('<ellipse cx="256" cy="476" rx="80" ry="108" fill="%s"/>' % c['belly'])
+    out += ch.pip_wing(158, 452, 50, 116, 12) + ch.pip_wing(372, 452, 50, 116, -12)
+    # the head of the bust (pip_head 'happy': the eyes closed in a smile), bent toward the bowl, with an open beak
+    head = ch.pip_head('happy')
+    start = next(i for i, p in enumerate(head) if p.startswith('<g transform'))
+    head = head[start + 1:-1]
+    beak = next(i for i, p in enumerate(head) if p.startswith('<path d="M 222 238'))
+    head[beak:beak + 2] = [
+        # the open mouth (dark), the lower mandible dropped under it, and the upper mandible, short and hooked, over both
+        '<path d="M 230 250 Q 256 244 282 250 L 280 290 Q 256 318 232 290 Z" fill="#6B2C48"/>',
+        '<path d="M 234 290 Q 256 302 278 290 Q 276 312 256 318 Q 236 312 234 290 Z" fill="%s"/>' % c['beak'],
+        '<path d="M 222 238 Q 256 226 290 238 Q 290 254 280 264 Q 268 272 260 284 Q 256 290 252 284 Q 244 272 232 264 Q 222 254 222 238 Z" '
+        'fill="%s"/>' % c['beak'],
+        '<path d="M 238 246 Q 256 240 274 246" fill="none" stroke="#B9BBA6" stroke-width="5" stroke-linecap="round"/>',
+        '<path d="M 244 300 Q 256 306 268 300" fill="none" stroke="#6F7160" stroke-width="4" stroke-linecap="round"/>']
+    out.append('<g transform="translate(-30 26) rotate(-16 256 340)">%s</g>' % ''.join(head))
+    return out
+
+
+def pip_with(container):
+    """Pip whole (pip_whole: x 100 to 470, y 30 to 664 of his 512 units) at 0.34, standing in x 124 to 250 with his toes on y ~ 228,
+    and the container in front of his feet, x 80 to 168, clear of the rail (x up to 80); the drop target ('@target' in
+    scenes.areas.json, 80 to 180 x 120 to 246) is the container and the room above it, so a piece put there sits in it."""
+    return sc.composite(['<g transform="translate(90 10) scale(0.34)">%s</g>' % ''.join(pip_whole()), container])
+
+
+def pip_feed():
+    return {'pip-feed': pip_with(obj(m.bowl(), 122, 244, 0.42)), 'pip-basket': pip_with(obj(b2.basket(), 124, 246, 0.43))}
+
+
+MARBLE, MARBLE_SHADE = '#FFB23E', '#E58A1E'
+MARBLE_R = 22   # one size on both signs of the pair, so "one" is never the bigger thing
+
+
+def marble(cx, cy, r=MARBLE_R):
+    return [E(cx, cy, r, r, MARBLE_SHADE, 3.5),
+            P(m.ell(cx - r * 0.12, cy - r * 0.14, r * 0.82, r * 0.8), MARBLE, 0),
+            '<circle cx="%s" cy="%s" r="%s" fill="%s" opacity="0.7"/>' % (f(cx - r * 0.38), f(cy - r * 0.4), f(r * 0.22), WHITE)]
+
+
+def sign_bowl(heap):
+    """The shallow blue bowl (bowl.svg's colours), its rim and inside first, then the marbles, then the bowl's front, so that
+    the marbles sit in it."""
+    fill = '#7EC8E8'
+    out = ['<ellipse cx="128" cy="230" rx="96" ry="9" fill="%s" opacity="0.12"/>' % INK,
+           P(m.ell(128, 150, 104, 26), WHITE, 4), P(m.ell(128, 153, 92, 19), '#E4F3FA', 0)]
+    for cx, cy in heap:
+        out += marble(cx, cy)
+    body = 'M 24 150 A 104 26 0 0 0 232 150 C 230 200, 182 228, 128 228 C 74 228, 26 200, 24 150 Z'
+    out += [P(body, fill, 4), L('M 44 182 C 74 204, 182 204, 212 182', WHITE, 7, 0.6),
+            L('M 24 150 A 104 26 0 0 0 232 150', INK, 4)]
+    return sc.composite(out)
+
+
+def book_open():
+    """An open book seen from the front, its pages full of lines of print far too small to read (grey bars, no letter)."""
+    out = ['<ellipse cx="128" cy="222" rx="104" ry="9" fill="%s" opacity="0.12"/>' % INK,
+           P('M 18 78 Q 70 62 128 82 Q 186 62 238 78 L 238 206 Q 186 190 128 210 Q 70 190 18 206 Z', '#2F7FE0', 4),
+           P('M 26 66 Q 76 48 128 70 L 128 198 Q 76 176 26 194 Z', CREAM, 4),
+           P('M 230 66 Q 180 48 128 70 L 128 198 Q 180 176 230 194 Z', CREAM, 4),
+           L('M 128 70 L 128 198', '#D8CBB4', 3)]
+    for side in (-1, 1):
+        for k in range(7):
+            y = 82 + k * 15
+            long = (k % 3 != 2)
+            x0, x1 = (128 + side * 14, 128 + side * (84 if long else 58))
+            out.append('<path d="M %s %s Q %s %s %s %s" fill="none" stroke="#9A93B4" stroke-width="5" stroke-linecap="round"/>'
+                       % (f(x0), f(y - 4 + abs(side * 0)), f((x0 + x1) / 2), f(y - 8), f(x1), f(y - 2)))
+    return out
+
+
+def box_of_things():
+    """An open carton (the bin's colours) holding three things that are not letters: a red ball, a crayon drawing (a sun and a
+    house in crayon on a sheet), and a toy block with a star."""
+    k, s, top, inside = '#D9A866', '#B8874A', '#E8C08A', '#8C6236'
+    out = ['<ellipse cx="128" cy="230" rx="104" ry="9" fill="%s" opacity="0.12"/>' % INK,
+           P('M 40 126 L 200 126 L 216 108 L 56 108 Z', inside)]
+    # the drawing, standing up at the back, a little tilted
+    out.append('<g transform="translate(-4 -20) rotate(-8 150 86)">%s%s%s%s</g>' % (
+        P('M 112 34 L 192 34 L 192 132 L 112 132 Z', WHITE, 3.5),
+        '<circle cx="170" cy="56" r="12" fill="none" stroke="#FFB23E" stroke-width="5"/>',
+        '<path d="M 124 100 L 146 80 L 168 100 Z M 128 100 L 128 122 L 164 122 L 164 100" fill="none" stroke="#E5484D" '
+        'stroke-width="5" stroke-linejoin="round"/>',
+        '<path d="M 116 126 Q 150 118 188 126" fill="none" stroke="#34A86A" stroke-width="5"/>'))
+    # the ball at the left, the block at the right, both sitting in the box
+    out.append(obj(m.ball('red'), 80, 140, 0.36))
+    cube = ('<path d="M 150 96 L 164 84 L 210 84 L 196 96 Z" fill="#FFE08A" stroke="%s" stroke-width="3.5"/>'
+            '<path d="M 196 96 L 210 84 L 210 130 L 196 142 Z" fill="#E0A21A" stroke="%s" stroke-width="3.5"/>'
+            '<path d="M 150 96 L 196 96 L 196 142 L 150 142 Z" fill="#FFC83D" stroke="%s" stroke-width="3.5"/>'
+            '<path d="M 173 104 L 177 114 L 187 114 L 179 121 L 182 131 L 173 125 L 164 131 L 167 121 L 159 114 L 169 114 Z" '
+            'fill="#E5484D" stroke="%s" stroke-width="2.5" stroke-linejoin="round"/>' % (INK, INK, INK, INK))
+    out.append('<g transform="translate(4 -16)">%s</g>' % cube)
+    out += [P('M 40 126 L 200 126 L 200 222 L 40 222 Z', k, 4), P('M 200 126 L 216 108 L 216 204 L 200 222 Z', s, 4),
+            P('M 40 126 L 14 100 L 52 92 L 72 120 Z', top, 4), P('M 200 126 L 230 98 L 196 88 L 176 120 Z', top, 4),
+            L('M 52 200 L 52 140', WHITE, 6, 0.45)]
+    return out
+
+
+def signs():
+    # a loose heap of 7 in the bowl (4 behind, 3 in front a little lower), not a dice pattern; and the one marble in the middle
+    many = [(76, 140), (110, 136), (146, 138), (180, 142), (94, 116), (128, 112), (162, 118)]
+    many.sort(key=lambda t: t[1])
+    return {'sign-one': sign_bowl([(128, 140)]), 'sign-many': sign_bowl(many),
+            'sign-letters': sc.composite(book_open()), 'sign-other': sc.composite(box_of_things())}
+
+
 PARTS = {'batch5a': many_sets, 'batch5b': ten_frames, 'batch5c': lambda: dict(lit_sprites(), **doll_pictures(), **shape_cards()),
-         'batch6a': lambda: dict(rooms(), **family_garden(), **heart_flower())}
+         'batch6a': lambda: dict(rooms(), **family_garden(), **heart_flower()),
+         'batch7a': lambda: dict(pip_feed(), **signs())}
 
 
 def write_json(name, data):
