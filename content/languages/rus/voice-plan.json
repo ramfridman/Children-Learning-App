@@ -122,6 +122,13 @@
       "review": "text-ready"
     },
     {
+      "id": "f19",
+      "vo": "vo:rus.f19",
+      "he": "הַקְשִׁיבוּ, וּמִצְאוּ אֶת זֶה בַּחֶדֶר.",
+      "voice": "הקשיבו, ומצאו את זה בחדר.",
+      "review": "text-ready"
+    },
+    {
       "id": "f20",
       "vo": "vo:rus.f20",
       "he": "הַקְשִׁיבוּ לַבַּקָּשָׁה, וּתְנוּ לֶחָבֵר אֶת מַה שֶּׁמְּבַקְשִׁים.",
@@ -260,6 +267,13 @@
       "he": "כַּמָּה יֵשׁ? הַקְשִׁיבוּ לַכַּפְתּוֹרִים, וּגְעוּ בַּמִּסְפָּר הַנָּכוֹן.",
       "voice": "כמה יש? הקשיבו לכפתורים, וגעו במספר הנכון.",
       "review": "text-ready"
+    },
+    {
+      "id": "f41",
+      "vo": "vo:rus.f41",
+      "he": "הַקְשִׁיבוּ:",
+      "voice": "הקשיבו:",
+      "review": "needs-editor"
     },
     {
       "id": "he-fb-check",
@@ -712,6 +726,13 @@
       "ipa": "[ʊ mʲɪˈnʲa jesʲtʲ ˈmamə i ˈbabʊʂkə]"
     },
     {
+      "id": "ch-vot-jabloko",
+      "vo": "vo:rus.ch_vot_jabloko",
+      "shown": "Вот яблоко!",
+      "say": "Вот я́блоко!",
+      "ipa": "[vot ˈjabləkə]"
+    },
+    {
       "id": "ch-vot-koshka",
       "vo": "vo:rus.ch_vot_koshka",
       "shown": "Вот кошка!",
@@ -731,6 +752,13 @@
       "shown": "Вот мяч!",
       "say": "Вот мяч!",
       "ipa": "[vot ˈmʲætɕ]"
+    },
+    {
+      "id": "ch-vot-mysh",
+      "vo": "vo:rus.ch_vot_mysh",
+      "shown": "Вот мышь!",
+      "say": "Вот мышь!",
+      "ipa": "[vot ˈmɨʂ]"
     },
     {
       "id": "ch-vot-shapka",

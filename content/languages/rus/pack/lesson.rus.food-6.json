@@ -40,9 +40,9 @@
         "rus.a07.tc21"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     }
   ]
 }

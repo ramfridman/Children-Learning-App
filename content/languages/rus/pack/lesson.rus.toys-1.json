@@ -42,9 +42,9 @@
         "rus.a08.tc05"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     }
   ]
 }

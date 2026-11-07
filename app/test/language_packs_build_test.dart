@@ -14,6 +14,7 @@ import 'package:nitznutz/engine/course.dart';
 
 import '../tool/pack_builder_lib.dart';
 import 'support/pack_fixtures.dart';
+import 'support/temp_dir.dart';
 
 const String _languages = '../content/languages';
 
@@ -161,7 +162,7 @@ void main() {
     late Directory dir;
 
     setUp(() => dir = _copyOf('eng'));
-    tearDown(() => dir.deleteSync(recursive: true));
+    tearDown(() => removeTempDir(dir));
 
     Future<List<Problem>> refused() async {
       try {
@@ -216,6 +217,37 @@ void main() {
         (options[1]! as Map<String, Object?>)['misconception'] = 'rus.lis.sem';
       });
       expect(await refused(), isNotEmpty);
+    });
+
+    test('a route belongs to the Russian course: a reader route, a hearing screen or an order in English (R1, R3, R4)', () async {
+      _change(dir, 'skill.ENG-A-01.json', (Map<String, Object?> d) => d['readerAs'] = 'heritage');
+      expect(
+        (await refused()).map((Problem x) => x.toString()).join('\n'),
+        contains('a reader route belongs to the Russian course'),
+      );
+      _change(dir, 'skill.ENG-A-01.json', (Map<String, Object?> d) => d.remove('readerAs'));
+      _change(dir, 'activity.eng.a12.i01.json', (Map<String, Object?> d) {
+        final Map<String, Object?> say = d['say']! as Map<String, Object?>;
+        say['order'] = <String, Object?>{'new': 'echo', 'heritage': 'picture'};
+        say['pictureFirst'] = <String, Object?>{
+          'vo': 'vo:eng.f01',
+          'caption': (d['prompt']! as Map<String, Object?>)['caption'],
+        };
+      });
+      expect(
+        (await refused()).map((Problem x) => x.toString()).join('\n'),
+        contains('a route belongs to the Russian course'),
+      );
+      _change(dir, 'activity.eng.a12.i01.json', (Map<String, Object?> d) {
+        final Map<String, Object?> say = d['say']! as Map<String, Object?>;
+        say.remove('order');
+        say.remove('pictureFirst');
+        (d['answer']! as Map<String, Object?>).addAll(<String, Object?>{'teach': true, 'hear': true});
+      });
+      expect(
+        (await refused()).map((Problem x) => x.toString()).join('\n'),
+        contains('a route belongs to the Russian course'),
+      );
     });
 
     test('a pack of the wrong id for its course', () async {

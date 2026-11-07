@@ -40,9 +40,9 @@
         "rus.a02.tc08"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     },
     {
       "items": [
@@ -50,9 +50,9 @@
         "rus.a02.tc10"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     }
   ]
 }

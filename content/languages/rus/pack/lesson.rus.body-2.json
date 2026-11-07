@@ -40,9 +40,9 @@
         "rus.a03.tc08"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     }
   ]
 }

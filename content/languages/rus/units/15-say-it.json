@@ -1135,13 +1135,15 @@
   ],
   "routes": {
     "new": {
-      "note": "echo first (picture, the model, f05, the model again); from the third encounter, picture first (f06)"
+      "note": "picture first for every child (a retrieval try, then the model after the pause); by the third encounter of every word it is the same for a new learner as for a heritage speaker",
+      "say": "picture"
     },
     "heritage": {
-      "note": "picture first from the start, then the model; extended to every word of A-02 to A-09"
+      "note": "picture first from the start, then the model; extended to every word of A-02 to A-09",
+      "say": "picture"
     },
     "reader": {
-      "as": "new",
+      "as": "oral",
       "note": "as heritage or new, by strand 1"
     }
   }

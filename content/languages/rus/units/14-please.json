@@ -320,10 +320,10 @@
     },
     "heritage": {
       "teach": false,
-      "say": "picture first in 10 and 11"
+      "say": "picture"
     },
     "reader": {
-      "as": "new",
+      "as": "oral",
       "note": "as heritage or new"
     }
   }

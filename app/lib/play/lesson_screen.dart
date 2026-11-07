@@ -22,6 +22,7 @@ import '../child/activity_shell.dart';
 import '../child/companion_views.dart';
 import '../app/rules_providers.dart';
 import '../content/models.dart';
+import '../content/served_route.dart';
 import '../engine/course.dart';
 import '../data/app_database.dart';
 import '../design/app_text.dart';
@@ -39,6 +40,7 @@ import '../speech/voice_answer.dart';
 import '../speech/word_matcher.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
+import '../world/adventure_adapter.dart' show LanguageCourse;
 import '../voice/voice_director.dart';
 import 'activity_frame.dart';
 import 'count_tap_session.dart';
@@ -347,9 +349,37 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     return c.endedForRest ? 'limit' : 'finished';
   }
 
+  /// The skill a lesson is played in: that of its first item (every lesson of a language course has one skill). Null for a lesson with no
+  /// items.
+  String? _lessonSkill(PackContent content, Lesson lesson) =>
+      lesson.itemIds.isEmpty ? null : content.activities[lesson.itemIds.first]?.skillId;
+
+  /// How the child is served in a skill of the course (see `servedRoute`): the parent's route, and for a reader the skill's `readerAs` and
+  /// what strand 1 of the child's placement found. A land has no routes (null); a skill that is not known is served as the lesson is.
+  String? Function(String?) _servedRoutes(PackContent content) {
+    if (!Course.isLanguage(content.course)) return (String? _) => null;
+    final String? route = ref.read(languagesProvider).value?.of(widget.profileId, content.course).route;
+    // Only a reader needs the placement: nothing else is read, so a lesson of a new learner or a heritage speaker starts as before.
+    final Set<String> assumed = route != 'reader'
+        ? const <String>{}
+        : (ref.read(languageCoursesProvider(widget.profileId)).value ?? const <LanguageCourse>[])
+              .where((LanguageCourse c) => c.course == content.course)
+              .expand((LanguageCourse c) => c.assumed)
+              .toSet();
+    return (String? skillId) => servedRoute(
+      route: route,
+      skill: skillId == null ? null : content.skills[skillId],
+      assumed: assumed,
+      placement: content.placement,
+    );
+  }
+
   LessonController _controllerFor(PackContent content, Guide guide) {
     final LessonController? have = _controller;
     if (have != null) return have;
+    // How the child is served in a skill of a language course: the parent's route, with a reader resolved by the skill and by what
+    // strand 1 of its placement found (a land has no routes). What is not read yet counts as a new learner.
+    final String? Function(String?) served = _servedRoutes(content);
     final LessonController made = _controller = LessonController(
       content: content,
       lesson: widget.mission ?? content.lessons[widget.lessonId]!,
@@ -361,9 +391,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       tutorContext: _tutor == null ? null : _tutorContext(guide, content),
       timeIsUp: _timeIsUp,
       flow: widget.flow,
-      route: Course.isLanguage(content.course)
-          ? ref.read(languagesProvider).value?.of(widget.profileId, content.course).route
-          : null,
+      route: served(_lessonSkill(content, widget.mission ?? content.lessons[widget.lessonId]!)),
+      routeOfSkill: served,
+      // The visit's quiet fallback turns a say step that is picture first back into echo, silently.
+      echoOnly: () => _quiet.echoOnly,
       // The child's first name goes on the tiles of an own-name item on this phone and nowhere else (decision 25).
       personalise: OwnName(
         childName: ref.read(activeProfileProvider)?.name,
@@ -554,6 +585,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         SayItActivity() => SayItSession(c, a, say: _makeSayStep(c, a)),
       };
       _session!.playClips = _playClips;
+      _session!.untilQuiet = _director.untilQuiet;
       _sessionIndex = c.index;
       // The old stage is still on screen for this frame; let it go afterwards.
       if (old != null) SchedulerBinding.instance.addPostFrameCallback((_) => old.dispose());

@@ -551,9 +551,9 @@
       "note": "teach all six words; items 01 to 06 and 17 to 20, then 07 to 16 on later visits"
     },
     "heritage": {
-      "teach": false,
+      "hear": true,
       "order": "mixed",
-      "note": "teach: one hearing (a single hearing of the words; not built, so no teach screen)"
+      "note": "one hearing of each word (hearing screens th01 to th06), each before the first lesson that asks it; no teach screens for a heritage speaker"
     },
     "reader": {
       "as": "heritage",

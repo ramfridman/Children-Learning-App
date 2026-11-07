@@ -38,9 +38,9 @@
         "rus.a06.tc06"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     }
   ]
 }

@@ -779,6 +779,7 @@ List<Problem> validatePack({
         checkVo(file, 'say.heard.vo', (speak['heard']! as Map<String, Object?>)['vo']);
         checkVo(file, 'say.together.vo', (speak['together']! as Map<String, Object?>)['vo']);
         _sayWords(file, a['course'] as String? ?? course, speak, say);
+        _sayRoutes(file, a, speak, say, course: a['course'] as String? ?? course);
       case 'give_n':
         checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> source = scene['source']! as Map<String, Object?>;
@@ -842,12 +843,33 @@ List<Problem> validatePack({
       }
     }
     for (final (int i, Map<String, Object?> set) in _maps(l['teach']).indexed) {
+      final bool hear = set['mode'] == 'hear';
+      final List<Object?> routes = set['routes']! as List<Object?>;
+      // A teach screen is for a new learner and never for a heritage speaker (the syllabus's rule); a hearing screen is for a heritage
+      // speaker. The reader is resolved to one of the two before the lesson is built, so it is no route of a set.
+      if (routes.any((Object? r) => r != (hear ? 'heritage' : 'new'))) {
+        say(
+          file,
+          'teach[$i].routes',
+          hear
+              ? 'a set of hearing screens (mode hear) is for the heritage route only'
+              : 'a set of teach screens is for the new route only: a heritage speaker is never shown one',
+        );
+      }
       for (final (int j, Object? item) in (set['items']! as List<Object?>).indexed) {
         final Map<String, Object?>? doc = activities[item];
         if (doc == null) {
           say(file, 'teach[$i].items[$j]', 'there is no activity "$item" in this pack');
         } else if (!_isTeachScreen(doc)) {
           say(file, 'teach[$i].items[$j]', '"$item" is not a teach screen (a say_it with answer.teach)');
+        } else if (_isHearScreen(doc) != hear) {
+          say(
+            file,
+            'teach[$i].items[$j]',
+            hear
+                ? '"$item" is a teach screen, and a hear set holds hearing screens (answer.hear)'
+                : '"$item" is a hearing screen, and it is in a hear set only',
+          );
         } else if (l['items'] is List<Object?> && (l['items']! as List<Object?>).contains(item)) {
           say(
             file,
@@ -866,6 +888,9 @@ List<Problem> validatePack({
   skills.forEach((String id, Map<String, Object?> s) {
     final String file = 'skill.$id.json';
     _skillId(file, id, s, say, course: course);
+    if (s.containsKey('readerAs') && course != Course.rus) {
+      say(file, 'readerAs', 'a reader route belongs to the Russian course');
+    }
     for (final (int i, Map<String, Object?> p) in _maps(s['prerequisites']).indexed) {
       if (p['skill'] == id) say(file, 'prerequisites[$i].skill', 'a skill cannot need itself');
     }
@@ -1127,6 +1152,41 @@ void _voiceAnswer(
 /// A teach screen: a `say_it` whose answer says `teach` (the child is shown the word, not asked it).
 bool _isTeachScreen(Map<String, Object?> doc) =>
     doc['template'] == 'say_it' && (doc['answer'] as Map<String, Object?>?)?['teach'] == true;
+
+/// A hearing screen: a teach screen that is only heard (`answer.hear`).
+bool _isHearScreen(Map<String, Object?> doc) => (doc['answer'] as Map<String, Object?>?)?['hear'] == true;
+
+/// The routes of a say step (docs/languages/band-a-build.md 2.6.1 R3 and R4). Only the Russian course has routes, so only it may hear a word
+/// (`answer.hear`, which is a teach screen too) or give a step an order. A teach or hearing screen is always echo, so it has neither an order
+/// nor a picture-first line; any other step has both or none, and its picture-first line asks for the word, so no clip follows it.
+void _sayRoutes(
+  String file,
+  Map<String, Object?> a,
+  Map<String, Object?> speak,
+  Say say, {
+  required String course,
+}) {
+  final Map<String, Object?> answer = a['answer']! as Map<String, Object?>;
+  final bool hear = answer['hear'] == true;
+  final bool screen = answer['teach'] == true;
+  final bool ordered = speak.containsKey('order');
+  final bool asks = speak.containsKey('pictureFirst');
+  if (hear && !screen) say(file, 'answer.hear', 'a hearing screen is a teach screen (answer.teach) too');
+  if ((hear || ordered || asks) && course != Course.rus) {
+    say(file, hear ? 'answer.hear' : 'say.order', 'a route belongs to the Russian course');
+  }
+  if (screen && (ordered || asks)) {
+    say(file, 'say.order', 'a teach or hearing screen is always echo: it has no order and no pictureFirst');
+  }
+  if (ordered != asks) {
+    say(file, 'say.order', 'order and pictureFirst go together: a step has both or neither');
+  }
+  final Map<String, Object?> first =
+      (speak['pictureFirst'] as Map<String, Object?>?) ?? const <String, Object?>{};
+  if (first.containsKey('target') || first.containsKey('target2')) {
+    say(file, 'say.pictureFirst', 'asks for the word before it is heard: no clip may follow the line');
+  }
+}
 
 List<Map<String, Object?>> _maps(Object? v) => <Map<String, Object?>>[
   for (final Object? e in (v as List<Object?>? ?? const <Object?>[])) e! as Map<String, Object?>,
@@ -1538,7 +1598,7 @@ void _languageFieldsInLands(String file, Map<String, Object?> a, void Function(S
         final String here = path.isEmpty ? k : '$path.$k';
         final bool option = RegExp(r'^answer\.options\[\d+\]$').hasMatch(path);
         final bool own =
-            const <String>{'show', 'clips', 'pole', 'pairWith', 'teach'}.contains(k) ||
+            const <String>{'show', 'clips', 'pole', 'pairWith', 'teach', 'hear'}.contains(k) ||
             ((k == 'target' || k == 'target2') && v is String) ||
             (option && const <String>{'text', 'clip', 'reveal'}.contains(k));
         if (own) {

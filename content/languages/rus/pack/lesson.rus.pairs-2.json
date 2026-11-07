@@ -29,5 +29,17 @@
       }
     ]
   },
-  "sequence": 64
+  "sequence": 64,
+  "teach": [
+    {
+      "items": [
+        "rus.a20.th05",
+        "rus.a20.th06"
+      ],
+      "routes": [
+        "heritage"
+      ],
+      "mode": "hear"
+    }
+  ]
 }

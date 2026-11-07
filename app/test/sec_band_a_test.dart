@@ -13,6 +13,7 @@ import 'package:nitznutz/content/schema.dart' show Problem;
 
 import '../tool/pack_builder_lib.dart';
 import 'support/pack_fixtures.dart';
+import 'support/temp_dir.dart';
 
 const String _languages = '../content/languages';
 
@@ -28,7 +29,7 @@ void main() {
       if (e is File) e.copySync('${dir.path}${Platform.pathSeparator}${e.uri.pathSegments.last}');
     }
   });
-  tearDown(() => dir.deleteSync(recursive: true));
+  tearDown(() => removeTempDir(dir));
 
   void change(String file, void Function(Map<String, Object?> doc) edit) {
     final File f = File('${dir.path}${Platform.pathSeparator}$file');

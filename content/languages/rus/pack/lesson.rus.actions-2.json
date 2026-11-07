@@ -39,9 +39,9 @@
         "rus.a04.tc07"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     }
   ]
 }

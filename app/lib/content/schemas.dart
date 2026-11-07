@@ -156,8 +156,20 @@ const List<String> poles = <String>['yes', 'no', 'same', 'different'];
 /// not set yet is served as a new learner.
 const List<String> languageRoutes = <String>['new', 'heritage', 'reader'];
 
-/// The routes a teach set may name: a heritage speaker already knows the words and is never shown a teach screen (the syllabus's rule).
-const List<String> teachRoutes = <String>['new', 'reader'];
+/// The routes a lesson's `teach` set may name. The reader is served as a new learner or as a heritage speaker before the lesson is built
+/// (`servedRoute`), so it is no value here. What each route may be shown is held by the validator: a `teach` set only the new learner
+/// (a heritage speaker already knows the words and is never shown a teach screen), a `hear` set only the heritage speaker.
+const List<String> teachRoutes = <String>['new', 'heritage'];
+
+/// The two kinds of set a lesson's `teach` holds: teach screens (the new words, echo) and hearing screens (one hearing of a word, no demand).
+const List<String> teachModes = <String>['teach', 'hear'];
+
+/// How a skill serves a child whose route is `reader`: by its oral route (the placement's strand 1 decides) or as a heritage speaker.
+const List<String> readerServes = <String>['oral', 'heritage'];
+
+/// The order a say step is played in on a route: the model first and then the child (echo), or the picture and the question first, and the
+/// model after a pause (picture).
+const List<String> sayOrders = <String>['echo', 'picture'];
 
 const SString _id = SString(minLength: 3, maxLength: 81, pattern: Patterns.activityId);
 
@@ -420,6 +432,9 @@ const SObject skillSchema = SObject(<String, SField>{
   // The strand of the course the skill is in (frame section 4.1: `lis`, `spk`, `pa`, `ph`, `rd`, `wr`; `ol`, `pk`, `dec`; `voc`,
   // `grm`, `pho`, `let`, `rea`, `wri`): the parent's progress view groups a language's skills by it.
   'strand': SField(SString(minLength: 2, maxLength: 4, pattern: r'[a-z]{2,4}'), required: false),
+  // The Russian course: how a child whose route is `reader` is served in this skill (`oral`, the default: as the placement's first strand
+  // says; or as a heritage speaker). Only the Russian course has routes.
+  'readerAs': SField(SEnum(readerServes), required: false),
   'masteryRequires': SField(
     SObject(<String, SField>{
       'successes': SField(SInt(min: 1, max: 20), required: false),
@@ -563,14 +578,16 @@ const SObject lessonSchema = SObject(<String, SField>{
   // The place of the lesson on the path of its land (M9): the island plays the first lesson, in this order, that the
   // child has not finished yet. Lessons without one come last.
   'sequence': SField(SInt(min: 1, max: 500), required: false),
-  // The teach screens of a language lesson (LS09, echo), each set with the routes that are shown it: a new learner is shown the new
-  // words before the lesson asks them; a heritage speaker, who knows them, is never shown them. The ids are activities of the pack
-  // that are teach screens (`say_it` with `answer.teach`) and are not in `items`.
+  // The screens that come before a language lesson's items, each set with the routes that are shown it: teach screens (LS09, echo;
+  // mode `teach`, the default) for a new learner, who is shown the new words before the lesson asks them, and hearing screens (mode
+  // `hear`) for a heritage speaker, who hears a word once before it is asked. The ids are activities of the pack that are teach screens
+  // (`say_it` with `answer.teach`) and are not in `items`.
   'teach': SField(
     SArray(
       SObject(<String, SField>{
         'items': SField(SArray(_id, minItems: 1, maxItems: 8)),
         'routes': SField(SArray(SEnum(teachRoutes), minItems: 1, maxItems: 2)),
+        'mode': SField(SEnum(teachModes), required: false),
       }),
       minItems: 1,
       maxItems: 6,
@@ -1745,6 +1762,13 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           // "I heard:" and "let's say it together" (Hebrew frame lines; the word follows as the line's own target clip).
           'heard': SField(_spoken),
           'together': SField(_spoken),
+          // The Russian course: the order the step is played in on each route, and the line that asks the child to say the word before it
+          // is heard (never with a clip after it: the word is what the child is asked for).
+          'order': SField(
+            SObject(<String, SField>{'new': SField(SEnum(sayOrders)), 'heritage': SField(SEnum(sayOrders))}),
+            required: false,
+          ),
+          'pictureFirst': SField(_spoken, required: false),
         }),
       ),
       'answer': const SField(
@@ -1755,6 +1779,9 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           // A teach screen of a lesson (`lesson.teach`): the word is shown, not asked. It is never scored, writes nothing, has no
           // microphone, and the engine does not see it.
           'teach': SField(SBool(), required: false),
+          // A hearing screen (`lesson.teach` mode `hear`): a teach screen that is only heard: the line and the word once, no microphone, no
+          // "I said it", the word again as often as the child touches the replay button, the picture once the word has been said.
+          'hear': SField(SBool(), required: false),
         }),
       ),
     }),

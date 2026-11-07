@@ -19,6 +19,15 @@
       "frame": "f03",
       "heard": "f04",
       "together": "f03"
+    },
+    "sayOrder": {
+      "new": "echo",
+      "heritage": "picture"
+    },
+    "pictureFirst": "f06",
+    "afterBubble": "f07",
+    "hear": {
+      "frame": "f41"
     }
   },
   "feedback": {
@@ -517,6 +526,11 @@
       "he": "אֶפְשָׁר לַעֲנוֹת בִּתְמוּנָה, אוֹ בְּקוֹל. אֶפְשָׁר גַּם לְדַלֵּג.",
       "voice": "אפשר לענות בתמונה, או בקול. אפשר גם לדלג.",
       "review": "text-ready"
+    },
+    "f41": {
+      "he": "הַקְשִׁיבוּ:",
+      "voice": "הקשיבו:",
+      "review": "needs-editor"
     }
   },
   "teachPictures": {

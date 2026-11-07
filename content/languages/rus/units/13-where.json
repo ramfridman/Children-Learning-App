@@ -12,155 +12,131 @@
   "items": [
     {
       "id": "01",
-      "kind": "tap",
-      "frame": "f01",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "picture": "scene-room-ball",
       "target": "ch-gde-mjach",
       "options": [
-        {
-          "pic": "ball",
-          "clip": "w-mjach"
-        },
-        {
-          "pic": "balloon",
-          "clip": "w-sharik"
-        },
-        {
-          "pic": "doll",
-          "clip": "w-kukla"
-        }
+        "ball",
+        "balloon",
+        "doll"
       ],
+      "right": "ball",
       "wrong": {
         "balloon": "sem",
         "doll": "sem"
       },
-      "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
+      "after": "ch-vot-mjach",
+      "ladder": "HL-1",
+      "rep": "embodied"
     },
     {
       "id": "02",
-      "kind": "tap",
-      "frame": "f01",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "picture": "scene-room-cat",
       "target": "ch-gde-koshka",
       "options": [
-        {
-          "pic": "cat",
-          "clip": "w-koshka"
-        },
-        {
-          "pic": "dog",
-          "clip": "w-sobaka"
-        },
-        {
-          "pic": "porridge",
-          "clip": "w-kasha"
-        }
+        "cat",
+        "dog",
+        "porridge"
       ],
+      "right": "cat",
       "wrong": {
         "dog": "sem",
         "porridge": "sound"
       },
-      "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
+      "after": "ch-vot-koshka",
+      "ladder": "HL-1",
+      "rep": "embodied"
     },
     {
       "id": "03",
-      "kind": "tap",
-      "frame": "f01",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "picture": "scene-room-mouse",
       "target": "ch-gde-mysh",
       "options": [
-        {
-          "pic": "mouse",
-          "clip": "w-mysh"
-        },
-        {
-          "pic": "teddy",
-          "clip": "w-mishka"
-        },
-        {
-          "pic": "cat",
-          "clip": "w-koshka"
-        }
+        "mouse",
+        "teddy",
+        "cat"
       ],
+      "right": "mouse",
       "wrong": {
         "teddy": "sound",
         "cat": "sem"
       },
-      "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
+      "after": "ch-vot-mysh",
+      "ladder": "HL-1",
+      "rep": "embodied"
     },
     {
       "id": "04",
-      "kind": "tap",
-      "frame": "f01",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "picture": "scene-room-hat",
       "target": "ch-gde-shapka",
       "options": [
-        {
-          "pic": "hat-warm",
-          "clip": "w-shapka"
-        },
-        {
-          "pic": "scarf",
-          "clip": "w-sharf"
-        },
-        {
-          "pic": "jacket",
-          "clip": "w-kurtka"
-        }
+        "hat-warm",
+        "scarf",
+        "jacket"
       ],
+      "right": "hat-warm",
       "wrong": {
         "scarf": "sound",
         "jacket": "sem"
       },
-      "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
+      "after": "ch-vot-shapka",
+      "ladder": "HL-1",
+      "rep": "embodied"
     },
     {
       "id": "05",
-      "kind": "tap",
-      "frame": "f01",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "picture": "scene-room-apple",
       "target": "ch-gde-jabloko",
       "options": [
-        {
-          "pic": "apple",
-          "clip": "w-yabloko"
-        },
-        {
-          "pic": "milk",
-          "clip": "w-moloko"
-        },
-        {
-          "pic": "pear",
-          "clip": "w-grusha"
-        }
+        "apple",
+        "milk",
+        "pear"
       ],
+      "right": "apple",
       "wrong": {
         "milk": "sound",
         "pear": "sem"
       },
       "purpose": "check",
-      "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
+      "after": "ch-vot-jabloko",
+      "ladder": "HL-1",
+      "rep": "embodied"
     },
     {
       "id": "06",
-      "kind": "tap",
+      "kind": "listen_do",
+      "mode": "hotspots",
       "frame": "f01",
+      "picture": "scene-garden-family",
       "target": "ch-gde-mama",
       "options": [
-        {
-          "pic": "fam-mother",
-          "clip": "w-mama"
-        },
-        {
-          "pic": "fam-father",
-          "clip": "w-papa"
-        },
-        {
-          "pic": "fam-grandmother",
-          "clip": "w-babushka"
-        }
+        "mother",
+        "father",
+        "grandmother"
       ],
+      "right": "mother",
       "wrong": {
-        "fam-father": "sound",
-        "fam-grandmother": "sem"
+        "father": "sound",
+        "grandmother": "sem"
       },
       "purpose": "check",
-      "then": "listen_do scene search in scene-garden (the family)"
+      "after": "ch-vot-mama",
+      "ladder": "HL-1",
+      "rep": "embodied"
     },
     {
       "id": "p01",
@@ -290,7 +266,7 @@
       ]
     },
     "reader": {
-      "as": "new",
+      "as": "oral",
       "note": "as heritage or new"
     }
   }

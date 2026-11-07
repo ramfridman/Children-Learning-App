@@ -343,7 +343,7 @@
         "text:7",
         "text:ס",
         "text:0",
-        "shape-triangle"
+        "shape-heart"
       ],
       "letters": [
         "text:ז",
@@ -352,7 +352,7 @@
       "wrong": {
         "text:7": "print_num",
         "text:0": "print_num",
-        "shape-triangle": "print_shape"
+        "shape-heart": "print_shape"
       },
       "face": "letter",
       "ladder": "HL-PRINT"
@@ -390,13 +390,13 @@
           "bin": "other"
         },
         {
-          "pic": "star",
+          "pic": "shape-flower",
           "bin": "other"
         }
       ],
       "wrong": {
         "9": "print_num",
-        "star": "print_shape"
+        "shape-flower": "print_shape"
       },
       "ladder": "HL-PRINT",
       "font": "display"

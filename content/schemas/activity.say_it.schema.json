@@ -418,6 +418,86 @@
             "caption"
           ],
           "additionalProperties": false
+        },
+        "order": {
+          "type": "object",
+          "properties": {
+            "new": {
+              "type": "string",
+              "enum": [
+                "echo",
+                "picture"
+              ]
+            },
+            "heritage": {
+              "type": "string",
+              "enum": [
+                "echo",
+                "picture"
+              ]
+            }
+          },
+          "required": [
+            "new",
+            "heritage"
+          ],
+          "additionalProperties": false
+        },
+        "pictureFirst": {
+          "type": "object",
+          "properties": {
+            "vo": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 83,
+              "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+            },
+            "caption": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "const": "he"
+                  },
+                  "v": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 240
+                  }
+                },
+                "required": [
+                  "t",
+                  "v"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1,
+              "maxItems": 1
+            },
+            "target": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 83,
+              "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+            },
+            "target2": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 83,
+              "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+            },
+            "show": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            }
+          },
+          "required": [
+            "vo",
+            "caption"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [
@@ -439,6 +519,9 @@
           "type": "boolean"
         },
         "teach": {
+          "type": "boolean"
+        },
+        "hear": {
           "type": "boolean"
         }
       },

@@ -518,12 +518,16 @@
       "file": "shape_dot.svg"
     },
     {
-      "id": "shape_ring",
-      "file": "shape_ring.svg"
+      "id": "shape_flower",
+      "file": "shape_flower.svg"
     },
     {
-      "id": "shape_triangle",
-      "file": "shape_triangle.svg"
+      "id": "shape_heart",
+      "file": "shape_heart.svg"
+    },
+    {
+      "id": "shape_ring",
+      "file": "shape_ring.svg"
     },
     {
       "id": "shape_triangle_open",

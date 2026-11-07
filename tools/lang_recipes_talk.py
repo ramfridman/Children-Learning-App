@@ -84,7 +84,15 @@ class Talk:
         doc = self.head(sk, sid, aid, item, where, 'say_it', rep='embodied', goal='say the word with the voice', attempts=1)
         # A single word is shown in a chip under the line; a chunk (a sentence) is only heard.
         item = dict(item, target=word, show=item.get('show', bool(row) and ' ' not in (row.get('shown') or '').strip()))
-        if not self.lines_of(doc, item, where, (), hints=False):
+        # A say step of a course with routes (docs/languages/band-a-build.md 2.6.1 R4): the prompt is the echo one ("let's say it together",
+        # then the word), and `say.order` and `say.pictureFirst` let the player ask for the word before it is heard. A teach or hearing
+        # screen is always echo.
+        order = None if item.get('_screen') else self.say_order(sk)
+        picture_first = self.picture_first(item, where) if order else None
+        if order and picture_first is None:
+            return None
+        frame = (item.get('together') or self.defaults.get('together')) if order else None
+        if not self.lines_of(doc, item, where, (), frame=frame, hints=False):
             return None
         heard = self.spoken({'line': item.get('heard') or self.defaults.get('heard'), 'target': word}, where + ' heard', item)
         together = self.spoken({'line': item.get('together') or self.defaults.get('together'), 'target': word},
@@ -95,6 +103,8 @@ class Talk:
         if item.get('keyWords'):
             say['keyWords'] = item['keyWords']
         say.update({'clip': self.vo(word), 'heard': heard, 'together': together})
+        if order:
+            say.update({'order': order, 'pictureFirst': picture_first})
         doc['scene'] = {'picture': {'sprite': self.asset(item['picture'], where)}}
         doc['say'] = say
         doc['answer'] = {'type': 'say_it', 'scored': bool(item.get('scored', False))}

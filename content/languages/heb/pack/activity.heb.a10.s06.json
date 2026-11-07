@@ -175,7 +175,7 @@
       },
       {
         "id": "i5",
-        "sprite": "asset:star",
+        "sprite": "asset:shape_flower",
         "bin": "b2",
         "misconception": "heb.pk.print_shape"
       }

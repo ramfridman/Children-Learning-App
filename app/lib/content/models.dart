@@ -1532,11 +1532,35 @@ class SayItActivity extends Activity {
       together = Spoken.fromJson(_map(json['say'])['together']),
       scored = _map(json['answer'])['scored'] == true,
       teach = _map(json['answer'])['teach'] == true,
+      hear = _map(json['answer'])['hear'] == true,
+      order = <String, String>{
+        for (final MapEntry<String, Object?> e in _maybe(_map(json['say'])['order']).entries)
+          e.key: e.value! as String,
+      },
+      pictureFirstLine = _map(json['say'])['pictureFirst'] == null
+          ? null
+          : Spoken.fromJson(_map(json['say'])['pictureFirst']),
       super._();
 
   /// A teach screen (`answer.teach`): the word is shown and said twice, the child may say it with the voice. It is never scored, writes no
   /// attempt, has no microphone and no help (nothing can be got wrong), and the engine does not see it.
   final bool teach;
+
+  /// A hearing screen (`answer.hear`, always a teach screen too): the line and the word once, no microphone, no "I said it", the word again
+  /// whenever the child touches the replay button; the picture shows once the word has been said. It writes nothing either.
+  final bool hear;
+
+  /// The order the step is played in on each route (`echo`: the model first, then the child; `picture`: the question first, the model after
+  /// a pause), by route name; empty for a step that has no routes (a course that has none, a teach or hearing screen).
+  final Map<String, String> order;
+
+  /// The line that asks the child to say the word before it is heard (no clip after it), or null.
+  final Spoken? pictureFirstLine;
+
+  /// Whether the child is asked for the word before it is heard on [route] (a route not set counts as a new learner). [echoOnly] is the
+  /// visit's quiet fallback (too many unsure turns): the rest of the visit is echo, silently. A teach or hearing screen is always echo.
+  bool picturesFirst(String? route, {bool echoOnly = false}) =>
+      !teach && !echoOnly && pictureFirstLine != null && order[route ?? 'new'] == 'picture';
 
   /// The picture (an `asset:` reference).
   final String picture;
@@ -1674,6 +1698,7 @@ class Lesson {
           TeachSet(
             itemIds: <String>[for (final Object? i in t['items']! as List<Object?>) i! as String],
             routes: <String>{for (final Object? r in t['routes']! as List<Object?>) r! as String},
+            hear: t['mode'] == 'hear',
           ),
       ],
       stopAfterStruggles = 0,
@@ -1711,13 +1736,17 @@ class Lesson {
   final Spoken celebration;
 }
 
-/// A set of new words to be shown before a lesson asks them (LS09, echo): the teach screens, in order, and the routes of a language course
-/// that are shown them. A heritage speaker already knows the words and is never shown them.
+/// A set of screens to be shown before a lesson asks its words, in order, and the routes of a language course that are shown them: the
+/// teach screens of new words (LS09, echo) for a new learner, or, when [hear], the hearing screens of words a heritage speaker is to hear
+/// once before they are asked. A heritage speaker already knows the words and is never shown a teach screen.
 class TeachSet {
-  const TeachSet({required this.itemIds, required this.routes});
+  const TeachSet({required this.itemIds, required this.routes, this.hear = false});
 
   final List<String> itemIds;
   final Set<String> routes;
+
+  /// A set of hearing screens (`mode` `hear`), not of teach screens.
+  final bool hear;
 }
 
 /// A skill of the pack, for the learning engine.
@@ -1750,6 +1779,7 @@ class SkillDoc {
         _ => null,
       },
       strand = json['strand'] as String?,
+      readerAs = (json['readerAs'] as String?) ?? 'oral',
       masteryRequires = (json['masteryRequires'] as Map<String, Object?>?) ?? const <String, Object?>{},
       initialStabilityDays = (_map(json['retention'])['initialStabilityDays']! as num).toDouble(),
       targetRetention = (_map(json['retention'])['targetRetention']! as num).toDouble();
@@ -1783,6 +1813,10 @@ class SkillDoc {
 
   /// The strand of the course (`lis`, `ph`, `rea` ...) the progress view groups the skill under; null in the lands.
   final String? strand;
+
+  /// How a child whose route is `reader` is served in this skill: `oral` (the default: as strand 1 of the placement says) or `heritage`
+  /// (see `servedRoute`). Only the Russian course says anything else.
+  final String readerAs;
   final Map<String, Object?> masteryRequires;
   final double initialStabilityDays;
   final double targetRetention;
@@ -2027,14 +2061,18 @@ class PackContent {
       if (activities[id] case final Activity a when !a.teachScreen) a,
   ];
 
-  /// What a child on [route] plays in [lesson]: the teach screens of the sets that route is shown, then the lesson's items. A route that
-  /// is not set yet counts as a new learner (the stress marks do the same). A heritage speaker is never shown a teach screen: the schema
-  /// does not let a set name that route, and this refuses it as well, whatever a pack says.
-  List<Activity> itemsFor(Lesson lesson, {String? route}) => <Activity>[
-    if (route != 'heritage')
+  /// What a child served on [route] (`new` or `heritage`: [servedRoute] has resolved a reader) plays in [lesson]: the screens of the sets
+  /// that route is shown, then the lesson's items, the same for every route. A route that is not set yet counts as a new learner. A
+  /// heritage speaker is never shown a teach screen (a `teach` set may not name that route) and is shown a hearing screen only from a
+  /// `hear` set, a new learner never; a pack that says otherwise is refused here as well. Any other route (a reader nobody resolved) is
+  /// served as a new learner, the side that shows more. A route never removes, adds or reorders a lesson's items.
+  List<Activity> itemsFor(Lesson lesson, {String? route}) {
+    final bool heritage = route == 'heritage';
+    return <Activity>[
       for (final TeachSet set in lesson.teach)
-        if (set.routes.contains(route ?? 'new'))
+        if (set.routes.contains(heritage ? 'heritage' : 'new') && set.hear == heritage)
           for (final String id in set.itemIds) ?activities[id],
-    ...itemsOf(lesson),
-  ];
+      ...itemsOf(lesson),
+    ];
+  }
 }

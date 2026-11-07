@@ -466,8 +466,32 @@
       "file": "scarf.svg"
     },
     {
+      "id": "scene_garden_family",
+      "file": "scene_garden_family.svg"
+    },
+    {
       "id": "scene_picnic",
       "file": "scene_picnic.svg"
+    },
+    {
+      "id": "scene_room_apple",
+      "file": "scene_room_apple.svg"
+    },
+    {
+      "id": "scene_room_ball",
+      "file": "scene_room_ball.svg"
+    },
+    {
+      "id": "scene_room_cat",
+      "file": "scene_room_cat.svg"
+    },
+    {
+      "id": "scene_room_hat",
+      "file": "scene_room_hat.svg"
+    },
+    {
+      "id": "scene_room_mouse",
+      "file": "scene_room_mouse.svg"
     },
     {
       "id": "scene_toybox",

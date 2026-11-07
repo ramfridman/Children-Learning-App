@@ -39,11 +39,11 @@
     "altText": "תְּמוּנָה וּמִלָּה לוֹמַר"
   },
   "prompt": {
-    "vo": "vo:rus.f06",
+    "vo": "vo:rus.f03",
     "caption": [
       {
         "t": "he",
-        "v": "מַה זֶּה? נַסּוּ לְהַגִּיד בְּרוּסִית."
+        "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
     "target": "vo:rus.w_rot",
@@ -119,6 +119,19 @@
         }
       ],
       "target": "vo:rus.w_rot"
+    },
+    "order": {
+      "new": "picture",
+      "heritage": "picture"
+    },
+    "pictureFirst": {
+      "vo": "vo:rus.f06",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מַה זֶּה? נַסּוּ לְהַגִּיד בְּרוּסִית."
+        }
+      ]
     }
   },
   "answer": {

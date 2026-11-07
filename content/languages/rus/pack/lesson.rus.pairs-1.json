@@ -43,7 +43,20 @@
       ],
       "routes": [
         "new"
-      ]
+      ],
+      "mode": "teach"
+    },
+    {
+      "items": [
+        "rus.a20.th01",
+        "rus.a20.th02",
+        "rus.a20.th03",
+        "rus.a20.th04"
+      ],
+      "routes": [
+        "heritage"
+      ],
+      "mode": "hear"
     }
   ]
 }

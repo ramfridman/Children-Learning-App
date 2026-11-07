@@ -40,9 +40,9 @@
         "rus.a05.tc16"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     }
   ]
 }

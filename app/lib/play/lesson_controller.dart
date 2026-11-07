@@ -155,6 +155,8 @@ class LessonController extends ChangeNotifier {
     this.timeIsUp,
     this.flow,
     this.route,
+    this.routeOfSkill,
+    this.echoOnly,
     Activity Function(Activity)? personalise,
     Clock clock = const SystemClock(),
   }) : _personalise = personalise ?? _ownNameWithoutAName,
@@ -177,9 +179,19 @@ class LessonController extends ChangeNotifier {
   /// here and nowhere else. A controller built with no personaliser makes them from no name, so the item still has a face to draw.
   final Activity Function(Activity) _personalise;
 
-  /// The child's route in a language course (`new`, `heritage` or `reader`), or null: it decides which teach screens come before the items
-  /// ([PackContent.itemsFor]). A heritage speaker is never shown one.
+  /// How the child is served in the lesson's skill in a language course, `new` or `heritage` ([servedRoute] has resolved a reader), or null
+  /// for a land: it decides which screens come before the items ([PackContent.itemsFor]). A heritage speaker is never shown a teach screen.
   final String? route;
+
+  /// How the child is served in another skill (a say step's own skill); null: every skill is served as [route].
+  final String? Function(String skillId)? routeOfSkill;
+
+  /// Asked when a say step begins: is the visit's quiet fallback on (too many unsure turns)? Then the step is echo whatever its route says.
+  final bool Function()? echoOnly;
+
+  /// The say step on screen asks for the word before the voice says it (picture first, R4 of docs/languages/band-a-build.md 2.6.1): decided
+  /// when the step begins, from its order on the route the child is served on and the quiet fallback, and kept until the next step.
+  bool pictureFirst = false;
 
   /// How long the progress trail is: the lesson's items, or at most what the flow can give.
   int get trailLength => flow?.length ?? items.length;
@@ -403,10 +415,19 @@ class LessonController extends ChangeNotifier {
     hintShown = 0;
     _recent.clear();
     askedLine = null;
-    _say(a.promptLine);
+    _say(_promptOf(a));
     _markMs = _clock.nowMs();
     resetNonce++;
     _prefetchTutor(a);
+  }
+
+  /// The line a step opens with: the question alone when a say step is played picture first (the word follows after a pause, from the
+  /// session), otherwise the activity's own prompt. Sets [pictureFirst].
+  Spoken _promptOf(Activity a) {
+    pictureFirst =
+        a is SayItActivity &&
+        a.picturesFirst(routeOfSkill?.call(a.skillId) ?? route, echoOnly: echoOnly?.call() ?? false);
+    return pictureFirst ? (a as SayItActivity).pictureFirstLine! : a.promptLine;
   }
 
   /// The replay button: the question again, without any help.
@@ -414,7 +435,7 @@ class LessonController extends ChangeNotifier {
     if (finished) return;
     actionNonce++;
     if (!replayQuiet) {
-      _say(askedLine ?? current.promptLine);
+      _say(askedLine ?? _promptOf(current));
       voiceReplaces = true;
     }
     feedback = FeedbackKind.none;
@@ -555,6 +576,24 @@ class LessonController extends ChangeNotifier {
     if (finished || solved) return;
     actionNonce++;
     _say(a.together);
+    notifyListeners();
+  }
+
+  /// A say step asked picture first has now said the word (the pause is over): the word shows in its chip under the line, as in an echo
+  /// step. Nothing is said or written.
+  void showWord() {
+    final Activity a = current;
+    if (finished || a is! SayItActivity || bubbleShow == a.promptLine.show) return;
+    bubbleShow = a.promptLine.show;
+    notifyListeners();
+  }
+
+  /// The tap on the picture of a hearing screen: the step is over. Nothing is written, and nothing more is said (the word was heard once,
+  /// and again if the child asked for it).
+  void hearDone() {
+    if (finished || solved) return;
+    actionNonce++;
+    solved = true;
     notifyListeners();
   }
 

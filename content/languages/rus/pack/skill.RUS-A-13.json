@@ -19,7 +19,8 @@
     }
   ],
   "representations": [
-    "pictorial"
+    "pictorial",
+    "embodied"
   ],
   "misconceptions": [
     "rus.lis.sem",
@@ -29,5 +30,6 @@
   "retention": {
     "targetRetention": 0.9,
     "initialStabilityDays": 1
-  }
+  },
+  "readerAs": "oral"
 }

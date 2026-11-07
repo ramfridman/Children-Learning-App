@@ -25,4 +25,5 @@ In `content/languages/pictures` (generator `tools/make_language_pictures_band_a.
 | `scene-room-apple` | 05 | milk | **apple** (on the sill) | pear |
 
 - **RUS-A-13 06:** `scene-garden-family`, papa, **mama** and babushka of the approved family standing in a garden (parts `father`, `mother`, `grandmother`).
+- **Wired (app-developer, 2026-11-07):** RUS-A-13 items 01 to 06 are LS11 hotspots on these six pictures (01 to 05 ask with f19, 06 with f01 because the garden is not a room), each praise ending with the "Вот …!" clip; the touch areas are the ones in the `.hotspots.json` files, unchanged.
 - **RUS-A-16 01 and 04:** `st1-p1.hotspots.json` (`sobaka`, the dog; `mjach`, the ball) and `st2-p1.hotspots.json` (`jozhik`, the hedgehog), at least 96 of the 384 x 216 units. The recipe finds them by the word's clip (`w-sobaka` → `sobaka`), so the words of 01 and 04 are in the pack at the next `python tools/lang_pack.py rus`.

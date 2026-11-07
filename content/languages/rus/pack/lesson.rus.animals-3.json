@@ -38,9 +38,9 @@
         "rus.a05.tc12"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     }
   ]
 }

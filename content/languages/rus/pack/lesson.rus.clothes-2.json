@@ -42,9 +42,9 @@
         "rus.a09.tc10"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     }
   ]
 }

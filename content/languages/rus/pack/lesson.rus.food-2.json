@@ -41,9 +41,9 @@
         "rus.a07.tc10"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     }
   ]
 }

@@ -38,9 +38,9 @@
         "rus.a07.tc17"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     }
   ]
 }

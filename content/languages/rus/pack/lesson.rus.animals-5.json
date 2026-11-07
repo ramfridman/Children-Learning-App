@@ -40,9 +40,9 @@
         "rus.a05.tc20"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     },
     {
       "items": [
@@ -50,9 +50,9 @@
         "rus.a05.tc22"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     }
   ]
 }

@@ -297,12 +297,13 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
         sk = {'doc': skill, 'file': fname, 'band': m.group(2), 'slug': (m.group(2) + m.group(3) + (m.group(4) or '')).lower(),
               'items': [], 'ownName': unit.get('ownName')}
         self.skills[sid] = sk
+        # The routes come first: the say steps are made by the order the unit's routes give them.
+        self.check_routes(fname, unit)
+        sk['routes'] = unit.get('routes') if isinstance(unit.get('routes'), dict) else None
         for i, item in enumerate(unit.get('items', [])):
             self._item(fname, sk, sid, item, '%s items[%d]' % (fname, i))
         for i, doc in enumerate(unit.get('docs', [])):
             self._raw(fname, doc, '%s docs[%d]' % (fname, i))
-        self.check_routes(fname, unit)
-        sk['routes'] = unit.get('routes')
         self.teach_items(fname, sk, sid, unit)
         sk['lessons'] = unit.get('lessons', [])
         sk['lessonFile'] = fname
@@ -334,6 +335,8 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
             # A step that goes with the item: the touch on the picture after a say step (`tap`), or the say step after a bubble
             # (`say`). It is an activity of its own, `<id>t` or `<id>s`, played right after.
             step = dict(follow, id=item_id + follow['kind'][0])
+            if follow['kind'] == 'say':
+                step['afterBubble'] = True  # the say step of a puppet's bubble asks "what do we answer?", not "what is this?"
             step_id = aid + follow['kind'][0]
             step_doc = getattr(self, 'recipe_' + RECIPES[follow['kind']])(sk, sid, step_id, step, where + ' then')
             if step_doc is not None:
@@ -483,6 +486,9 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
                 'misconceptions': tags,
                 'retention': d.get('retention', self.defaults.get('retention', {'targetRetention': 0.9, 'initialStabilityDays': 1})),
             }
+            reader = self.reader_as(sk.get('routes'))
+            if reader:
+                doc['readerAs'] = reader
             for key in SKILL_EXTRAS:
                 if key in d:
                     doc[key] = he(d[key]) if key == 'childLine' else d[key]

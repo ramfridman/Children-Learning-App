@@ -38,9 +38,9 @@
         "rus.a03.tc11"
       ],
       "routes": [
-        "new",
-        "reader"
-      ]
+        "new"
+      ],
+      "mode": "teach"
     }
   ]
 }
