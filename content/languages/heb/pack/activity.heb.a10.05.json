@@ -152,8 +152,8 @@
       },
       {
         "id": "o3",
-        "text": "●",
-        "label": "●",
+        "sprite": "asset:shape_dot",
+        "label": "תְּמוּנָה",
         "misconception": "heb.pk.print_shape"
       }
     ],

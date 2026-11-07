@@ -11,11 +11,11 @@
       "options": [
         "text:ב",
         "text:5",
-        "text:●"
+        "shape-dot"
       ],
       "wrong": {
         "text:5": "print_num",
-        "text:●": "print_shape"
+        "shape-dot": "print_shape"
       },
       "frame": "i-letter",
       "ladder": "HL-PRINT",
@@ -27,11 +27,11 @@
       "options": [
         "text:ש",
         "text:7",
-        "text:▲"
+        "shape-triangle"
       ],
       "wrong": {
         "text:7": "print_num",
-        "text:▲": "print_shape"
+        "shape-triangle": "print_shape"
       },
       "frame": "i-letter",
       "ladder": "HL-PRINT",
@@ -43,11 +43,11 @@
       "options": [
         "text:א",
         "text:2",
-        "text:○"
+        "shape-ring"
       ],
       "wrong": {
         "text:2": "print_num",
-        "text:○": "print_shape"
+        "shape-ring": "print_shape"
       },
       "frame": "i-letter",
       "ladder": "HL-PRINT",
@@ -59,11 +59,11 @@
       "options": [
         "text:ו",
         "text:1",
-        "text:△"
+        "shape-triangle-open"
       ],
       "wrong": {
         "text:1": "print_num",
-        "text:△": "print_shape"
+        "shape-triangle-open": "print_shape"
       },
       "frame": "i-letter",
       "ladder": "HL-PRINT",
@@ -75,11 +75,11 @@
       "options": [
         "text:ז",
         "text:7",
-        "text:●"
+        "shape-dot"
       ],
       "wrong": {
         "text:7": "print_num",
-        "text:●": "print_shape"
+        "shape-dot": "print_shape"
       },
       "frame": "i-letter",
       "ladder": "HL-PRINT",
@@ -91,11 +91,11 @@
       "options": [
         "text:ס",
         "text:0",
-        "text:○"
+        "shape-ring"
       ],
       "wrong": {
         "text:0": "print_num",
-        "text:○": "print_shape"
+        "shape-ring": "print_shape"
       },
       "frame": "i-letter",
       "ladder": "HL-PRINT",
@@ -107,11 +107,11 @@
       "options": [
         "text:ק",
         "text:9",
-        "text:▲"
+        "shape-triangle"
       ],
       "wrong": {
         "text:9": "print_num",
-        "text:▲": "print_shape"
+        "shape-triangle": "print_shape"
       },
       "frame": "i-letter",
       "ladder": "HL-PRINT",
@@ -125,11 +125,11 @@
       "options": [
         "text:מ",
         "text:3",
-        "text:▲"
+        "shape-triangle"
       ],
       "wrong": {
         "text:3": "print_num",
-        "text:▲": "print_shape"
+        "shape-triangle": "print_shape"
       },
       "frame": "i-letter",
       "ladder": "HL-PRINT",
@@ -142,11 +142,11 @@
       "options": [
         "text:ל",
         "text:5",
-        "text:○"
+        "shape-ring"
       ],
       "wrong": {
         "text:5": "print_num",
-        "text:○": "print_shape"
+        "shape-ring": "print_shape"
       },
       "frame": "i-letter",
       "ladder": "HL-PRINT",
@@ -159,11 +159,11 @@
       "options": [
         "text:ז",
         "text:7",
-        "text:△"
+        "shape-triangle-open"
       ],
       "wrong": {
         "text:7": "print_num",
-        "text:△": "print_shape"
+        "shape-triangle-open": "print_shape"
       },
       "frame": "i-letter",
       "ladder": "HL-PRINT",
@@ -176,11 +176,11 @@
       "options": [
         "text:ס",
         "text:0",
-        "text:○"
+        "shape-ring"
       ],
       "wrong": {
         "text:0": "print_num",
-        "text:○": "print_shape"
+        "shape-ring": "print_shape"
       },
       "frame": "i-letter",
       "ladder": "HL-PRINT",
@@ -193,11 +193,11 @@
       "options": [
         "text:ו",
         "text:1",
-        "text:●"
+        "shape-dot"
       ],
       "wrong": {
         "text:1": "print_num",
-        "text:●": "print_shape"
+        "shape-dot": "print_shape"
       },
       "frame": "i-letter",
       "ladder": "HL-PRINT",
@@ -211,11 +211,13 @@
       "bins": [
         {
           "id": "letters",
-          "label": "heb-a-i-bin-letters"
+          "label": "heb-a-i-bin-letters",
+          "picture": "sign-letters"
         },
         {
           "id": "other",
-          "label": "heb-a-i-bin-other"
+          "label": "heb-a-i-bin-other",
+          "picture": "sign-other"
         }
       ],
       "cards": [
@@ -253,11 +255,13 @@
       "bins": [
         {
           "id": "letters",
-          "label": "heb-a-i-bin-letters"
+          "label": "heb-a-i-bin-letters",
+          "picture": "sign-letters"
         },
         {
           "id": "other",
-          "label": "heb-a-i-bin-other"
+          "label": "heb-a-i-bin-other",
+          "picture": "sign-other"
         }
       ],
       "cards": [
@@ -365,11 +369,13 @@
       "bins": [
         {
           "id": "letters",
-          "label": "heb-a-i-bin-letters"
+          "label": "heb-a-i-bin-letters",
+          "picture": "sign-letters"
         },
         {
           "id": "other",
-          "label": "heb-a-i-bin-other"
+          "label": "heb-a-i-bin-other",
+          "picture": "sign-other"
         }
       ],
       "cards": [

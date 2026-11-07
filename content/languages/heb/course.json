@@ -343,21 +343,27 @@
       "tag": "M-HEB-SEM",
       "kind": "diagnostic",
       "family": "MEANING",
-      "parentText": "הילד מכיר את הנושא, ומילים קרובות (כמו כלב וחתול) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות."
+      "parentText": "הילד מכיר את הנושא, ומילים קרובות (כמו כלב וחתול) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות.",
+      "homeActivity": "שחקו \"הביאו לי\" עם חפצים מהבית, ושימו זה ליד זה שני דברים קרובים (כף ומזלג, נעל וגרב). כשהחפץ מגיע, אמרו יחד את שמו.",
+      "review": "needs-editor"
     },
     "soundalike": {
       "id": "heb.ol.soundalike",
       "tag": "M-HEB-SOUNDALIKE",
       "kind": "diagnostic",
       "family": "GUESS",
-      "parentText": "הילד שומע רק חלק מהמילה, ולכן מילים שנשמעות דומות (כמו כדור וכף) מתחלפות לפעמים. כדאי להקשיב יחד עד הסוף."
+      "parentText": "הילד שומע רק חלק מהמילה, ולכן מילים שנשמעות דומות (כמו כדור וכף) מתחלפות לפעמים.",
+      "homeActivity": "אמרו לאט את שמו של חפץ, ובקשו לגעת בו מבין שני דברים ששמם נשמע דומה (כוס וכיס). הקשיבו יחד עד סוף המילה.",
+      "review": "needs-editor"
     },
     "story_role": {
       "id": "heb.ol.story_role",
       "tag": "M-HEB-STORY-ROLE",
       "kind": "diagnostic",
       "family": "MEANING",
-      "parentText": "הילד מבין את הסיפור, ולפעמים עוד מתבלבל מי עשה מה. כדאי לשאול בזמן הקריאה: מי עשה את זה?",
+      "parentText": "הילד מבין את הסיפור, ולפעמים עוד מתבלבל מי עשה מה.",
+      "homeActivity": "כשקוראים ספר יחד, עצרו מדי פעם ושאלו \"מי עשה את זה?\", ותנו לילד להצביע על הדמות בתמונה.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "story",
         "pictorial"
@@ -368,7 +374,9 @@
       "tag": "M-HEB-STORY-SEEN",
       "kind": "diagnostic",
       "family": "MEANING",
-      "parentText": "הילד עונה לפעמים במשהו שרואים בתמונה, ולא במה שנשאל. כדאי לחזור על השאלה ולהצביע יחד על התשובה.",
+      "parentText": "הילד עונה לפעמים במשהו שרואים בתמונה, ולא במה שנשאל.",
+      "homeActivity": "כשקוראים יחד, שאלו שאלה אחת על מה שקרה בעמוד, וחזרו עליה לאט לפני שעונים. אם צריך, הצביעו יחד על התשובה.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "story",
         "pictorial"
@@ -379,7 +387,9 @@
       "tag": "M-HEB-STORY-WORLD",
       "kind": "diagnostic",
       "family": "MEANING",
-      "parentText": "הילד עונה לפעמים ממה שקורה בדרך כלל, ולא ממה שקרה בסיפור. כדאי לחזור לעמוד ולבדוק יחד מה קרה בו.",
+      "parentText": "הילד עונה לפעמים ממה שקורה בדרך כלל, ולא ממה שקרה בסיפור.",
+      "homeActivity": "אחרי סיפור, שאלו \"ומה קרה בסיפור שלנו?\", ודפדפו יחד לעמוד כדי לבדוק.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "story",
         "pictorial"
@@ -390,7 +400,9 @@
       "tag": "M-HEB-STORY-ORDER",
       "kind": "diagnostic",
       "family": "MEANING",
-      "parentText": "הילד עוד מתבלבל בסדר של מה שקרה בסיפור. כדאי לספר יחד: קודם, אחר כך, בסוף.",
+      "parentText": "הילד עוד מתבלבל בסדר של מה שקרה בסיפור.",
+      "homeActivity": "אחרי סיפור, ספרו אותו יחד בשלושה חלקים: קודם, אחר כך, בסוף. אפשר לסדר שלושה צעצועים לפי הסדר.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "story",
         "pictorial"
@@ -402,6 +414,8 @@
       "kind": "diagnostic",
       "family": "MEANING",
       "parentText": "הילד מקבץ דברים שהולכים יחד (כלב והכדור שלו), ולא דברים מאותו סוג. זה שלב רגיל בגיל הזה.",
+      "homeActivity": "סדרו יחד צעצועים או כביסה לפי סוג: כל הגרביים כאן, כל הכדורים שם. שאלו: \"מה עוד מאותו סוג?\"",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "concrete",
         "pictorial"
@@ -412,7 +426,9 @@
       "tag": "M-HEB-CAT-LOOK",
       "kind": "diagnostic",
       "family": "MEANING",
-      "parentText": "הילד מקבץ לפי צבע או צורה, ולא לפי סוג. כדאי לשאול: מה זה באמת?",
+      "parentText": "הילד מקבץ לפי צבע או צורה, ולא לפי סוג.",
+      "homeActivity": "מיינו יחד חפצים מהבית שצבעם דומה והם מסוגים שונים (בננה צהובה וכדור צהוב). שאלו \"מה זה באמת?\", ושימו כל דבר עם הסוג שלו.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "concrete",
         "pictorial"
@@ -423,7 +439,9 @@
       "tag": "M-HEB-CAT-ATYPICAL",
       "kind": "diagnostic",
       "family": "MEANING",
-      "parentText": "הילד עוד לא מצרף לקבוצה חבר לא שגרתי (גם פרפר הוא בעל חיים). כדאי לדבר על מה שכל בעלי החיים עושים: זזים, אוכלים, ישנים.",
+      "parentText": "הילד עוד לא מצרף לקבוצה חבר לא שגרתי (גם פרפר הוא בעל חיים).",
+      "homeActivity": "בטיול או בספר, חפשו יחד בעלי חיים, גם קטנים ומפתיעים (נמלה, פרפר, דג), ודברו על מה שכולם עושים: זזים, אוכלים, ישנים.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "concrete",
         "pictorial"
@@ -434,7 +452,9 @@
       "tag": "M-HEB-PREP",
       "kind": "diagnostic",
       "family": "GRAMMAR",
-      "parentText": "הילד עוד מתבלבל בין המילים על, מתחת, בתוך וליד. כדאי לשחק בהחבאת צעצוע ולומר איפה הוא.",
+      "parentText": "הילד עוד מתבלבל בין המילים על, מתחת, בתוך וליד.",
+      "homeActivity": "החביאו צעצוע בבית ואמרו איפה הוא: על הכיסא, מתחת לשולחן, בתוך הקופסה, ליד הדלת. אחר כך מתחלפים: הילד מחביא ואומר.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "embodied",
         "pictorial"
@@ -445,7 +465,9 @@
       "tag": "M-HEB-ROLE-SWAP",
       "kind": "diagnostic",
       "family": "GRAMMAR",
-      "parentText": "הילד שומע את המילים, ולפעמים מחליף בין הדבר למקום (הקופסה על הכדור במקום הכדור על הקופסה). כדאי לחזור על המשפט לאט.",
+      "parentText": "הילד שומע את המילים, ולפעמים מחליף בין הדבר למקום (הקופסה על הכדור במקום הכדור על הקופסה).",
+      "homeActivity": "שחקו עם כדור וקופסה: אמרו לאט \"הכדור על הקופסה\", ותנו לילד לסדר. אחר כך הפכו: \"הקופסה על הכדור\".",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "pictorial",
         "embodied"
@@ -456,7 +478,9 @@
       "tag": "M-HEB-PLURAL",
       "kind": "diagnostic",
       "family": "GRAMMAR",
-      "parentText": "הילד עוד לא שומע תמיד את סוף המילה ברבים (ים, ות). כדאי לומר יחד: חתול, חתולים.",
+      "parentText": "הילד עוד לא שומע תמיד את סוף המילה ברבים (ים, ות).",
+      "homeActivity": "כשמסדרים או סופרים בבית, אמרו יחד אחד והרבה: כף, כפות; כוס, כוסות; ספר, ספרים.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "pictorial",
         "concrete"
@@ -467,7 +491,9 @@
       "tag": "M-HEB-ALLIT",
       "kind": "diagnostic",
       "family": "RHYME",
-      "parentText": "הילד בוחר מילה שמתחילה כמו המילה, ולא מילה שנגמרת כמוה. כדאי לשחק בחרוזים ולהקשיב יחד לסוף.",
+      "parentText": "הילד בוחר מילה שמתחילה כמו המילה, ולא מילה שנגמרת כמוה.",
+      "homeActivity": "שחקו בחרוזים באמבטיה או בדרך: אמרו מילה (חתול), ובקשו מילה שנגמרת כמוה (גדול, כחול). הקשיבו יחד לסוף המילה.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "story",
         "pictorial"
@@ -478,7 +504,9 @@
       "tag": "M-HEB-SYLL",
       "kind": "diagnostic",
       "family": "SEGMENT",
-      "parentText": "הילד עוד סופר יותר מדי או פחות מדי חלקים במילה (הברות). כדאי למחוא כף יחד על כל חלק.",
+      "parentText": "הילד עוד סופר יותר מדי או פחות מדי חלקים במילה (הברות).",
+      "homeActivity": "מחאו כף יחד על כל חלק בשמות של דברים בבית, לאט: כף (אחת), שולחן (שתיים), מקרר (שלוש).",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "embodied",
         "concrete"
@@ -489,7 +517,9 @@
       "tag": "M-HEB-BLEND-FIRST",
       "kind": "diagnostic",
       "family": "SEGMENT",
-      "parentText": "הילד שומע את החלק הראשון של המילה ומנחש את השאר. כדאי לומר את החלקים לאט, ואז מהר יותר.",
+      "parentText": "הילד שומע את החלק הראשון של המילה ומנחש את השאר.",
+      "homeActivity": "שחקו \"איזו מילה?\": אמרו שם של דבר בבית בחלקים, לאט ואחר כך מהר יותר, עד שהילד מגלה את המילה ומביא את הדבר.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "concrete",
         "pictorial"
@@ -500,7 +530,9 @@
       "tag": "M-HEB-BLEND-LAST",
       "kind": "diagnostic",
       "family": "SEGMENT",
-      "parentText": "הילד זוכר רק את החלק האחרון של המילה. כדאי לומר את החלקים שוב, מההתחלה.",
+      "parentText": "הילד זוכר רק את החלק האחרון של המילה.",
+      "homeActivity": "כשאומרים מילה בחלקים, חזרו יחד על כל החלקים מההתחלה, ורק אז אמרו את המילה כולה. אפשר לשים חפץ קטן לכל חלק.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "concrete",
         "pictorial"
@@ -511,7 +543,9 @@
       "tag": "M-HEB-PRINT-NUM",
       "kind": "diagnostic",
       "family": "PRINT",
-      "parentText": "הילד עוד מתבלבל בין אותיות לספרות. כדאי להראות: בזה סופרים, ובזה קוראים.",
+      "parentText": "הילד עוד מתבלבל בין אותיות לספרות.",
+      "homeActivity": "חפשו יחד על קופסאות במטבח או על שלט ברחוב: איפה יש אותיות, ואיפה יש מספרים? בזה קוראים, ובזה סופרים.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "symbolic",
         "concrete"
@@ -522,7 +556,9 @@
       "tag": "M-HEB-PRINT-SHAPE",
       "kind": "diagnostic",
       "family": "PRINT",
-      "parentText": "הילד עוד מתבלבל בין אות לבין צורה או ציור. כדאי להצביע יחד על אותיות בספרים ובשלטים.",
+      "parentText": "הילד עוד מתבלבל בין אות לבין צורה או ציור.",
+      "homeActivity": "הצביעו יחד על אותיות בספר או על קופסה במטבח, וגם על הציורים והצורות שלידן. שאלו: \"פה כתוב, או פה מצויר?\"",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "symbolic",
         "concrete"
@@ -533,7 +569,9 @@
       "tag": "M-HEB-PRINT-PICTURE",
       "kind": "diagnostic",
       "family": "PRINT",
-      "parentText": "הילד חושב שקוראים את התמונה. כדאי להעביר אצבע מתחת למילים בזמן הקריאה.",
+      "parentText": "הילד חושב שקוראים את התמונה.",
+      "homeActivity": "כשקוראים ספר יחד, העבירו אצבע מתחת למילים בזמן הקריאה, ומדי פעם הראו: \"פה התמונה, ופה המילים שאנחנו קוראים.\"",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "symbolic",
         "embodied"
@@ -544,7 +582,9 @@
       "tag": "M-HEB-ORDER",
       "kind": "diagnostic",
       "family": "DIR",
-      "parentText": "הילד מתחיל לפעמים משמאל. בעברית קוראים מימין לשמאל: כדאי להעביר אצבע מתחת לשורה מימין.",
+      "parentText": "הילד מתחיל לפעמים משמאל. בעברית קוראים מימין לשמאל.",
+      "homeActivity": "כשקוראים יחד, העבירו אצבע מתחת לשורה מימין לשמאל, ותנו לילד להראות איפה מתחילים.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "symbolic",
         "embodied"
@@ -555,7 +595,9 @@
       "tag": "M-HEB-NAME-FIRST",
       "kind": "diagnostic",
       "family": "GUESS",
-      "parentText": "הילד מזהה את השם שלו לפי האות הראשונה. זה שלב רגיל; כדאי להסתכל יחד על כל האותיות בשם.",
+      "parentText": "הילד מזהה את השם שלו לפי האות הראשונה. זה שלב רגיל.",
+      "homeActivity": "כתבו את השם של הילד על דף, והסתכלו יחד על כל האותיות, אחת אחת. אחר כך חפשו את אותן אותיות על קופסאות בבית.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "symbolic"
       ]
@@ -565,7 +607,9 @@
       "tag": "M-HEB-NAME-LENGTH",
       "kind": "diagnostic",
       "family": "GUESS",
-      "parentText": "הילד מזהה את השם שלו לפי האורך. כדאי להשוות יחד את האותיות של השם, אחת אחת.",
+      "parentText": "הילד מזהה את השם שלו לפי האורך.",
+      "homeActivity": "כתבו על דף את השם של הילד ולידו שם אחר באותו אורך, וגעו יחד בכל אות. שאלו: \"איפה השם שלך?\"",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "symbolic"
       ]
@@ -575,7 +619,9 @@
       "tag": "M-HEB-STROKE",
       "kind": "diagnostic",
       "family": "STROKE",
-      "parentText": "הילד מתחיל לפעמים קו מהקצה השני. זה תרגול בלבד; כדאי לצייר יחד ולהתחיל מהנקודה.",
+      "parentText": "הילד מתחיל לפעמים קו מהקצה השני. זה תרגול בלבד.",
+      "homeActivity": "ציירו יחד על דף, או באצבע על השולחן: גשם שיורד, דרך, גבעה, שלולית עגולה. סמנו נקודה במקום שבו מתחילים.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "embodied"
       ]
@@ -585,7 +631,9 @@
       "tag": "M-HEB-SHAPE-BK",
       "kind": "diagnostic",
       "family": "SHAPE",
-      "parentText": "הילד מבלבל בין האותיות ב ו-כ. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "parentText": "הילד מבלבל בין האותיות ב ו-כ.",
+      "homeActivity": "כתבו על דף את האותיות ב ו-כ זו ליד זו, וחפשו יחד מה שונה בהן. אחר כך חפשו אותן בספר או על קופסה במטבח.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "symbolic"
       ]
@@ -595,7 +643,9 @@
       "tag": "M-HEB-SHAPE-DR",
       "kind": "diagnostic",
       "family": "SHAPE",
-      "parentText": "הילד מבלבל בין האותיות ד ו-ר. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "parentText": "הילד מבלבל בין האותיות ד ו-ר.",
+      "homeActivity": "כתבו על דף את האותיות ד ו-ר זו ליד זו, וחפשו יחד מה שונה בהן. אחר כך חפשו אותן בספר או על קופסה במטבח.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "symbolic"
       ]
@@ -605,7 +655,9 @@
       "tag": "M-HEB-SHAPE-HXT",
       "kind": "diagnostic",
       "family": "SHAPE",
-      "parentText": "הילד מבלבל בין האותיות ה ו-ח. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "parentText": "הילד מבלבל בין האותיות ה ו-ח.",
+      "homeActivity": "כתבו על דף את האותיות ה ו-ח זו ליד זו, וחפשו יחד מה שונה בהן. אחר כך חפשו אותן בספר או על קופסה במטבח.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "symbolic"
       ]
@@ -615,7 +667,9 @@
       "tag": "M-HEB-SHAPE-VZN",
       "kind": "diagnostic",
       "family": "SHAPE",
-      "parentText": "הילד מבלבל בין האותיות ו ו-ז. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "parentText": "הילד מבלבל בין האותיות ו ו-ז.",
+      "homeActivity": "כתבו על דף את האותיות ו ו-ז זו ליד זו, וחפשו יחד מה שונה בהן. אחר כך חפשו אותן בספר או על קופסה במטבח.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "symbolic"
       ]
@@ -625,7 +679,9 @@
       "tag": "M-HEB-SHAPE-SM",
       "kind": "diagnostic",
       "family": "SHAPE",
-      "parentText": "הילד מבלבל בין האותיות ס ו-ם. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "parentText": "הילד מבלבל בין האותיות ס ו-ם.",
+      "homeActivity": "כתבו על דף את האותיות ס ו-ם זו ליד זו, וחפשו יחד מה שונה בהן. אחר כך חפשו אותן בספר או על קופסה במטבח.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "symbolic"
       ]
@@ -635,7 +691,9 @@
       "tag": "M-HEB-SHAPE-AZ",
       "kind": "diagnostic",
       "family": "SHAPE",
-      "parentText": "הילד מבלבל בין האותיות ע ו-צ. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "parentText": "הילד מבלבל בין האותיות ע ו-צ.",
+      "homeActivity": "כתבו על דף את האותיות ע ו-צ זו ליד זו, וחפשו יחד מה שונה בהן. אחר כך חפשו אותן בספר או על קופסה במטבח.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "symbolic"
       ]
@@ -645,7 +703,9 @@
       "tag": "M-HEB-SHAPE-GN",
       "kind": "diagnostic",
       "family": "SHAPE",
-      "parentText": "הילד מבלבל בין האותיות ג ו-נ. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "parentText": "הילד מבלבל בין האותיות ג ו-נ.",
+      "homeActivity": "כתבו על דף את האותיות ג ו-נ זו ליד זו, וחפשו יחד מה שונה בהן. אחר כך חפשו אותן בספר או על קופסה במטבח.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "symbolic"
       ]
@@ -655,7 +715,9 @@
       "tag": "M-HEB-SHAPE-TM",
       "kind": "diagnostic",
       "family": "SHAPE",
-      "parentText": "הילד מבלבל בין האותיות ט ו-מ. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "parentText": "הילד מבלבל בין האותיות ט ו-מ.",
+      "homeActivity": "כתבו על דף את האותיות ט ו-מ זו ליד זו, וחפשו יחד מה שונה בהן. אחר כך חפשו אותן בספר או על קופסה במטבח.",
+      "review": "needs-editor",
       "preferredRepresentations": [
         "symbolic"
       ]

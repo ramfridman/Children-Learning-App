@@ -129,13 +129,13 @@
     "bins": [
       {
         "id": "b1",
-        "text": "אֶחָד",
+        "sprite": "asset:sign_one",
         "clip": "vo:heb.heb_a_bin_one",
         "label": "אֶחָד"
       },
       {
         "id": "b2",
-        "text": "הַרְבֵּה",
+        "sprite": "asset:sign_many",
         "clip": "vo:heb.heb_a_bin_many",
         "label": "הַרְבֵּה"
       }

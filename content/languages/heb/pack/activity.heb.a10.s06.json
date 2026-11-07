@@ -140,13 +140,13 @@
     "bins": [
       {
         "id": "b1",
-        "text": "אוֹתִיּוֹת",
+        "sprite": "asset:sign_letters",
         "clip": "vo:heb.heb_a_i_bin_letters",
         "label": "אוֹתִיּוֹת"
       },
       {
         "id": "b2",
-        "text": "דְּבָרִים אֲחֵרִים",
+        "sprite": "asset:sign_other",
         "clip": "vo:heb.heb_a_i_bin_other",
         "label": "דְּבָרִים אֲחֵרִים"
       }

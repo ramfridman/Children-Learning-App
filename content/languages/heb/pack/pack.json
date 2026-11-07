@@ -530,6 +530,10 @@
       "file": "shape_ring.svg"
     },
     {
+      "id": "shape_triangle",
+      "file": "shape_triangle.svg"
+    },
+    {
       "id": "shape_triangle_open",
       "file": "shape_triangle_open.svg"
     },
@@ -548,6 +552,22 @@
     {
       "id": "shirt_striped",
       "file": "shirt_striped.svg"
+    },
+    {
+      "id": "sign_letters",
+      "file": "sign_letters.svg"
+    },
+    {
+      "id": "sign_many",
+      "file": "sign_many.svg"
+    },
+    {
+      "id": "sign_one",
+      "file": "sign_one.svg"
+    },
+    {
+      "id": "sign_other",
+      "file": "sign_other.svg"
     },
     {
       "id": "soap_bubble",

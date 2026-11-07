@@ -485,13 +485,19 @@
       ]
     },
     {
-      "id": "words-from-stories-more",
-      "title": "מִילִים חֲדָשׁוֹת",
+      "id": "say-1",
+      "title": "מִלִּים חֲדָשׁוֹת",
       "items": [
         "say-siach",
         "say-kemach",
         "say-keara",
-        "say-tanur",
+        "say-tanur"
+      ]
+    },
+    {
+      "id": "say-2",
+      "title": "עוֹד מִלִּים חֲדָשׁוֹת",
+      "items": [
         "say-sira",
         "say-kova",
         "say-ruach",

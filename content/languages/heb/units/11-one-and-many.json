@@ -120,11 +120,13 @@
       "bins": [
         {
           "id": "one",
-          "label": "heb-a-bin-one"
+          "label": "heb-a-bin-one",
+          "picture": "sign-one"
         },
         {
           "id": "many",
-          "label": "heb-a-bin-many"
+          "label": "heb-a-bin-many",
+          "picture": "sign-many"
         }
       ],
       "cards": [
@@ -179,11 +181,13 @@
       "bins": [
         {
           "id": "one",
-          "label": "heb-a-bin-one"
+          "label": "heb-a-bin-one",
+          "picture": "sign-one"
         },
         {
           "id": "many",
-          "label": "heb-a-bin-many"
+          "label": "heb-a-bin-many",
+          "picture": "sign-many"
         }
       ],
       "cards": [

@@ -2,7 +2,8 @@
   "skill": {
     "id": "HEB-A-14",
     "strand": "wr",
-    "title": "עוקב באצבע אחרי קווים של טרום כתיבה"
+    "title": "עוקב באצבע אחרי קווים של טרום כתיבה",
+    "writing": "practised"
   },
   "items": [
     {
@@ -100,7 +101,7 @@
       "purpose": "practice",
       "rep": "embodied",
       "scene": "stroke-door",
-      "guide": "start-dot",
+      "guide": "full",
       "tag": "stroke",
       "ladder": "HL-TRACE"
     }

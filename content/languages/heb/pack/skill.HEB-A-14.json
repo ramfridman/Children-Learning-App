@@ -22,5 +22,6 @@
   "retention": {
     "targetRetention": 0.9,
     "initialStabilityDays": 1
-  }
+  },
+  "writing": "practised"
 }
