@@ -53,10 +53,15 @@ abstract final class BlockLayout {
   static bool hasBlocks(TapAnswerActivity a) => onStage(a) || onTiles(a);
 
   /// The board [base] as [a] lays it out: S or T, or [base] itself for an item without blocks.
-  static ActivitySpec of(TapAnswerActivity a, ActivitySpec base) => onStage(a)
+  /// The bubble's line is measured with [scaler], the one the lesson draws it with (the system's text size, up to 1.3).
+  static ActivitySpec of(
+    TapAnswerActivity a,
+    ActivitySpec base, {
+    TextScaler scaler = TextScaler.noScaling,
+  }) => onStage(a)
       ? forStage(base)
       : onTiles(a)
-      ? _tiles(a, base)
+      ? _tiles(a, base, scaler)
       : base;
 
   // Layout S. On a phone the stage grows to the top bar's height above it and to 12 above the tiles, which move down to the bottom line
@@ -87,11 +92,11 @@ abstract final class BlockLayout {
   // not have [tabletCardRoom] above them. The bubble stands at the old stage's top line, and the tiles begin where it ends, with the
   // frame's clearance. What a hint draws (a card of blocks) keeps the room left of the bubble (a phone: from the top bar down), or, on a
   // tablet, the room between the tallest line the bubble says and the tiles; it is not drawn on a card of its own.
-  static ActivitySpec _tiles(TapAnswerActivity a, ActivitySpec base) {
+  static ActivitySpec _tiles(TapAnswerActivity a, ActivitySpec base, TextScaler scaler) {
     final double bubbleTop = base.blocksBubbleTop ?? base.bubbleTop;
     final bool card = base.stageIsCard;
     final double bottom = bottomLine(base);
-    final double? bubbleWidth = card ? null : _bubbleWidth(a.promptLine.caption, base);
+    final double? bubbleWidth = card ? null : _bubbleWidth(a.promptLine.caption, base, scaler);
     final ActivitySpec raised = base.withStageAndTiles(
       stage: base.stage,
       tilesLeft: base.tilesLeft,
@@ -104,12 +109,14 @@ abstract final class BlockLayout {
     // On a tablet the box for a hint's card is all that is left above the tiles, from under the tallest line the bubble says (a hint's line
     // is longer than the question, and the card must not lie under it); a phone's starts at the top bar's height, left of the bubble.
     final double stageTop = card
-        ? base.bubbleTop + _tallestLine(a, raised) + 12
+        ? base.bubbleTop + _tallestLine(a, raised, scaler) + 12
         : base.blocksStageTop ?? bubbleTop;
     // The highest the tiles may stand: under the question (a phone), or with the card's room between them and its box (a tablet).
     final double top = card
         ? stageTop + tabletCardRoom + ActivityFrame.tileClear
-        : bubbleTop + ActivityFrame.fitBubble(a.promptLine.caption, raised).height + ActivityFrame.tileClear;
+        : bubbleTop +
+              ActivityFrame.fitBubble(a.promptLine.caption, raised, scaler: scaler).height +
+              ActivityFrame.tileClear;
     final double edge = BaseTenLayout.tileEdge;
     final List<BaseTen> pictures = <BaseTen>[
       for (final ChoiceOption o in a.options)
@@ -155,12 +162,13 @@ abstract final class BlockLayout {
 
   /// How tall the bubble is at its tallest line of [a], of the lines it says while the item is worked on: the question and the number
   /// sentence under it, a hint, a "not yet" and the welcome of "not sure". It sets where the box of a hint's card may begin.
-  static double _tallestLine(TapAnswerActivity a, ActivitySpec s) {
+  static double _tallestLine(TapAnswerActivity a, ActivitySpec s, TextScaler scaler) {
     double height(Spoken line, {double reserve = 0}) => ActivityFrame.fitBubble(
       line.caption,
       s,
       reserve: reserve,
       maxHeight: s.bubbleMaxHeight + reserve,
+      scaler: scaler,
     ).height;
     return <double>[
       height(a.promptLine, reserve: a.promptMath == null ? 0 : MathRun.reserveFor(s.bubbleFont)),
@@ -173,7 +181,7 @@ abstract final class BlockLayout {
   /// The width a phone's bubble needs for [text] to fit two lines at the band's size (it stays the board's own when it already does),
   /// held by its right edge beside the guide, so it grows to the left, into the room the empty stage leaves. Null when the board's own
   /// width is enough, or when the room runs out before two lines fit (the item then has a taller bubble, and the check says so).
-  static double? _bubbleWidth(String text, ActivitySpec base) {
+  static double? _bubbleWidth(String text, ActivitySpec base, TextScaler scaler) {
     final double twoLines = ActivityFrame.bubbleHeight('x\nx', base.bubbleFont, 1000);
     bool fits(double width) => ActivityFrame.bubbleHeight(text, base.bubbleFont, width) <= twoLines + 1;
     if (fits(base.bubbleMaxWidth)) return null;

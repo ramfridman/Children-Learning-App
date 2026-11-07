@@ -724,6 +724,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       listenable: Listenable.merge(<Listenable?>[controller, _voice?.answer, _sayTick]),
       builder: (BuildContext ctx, Widget? _) {
         final TemplateSession session = _sessionFor(controller);
+        session.bubbleScaler = ActivityFrame.bubbleScaler(ctx);
         final ActivitySpec spec = session.layoutFor(board);
         if (controller.finished) _endVisit(_endReason());
         final bool helpOffered =

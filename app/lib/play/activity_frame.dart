@@ -106,8 +106,21 @@ class ActivityFrame extends StatelessWidget {
   final VoidCallback? onConfirmYes;
   final VoidCallback? onConfirmAgain;
 
-  /// How tall the bubble of [text] at [font] is when it wraps inside [maxWidth] (its padding included).
-  static double bubbleHeight(String text, double font, double maxWidth) {
+  /// The most the system's text size may scale the bubble's line: parents who share the phone may need larger text, and the board has the
+  /// room for this much (the bubble stands higher or wider and the line shrinks to fit, never over a tile).
+  static const double maxTextScale = 1.3;
+
+  /// The text scaler the bubble of the lesson measures and draws with: the system's, up to [maxTextScale].
+  static TextScaler bubbleScaler(BuildContext context) =>
+      MediaQuery.textScalerOf(context).clamp(maxScaleFactor: maxTextScale);
+
+  /// How tall the bubble of [text] at [font] is when it wraps inside [maxWidth] (its padding included), drawn with [scaler].
+  static double bubbleHeight(
+    String text,
+    double font,
+    double maxWidth, {
+    TextScaler scaler = TextScaler.noScaling,
+  }) {
     const EdgeInsets pad = EdgeInsets.symmetric(horizontal: 16, vertical: 8);
     final TextPainter p = TextPainter(
       text: TextSpan(
@@ -115,27 +128,31 @@ class ActivityFrame extends StatelessWidget {
         style: AppText.fixed(size: font, weight: 500),
       ),
       textDirection: TextDirection.rtl,
+      textScaler: scaler,
     )..layout(maxWidth: maxWidth - pad.horizontal);
     final double height = p.height + pad.vertical;
     p.dispose();
     return height;
   }
 
-  /// The largest font, down to [min], at which [text] (and [reserve], the room of a chip under it) fits in [maxHeight] (the
-  /// board's own limit when null), and the height of the bubble at that font.
+  /// The largest font, down to [min] points as drawn (with [scaler], so a font of 14 / 1.3 is drawn at 14), at which [text] (and
+  /// [reserve], the room of a chip under it) fits in [maxHeight] (the board's own limit when null), and the height of the bubble at that
+  /// font. The font is the nominal one: the bubble draws it through [scaler].
   static ({double font, double height}) fitBubble(
     String text,
     ActivitySpec s, {
     double min = 14,
     double reserve = 0,
     double? maxHeight,
+    TextScaler scaler = TextScaler.noScaling,
   }) {
-    double heightAt(double size) => bubbleHeight(text, size, s.bubbleMaxWidth) + reserve;
-    for (double size = s.bubbleFont; size > min; size -= 1) {
+    final double factor = scaler.scale(1);
+    double heightAt(double size) => bubbleHeight(text, size, s.bubbleMaxWidth, scaler: scaler) + reserve;
+    for (double size = s.bubbleFont; size * factor > min; size -= 1) {
       final double height = heightAt(size);
       if (height <= (maxHeight ?? s.bubbleMaxHeight)) return (font: size, height: height);
     }
-    return (font: min, height: heightAt(min));
+    return (font: min / factor, height: heightAt(min / factor));
   }
 
   @override
@@ -144,11 +161,12 @@ class ActivityFrame extends StatelessWidget {
     final ActivitySpec s = spec ?? ActivitySpec.of(board);
     // The chip's word is a tenth larger than the Hebrew beside it (fonts.md section 6); its room is taken off the line's.
     final double chipSize = s.bubbleFont * 1.1;
+    final TextScaler scaler = bubbleScaler(context);
     final ({String text, String course})? target = bubbleTarget;
     final List<String>? run = bubbleMath;
     // The number sentence has a row of its own under the line, and its room is added to the board's limit for the bubble: the line keeps the
     // room it has without one (the band's size on three lines), and the bubble stands higher by the run's row.
-    final double mathRoom = run == null ? 0 : MathRun.reserveFor(s.bubbleFont);
+    final double mathRoom = run == null ? 0 : MathRun.reserveFor(scaler.scale(s.bubbleFont));
     // The bubble keeps clear of the tiles under it: its text shrinks to the room there is between the progress trail and the tiles
     // (never below the minimum), and a bubble that is still too tall (a long line with a chip) stands higher, not over the tiles.
     final double floorTop = s.trailTop + 36 + 4;
@@ -159,6 +177,7 @@ class ActivityFrame extends StatelessWidget {
       s,
       reserve: (target == null ? 0 : 6 + TargetChip.heightFor(chipSize)) + mathRoom,
       maxHeight: math.min(s.bubbleMaxHeight + mathRoom, ceiling - floorTop),
+      scaler: scaler,
     );
     final double font = fit.font;
     final double bubbleTop = clear
@@ -185,11 +204,13 @@ class ActivityFrame extends StatelessWidget {
                 key: const Key('lesson-bubble'),
                 text: bubbleText,
                 fontSize: font,
-                // The board is a fixed canvas, scaled as a whole: the line is as big as the board says, whatever the system's text size.
-                textScaler: TextScaler.noScaling,
+                // Measured and drawn with the same scaler (the system's, up to 1.3), so the room worked out for the line is the room it takes.
+                textScaler: scaler,
                 maxWidth: s.bubbleMaxWidth,
                 chip: target == null ? null : TargetChip(target.text, course: target.course, size: chipSize),
-                math: run == null ? null : MathRun(run, size: s.bubbleFont, division: MathSigns.of(context)),
+                math: run == null
+                    ? null
+                    : MathRun(run, size: scaler.scale(s.bubbleFont), division: MathSigns.of(context)),
                 // A bubble that stands off its board's place points at the guide's mouth: the tail meets it from the top.
                 pointerAt: s.tailAtMouth
                     ? (s.mouthY - bubbleTop).clamp(24.0, math.max(24.0, fit.height - 24))

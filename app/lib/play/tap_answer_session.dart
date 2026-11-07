@@ -261,7 +261,7 @@ class TapAnswerSession extends TemplateSession {
   @override
   ActivitySpec layoutFor(ActivitySpec base) {
     // Blocks have their own two layouts (docs/design/c1-blocks.md section 5), which give the cubes the board's height.
-    if (BlockLayout.hasBlocks(activity)) return BlockLayout.of(activity, base);
+    if (BlockLayout.hasBlocks(activity)) return BlockLayout.of(activity, base, scaler: bubbleScaler);
     const double margin = 12;
     final double need = numberMode
         ? KeypadLayout.of(base).roomHeight

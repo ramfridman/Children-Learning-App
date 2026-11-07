@@ -136,6 +136,10 @@ abstract class TemplateSession extends ChangeNotifier {
     later(Duration(milliseconds: 450 * options.length), () => setVoiceLit(null));
   }
 
+  /// The text scaler the lesson's bubble is drawn with (the system's text size, up to 1.3: `ActivityFrame.bubbleScaler`), set by the lesson
+  /// screen before it asks for [layoutFor]: a layout that makes room for the bubble measures the line the way it is drawn.
+  TextScaler bubbleScaler = TextScaler.noScaling;
+
   /// The board numbers this template lays its activity out on: [base] (the board's own, see `ActivitySpec.of`) unless the template
   /// needs a different stage or tile box. Every `build...` below is given what this returns.
   ActivitySpec layoutFor(ActivitySpec base) => base;
