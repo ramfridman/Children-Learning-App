@@ -14,13 +14,14 @@
     "NUM-B-09"
   ],
   "items": [
-    "c.numb09.8",
     "c.numb09.9",
     "c.numb09.10",
     "c.numb09.11",
     "c.numb09.12",
     "c.numb09.13",
-    "c.numb09.14"
+    "c.numb09.14",
+    "c.numb09.15",
+    "c.numb09.16"
   ],
   "estimatedMinutes": 6,
   "sequence": 103,

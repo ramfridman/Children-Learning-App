@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "compare-to-100-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מַשְׁוִים"
+    }
+  ],
+  "skills": [
+    "NUM-C-04"
+  ],
+  "items": [
+    "c.numc04.9",
+    "c.numc04.10",
+    "c.numc04.11",
+    "c.numc04.12",
+    "c.numc04.13",
+    "c.numc04.14",
+    "c.numc04.15",
+    "c.numc04.16"
+  ],
+  "estimatedMinutes": 8,
+  "sequence": 110,
+  "celebration": {
+    "vo": "vo:celebrate.compare_to_100_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הִשְׁוִיתֶם קֹדֶם אֶת הָעֲשָׂרוֹת."
+      }
+    ]
+  }
+}

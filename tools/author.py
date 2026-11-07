@@ -306,7 +306,7 @@ def representation(template, scene, answer):
         return 'pictorial' if any(is_picture(c) for c in scene['cells']) else 'symbolic'
     assert template == 'tap_answer', template
     drawn = (any(k in scene for k in ('group', 'group2', 'chart', 'picture'))
-             or any('sprite' in o or 'set' in o for o in answer.get('options', []))
+             or any('sprite' in o or 'set' in o or 'picture' in o for o in answer.get('options', []))
              or any(is_picture(c) for c in scene.get('row', [])))
     return 'pictorial' if drawn else 'symbolic'
 
@@ -328,7 +328,8 @@ def template_version(template, scene, answer):
         return '1.0'
     row = scene.get('row', [])
     options = answer.get('options', [])
-    if (scene.get('picture') or answer['type'] == 'number' or len(options) > 4 or len(row) > 8
+    if (scene.get('picture') or scene.get('picture2') or any(o.get('picture') for o in options) or answer['type'] == 'number'
+            or len(options) > 4 or len(row) > 8
             or any(is_new_cell(c) for c in row) or scene.get('numeral', 0) > 100
             or any(o.get('numeral', 0) > 100 for o in options)):
         return '1.4'
@@ -464,7 +465,7 @@ def k_give(a, ctx):
 
 def k_count_tap(a, ctx):
     obj, n = ctx['objects'][a['obj']], a['count']
-    opts, cid, tags = options(a['options'], n, near_tag(n), lambda v: {'value': v}, lambda v: F[v])
+    opts, cid, tags = options(a['options'], n, near_tag(n), lambda v: {'value': v}, lambda v: F[v], own=a.get('tags'))
     for o in opts:
         o.pop('label')
     return activity(
@@ -476,7 +477,7 @@ def k_count_tap(a, ctx):
         choice(opts, cid), tags,
         hints(a['id'], 'נוֹגְעִים %s %s, וְאוֹמְרִים מִסְפָּר אֶחָד.' % (prefix('ב', obj['one']), F[1] if obj['g'] == 'f' else M[1]),
               'בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: %s…' % count_words(3),
-              '%s. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: %s! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
+              a.get('h3') or '%s. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: %s! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
                   count_words(n), F[n], F[n]),
               shared=(None, 'ucount')),
         'child touches each one once and answers with the last number counted',
@@ -655,7 +656,11 @@ def k_pick(a, ctx):
     tags_of = a.get('tags', {})
     opts, cid, tags = [], None, set()
     for k, sp in enumerate(a['options'], start=1):
-        if sp.startswith('n:'):  # "n:4": a numeral on a tile
+        if isinstance(sp, dict):  # {'key': 'b34', 'picture': {...base_ten...}, 'label': '...'}: blocks on a tile (tap_answer 1.4, X1)
+            assert sp['picture'].get('kind') == 'base_ten' and sp.get('label'), '%s: an option picture is blocks with a label' % a['id']
+            o = {'id': 'o%d' % k, 'picture': dict(sp['picture']), 'label': sp['label']}
+            sp = sp['key']
+        elif sp.startswith('n:'):  # "n:4": a numeral on a tile
             v = int(sp[2:])
             o = {'id': 'o%d' % k, 'numeral': v, 'label': F[v]}
         elif '*' in sp:  # "ball_red*3": a set of three things as the answer
@@ -693,8 +698,12 @@ def k_pick(a, ctx):
         g = a['group2']
         scene['group2'] = {'sprite': 'asset:' + g['sprite'], 'count': g.get('count', 1),
                            'arrangement': g.get('arrangement', 'line'), 'seed': g.get('seed', 8), 'scale': g.get('scale', 1)}
-    right = F[int(a['correct'][2:])] if a['correct'].startswith('n:') else this_one(ctx, a['correct'].split('*')[0])
-    gender = 'm' if a['correct'].startswith('n:') else names[a['correct'].split('*')[0]]['g']
+    pictured = {sp['key']: sp['label'] for sp in a['options'] if isinstance(sp, dict)}
+    if a['correct'] in pictured:  # blocks on the tiles: the table gives the hints and the line for the right answer
+        right, gender = pictured[a['correct']], 'm'
+    else:
+        right = F[int(a['correct'][2:])] if a['correct'].startswith('n:') else this_one(ctx, a['correct'].split('*')[0])
+        gender = 'm' if a['correct'].startswith('n:') else names[a['correct'].split('*')[0]]['g']
     # a tick is pressed, not "pressed on": the editor's `לִלְחֹץ עַל הַוִּי` (b15-hebrew.md H7a)
     tick = a['correct'] == 'tick'
     h3_default = '%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ %s.' % ('כֵּן', 'עַל הַוִּי') if tick else (

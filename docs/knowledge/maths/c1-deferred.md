@@ -4,26 +4,17 @@ The maths teacher, 2026-11-06; prepared in the generator 2026-11-07 (QA-C1-5). B
 content with only the items that today's sessions draw. The items below need a mode that no session draws yet (security review of step
 0: `qa_m10s0_undrawn_modes_test.dart` fails on any `scene.picture` or `answer.type: number` in content).
 
-**State (2026-11-07): written in `tools/band_c.py`, out of content.** The items of §1 to §3 that today's schema can say are in
-`numbers_c1_waiting` and `math_c1_waiting`, behind the table `DRAWN` at the top of the C1 section (`base_ten`, `hundred_chart`,
-`number`, all False). `tools/test_check_maths.py` (class `C1Deferred`) builds them in memory with every mode on, runs
-`check_maths` strict over them (0 WRONG, RULE, AMBIG, UNCHECKED), checks that none is in `content/` and that switching a mode on
-renumbers no drawn item (each waiting item comes after every drawn item of its skill, and they have lessons of their own:
-`blocks-tens-and-ones`, `hundred-chart`, `write-numbers`, `type-the-answer`).
+**State (2026-11-07, step 3): in content.** The app-developer drew the three modes and the new fields of the blocks picture (`litRods`,
+`crossedRods`, `scene.picture2`, `answer.options[].picture`) and switched every `DRAWN` entry on (commit d648af2b). The maths teacher
+then wrote the items that need the new fields and the items that criterion 2 and criterion 7 still lacked (section 5). `tools/author.py`
+`k_pick` carries `picture` and `picture2` into the scene and takes an option of blocks as `{'key', 'picture', 'label'}`; its
+representation is pictorial and it needs tap_answer 1.4. `tools/test_check_maths.py` (class `C1Deferred`) now checks that every mode is
+drawn, that every waiting item is in content exactly as the generator writes it, and that the items on disk pass `check_maths --strict`.
 
-**To switch a mode on** (the app-developer, in the commit whose session draws it): set its `DRAWN` entry True, take its check off
-`qa_m10s0_undrawn_modes_test.dart`, run `python -I tools/regen_content.py`, then `python -I -X utf8 tools/check_maths.py --ids c.
---strict` and the content tests. For the two pictures, `tools/author.py` `k_pick` must first copy the item's `picture` into the scene
-(one line, as `k_number` does: `if 'picture' in a: scene['picture'] = a['picture']`); the test carries it by hand until then.
-
-The checker reads all three modes (`tools/check_maths.py`): base-ten blocks are 10 × tens + ones and M-PV-FACE also gives every
-block counted as one (7 for 34); the hundred chart's answer is its one blank cell, the caption must fit the lit cells (ten more, ten
-less, the column, "after", or a lit neighbour), and M-HC-ROW gives the next cell in the row; a number answer is recomputed from its
-row, its picture or the one number of its caption, every expected wrong number must reproduce its tag, and every rule must name its
-tag (`smaller_from_larger` M-SUB-SMALLBIG and `added_instead` M-OP-SWAP only on a subtraction, `face_value` M-PV-FACE,
-`forgot_the_ten` and `off_by_ten` M-REGROUP-FORGET).
-
-Hebrew in the specs is a draft in the plural address, `needs-editor`; = is read שָׁוֶה. None of it is voiced.
+The history of the switch-on, kept for the next batch that adds a mode: the app-developer sets the mode's `DRAWN` entry True in the
+commit whose session draws it, takes its check off `qa_m10s0_undrawn_modes_test.dart`, runs `python -I tools/regen_content.py`, then
+`python -I -X utf8 tools/check_maths.py --ids c. --strict` and the content tests. A waiting item comes after every drawn item of its
+skill, so switching a mode on renumbers no item.
 
 ## 1. `scene.picture` `base_ten` (X1): hundreds flats, tens rods, ones cubes
 
@@ -114,3 +105,42 @@ only an exact tick and 101 ticks do not fit a phone. The skill as written (curri
 
 When X5 is drawn, these replace four of the window items (keep two windows for the transfer check). Not prepared: the number line
 schema has no tolerance yet, and X5 is not in the app-developer's step-3 work (base_ten, hundred_chart and the keypad).
+
+## 5. Step 3 (2026-11-07): the items the new fields allow, and the gaps of criteria 2 and 7
+
+Every answer, distractor and tag rule below is recomputed by `check_maths` (0 WRONG, RULE, AMBIG, UNCHECKED over `--ids c.`). New rules:
+a lit rod is what the caption asks about when it says "the rod" (10 × `litRods`; M-PV-FACE is the rod counted as one); two pictures with no
+row are a comparison of their two numbers (both must be on a tile; M-PV-FACE is the ones-first pick of the two); over a sentence,
+`picture2` is the second number of a sum and `crossedRods` the number taken away; blocks on a tile are read as their number (its label
+must say it; for "where is 34?" M-PV-FACE is the digits as loose cubes, 7); the middle of two marks of a line (`40 ? 50`) is solved as a
+row, and M-NL-SPACE is the mark next to an end.
+
+| Id | Skill | Item | Answer | Wrong options and tags |
+|---|---|---|---|---|
+| c.numc03.24 | NUM-C-03 | blocks 2, 7 with one rod lit: כַּמָּה שָׁוֶה הַמּוֹט שֶׁזּוֹהֵר? | 10 | 1 M-PV-FACE, 100 M-PV-ZERO |
+| c.numc03.25 | NUM-C-03 | blocks on the tiles: אֵיפֹה הַמִּסְפָּר שְׁלוֹשִׁים וְאַרְבַּע? | 3 rods 4 cubes | 4 rods 3 cubes M-NUM-REV, 7 cubes M-PV-FACE |
+| c.numc02.18 to .20 | NUM-C-02 | blocks on the tiles: 37, 60 and 52 (transfer) | the blocks of the number | 73 M-NUM-REV; 6 cubes M-PV-ZERO; 25 M-NUM-REV and 7 cubes M-PV-FACE |
+| c.numc04.13 to .16 | NUM-C-04 | two numbers of blocks side by side, numerals on the tiles (`compare-blocks`) | 41; 27 (smaller); 52; 64 (transfer) | 39, 31, 48, 59 M-PV-FACE; 14, 72, 25, 46 M-NUM-REV |
+| c.mathc03.15, .16 | MATH-C-03 | 4 rods beside 3 rods, `40 + 30 = ?`; 3 beside 5, `30 + 50 = ?` (`tens-blocks`) | 70; 80 | 7, 8 M-PV-FACE; 700, 800 M-PV-ZERO; 10, 20 M-OP-SWAP |
+| c.mathc03.17, .18 | MATH-C-03 | 7 rods, 4 crossed out, `70 − 40 = ?`; 6 rods, 2 crossed, `60 − 20 = ?` (transfer) | 30; 40 | 3, 4 M-PV-FACE; 300, 400 M-PV-ZERO; 110, 80 M-OP-SWAP |
+| c.mathc02.15 | MATH-C-02 | keypad `9 = 15 − ?` (= first) | 6 | 24 M-OP-SWAP, 15 M-EQ-OPER; rule added_instead |
+| c.numc03.26 to .28 | NUM-C-03 | pay 34, 52, 60 shekels with tens and ones coins (concrete; the purse allows no other way) | the price | M-MONEY-COUNT |
+| c.mathc01.32, .33 | MATH-C-01 | the balance: 8 + 7 against 10, 9 + 5 against 10, add blocks (concrete; families 8-7 and 9-5) | 5; 4 | M-EQ-OPER |
+| c.numb06.15, .16 | NUM-B-06 | count by touch, then the numeral (concrete) | 6; 9 | 9, 6 M-NUM-REV; 7 M-CNT-DOUBLE, 8 M-CNT-SKIP |
+| c.numb09.15, .16 | NUM-B-09 | count by touch (concrete; count_tap has no ten-frame) | 8; 7 | the neighbours, M-CNT-SKIP and M-CNT-DOUBLE |
+| c.numc06.14 to .16 | NUM-C-06 | the middle of two marks, `40 ? 50`, `20 ? 40`, `30 ? 40` (symbolic, `middle`) | 45; 30; 35 | 41, 21, 31 M-NL-SPACE; 90, 60, 70 M-EQ-OPER (its own line) |
+| c.numc01.15, c.numc09.17 | NUM-C-01, C-09 | the chart: after 69 (end of a row); ten more than 62 | 70; 72 | 60 M-CNT-DECADE, 71 M-CNT-SEQ; 63 M-HC-ROW, 52 M-OP-SWAP |
+| c.numc02.16, .17; c.numc03.23 | NUM-C-02, C-03 | keypad: write 58, write 81; `? = 70 + 6` | 58; 81; 76 | 85, 18, 67 M-NUM-REV; 508, 801, 706 M-PV-ZERO; face_value |
+| c.numb01.3, .4; c.numb10.3, .4 | NUM-B-01, B-10 | two jumps; two more size traps (`size-trap`) | 13, 17; 8, 6 | the line's tags; M-CNT-SIZE |
+
+The 58 and 43 towers of §1 are not written: the ones-first reading picks 58 too, so the one wrong tile would carry no tag; the lucky-right
+item of M-PV-FACE in NUM-C-04 stays `58 > ?`.
+
+**Still missing for C1 to be complete (M10 §1):**
+- X5, the number line 0 to 100 with a tolerance (§4): the number_line schema has no tolerance; NUM-C-06 stays on windows of twenty.
+- The M-SUB-ORDER diagnostic of MATH-C-02 (`6 − 15 = 9` accepted): needs a true-or-false sentence card (T25 or a new mode).
+- Criterion 3, from before this step: no diagnostic item for MATH-B-04 M-ADD-RECOUNT and NUM-B-01 M-CNT-SEQ; no lucky-right item for
+  MATH-C-01 M-SUB-SMALLBIG (every fact crosses ten), NUM-B-06 M-NUM-REV, NUM-C-01 M-CNT-DECADE and NUM-C-02 M-NUM-REV.
+- NUM-B-09's concrete items count by touch in a line; a ten-frame to fill (a give_n target) would carry the skill better.
+- The place-value mat (T26) of NUM-C-03 is batch C2.
+

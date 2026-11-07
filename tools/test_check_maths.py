@@ -401,7 +401,7 @@ def number_doc(caption, value, expected, row=None, rules=(), skill='MATH-C-01', 
 class Pictures(BatchC1):
     """QA-C1-5: the recognisers of base-ten blocks (10 x tens + ones; M-PV-FACE also counts every block as one), the hundred chart
     (the blank cell) and the number answer (the keypad)."""
-    TAGS = BatchC1.TAGS | {'M-HC-ROW', 'M-OP-SWAP', 'M-CNT-DECADE', 'M-CNT-SEQ'}
+    TAGS = BatchC1.TAGS | {'M-HC-ROW', 'M-OP-SWAP', 'M-CNT-DECADE', 'M-CNT-SEQ', 'M-NL-SPACE'}
 
     def test_base_ten_blocks(self):
         good = base_ten_item(3, 4, [(34, None), (7, 'M-PV-FACE'), (43, 'M-NUM-REV'), (304, 'M-PV-ZERO')])
@@ -457,6 +457,105 @@ class Pictures(BatchC1):
                             picture={'kind': 'base_ten', 'tens': 6, 'ones': 0}, skill='MATH-C-03')
         self.assertIn(('WRONG', 'picture'), codes(self.c1run(blocks)), '60 is no number of 40 + 30')
 
+    def test_the_lit_rod(self):
+        """litRods: "how much is this rod worth?" asks for the lit rods (10), not the whole picture (27)."""
+        good = c1_item('כַּמָּה שָׁוֶה הַמּוֹט שֶׁזּוֹהֵר?', [(10, None), (1, 'M-PV-FACE'), (100, 'M-PV-ZERO')], skill='NUM-C-03')
+        good['scene']['picture'] = {'kind': 'base_ten', 'tens': 2, 'ones': 7, 'litRods': 1}
+        self.assertEqual(self.failing(good), [])
+        whole = copy.deepcopy(good)
+        whole['answer']['options'][0]['numeral'] = 27  # the whole picture is not what the rod is worth
+        self.assertIn(('WRONG', 'answer'), codes(self.c1run(whole)))
+        dark = copy.deepcopy(good)
+        del dark['scene']['picture']['litRods']
+        self.assertIn(('WRONG', 'unsolvable'), codes(self.c1run(dark)))
+        face = copy.deepcopy(good)
+        face['answer']['options'][1]['numeral'] = 2  # one rod counted as one is 1
+        self.assertIn(('RULE', 'tag-rule'), codes(self.c1run(face)))
+        many = copy.deepcopy(good)
+        many['scene']['picture'].update(litRods=2, crossedRods=1)
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(many)), 'three of two rods')
+
+    def test_two_pictures_compared(self):
+        """picture and picture2 with no row: which of the two numbers of blocks is bigger (or smaller); the tiles must hold both."""
+        good = c1_item('אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר? מִסְתַּכְּלִים עַל הַקֻּבִּיּוֹת.', [(41, None), (39, 'M-PV-FACE'), (14, 'M-NUM-REV')])
+        good['scene'].update(picture={'kind': 'base_ten', 'tens': 4, 'ones': 1}, picture2={'kind': 'base_ten', 'tens': 3, 'ones': 9})
+        self.assertEqual(self.failing(good), [])
+        small = copy.deepcopy(good)
+        small['prompt']['caption'][0]['v'] = 'אֵיזֶה מִסְפָּר קָטָן יוֹתֵר? מִסְתַּכְּלִים עַל הַקֻּבִּיּוֹת.'
+        self.assertIn(('WRONG', 'answer'), codes(self.c1run(small)), '39 is the smaller, not 41')
+        missing = copy.deepcopy(good)
+        missing['scene']['picture2']['ones'] = 8  # 38 is drawn, no tile has it
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(missing)))
+        face = copy.deepcopy(good)
+        face['answer']['options'][2]['misconception'] = 'M-PV-FACE'  # the ones first pick 39, not 14
+        face['answer']['options'][1]['misconception'] = 'M-NUM-REV'
+        self.assertIn(('RULE', 'tag-rule'), codes(self.c1run(face)))
+        chart = copy.deepcopy(good)
+        chart['scene']['picture2'] = {'kind': 'hundred_chart', 'lit': [39], 'blank': [40]}
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(chart)), 'a second picture is blocks')
+
+    def test_blocks_over_a_sentence(self):
+        """picture2 is the second number of a sum (40 + 30); crossed-out rods are the number taken away (70 - 40)."""
+        tags = [(7, 'M-PV-FACE'), (700, 'M-PV-ZERO'), (10, 'M-OP-SWAP')]
+        plus = c1_item('כַּמָּה זֶה?', [(70, None)] + tags, row=['n:40', 'op:+', 'n:30', 'op:=', '?'], skill='MATH-C-03')
+        plus['scene'].update(picture={'kind': 'base_ten', 'tens': 4}, picture2={'kind': 'base_ten', 'tens': 3})
+        self.assertEqual(self.failing(plus), [])
+        off = copy.deepcopy(plus)
+        off['scene']['picture2']['tens'] = 2  # 4 rods and 2 rods are not 40 + 30
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(off)))
+        minus = c1_item('כַּמָּה נִשְׁאַר?', [(30, None), (3, 'M-PV-FACE'), (300, 'M-PV-ZERO'), (110, 'M-OP-SWAP')],
+                        row=['n:70', 'op:-', 'n:40', 'op:=', '?'], skill='MATH-C-03')
+        minus['scene']['picture'] = {'kind': 'base_ten', 'tens': 7, 'crossedRods': 4}
+        self.assertEqual(self.failing(minus), [])
+        three = copy.deepcopy(minus)
+        three['scene']['picture']['crossedRods'] = 3  # 3 rods crossed out are 30 taken away, the sentence takes 40
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(three)))
+        added = copy.deepcopy(minus)
+        added['scene']['row'] = ['n:70', 'op:+', 'n:40', 'op:=', '?']
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(added)), 'rods crossed out over an addition')
+        alone = base_ten_item(7, 0, [(70, None), (7, 'M-PV-FACE')])
+        alone['scene']['picture']['crossedRods'] = 4
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(alone)), 'rods crossed out with no sentence')
+        typed = number_doc('כַּמָּה נִשְׁאַר?', 30, [(3, 'M-PV-FACE')], row=['n:70', 'op:-', 'n:40', 'op:=', '?'],
+                           picture={'kind': 'base_ten', 'tens': 7, 'crossedRods': 2}, skill='MATH-C-03')
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(typed)), 'the keypad reads the crossed rods too')
+
+    def test_blocks_on_the_tiles(self):
+        """answer.options[].picture: "where is thirty-four?" with blocks on the tiles; the label names the blocks' number;
+        M-NUM-REV is the rods and cubes swapped, M-PV-FACE the digits taken as loose cubes (7)."""
+        def tile(k, t, o, label, tag=None):
+            return dict({'id': 'o%d' % k, 'picture': {'kind': 'base_ten', 'tens': t, 'ones': o}, 'label': label},
+                        **({'misconception': tag} if tag else {}))
+        good = c1_item('אֵיפֹה הַמִּסְפָּר שְׁלוֹשִׁים וְאַרְבַּע?', [], skill='NUM-C-03')
+        good['answer']['options'] = [tile(1, 3, 4, 'שְׁלוֹשִׁים וְאַרְבַּע'), tile(2, 4, 3, 'אַרְבָּעִים וְשָׁלוֹשׁ', 'M-NUM-REV'),
+                                     tile(3, 0, 7, 'שֶׁבַע', 'M-PV-FACE')]
+        self.assertEqual(self.failing(good), [])
+        moved = copy.deepcopy(good)
+        moved['answer']['correct'] = 'o2'
+        self.assertIn(('WRONG', 'answer'), codes(self.c1run(moved)))
+        label = copy.deepcopy(good)
+        label['answer']['options'][1]['label'] = 'שְׁלוֹשִׁים וְאַרְבַּע'
+        self.assertIn(('WRONG', 'label'), codes(self.c1run(label)))
+        face = copy.deepcopy(good)
+        face['answer']['options'][2]['picture']['ones'] = 8
+        face['answer']['options'][2]['label'] = 'שְׁמוֹנֶה'
+        self.assertIn(('RULE', 'tag-rule'), codes(self.c1run(face)), '3 and 4 as ones are 7 cubes')
+        lit = copy.deepcopy(good)
+        lit['answer']['options'][1]['picture']['litRods'] = 1
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(lit)))
+
+    def test_the_middle_of_two_marks(self):
+        """A row of two marks with the gap between: the middle (45); M-NL-SPACE is the mark next to an end."""
+        good = c1_item('עַל הַצִּיר, אֵיזֶה מִסְפָּר נִמְצָא בְּדִיּוּק בָּאֶמְצַע?', [(45, None), (41, 'M-NL-SPACE'), (90, 'M-EQ-OPER')],
+                       row=['n:40', '?', 'n:50'], skill='NUM-C-06')
+        self.assertEqual(self.failing(good), [])
+        far = copy.deepcopy(good)
+        far['answer']['options'][1]['numeral'] = 43
+        self.assertIn(('RULE', 'tag-rule'), codes(self.c1run(far)))
+        moved = copy.deepcopy(good)
+        moved['answer']['correct'] = 'o2'
+        self.assertIn(('WRONG', 'answer'), codes(self.c1run(moved)))
+
 
 def c1_waiting_docs():
     """The items of tools/band_c.py that wait for a mode (DRAWN), built in memory with every mode on, as tools/author.py would write
@@ -498,28 +597,55 @@ def c1_waiting_docs():
             a = dict(a, domain=u.d['domain'], band=a.get('band', 'C'))
             doc = author.KINDS[a['kind']](a, ctx)
             if 'picture' in a and 'picture' not in doc['scene']:
-                # author.k_pick does not carry `picture` into the scene yet (one line, with the step that draws the pictures)
-                doc['scene']['picture'] = a['picture']
-                carried.append(a['id'])
+                carried.append(a['id'])  # a picture the generator dropped (none since step 3: author.k_pick carries it)
             docs.append(doc)
     return docs, carried, units[True]
 
 
 class C1Deferred(unittest.TestCase):
-    """QA-C1-5: the items of docs/knowledge/maths/c1-deferred.md are in tools/band_c.py behind DRAWN, out of content, and pass the
-    gate (check_maths --strict) the moment a mode is switched on."""
+    """QA-C1-5: the items of docs/knowledge/maths/c1-deferred.md, written in tools/band_c.py behind DRAWN. Since step 3 (2026-11-07)
+    every mode is drawn: each waiting item is in content, as the generator writes it, and passes the gate (check_maths --strict)."""
 
     @classmethod
     def setUpClass(cls):
         cls.docs, cls.carried, cls.units = c1_waiting_docs()
 
-    def test_no_waiting_item_is_in_content(self):
-        on_disk = {p[len('activity.'):-len('.json')] for p in os.listdir(cm.STARTER) if p.startswith('activity.c.')}
-        self.assertEqual(sorted(d['id'] for d in self.docs if d['id'] in on_disk), [])
+    def test_every_mode_is_drawn(self):
+        import band_c  # noqa: E402
+        self.assertEqual({m for m, on in band_c.DRAWN.items() if not on}, set())
+
+    def test_every_waiting_item_is_in_content_as_written(self):
+        missing, changed = [], []
+        for d in self.docs:
+            path = os.path.join(cm.STARTER, 'activity.%s.json' % d['id'])
+            if not os.path.exists(path):
+                missing.append(d['id'])
+                continue
+            with open(path, encoding='utf-8') as fh:
+                disk = json.load(fh)
+            for k in ('template', 'skills', 'scene', 'answer', 'checkType', 'representation', 'variantGroup'):
+                if disk.get(k) != d.get(k):
+                    changed.append((d['id'], k))
+        self.assertEqual(missing, [])
+        self.assertEqual(changed, [], 'regenerate the content: python -I tools/regen_content.py')
+        self.assertEqual(self.carried, [], 'the generator carries every stage picture into the scene')
+
+    def test_the_waiting_items_on_disk_pass_the_gate(self):
+        docs, records, skills = cm.load(cm.STARTER)
+        ids = {d['id'] for d in self.docs}
+        on_disk = [d for d in docs if d['id'] in ids]
+        self.assertEqual(len(on_disk), len(ids))
+        f, counts = cm.check_docs(on_disk, records, skills, CATALOGUE, cm.Svg(cm.STARTER))
+        self.assertEqual([r for r in f.rows if r[0] in cm.STRICT_FAILING], [])
+        self.assertEqual(counts['checked'], len(on_disk))
 
     def test_every_mode_has_its_items(self):
         kinds = {(d['scene'].get('picture') or {}).get('kind') or d['answer']['type'] for d in self.docs}
-        self.assertEqual(kinds, {'base_ten', 'hundred_chart', 'number'})
+        self.assertLessEqual({'base_ten', 'hundred_chart', 'number'}, kinds)
+        fields = {k for d in self.docs for k in (d['scene'].get('picture') or {}) if k in ('litRods', 'crossedRods')}
+        self.assertEqual(fields, {'litRods', 'crossedRods'})
+        self.assertTrue(any('picture2' in d['scene'] for d in self.docs))
+        self.assertTrue(any('picture' in o for d in self.docs for o in d['answer'].get('options', [])))
         self.assertGreaterEqual(len(self.docs), 20)
 
     def test_the_waiting_items_pass_the_gate(self):

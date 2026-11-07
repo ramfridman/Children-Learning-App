@@ -18,7 +18,11 @@
     "c.numb01.1",
     "c.numb01.2",
     "c.numb10.1",
-    "c.numb10.2"
+    "c.numb10.2",
+    "c.numb01.3",
+    "c.numb01.4",
+    "c.numb10.3",
+    "c.numb10.4"
   ],
   "estimatedMinutes": 3,
   "sequence": 104,

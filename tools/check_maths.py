@@ -442,12 +442,14 @@ class Item:
 
 
 def opt_value(o):
-    """The number an option shows (a numeral, a value or a set's count), else None."""
+    """The number an option shows (a numeral, a value, a set's count or the blocks on its tile), else None."""
     for k in ('numeral', 'value'):
         if isinstance(o.get(k), (int, float)):
             return o[k]
     if isinstance(o.get('set'), dict):
         return o['set'].get('count')
+    if isinstance(o.get('picture'), dict) and o['picture'].get('kind') == 'base_ten':
+        return base_ten(o['picture'])
     return None
 
 
@@ -665,6 +667,9 @@ def tag_candidates(tag, ctx):
         if len(parts) >= 2:
             out.add(int(''.join(str(p) for p in parts)))
         return out
+    if tag == 'M-NL-SPACE' and ctx.get('marks'):
+        # the middle of two marks of a line: the mark next to an end, a line whose gaps are not equal (40 _ 50: 41)
+        return {v + d for v in ctx['marks'] for d in (1, -1)}
     if tag == 'M-OOO-LTR' and ctx.get('ltr') is not None:
         return {ctx['ltr']}
     return None
@@ -767,6 +772,18 @@ def picture_value(it, pic):
         x = base_ten(pic)
         if not x:
             out.append(('WRONG', 'picture', 'the base-ten picture shows no blocks'))
+        lit, crossed = pic.get('litRods', 0), pic.get('crossedRods', 0)
+        if lit + crossed > pic.get('tens', 0):
+            out.append(('WRONG', 'picture', '%d rods lit and %d crossed out, of %d' % (lit, crossed, pic.get('tens', 0))))
+        if crossed:
+            out.append(('WRONG', 'picture', 'rods crossed out with no subtraction in a row'))
+        if it.has('המוט', 'המוטות'):  # the lit rod (litRods): what the lit rods are worth; M-PV-FACE is a rod counted as one
+            if not lit:
+                out.append(('WRONG', 'unsolvable', 'the caption asks about the rod, and no rod is lit'))
+            nums = [v for v in numbers(it.caption) if v != 10 * lit]
+            if nums:
+                out.append(('WRONG', 'picture', 'the caption says %s, the lit rods are worth %d' % (nums, 10 * lit)))
+            return 10 * lit, {'face': lit, 'given': [10 * lit]}, out
         nums = [v for v in numbers(it.caption) if v != x]
         if nums:
             out.append(('WRONG', 'picture', 'the caption says %s, the blocks show %d' % (nums, x)))
@@ -801,6 +818,33 @@ def picture_value(it, pic):
     return None, {}, out
 
 
+def sentence_blocks(pic, pic2, seq, row, given, x):
+    """The findings of base-ten blocks over a number sentence: the blocks show a number of the sentence; a second picture is the
+    second number of a sum (40 + 30: 4 rods beside 3); rods crossed out are the number taken away (70 - 40: 7 rods, the last 4
+    crossed); a lit rod is not part of a sentence."""
+    out = []
+    shown = base_ten(pic)
+    ops = [t for t in seq if isinstance(t, str) and t != '=']
+    crossed, lit = pic.get('crossedRods', 0), pic.get('litRods', 0)
+    if shown not in given + [x]:
+        out.append(('WRONG', 'picture', 'the blocks show %d, the sentence %s has %s' % (shown, row, given + [x])))
+    if lit + crossed > pic.get('tens', 0):
+        out.append(('WRONG', 'picture', '%d rods lit and %d crossed out, of %d' % (lit, crossed, pic.get('tens', 0))))
+    if lit:
+        out.append(('WRONG', 'picture', 'a lit rod over a number sentence'))
+    if pic2 is not None:
+        if pic2.get('litRods') or pic2.get('crossedRods'):
+            out.append(('WRONG', 'picture', 'the second picture has rods lit or crossed out'))
+        if ops != ['+'] or len(given) != 2 or [shown, base_ten(pic2)] != given or seq.index(None) != len(seq) - 1:
+            out.append(('WRONG', 'picture', 'two pictures of blocks %s and %s are the two numbers of a sum; the sentence is %s' %
+                        (shown, base_ten(pic2), row)))
+    if crossed:
+        if ops not in (['-'], ['−']) or len(given) != 2 or given != [shown, 10 * crossed] or seq.index(None) != len(seq) - 1:
+            out.append(('WRONG', 'picture', '%d rods of %d crossed out are %d taken from %d; the sentence is %s' %
+                        (crossed, pic.get('tens', 0), 10 * crossed, shown, row)))
+    return out
+
+
 def sentence_ctx(seq):
     """The tag context of a number sentence with a gap (what the sentence branch of recognise_choice builds)."""
     given = [t for t in seq if isinstance(t, (int, float))]
@@ -829,8 +873,9 @@ def number_ctx(it):
         if len(sols) != 1:
             return None, {}, 'number-sentence', [('WRONG', 'unsolvable', 'the number sentence %s has %d solutions' % (row, len(sols)))]
         x, ctx = sols[0], sentence_ctx(seq)
-        if pic and pic.get('kind') == 'base_ten' and base_ten(pic) not in ctx['given'] + [x]:
-            found.append(('WRONG', 'picture', 'the blocks show %d, the sentence %s has %s' % (base_ten(pic), row, ctx['given'] + [x])))
+        if pic and pic.get('kind') == 'base_ten':
+            pic2 = sc.get('picture2') if isinstance(sc.get('picture2'), dict) else None
+            found.extend(sentence_blocks(pic, pic2, seq, row, ctx['given'], x))
         return x, ctx, 'number-sentence', found
     if pic:
         x, ctx, found = picture_value(it, pic)
@@ -902,6 +947,28 @@ def recognise_choice(it, svg):
 
     # --- a stage picture (X1): base-ten blocks and the hundred chart (M10 C1, QA-C1-5)
     pic = sc.get('picture') if isinstance(sc.get('picture'), dict) else None
+    pic2 = sc.get('picture2') if isinstance(sc.get('picture2'), dict) else None
+    if pic2 is not None and pic2.get('kind') != 'base_ten' or pic2 is not None and (pic or {}).get('kind') != 'base_ten':
+        out.append(('WRONG', 'picture', 'a second picture is blocks beside blocks'))
+        return None, out
+    if pic2 and not (seq and None in seq):  # two numbers of blocks side by side: which is bigger (or smaller)?
+        shown = [base_ten(pic), base_ten(pic2)]
+        for p in (pic, pic2):
+            if p.get('litRods') or p.get('crossedRods'):
+                out.append(('WRONG', 'picture', 'a comparison of blocks with rods lit or crossed out'))
+        big, small = it.has('גדול'), it.has('קטן')
+        if big == small or shown[0] == shown[1]:
+            out.append(('WRONG', 'unsolvable', 'the blocks show %s and the caption asks neither bigger nor smaller' % shown))
+            return None, out
+        x = max(shown) if big else min(shown)
+        if nums:
+            out.append(('WRONG', 'picture', 'the caption says %s, the blocks show %s' % (nums, shown)))
+        vals = [opt_value(o) for o in it.options]
+        for v in shown:
+            if v not in vals:
+                out.append(('WRONG', 'picture', 'the blocks show %d, no tile has it' % v))
+        return numeric('compare-blocks', x, {'compare': shown, 'want': 'max' if x == max(shown) else 'min', 'given': shown},
+                       shown), out
     if pic and not (seq and None in seq):
         x, ctx, found = picture_value(it, pic)
         out.extend(found)
@@ -933,9 +1000,7 @@ def recognise_choice(it, svg):
         if plus + minus and (plus != seq.count('+') or minus != seq.count('-') + seq.count('−')):
             out.append(('WRONG', 'picture', 'the caption reads %d plus and %d minus, the row has %s' % (plus, minus, row)))
         if pic and pic.get('kind') == 'base_ten':
-            shown = base_ten(pic)
-            if shown not in given + [x]:
-                out.append(('WRONG', 'picture', 'the blocks show %d, the sentence %s has %s' % (shown, row, given + [x])))
+            out.extend(sentence_blocks(pic, pic2, seq, row, given, x))
         rev = list(reversed(seq))
         ops = [t for t in seq if isinstance(t, str) and t != '=']
         ctx = {'given': given, 'op': ops[0] if ops else None, 'sentence': True}
@@ -955,7 +1020,10 @@ def recognise_choice(it, svg):
         x = v0 + step * (gap - i0)
         if any(v != v0 + step * (i - i0) for i, v in known):
             out.append(('WRONG', 'unsolvable', 'the row %s is not a counting sequence' % row))
-        return numeric('missing-in-row', int(x), {'given': [v for _, v in known]}, [v for _, v in known]), out
+        ctx = {'given': [v for _, v in known]}
+        if len(seq) == 3 and gap == 1:  # the middle of two marks
+            ctx['marks'] = [v for _, v in known]
+        return numeric('missing-in-row', int(x), ctx, [v for _, v in known]), out
 
     # --- coins and notes: the shekels drawn (M10 C1: ten-shekel coins as tens, one-shekel coins as ones)
     if g and sprite_info(g).get('kind') in ('coin', 'note') and it.has('שקל') and not it.has('כדי ש'):
@@ -1082,7 +1150,10 @@ def recognise_choice(it, svg):
     if it.has('מה בא לפני', 'קחו אחת מתוך') and nums:
         return numeric('before', nums[-1] - 1, {'prev': nums[-1], 'given': [nums[-1]]}, nums), out
     if it.has('איפה המספר') and nums:
-        return numeric('pick-numeral', nums[0], {}, nums), out
+        ctx = {}
+        if any(isinstance(o.get('picture'), dict) for o in it.options):
+            ctx['face'] = sum(int(d) for d in str(int(nums[0])))
+        return numeric('pick-numeral', nums[0], ctx, nums), out
     if it.has('איזה מספר גדול יותר', 'איזה מספר קטן יותר'):
         vals = [opt_value(o) for o in it.options]
         x = max(vals) if it.has('גדול') else min(vals)
@@ -1335,6 +1406,11 @@ def check_label(f, it, o):
     elif isinstance(o.get('set'), dict) and said:
         if said != [v]:
             f.add('WRONG', it, 'label', '%s: the label says %s, the set has %s' % (o['id'], said, v))
+    elif isinstance(o.get('picture'), dict):
+        if o['picture'].get('kind') != 'base_ten' or o['picture'].get('litRods') or o['picture'].get('crossedRods'):
+            f.add('WRONG', it, 'picture', '%s: blocks on a tile are plain base-ten blocks' % o['id'])
+        elif said != [v]:
+            f.add('WRONG', it, 'label', '%s: the label says %s, the blocks show %s' % (o['id'], said, v))
     if info.get('kind') == 'tower' and said and said != [info['n']]:
         f.add('WRONG', it, 'label', '%s: the label says tower %s, the picture is tower %s' % (o['id'], said, info['n']))
     if info.get('kind') == 'day':

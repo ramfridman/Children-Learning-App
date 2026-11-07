@@ -1,0 +1,161 @@
+{
+  "schema": "activity/v1",
+  "id": "c.mathc01.33",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "balance",
+  "templateVersion": "1.0",
+  "domain": "math",
+  "band": "C",
+  "skills": [
+    {
+      "id": "MATH-C-01",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "fact-9-5",
+  "difficulty": {
+    "authored": 0.6
+  },
+  "prompt": {
+    "vo": "vo:c.mathc01.33.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בְּצַד אֶחָד תֵּשַׁע קֻבִּיּוֹת וְעוֹד חָמֵשׁ, וּבַצַּד הַשֵּׁנִי עֶשֶׂר. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁהַצְּדָדִים שָׁוִים."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "left": {
+      "groups": [
+        {
+          "sprite": "asset:block",
+          "count": 9,
+          "weight": 1
+        },
+        {
+          "sprite": "asset:block",
+          "count": 5,
+          "weight": 1
+        }
+      ]
+    },
+    "right": {
+      "groups": [
+        {
+          "sprite": "asset:block",
+          "count": 10,
+          "weight": 1
+        }
+      ]
+    },
+    "blockSprite": "asset:block"
+  },
+  "answer": {
+    "type": "scale",
+    "mode": "balance",
+    "result": "4",
+    "misconception": "M-EQ-OPER"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.mathc01.33.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! תֵּשַׁע וְעוֹד חָמֵשׁ שָׁוֶה עֶשֶׂר וְעוֹד אַרְבַּע."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-EQ-OPER",
+        "vo": "vo:fb.eq_oper",
+        "caption": [
+          {
+            "t": "he",
+            "v": "סִימַן הַשָּׁוֶה אוֹמֵר: בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.scale.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.mathc01.33.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "תֵּשַׁע וְעוֹד חָמֵשׁ הֵם עֶשֶׂר וְעוֹד אַרְבַּע. אָז מוֹסִיפִים אַרְבַּע קֻבִּיּוֹת."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child reads the scale",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "בְּצַד אֶחָד תֵּשַׁע קֻבִּיּוֹת וְעוֹד חָמֵשׁ, וּבַצַּד הַשֵּׁנִי עֶשֶׂר. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁהַצְּדָדִים שָׁוִים."
+  }
+}

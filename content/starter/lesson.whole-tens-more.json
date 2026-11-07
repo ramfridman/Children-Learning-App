@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "whole-tens-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "עֲשָׂרוֹת בְּמוֹטוֹת"
+    }
+  ],
+  "skills": [
+    "MATH-C-03"
+  ],
+  "items": [
+    "c.mathc03.9",
+    "c.mathc03.10",
+    "c.mathc03.11",
+    "c.mathc03.12",
+    "c.mathc03.15",
+    "c.mathc03.16",
+    "c.mathc03.17",
+    "c.mathc03.18"
+  ],
+  "estimatedMinutes": 8,
+  "sequence": 106,
+  "celebration": {
+    "vo": "vo:celebrate.whole_tens_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! סְפַרְתֶּם אֶת הַמּוֹטוֹת בַּעֲשָׂרוֹת."
+      }
+    ]
+  }
+}

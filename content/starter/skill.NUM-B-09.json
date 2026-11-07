@@ -25,7 +25,8 @@
   ],
   "representations": [
     "pictorial",
-    "symbolic"
+    "symbolic",
+    "concrete"
   ],
   "misconceptions": [
     "M-CNT-SKIP",
