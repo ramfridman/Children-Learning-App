@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.strokes-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד דְּרָכִים"
+    }
+  ],
+  "skills": [
+    "HEB-A-14"
+  ],
+  "items": [
+    "heb.a14.05",
+    "heb.a14.06",
+    "heb.a14.07",
+    "heb.a14.08",
+    "heb.a14.09"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 28
+}

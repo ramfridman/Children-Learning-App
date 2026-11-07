@@ -3,8 +3,8 @@
   "id": "eng.a06.i07",
   "review": "needs-editor",
   "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.3",
+  "template": "listen_do",
+  "templateVersion": "1.0",
   "course": "eng",
   "domain": "languages",
   "band": "A",
@@ -16,8 +16,8 @@
   ],
   "purpose": "learn",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "en-feet",
+  "representation": "embodied",
+  "variantGroup": "en-touch-feet",
   "difficulty": {
     "authored": 0.2
   },
@@ -32,18 +32,18 @@
   },
   "tutor": {
     "llmAllowed": false,
-    "goal": "listen and choose",
+    "goal": "do what is said",
     "mustNotRevealBeforeHint": 2
   },
   "a11y": {
-    "altText": "שָׁלוֹשׁ תְּמוּנוֹת"
+    "altText": "תְּמוּנָה וְחָבֵר שֶׁעוֹשֶׂה מַה שֶּׁאוֹמְרִים"
   },
   "prompt": {
-    "vo": "vo:eng.he_ins_listen_tap",
+    "vo": "vo:eng.he_ins_touch_body",
     "caption": [
       {
         "t": "he",
-        "v": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה."
+        "v": "הַקְשִׁיבוּ, וּגְעוּ בַּגּוּף שֶׁל מִיקָה."
       }
     ],
     "target": "vo:eng.en_touch_feet",
@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_5",
+      "vo": "vo:eng.he_fb_right_6",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "שְׁמַעְתֶּם טוֹב!"
         }
       ],
       "target": "vo:eng.en_touch_feet"
@@ -121,25 +121,51 @@
       "target": "vo:eng.en_touch_feet"
     }
   ],
-  "scene": {},
+  "scene": {
+    "picture": "asset:mika_body"
+  },
   "answer": {
     "type": "choice",
+    "mode": "hotspots",
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:body_feet",
-        "label": "תְּמוּנָה"
+        "label": "feet",
+        "at": {
+          "x": 0.3594,
+          "y": 0.7188,
+          "w": 0.2812,
+          "h": 0.2812
+        }
       },
       {
         "id": "o2",
-        "sprite": "asset:body_hands",
-        "label": "תְּמוּנָה",
+        "label": "hands",
+        "at": [
+          {
+            "x": 0.05,
+            "y": 0.4734,
+            "w": 0.2812,
+            "h": 0.2812
+          },
+          {
+            "x": 0.6687,
+            "y": 0.4734,
+            "w": 0.2812,
+            "h": 0.2812
+          }
+        ],
         "misconception": "eng.lis.sem"
       },
       {
         "id": "o3",
-        "sprite": "asset:body_ears",
-        "label": "תְּמוּנָה",
+        "label": "head",
+        "at": {
+          "x": 0.3516,
+          "y": 0.0641,
+          "w": 0.2969,
+          "h": 0.3359
+        },
         "misconception": "eng.lis.l1_guess"
       }
     ],

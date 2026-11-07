@@ -8,14 +8,12 @@
     {"id": "i05", "kind": "tap", "target": "en-sister", "options": ["fam-sister", "fam-brother", "fam-father"], "wrong": {"fam-brother": "sem", "fam-father": "l1_guess"}},
     {"id": "i06", "kind": "tap", "target": "en-grandma", "options": ["fam-grandmother", "fam-mother", "fam-brother"], "wrong": {"fam-mother": "sem", "fam-brother": "l1_guess"}},
     {"id": "i07", "kind": "tap", "purpose": "check", "target": "en-grandpa", "options": ["fam-grandfather", "fam-father", "fam-baby"], "wrong": {"fam-father": "sem", "fam-baby": "l1_guess"}},
-    {"id": "i08", "kind": "tap", "purpose": "check", "target": "en-sister", "options": ["fam-sister", "fam-mother", "fam-baby"], "wrong": {"fam-mother": "sem", "fam-baby": "l1_guess"}}
+    {"id": "i08", "kind": "tap", "purpose": "check", "target": "en-sister", "options": ["fam-sister", "fam-mother", "fam-baby"], "wrong": {"fam-mother": "sem", "fam-baby": "l1_guess"}, "stage": "fam-all"},
+    {"id": "p01", "kind": "puppet", "frame": "he-ins-personal", "mode": "personal", "topic": "family", "picture": "pip-family", "prompt": ["en-this-is-my-family", "en-who-in-family"], "purpose": "practice", "cards": [{"pic": "fam-mother", "clip": "en-mom"}, {"pic": "fam-father", "clip": "en-dad"}, {"pic": "fam-brother", "clip": "en-brother"}, {"pic": "fam-sister", "clip": "en-sister"}, {"pic": "fam-baby", "clip": "en-baby"}, {"pic": "fam-grandmother", "clip": "en-grandma"}, {"pic": "fam-grandfather", "clip": "en-grandpa"}, {"pic": "fam-someone"}], "reply": "en-nice", "pass": "en-thats-ok"}
   ],
   "lessons": [
     {"id": "fam-1", "title": "הַמִּשְׁפָּחָה", "items": ["i01", "i02", "i03"]},
-    {"id": "fam-2", "title": "הַמִּשְׁפָּחָה הַגְּדוֹלָה", "items": ["i04", "i05", "i06"]}
-  ],
-  "waiting": [
-    {"id": "i08", "template": "LS01 tap with a stage picture first", "replaces": "i08", "purpose": "check", "stage": "fam-all", "note": "The whole family picture (fam-all) first, then the three cards; the tap recipe has no stage picture yet, so i08 is a plain tap for now."},
-    {"id": "p01", "template": "LS10 puppet_talk personal", "topic": "family", "frame": "he-ins-personal", "picture": "pip-family", "prompt": ["en-this-is-my-family", "en-who-in-family"], "cards": [{"pic": "fam-mother", "clip": "en-mom"}, {"pic": "fam-father", "clip": "en-dad"}, {"pic": "fam-brother", "clip": "en-brother"}, {"pic": "fam-sister", "clip": "en-sister"}, {"pic": "fam-baby", "clip": "en-baby"}, {"pic": "fam-grandmother", "clip": "en-grandma"}, {"pic": "fam-grandfather", "clip": "en-grandpa"}, {"pic": "fam-someone"}], "many": true, "reply": "en-nice", "pass": "en-thats-ok", "note": "Any number of cards; no default, no follow-up; \"someone else\" holds everyone else; the pass is always on screen."}
+    {"id": "fam-2", "title": "הַמִּשְׁפָּחָה הַגְּדוֹלָה", "items": ["i04", "i05", "i06"]},
+    {"id": "fam-more", "title": "הַמִּשְׁפָּחָה הַגְּדוֹלָה", "items": ["p01"]}
   ]
 }

@@ -88,18 +88,28 @@ void main() {
         for (final Activity a in content.activities.values) {
           expect(a.llmAllowed, isFalse, reason: a.id);
         }
+        // A choice (a tap, a bubble, a button, a pause of a story) names its distractors and each carries a tag. A sort, a pair, a drum, a
+        // story only heard, a personal turn and a say step have no distractors of that kind: their tags are on a card, a face or a classifier,
+        // and the validator holds them to the same rule (every wrong thing carries the error it shows).
+        int choices = 0;
         for (final MapEntry<String, Object?> e in pack.docs.entries) {
           if (!e.key.startsWith('activity.')) continue;
-          final Map<String, Object?> options =
+          final Map<String, Object?> answer =
               (e.value! as Map<String, Object?>)['answer']! as Map<String, Object?>;
-          final String correct = options['correct']! as String;
-          for (final Object? o in options['options']! as List<Object?>) {
+          if (answer['type'] != 'choice') continue;
+          choices++;
+          final Object? correct = answer['correct'];
+          final Set<String> right = <String>{
+            if (correct is List<Object?>) ...correct.cast<String>() else correct! as String,
+          };
+          for (final Object? o in answer['options']! as List<Object?>) {
             final Map<String, Object?> option = o! as Map<String, Object?>;
-            if (option['id'] != correct) {
+            if (!right.contains(option['id'])) {
               expect(option['misconception'], isNotNull, reason: '${e.key} ${option['id']}');
             }
           }
         }
+        expect(choices, greaterThan(20));
       });
 
       test(
@@ -127,7 +137,11 @@ void main() {
           for (final Object? a in pack.manifest['assets']! as List<Object?>) {
             final String id = (a! as Map<String, Object?>)['id']! as String;
             final File shared = File('$_languages/pictures/${id.replaceAll('_', '-')}.svg');
-            expect(shared.existsSync(), isTrue, reason: id);
+            if (!shared.existsSync()) {
+              // Made by the generator, not drawn: the blank target of a count, or a counted thing on a glow.
+              expect(id == 'blank' || id.endsWith('_lit'), isTrue, reason: id);
+              continue;
+            }
             expect(pack.files['$id.svg'], Uint8List.fromList(shared.readAsBytesSync()), reason: id);
           }
         },

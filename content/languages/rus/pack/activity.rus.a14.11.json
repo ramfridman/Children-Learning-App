@@ -1,0 +1,152 @@
+{
+  "schema": "activity/v1",
+  "id": "rus.a14.11",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "puppet_talk",
+  "templateVersion": "1.0",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "RUS-A-14",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "transfer",
+  "representation": "story",
+  "variantGroup": "a14-11",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "answer the puppet",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "בֻּבָּה שֶׁמְּדַבֶּרֶת"
+  },
+  "prompt": {
+    "vo": "vo:rus.f07",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מָה עוֹנִים לֶחָבֵר?"
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:rus.he_fb_right_5",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בְּדִיּוּק!"
+        }
+      ],
+      "target": "vo:rus.ch_daj_sok"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:rus.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ],
+      "target": "vo:rus.ch_daj_sok"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ],
+      "target": "vo:rus.ch_daj_sok"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:rus.f07",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מָה עוֹנִים לֶחָבֵר?"
+        }
+      ],
+      "target": "vo:rus.ch_daj_sok"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:rus.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:rus.ch_daj_sok"
+    }
+  ],
+  "scene": {
+    "picture": "asset:juice"
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "bubble",
+    "options": [
+      {
+        "id": "o1",
+        "label": "צְלִיל",
+        "clip": "vo:rus.ch_daj_sok"
+      },
+      {
+        "id": "o2",
+        "label": "צְלִיל",
+        "clip": "vo:rus.ch_daj_sup",
+        "misconception": "rus.voc.sound"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:mika_gift",
+        "label": "תְּמוּנָה",
+        "misconception": "rus.lis.sem"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

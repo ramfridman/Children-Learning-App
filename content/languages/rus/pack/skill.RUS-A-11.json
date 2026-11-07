@@ -1,0 +1,34 @@
+{
+  "schema": "skill/v1",
+  "id": "RUS-A-11",
+  "review": "needs-editor",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִסְפָּרִים עַד עֶשֶׂר"
+    }
+  ],
+  "strand": "num",
+  "prerequisites": [
+    {
+      "skill": "RUS-A-10",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "rus.num.numword",
+    "rus.voc.sound"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  },
+  "setCoverage": true
+}

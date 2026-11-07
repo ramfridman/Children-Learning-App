@@ -132,7 +132,7 @@ class CommittedSourcesTest(unittest.TestCase):
         self.addCleanup(shutil.rmtree, tmp, True)
         for rel in ('content/languages', 'docs/languages'):
             shutil.copytree(os.path.join(ROOT, rel), os.path.join(tmp, rel),
-                            ignore=shutil.ignore_patterns('pack', 'voice-plan.json', 'fonts', 'strokes') if rel == 'content/languages'
+                            ignore=shutil.ignore_patterns('pack', 'voice-plan.json', 'fonts', 'latin.json', 'cyrillic.json', 'hebrew-print.json', 'hebrew-script.json') if rel == 'content/languages'
                             else None)
         for _ in range(2):
             lang_pack.run(root=tmp, quiet=True)
@@ -146,6 +146,26 @@ class CommittedSourcesTest(unittest.TestCase):
         for course in lang_pack.COURSES:
             pack_dir, out = lang_pack.outputs(course)
             self.assertEqual(set(glob.glob(os.path.join(pack_dir, '*'))), {p for p in out if p.startswith(pack_dir)})
+
+
+def strings(node, key):
+    """Every string of a document under [key] (every string when [key] is None), at any depth."""
+    out = []
+    if isinstance(node, dict):
+        for k, v in node.items():
+            if isinstance(v, str):
+                if key is None or k == key:
+                    out.append(v)
+            else:
+                out += strings(v, key)
+    elif isinstance(node, list):
+        for v in node:
+            if isinstance(v, str):
+                if key is None:
+                    out.append(v)
+            else:
+                out += strings(v, key)
+    return out
 
 
 class PilotInvariantsTest(unittest.TestCase):
@@ -187,9 +207,8 @@ class PilotInvariantsTest(unittest.TestCase):
                 if name.startswith('activity.'):
                     self.assertFalse(d['tutor']['llmAllowed'], name)
                     self.assertTrue({s['id'] for s in d['skills']} <= skills, name)
-                    for o in d['answer']['options']:
-                        if 'misconception' in o:
-                            self.assertIn(o['misconception'], tags, name)
+                    for tag in strings(d, 'misconception'):
+                        self.assertIn(tag, tags, name)
                 if name.startswith('skill.'):
                     self.assertTrue(set(d['misconceptions']) <= tags, name)
                     self.assertTrue({p['skill'] for p in d['prerequisites']} <= skills, name)
@@ -199,10 +218,15 @@ class PilotInvariantsTest(unittest.TestCase):
             for name, d in self.docs(course).items():
                 if not name.startswith('activity.'):
                     continue
-                options = d['answer']['options']
-                wrong = [o for o in options if o['id'] != d['answer']['correct']]
+                answer = d['answer']
+                if answer.get('type') != 'choice':
+                    continue  # a sort, a pair, a drum, a story that is only heard, a personal turn: the tags are on the card, the face or the classifier
+                options = answer['options']
+                right = answer['correct'] if isinstance(answer['correct'], list) else [answer['correct']]
+                wrong = [o for o in options if o['id'] not in right]
                 self.assertTrue(all('misconception' in o for o in wrong), name)
-                self.assertEqual(d['scoring']['maxAttempts'], 2 if len(options) == 2 else 3, name)
+                if d['template'] != 'count_tap':
+                    self.assertEqual(d['scoring']['maxAttempts'], 2 if len(options) == 2 else 3, name)
 
     def test_every_picture_an_item_shows_is_in_the_pack_and_in_the_shared_library(self):
         for course in lang_pack.COURSES:
@@ -210,14 +234,18 @@ class PilotInvariantsTest(unittest.TestCase):
             assets = {a['id']: a['file'] for a in self.docs(course)['pack.json']['assets']}
             for asset, file in assets.items():
                 self.assertTrue(os.path.exists(os.path.join(pack_dir, file)), file)
-                with open(os.path.join(pack_dir, file), 'rb') as a, \
-                        open(os.path.join(ROOT, 'content', 'languages', 'pictures', asset.replace('_', '-') + '.svg'), 'rb') as b:
+                shared = os.path.join(ROOT, 'content', 'languages', 'pictures', asset.replace('_', '-') + '.svg')
+                if not os.path.exists(shared):
+                    # made by the generator: the blank target of a count, or a thing on a glow
+                    self.assertTrue(asset == 'blank' or asset.endswith('_lit'), file)
+                    continue
+                with open(os.path.join(pack_dir, file), 'rb') as a, open(shared, 'rb') as b:
                     self.assertEqual(a.read(), b.read(), file)
             for name, d in self.docs(course).items():
                 if name.startswith('activity.'):
-                    for o in d['answer']['options']:
-                        if 'sprite' in o:
-                            self.assertIn(o['sprite'][len('asset:'):], assets)
+                    for ref in strings(d, None):
+                        if ref.startswith('asset:'):
+                            self.assertIn(ref[len('asset:'):], assets, name)
 
     def test_the_voice_plan_lists_every_clip_a_document_names(self):
         for course in lang_pack.COURSES:
@@ -559,6 +587,154 @@ class WriteTest(Base):
         self.sb.write()
         self.assertEqual(lang_pack.main(['eng'], root=self.sb.root), 1)
         self.assertEqual(lang_pack.main(['fra'], root=self.sb.root), 2)
+
+
+# ---------------------------------------------------------------------------------------------------------------- the recipes
+
+EXTRA_CSV = ('en-cat,cat,cat.,/k/\nen-dog,dog,dog.,/d/\nen-one,one,one.,/w/\nen-two,two,two.,/t/\nen-three,three,three.,/t/\n'
+             'en-whats-this,What\'s this?,What is this?,/w/\nen-its-cat,It\'s a cat.,It is a cat.,/i/\nen-yes,yes,yes.,/j/\n'
+             'en-ch-1,Hello cat,Hello cat.,/h/\nen-ch-2,Bye dog,Bye dog.,/b/\nen-cat-slow,cat,cat.,/k/\nen-thats-ok,That\'s OK!,That is OK.,/o/\n')
+EXTRA_LINES = {'he-q': 'מִי זֶה?', 'he-pass': 'זֶה בְּסֵדֶר!', 'he-heard': 'שָׁמַעְתִּי:', 'he-together': 'נֹאמַר יַחַד.', 'he-bin': 'קֻפְסָה'}
+
+
+class RecipeBase(Base):
+    """A sandbox that has the clips, lines and pictures the recipes need."""
+
+    def setUp(self):
+        super().setUp()
+        global CSV
+        self.saved = CSV
+        CSV = CSV + EXTRA_CSV
+        self.addCleanup(self.restore)
+        self.sb.pictures = ['a', 'b', 'c', 'd', 'e', 'f']
+        self.sb.course['lines'].update({k: {'he': v} for k, v in EXTRA_LINES.items()})
+        self.sb.course['defaults'].update({'pass': 'he-pass', 'heard': 'he-heard', 'together': 'he-together'})
+        self.sb.course['ladders']['HL'][1]['orLine'] = 'he-show'  # a word with no gloss says another line
+        self.sb.course['tags']['yesno'] = {'id': 'eng.lis.yesno', 'kind': 'diagnostic', 'family': 'MEANING', 'parentText': 'טקסט להורה.'}
+
+    def restore(self):
+        global CSV
+        CSV = self.saved
+
+    def one(self, item, extra_lessons=True):
+        self.sb.unit['items'] = [item]
+        self.sb.unit['lessons'] = [{'id': 'l-1', 'title': 'כותרת', 'items': [item['id']]}]
+        files = self.files()
+        return files, files['activity.eng.a01.%s.json' % item['id']]
+
+
+class RecipesTest(RecipeBase):
+    def test_a_tap_item_can_have_a_stage_picture_a_second_target_clip_and_a_clip_after_the_right_answer(self):
+        _, doc = self.one({'id': 'i01', 'kind': 'tap', 'target': 'en-whats-this', 'target2': 'en-its-cat', 'hintWord': 'en-cat',
+                           'stage': 'a', 'options': ['b', 'c'], 'wrong': {'c': 'sem'}, 'after': 'en-yes', 'pole': 'yes'})
+        self.assertEqual(doc['scene'], {'group': {'sprite': 'asset:a', 'count': 1}})
+        self.assertEqual((doc['prompt']['target'], doc['prompt']['target2']), ('vo:eng.en_whats_this', 'vo:eng.en_its_cat'))
+        self.assertEqual(doc['feedback']['correct']['target'], 'vo:eng.en_yes')
+        self.assertEqual(doc['answer']['pole'], 'yes')
+
+    def test_sound_only_options_are_buttons_and_a_wrong_one_is_named_by_its_clip(self):
+        _, doc = self.one({'id': 'i01', 'kind': 'tap', 'options': [{'clip': 'en-cat'}, {'clip': 'en-dog'}], 'wrong': {'en-dog': 'sem'}})
+        self.assertEqual([sorted(o) for o in doc['answer']['options']], [['clip', 'id', 'label'], ['clip', 'id', 'label', 'misconception']])
+
+    def test_a_tap_all_names_its_right_cards_and_is_tap_answer_1_4(self):
+        _, doc = self.one({'id': 'i01', 'kind': 'tap', 'face': 'letter', 'options': ['text:a', 'text:b', 'text:c'],
+                           'letters': ['text:a', 'text:b'], 'wrong': {'text:c': 'sem'}})
+        self.assertEqual((doc['templateVersion'], doc['answer']['all'], doc['answer']['correct']), ('1.4', True, ['o1', 'o2']))
+
+    def test_a_per_item_feedback_line_and_an_inline_ladder_replace_the_course_ones(self):
+        step = {'line': 'he-again', 'action': 'replay_prompt_slow'}
+        _, doc = self.one({'id': 'i01', 'kind': 'tap', 'target': 'en-cat', 'options': ['a', 'b'], 'wrong': {'b': 'sem'},
+                           'feedback': {'byTag': {'sem': {'line': 'he-show'}}}, 'ladder': [step, step, dict(step, action='worked_example')]})
+        self.assertEqual(doc['feedback']['incorrect'][0]['caption'][0]['v'], LINES['he-show'])
+        self.assertEqual(len(doc['hints']), 3)
+
+    def test_a_say_item_with_a_tap_makes_two_activities_that_a_lesson_plays_in_order(self):
+        files, doc = self.one({'id': 'i01', 'kind': 'say', 'picture': 'a', 'clip': 'en-cat', 'forms': ['cat'], 'foils': ['cut'],
+                               'purpose': 'practice', 'then': {'kind': 'tap', 'target': 'en-cat', 'options': ['a', 'b'],
+                                                               'wrong': {'b': 'sem'}}})
+        self.assertEqual(doc['template'], 'say_it')
+        self.assertEqual(doc['answer'], {'type': 'say_it', 'scored': False})
+        self.assertEqual(files['lesson.eng.l-1.json']['items'], ['eng.a01.i01', 'eng.a01.i01t'])
+        self.assertEqual(files['activity.eng.a01.i01t.json']['template'], 'tap_answer')
+
+    def test_a_puppet_bubble_answers_with_the_right_bubble_and_a_personal_turn_is_never_scored(self):
+        _, doc = self.one({'id': 'i01', 'kind': 'puppet', 'picture': 'a', 'prompt': ['en-cat', 'en-dog'],
+                           'options': [{'clip': 'en-yes', 'pic': 'b'}, {'clip': 'en-dog'}], 'wrong': {'en-dog': 'sem'}})
+        self.assertEqual(doc['feedback']['correct']['target'], 'vo:eng.en_yes')
+        self.assertEqual(doc['prompt']['target2'], 'vo:eng.en_dog')
+        _, doc = self.one({'id': 'p01', 'kind': 'puppet', 'mode': 'personal', 'topic': 'age', 'picture': 'a', 'prompt': ['en-cat'],
+                           'cards': ['n:3'], 'cardClips': ['en-three'], 'reply': ['@card', 'en-yes'], 'pass': 'en-thats-ok'})
+        self.assertEqual((doc['purpose'], doc['answer']['type'], doc['answer']['options'][0]['numeral']), ('practice', 'none', 3))
+        self.assertEqual(doc['answer']['pass']['target'], 'vo:eng.en_thats_ok')
+
+    def test_a_drum_item_maps_one_more_and_one_fewer_to_tags_and_is_free_response(self):
+        _, doc = self.one({'id': 'i01', 'kind': 'drum', 'frame': 'he-tap', 'word': ['en-cat'], 'slow': ['en-cat-slow'], 'picture': 'a',
+                           'beats': 2, 'oneMore': 'sem', 'oneFewer': 'guess'})
+        self.assertEqual(doc['answer']['beats'], 2)
+        self.assertEqual([c['when'] for c in doc['answer']['classifiers']], ['one_more', 'one_fewer'])
+        self.assertNotIn('target', doc['prompt'])
+
+    def test_a_count_lights_the_things_from_their_own_picture_and_its_options_are_number_words(self):
+        files, doc = self.one({'id': 'i01', 'kind': 'count', 'objects': 'a', 'count': 2, 'clips': ['en-one', 'en-two'],
+                               'answerPrompt': 'he-q', 'options': [{'clip': 'en-two', 'value': 2}, {'clip': 'en-three', 'value': 3}],
+                               'wrong': {'en-three': 'sem'}})
+        self.assertEqual(doc['scene']['objects']['litSprite'], 'asset:a_lit')
+        self.assertIn({'id': 'a_lit', 'file': 'a_lit.svg'}, files['pack.json']['assets'])
+        self.assertEqual(doc['answer']['options'][1]['value'], 3)
+        self.assertEqual(doc['scene']['target'], {'sprite': 'asset:blank'})
+
+    def test_pairs_have_two_rows_and_the_bottom_row_stands_one_place_along(self):
+        _, doc = self.one({'id': 'i01', 'kind': 'pairs', 'pairs': [['a', 'b', 'en-cat'], ['c', 'd', 'en-dog']],
+                           'wrong': {'a+d': 'sem'}})
+        self.assertEqual([f['id'] for f in doc['scene']['left']], ['l1', 'l2'])
+        self.assertEqual([f['id'] for f in doc['scene']['right']], ['r2', 'r1'])
+        self.assertTrue(all('misconception' in f for f in doc['scene']['right']))
+
+    def test_a_sort_has_bins_that_say_their_name_and_cards_that_carry_the_tag_of_their_mistake(self):
+        _, doc = self.one({'id': 'i01', 'kind': 'sort', 'frame': 'he-tap', 'bins': [{'id': 'x', 'label': 'en-cat', 'picture': 'a'},
+                                                                                   {'id': 'y', 'label': 'en-dog', 'picture': 'b'}],
+                           'cards': [{'pic': 'c', 'clip': 'en-cat', 'bin': 'x'}, {'pic': 'd', 'bin': 'y'}],
+                           'traps': {'c': {'tag': 'sem'}}})
+        self.assertEqual([c['bin'] for c in doc['scene']['items']], ['b1', 'b2'])
+        self.assertEqual(doc['scene']['items'][0]['misconception'], 'eng.lis.sem')
+        self.assertEqual(doc['answer']['mode'], 'sort')
+
+    def test_a_chant_lights_the_pictures_whose_word_a_line_says(self):
+        _, doc = self.one({'id': 'i01', 'kind': 'chant', 'frame': 'he-tap', 'lines': ['en-ch-1', 'en-ch-2'],
+                           'pictures': [{'pic': 'a', 'clip': 'en-cat'}, {'pic': 'b', 'clip': 'en-dog'}]})
+        self.assertEqual([l['lights'] for l in doc['scene']['lines']], [[0], [1]])
+        self.assertEqual((doc['purpose'], doc['answer']), ('practice', {'type': 'none', 'mode': 'chant'}))
+
+    def test_a_story_has_pages_and_a_dialogic_pause_with_a_recast(self):
+        _, doc = self.one({'id': 'i01', 'kind': 'story', 'mode': 'dialogic', 'frame': 'he-tap', 'question': 'he-q',
+                           'pages': [{'picture': 'a', 'clips': ['en-cat']}, {'picture': 'b', 'clips': ['en-dog']}],
+                           'pauseAfter': 0, 'options': ['c', 'd'], 'wrong': {'d': 'sem'}, 'recast': 'en-dog'})
+        self.assertEqual((doc['answer']['mode'], doc['answer']['pauseAfter']), ('dialogic', 0))
+        self.assertEqual(doc['feedback']['correct']['target'], 'vo:eng.en_dog')
+
+    def test_a_place_command_reads_the_places_of_its_picture(self):
+        self.sb.unit['items'] = [{'id': 'i01', 'kind': 'listen_do', 'mode': 'place', 'frame': 'he-tap', 'picture': 'a', 'thing': 'b',
+                                  'options': ['on', 'under'], 'right': 'on', 'wrong': {'under': 'sem'}}]
+        self.sb.unit['lessons'] = [{'id': 'l-1', 'title': 'כותרת', 'items': ['i01']}]
+        self.sb.write()
+        areas = {'pictures': {'a': {'on': [0.3, 0.1, 0.4, 0.3], 'under': [0.3, 0.6, 0.4, 0.3], '@thing': [0.7, 0.1, 0.29, 0.29]}}}
+        with open(os.path.join(self.sb.root, 'content', 'languages', 'pictures', 'scenes.areas.json'), 'w', encoding='utf-8') as fh:
+            json.dump(areas, fh)
+        files = {k: json.loads(v) for k, v in lang_pack.Course('eng', self.sb.root).build().items() if k.endswith('.json')}
+        doc = files['activity.eng.a01.i01.json']
+        self.assertEqual(doc['answer']['options'][0]['at'], {'x': 0.3, 'y': 0.1, 'w': 0.4, 'h': 0.3})
+        self.assertEqual(doc['scene']['thing']['sprite'], 'asset:b')
+
+    def test_a_place_with_no_touch_area_is_named_for_the_design_director(self):
+        self.sb.unit['items'] = [{'id': 'i01', 'kind': 'listen_do', 'mode': 'place', 'frame': 'he-tap', 'picture': 'a', 'thing': 'b',
+                                  'options': ['on', 'under'], 'right': 'on', 'wrong': {'under': 'sem'}}]
+        self.sb.unit['lessons'] = [{'id': 'l-1', 'title': 'כותרת', 'items': ['i01']}]
+        self.assertProblem('has no touch area "on"')
+
+    def test_a_second_target_clip_needs_a_first(self):
+        self.sb.unit['items'] = [{'id': 'i01', 'kind': 'tap', 'target2': 'en-cat', 'options': ['a', 'b'], 'wrong': {'b': 'sem'}}]
+        self.sb.unit['lessons'] = [{'id': 'l-1', 'title': 'כותרת', 'items': ['i01']}]
+        self.assertProblem('second target clip has a first one')
 
 
 if __name__ == '__main__':

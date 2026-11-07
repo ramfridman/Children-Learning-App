@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_6",
+      "vo": "vo:heb.ok_1",
       "caption": [
         {
           "t": "he",
-          "v": "יוֹפִי שֶׁל הַקְשָׁבָה!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:heb.heb_a_w_chatula"

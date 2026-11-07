@@ -2,7 +2,7 @@
   "course": "eng",
   "pack": {"version": "0.1.0", "minAppVersion": "0.5.0"},
   "note": "ENG-1 Band A (ENG-A-01 to A-17), text only (every clip pending). The lines are those of docs/languages/english/band-a-content.md section 2 (text-ready, by the hebrew-text-editor) and the teacher's new lines (needs-editor); the English clips are rows of docs/languages/english/pronunciation.csv. Items of templates that have no recipe yet are written in each unit's \"waiting\" list and in waiting/ (not in the pack).",
-  "defaults": {"frame": "he-ins-listen-tap", "ladder": "HL-PIC", "celebration": "he-bye", "rep": "pictorial", "minutes": 4},
+  "defaults": {"frame": "he-ins-listen-tap", "ladder": "HL-PIC", "celebration": "he-bye", "rep": "pictorial", "minutes": 4, "pass": "pass", "heard": "he-fb-heard", "together": "he-fb-together", "answerPrompt": "he-ins-how-many"},
   "feedback": {"right": [{"line": "he-fb-right-1", "target": "@target"}, {"line": "he-fb-right-2", "target": "@target"}, {"line": "he-fb-right-3", "target": "@target"}, {"line": "he-fb-right-4", "target": "@target"}, {"line": "he-fb-right-5", "target": "@target"}, {"line": "he-fb-right-6", "target": "@target"}, {"line": "he-fb-right-7", "target": "@target"}, {"line": "he-fb-right-8", "target": "@target"}], "wrong": {"line": "he-fb-check"}, "unsure": {"line": "he-fb-listen-again", "target": "@target"}, "byTag": {"syll": {"line": "he-fb-beats-together", "target": "@slow"}, "weak_syll": {"line": "he-fb-beats-together", "target": "@slow"}, "yesno": {"line": "he-fb-look-again"}}},
   "ladders": {
     "HL-PIC": [{"line": "he-hint-again", "action": "replay_prompt_slow", "target": "@slow"}, {"line": "@gloss", "action": "highlight_objects_sequentially", "target": "@target"}, {"line": "he-hint-showme", "action": "worked_example", "target": "@target"}],
@@ -254,6 +254,7 @@
     "he-gl-wave": {"he": "נוֹפְפוּ", "voice": "נוֹפְפוּ", "review": "text-ready"},
     "he-gl-yellow": {"he": "צָהֹב", "voice": "צָהֹב", "review": "text-ready"},
     "he-ins-its-a": {"he": "מָה זֶה? הַקְשִׁיבוּ לַתְּשׁוּבָה, וּגְעוּ בַּתְּמוּנָה.", "voice": "מה זה? הקשיבו לתשובה, וגעו בתמונה.", "review": "needs-editor"},
-    "he-pl-thanks": {"he": "תּוֹדָה! מַמְשִׁיכִים.", "voice": "תודה, ממשיכים.", "review": "needs-editor"}
+    "he-pl-thanks": {"he": "תּוֹדָה! מַמְשִׁיכִים.", "voice": "תודה, ממשיכים.", "review": "needs-editor"},
+    "pass": {"he": "זֶה בְּסֵדֶר!", "voice": "זה בסדר!", "review": "needs-editor"}
   }
 }

@@ -22,7 +22,7 @@
     "authored": 0.2
   },
   "scoring": {
-    "maxAttempts": 2,
+    "maxAttempts": 3,
     "creditByHintLevel": [
       1,
       0.75,
@@ -36,7 +36,7 @@
     "mustNotRevealBeforeHint": 2
   },
   "a11y": {
-    "altText": "שְׁתֵּי תְּמוּנוֹת"
+    "altText": "שָׁלוֹשׁ תְּמוּנוֹת"
   },
   "prompt": {
     "vo": "vo:eng.he_ins_listen_tap",
@@ -135,6 +135,12 @@
         "sprite": "asset:mika_arrive",
         "label": "תְּמוּנָה",
         "misconception": "eng.lis.sem"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:mika_eat",
+        "label": "תְּמוּנָה",
+        "misconception": "eng.lis.l1_guess"
       }
     ],
     "correct": "o1",

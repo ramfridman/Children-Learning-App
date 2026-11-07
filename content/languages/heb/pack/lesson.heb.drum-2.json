@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.drum-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד תּוֹפְפִים"
+    }
+  ],
+  "skills": [
+    "HEB-A-08"
+  ],
+  "items": [
+    "heb.a08.04",
+    "heb.a08.05",
+    "heb.a08.06"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 13
+}

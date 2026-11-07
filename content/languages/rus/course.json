@@ -10,7 +10,11 @@
     "ladder": "HL-1",
     "celebration": "he-fb-right-8",
     "rep": "pictorial",
-    "minutes": 4
+    "minutes": 4,
+    "pass": "pass",
+    "heard": "f04",
+    "together": "f03",
+    "answerPrompt": "f40"
   },
   "feedback": {
     "right": [
@@ -241,30 +245,6 @@
       "preferredRepresentations": [
         "pictorial"
       ]
-    },
-    "also-sem": {
-      "id": "rus.lis.sem",
-      "tag": "M-RUS-SEM",
-      "kind": "diagnostic",
-      "family": "MEANING",
-      "parentText": "הילד כבר מכיר את הנושא, ומילים קרובות (כמו שתי חיות) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות.",
-      "homeActivity": "הניחו שני חפצים מאותו נושא, אמרו ברוסית את השם של אחד מהם, ובקשו מהילד להצביע עליו.",
-      "preferredRepresentations": [
-        "story"
-      ],
-      "note": "the same tag as \"sem\", for the skills beyond the 10 a misconception document may list (A-13, A-14, A-17); the pack keeps the document of \"sem\""
-    },
-    "also-sound": {
-      "id": "rus.voc.sound",
-      "tag": "M-RUS-SOUND",
-      "kind": "diagnostic",
-      "family": "GUESS",
-      "parentText": "מילים שנשמעות דומה (сок ו־суп) עדיין מתחלפות לילד. זה שלב רגיל בלמידת שפה חדשה.",
-      "homeActivity": "אמרו לאט שתי מילים דומות, אחת אחרי השנייה, והצביעו על התמונה של כל אחת.",
-      "preferredRepresentations": [
-        "pictorial"
-      ],
-      "note": "the same tag as \"sound\", for the skills beyond the 10 a misconception document may list (A-13, A-14); the pack keeps the document of \"sound\""
     }
   },
   "lines": {
@@ -521,6 +501,16 @@
     "he-fb-right-8": {
       "he": "כׇּל הַכָּבוֹד!",
       "voice": "כל הכבוד.",
+      "review": "text-ready"
+    },
+    "pass": {
+      "he": "זֶה בְּסֵדֶר!",
+      "voice": "זה בסדר!",
+      "review": "needs-editor"
+    },
+    "personal": {
+      "he": "אֶפְשָׁר לַעֲנוֹת בִּתְמוּנָה, אוֹ בְּקוֹל. אֶפְשָׁר גַּם לְדַלֵּג.",
+      "voice": "אפשר לענות בתמונה, או בקול. אפשר גם לדלג.",
       "review": "text-ready"
     }
   }

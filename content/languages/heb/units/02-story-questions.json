@@ -7,8 +7,45 @@
   "items": [
     {
       "id": "01",
-      "kind": "tap",
-      "target": "heb-a-s1-p4",
+      "kind": "story",
+      "mode": "dialogic",
+      "frame": "s1-title",
+      "rep": "story",
+      "pages": [
+        {
+          "picture": "s1-p1",
+          "clips": [
+            "heb-a-s1-p1"
+          ]
+        },
+        {
+          "picture": "s1-p2",
+          "clips": [
+            "heb-a-s1-p2"
+          ]
+        },
+        {
+          "picture": "s1-p3",
+          "clips": [
+            "heb-a-s1-p3"
+          ]
+        },
+        {
+          "picture": "s1-p4",
+          "clips": [
+            "heb-a-s1-p4"
+          ]
+        },
+        {
+          "picture": "s1-p5",
+          "clips": [
+            "heb-a-s1-p5"
+          ]
+        }
+      ],
+      "pauseAfter": 4,
+      "question": "s1-q2",
+      "recast": "heb-a-s1-r2",
       "options": [
         "cat",
         "rabbit",
@@ -18,14 +55,49 @@
         "rabbit": "story_role",
         "dog": "story_world"
       },
-      "frame": "s1-q2",
-      "ladder": "HL-STORY",
-      "rep": "story"
+      "ladder": "HL-STORY"
     },
     {
       "id": "02",
-      "kind": "tap",
-      "target": "heb-a-s1-p3",
+      "kind": "story",
+      "mode": "dialogic",
+      "frame": "s1-title",
+      "rep": "story",
+      "pages": [
+        {
+          "picture": "s1-p1",
+          "clips": [
+            "heb-a-s1-p1"
+          ]
+        },
+        {
+          "picture": "s1-p2",
+          "clips": [
+            "heb-a-s1-p2"
+          ]
+        },
+        {
+          "picture": "s1-p3",
+          "clips": [
+            "heb-a-s1-p3"
+          ]
+        },
+        {
+          "picture": "s1-p4",
+          "clips": [
+            "heb-a-s1-p4"
+          ]
+        },
+        {
+          "picture": "s1-p5",
+          "clips": [
+            "heb-a-s1-p5"
+          ]
+        }
+      ],
+      "pauseAfter": 3,
+      "question": "s1-q1",
+      "recast": "heb-a-s1-r1",
       "options": [
         "bush",
         "tree",
@@ -35,14 +107,49 @@
         "tree": "story_seen",
         "window": "story_world"
       },
-      "frame": "s1-q1",
-      "ladder": "HL-STORY",
-      "rep": "story"
+      "ladder": "HL-STORY"
     },
     {
       "id": "03",
-      "kind": "tap",
-      "target": "heb-a-s2-p2",
+      "kind": "story",
+      "mode": "dialogic",
+      "frame": "s2-title",
+      "rep": "story",
+      "pages": [
+        {
+          "picture": "s2-p1",
+          "clips": [
+            "heb-a-s2-p1"
+          ]
+        },
+        {
+          "picture": "s2-p2",
+          "clips": [
+            "heb-a-s2-p2"
+          ]
+        },
+        {
+          "picture": "s2-p3",
+          "clips": [
+            "heb-a-s2-p3"
+          ]
+        },
+        {
+          "picture": "s2-p4",
+          "clips": [
+            "heb-a-s2-p4"
+          ]
+        },
+        {
+          "picture": "s2-p5",
+          "clips": [
+            "heb-a-s2-p5"
+          ]
+        }
+      ],
+      "pauseAfter": 2,
+      "question": "s2-q1",
+      "recast": "heb-a-s2-r1",
       "options": [
         "egg",
         "spoon",
@@ -52,14 +159,49 @@
         "spoon": "story_seen",
         "apple": "story_world"
       },
-      "frame": "s2-q1",
-      "ladder": "HL-STORY",
-      "rep": "story"
+      "ladder": "HL-STORY"
     },
     {
       "id": "04",
-      "kind": "tap",
-      "target": "heb-a-s2-p4",
+      "kind": "story",
+      "mode": "dialogic",
+      "frame": "s2-title",
+      "rep": "story",
+      "pages": [
+        {
+          "picture": "s2-p1",
+          "clips": [
+            "heb-a-s2-p1"
+          ]
+        },
+        {
+          "picture": "s2-p2",
+          "clips": [
+            "heb-a-s2-p2"
+          ]
+        },
+        {
+          "picture": "s2-p3",
+          "clips": [
+            "heb-a-s2-p3"
+          ]
+        },
+        {
+          "picture": "s2-p4",
+          "clips": [
+            "heb-a-s2-p4"
+          ]
+        },
+        {
+          "picture": "s2-p5",
+          "clips": [
+            "heb-a-s2-p5"
+          ]
+        }
+      ],
+      "pauseAfter": 4,
+      "question": "s2-q2",
+      "recast": "heb-a-s2-r2",
       "options": [
         "oven",
         "bowl",
@@ -69,9 +211,7 @@
         "bowl": "story_seen",
         "fridge": "story_world"
       },
-      "frame": "s2-q2",
-      "ladder": "HL-STORY",
-      "rep": "story"
+      "ladder": "HL-STORY"
     },
     {
       "id": "05",
@@ -127,8 +267,45 @@
     },
     {
       "id": "07",
-      "kind": "tap",
-      "target": "heb-a-s3-p4",
+      "kind": "story",
+      "mode": "dialogic",
+      "frame": "s3-title",
+      "rep": "story",
+      "pages": [
+        {
+          "picture": "s3-p1",
+          "clips": [
+            "heb-a-s3-p1"
+          ]
+        },
+        {
+          "picture": "s3-p2",
+          "clips": [
+            "heb-a-s3-p2"
+          ]
+        },
+        {
+          "picture": "s3-p3",
+          "clips": [
+            "heb-a-s3-p3"
+          ]
+        },
+        {
+          "picture": "s3-p4",
+          "clips": [
+            "heb-a-s3-p4"
+          ]
+        },
+        {
+          "picture": "s3-p5",
+          "clips": [
+            "heb-a-s3-p5"
+          ]
+        }
+      ],
+      "pauseAfter": 4,
+      "question": "s3-q2",
+      "recast": "heb-a-s3-r2",
       "options": [
         "fish",
         "tortoise",
@@ -138,16 +315,50 @@
         "tortoise": "story_role",
         "bird": "story_world"
       },
-      "frame": "s3-q2",
-      "purpose": "check",
-      "difficulty": 0.4,
       "ladder": "HL-STORY",
-      "rep": "story"
+      "purpose": "check"
     },
     {
       "id": "08",
-      "kind": "tap",
-      "target": "heb-a-s3-p2",
+      "kind": "story",
+      "mode": "dialogic",
+      "frame": "s3-title",
+      "rep": "story",
+      "pages": [
+        {
+          "picture": "s3-p1",
+          "clips": [
+            "heb-a-s3-p1"
+          ]
+        },
+        {
+          "picture": "s3-p2",
+          "clips": [
+            "heb-a-s3-p2"
+          ]
+        },
+        {
+          "picture": "s3-p3",
+          "clips": [
+            "heb-a-s3-p3"
+          ]
+        },
+        {
+          "picture": "s3-p4",
+          "clips": [
+            "heb-a-s3-p4"
+          ]
+        },
+        {
+          "picture": "s3-p5",
+          "clips": [
+            "heb-a-s3-p5"
+          ]
+        }
+      ],
+      "pauseAfter": 2,
+      "question": "s3-q1",
+      "recast": "heb-a-s3-r1",
       "options": [
         "hat",
         "boat",
@@ -157,11 +368,8 @@
         "boat": "story_seen",
         "kite": "story_world"
       },
-      "frame": "s3-q1",
-      "purpose": "check",
-      "difficulty": 0.4,
       "ladder": "HL-STORY",
-      "rep": "story"
+      "purpose": "check"
     }
   ],
   "lessons": [

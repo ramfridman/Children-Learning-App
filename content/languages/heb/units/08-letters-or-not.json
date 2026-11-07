@@ -203,6 +203,203 @@
       "ladder": "HL-PRINT",
       "rep": "symbolic",
       "purpose": "probe"
+    },
+    {
+      "id": "s01",
+      "kind": "sort",
+      "frame": "i-sort-cat",
+      "bins": [
+        {
+          "id": "letters",
+          "label": "heb-a-i-bin-letters"
+        },
+        {
+          "id": "other",
+          "label": "heb-a-i-bin-other"
+        }
+      ],
+      "cards": [
+        {
+          "text": "ב",
+          "bin": "letters"
+        },
+        {
+          "text": "ר",
+          "bin": "letters"
+        },
+        {
+          "text": "ת",
+          "bin": "letters"
+        },
+        {
+          "text": "5",
+          "bin": "other"
+        },
+        {
+          "pic": "shape-dot",
+          "bin": "other"
+        }
+      ],
+      "wrong": {
+        "5": "print_num",
+        "shape-dot": "print_shape"
+      },
+      "ladder": "HL-PRINT"
+    },
+    {
+      "id": "s02",
+      "kind": "sort",
+      "frame": "i-sort-cat",
+      "bins": [
+        {
+          "id": "letters",
+          "label": "heb-a-i-bin-letters"
+        },
+        {
+          "id": "other",
+          "label": "heb-a-i-bin-other"
+        }
+      ],
+      "cards": [
+        {
+          "text": "ש",
+          "bin": "letters"
+        },
+        {
+          "text": "מ",
+          "bin": "letters"
+        },
+        {
+          "text": "ל",
+          "bin": "letters"
+        },
+        {
+          "text": "7",
+          "bin": "other"
+        },
+        {
+          "text": "⭐",
+          "bin": "other"
+        }
+      ],
+      "wrong": {
+        "7": "print_num",
+        "⭐": "print_shape"
+      },
+      "ladder": "HL-PRINT"
+    },
+    {
+      "id": "t03",
+      "kind": "tap",
+      "frame": "i-letters",
+      "options": [
+        "text:א",
+        "text:2",
+        "text:ס",
+        "shape-ring",
+        "text:ל"
+      ],
+      "letters": [
+        "text:א",
+        "text:ס",
+        "text:ל"
+      ],
+      "wrong": {
+        "text:2": "print_num",
+        "shape-ring": "print_shape"
+      },
+      "face": "letter",
+      "ladder": "HL-PRINT"
+    },
+    {
+      "id": "t04",
+      "kind": "tap",
+      "frame": "i-letters",
+      "options": [
+        "text:ו",
+        "text:1",
+        "text:ד",
+        "shape-triangle-open",
+        "text:נ"
+      ],
+      "letters": [
+        "text:ו",
+        "text:ד",
+        "text:נ"
+      ],
+      "wrong": {
+        "text:1": "print_num",
+        "shape-triangle-open": "print_shape"
+      },
+      "face": "letter",
+      "ladder": "HL-PRINT"
+    },
+    {
+      "id": "t05",
+      "kind": "tap",
+      "frame": "i-letters",
+      "options": [
+        "text:ז",
+        "text:7",
+        "text:ס",
+        "text:0",
+        "text:♥"
+      ],
+      "letters": [
+        "text:ז",
+        "text:ס"
+      ],
+      "wrong": {
+        "text:7": "print_num",
+        "text:0": "print_num",
+        "text:♥": "print_shape"
+      },
+      "face": "letter",
+      "ladder": "HL-PRINT"
+    },
+    {
+      "id": "s06",
+      "kind": "sort",
+      "frame": "i-sort-cat",
+      "purpose": "check",
+      "bins": [
+        {
+          "id": "letters",
+          "label": "heb-a-i-bin-letters"
+        },
+        {
+          "id": "other",
+          "label": "heb-a-i-bin-other"
+        }
+      ],
+      "cards": [
+        {
+          "text": "ק",
+          "bin": "letters"
+        },
+        {
+          "text": "פ",
+          "bin": "letters"
+        },
+        {
+          "text": "ה",
+          "bin": "letters"
+        },
+        {
+          "text": "9",
+          "bin": "other"
+        },
+        {
+          "text": "✿",
+          "bin": "other"
+        }
+      ],
+      "wrong": {
+        "9": "print_num",
+        "✿": "print_shape"
+      },
+      "ladder": "HL-PRINT",
+      "font": "display"
     }
   ],
   "lessons": [
@@ -222,6 +419,17 @@
         "04",
         "05",
         "07"
+      ]
+    },
+    {
+      "id": "letters-or-not-more",
+      "title": "אוֹתִיּוֹת",
+      "items": [
+        "s01",
+        "s02",
+        "t03",
+        "t04",
+        "t05"
       ]
     }
   ]

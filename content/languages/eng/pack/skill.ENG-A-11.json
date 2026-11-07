@@ -23,7 +23,8 @@
     }
   ],
   "representations": [
-    "pictorial"
+    "pictorial",
+    "story"
   ],
   "misconceptions": [
     "eng.lis.l1_guess",

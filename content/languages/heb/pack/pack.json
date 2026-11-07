@@ -6,12 +6,48 @@
   "course": "heb",
   "assets": [
     {
+      "id": "act_he_kick_boy_b",
+      "file": "act_he_kick_boy_b.svg"
+    },
+    {
+      "id": "act_he_kick_rabbit_b",
+      "file": "act_he_kick_rabbit_b.svg"
+    },
+    {
+      "id": "act_he_search_cat_b",
+      "file": "act_he_search_cat_b.svg"
+    },
+    {
+      "id": "act_he_stir_nitzi_b",
+      "file": "act_he_stir_nitzi_b.svg"
+    },
+    {
+      "id": "act_he_swim_duck_b",
+      "file": "act_he_swim_duck_b.svg"
+    },
+    {
+      "id": "act_he_swim_fish_b",
+      "file": "act_he_swim_fish_b.svg"
+    },
+    {
+      "id": "ant",
+      "file": "ant.svg"
+    },
+    {
       "id": "apple",
       "file": "apple.svg"
     },
     {
+      "id": "apron",
+      "file": "apron.svg"
+    },
+    {
       "id": "ball",
       "file": "ball.svg"
+    },
+    {
+      "id": "ball_yellow",
+      "file": "ball_yellow.svg"
     },
     {
       "id": "balloon",
@@ -30,6 +66,14 @@
       "file": "bat.svg"
     },
     {
+      "id": "bed",
+      "file": "bed.svg"
+    },
+    {
+      "id": "bin_box",
+      "file": "bin_box.svg"
+    },
+    {
       "id": "bird",
       "file": "bird.svg"
     },
@@ -46,8 +90,20 @@
       "file": "bowl.svg"
     },
     {
+      "id": "box",
+      "file": "box.svg"
+    },
+    {
+      "id": "bread",
+      "file": "bread.svg"
+    },
+    {
       "id": "bush",
       "file": "bush.svg"
+    },
+    {
+      "id": "butterfly",
+      "file": "butterfly.svg"
     },
     {
       "id": "cake",
@@ -58,6 +114,10 @@
       "file": "camel.svg"
     },
     {
+      "id": "carrot",
+      "file": "carrot.svg"
+    },
+    {
       "id": "cat",
       "file": "cat.svg"
     },
@@ -66,8 +126,20 @@
       "file": "cave.svg"
     },
     {
+      "id": "chair",
+      "file": "chair.svg"
+    },
+    {
+      "id": "chick",
+      "file": "chick.svg"
+    },
+    {
       "id": "clouds",
       "file": "clouds.svg"
+    },
+    {
+      "id": "cookie",
+      "file": "cookie.svg"
     },
     {
       "id": "ctx_bush_park",
@@ -96,6 +168,10 @@
     {
       "id": "doll",
       "file": "doll.svg"
+    },
+    {
+      "id": "dress_strawberries",
+      "file": "dress_strawberries.svg"
     },
     {
       "id": "drum_strip_1",
@@ -154,6 +230,10 @@
       "file": "hat.svg"
     },
     {
+      "id": "hat_cat_ears",
+      "file": "hat_cat_ears.svg"
+    },
+    {
       "id": "horse",
       "file": "horse.svg"
     },
@@ -168,6 +248,10 @@
     {
       "id": "kite",
       "file": "kite.svg"
+    },
+    {
+      "id": "kite_butterfly",
+      "file": "kite_butterfly.svg"
     },
     {
       "id": "milk",
@@ -188,6 +272,10 @@
     {
       "id": "oven",
       "file": "oven.svg"
+    },
+    {
+      "id": "pita",
+      "file": "pita.svg"
     },
     {
       "id": "pizza",
@@ -302,6 +390,10 @@
       "file": "rooster.svg"
     },
     {
+      "id": "s1_p1",
+      "file": "s1_p1.svg"
+    },
+    {
       "id": "s1_p2",
       "file": "s1_p2.svg"
     },
@@ -316,6 +408,10 @@
     {
       "id": "s1_p5",
       "file": "s1_p5.svg"
+    },
+    {
+      "id": "s2_p1",
+      "file": "s2_p1.svg"
     },
     {
       "id": "s2_p2",
@@ -334,8 +430,16 @@
       "file": "s2_p5.svg"
     },
     {
+      "id": "s3_p1",
+      "file": "s3_p1.svg"
+    },
+    {
       "id": "s3_p2",
       "file": "s3_p2.svg"
+    },
+    {
+      "id": "s3_p3",
+      "file": "s3_p3.svg"
     },
     {
       "id": "s3_p4",
@@ -346,6 +450,10 @@
       "file": "s3_p5.svg"
     },
     {
+      "id": "sandal",
+      "file": "sandal.svg"
+    },
+    {
       "id": "scarf",
       "file": "scarf.svg"
     },
@@ -354,12 +462,84 @@
       "file": "sea.svg"
     },
     {
+      "id": "set_apples",
+      "file": "set_apples.svg"
+    },
+    {
+      "id": "set_balls_4",
+      "file": "set_balls_4.svg"
+    },
+    {
+      "id": "set_boats",
+      "file": "set_boats.svg"
+    },
+    {
+      "id": "set_cakes",
+      "file": "set_cakes.svg"
+    },
+    {
+      "id": "set_cats",
+      "file": "set_cats.svg"
+    },
+    {
+      "id": "set_dogs",
+      "file": "set_dogs.svg"
+    },
+    {
+      "id": "set_dolls",
+      "file": "set_dolls.svg"
+    },
+    {
+      "id": "set_donkeys",
+      "file": "set_donkeys.svg"
+    },
+    {
+      "id": "set_eggs",
+      "file": "set_eggs.svg"
+    },
+    {
+      "id": "set_horses",
+      "file": "set_horses.svg"
+    },
+    {
+      "id": "set_pizzas",
+      "file": "set_pizzas.svg"
+    },
+    {
+      "id": "set_planes",
+      "file": "set_planes.svg"
+    },
+    {
+      "id": "set_teddies",
+      "file": "set_teddies.svg"
+    },
+    {
+      "id": "shape_dot",
+      "file": "shape_dot.svg"
+    },
+    {
+      "id": "shape_ring",
+      "file": "shape_ring.svg"
+    },
+    {
+      "id": "shape_triangle_open",
+      "file": "shape_triangle_open.svg"
+    },
+    {
+      "id": "sheep",
+      "file": "sheep.svg"
+    },
+    {
       "id": "ship",
       "file": "ship.svg"
     },
     {
       "id": "shirt",
       "file": "shirt.svg"
+    },
+    {
+      "id": "shirt_striped",
+      "file": "shirt_striped.svg"
     },
     {
       "id": "soap_bubble",
@@ -378,12 +558,60 @@
       "file": "star.svg"
     },
     {
+      "id": "strawberry",
+      "file": "strawberry.svg"
+    },
+    {
+      "id": "stroke_door",
+      "file": "stroke_door.svg"
+    },
+    {
+      "id": "stroke_fence",
+      "file": "stroke_fence.svg"
+    },
+    {
+      "id": "stroke_hill",
+      "file": "stroke_hill.svg"
+    },
+    {
+      "id": "stroke_jetty",
+      "file": "stroke_jetty.svg"
+    },
+    {
+      "id": "stroke_pond",
+      "file": "stroke_pond.svg"
+    },
+    {
+      "id": "stroke_rain_daisy",
+      "file": "stroke_rain_daisy.svg"
+    },
+    {
+      "id": "stroke_rain_tulip",
+      "file": "stroke_rain_tulip.svg"
+    },
+    {
+      "id": "stroke_road_house",
+      "file": "stroke_road_house.svg"
+    },
+    {
+      "id": "stroke_stone",
+      "file": "stroke_stone.svg"
+    },
+    {
       "id": "sugar",
       "file": "sugar.svg"
     },
     {
       "id": "sun",
       "file": "sun.svg"
+    },
+    {
+      "id": "swimsuit",
+      "file": "swimsuit.svg"
+    },
+    {
+      "id": "table",
+      "file": "table.svg"
     },
     {
       "id": "teacher_sing",
@@ -410,6 +638,10 @@
       "file": "tortoise.svg"
     },
     {
+      "id": "towel_striped",
+      "file": "towel_striped.svg"
+    },
+    {
       "id": "tree",
       "file": "tree.svg"
     },
@@ -424,6 +656,10 @@
     {
       "id": "window",
       "file": "window.svg"
+    },
+    {
+      "id": "wool",
+      "file": "wool.svg"
     }
   ],
   "vo": []

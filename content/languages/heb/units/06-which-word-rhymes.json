@@ -315,6 +315,84 @@
       "rep": "pictorial",
       "frame": "r-chalon",
       "purpose": "probe"
+    },
+    {
+      "id": "09",
+      "kind": "pairs",
+      "frame": "i-pairs",
+      "purpose": "check",
+      "cards": [
+        {
+          "pic": "spoon",
+          "clip": "heb-a-w-kaf"
+        },
+        {
+          "pic": "teddy-nose",
+          "clip": "heb-a-w-af"
+        },
+        {
+          "pic": "ball",
+          "clip": "heb-a-w-kadur"
+        },
+        {
+          "pic": "oven",
+          "clip": "heb-a-w-tanur"
+        }
+      ],
+      "pairs": [
+        [
+          "spoon",
+          "teddy-nose"
+        ],
+        [
+          "ball",
+          "oven"
+        ]
+      ],
+      "wrong": {
+        "spoon+ball": "allit",
+        "spoon+oven": "sem"
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "10",
+      "kind": "pairs",
+      "frame": "i-pairs",
+      "purpose": "check",
+      "cards": [
+        {
+          "pic": "star",
+          "clip": "heb-a-w-kochav"
+        },
+        {
+          "pic": "rabbit-tail",
+          "clip": "heb-a-w-zanav"
+        },
+        {
+          "pic": "cup",
+          "clip": "heb-a-w-kos"
+        },
+        {
+          "pic": "plane",
+          "clip": "heb-a-w-matos"
+        }
+      ],
+      "pairs": [
+        [
+          "star",
+          "rabbit-tail"
+        ],
+        [
+          "cup",
+          "plane"
+        ]
+      ],
+      "wrong": {
+        "star+cup": "allit",
+        "star+plane": "sem"
+      },
+      "ladder": "HL-WORD"
     }
   ],
   "lessons": [

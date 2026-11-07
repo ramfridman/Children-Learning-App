@@ -26,7 +26,10 @@
     "pictorial"
   ],
   "misconceptions": [
-    "rus.grm.kto"
+    "rus.grm.kto",
+    "rus.lis.sem",
+    "rus.voc.sound",
+    "rus.grm.yesno"
   ],
   "retention": {
     "targetRetention": 0.9,

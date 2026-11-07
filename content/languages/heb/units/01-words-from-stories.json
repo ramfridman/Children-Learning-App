@@ -181,6 +181,276 @@
       },
       "purpose": "check",
       "difficulty": 0.4
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "i-what-he",
+      "purpose": "learn",
+      "rep": "story",
+      "stage": "act-he-kick-rabbit-b",
+      "options": [
+        {
+          "clip": "heb-a-w-boet"
+        },
+        {
+          "clip": "heb-a-w-zorek"
+        },
+        {
+          "clip": "heb-a-w-boreach"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-zorek": "sem",
+        "heb-a-w-boreach": "soundalike"
+      },
+      "h2": "m-boet",
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "frame": "i-what-she",
+      "purpose": "learn",
+      "rep": "story",
+      "stage": "act-he-search-cat-b",
+      "options": [
+        {
+          "clip": "heb-a-w-mechapeset"
+        },
+        {
+          "clip": "heb-a-w-motset"
+        },
+        {
+          "clip": "heb-a-w-mechabeket"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-motset": "sem",
+        "heb-a-w-mechabeket": "soundalike"
+      },
+      "h2": "m-mechapeset",
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "11",
+      "kind": "tap",
+      "frame": "i-what-she",
+      "purpose": "learn",
+      "rep": "story",
+      "stage": "act-he-stir-nitzi-b",
+      "options": [
+        {
+          "clip": "heb-a-w-meurbevet"
+        },
+        {
+          "clip": "heb-a-w-ofa"
+        },
+        {
+          "clip": "heb-a-w-medaberet"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-ofa": "sem",
+        "heb-a-w-medaberet": "soundalike"
+      },
+      "h2": "m-meurbevet",
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "12",
+      "kind": "tap",
+      "frame": "i-what-he",
+      "purpose": "learn",
+      "rep": "story",
+      "stage": "act-he-swim-fish-b",
+      "options": [
+        {
+          "clip": "heb-a-w-soche"
+        },
+        {
+          "clip": "heb-a-w-kofets"
+        },
+        {
+          "clip": "heb-a-w-shote"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-kofets": "sem",
+        "heb-a-w-shote": "soundalike"
+      },
+      "h2": "m-soche",
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "17",
+      "kind": "tap",
+      "frame": "i-what-he",
+      "purpose": "check",
+      "rep": "story",
+      "stage": "act-he-kick-boy-b",
+      "options": [
+        {
+          "clip": "heb-a-w-boet"
+        },
+        {
+          "clip": "heb-a-w-zorek"
+        },
+        {
+          "clip": "heb-a-w-boreach"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-zorek": "sem",
+        "heb-a-w-boreach": "soundalike"
+      },
+      "h2": "m-boet",
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "18",
+      "kind": "tap",
+      "frame": "i-what-he",
+      "purpose": "check",
+      "rep": "story",
+      "stage": "act-he-swim-duck-b",
+      "options": [
+        {
+          "clip": "heb-a-w-soche"
+        },
+        {
+          "clip": "heb-a-w-kofets"
+        },
+        {
+          "clip": "heb-a-w-shote"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-kofets": "sem",
+        "heb-a-w-shote": "soundalike"
+      },
+      "h2": "m-soche",
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "say-siach",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "bush",
+      "clip": "heb-a-w-siach",
+      "foils": [
+        "קֶמַח",
+        "קְעָרָה"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
+    },
+    {
+      "id": "say-kemach",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "flour",
+      "clip": "heb-a-w-kemach",
+      "foils": [
+        "קְעָרָה",
+        "תַּנּוּר"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
+    },
+    {
+      "id": "say-keara",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "bowl",
+      "clip": "heb-a-w-keara",
+      "foils": [
+        "תַּנּוּר",
+        "סִירָה"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
+    },
+    {
+      "id": "say-tanur",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "oven",
+      "clip": "heb-a-w-tanur",
+      "foils": [
+        "סִירָה",
+        "כּוֹבַע"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
+    },
+    {
+      "id": "say-sira",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "boat",
+      "clip": "heb-a-w-sira",
+      "foils": [
+        "כּוֹבַע",
+        "רוּחַ"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
+    },
+    {
+      "id": "say-kova",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "hat",
+      "clip": "heb-a-w-kova",
+      "foils": [
+        "רוּחַ",
+        "כַּדּוּר"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
+    },
+    {
+      "id": "say-ruach",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "wind",
+      "clip": "heb-a-w-ruach",
+      "foils": [
+        "כַּדּוּר",
+        "שִׂיחַ"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
+    },
+    {
+      "id": "say-kadur",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "ball",
+      "clip": "heb-a-w-kadur",
+      "foils": [
+        "שִׂיחַ",
+        "קֶמַח"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
     }
   ],
   "lessons": [
@@ -202,6 +472,30 @@
         "06",
         "07",
         "08"
+      ]
+    },
+    {
+      "id": "verbs-1",
+      "title": "מָה הֵם עוֹשִׂים?",
+      "items": [
+        "09",
+        "10",
+        "11",
+        "12"
+      ]
+    },
+    {
+      "id": "words-from-stories-more",
+      "title": "מִילִים חֲדָשׁוֹת",
+      "items": [
+        "say-siach",
+        "say-kemach",
+        "say-keara",
+        "say-tanur",
+        "say-sira",
+        "say-kova",
+        "say-ruach",
+        "say-kadur"
       ]
     }
   ]

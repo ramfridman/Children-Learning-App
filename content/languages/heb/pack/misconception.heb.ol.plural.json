@@ -1,0 +1,17 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.plural",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "GRAMMAR",
+  "skills": [
+    "HEB-A-05"
+  ],
+  "parentText": "הילד עוד לא שומע תמיד את סוף המילה ברבים (ים, ות). כדאי לומר יחד: חתול, חתולים.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial",
+    "concrete"
+  ]
+}

@@ -221,6 +221,9 @@ class LessonController extends ChangeNotifier {
   /// A language course: the clip that follows [voice] (the second clip of the line), and the target word to show in a chip under
   /// the bubble's line. Null for every line of the lands.
   String? voiceTarget;
+
+  /// The second target clip of the line, after [voiceTarget] (a question and its answer, two sounds to compare); null for most lines.
+  String? voiceTarget2;
   String? bubbleShow;
 
   /// The line asked after the first one (the question of a story's pause, "how many?" after the counting): the replay button says
@@ -246,6 +249,7 @@ class LessonController extends ChangeNotifier {
     bubble = line.caption;
     voice = line.vo;
     voiceTarget = line.target;
+    voiceTarget2 = line.target2;
     bubbleShow = line.show;
     voiceNonce++;
   }
@@ -444,11 +448,13 @@ class LessonController extends ChangeNotifier {
       final String keep = bubble;
       final String? keepVoice = voice;
       final String? keepTarget = voiceTarget;
+      final String? keepTarget2 = voiceTarget2;
       final String? keepShow = bubbleShow;
       _applyHint(math.min(hintLevel + 1, current.hints.length));
       bubble = keep;
       voice = keepVoice;
       voiceTarget = keepTarget;
+      voiceTarget2 = keepTarget2;
       bubbleShow = keepShow;
     }
     notifyListeners();

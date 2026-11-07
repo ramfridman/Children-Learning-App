@@ -1,0 +1,193 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a03.03",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sort_drag",
+  "templateVersion": "1.1",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "a03-03",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "put each card in its place",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנוֹת וְקֻפְסָאוֹת לְמִיּוּן"
+  },
+  "prompt": {
+    "vo": "vo:heb.i_sort_cat",
+    "caption": [
+      {
+        "t": "he",
+        "v": "שִׂימוּ כׇּל תְּמוּנָה בַּמָּקוֹם שֶׁלָּהּ."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נָכוֹן!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:heb.ol.cat_atypical",
+        "vo": "vo:heb.d_cat_atypical",
+        "caption": [
+          {
+            "t": "he",
+            "v": "גַּם זֶה חַי: זֶה זָז וְאוֹכֵל."
+          }
+        ]
+      },
+      {
+        "when": "misconception:heb.ol.cat_look",
+        "vo": "vo:heb.d_cat_look",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הֵם דּוֹמִים בַּצֶּבַע. מָה הֵם בֶּאֱמֶת?"
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:heb.h_look",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:heb.show",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַעֲשֶׂה אֶת זֶה יַחַד."
+        }
+      ]
+    }
+  ],
+  "scene": {
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:elephant",
+        "clip": "vo:heb.heb_a_bin_animals",
+        "label": "בַּעֲלֵי חַיִּים"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:shirt",
+        "clip": "vo:heb.heb_a_bin_clothes",
+        "label": "בְּגָדִים"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:cat",
+        "clip": "vo:heb.heb_a_w_chatul",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:horse",
+        "clip": "vo:heb.heb_a_w_sus",
+        "bin": "b1"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:tortoise",
+        "clip": "vo:heb.heb_a_w_tsav",
+        "bin": "b1",
+        "misconception": "heb.ol.cat_atypical"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:sandal",
+        "clip": "vo:heb.heb_a_w_sandal",
+        "bin": "b2"
+      },
+      {
+        "id": "i5",
+        "sprite": "asset:hat_cat_ears",
+        "clip": "vo:heb.heb_a_w_kova",
+        "bin": "b2",
+        "misconception": "heb.ol.cat_look"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "heb.ol.cat_atypical"
+  }
+}

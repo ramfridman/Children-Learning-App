@@ -1,268 +1,292 @@
 {
- "skill": {
-  "id": "RUS-A-13",
-  "strand": "grm",
-  "title": "אֵיפֹה?",
-  "prerequisites": [
-   {
-    "skill": "RUS-A-12"
-   }
-  ]
- },
- "items": [
-  {
-   "id": "01",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "ch-gde-mjach",
-   "options": [
-    {
-     "pic": "ball",
-     "clip": "w-mjach"
-    },
-    {
-     "pic": "balloon",
-     "clip": "w-sharik"
-    },
-    {
-     "pic": "doll",
-     "clip": "w-kukla"
-    }
-   ],
-   "wrong": {
-    "balloon": "also-sem",
-    "doll": "also-sem"
-   },
-   "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
+  "skill": {
+    "id": "RUS-A-13",
+    "strand": "grm",
+    "title": "אֵיפֹה?",
+    "prerequisites": [
+      {
+        "skill": "RUS-A-12"
+      }
+    ]
   },
-  {
-   "id": "02",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "ch-gde-koshka",
-   "options": [
+  "items": [
     {
-     "pic": "cat",
-     "clip": "w-koshka"
+      "id": "01",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "ch-gde-mjach",
+      "options": [
+        {
+          "pic": "ball",
+          "clip": "w-mjach"
+        },
+        {
+          "pic": "balloon",
+          "clip": "w-sharik"
+        },
+        {
+          "pic": "doll",
+          "clip": "w-kukla"
+        }
+      ],
+      "wrong": {
+        "balloon": "sem",
+        "doll": "sem"
+      },
+      "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
     },
     {
-     "pic": "dog",
-     "clip": "w-sobaka"
+      "id": "02",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "ch-gde-koshka",
+      "options": [
+        {
+          "pic": "cat",
+          "clip": "w-koshka"
+        },
+        {
+          "pic": "dog",
+          "clip": "w-sobaka"
+        },
+        {
+          "pic": "porridge",
+          "clip": "w-kasha"
+        }
+      ],
+      "wrong": {
+        "dog": "sem",
+        "porridge": "sound"
+      },
+      "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
     },
     {
-     "pic": "porridge",
-     "clip": "w-kasha"
+      "id": "03",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "ch-gde-mysh",
+      "options": [
+        {
+          "pic": "mouse",
+          "clip": "w-mysh"
+        },
+        {
+          "pic": "teddy",
+          "clip": "w-mishka"
+        },
+        {
+          "pic": "cat",
+          "clip": "w-koshka"
+        }
+      ],
+      "wrong": {
+        "teddy": "sound",
+        "cat": "sem"
+      },
+      "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "ch-gde-shapka",
+      "options": [
+        {
+          "pic": "hat-warm",
+          "clip": "w-shapka"
+        },
+        {
+          "pic": "scarf",
+          "clip": "w-sharf"
+        },
+        {
+          "pic": "jacket",
+          "clip": "w-kurtka"
+        }
+      ],
+      "wrong": {
+        "scarf": "sound",
+        "jacket": "sem"
+      },
+      "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "ch-gde-jabloko",
+      "options": [
+        {
+          "pic": "apple",
+          "clip": "w-yabloko"
+        },
+        {
+          "pic": "milk",
+          "clip": "w-moloko"
+        },
+        {
+          "pic": "pear",
+          "clip": "w-grusha"
+        }
+      ],
+      "wrong": {
+        "milk": "sound",
+        "pear": "sem"
+      },
+      "purpose": "check",
+      "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "ch-gde-mama",
+      "options": [
+        {
+          "pic": "fam-mother",
+          "clip": "w-mama"
+        },
+        {
+          "pic": "fam-father",
+          "clip": "w-papa"
+        },
+        {
+          "pic": "fam-grandmother",
+          "clip": "w-babushka"
+        }
+      ],
+      "wrong": {
+        "fam-father": "sound",
+        "fam-grandmother": "sem"
+      },
+      "purpose": "check",
+      "then": "listen_do scene search in scene-garden (the family)"
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "ch-gde-koshka",
+      "options": [
+        {
+          "pic": "cat",
+          "clip": "w-koshka"
+        },
+        {
+          "pic": "dog",
+          "clip": "w-sobaka"
+        },
+        {
+          "pic": "porridge",
+          "clip": "w-kasha"
+        }
+      ],
+      "wrong": {
+        "dog": "sem",
+        "porridge": "sound"
+      },
+      "purpose": "probe"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "frame": "f18",
+      "stage": "doll",
+      "target": "ch-vot-mjach",
+      "options": [
+        "mika-no",
+        "mika-yes"
+      ],
+      "wrong": {
+        "mika-yes": "yesno"
+      },
+      "pole": "no",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "frame": "f18",
+      "stage": "cat",
+      "target": "ch-vot-koshka",
+      "options": [
+        "mika-yes",
+        "mika-no"
+      ],
+      "wrong": {
+        "mika-no": "yesno"
+      },
+      "pole": "yes",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "f18",
+      "stage": "scarf",
+      "target": "ch-vot-shapka",
+      "options": [
+        "mika-no",
+        "mika-yes"
+      ],
+      "wrong": {
+        "mika-yes": "yesno"
+      },
+      "pole": "no",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "frame": "f18",
+      "stage": "fam-mother",
+      "target": "ch-vot-mama",
+      "options": [
+        "mika-yes",
+        "mika-no"
+      ],
+      "wrong": {
+        "mika-no": "yesno"
+      },
+      "pole": "yes",
+      "ladder": "HL-1",
+      "rep": "pictorial"
     }
-   ],
-   "wrong": {
-    "dog": "also-sem",
-    "porridge": "also-sound"
-   },
-   "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
-  },
-  {
-   "id": "03",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "ch-gde-mysh",
-   "options": [
+  ],
+  "lessons": [
     {
-     "pic": "mouse",
-     "clip": "w-mysh"
+      "id": "where-1",
+      "title": "אֵיפֹה?",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
     },
     {
-     "pic": "teddy",
-     "clip": "w-mishka"
-    },
-    {
-     "pic": "cat",
-     "clip": "w-koshka"
+      "id": "where-more",
+      "title": "אֵיפֹה?",
+      "items": [
+        "07",
+        "08",
+        "09",
+        "10"
+      ]
     }
-   ],
-   "wrong": {
-    "teddy": "also-sound",
-    "cat": "also-sem"
-   },
-   "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
-  },
-  {
-   "id": "04",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "ch-gde-shapka",
-   "options": [
-    {
-     "pic": "hat-warm",
-     "clip": "w-shapka"
+  ],
+  "routes": {
+    "new": "all items",
+    "heritage": {
+      "teach": false,
+      "order": [
+        "07-10",
+        "01-06"
+      ]
     },
-    {
-     "pic": "scarf",
-     "clip": "w-sharf"
-    },
-    {
-     "pic": "jacket",
-     "clip": "w-kurtka"
-    }
-   ],
-   "wrong": {
-    "scarf": "also-sound",
-    "jacket": "also-sem"
-   },
-   "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
-  },
-  {
-   "id": "05",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "ch-gde-jabloko",
-   "options": [
-    {
-     "pic": "apple",
-     "clip": "w-yabloko"
-    },
-    {
-     "pic": "milk",
-     "clip": "w-moloko"
-    },
-    {
-     "pic": "pear",
-     "clip": "w-grusha"
-    }
-   ],
-   "wrong": {
-    "milk": "also-sound",
-    "pear": "also-sem"
-   },
-   "purpose": "check",
-   "then": "listen_do scene search in scene-room (f19, three things glow; the recast Вот …!) when the recipe exists; until then the three pictures"
-  },
-  {
-   "id": "06",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "ch-gde-mama",
-   "options": [
-    {
-     "pic": "fam-mother",
-     "clip": "w-mama"
-    },
-    {
-     "pic": "fam-father",
-     "clip": "w-papa"
-    },
-    {
-     "pic": "fam-grandmother",
-     "clip": "w-babushka"
-    }
-   ],
-   "wrong": {
-    "fam-father": "also-sound",
-    "fam-grandmother": "also-sem"
-   },
-   "purpose": "check",
-   "then": "listen_do scene search in scene-garden (the family)"
-  },
-  {
-   "id": "p01",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "ch-gde-koshka",
-   "options": [
-    {
-     "pic": "cat",
-     "clip": "w-koshka"
-    },
-    {
-     "pic": "dog",
-     "clip": "w-sobaka"
-    },
-    {
-     "pic": "porridge",
-     "clip": "w-kasha"
-    }
-   ],
-   "wrong": {
-    "dog": "also-sem",
-    "porridge": "also-sound"
-   },
-   "purpose": "probe"
+    "reader": "as heritage or new"
   }
- ],
- "lessons": [
-  {
-   "id": "where-1",
-   "title": "אֵיפֹה?",
-   "items": [
-    "01",
-    "02",
-    "03",
-    "04"
-   ]
-  }
- ],
- "routes": {
-  "new": "all items",
-  "heritage": {
-   "teach": false,
-   "order": [
-    "07-10",
-    "01-06"
-   ]
-  },
-  "reader": "as heritage or new"
- },
- "waiting": [
-  {
-   "id": "07",
-   "template": "tap_answer",
-   "mode": "yes-no",
-   "frame": "f18",
-   "ask": "ch-vot-mjach",
-   "scene": "mika holds a doll",
-   "right": "no",
-   "wrong": {
-    "yes": "yesno"
-   },
-   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face (the friend holds up or points at the thing)"
-  },
-  {
-   "id": "08",
-   "template": "tap_answer",
-   "mode": "yes-no",
-   "frame": "f18",
-   "ask": "ch-vot-koshka",
-   "scene": "mika points at the cat",
-   "right": "yes",
-   "wrong": {
-    "no": "yesno"
-   },
-   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face (the friend holds up or points at the thing)"
-  },
-  {
-   "id": "09",
-   "template": "tap_answer",
-   "mode": "yes-no",
-   "frame": "f18",
-   "ask": "ch-vot-shapka",
-   "scene": "mika holds a scarf",
-   "right": "no",
-   "wrong": {
-    "yes": "yesno"
-   },
-   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face (the friend holds up or points at the thing)"
-  },
-  {
-   "id": "10",
-   "template": "tap_answer",
-   "mode": "yes-no",
-   "frame": "f18",
-   "ask": "ch-vot-mama",
-   "scene": "mika points at the mother",
-   "right": "yes",
-   "wrong": {
-    "no": "yesno"
-   },
-   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face (the friend holds up or points at the thing)"
-  }
- ]
 }

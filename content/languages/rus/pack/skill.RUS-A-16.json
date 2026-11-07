@@ -1,0 +1,36 @@
+{
+  "schema": "skill/v1",
+  "id": "RUS-A-16",
+  "review": "needs-editor",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "סִפּוּר בְּשָׁלוֹשׁ תְּמוּנוֹת"
+    }
+  ],
+  "strand": "lis",
+  "prerequisites": [
+    {
+      "skill": "RUS-A-04",
+      "weight": 0.8
+    },
+    {
+      "skill": "RUS-A-12",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "story"
+  ],
+  "misconceptions": [
+    "rus.lis.sem",
+    "rus.lis.seq"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

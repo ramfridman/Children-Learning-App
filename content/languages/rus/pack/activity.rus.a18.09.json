@@ -1,0 +1,147 @@
+{
+  "schema": "activity/v1",
+  "id": "rus.a18.09",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sound_boxes",
+  "templateVersion": "1.0",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "RUS-A-18",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "w-sobaka",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "tap once for each part of the word",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תּוֹף וְתְמוּנָה שֶׁל מִלָּה"
+  },
+  "prompt": {
+    "vo": "vo:rus.f28",
+    "caption": [
+      {
+        "t": "he",
+        "v": "תּוֹפְפוּ עַל הַתֹּף: פַּעַם אַחַת לְכׇל חֵלֶק בַּמִּלָּה."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:rus.he_fb_right_4",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מְצָאתֶם!"
+        }
+      ],
+      "target": "vo:rus.w_sobaka"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:rus.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ],
+      "target": "vo:rus.w_sobaka"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ],
+      "target": "vo:rus.w_sobaka"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:rus.f28",
+      "caption": [
+        {
+          "t": "he",
+          "v": "תּוֹפְפוּ עַל הַתֹּף: פַּעַם אַחַת לְכׇל חֵלֶק בַּמִּלָּה."
+        }
+      ],
+      "target": "vo:rus.w_sobaka"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:rus.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:rus.w_sobaka"
+    }
+  ],
+  "scene": {
+    "picture": "asset:dog",
+    "word": [
+      "vo:rus.w_sobaka"
+    ],
+    "slow": [
+      "vo:rus.sy_sobaka"
+    ]
+  },
+  "answer": {
+    "type": "drum",
+    "mode": "drum",
+    "beats": 3,
+    "classifiers": [
+      {
+        "when": "one_more",
+        "misconception": "rus.pho.syll"
+      },
+      {
+        "when": "one_fewer",
+        "misconception": "rus.pho.syll"
+      }
+    ]
+  }
+}

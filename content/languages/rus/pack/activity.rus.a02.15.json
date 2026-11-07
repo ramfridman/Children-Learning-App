@@ -1,0 +1,147 @@
+{
+  "schema": "activity/v1",
+  "id": "rus.a02.15",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "puppet_talk",
+  "templateVersion": "1.0",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "RUS-A-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a02-15",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the puppet asks, the child may answer or pass",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "בֻּבָּה שֶׁמְּדַבֶּרֶת"
+  },
+  "prompt": {
+    "vo": "vo:rus.personal",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֶפְשָׁר לַעֲנוֹת בִּתְמוּנָה, אוֹ בְּקוֹל. אֶפְשָׁר גַּם לְדַלֵּג."
+      }
+    ],
+    "target": "vo:rus.ch_u_menja_est",
+    "target2": "vo:rus.ch_kto_u_tebja_v_seme",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:rus.he_fb_right_3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יָפֶה מְאֹד!"
+        }
+      ],
+      "target": "vo:rus.ch_zdorovo"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:rus.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scene": {
+    "picture": "asset:mika_happy"
+  },
+  "answer": {
+    "type": "none",
+    "mode": "personal",
+    "topic": "family",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:fam_mother",
+        "label": "תְּמוּנָה"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:fam_father",
+        "label": "תְּמוּנָה"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:fam_grandmother",
+        "label": "תְּמוּנָה"
+      },
+      {
+        "id": "o4",
+        "sprite": "asset:fam_grandfather",
+        "label": "תְּמוּנָה"
+      },
+      {
+        "id": "o5",
+        "sprite": "asset:fam_brother",
+        "label": "תְּמוּנָה"
+      },
+      {
+        "id": "o6",
+        "sprite": "asset:fam_sister",
+        "label": "תְּמוּנָה"
+      },
+      {
+        "id": "o7",
+        "sprite": "asset:fam_baby",
+        "label": "תְּמוּנָה"
+      },
+      {
+        "id": "o8",
+        "sprite": "asset:fam_someone",
+        "label": "תְּמוּנָה"
+      }
+    ],
+    "pass": {
+      "vo": "vo:rus.pass",
+      "caption": [
+        {
+          "t": "he",
+          "v": "זֶה בְּסֵדֶר!"
+        }
+      ],
+      "target": "vo:rus.ch_horosho"
+    }
+  }
+}

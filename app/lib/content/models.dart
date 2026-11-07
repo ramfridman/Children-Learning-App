@@ -27,7 +27,7 @@ String _caption(Object? o) => _map((o! as List<Object?>).single)['v']! as String
 /// clip, the target-language clip that follows the Hebrew frame clip ([target]), and a target word to show in a chip under the
 /// caption ([show]); never inside it.
 class Spoken {
-  const Spoken({required this.vo, required this.caption, this.target, this.show});
+  const Spoken({required this.vo, required this.caption, this.target, this.target2, this.show});
 
   factory Spoken.fromJson(Object? json) {
     final Map<String, Object?> m = _map(json);
@@ -35,13 +35,17 @@ class Spoken {
       vo: m['vo']! as String,
       caption: _caption(m['caption']),
       target: m['target'] as String?,
+      target2: m['target2'] as String?,
       show: m['show'] as String?,
     );
   }
 
   final String vo;
   final String caption;
+
+  /// A language course: the clip that follows [vo], and a second one after it (a question and its answer, two sounds to compare).
   final String? target;
+  final String? target2;
   final String? show;
 }
 

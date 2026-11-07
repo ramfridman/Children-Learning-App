@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.syllables-more1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "הֲבָרוֹת"
+    }
+  ],
+  "skills": [
+    "RUS-A-18"
+  ],
+  "items": [
+    "rus.a18.01",
+    "rus.a18.02",
+    "rus.a18.03",
+    "rus.a18.04",
+    "rus.a18.05",
+    "rus.a18.06"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 58
+}

@@ -1,0 +1,131 @@
+{
+  "skill": {
+    "id": "HEB-A-14",
+    "strand": "wr",
+    "title": "עוקב באצבע אחרי קווים של טרום כתיבה"
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "trace",
+      "frame": "i-trace",
+      "purpose": "practice",
+      "rep": "embodied",
+      "scene": "stroke-rain-daisy",
+      "guide": "full",
+      "tag": "stroke",
+      "ladder": "HL-TRACE"
+    },
+    {
+      "id": "02",
+      "kind": "trace",
+      "frame": "i-trace",
+      "purpose": "practice",
+      "rep": "embodied",
+      "scene": "stroke-road-house",
+      "guide": "full",
+      "tag": "stroke",
+      "ladder": "HL-TRACE"
+    },
+    {
+      "id": "03",
+      "kind": "trace",
+      "frame": "i-trace",
+      "purpose": "practice",
+      "rep": "embodied",
+      "scene": "stroke-hill",
+      "guide": "full",
+      "tag": "stroke",
+      "ladder": "HL-TRACE"
+    },
+    {
+      "id": "04",
+      "kind": "trace",
+      "frame": "i-trace",
+      "purpose": "practice",
+      "rep": "embodied",
+      "scene": "stroke-pond",
+      "guide": "full",
+      "tag": "stroke",
+      "ladder": "HL-TRACE"
+    },
+    {
+      "id": "05",
+      "kind": "trace",
+      "frame": "i-trace",
+      "purpose": "practice",
+      "rep": "embodied",
+      "scene": "stroke-rain-tulip",
+      "guide": "start-dot",
+      "tag": "stroke",
+      "ladder": "HL-TRACE"
+    },
+    {
+      "id": "06",
+      "kind": "trace",
+      "frame": "i-trace",
+      "purpose": "practice",
+      "rep": "embodied",
+      "scene": "stroke-jetty",
+      "guide": "start-dot",
+      "tag": "stroke",
+      "ladder": "HL-TRACE"
+    },
+    {
+      "id": "07",
+      "kind": "trace",
+      "frame": "i-trace",
+      "purpose": "practice",
+      "rep": "embodied",
+      "scene": "stroke-fence",
+      "guide": "start-dot",
+      "tag": "stroke",
+      "ladder": "HL-TRACE"
+    },
+    {
+      "id": "08",
+      "kind": "trace",
+      "frame": "i-trace",
+      "purpose": "practice",
+      "rep": "embodied",
+      "scene": "stroke-stone",
+      "guide": "start-dot",
+      "tag": "stroke",
+      "ladder": "HL-TRACE"
+    },
+    {
+      "id": "09",
+      "kind": "trace",
+      "frame": "i-trace",
+      "purpose": "practice",
+      "rep": "embodied",
+      "scene": "stroke-door",
+      "guide": "start-dot",
+      "tag": "stroke",
+      "ladder": "HL-TRACE"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "strokes-1",
+      "title": "הוֹלְכִים עַל הַדֶּרֶךְ",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "id": "strokes-2",
+      "title": "עוֹד דְּרָכִים",
+      "items": [
+        "05",
+        "06",
+        "07",
+        "08",
+        "09"
+      ]
+    }
+  ]
+}

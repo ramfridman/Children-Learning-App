@@ -81,6 +81,111 @@
       "purpose": "check",
       "difficulty": 0.4,
       "ladder": "HL-PLACE"
+    },
+    {
+      "id": "01",
+      "kind": "listen_do",
+      "frame": "pl-1",
+      "purpose": "learn",
+      "rep": "embodied",
+      "mode": "place",
+      "picture": "chair",
+      "thing": "ball",
+      "options": [
+        "on",
+        "under",
+        "by"
+      ],
+      "right": "on",
+      "wrong": {
+        "under": "prep",
+        "by": "prep"
+      },
+      "ladder": "HL-PLACE"
+    },
+    {
+      "id": "02",
+      "kind": "listen_do",
+      "frame": "pl-2",
+      "purpose": "learn",
+      "rep": "embodied",
+      "mode": "place",
+      "picture": "box",
+      "thing": "teddy",
+      "options": [
+        "in",
+        "on",
+        "under"
+      ],
+      "right": "in",
+      "wrong": {
+        "on": "prep",
+        "under": "prep"
+      },
+      "ladder": "HL-PLACE"
+    },
+    {
+      "id": "03",
+      "kind": "listen_do",
+      "frame": "pl-3",
+      "purpose": "learn",
+      "rep": "embodied",
+      "mode": "place",
+      "picture": "table",
+      "thing": "cat",
+      "options": [
+        "under",
+        "on",
+        "by"
+      ],
+      "right": "under",
+      "wrong": {
+        "on": "prep",
+        "by": "prep"
+      },
+      "ladder": "HL-PLACE"
+    },
+    {
+      "id": "04",
+      "kind": "listen_do",
+      "frame": "pl-4",
+      "purpose": "learn",
+      "rep": "embodied",
+      "mode": "place",
+      "picture": "bed",
+      "thing": "doll",
+      "options": [
+        "by",
+        "on",
+        "under"
+      ],
+      "right": "by",
+      "wrong": {
+        "on": "prep",
+        "under": "prep"
+      },
+      "ladder": "HL-PLACE"
+    },
+    {
+      "id": "09",
+      "kind": "listen_do",
+      "frame": "pl-9",
+      "purpose": "check",
+      "rep": "embodied",
+      "mode": "place",
+      "picture": "table",
+      "thing": "hat",
+      "options": [
+        "on",
+        "under",
+        "by"
+      ],
+      "right": "on",
+      "wrong": {
+        "under": "prep",
+        "by": "prep"
+      },
+      "ladder": "HL-PLACE"
     }
   ],
   "lessons": [
@@ -92,6 +197,16 @@
         "06",
         "07",
         "08"
+      ]
+    },
+    {
+      "id": "places-2",
+      "title": "שִׂימוּ בַּמָּקוֹם",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
       ]
     }
   ]

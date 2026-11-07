@@ -1,26 +1,22 @@
 {
   "skill": {"id": "ENG-A-11", "strand": "lis", "title": "מָה זֶה?", "prerequisites": [{"skill": "ENG-A-05", "weight": 0.5}, {"skill": "ENG-A-09", "weight": 0.5}], "setCoverage": true},
   "items": [
-    {"id": "i01", "kind": "tap", "frame": "he-ins-its-a", "target": "en-its-ball", "options": ["ball", "drum", "book"], "wrong": {"drum": "sem", "book": "l1_guess"}},
-    {"id": "i02", "kind": "tap", "frame": "he-ins-its-a", "target": "en-its-book", "options": ["book", "teddy", "car"], "wrong": {"teddy": "sem", "car": "l1_guess"}},
-    {"id": "i03", "kind": "tap", "frame": "he-ins-its-a", "target": "en-its-kite", "options": ["kite", "bike", "ball"], "wrong": {"bike": "sem", "ball": "l1_guess"}},
-    {"id": "i04", "kind": "tap", "frame": "he-ins-its-a", "target": "en-its-duck", "options": ["duck", "bird", "cat"], "wrong": {"bird": "sem", "cat": "l1_guess"}},
-    {"id": "i05", "kind": "tap", "frame": "he-ins-its-a", "target": "en-its-apple", "options": ["apple", "banana", "car"], "wrong": {"banana": "sem", "car": "l1_guess"}},
-    {"id": "i06", "kind": "tap", "frame": "he-ins-its-a", "target": "en-its-egg", "options": ["egg", "bread", "kite"], "wrong": {"bread": "sem", "kite": "l1_guess"}},
-    {"id": "i09", "kind": "tap", "purpose": "check", "frame": "he-ins-its-a", "target": "en-its-duck", "options": ["duck-2", "frog-2", "cat-2"], "wrong": {"frog-2": "sem", "cat-2": "l1_guess"}},
-    {"id": "i10", "kind": "tap", "purpose": "check", "frame": "he-ins-its-a", "target": "en-its-egg", "options": ["egg", "apple", "car"], "wrong": {"apple": "sem", "car": "l1_guess"}},
+    {"id": "i01", "kind": "tap", "frame": "he-ins-whats-this", "target": "en-whats-this", "options": ["ball", "drum", "book"], "wrong": {"drum": "sem", "book": "l1_guess"}, "target2": "en-its-ball", "hintWord": "en-its-ball"},
+    {"id": "i02", "kind": "tap", "frame": "he-ins-whats-this", "target": "en-whats-this", "options": ["book", "teddy", "car"], "wrong": {"teddy": "sem", "car": "l1_guess"}, "target2": "en-its-book", "hintWord": "en-its-book"},
+    {"id": "i03", "kind": "tap", "frame": "he-ins-whats-this", "target": "en-whats-this", "options": ["kite", "bike", "ball"], "wrong": {"bike": "sem", "ball": "l1_guess"}, "target2": "en-its-kite", "hintWord": "en-its-kite"},
+    {"id": "i04", "kind": "tap", "frame": "he-ins-whats-this", "target": "en-whats-this", "options": ["duck", "bird", "cat"], "wrong": {"bird": "sem", "cat": "l1_guess"}, "target2": "en-its-duck", "hintWord": "en-its-duck"},
+    {"id": "i05", "kind": "tap", "frame": "he-ins-whats-this", "target": "en-whats-this", "options": ["apple", "banana", "car"], "wrong": {"banana": "sem", "car": "l1_guess"}, "target2": "en-its-apple", "hintWord": "en-its-apple"},
+    {"id": "i06", "kind": "tap", "frame": "he-ins-whats-this", "target": "en-whats-this", "options": ["egg", "bread", "kite"], "wrong": {"bread": "sem", "kite": "l1_guess"}, "target2": "en-its-egg", "hintWord": "en-its-egg"},
+    {"id": "i09", "kind": "puppet", "purpose": "check", "frame": "he-ins-bubble", "rep": "story", "ladder": "HL-BUBBLE", "mode": "bubble", "picture": "pip-holds", "prompt": ["en-whats-this"], "options": [{"clip": "en-its-duck", "pic": "duck"}, {"clip": "en-its-frog"}, {"clip": "en-hello"}], "wrong": {"en-its-frog": "sem", "en-hello": "l1_guess"}, "shows": "duck"},
+    {"id": "i10", "kind": "puppet", "purpose": "check", "frame": "he-ins-bubble", "rep": "story", "ladder": "HL-BUBBLE", "mode": "bubble", "picture": "pip-holds", "prompt": ["en-whats-this"], "options": [{"clip": "en-its-egg", "pic": "egg"}, {"clip": "en-its-apple"}, {"clip": "en-hello"}], "wrong": {"en-its-apple": "sem", "en-hello": "l1_guess"}, "shows": "egg"},
     {"id": "pr1", "kind": "tap", "purpose": "probe", "frame": "he-ins-its-a", "target": "en-its-duck", "options": ["duck", "bird", "cat"], "wrong": {"bird": "sem", "cat": "l1_guess"}},
-    {"id": "pr2", "kind": "tap", "purpose": "probe", "frame": "he-ins-its-a", "target": "en-its-apple", "options": ["apple", "banana", "car"], "wrong": {"banana": "sem", "car": "l1_guess"}}
+    {"id": "pr2", "kind": "tap", "purpose": "probe", "frame": "he-ins-its-a", "target": "en-its-apple", "options": ["apple", "banana", "car"], "wrong": {"banana": "sem", "car": "l1_guess"}},
+    {"id": "i07", "kind": "puppet", "purpose": "learn", "frame": "he-ins-bubble", "rep": "story", "ladder": "HL-BUBBLE", "mode": "bubble", "picture": "pip-holds", "prompt": ["en-whats-this"], "options": [{"clip": "en-its-car", "pic": "car"}, {"clip": "en-its-boat"}, {"clip": "en-hello"}], "wrong": {"en-its-boat": "sem", "en-hello": "l1_guess"}, "shows": "car"},
+    {"id": "i08", "kind": "puppet", "purpose": "learn", "frame": "he-ins-bubble", "rep": "story", "ladder": "HL-BUBBLE", "mode": "bubble", "picture": "pip-holds", "prompt": ["en-whats-this"], "options": [{"clip": "en-its-book", "pic": "book"}, {"clip": "en-its-ball"}, {"clip": "en-hello"}], "wrong": {"en-its-ball": "sem", "en-hello": "l1_guess"}, "shows": "book"}
   ],
   "lessons": [
     {"id": "what-1", "title": "מָה זֶה?", "items": ["i01", "i02", "i03"]},
-    {"id": "what-2", "title": "וּמָה זֶה?", "items": ["i04", "i05", "i06"]}
-  ],
-  "waiting": [
-    {"id": "i01-i06", "template": "LS01 tap with two English clips", "note": "The prompt is the question and the answer, en-whats-this then en-its-<thing>, after he-ins-whats-this. A line holds one English clip, so the pack plays he-ins-its-a (\"What is it? Listen to the answer\") and the answer only."},
-    {"id": "i07", "template": "LS10 puppet_talk bubble", "purpose": "learn", "frame": "he-ins-bubble", "picture": "pip-holds", "shows": "car", "prompt": ["en-whats-this"], "options": [{"clip": "en-its-car", "pic": "car"}, {"clip": "en-its-boat"}, {"clip": "en-hello"}], "wrong": {"en-its-boat": "sem", "en-hello": "l1_guess"}, "ladder": "HL-BUBBLE", "rep": "story"},
-    {"id": "i08", "template": "LS10 puppet_talk bubble", "purpose": "learn", "frame": "he-ins-bubble", "picture": "pip-holds", "shows": "book", "prompt": ["en-whats-this"], "options": [{"clip": "en-its-book", "pic": "book"}, {"clip": "en-its-ball"}, {"clip": "en-hello"}], "wrong": {"en-its-ball": "sem", "en-hello": "l1_guess"}, "ladder": "HL-BUBBLE", "rep": "story"},
-    {"id": "i09", "template": "LS10 puppet_talk bubble", "purpose": "check", "frame": "he-ins-bubble", "picture": "pip-holds", "shows": "duck", "prompt": ["en-whats-this"], "options": [{"clip": "en-its-duck", "pic": "duck"}, {"clip": "en-its-frog"}, {"clip": "en-hello"}], "wrong": {"en-its-frog": "sem", "en-hello": "l1_guess"}, "ladder": "HL-BUBBLE", "rep": "story", "replaces": "i09"},
-    {"id": "i10", "template": "LS10 puppet_talk bubble", "purpose": "check", "frame": "he-ins-bubble", "picture": "pip-holds", "shows": "egg", "prompt": ["en-whats-this"], "options": [{"clip": "en-its-egg", "pic": "egg"}, {"clip": "en-its-apple"}, {"clip": "en-hello"}], "wrong": {"en-its-apple": "sem", "en-hello": "l1_guess"}, "ladder": "HL-BUBBLE", "rep": "story", "replaces": "i10"}
+    {"id": "what-2", "title": "וּמָה זֶה?", "items": ["i04", "i05", "i06"]},
+    {"id": "what-more", "title": "וּמָה זֶה?", "items": ["i07", "i08"]}
   ]
 }

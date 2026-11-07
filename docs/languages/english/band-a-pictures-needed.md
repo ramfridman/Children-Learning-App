@@ -21,3 +21,14 @@ All three rows are done, in `content/languages/pictures` (generator `tools/make_
 - `duckling-lit.svg`, `ball-lit.svg`: the same drawing in the same place as `duckling` and `ball`, with a soft gold glow behind (as `content/starter/*_lit.svg`), so swapping the sprite on a touch moves nothing.
 - `dog-big.hotspots.json`, `ball-pair.hotspots.json`: two areas each, `big` and `small`, at least 72 of 256 units (65.5 pt on the phone SE), not overlapping. **`dog-big` no longer has the gold glow behind the big dog**: in a hotspot item that asks for the small dog it would point at the wrong one.
 - `story-bounce-2.hotspots.json` to `-5`: `cat` and `ball` (2), `duck` and `ball` (3), `frog` and `ball` (4), `dog` and `ball` (5), shares of the page's width and height, at least 96 of the 384 x 216 units (64.5 pt on the SE's tall stage), not overlapping. On page 5 the ball now flies just in front of the dog's nose (it was inside the dog's outline, so the two could not have separate areas).
+
+## Update 2026-11-07 (app-developer): what the recipes found
+
+The design-director's batch 5 answered the three rows above (`duckling-lit`, `ball-lit`, the tap areas of `dog-big`, `ball-pair` and the bounce story). The recipes now use them. Still wanted:
+
+| Needed | For | What |
+|---|---|---|
+| a drawn box that **opens** (`present-open`) | ENG-A-16 g01 to g06 (the guessing game: "the box stays closed until the child taps, then it opens") | the closed `present` is all the story pages show now |
+| Pip holding the object (a composite of `pip-holds` with a thing) | ENG-A-11 i07 to i10 | the bubble turns show the object alone |
+| the friend in a playground | ENG-A-02 buttons use `mika-body` | optional |
+| `<picture>-lit.svg` for the counted things (`duckling` and `ball` exist; `apple`, `duck`, `car` for Russian) | T02 counts | the generator makes a gold-glow copy of the thing when none is drawn |

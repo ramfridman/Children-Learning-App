@@ -1,0 +1,33 @@
+{
+  "schema": "skill/v1",
+  "id": "HEB-A-05",
+  "review": "needs-editor",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מבין אחד והרבה (חתול, חתולים)"
+    }
+  ],
+  "strand": "ol",
+  "prerequisites": [
+    {
+      "skill": "HEB-A-02",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "heb.ol.plural",
+    "heb.ol.sem"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

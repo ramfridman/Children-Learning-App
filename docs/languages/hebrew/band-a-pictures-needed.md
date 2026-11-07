@@ -26,3 +26,13 @@ A-05.2 (many balls) uses the existing `set-balls-4.svg`.
 All twelve are done, in `content/languages/pictures` (generator `tools/make_language_pictures_band_a.py`, sheet `docs/design/languages/pictures_batch5a.png`): each set is the singular picture's own drawing, all copies the same size, in one loose group of a back row and a front row that overlap a little (no row, grid or dice layout). Counts: `set-cats` 4, `set-dogs` 3, `set-dolls` 4, `set-teddies` 3, `set-cakes` 3, `set-pizzas` 3, `set-horses` 3, `set-donkeys` 3, `set-boats` 4, `set-planes` 3, `set-eggs` 5, `set-apples` 5, so "many" is never tied to one number.
 
 Also for this course: the HEB-A-10 marks ● ○ ▲ △ (`text:●` and so on in `units/08-letters-or-not.json`) **are not in Heebo** (nor in Secular One): the font has no glyph for U+25CF, U+25CB, U+25B2 or U+25B3, so the app would draw them in a fallback system font that differs per phone. They are drawn as shape cards for the app-developer to use instead: `shape-dot`, `shape-ring`, `shape-triangle`, `shape-triangle-open` (ink, the weight of a bold letter, centred; sheet `pictures_batch5c.png`).
+
+## Update 2026-11-07 (app-developer)
+
+All the sets of HEB-A-05 exist now (batch 5); the skill is in the pack. Still wanted:
+
+| Needed | For | What |
+|---|---|---|
+| a heart, a flower and a star as pictures (`shape-heart`, `shape-flower`; `star` exists) | HEB-A-10 s02, t05, s06 | the batch asked for ⭐ ♥ ✿ as cards; Heebo has none of them, so they are text for now |
+| a check of the touch areas of `chair`, `box`, `table` and `bed` (on, under, by, in) | HEB-A-04 | measured by the app-developer in `scenes.areas.json`; refine them |
+| the two frames of the A-02 actions as a stage | HEB-A-02 09 to 18 | the item shows the second frame only |

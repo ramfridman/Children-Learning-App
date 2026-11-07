@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_8",
+      "vo": "vo:heb.ok_6",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "יוֹפִי שֶׁל הַקְשָׁבָה!"
         }
       ],
       "target": "vo:heb.heb_a_pl_6"

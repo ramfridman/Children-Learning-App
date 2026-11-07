@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_1",
+      "vo": "vo:heb.ok_3",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "שְׁמַעְתֶּם טוֹב!"
         }
       ]
     },

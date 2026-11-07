@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "eng.chant-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "eng",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "זָזִים וְסוֹפְרִים"
+    }
+  ],
+  "skills": [
+    "ENG-A-13"
+  ],
+  "items": [
+    "eng.a13.c03",
+    "eng.a13.i03",
+    "eng.a13.c04",
+    "eng.a13.i04",
+    "eng.a13.c05",
+    "eng.a13.i05"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "sequence": 33
+}

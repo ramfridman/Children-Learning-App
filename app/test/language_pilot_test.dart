@@ -34,6 +34,36 @@ const Map<String, ({String lesson, int items, String skill})> _first =
       'rus': (lesson: 'rus.greet-1', items: 3, skill: 'RUS-A-01'),
     };
 
+/// The course has a placement game, so its first visit is the placement (frame 3.2): the child plays the probes, touching a wrong
+/// picture each time (so that the staircase stays on the floor and the first lesson is still the next one), until the visit ends with
+/// its own celebration, and is back on the home.
+Future<void> playPlacement(WidgetTester tester) async {
+  await tester.tap(find.byKey(const Key('course-play')));
+  await settle(tester);
+  expect(find.byType(LessonScreen), findsOneWidget);
+  // Any answer tile of the probe on screen (a picture or a sound, a letter): the second one, which is not the right one in the packs.
+  final Finder tiles = find.byWidgetPredicate(
+    (Widget w) =>
+        w.key is ValueKey<String> && (w.key! as ValueKey<String>).value.startsWith(RegExp(r'option-|tile-o')),
+  );
+  int probes = 0;
+  while (find.byKey(const Key('lesson-celebration')).evaluate().isEmpty && tiles.evaluate().length > 1) {
+    expect(++probes, lessThan(16), reason: 'the placement visit ends after about eight probes');
+    await tester.tap(tiles.at(1));
+    await settle(tester, ms: 3000);
+  }
+  expect(probes, greaterThan(0), reason: 'the placement offered at least one probe');
+  if (find.byKey(const Key('lesson-done')).evaluate().isNotEmpty) {
+    await tester.tap(find.byKey(const Key('lesson-done')));
+    await tester.pumpAndSettle();
+  }
+  expect(
+    find.byType(CourseHomeScreen),
+    findsOneWidget,
+    reason: 'back on the course home after the placement',
+  );
+}
+
 void main() {
   late Map<String, PackContent> packs;
 
@@ -62,6 +92,7 @@ void main() {
         await openCourse(tester, course);
         expect(find.byType(CourseHomeScreen), findsOneWidget);
         expect(find.byKey(const Key('course-play')), findsOneWidget);
+        await playPlacement(tester);
         await tester.tap(find.byKey(const Key('course-play')));
         await settle(tester);
         expect(find.byType(LessonScreen), findsOneWidget);
@@ -76,8 +107,13 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byType(CourseHomeScreen), findsOneWidget, reason: 'back on the course home');
 
-        final List<Attempt> rows = await rig.db.attemptsOf(courseKid);
+        final List<Attempt> all = await rig.db.attemptsOf(courseKid);
+        final List<Attempt> rows = <Attempt>[
+          for (final Attempt a in all)
+            if (a.lessonId == first.lesson) a,
+        ];
         expect(rows, hasLength(first.items));
+        expect(all.length, greaterThan(first.items), reason: 'the placement probes were answered first');
         for (final Attempt a in rows) {
           expect(a.packId, 'lang-$course');
           expect(a.lessonId, first.lesson);
@@ -98,10 +134,12 @@ void main() {
         (WidgetTester tester) async {
           final AppRig rig = await courseApp(tester, <String>[course], packs: packs);
           await openCourse(tester, course);
+          await playPlacement(tester);
+          final int before = (await rig.db.attemptsOf(courseKid)).length;
           await tester.tap(find.byKey(const Key('course-play')));
           await settle(tester);
           await answer(tester, right: false);
-          final List<Attempt> rows = await rig.db.attemptsOf(courseKid);
+          final List<Attempt> rows = (await rig.db.attemptsOf(courseKid)).skip(before).toList();
           expect(rows, hasLength(1));
           expect(rows.single.result, 'incorrect');
           expect(
@@ -124,6 +162,7 @@ void main() {
         testWidgets('the first activity on the ${b.key} board', (WidgetTester tester) async {
           await courseApp(tester, <String>[course], packs: packs, size: b.value);
           await openCourse(tester, course);
+          await playPlacement(tester);
           await tester.tap(find.byKey(const Key('course-play')));
           await settle(tester);
           expect(find.byType(LessonScreen), findsOneWidget);

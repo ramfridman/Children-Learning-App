@@ -1,0 +1,339 @@
+{
+  "skill": {
+    "id": "RUS-A-11",
+    "strand": "num",
+    "title": "מִסְפָּרִים עַד עֶשֶׂר",
+    "prerequisites": [
+      {
+        "skill": "RUS-A-10"
+      }
+    ],
+    "setCoverage": true
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "count",
+      "objects": "apple",
+      "count": 6,
+      "clips": [
+        "n-1",
+        "n-2",
+        "n-3",
+        "n-4",
+        "n-5",
+        "n-6"
+      ],
+      "answerPrompt": "f40",
+      "answerTarget": "ch-skolko",
+      "options": [
+        {
+          "clip": "n-6",
+          "value": 6
+        },
+        {
+          "clip": "n-7",
+          "value": 7
+        },
+        {
+          "clip": "n-5",
+          "value": 5
+        }
+      ],
+      "wrong": {
+        "n-7": "sound",
+        "n-5": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "concrete",
+      "frame": "f15"
+    },
+    {
+      "id": "02",
+      "kind": "count",
+      "objects": "apple",
+      "count": 7,
+      "clips": [
+        "n-1",
+        "n-2",
+        "n-3",
+        "n-4",
+        "n-5",
+        "n-6",
+        "n-7"
+      ],
+      "answerPrompt": "f40",
+      "answerTarget": "ch-skolko",
+      "options": [
+        {
+          "clip": "n-7",
+          "value": 7
+        },
+        {
+          "clip": "n-8",
+          "value": 8
+        },
+        {
+          "clip": "n-6",
+          "value": 6
+        }
+      ],
+      "wrong": {
+        "n-8": "sound",
+        "n-6": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "concrete",
+      "frame": "f15"
+    },
+    {
+      "id": "03",
+      "kind": "count",
+      "objects": "apple",
+      "count": 8,
+      "clips": [
+        "n-1",
+        "n-2",
+        "n-3",
+        "n-4",
+        "n-5",
+        "n-6",
+        "n-7",
+        "n-8"
+      ],
+      "answerPrompt": "f40",
+      "answerTarget": "ch-skolko",
+      "options": [
+        {
+          "clip": "n-8",
+          "value": 8
+        },
+        {
+          "clip": "n-7",
+          "value": 7
+        },
+        {
+          "clip": "n-9",
+          "value": 9
+        }
+      ],
+      "wrong": {
+        "n-7": "sound",
+        "n-9": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "concrete",
+      "frame": "f15"
+    },
+    {
+      "id": "04",
+      "kind": "count",
+      "objects": "apple",
+      "count": 9,
+      "clips": [
+        "n-1",
+        "n-2",
+        "n-3",
+        "n-4",
+        "n-5",
+        "n-6",
+        "n-7",
+        "n-8",
+        "n-9"
+      ],
+      "answerPrompt": "f40",
+      "answerTarget": "ch-skolko",
+      "options": [
+        {
+          "clip": "n-9",
+          "value": 9
+        },
+        {
+          "clip": "n-10",
+          "value": 10
+        },
+        {
+          "clip": "n-8",
+          "value": 8
+        }
+      ],
+      "wrong": {
+        "n-10": "sound",
+        "n-8": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "concrete",
+      "frame": "f15"
+    },
+    {
+      "id": "05",
+      "kind": "count",
+      "purpose": "check",
+      "objects": "apple",
+      "count": 10,
+      "clips": [
+        "n-1",
+        "n-2",
+        "n-3",
+        "n-4",
+        "n-5",
+        "n-6",
+        "n-7",
+        "n-8",
+        "n-9",
+        "n-10"
+      ],
+      "answerPrompt": "f40",
+      "answerTarget": "ch-skolko",
+      "options": [
+        {
+          "clip": "n-10",
+          "value": 10
+        },
+        {
+          "clip": "n-9",
+          "value": 9
+        },
+        {
+          "clip": "n-8",
+          "value": 8
+        }
+      ],
+      "wrong": {
+        "n-9": "sound",
+        "n-8": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "concrete",
+      "frame": "f15"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "frame": "f16",
+      "target": "n-6",
+      "options": [
+        "set-tenframe-6",
+        "set-tenframe-7",
+        "set-tenframe-5"
+      ],
+      "wrong": {
+        "set-tenframe-7": "sound",
+        "set-tenframe-5": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "pictorial"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "frame": "f16",
+      "target": "n-7",
+      "options": [
+        "set-tenframe-7",
+        "set-tenframe-8",
+        "set-tenframe-6"
+      ],
+      "wrong": {
+        "set-tenframe-8": "sound",
+        "set-tenframe-6": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "pictorial"
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "frame": "f16",
+      "target": "n-8",
+      "options": [
+        "set-tenframe-8",
+        "set-tenframe-7",
+        "set-tenframe-9"
+      ],
+      "wrong": {
+        "set-tenframe-7": "sound",
+        "set-tenframe-9": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "pictorial"
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "f16",
+      "target": "n-9",
+      "options": [
+        "set-tenframe-9",
+        "set-tenframe-10",
+        "set-tenframe-8"
+      ],
+      "wrong": {
+        "set-tenframe-10": "sound",
+        "set-tenframe-8": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "pictorial"
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "frame": "f16",
+      "purpose": "check",
+      "target": "n-10",
+      "options": [
+        "set-tenframe-10",
+        "set-tenframe-9",
+        "set-tenframe-8"
+      ],
+      "wrong": {
+        "set-tenframe-9": "sound",
+        "set-tenframe-8": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "pictorial"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "numbers-2",
+      "title": "מִסְפָּרִים עַד עֶשֶׂר",
+      "items": [
+        "06",
+        "07",
+        "08",
+        "09"
+      ]
+    },
+    {
+      "id": "numbers-6-10-more",
+      "title": "מִסְפָּרִים עַד עֶשֶׂר",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    }
+  ],
+  "teach": [
+    [
+      "n-6",
+      "n-7",
+      "n-8",
+      "n-9",
+      "n-10"
+    ]
+  ],
+  "routes": {
+    "new": "teach by counting along; items 01 to 10",
+    "heritage": {
+      "teach": false,
+      "order": [
+        "06-10",
+        "01-05"
+      ]
+    },
+    "reader": "as heritage or new"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "lesson/v1",
+  "id": "eng.say-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "eng",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "אוֹמְרִים מִלָּה"
+    }
+  ],
+  "skills": [
+    "ENG-A-12"
+  ],
+  "items": [
+    "eng.a12.i01",
+    "eng.a12.i01t",
+    "eng.a12.i02",
+    "eng.a12.i02t",
+    "eng.a12.i03",
+    "eng.a12.i03t",
+    "eng.a12.i04",
+    "eng.a12.i04t"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "sequence": 29
+}

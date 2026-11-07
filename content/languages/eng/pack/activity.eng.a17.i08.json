@@ -3,8 +3,8 @@
   "id": "eng.a17.i08",
   "review": "needs-editor",
   "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.3",
+  "template": "puppet_talk",
+  "templateVersion": "1.0",
   "course": "eng",
   "domain": "languages",
   "band": "A",
@@ -17,7 +17,7 @@
   "purpose": "check",
   "checkType": "transfer",
   "representation": "story",
-  "variantGroup": "en-im-happy",
+  "variantGroup": "a17-i08",
   "difficulty": {
     "authored": 0.2
   },
@@ -32,33 +32,33 @@
   },
   "tutor": {
     "llmAllowed": false,
-    "goal": "listen and choose",
+    "goal": "answer the puppet",
     "mustNotRevealBeforeHint": 2
   },
   "a11y": {
-    "altText": "שָׁלוֹשׁ תְּמוּנוֹת"
+    "altText": "בֻּבָּה שֶׁמְּדַבֶּרֶת"
   },
   "prompt": {
-    "vo": "vo:eng.he_ins_face",
+    "vo": "vo:eng.he_ins_bubble",
     "caption": [
       {
         "t": "he",
-        "v": "הַקְשִׁיבוּ, וּגְעוּ בַּפַּרְצוּף הַנָּכוֹן."
+        "v": "מָה עוֹנִים? גְּעוּ בַּבֻּעָה."
       }
     ],
-    "target": "vo:eng.en_im_happy",
+    "target": "vo:eng.en_how_are_you",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_3",
+      "vo": "vo:eng.he_fb_right_5",
       "caption": [
         {
           "t": "he",
-          "v": "יָפֶה מְאֹד!"
+          "v": "בְּדִיּוּק!"
         }
       ],
-      "target": "vo:eng.en_im_happy"
+      "target": "vo:eng.en_im_cold"
     },
     "incorrect": [
       {
@@ -80,7 +80,7 @@
           "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
         }
       ],
-      "target": "vo:eng.en_im_happy"
+      "target": "vo:eng.en_im_cold"
     }
   },
   "hints": [
@@ -94,19 +94,19 @@
           "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
         }
       ],
-      "target": "vo:eng.en_im_happy"
+      "target": "vo:eng.en_im_cold"
     },
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_happy",
+      "vo": "vo:eng.he_gl_cold",
       "caption": [
         {
           "t": "he",
-          "v": "שָׂמֵחַ"
+          "v": "קַר"
         }
       ],
-      "target": "vo:eng.en_im_happy"
+      "target": "vo:eng.en_im_cold"
     },
     {
       "level": 3,
@@ -118,28 +118,31 @@
           "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
         }
       ],
-      "target": "vo:eng.en_im_happy"
+      "target": "vo:eng.en_im_cold"
     }
   ],
-  "scene": {},
+  "scene": {
+    "picture": "asset:mika_snow"
+  },
   "answer": {
     "type": "choice",
+    "mode": "bubble",
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:mika_present",
-        "label": "תְּמוּנָה"
+        "label": "צְלִיל",
+        "clip": "vo:eng.en_im_cold"
       },
       {
         "id": "o2",
-        "sprite": "asset:mika_icecream",
-        "label": "תְּמוּנָה",
+        "label": "צְלִיל",
+        "clip": "vo:eng.en_im_happy",
         "misconception": "eng.lis.sem"
       },
       {
         "id": "o3",
-        "sprite": "asset:mika_snow",
-        "label": "תְּמוּנָה",
+        "label": "צְלִיל",
+        "clip": "vo:eng.en_hello",
         "misconception": "eng.lis.l1_guess"
       }
     ],

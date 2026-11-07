@@ -1,0 +1,157 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a10.i04",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "listen_do",
+  "templateVersion": "1.0",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-10",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "en-small",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 2,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "do what is said",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנָה וְחָבֵר שֶׁעוֹשֶׂה מַה שֶּׁאוֹמְרִים"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_ins_listen_tap",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה."
+      }
+    ],
+    "target": "vo:eng.en_small",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן!"
+        }
+      ],
+      "target": "vo:eng.en_small"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ],
+      "target": "vo:eng.en_small"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:eng.he_hint_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
+        }
+      ],
+      "target": "vo:eng.en_small_slow"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:eng.he_gl_small",
+      "caption": [
+        {
+          "t": "he",
+          "v": "קָטָן"
+        }
+      ],
+      "target": "vo:eng.en_small"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:eng.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:eng.en_small"
+    }
+  ],
+  "scene": {
+    "picture": "asset:ball_pair"
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "hotspots",
+    "options": [
+      {
+        "id": "o1",
+        "label": "הַקָּטָן",
+        "at": {
+          "x": 0.6406,
+          "y": 0.6094,
+          "w": 0.3281,
+          "h": 0.3281
+        }
+      },
+      {
+        "id": "o2",
+        "label": "הַגָּדוֹל",
+        "at": {
+          "x": 0.0625,
+          "y": 0.3438,
+          "w": 0.5625,
+          "h": 0.5781
+        },
+        "misconception": "eng.lis.sem"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

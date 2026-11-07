@@ -1,0 +1,201 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a15.d01",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "story",
+  "templateVersion": "1.0",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-15",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a15-d01",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "answer the question the story asks",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "סִפּוּר בִּתְמוּנוֹת"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_ins_listen_tap",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_6",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁמַעְתֶּם טוֹב!"
+        }
+      ],
+      "target": "vo:eng.en_st_bounce_3"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:eng.he_hint_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:eng.he_hint_page",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַחֲזֹר לָעַמּוּד הַזֶּה בַּסִּפּוּר."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:eng.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ]
+    }
+  ],
+  "scene": {
+    "pages": [
+      {
+        "picture": "asset:story_bounce_1",
+        "clips": [
+          "vo:eng.en_st_bounce_1"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      },
+      {
+        "picture": "asset:story_bounce_2",
+        "clips": [
+          "vo:eng.en_st_bounce_2"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      },
+      {
+        "picture": "asset:story_bounce_3",
+        "clips": [
+          "vo:eng.en_st_bounce_3"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      },
+      {
+        "picture": "asset:story_bounce_4",
+        "clips": [
+          "vo:eng.en_st_bounce_4"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      },
+      {
+        "picture": "asset:story_bounce_5",
+        "clips": [
+          "vo:eng.en_st_bounce_5"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      },
+      {
+        "picture": "asset:story_bounce_6",
+        "clips": [
+          "vo:eng.en_st_bounce_6"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      }
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "dialogic",
+    "pauseAfter": 1,
+    "question": {
+      "vo": "vo:eng.he_q_who",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מִי זֶה?"
+        }
+      ]
+    },
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:duck",
+        "label": "תְּמוּנָה"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:cat",
+        "label": "תְּמוּנָה",
+        "misconception": "eng.lis.story_recall"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:frog",
+        "label": "תְּמוּנָה",
+        "misconception": "eng.lis.sem"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

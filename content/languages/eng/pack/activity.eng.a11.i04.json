@@ -17,7 +17,7 @@
   "purpose": "learn",
   "checkType": "practice",
   "representation": "pictorial",
-  "variantGroup": "en-its-duck",
+  "variantGroup": "en-whats-this",
   "difficulty": {
     "authored": 0.2
   },
@@ -39,23 +39,24 @@
     "altText": "שָׁלוֹשׁ תְּמוּנוֹת"
   },
   "prompt": {
-    "vo": "vo:eng.he_ins_its_a",
+    "vo": "vo:eng.he_ins_whats_this",
     "caption": [
       {
         "t": "he",
-        "v": "מָה זֶה? הַקְשִׁיבוּ לַתְּשׁוּבָה, וּגְעוּ בַּתְּמוּנָה."
+        "v": "הַקְשִׁיבוּ לַשְּׁאֵלָה וְלַתְּשׁוּבָה, וּגְעוּ בַּתְּמוּנָה."
       }
     ],
-    "target": "vo:eng.en_its_duck",
+    "target": "vo:eng.en_whats_this",
+    "target2": "vo:eng.en_its_duck",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_3",
+      "vo": "vo:eng.he_fb_right_6",
       "caption": [
         {
           "t": "he",
-          "v": "יָפֶה מְאֹד!"
+          "v": "שְׁמַעְתֶּם טוֹב!"
         }
       ],
       "target": "vo:eng.en_its_duck"

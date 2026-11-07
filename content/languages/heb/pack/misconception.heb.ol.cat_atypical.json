@@ -1,0 +1,17 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.cat_atypical",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "HEB-A-03"
+  ],
+  "parentText": "הילד עוד לא מצרף לקבוצה חבר לא שגרתי (גם פרפר הוא בעל חיים). כדאי לדבר על מה שכל בעלי החיים עושים: זזים, אוכלים, ישנים.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

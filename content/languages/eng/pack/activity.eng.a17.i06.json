@@ -1,0 +1,153 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a17.i06",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "puppet_talk",
+  "templateVersion": "1.0",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-17",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a17-i06",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "answer the puppet",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "בֻּבָּה שֶׁמְּדַבֶּרֶת"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_ins_bubble",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מָה עוֹנִים? גְּעוּ בַּבֻּעָה."
+      }
+    ],
+    "target": "vo:eng.en_how_are_you",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נָכוֹן!"
+        }
+      ],
+      "target": "vo:eng.en_im_happy"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ],
+      "target": "vo:eng.en_im_happy"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:eng.he_hint_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
+        }
+      ],
+      "target": "vo:eng.en_im_happy"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:eng.he_gl_happy",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שָׂמֵחַ"
+        }
+      ],
+      "target": "vo:eng.en_im_happy"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:eng.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:eng.en_im_happy"
+    }
+  ],
+  "scene": {
+    "picture": "asset:mika_present"
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "bubble",
+    "options": [
+      {
+        "id": "o1",
+        "label": "צְלִיל",
+        "clip": "vo:eng.en_im_happy"
+      },
+      {
+        "id": "o2",
+        "label": "צְלִיל",
+        "clip": "vo:eng.en_im_sad",
+        "misconception": "eng.lis.sem"
+      },
+      {
+        "id": "o3",
+        "label": "צְלִיל",
+        "clip": "vo:eng.en_hello",
+        "misconception": "eng.lis.l1_guess"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

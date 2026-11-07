@@ -1,0 +1,38 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.words-from-stories-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִילִים חֲדָשׁוֹת"
+    }
+  ],
+  "skills": [
+    "HEB-A-02"
+  ],
+  "items": [
+    "heb.a02.say-siach",
+    "heb.a02.say-kemach",
+    "heb.a02.say-keara",
+    "heb.a02.say-tanur",
+    "heb.a02.say-sira",
+    "heb.a02.say-kova",
+    "heb.a02.say-ruach",
+    "heb.a02.say-kadur"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 4
+}

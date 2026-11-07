@@ -10,7 +10,10 @@
     "ladder": "HL-WORD",
     "celebration": "ok-8",
     "rep": "pictorial",
-    "minutes": 4
+    "minutes": 4,
+    "pass": "pass",
+    "heard": "heard",
+    "together": "say-together"
   },
   "feedback": {
     "right": [
@@ -107,6 +110,22 @@
       },
       "print_shape": {
         "line": "fb-print-shape"
+      },
+      "cat_theme": {
+        "line": "d-cat-theme"
+      },
+      "cat_look": {
+        "line": "d-cat-look"
+      },
+      "cat_atypical": {
+        "line": "d-cat-atypical"
+      },
+      "plural": {
+        "line": "d-plural",
+        "target": "@target"
+      },
+      "stroke": {
+        "line": "d-start"
       }
     }
   },
@@ -119,7 +138,8 @@
       },
       {
         "line": "@gloss",
-        "action": "highlight_objects_sequentially"
+        "action": "highlight_objects_sequentially",
+        "orLine": "h-look"
       },
       {
         "line": "show",
@@ -229,6 +249,37 @@
       },
       {
         "line": "fb-story-world",
+        "action": "highlight_objects_sequentially"
+      },
+      {
+        "line": "show",
+        "action": "worked_example"
+      }
+    ],
+    "HL-PLURAL": [
+      {
+        "line": "d-plural",
+        "action": "replay_prompt_slow",
+        "target": "@target"
+      },
+      {
+        "line": "@gloss",
+        "action": "highlight_objects_sequentially",
+        "orLine": "h-look"
+      },
+      {
+        "line": "show",
+        "action": "worked_example",
+        "target": "@target"
+      }
+    ],
+    "HL-TRACE": [
+      {
+        "line": "i-trace",
+        "action": "replay_prompt_slow"
+      },
+      {
+        "line": "d-start",
         "action": "highlight_objects_sequentially"
       },
       {
@@ -847,6 +898,156 @@
       "voice": "היה כיף לשחק יחד",
       "review": "needs-editor",
       "note": "placement: the end of a placement visit"
+    },
+    "s1-title": {
+      "he": "הַכַּדּוּר שֶׁל הָאַרְנָב",
+      "voice": "הכדור של הארנב.",
+      "review": "text-ready"
+    },
+    "s2-title": {
+      "he": "נִיצִי אוֹפָה עוּגָה",
+      "voice": "ניצי אופה עוגה.",
+      "review": "text-ready"
+    },
+    "s3-title": {
+      "he": "הַכּוֹבַע שֶׁל קוּבִּי",
+      "voice": "הכובע של קובי.",
+      "review": "text-ready"
+    },
+    "i-what-he": {
+      "he": "מָה הוּא עוֹשֶׂה?",
+      "voice": "מה הוא עוֹשֶׂה?",
+      "review": "text-ready"
+    },
+    "m-boet": {
+      "he": "בּוֹעֲטִים בְּכַדּוּר בָּרֶגֶל, וְהוּא עָף רָחוֹק.",
+      "voice": "בועטים בכדור ברגל, והוא עף רחוק.",
+      "review": "text-ready"
+    },
+    "i-what-she": {
+      "he": "מָה הִיא עוֹשָׂה?",
+      "voice": "מה היא עוֹשָׂה?",
+      "review": "text-ready"
+    },
+    "m-mechapeset": {
+      "he": "מְחַפֶּשֶׂת זֶה לְנַסּוֹת לִמְצֹא מַשֶּׁהוּ.",
+      "voice": "מְחַפֶּשֶׂת זה לנסות למצוא משהו.",
+      "review": "text-ready"
+    },
+    "m-meurbevet": {
+      "he": "מְעַרְבֶּבֶת זֶה לְסוֹבֵב בְּכַף, וְהַכֹּל מִתְחַבֵּר.",
+      "voice": "מערבבת זה לסובב בכף, והכול מתחבר.",
+      "review": "text-ready"
+    },
+    "m-soche": {
+      "he": "שׂוֹחֶה זֶה לָזוּז בְּתוֹךְ הַמַּיִם.",
+      "voice": "שׂוֹחֶה זה לזוז בתוך המים.",
+      "review": "text-ready"
+    },
+    "heard": {
+      "he": "שָׁמַעְתִּי:",
+      "voice": "שמעתי:",
+      "review": "text-ready"
+    },
+    "i-sort-cat": {
+      "he": "שִׂימוּ כׇּל תְּמוּנָה בַּמָּקוֹם שֶׁלָּהּ.",
+      "voice": "שִׂימוּ כל תמונה במקום שלה.",
+      "review": "text-ready"
+    },
+    "i-odd-animals": {
+      "he": "מָה הִגִּיעַ בְּטָעוּת לַקֻּפְסָה שֶׁל בַּעֲלֵי הַחַיִּים?",
+      "voice": "מה הגיע בטעות לקופסה של בעלי החיים?",
+      "review": "text-ready"
+    },
+    "why": {
+      "he": "כִּי אֵלֶּה…",
+      "voice": "כי אֵלֶּה…",
+      "review": "text-ready"
+    },
+    "i-odd-food": {
+      "he": "מָה הִגִּיעַ בְּטָעוּת לַקֻּפְסָה שֶׁל הָאֹכֶל?",
+      "voice": "מה הגיע בטעות לקופסה של הָאֹכֶל?",
+      "review": "text-ready"
+    },
+    "i-odd-clothes": {
+      "he": "מָה הִגִּיעַ בְּטָעוּת לַקֻּפְסָה שֶׁל הַבְּגָדִים?",
+      "voice": "מה הגיע בטעות לקופסה של הבגדים?",
+      "review": "text-ready"
+    },
+    "pl-1": {
+      "he": "שִׂימוּ אֶת הַכַּדּוּר עַל הַכִּסֵּא.",
+      "voice": "שִׂימוּ את הכדור על הכיסא.",
+      "review": "text-ready"
+    },
+    "pl-2": {
+      "he": "שִׂימוּ אֶת הַדֻּבִּי בְּתוֹךְ הַקֻּפְסָה.",
+      "voice": "שִׂימוּ את הדובי בתוך הקופסה.",
+      "review": "text-ready"
+    },
+    "pl-3": {
+      "he": "שִׂימוּ אֶת הֶחָתוּל מִתַּחַת לַשֻּׁלְחָן.",
+      "voice": "שִׂימוּ את החתול מתחת לשולחן.",
+      "review": "text-ready"
+    },
+    "pl-4": {
+      "he": "שִׂימוּ אֶת הַבֻּבָּה לְיַד הַמִּטָּה.",
+      "voice": "שִׂימוּ את הבובה ליד המיטה.",
+      "review": "text-ready"
+    },
+    "pl-9": {
+      "he": "שִׂימוּ אֶת הַכּוֹבַע עַל הַשֻּׁלְחָן.",
+      "voice": "שִׂימוּ את הכובע על השולחן.",
+      "review": "text-ready"
+    },
+    "i-pairs": {
+      "he": "חַבְּרוּ מִלִּים שֶׁנִּגְמָרוֹת אוֹתוֹ דָּבָר.",
+      "voice": "חברו מילים שנגמרות אותו דבר.",
+      "review": "text-ready"
+    },
+    "i-letters": {
+      "he": "אֵיפֹה הָאוֹתִיּוֹת? גְּעוּ בְּכׇל הָאוֹתִיּוֹת.",
+      "voice": "איפה האותיות? געו בכל האותיות.",
+      "review": "text-ready"
+    },
+    "i-order": {
+      "he": "סַדְּרוּ אֶת הַתְּמוּנוֹת לְפִי הַסִּפּוּר.",
+      "voice": "סדרו את התמונות לפי הסיפור.",
+      "review": "text-ready"
+    },
+    "i-trace": {
+      "he": "הוֹלְכִים עִם הָאֶצְבַּע עַל הַדֶּרֶךְ.",
+      "voice": "הולכים עם האצבע על הדרך.",
+      "review": "text-ready"
+    },
+    "pass": {
+      "he": "זֶה בְּסֵדֶר!",
+      "voice": "זה בסדר!",
+      "review": "needs-editor"
+    },
+    "d-start": {
+      "he": "מַתְחִילִים כָּאן.",
+      "voice": "מתחילים כאן.",
+      "review": "text-ready"
+    },
+    "d-cat-theme": {
+      "he": "הֵם הוֹלְכִים יַחַד. בּוֹאוּ נִבְדֹּק מֵאֵיזֶה סוּג הֵם.",
+      "voice": "הם הולכים יחד. בואו נבדוק מאיזה סוג הם.",
+      "review": "text-ready"
+    },
+    "d-cat-look": {
+      "he": "הֵם דּוֹמִים בַּצֶּבַע. מָה הֵם בֶּאֱמֶת?",
+      "voice": "הם דומים בצבע. מה הם באמת?",
+      "review": "text-ready"
+    },
+    "d-cat-atypical": {
+      "he": "גַּם זֶה חַי: זֶה זָז וְאוֹכֵל.",
+      "voice": "גם זה חי: זה זז ואוכל.",
+      "review": "text-ready"
+    },
+    "d-plural": {
+      "he": "שִׁמְעוּ אֶת הַסּוֹף:",
+      "voice": "שמעו את הסוף:",
+      "review": "text-ready"
     }
   }
 }

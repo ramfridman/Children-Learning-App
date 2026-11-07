@@ -1,0 +1,33 @@
+{
+  "schema": "skill/v1",
+  "id": "ENG-A-13",
+  "review": "needs-editor",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "דִּקְלוּמִים"
+    }
+  ],
+  "strand": "spk",
+  "prerequisites": [
+    {
+      "skill": "ENG-A-02",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "story"
+  ],
+  "misconceptions": [
+    "eng.lis.l1_guess",
+    "eng.lis.sem"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

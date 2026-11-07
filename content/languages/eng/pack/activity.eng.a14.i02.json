@@ -1,0 +1,154 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a14.i02",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sound_boxes",
+  "templateVersion": "1.0",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-14",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "en-duck",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "tap once for each part of the word",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תּוֹף וְתְמוּנָה שֶׁל מִלָּה"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_ins_drum",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַקְשִׁיבוּ לַמִּלָּה, וְתוֹפְפוּ פַּעַם אַחַת לְכׇל חֵלֶק."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_6",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁמַעְתֶּם טוֹב!"
+        }
+      ],
+      "target": "vo:eng.en_duck"
+    },
+    "incorrect": [
+      {
+        "when": "misconception:eng.pa.syll",
+        "vo": "vo:eng.he_fb_beats_together",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְתוֹפֵף יַחַד, לְאַט."
+          }
+        ],
+        "target": "vo:eng.en_duck_slow"
+      },
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ],
+      "target": "vo:eng.en_duck"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:eng.he_hint_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
+        }
+      ],
+      "target": "vo:eng.en_duck_slow"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:eng.he_hint_beats",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִמְחָא כַּפַּיִם לְכׇל חֵלֶק, לְאַט."
+        }
+      ],
+      "target": "vo:eng.en_duck_slow"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:eng.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:eng.en_duck"
+    }
+  ],
+  "scene": {
+    "picture": "asset:duck",
+    "word": [
+      "vo:eng.en_duck"
+    ],
+    "slow": [
+      "vo:eng.en_duck_slow"
+    ]
+  },
+  "answer": {
+    "type": "drum",
+    "mode": "drum",
+    "beats": 1,
+    "classifiers": [
+      {
+        "when": "one_more",
+        "misconception": "eng.pa.syll"
+      }
+    ]
+  }
+}

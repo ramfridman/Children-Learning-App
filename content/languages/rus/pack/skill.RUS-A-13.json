@@ -23,7 +23,8 @@
   ],
   "misconceptions": [
     "rus.lis.sem",
-    "rus.voc.sound"
+    "rus.voc.sound",
+    "rus.grm.yesno"
   ],
   "retention": {
     "targetRetention": 0.9,

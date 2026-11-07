@@ -14,7 +14,9 @@
   "strand": "ol",
   "prerequisites": [],
   "representations": [
-    "pictorial"
+    "pictorial",
+    "story",
+    "embodied"
   ],
   "misconceptions": [
     "heb.ol.sem",

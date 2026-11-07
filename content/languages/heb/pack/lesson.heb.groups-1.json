@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.groups-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "כׇּל דָּבָר בַּמָּקוֹם שֶׁלּוֹ"
+    }
+  ],
+  "skills": [
+    "HEB-A-03"
+  ],
+  "items": [
+    "heb.a03.01",
+    "heb.a03.02",
+    "heb.a03.03"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 23
+}

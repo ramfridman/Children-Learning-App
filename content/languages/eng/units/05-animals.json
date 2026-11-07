@@ -9,16 +9,12 @@
     {"id": "i06", "kind": "tap", "target": "en-duck", "options": ["duck", "bird", "dog"], "wrong": {"bird": "sem", "dog": "l1_guess"}},
     {"id": "i07", "kind": "tap", "target": "en-pig", "options": ["pig", "cow", "frog"], "wrong": {"cow": "sem", "frog": "l1_guess"}},
     {"id": "i08", "kind": "tap", "target": "en-frog", "options": ["frog", "fish", "duck"], "wrong": {"fish": "sem", "duck": "l1_guess"}},
-    {"id": "m01", "kind": "tap", "purpose": "check", "target": "en-cat", "options": ["cat-2", "dog-2", "cow-2"], "wrong": {"dog-2": "sem", "cow-2": "l1_guess"}},
-    {"id": "m02", "kind": "tap", "purpose": "check", "target": "en-duck", "options": ["duck-2", "bird-2", "frog-2"], "wrong": {"bird-2": "sem", "frog-2": "l1_guess"}},
+    {"id": "m01", "kind": "pairs", "purpose": "check", "frame": "he-ins-pairs", "rep": "pictorial", "ladder": "HL-PAIRS", "pairs": [["cat", "cat-2", "en-cat"], ["dog", "dog-2", "en-dog"], ["cow", "cow-2", "en-cow"]], "wrong": {"cat+dog": "sem", "cow+dog": "l1_guess"}},
+    {"id": "m02", "kind": "pairs", "purpose": "check", "frame": "he-ins-pairs", "rep": "pictorial", "ladder": "HL-PAIRS", "pairs": [["duck", "duck-2", "en-duck"], ["bird", "bird-2", "en-bird"], ["frog", "frog-2", "en-frog"]], "wrong": {"duck+bird": "sem", "frog+duck": "l1_guess"}},
     {"id": "pr1", "kind": "tap", "purpose": "probe", "target": "en-cow", "options": ["cow", "pig", "fish"], "wrong": {"pig": "sem", "fish": "l1_guess"}}
   ],
   "lessons": [
     {"id": "ani-1", "title": "חַיּוֹת", "items": ["i01", "i02", "i03", "i04"]},
     {"id": "ani-2", "title": "עוֹד חַיּוֹת", "items": ["i05", "i06", "i07", "i08"]}
-  ],
-  "waiting": [
-    {"id": "m01", "template": "LS01 pairs (match_pairs)", "purpose": "check", "replaces": "m01", "frame": "he-ins-pairs", "pairs": [["cat", "cat-2", "en-cat"], ["dog", "dog-2", "en-dog"], ["cow", "cow-2", "en-cow"]], "wrong": {"cat+dog": "sem", "cow+dog": "l1_guess"}, "ladder": "HL-PAIRS", "rep": "pictorial", "note": "Two rows of three cards; each card says its word on a tap; a wrong pairing hears both words."},
-    {"id": "m02", "template": "LS01 pairs (match_pairs)", "purpose": "check", "replaces": "m02", "frame": "he-ins-pairs", "pairs": [["duck", "duck-2", "en-duck"], ["bird", "bird-2", "en-bird"], ["frog", "frog-2", "en-frog"]], "wrong": {"duck+bird": "sem", "frog+duck": "l1_guess"}, "ladder": "HL-PAIRS", "rep": "pictorial"}
   ]
 }

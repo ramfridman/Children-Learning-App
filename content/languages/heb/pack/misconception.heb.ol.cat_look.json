@@ -1,0 +1,17 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.cat_look",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "HEB-A-03"
+  ],
+  "parentText": "הילד מקבץ לפי צבע או צורה, ולא לפי סוג. כדאי לשאול: מה זה באמת?",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

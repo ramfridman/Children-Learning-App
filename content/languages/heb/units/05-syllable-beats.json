@@ -120,6 +120,97 @@
       "frame": "i-strip",
       "ladder": "HL-SYLL",
       "purpose": "probe"
+    },
+    {
+      "id": "01",
+      "kind": "drum",
+      "frame": "i-drum",
+      "purpose": "learn",
+      "rep": "embodied",
+      "word": "heb-a-w-dag",
+      "picture": "fish",
+      "beats": 1,
+      "oneMore": "syll",
+      "oneFewer": "syll",
+      "ladder": "HL-SYLL"
+    },
+    {
+      "id": "02",
+      "kind": "drum",
+      "frame": "i-drum",
+      "purpose": "learn",
+      "rep": "embodied",
+      "word": "heb-a-w-dubi",
+      "picture": "teddy",
+      "beats": 2,
+      "oneMore": "syll",
+      "oneFewer": "syll",
+      "ladder": "HL-SYLL"
+    },
+    {
+      "id": "03",
+      "kind": "drum",
+      "frame": "i-drum",
+      "purpose": "learn",
+      "rep": "embodied",
+      "word": "heb-a-w-banana",
+      "picture": "banana",
+      "beats": 3,
+      "oneMore": "syll",
+      "oneFewer": "syll",
+      "ladder": "HL-SYLL"
+    },
+    {
+      "id": "04",
+      "kind": "drum",
+      "frame": "i-drum",
+      "purpose": "learn",
+      "rep": "embodied",
+      "word": "heb-a-w-pil",
+      "picture": "elephant",
+      "beats": 1,
+      "oneMore": "syll",
+      "oneFewer": "syll",
+      "ladder": "HL-SYLL"
+    },
+    {
+      "id": "05",
+      "kind": "drum",
+      "frame": "i-drum",
+      "purpose": "learn",
+      "rep": "embodied",
+      "word": "heb-a-w-uga",
+      "picture": "cake",
+      "beats": 2,
+      "oneMore": "syll",
+      "oneFewer": "syll",
+      "ladder": "HL-SYLL"
+    },
+    {
+      "id": "06",
+      "kind": "drum",
+      "frame": "i-drum",
+      "purpose": "learn",
+      "rep": "embodied",
+      "word": "heb-a-w-matana",
+      "picture": "present",
+      "beats": 3,
+      "oneMore": "syll",
+      "oneFewer": "syll",
+      "ladder": "HL-SYLL"
+    },
+    {
+      "id": "11",
+      "kind": "drum",
+      "frame": "i-drum",
+      "purpose": "learn",
+      "rep": "embodied",
+      "word": "heb-a-w-agala",
+      "picture": "pram",
+      "beats": 3,
+      "oneMore": "syll",
+      "oneFewer": "syll",
+      "ladder": "HL-SYLL"
     }
   ],
   "lessons": [
@@ -131,6 +222,24 @@
         "07",
         "10",
         "09"
+      ]
+    },
+    {
+      "id": "drum-1",
+      "title": "תּוֹפְפִים מִלִּים",
+      "items": [
+        "01",
+        "02",
+        "03"
+      ]
+    },
+    {
+      "id": "drum-2",
+      "title": "עוֹד תּוֹפְפִים",
+      "items": [
+        "04",
+        "05",
+        "06"
       ]
     }
   ]

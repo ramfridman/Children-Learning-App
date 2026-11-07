@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "eng.adj-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "eng",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "חַם, קַר, שָׂמֵחַ, עָצוּב"
+    }
+  ],
+  "skills": [
+    "ENG-A-10"
+  ],
+  "items": [
+    "eng.a10.i01",
+    "eng.a10.i02",
+    "eng.a10.i03",
+    "eng.a10.i04"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "sequence": 25
+}

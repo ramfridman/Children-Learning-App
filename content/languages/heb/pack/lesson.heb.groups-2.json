@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.groups-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מָה הִגִּיעַ בְּטָעוּת?"
+    }
+  ],
+  "skills": [
+    "HEB-A-03"
+  ],
+  "items": [
+    "heb.a03.04",
+    "heb.a03.05",
+    "heb.a03.06"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 24
+}

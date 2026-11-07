@@ -38,6 +38,10 @@
       "file": "apple.svg"
     },
     {
+      "id": "apple_lit",
+      "file": "apple_lit.svg"
+    },
+    {
       "id": "ball",
       "file": "ball.svg"
     },
@@ -52,6 +56,10 @@
     {
       "id": "ball_green",
       "file": "ball_green.svg"
+    },
+    {
+      "id": "ball_lit",
+      "file": "ball_lit.svg"
     },
     {
       "id": "ball_red",
@@ -88,6 +96,10 @@
     {
       "id": "bird",
       "file": "bird.svg"
+    },
+    {
+      "id": "blank",
+      "file": "blank.svg"
     },
     {
       "id": "blocks",
@@ -134,10 +146,6 @@
       "file": "body_teeth.svg"
     },
     {
-      "id": "body_tummy",
-      "file": "body_tummy.svg"
-    },
-    {
       "id": "book",
       "file": "book.svg"
     },
@@ -156,6 +164,10 @@
     {
       "id": "car",
       "file": "car.svg"
+    },
+    {
+      "id": "car_lit",
+      "file": "car_lit.svg"
     },
     {
       "id": "carrot",
@@ -214,8 +226,28 @@
       "file": "dog.svg"
     },
     {
+      "id": "dog_shaggy",
+      "file": "dog_shaggy.svg"
+    },
+    {
       "id": "doll",
       "file": "doll.svg"
+    },
+    {
+      "id": "doll_body",
+      "file": "doll_body.svg"
+    },
+    {
+      "id": "doll_eyes",
+      "file": "doll_eyes.svg"
+    },
+    {
+      "id": "doll_mouth",
+      "file": "doll_mouth.svg"
+    },
+    {
+      "id": "doll_nose",
+      "file": "doll_nose.svg"
     },
     {
       "id": "dress",
@@ -224,6 +256,10 @@
     {
       "id": "duck",
       "file": "duck.svg"
+    },
+    {
+      "id": "duck_lit",
+      "file": "duck_lit.svg"
     },
     {
       "id": "egg",
@@ -266,6 +302,10 @@
       "file": "fam_sister.svg"
     },
     {
+      "id": "fam_someone",
+      "file": "fam_someone.svg"
+    },
+    {
       "id": "fish",
       "file": "fish.svg"
     },
@@ -288,6 +328,10 @@
     {
       "id": "grapes",
       "file": "grapes.svg"
+    },
+    {
+      "id": "hat",
+      "file": "hat.svg"
     },
     {
       "id": "hat_warm",
@@ -330,12 +374,28 @@
       "file": "mika_arrive.svg"
     },
     {
+      "id": "mika_body",
+      "file": "mika_body.svg"
+    },
+    {
       "id": "mika_gift",
       "file": "mika_gift.svg"
     },
     {
+      "id": "mika_happy",
+      "file": "mika_happy.svg"
+    },
+    {
       "id": "mika_leave",
       "file": "mika_leave.svg"
+    },
+    {
+      "id": "mika_no",
+      "file": "mika_no.svg"
+    },
+    {
+      "id": "mika_yes",
+      "file": "mika_yes.svg"
     },
     {
       "id": "milk",
@@ -348,6 +408,14 @@
     {
       "id": "mouse",
       "file": "mouse.svg"
+    },
+    {
+      "id": "neighbour_arrive",
+      "file": "neighbour_arrive.svg"
+    },
+    {
+      "id": "neighbour_leave",
+      "file": "neighbour_leave.svg"
     },
     {
       "id": "onion",
@@ -394,6 +462,14 @@
       "file": "scarf.svg"
     },
     {
+      "id": "scene_picnic",
+      "file": "scene_picnic.svg"
+    },
+    {
+      "id": "scene_toybox",
+      "file": "scene_toybox.svg"
+    },
+    {
       "id": "set_balls_1",
       "file": "set_balls_1.svg"
     },
@@ -434,6 +510,30 @@
       "file": "set_ducks_5.svg"
     },
     {
+      "id": "set_tenframe_10",
+      "file": "set_tenframe_10.svg"
+    },
+    {
+      "id": "set_tenframe_5",
+      "file": "set_tenframe_5.svg"
+    },
+    {
+      "id": "set_tenframe_6",
+      "file": "set_tenframe_6.svg"
+    },
+    {
+      "id": "set_tenframe_7",
+      "file": "set_tenframe_7.svg"
+    },
+    {
+      "id": "set_tenframe_8",
+      "file": "set_tenframe_8.svg"
+    },
+    {
+      "id": "set_tenframe_9",
+      "file": "set_tenframe_9.svg"
+    },
+    {
       "id": "shirt",
       "file": "shirt.svg"
     },
@@ -456,6 +556,66 @@
     {
       "id": "squirrel",
       "file": "squirrel.svg"
+    },
+    {
+      "id": "st1_cat",
+      "file": "st1_cat.svg"
+    },
+    {
+      "id": "st1_p1",
+      "file": "st1_p1.svg"
+    },
+    {
+      "id": "st1_p2",
+      "file": "st1_p2.svg"
+    },
+    {
+      "id": "st1_p3",
+      "file": "st1_p3.svg"
+    },
+    {
+      "id": "st1_sleep",
+      "file": "st1_sleep.svg"
+    },
+    {
+      "id": "st2_bear",
+      "file": "st2_bear.svg"
+    },
+    {
+      "id": "st2_p1",
+      "file": "st2_p1.svg"
+    },
+    {
+      "id": "st2_p2",
+      "file": "st2_p2.svg"
+    },
+    {
+      "id": "st2_p3",
+      "file": "st2_p3.svg"
+    },
+    {
+      "id": "st2_sleep",
+      "file": "st2_sleep.svg"
+    },
+    {
+      "id": "st3_beach",
+      "file": "st3_beach.svg"
+    },
+    {
+      "id": "st3_boy",
+      "file": "st3_boy.svg"
+    },
+    {
+      "id": "st3_p1",
+      "file": "st3_p1.svg"
+    },
+    {
+      "id": "st3_p2",
+      "file": "st3_p2.svg"
+    },
+    {
+      "id": "st3_p3",
+      "file": "st3_p3.svg"
     },
     {
       "id": "stacker",

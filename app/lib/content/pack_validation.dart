@@ -782,7 +782,7 @@ List<Problem> validatePack({
           checkTag(file, 'answer.classifiers[$i].misconception', c['misconception']);
         }
     }
-    _targetClips(file, a, checkVo);
+    _targetClips(file, a, say, checkVo);
     checkLs01(
       file,
       a,
@@ -825,7 +825,7 @@ List<Problem> validatePack({
     }
     final Map<String, Object?> cel = l['celebration']! as Map<String, Object?>;
     checkVo(file, 'celebration.vo', cel['vo']);
-    _targetClips(file, l, checkVo);
+    _targetClips(file, l, say, checkVo);
     _hebrew(file, l, say, pointed: l['band'] != 'C');
   });
 
@@ -1408,7 +1408,7 @@ void _languageFieldsInLands(String file, Map<String, Object?> a, void Function(S
         final bool option = RegExp(r'^answer\.options\[\d+\]$').hasMatch(path);
         final bool own =
             const <String>{'show', 'clips', 'pole', 'pairWith'}.contains(k) ||
-            (k == 'target' && v is String) ||
+            ((k == 'target' || k == 'target2') && v is String) ||
             (option && const <String>{'text', 'clip', 'reveal'}.contains(k));
         if (own) {
           say(file, here, 'belongs to a language course, not to the lands');
@@ -1953,12 +1953,25 @@ void _story(
 }
 
 /// The second clip of a spoken line (`target`) names a voice line of the pack, and only a language course has one.
-void _targetClips(String file, Map<String, Object?> a, void Function(String, String, Object?) checkVo) {
+void _targetClips(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say,
+  void Function(String, String, Object?) checkVo,
+) {
   void walk(Object? node, String path) {
     if (node is Map<String, Object?>) {
+      // A second target clip follows a first one: a line cannot have the second alone.
+      if (node['target2'] is String && node['target'] is! String) {
+        say(
+          file,
+          path.isEmpty ? 'target2' : '$path.target2',
+          'is the clip after `target`: the line has no `target`',
+        );
+      }
       node.forEach((String k, Object? v) {
         final String here = path.isEmpty ? k : '$path.$k';
-        if (k == 'target' && v is String) {
+        if ((k == 'target' || k == 'target2') && v is String) {
           checkVo(file, here, v);
         } else {
           walk(v, here);

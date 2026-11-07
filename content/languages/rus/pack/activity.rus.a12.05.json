@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_2",
+      "vo": "vo:rus.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:rus.ch_kto_eto"

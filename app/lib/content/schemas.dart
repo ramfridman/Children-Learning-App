@@ -185,6 +185,9 @@ const SArray _caption = SArray(
 /// Hebrew frame clip (a two-clip line), and a target word to show in a chip under the line (never inside the Hebrew).
 const Map<String, SField> _lineExtras = <String, SField>{
   'target': SField(_vo, required: false),
+  // A second target clip, played right after the first: a question and its answer, or the two sounds of a same-or-different item. Only
+  // with a first one (the validator).
+  'target2': SField(_vo, required: false),
   'show': SField(SString(minLength: 1, maxLength: _targetTextMax), required: false),
 };
 
@@ -526,7 +529,9 @@ const SObject misconceptionSchema = SObject(<String, SField>{
   // The family of the tag (frame section 4.1), for the parent view and for the rules that look at a kind of mistake: only a tag of the family
   // SHAPE may stand on an option that has no sound of its own (L5-1). Optional: the lands have none.
   'family': SField(SEnum(tagFamilies), required: false),
-  'skills': SField(SArray(_skill, minItems: 1, maxItems: 10)),
+  // A language tag is used all over its course (eng.lis.sem names 12 skills of Band A alone), so the bound is the size of a course;
+  // the array stays bounded and every entry is a skill id, so nothing a hostile pack puts here can grow.
+  'skills': SField(SArray(_skill, minItems: 1, maxItems: 60)),
   'parentText': SField(SString(minLength: 1, maxLength: 240)),
   // Something a parent can do at home in about five minutes (M7, pack 0.3.0). Plain Hebrew for the parent.
   'homeActivity': SField(_caption, required: false),

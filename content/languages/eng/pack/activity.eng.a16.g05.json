@@ -1,0 +1,178 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a16.g05",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "story",
+  "templateVersion": "1.0",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-16",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a16-g05",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "answer the question the story asks",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "סִפּוּר בִּתְמוּנוֹת"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_ins_box",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מַה יֵּשׁ בַּקֻּפְסָה? הַקְשִׁיבוּ לְפִיפּ."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_5",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בְּדִיּוּק!"
+        }
+      ],
+      "target": "vo:eng.en_boat"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ],
+      "target": "vo:eng.en_boat"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:eng.he_hint_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
+        }
+      ],
+      "target": "vo:eng.en_boat"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:eng.he_gl_boat",
+      "caption": [
+        {
+          "t": "he",
+          "v": "סִירָה"
+        }
+      ],
+      "target": "vo:eng.en_boat"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:eng.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:eng.en_boat"
+    }
+  ],
+  "scene": {
+    "pages": [
+      {
+        "picture": "asset:present",
+        "clips": [
+          "vo:eng.en_whats_in_the_box"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      },
+      {
+        "picture": "asset:present",
+        "clips": [
+          "vo:eng.en_isit_boat",
+          "vo:eng.en_yes"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      }
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "dialogic",
+    "pauseAfter": 1,
+    "question": {
+      "vo": "vo:eng.he_ins_box_pick",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אָז מַה יֵּשׁ בַּקֻּפְסָה? גְּעוּ בַּתְּמוּנָה."
+        }
+      ]
+    },
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:boat",
+        "label": "תְּמוּנָה"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:drum",
+        "label": "תְּמוּנָה",
+        "misconception": "eng.lis.l1_guess"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:bike",
+        "label": "תְּמוּנָה",
+        "misconception": "eng.lis.l1_guess"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

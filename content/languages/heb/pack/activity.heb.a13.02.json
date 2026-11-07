@@ -1,0 +1,150 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a13.02",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "build_pattern",
+  "templateVersion": "1.1",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-13",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "a13-02",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "put the pictures in the order of the story",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנוֹת לְסַדֵּר"
+  },
+  "prompt": {
+    "vo": "vo:heb.i_order",
+    "caption": [
+      {
+        "t": "he",
+        "v": "סַדְּרוּ אֶת הַתְּמוּנוֹת לְפִי הַסִּפּוּר."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_5",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מְצָאתֶם!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:heb.ol.story_order",
+        "vo": "vo:heb.i_first",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מַה קָּרָה קֹדֶם?"
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:heb.i_order",
+      "caption": [
+        {
+          "t": "he",
+          "v": "סַדְּרוּ אֶת הַתְּמוּנוֹת לְפִי הַסִּפּוּר."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:heb.fb_story_world",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִרְאֶה מַה קָּרָה בַּסִּפּוּר שֶׁלָּנוּ."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:heb.show",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַעֲשֶׂה אֶת זֶה יַחַד."
+        }
+      ]
+    }
+  ],
+  "scene": {
+    "slots": 3,
+    "palette": [
+      "asset:s2_p5",
+      "asset:s2_p2",
+      "asset:s2_p4"
+    ],
+    "clips": [
+      "vo:heb.heb_a_s2_p2",
+      "vo:heb.heb_a_s2_p4",
+      "vo:heb.heb_a_s2_p5"
+    ]
+  },
+  "answer": {
+    "type": "build",
+    "order": [
+      1,
+      2,
+      0
+    ],
+    "misconception": "heb.ol.story_order"
+  }
+}

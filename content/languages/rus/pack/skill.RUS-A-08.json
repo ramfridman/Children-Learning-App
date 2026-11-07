@@ -14,7 +14,8 @@
   "strand": "voc",
   "prerequisites": [],
   "representations": [
-    "pictorial"
+    "pictorial",
+    "embodied"
   ],
   "misconceptions": [
     "rus.lis.sem",

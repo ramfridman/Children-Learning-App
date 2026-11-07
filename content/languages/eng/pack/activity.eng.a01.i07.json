@@ -1,0 +1,149 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a01.i07",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "puppet_talk",
+  "templateVersion": "1.0",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-01",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a01-i07",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 2,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "answer the puppet",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "בֻּבָּה שֶׁמְּדַבֶּרֶת"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_ins_bubble",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מָה עוֹנִים? גְּעוּ בַּבֻּעָה."
+      }
+    ],
+    "target": "vo:eng.en_pip_hello",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_8",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כׇּל הַכָּבוֹד!"
+        }
+      ],
+      "target": "vo:eng.en_hello"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ],
+      "target": "vo:eng.en_hello"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:eng.he_hint_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
+        }
+      ],
+      "target": "vo:eng.en_hello"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:eng.he_gl_hello",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שָׁלוֹם"
+        }
+      ],
+      "target": "vo:eng.en_hello"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:eng.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:eng.en_hello"
+    }
+  ],
+  "scene": {
+    "picture": "asset:pip_arrive"
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "bubble",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:act_wave",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_hello"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:pip_leave",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_goodbye",
+        "misconception": "eng.lis.sem"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

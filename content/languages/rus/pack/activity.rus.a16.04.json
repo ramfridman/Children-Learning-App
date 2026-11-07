@@ -1,0 +1,114 @@
+{
+  "schema": "activity/v1",
+  "id": "rus.a16.04",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "story",
+  "templateVersion": "1.0",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "RUS-A-16",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a16-04",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "listen to the story",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "סִפּוּר בִּתְמוּנוֹת"
+  },
+  "prompt": {
+    "vo": "vo:rus.f21",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נַקְשִׁיב לְסִפּוּר."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:rus.he_fb_right_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:rus.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scene": {
+    "pages": [
+      {
+        "picture": "asset:st2_p1",
+        "clips": [
+          "vo:rus.st2_t",
+          "vo:rus.st2_1"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      },
+      {
+        "picture": "asset:st2_p2",
+        "clips": [
+          "vo:rus.st2_2"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      },
+      {
+        "picture": "asset:st2_p3",
+        "clips": [
+          "vo:rus.st2_3"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      }
+    ]
+  },
+  "answer": {
+    "type": "none",
+    "mode": "listen"
+  }
+}

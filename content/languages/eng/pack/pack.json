@@ -50,6 +50,26 @@
       "file": "ball_2.svg"
     },
     {
+      "id": "ball_blue",
+      "file": "ball_blue.svg"
+    },
+    {
+      "id": "ball_lit",
+      "file": "ball_lit.svg"
+    },
+    {
+      "id": "ball_pair",
+      "file": "ball_pair.svg"
+    },
+    {
+      "id": "ball_red",
+      "file": "ball_red.svg"
+    },
+    {
+      "id": "ball_yellow",
+      "file": "ball_yellow.svg"
+    },
+    {
       "id": "balloon_blue",
       "file": "balloon_blue.svg"
     },
@@ -84,6 +104,10 @@
     {
       "id": "bird_2",
       "file": "bird_2.svg"
+    },
+    {
+      "id": "blank",
+      "file": "blank.svg"
     },
     {
       "id": "boat",
@@ -190,6 +214,10 @@
       "file": "dog_2.svg"
     },
     {
+      "id": "dog_big",
+      "file": "dog_big.svg"
+    },
+    {
       "id": "drum",
       "file": "drum.svg"
     },
@@ -222,8 +250,24 @@
       "file": "duck_2.svg"
     },
     {
+      "id": "duckling",
+      "file": "duckling.svg"
+    },
+    {
+      "id": "duckling_lit",
+      "file": "duckling_lit.svg"
+    },
+    {
       "id": "egg",
       "file": "egg.svg"
+    },
+    {
+      "id": "elephant",
+      "file": "elephant.svg"
+    },
+    {
+      "id": "fam_all",
+      "file": "fam_all.svg"
     },
     {
       "id": "fam_baby",
@@ -254,6 +298,10 @@
       "file": "fam_sister.svg"
     },
     {
+      "id": "fam_someone",
+      "file": "fam_someone.svg"
+    },
+    {
       "id": "fish",
       "file": "fish.svg"
     },
@@ -280,6 +328,10 @@
     {
       "id": "mika_arrive",
       "file": "mika_arrive.svg"
+    },
+    {
+      "id": "mika_body",
+      "file": "mika_body.svg"
     },
     {
       "id": "mika_cold",
@@ -342,6 +394,10 @@
       "file": "pip_cold.svg"
     },
     {
+      "id": "pip_family",
+      "file": "pip_family.svg"
+    },
+    {
       "id": "pip_happy",
       "file": "pip_happy.svg"
     },
@@ -352,6 +408,10 @@
     {
       "id": "pip_sad",
       "file": "pip_sad.svg"
+    },
+    {
+      "id": "present",
+      "file": "present.svg"
     },
     {
       "id": "set_balls_1",
@@ -394,12 +454,44 @@
       "file": "set_ducks_5.svg"
     },
     {
+      "id": "story_bounce_1",
+      "file": "story_bounce_1.svg"
+    },
+    {
+      "id": "story_bounce_2",
+      "file": "story_bounce_2.svg"
+    },
+    {
+      "id": "story_bounce_3",
+      "file": "story_bounce_3.svg"
+    },
+    {
+      "id": "story_bounce_4",
+      "file": "story_bounce_4.svg"
+    },
+    {
+      "id": "story_bounce_5",
+      "file": "story_bounce_5.svg"
+    },
+    {
+      "id": "story_bounce_6",
+      "file": "story_bounce_6.svg"
+    },
+    {
       "id": "tea",
       "file": "tea.svg"
     },
     {
       "id": "teddy",
       "file": "teddy.svg"
+    },
+    {
+      "id": "thumb_down",
+      "file": "thumb_down.svg"
+    },
+    {
+      "id": "thumb_up",
+      "file": "thumb_up.svg"
     },
     {
       "id": "water",

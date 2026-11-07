@@ -1,403 +1,437 @@
 {
- "skill": {
-  "id": "RUS-A-08",
-  "strand": "voc",
-  "title": "צַעֲצוּעִים",
-  "setCoverage": true
- },
- "items": [
-  {
-   "id": "01",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "w-mjach",
-   "options": [
-    {
-     "pic": "ball",
-     "clip": "w-mjach"
-    },
-    {
-     "pic": "balloon",
-     "clip": "w-sharik"
-    },
-    {
-     "pic": "blocks",
-     "clip": "w-kubiki"
-    }
-   ],
-   "wrong": {
-    "balloon": "sem",
-    "blocks": "sem"
-   }
+  "skill": {
+    "id": "RUS-A-08",
+    "strand": "voc",
+    "title": "צַעֲצוּעִים",
+    "setCoverage": true
   },
-  {
-   "id": "02",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "w-kukla",
-   "options": [
+  "items": [
     {
-     "pic": "doll",
-     "clip": "w-kukla"
+      "id": "01",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-mjach",
+      "options": [
+        {
+          "pic": "ball",
+          "clip": "w-mjach"
+        },
+        {
+          "pic": "balloon",
+          "clip": "w-sharik"
+        },
+        {
+          "pic": "blocks",
+          "clip": "w-kubiki"
+        }
+      ],
+      "wrong": {
+        "balloon": "sem",
+        "blocks": "sem"
+      }
     },
     {
-     "pic": "blocks",
-     "clip": "w-kubiki"
+      "id": "02",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-kukla",
+      "options": [
+        {
+          "pic": "doll",
+          "clip": "w-kukla"
+        },
+        {
+          "pic": "blocks",
+          "clip": "w-kubiki"
+        },
+        {
+          "pic": "teddy",
+          "clip": "w-mishka"
+        }
+      ],
+      "wrong": {
+        "blocks": "sound",
+        "teddy": "sem"
+      }
     },
     {
-     "pic": "teddy",
-     "clip": "w-mishka"
+      "id": "03",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-mashina",
+      "options": [
+        {
+          "pic": "car",
+          "clip": "w-mashina"
+        },
+        {
+          "pic": "ball",
+          "clip": "w-mjach"
+        },
+        {
+          "pic": "top",
+          "clip": "w-jula"
+        }
+      ],
+      "wrong": {
+        "ball": "sem",
+        "top": "sem"
+      }
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-kubiki",
+      "options": [
+        {
+          "pic": "blocks",
+          "clip": "w-kubiki"
+        },
+        {
+          "pic": "doll",
+          "clip": "w-kukla"
+        },
+        {
+          "pic": "stacker",
+          "clip": "w-piramidka"
+        }
+      ],
+      "wrong": {
+        "doll": "sound",
+        "stacker": "sem"
+      }
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-mishka",
+      "options": [
+        {
+          "pic": "teddy",
+          "clip": "w-mishka"
+        },
+        {
+          "pic": "mouse",
+          "clip": "w-mysh"
+        },
+        {
+          "pic": "doll",
+          "clip": "w-kukla"
+        }
+      ],
+      "wrong": {
+        "mouse": "sound",
+        "doll": "sem"
+      }
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-sharik",
+      "options": [
+        {
+          "pic": "balloon",
+          "clip": "w-sharik"
+        },
+        {
+          "pic": "ball",
+          "clip": "w-mjach"
+        },
+        {
+          "pic": "blocks",
+          "clip": "w-kubiki"
+        }
+      ],
+      "wrong": {
+        "ball": "sem",
+        "blocks": "sem"
+      }
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-piramidka",
+      "options": [
+        {
+          "pic": "stacker",
+          "clip": "w-piramidka"
+        },
+        {
+          "pic": "blocks",
+          "clip": "w-kubiki"
+        },
+        {
+          "pic": "top",
+          "clip": "w-jula"
+        }
+      ],
+      "wrong": {
+        "blocks": "sem",
+        "top": "sem"
+      }
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-kniga",
+      "options": [
+        {
+          "pic": "book",
+          "clip": "w-kniga"
+        },
+        {
+          "pic": "pencil",
+          "clip": "w-karandash"
+        },
+        {
+          "pic": "doll",
+          "clip": "w-kukla"
+        }
+      ],
+      "wrong": {
+        "pencil": "sem",
+        "doll": "sem"
+      }
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-karandash",
+      "options": [
+        {
+          "pic": "pencil",
+          "clip": "w-karandash"
+        },
+        {
+          "pic": "book",
+          "clip": "w-kniga"
+        },
+        {
+          "pic": "car",
+          "clip": "w-mashina"
+        }
+      ],
+      "wrong": {
+        "book": "sem",
+        "car": "sem"
+      }
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-jula",
+      "options": [
+        {
+          "pic": "top",
+          "clip": "w-jula"
+        },
+        {
+          "pic": "ball",
+          "clip": "w-mjach"
+        },
+        {
+          "pic": "stacker",
+          "clip": "w-piramidka"
+        }
+      ],
+      "wrong": {
+        "ball": "sem",
+        "stacker": "sem"
+      }
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-mjach",
+      "options": [
+        {
+          "pic": "ball",
+          "clip": "w-mjach"
+        },
+        {
+          "pic": "balloon",
+          "clip": "w-sharik"
+        },
+        {
+          "pic": "doll",
+          "clip": "w-kukla"
+        }
+      ],
+      "wrong": {
+        "balloon": "sem",
+        "doll": "sem"
+      },
+      "purpose": "probe"
+    },
+    {
+      "id": "11",
+      "kind": "listen_do",
+      "frame": "f12",
+      "mode": "drag",
+      "picture": "scene-toybox",
+      "target": "w-mjach",
+      "options": [
+        "ball",
+        "balloon",
+        "blocks"
+      ],
+      "right": "ball",
+      "wrong": {
+        "balloon": "sem",
+        "blocks": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "12",
+      "kind": "listen_do",
+      "frame": "f12",
+      "mode": "drag",
+      "picture": "scene-toybox",
+      "target": "w-kukla",
+      "options": [
+        "doll",
+        "blocks",
+        "teddy"
+      ],
+      "right": "doll",
+      "wrong": {
+        "blocks": "sound",
+        "teddy": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "13",
+      "kind": "listen_do",
+      "frame": "f12",
+      "mode": "drag",
+      "picture": "scene-toybox",
+      "target": "w-mishka",
+      "options": [
+        "teddy",
+        "mouse",
+        "doll"
+      ],
+      "right": "teddy",
+      "wrong": {
+        "mouse": "sound",
+        "doll": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "14",
+      "kind": "listen_do",
+      "frame": "f12",
+      "purpose": "check",
+      "mode": "drag",
+      "picture": "scene-toybox",
+      "target": "w-kniga",
+      "options": [
+        "book",
+        "pencil",
+        "doll"
+      ],
+      "right": "book",
+      "wrong": {
+        "pencil": "sem",
+        "doll": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "15",
+      "kind": "listen_do",
+      "frame": "f12",
+      "purpose": "check",
+      "mode": "drag",
+      "picture": "scene-toybox",
+      "target": "w-jula",
+      "options": [
+        "top",
+        "ball",
+        "stacker"
+      ],
+      "right": "top",
+      "wrong": {
+        "ball": "sem",
+        "stacker": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
     }
-   ],
-   "wrong": {
-    "blocks": "sound",
-    "teddy": "sem"
-   }
-  },
-  {
-   "id": "03",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "w-mashina",
-   "options": [
-    {
-     "pic": "car",
-     "clip": "w-mashina"
-    },
-    {
-     "pic": "ball",
-     "clip": "w-mjach"
-    },
-    {
-     "pic": "top",
-     "clip": "w-jula"
-    }
-   ],
-   "wrong": {
-    "ball": "sem",
-    "top": "sem"
-   }
-  },
-  {
-   "id": "04",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "w-kubiki",
-   "options": [
-    {
-     "pic": "blocks",
-     "clip": "w-kubiki"
-    },
-    {
-     "pic": "doll",
-     "clip": "w-kukla"
-    },
-    {
-     "pic": "stacker",
-     "clip": "w-piramidka"
-    }
-   ],
-   "wrong": {
-    "doll": "sound",
-    "stacker": "sem"
-   }
-  },
-  {
-   "id": "05",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "w-mishka",
-   "options": [
-    {
-     "pic": "teddy",
-     "clip": "w-mishka"
-    },
-    {
-     "pic": "mouse",
-     "clip": "w-mysh"
-    },
-    {
-     "pic": "doll",
-     "clip": "w-kukla"
-    }
-   ],
-   "wrong": {
-    "mouse": "sound",
-    "doll": "sem"
-   }
-  },
-  {
-   "id": "06",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "w-sharik",
-   "options": [
-    {
-     "pic": "balloon",
-     "clip": "w-sharik"
-    },
-    {
-     "pic": "ball",
-     "clip": "w-mjach"
-    },
-    {
-     "pic": "blocks",
-     "clip": "w-kubiki"
-    }
-   ],
-   "wrong": {
-    "ball": "sem",
-    "blocks": "sem"
-   }
-  },
-  {
-   "id": "07",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "w-piramidka",
-   "options": [
-    {
-     "pic": "stacker",
-     "clip": "w-piramidka"
-    },
-    {
-     "pic": "blocks",
-     "clip": "w-kubiki"
-    },
-    {
-     "pic": "top",
-     "clip": "w-jula"
-    }
-   ],
-   "wrong": {
-    "blocks": "sem",
-    "top": "sem"
-   }
-  },
-  {
-   "id": "08",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "w-kniga",
-   "options": [
-    {
-     "pic": "book",
-     "clip": "w-kniga"
-    },
-    {
-     "pic": "pencil",
-     "clip": "w-karandash"
-    },
-    {
-     "pic": "doll",
-     "clip": "w-kukla"
-    }
-   ],
-   "wrong": {
-    "pencil": "sem",
-    "doll": "sem"
-   }
-  },
-  {
-   "id": "09",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "w-karandash",
-   "options": [
-    {
-     "pic": "pencil",
-     "clip": "w-karandash"
-    },
-    {
-     "pic": "book",
-     "clip": "w-kniga"
-    },
-    {
-     "pic": "car",
-     "clip": "w-mashina"
-    }
-   ],
-   "wrong": {
-    "book": "sem",
-    "car": "sem"
-   }
-  },
-  {
-   "id": "10",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "w-jula",
-   "options": [
-    {
-     "pic": "top",
-     "clip": "w-jula"
-    },
-    {
-     "pic": "ball",
-     "clip": "w-mjach"
-    },
-    {
-     "pic": "stacker",
-     "clip": "w-piramidka"
-    }
-   ],
-   "wrong": {
-    "ball": "sem",
-    "stacker": "sem"
-   }
-  },
-  {
-   "id": "p01",
-   "kind": "tap",
-   "frame": "f01",
-   "target": "w-mjach",
-   "options": [
-    {
-     "pic": "ball",
-     "clip": "w-mjach"
-    },
-    {
-     "pic": "balloon",
-     "clip": "w-sharik"
-    },
-    {
-     "pic": "doll",
-     "clip": "w-kukla"
-    }
-   ],
-   "wrong": {
-    "balloon": "sem",
-    "doll": "sem"
-   },
-   "purpose": "probe"
-  }
- ],
- "lessons": [
-  {
-   "id": "toys-1",
-   "title": "צַעֲצוּעִים",
-   "items": [
-    "01",
-    "02",
-    "03",
-    "04",
-    "05"
-   ]
-  },
-  {
-   "id": "toys-2",
-   "title": "צַעֲצוּעִים",
-   "items": [
-    "06",
-    "07",
-    "08",
-    "09",
-    "10"
-   ]
-  }
- ],
- "teach": [
-  [
-   "w-mjach",
-   "w-kukla",
-   "w-mashina",
-   "w-kubiki",
-   "w-mishka"
   ],
-  [
-   "w-sharik",
-   "w-piramidka",
-   "w-kniga",
-   "w-karandash",
-   "w-jula"
-  ]
- ],
- "routes": {
-  "new": "teach in two sets; items 01 to 15",
-  "heritage": {
-   "teach": false,
-   "order": [
-    "11-15",
-    "01-10"
-   ]
-  },
-  "reader": "as heritage or new"
- },
- "waiting": [
-  {
-   "id": "11",
-   "template": "listen_do",
-   "mode": "drag",
-   "frame": "f12",
-   "target": "w-mjach",
-   "scene": "scene-toybox",
-   "right": "ball",
-   "wrong": {
-    "balloon": "sem",
-    "blocks": "sem"
-   },
-   "check": false,
-   "why": "LS11 recipe (tidy-up: drag the toy into the box; scene-toybox)"
-  },
-  {
-   "id": "12",
-   "template": "listen_do",
-   "mode": "drag",
-   "frame": "f12",
-   "target": "w-kukla",
-   "scene": "scene-toybox",
-   "right": "doll",
-   "wrong": {
-    "blocks": "sound",
-    "teddy": "sem"
-   },
-   "check": false,
-   "why": "LS11 recipe (tidy-up: drag the toy into the box; scene-toybox)"
-  },
-  {
-   "id": "13",
-   "template": "listen_do",
-   "mode": "drag",
-   "frame": "f12",
-   "target": "w-mishka",
-   "scene": "scene-toybox",
-   "right": "teddy",
-   "wrong": {
-    "mouse": "sound",
-    "doll": "sem"
-   },
-   "check": false,
-   "why": "LS11 recipe (tidy-up: drag the toy into the box; scene-toybox)"
-  },
-  {
-   "id": "14",
-   "template": "listen_do",
-   "mode": "drag",
-   "frame": "f12",
-   "target": "w-kniga",
-   "scene": "scene-toybox",
-   "right": "book",
-   "wrong": {
-    "pencil": "sem",
-    "doll": "sem"
-   },
-   "check": true,
-   "why": "LS11 recipe (tidy-up: drag the toy into the box; scene-toybox)"
-  },
-  {
-   "id": "15",
-   "template": "listen_do",
-   "mode": "drag",
-   "frame": "f12",
-   "target": "w-jula",
-   "scene": "scene-toybox",
-   "right": "top",
-   "wrong": {
-    "ball": "sem",
-    "stacker": "sem"
-   },
-   "check": true,
-   "why": "LS11 recipe (tidy-up: drag the toy into the box; scene-toybox)"
+  "lessons": [
+    {
+      "id": "toys-1",
+      "title": "צַעֲצוּעִים",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05"
+      ]
+    },
+    {
+      "id": "toys-2",
+      "title": "צַעֲצוּעִים",
+      "items": [
+        "06",
+        "07",
+        "08",
+        "09",
+        "10"
+      ]
+    },
+    {
+      "id": "toys-more",
+      "title": "צַעֲצוּעִים",
+      "items": [
+        "11",
+        "12",
+        "13"
+      ]
+    }
+  ],
+  "teach": [
+    [
+      "w-mjach",
+      "w-kukla",
+      "w-mashina",
+      "w-kubiki",
+      "w-mishka"
+    ],
+    [
+      "w-sharik",
+      "w-piramidka",
+      "w-kniga",
+      "w-karandash",
+      "w-jula"
+    ]
+  ],
+  "routes": {
+    "new": "teach in two sets; items 01 to 15",
+    "heritage": {
+      "teach": false,
+      "order": [
+        "11-15",
+        "01-10"
+      ]
+    },
+    "reader": "as heritage or new"
   }
- ]
 }

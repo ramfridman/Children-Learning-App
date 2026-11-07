@@ -1,0 +1,40 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.say-it-more4",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "אוֹמְרִים מִלָּה"
+    }
+  ],
+  "skills": [
+    "RUS-A-15"
+  ],
+  "items": [
+    "rus.a15.16",
+    "rus.a15.16t",
+    "rus.a15.17",
+    "rus.a15.17t",
+    "rus.a15.18",
+    "rus.a15.18t",
+    "rus.a15.19",
+    "rus.a15.19t",
+    "rus.a15.20",
+    "rus.a15.20t"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 50
+}

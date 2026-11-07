@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.story-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "סִפּוּר בְּשָׁלוֹשׁ תְּמוּנוֹת"
+    }
+  ],
+  "skills": [
+    "RUS-A-16"
+  ],
+  "items": [
+    "rus.a16.01",
+    "rus.a16.02",
+    "rus.a16.03"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 52
+}

@@ -22,6 +22,10 @@ The script holds what is the same for every item of a kind (the file shape, the 
 the voice ids); the teacher's files hold what only a teacher can decide. It checks what it can before the pack builder does, and says
 every problem it finds at once. Pictures are copied from content/languages/pictures; nothing is voiced or paid here. Every Hebrew
 text it writes is `needs-editor` until a person approves it. Standard library only.
+
+The recipes of the templates (what a kind of item becomes: tap, listen and do, puppet talk, say it, chant, drum, story, count, pairs, sort,
+trace, sequence, the own-name steps) are in tools/lang_recipes.py (class `Recipes`, which `Course` takes); this file reads, checks and
+writes.
 """
 import csv
 import glob
@@ -32,18 +36,23 @@ import sys
 
 TOOLS = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(TOOLS, '..'))
+if TOOLS not in sys.path:  # `python -I` keeps the script's own folder off the path
+    sys.path.insert(0, TOOLS)
+import lang_recipes  # noqa: E402
 
 COURSES = ('eng', 'heb', 'rus')
 DOMAIN = 'languages'
 # The template versions the recipes write (app/lib/content/schemas.dart `supportedTemplates` must be at least these).
-TEMPLATE_VERSIONS = {'tap_answer': '1.3'}
-REPRESENTATIONS = ('concrete', 'pictorial', 'story', 'embodied', 'symbolic')
-PURPOSES = ('learn', 'practice', 'probe', 'repair', 'check')
-CHECK_TYPES = ('practice', 'transfer', 'reverse', 'error_spotting', 'explain_back', 'predict')
+TEMPLATE_VERSIONS = {'tap_answer': '1.3', 'story': '1.0', 'listen_do': '1.0', 'sing_along': '1.0', 'puppet_talk': '1.0',
+                     'sound_boxes': '1.0', 'count_tap': '1.1', 'sort_drag': '1.1', 'match_pairs': '1.1', 'build_pattern': '1.1',
+                     'say_it': '1.0', 'trace': '1.0'}
+REPRESENTATIONS = lang_recipes.REPRESENTATIONS
+# The kinds of item a unit file may hold, and the recipe each one has (tools/lang_recipes*.py).
+RECIPES = {'tap': 'tap', 'listen_do': 'listen_do', 'puppet': 'puppet', 'say': 'say', 'chant': 'chant', 'drum': 'drum', 'story': 'story',
+           'count': 'count', 'pairs': 'pairs', 'sort': 'sort', 'sequence': 'sequence', 'trace': 'trace'}
 TAG_KINDS = ('diagnostic', 'on_the_way', 'accent', 'practice')
 FAMILIES = ('DIR', 'NAME', 'SHAPE', 'STROKE', 'CONTRAST', 'SEGMENT', 'RHYME', 'VOWEL', 'CODE', 'GRAMMAR', 'PRINT', 'GUESS',
             'MEANING', 'ACCENT', 'FLUENCY')
-HINT_ACTIONS = ('replay_prompt_slow', 'highlight_objects_sequentially', 'show_fingers', 'worked_example')
 # What a skill file may carry beyond the fields the generator derives (frame section 3 and D-6 of docs/milestones/L0.md).
 SKILL_EXTRAS = ('worldObject', 'childLine', 'core', 'bundle', 'setCoverage', 'soundRight', 'letters', 'writing', 'graphemes',
                 'tricky', 'binary', 'masteryRequires')
@@ -69,7 +78,7 @@ def slug(text):
     return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
 
 
-class Course:
+class Course(lang_recipes.Recipes):
     """One course's spec, read and checked, and the files it makes."""
 
     def __init__(self, course, root=ROOT):
@@ -83,6 +92,9 @@ class Course:
         self.used_pictures = {}  # asset id -> picture file id
         self.skills = {}  # id -> skill info
         self.items = {}  # activity id (with the course) -> info
+        self.groups = {}  # an item that makes two activities (a say step and its tap): its id -> [the activity ids, in order]
+        self.derived = {}  # asset id -> how the generator makes the picture (a lit copy of a picture, a blank one)
+        self.template_versions = TEMPLATE_VERSIONS
         self.lessons = []
         self._load()
 
@@ -125,10 +137,35 @@ class Course:
             unit = self._json(path)
             if unit is not None:
                 self.units.append((os.path.basename(path), unit))
+        self.area_table = self._areas()
+        self.stroke_scenes = self._stroke_scenes()
         self.placement = None
         placement = os.path.join(self.dir, 'placement.json')
         if os.path.exists(placement):
             self.placement = self._json(placement)
+
+    def _areas(self):
+        """The touch areas of the pictures (shares of the picture's side): scenes.areas.json, and the body map of mika-body (its parts,
+        the close-up card of each part, and which items show their parts as cards)."""
+        table = {}
+        pictures = os.path.join(self.root, 'content', 'languages', 'pictures')
+        path = os.path.join(pictures, 'scenes.areas.json')
+        if os.path.exists(path):
+            table = {k: dict(v) for k, v in (self._json(path) or {}).get('pictures', {}).items()}
+        for path in sorted(glob.glob(os.path.join(pictures, '*.hotspots.json'))):
+            data = self._json(path) or {}
+            entry = table.setdefault(data.get('picture', os.path.basename(path).split('.')[0]), {})
+            entry.update(data.get('parts', {}))
+            entry['@cards'] = data.get('cards', {})
+            entry['@items'] = data.get('items', {})
+        return table
+
+    def _stroke_scenes(self):
+        """The paths of the pre-writing scenes (content/languages/strokes/prewriting-<course>-a14.json), by the scene's picture id."""
+        path = os.path.join(self.root, 'content', 'languages', 'strokes', 'prewriting-%s-a14.json' % self.id)
+        if not os.path.exists(path):
+            return {}
+        return {i['picture']: i for i in (self._json(path) or {}).get('items', [])}
 
     # ------------------------------------------------------------ ids and lines
     def vo(self, clip):
@@ -158,7 +195,7 @@ class Course:
         `@frame` (the item's own question) or `@gloss` (the line that says what the word means, from "glosses")."""
         if isinstance(step, str):
             step = {'line': step}
-        line_id = self.resolve_line(step.get('line'), item, where)
+        line_id = self.resolve_line(step.get('line'), item, where, step.get('orLine'))
         if line_id is None:
             return None
         text = self.line_text(line_id, where)
@@ -170,30 +207,49 @@ class Course:
         if target:
             out['target'] = self.vo(target)
             self.used_clips.add(target)
+            self.clip_row(target, where)
             if step.get('show'):
                 row = self.clip_row(target, where)
                 if row and row.get('shown'):
-                    out['show'] = row['shown']
+                    # A word on show stands alone in its chip: no full stop, question mark or exclamation mark beside it.
+                    out['show'] = row['shown'].rstrip(' .!?,')
+            second = self.resolve_target(step.get('target2'), item, where)
+            if second:
+                out['target2'] = self.vo(second)
+                self.used_clips.add(second)
+                self.clip_row(second, where)
+        elif step.get('target2'):
+            self.problem(where, 'a line with a second target clip has a first one')
         return out
 
-    def resolve_line(self, line, item, where):
+    @staticmethod
+    def word_of(item):
+        """The clip a hint or a praise names as "the word" of the item: `hintWord` when the prompt must not say it (a story's pause, a
+        bubble), else the clip the prompt plays."""
+        return (item or {}).get('hintWord') or (item or {}).get('target')
+
+    def resolve_line(self, line, item, where, or_line=None):
         if line == '@frame':
             line = (item or {}).get('frame') or self.defaults.get('frame')
         if line == '@gloss':
-            clip = item.get('target') if item else None
+            clip = self.word_of(item)
             line = (item or {}).get('h2') or self.glosses.get(clip)
-            if not line:
+            if not line and or_line:
+                line = or_line  # a first language has no gloss: the step says its other line
+            elif not line:
                 self.problem(where, 'the ladder asks for a gloss, and course.json "glosses" has none for "%s"' % clip)
         return line
 
     def resolve_target(self, target, item, where):
         if not target:
             return None
-        own = (item or {}).get('target')
+        own = self.word_of(item)
         if target == '@target':
             return own
         if target == '@slow':
             return own + '-slow' if own and own + '-slow' in self.pronunciation else own
+        if target == '@target2':
+            return (item or {}).get('target2')
         if target.startswith('@'):
             self.problem(where, 'unknown target "%s"' % target)
             return None
@@ -204,6 +260,8 @@ class Course:
         self._tags_used = {}
         self._skill_reps = {}
         self.assets = {}
+        self.groups = {}
+        self.derived = {}
         for name, unit in self.units:
             self._unit(name, unit)
         self._lessons()
@@ -249,20 +307,36 @@ class Course:
         if aid in self.items:
             self.problem(where, 'the id %s is used twice' % aid)
         kind = item.get('kind')
-        if kind == 'tap':
-            doc = self._tap(sk, sid, aid, item, where)
-        elif kind == 'raw':
+        if kind == 'raw':
             doc = self._raw_activity(sid, aid, item, where)
+        elif kind in RECIPES:
+            doc = getattr(self, 'recipe_' + RECIPES[kind])(sk, sid, aid, item, where)
         else:
-            self.problem(where, 'unknown kind "%s" (tap or raw)' % kind)
+            self.problem(where, 'unknown kind "%s" (%s or raw)' % (kind, ', '.join(sorted(RECIPES))))
             return
         if doc is None:
             return
+        self._add(sk, sid, aid, doc, item_id)
+        follow = item.get('then')
+        if isinstance(follow, dict):
+            # A step that goes with the item: the touch on the picture after a say step (`tap`), or the say step after a bubble
+            # (`say`). It is an activity of its own, `<id>t` or `<id>s`, played right after.
+            step = dict(follow, id=item_id + follow['kind'][0])
+            step_id = aid + follow['kind'][0]
+            step_doc = getattr(self, 'recipe_' + RECIPES[follow['kind']])(sk, sid, step_id, step, where + ' then')
+            if step_doc is not None:
+                self._add(sk, sid, step_id, step_doc, step['id'])
+                self.groups[aid] = [aid, step_id]
+
+    def _add(self, sk, sid, aid, doc, item_id):
         sk['items'].append(aid)
         self.items[aid] = {'doc': doc, 'skill': sid, 'purpose': doc.get('purpose', 'learn'), 'short': '%s.%s' % (sk['slug'], item_id)}
         if doc.get('representation') in REPRESENTATIONS:
             self._skill_reps.setdefault(sid, set()).add(doc['representation'])
         self.put('activity.%s.json' % aid, doc)
+
+    def picture_exists(self, picture):
+        return os.path.exists(os.path.join(self.root, 'content', 'languages', 'pictures', picture + '.svg'))
 
     def _picture(self, picture, where):
         asset = picture.replace('-', '_')
@@ -276,162 +350,6 @@ class Course:
         if not os.path.exists(os.path.join(self.root, 'content', 'languages', 'pictures', picture + '.svg')):
             self.problem(where, 'the picture "%s" is not in content/languages/pictures (the design-director draws it)' % picture)
         return asset
-
-    def _tap(self, sk, sid, aid, item, where):
-        """LS01 tap (`tap_answer`): the clip is heard, the child touches the picture (or letter) it names."""
-        raw_options = item.get('options', [])
-        if not 2 <= len(raw_options) <= 3:
-            self.problem(where, 'a Band A tap item has 2 or 3 options (it has %d)' % len(raw_options))
-            return None
-        keys = [o if isinstance(o, str) else o.get('pic', '') for o in raw_options]
-        right = item.get('right', keys[0] if keys else None)
-        wrong = item.get('wrong', {})
-        options = []
-        correct = None
-        text_face = False
-        names = []
-        for n, opt in enumerate(raw_options, start=1):
-            entry = {'id': 'o%d' % n}
-            key = keys[n - 1]
-            names.append(key)
-            if key.startswith('text:'):
-                text = key[5:]
-                text_face = True
-                entry.update({'text': text, 'label': text})
-            else:
-                asset = self._picture(key, where)
-                entry.update({'sprite': 'asset:' + asset, 'label': (self.defaults.get('pictureLabel') or 'תְּמוּנָה')})
-            if isinstance(opt, dict):
-                if opt.get('clip'):
-                    self.clip_row(opt['clip'], where)
-                    self.used_clips.add(opt['clip'])
-                    entry['clip'] = self.vo(opt['clip'])
-                if opt.get('label'):
-                    entry['label'] = opt['label']
-            if key == right:
-                correct = entry['id']
-            else:
-                slug_ = wrong.get(key)
-                if slug_ is None:
-                    self.problem(where, 'the distractor "%s" has no tag in "wrong" (every distractor carries the error it reveals)' % key)
-                else:
-                    entry['misconception'] = self._tag(slug_, sid, where)
-            options.append(entry)
-        if len(set(names)) != len(names):
-            self.problem(where, 'an option is listed twice')
-        if correct is None:
-            self.problem(where, 'the right answer "%s" is not among the options' % right)
-        for key in wrong:
-            if key not in names or key == right:
-                self.problem(where, '"wrong" names "%s", which is not a distractor of this item' % key)
-        purpose = item.get('purpose', 'learn')
-        if purpose not in PURPOSES:
-            self.problem(where, 'purpose "%s" is not one of %s' % (purpose, ', '.join(PURPOSES)))
-        check = item.get('check', 'transfer' if purpose == 'check' else 'practice')
-        if check not in CHECK_TYPES:
-            self.problem(where, 'check "%s" is not one of %s' % (check, ', '.join(CHECK_TYPES)))
-        rep = item.get('rep', self.defaults.get('rep', 'pictorial'))
-        if rep not in REPRESENTATIONS:
-            self.problem(where, 'rep "%s" is not one of %s' % (rep, ', '.join(REPRESENTATIONS)))
-        target = item.get('target')
-        if target:
-            self.clip_row(target, where)
-            self.used_clips.add(target)
-        ladder = self.ladders.get(item.get('ladder', self.defaults.get('ladder')))
-        if not ladder:
-            self.problem(where, 'the ladder "%s" is not in course.json "ladders"' % item.get('ladder', self.defaults.get('ladder')))
-            ladder = []
-        frame_id = item.get('frame', self.defaults.get('frame'))
-        frame = {'line': frame_id, 'target': target, 'show': item.get('show', False)}
-        prompt = self.spoken(frame, where + ' prompt', item)
-        feedback = self._feedback(item, options, where)
-        hints = []
-        for level, step in enumerate(ladder, start=1):
-            line = self.spoken(step, '%s hint %d' % (where, level), item)
-            action = step.get('action') if isinstance(step, dict) else None
-            if action not in HINT_ACTIONS:
-                self.problem(where, 'the ladder step %d has action "%s" (one of %s)' % (level, action, ', '.join(HINT_ACTIONS)))
-            if line:
-                hints.append(dict([('level', level), ('action', action)] + list(line.items())))
-        if len(ladder) != 3:
-            self.problem(where, 'a ladder has exactly 3 steps')
-        if prompt is None or feedback is None:
-            return None
-        two = len(options) == 2
-        count_word = {2: 'שְׁתֵּי', 3: 'שָׁלוֹשׁ'}[len(options)]
-        alt = item.get('alt') or '%s %s' % (count_word, 'אֶפְשָׁרֻיּוֹת' if text_face else 'תְּמוּנוֹת')
-        variant = item.get('variant') or slug(target or '%s-%s' % (sk['slug'], item['id']))
-        answer = {'type': 'choice', 'options': options, 'correct': correct, 'shuffle': True, 'unsureAllowed': True}
-        if text_face:
-            answer['face'] = 'letter'
-        doc = {
-            'schema': 'activity/v1',
-            'id': aid,
-            'review': 'needs-editor',
-            'revision': item.get('revision', 1),
-            'template': 'tap_answer',
-            'templateVersion': TEMPLATE_VERSIONS['tap_answer'],
-            'course': self.id,
-            'domain': DOMAIN,
-            'band': sk['band'],
-            'skills': [{'id': sid, 'weight': 1}],
-            'purpose': purpose,
-            'checkType': check,
-            'representation': rep,
-            'variantGroup': variant,
-            'difficulty': {'authored': item.get('difficulty', 0.2)},
-            # A two-choice item allows one retry only (frame section 2.3).
-            'scoring': {'maxAttempts': 2 if two else 3, 'creditByHintLevel': [1, 0.75, 0.5, 0.25]},
-            # The AI tutor is off for every language item (frame section 1.6): RuleTutor plays these hints.
-            'tutor': {'llmAllowed': False, 'goal': 'listen and choose', 'mustNotRevealBeforeHint': 2},
-            'a11y': {'altText': alt},
-            'prompt': dict(prompt, replayButton=True),
-            'feedback': feedback,
-            'hints': hints,
-            'scene': {},
-            'answer': answer,
-        }
-        if item.get('contradicts'):
-            doc['contradicts'] = self._tag(item['contradicts'], sid, where)
-        return doc
-
-    def _feedback(self, item, options, where):
-        fb = self.spec.get('feedback', {})
-        right = fb.get('right') or []
-        if not right or not fb.get('wrong') or not fb.get('unsure'):
-            self.problem('course.json', 'feedback needs "right" (a list of lines), "wrong" and "unsure"')
-            return None
-        # The praise is chosen by the item's place in the course (the same item always says the same line).
-        number = len(self.items)
-        correct = self.spoken(right[number % len(right)], where + ' feedback.correct', item)
-        rules = []
-        for option in options:
-            tag_id = option.get('misconception')
-            if not tag_id:
-                continue
-            tag = next((k for k, v in self.tags.items() if v.get('id') == tag_id), None)
-            by_tag = fb.get('byTag', {}).get(tag)
-            if by_tag and not any(r['when'] == 'misconception:' + tag_id for r in rules):
-                line = self.spoken(by_tag, '%s feedback.%s' % (where, tag), item)
-                if line:
-                    rules.append(dict([('when', 'misconception:' + tag_id)] + list(line.items())))
-        default = self.spoken(fb['wrong'], where + ' feedback.wrong', item)
-        if default:
-            rules.append(dict([('when', 'default')] + list(default.items())))
-        unsure = self.spoken(fb['unsure'], where + ' feedback.unsure', item)
-        if correct is None or default is None or unsure is None:
-            return None
-        return {'correct': correct, 'incorrect': rules, 'unsure': unsure}
-
-    def _tag(self, slug_, sid, where):
-        tag = self.tags.get(slug_)
-        if tag is None:
-            self.problem(where, 'the tag "%s" is not in course.json "tags"' % slug_)
-            return 'x.x.x'
-        self._tags_used.setdefault(slug_, [])
-        if sid not in self._tags_used[slug_]:
-            self._tags_used[slug_].append(sid)
-        return tag.get('id', 'x.x.x')
 
     def _raw_activity(self, sid, aid, item, where):
         """Any other template: the teacher or the app-developer writes the activity's own fields (everything but the id, the course,
@@ -485,7 +403,7 @@ class Course:
                     qualified = '%s.%s.%s' % (self.id, self.skills[sid]['slug'], ref) if '.' not in ref else '%s.%s' % (self.id, ref)
                     if qualified not in self.items:
                         self.problem(where, 'the item "%s" is not in this course' % ref)
-                    ids.append(qualified)
+                    ids.extend(self.groups.get(qualified, [qualified]))
                 skills = []
                 for aid in ids:
                     s = self.items.get(aid, {}).get('skill')
@@ -624,13 +542,16 @@ class Course:
             if os.path.exists(path):
                 with open(path, 'rb') as fh:
                     self.files[asset + '.svg'] = fh.read().replace(b'\r\n', b'\n')
+        for asset, (how, picture) in sorted(self.derived.items()):
+            base = self.files.get(picture.replace('-', '_') + '.svg') if picture else None
+            self.files[asset + '.svg'] = lang_recipes.derived_svg(how, base)
         self.put('pack.json', {
             'schema': 'pack-source/v1',
             'id': 'lang-%s' % self.id,
             'version': pack.get('version', ''),
             'minAppVersion': pack.get('minAppVersion', '0.5.0'),
             'course': self.id,
-            'assets': [{'id': a, 'file': a + '.svg'} for a in sorted(self.used_pictures)],
+            'assets': [{'id': a, 'file': a + '.svg'} for a in sorted(set(self.used_pictures) | set(self.derived))],
             'vo': [],
         })
         if not re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}$', pack.get('version', '')):

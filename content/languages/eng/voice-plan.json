@@ -24,10 +24,24 @@
       "review": "text-ready"
     },
     {
+      "id": "he-fb-heard",
+      "vo": "vo:eng.he_fb_heard",
+      "he": "שָׁמַעְתִּי:",
+      "voice": "שמעתי:",
+      "review": "text-ready"
+    },
+    {
       "id": "he-fb-listen-again",
       "vo": "vo:eng.he_fb_listen_again",
       "he": "בּוֹאוּ נַקְשִׁיב שׁוּב:",
       "voice": "בואו נקשיב שוב:",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-look-again",
+      "vo": "vo:eng.he_fb_look_again",
+      "he": "בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַתְּמוּנָה.",
+      "voice": "בואו נסתכל שוב על התמונה.",
       "review": "text-ready"
     },
     {
@@ -87,6 +101,13 @@
       "review": "text-ready"
     },
     {
+      "id": "he-fb-together",
+      "vo": "vo:eng.he_fb_together",
+      "he": "בּוֹאוּ נֹאמַר יַחַד.",
+      "voice": "בואו נגיד יחד.",
+      "review": "text-ready"
+    },
+    {
       "id": "he-gl-apple",
       "vo": "vo:eng.he_gl_apple",
       "he": "תַּפּוּחַ",
@@ -112,6 +133,13 @@
       "vo": "vo:eng.he_gl_banana",
       "he": "בָּנָנָה",
       "voice": "בָּנָנָה",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-big",
+      "vo": "vo:eng.he_gl_big",
+      "he": "גָּדוֹל",
+      "voice": "גָּדוֹל",
       "review": "text-ready"
     },
     {
@@ -479,6 +507,13 @@
       "review": "text-ready"
     },
     {
+      "id": "he-gl-small",
+      "vo": "vo:eng.he_gl_small",
+      "he": "קָטָן",
+      "voice": "קָטָן",
+      "review": "text-ready"
+    },
+    {
       "id": "he-gl-stand-up",
       "vo": "vo:eng.he_gl_stand_up",
       "he": "קוּמוּ",
@@ -556,6 +591,13 @@
       "review": "text-ready"
     },
     {
+      "id": "he-hint-page",
+      "vo": "vo:eng.he_hint_page",
+      "he": "בּוֹאוּ נַחֲזֹר לָעַמּוּד הַזֶּה בַּסִּפּוּר.",
+      "voice": "בואו נחזור לעמוד הזה בסיפור.",
+      "review": "text-ready"
+    },
+    {
       "id": "he-hint-showme",
       "vo": "vo:eng.he_hint_showme",
       "he": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים.",
@@ -563,10 +605,80 @@
       "review": "text-ready"
     },
     {
+      "id": "he-ins-box",
+      "vo": "vo:eng.he_ins_box",
+      "he": "מַה יֵּשׁ בַּקֻּפְסָה? הַקְשִׁיבוּ לְפִיפּ.",
+      "voice": "מה יש בקופסה? הקשיבו לפיפ.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-box-pick",
+      "vo": "vo:eng.he_ins_box_pick",
+      "he": "אָז מַה יֵּשׁ בַּקֻּפְסָה? גְּעוּ בַּתְּמוּנָה.",
+      "voice": "אז מה יש בקופסה? געו בתמונה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-bubble",
+      "vo": "vo:eng.he_ins_bubble",
+      "he": "מָה עוֹנִים? גְּעוּ בַּבֻּעָה.",
+      "voice": "מה עונים? געו בבועה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-chant",
+      "vo": "vo:eng.he_ins_chant",
+      "he": "בּוֹאוּ נְדַקְלֵם יַחַד, וְנַעֲשֶׂה אֶת הַתְּנוּעוֹת!",
+      "voice": "בואו נדקלם יחד, וְנַעֲשֶׂה את התנועות.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-count",
+      "vo": "vo:eng.he_ins_count",
+      "he": "בּוֹאוּ נִסְפֹּר בְּאַנְגְּלִית. גְּעוּ בְּכׇל אֶחָד.",
+      "voice": "בואו נספור באנגלית. געו בכל אֶחָד.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-do-too",
+      "vo": "vo:eng.he_ins_do_too",
+      "he": "עַכְשָׁו אַתֶּם! עֲשׂוּ אֶת זֶה, וְאָז גְּעוּ בַּכַּפְתּוֹר \"סִיַּמְתִּי\".",
+      "voice": "עכשיו אתם, עֲשׂוּ את זה, ואז געו בכפתור — סיימתי.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-drum",
+      "vo": "vo:eng.he_ins_drum",
+      "he": "הַקְשִׁיבוּ לַמִּלָּה, וְתוֹפְפוּ פַּעַם אַחַת לְכׇל חֵלֶק.",
+      "voice": "הקשיבו למילה, ותופפו פעם אַחַת לכל חלק.",
+      "review": "text-ready"
+    },
+    {
       "id": "he-ins-face",
       "vo": "vo:eng.he_ins_face",
       "he": "הַקְשִׁיבוּ, וּגְעוּ בַּפַּרְצוּף הַנָּכוֹן.",
       "voice": "הקשיבו, וגעו בפרצוף הנכון.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-find-said",
+      "vo": "vo:eng.he_ins_find_said",
+      "he": "וְעַכְשָׁו גְּעוּ בַּתְּמוּנָה שֶׁל הַמִּלָּה.",
+      "voice": "ועכשיו געו בתמונה של המילה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-give",
+      "vo": "vo:eng.he_ins_give",
+      "he": "הַקְשִׁיבוּ, וְגִרְרוּ אֶת הָאֹכֶל לְפִיפּ.",
+      "voice": "הקשיבו, וגררו את הָאֹכֶל לפיפ.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-how-many",
+      "vo": "vo:eng.he_ins_how_many",
+      "he": "כַּמָּה יֵשׁ? הַקְשִׁיבוּ לַכַּפְתּוֹרִים, וּגְעוּ בַּמִּסְפָּר הַנָּכוֹן.",
+      "voice": "כמה יש? הקשיבו לכפתורים, וגעו במספר הנכון.",
       "review": "text-ready"
     },
     {
@@ -584,10 +696,66 @@
       "review": "text-ready"
     },
     {
+      "id": "he-ins-make-do",
+      "vo": "vo:eng.he_ins_make_do",
+      "he": "הַקְשִׁיבוּ, וְהַרְאוּ לְמִיקָה מַה לַּעֲשׂוֹת: גְּעוּ בַּכַּפְתּוֹר.",
+      "voice": "הקשיבו, והראו למיקה מה לַעֲשׂוֹת: געו בכפתור.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-pairs",
+      "vo": "vo:eng.he_ins_pairs",
+      "he": "מִצְאוּ שְׁתֵּי תְּמוּנוֹת שֶׁהוֹלְכוֹת יַחַד.",
+      "voice": "מצאו שְׁתֵּי תמונות שהולכות יחד.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-personal",
+      "vo": "vo:eng.he_ins_personal",
+      "he": "אֶפְשָׁר לַעֲנוֹת בִּתְמוּנָה, אוֹ בְּקוֹל. אֶפְשָׁר גַּם לְדַלֵּג.",
+      "voice": "אפשר לענות בתמונה, או בקול. אפשר גם לדלג.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-say",
+      "vo": "vo:eng.he_ins_say",
+      "he": "עַכְשָׁו תּוֹרְכֶם. אִמְרוּ גַּם אַתֶּם!",
+      "voice": "עכשיו תורכם. אִמְרוּ גם אתם.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-story",
+      "vo": "vo:eng.he_ins_story",
+      "he": "בּוֹאוּ נִשְׁמַע סִפּוּר. אֶפְשָׁר לָגַעַת בַּתְּמוּנוֹת.",
+      "voice": "בואו נשמע סיפור. אפשר לגעת בתמונות.",
+      "review": "text-ready"
+    },
+    {
       "id": "he-ins-strip",
       "vo": "vo:eng.he_ins_strip",
       "he": "כַּמָּה תֻּפִּים? גְּעוּ בַּשּׁוּרָה הַנְּכוֹנָה.",
       "voice": "כמה תופים? געו בשורה הנכונה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-thumbs",
+      "vo": "vo:eng.he_ins_thumbs",
+      "he": "כֵּן אוֹ לֹא? גְּעוּ בַּאֲגוּדָל.",
+      "voice": "כן או לא? געו באגודל.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-touch-body",
+      "vo": "vo:eng.he_ins_touch_body",
+      "he": "הַקְשִׁיבוּ, וּגְעוּ בַּגּוּף שֶׁל מִיקָה.",
+      "voice": "הקשיבו, וגעו בגוף של מיקה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-whats-this",
+      "vo": "vo:eng.he_ins_whats_this",
+      "he": "הַקְשִׁיבוּ לַשְּׁאֵלָה וְלַתְּשׁוּבָה, וּגְעוּ בַּתְּמוּנָה.",
+      "voice": "הקשיבו לשאלה ולתשובה, וגעו בתמונה.",
       "review": "text-ready"
     },
     {
@@ -602,6 +770,41 @@
       "vo": "vo:eng.he_pl_thanks",
       "he": "תּוֹדָה! מַמְשִׁיכִים.",
       "voice": "תודה, ממשיכים.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "he-q-ball-end",
+      "vo": "vo:eng.he_q_ball_end",
+      "he": "אֵצֶל מִי הַכַּדּוּר בַּסּוֹף?",
+      "voice": "אצל מי הכדור בסוף?",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-q-ball-first",
+      "vo": "vo:eng.he_q_ball_first",
+      "he": "לְיַד מִי הַכַּדּוּר קָפַץ בַּהַתְחָלָה?",
+      "voice": "ליד מי הכדור קפץ בהתחלה?",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-q-ball-which",
+      "vo": "vo:eng.he_q_ball_which",
+      "he": "אֵיזֶה כַּדּוּר הָיָה בַּסִּפּוּר?",
+      "voice": "איזה כדור היה בסיפור?",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-q-who",
+      "vo": "vo:eng.he_q_who",
+      "he": "מִי זֶה?",
+      "voice": "מי זה?",
+      "review": "text-ready"
+    },
+    {
+      "id": "pass",
+      "vo": "vo:eng.pass",
+      "he": "זֶה בְּסֵדֶר!",
+      "voice": "זה בסדר!",
       "review": "needs-editor"
     }
   ],
@@ -661,6 +864,20 @@
       "shown": "banana",
       "say": "banana.",
       "ipa": "/bəˈnænə/"
+    },
+    {
+      "id": "en-big",
+      "vo": "vo:eng.en_big",
+      "shown": "big",
+      "say": "big.",
+      "ipa": "/bɪɡ/"
+    },
+    {
+      "id": "en-big-slow",
+      "vo": "vo:eng.en_big_slow",
+      "shown": "big",
+      "say": "big.",
+      "ipa": "/bɪɡ/"
     },
     {
       "id": "en-bike",
@@ -817,6 +1034,146 @@
       "ipa": "/kæt/"
     },
     {
+      "id": "en-ch-body-1",
+      "vo": "vo:eng.en_ch_body_1",
+      "shown": "Touch your head! Head!",
+      "say": "Touch your head! Head!",
+      "ipa": "/ˈtʌtʃ jɚ ˈhɛd | ˈhɛd/"
+    },
+    {
+      "id": "en-ch-body-2",
+      "vo": "vo:eng.en_ch_body_2",
+      "shown": "Touch your nose! Nose!",
+      "say": "Touch your nose! Nose!",
+      "ipa": "/ˈtʌtʃ jɚ ˈnoʊz | ˈnoʊz/"
+    },
+    {
+      "id": "en-ch-body-3",
+      "vo": "vo:eng.en_ch_body_3",
+      "shown": "Touch your mouth! Mouth!",
+      "say": "Touch your mouth! Mouth!",
+      "ipa": "/ˈtʌtʃ jɚ ˈmaʊθ | ˈmaʊθ/"
+    },
+    {
+      "id": "en-ch-body-4",
+      "vo": "vo:eng.en_ch_body_4",
+      "shown": "Touch your feet! Feet!",
+      "say": "Touch your feet! Feet!",
+      "ipa": "/ˈtʌtʃ jɚ ˈfit | ˈfit/"
+    },
+    {
+      "id": "en-ch-bye-1",
+      "vo": "vo:eng.en_ch_bye_1",
+      "shown": "Goodbye, goodbye!",
+      "say": "Goodbye, goodbye!",
+      "ipa": "/ɡʊdˈbaɪ ɡʊdˈbaɪ/"
+    },
+    {
+      "id": "en-ch-bye-2",
+      "vo": "vo:eng.en_ch_bye_2",
+      "shown": "Wave, wave, wave!",
+      "say": "Wave, wave, wave!",
+      "ipa": "/ˈweɪv ˈweɪv ˈweɪv/"
+    },
+    {
+      "id": "en-ch-bye-3",
+      "vo": "vo:eng.en_ch_bye_3",
+      "shown": "Bye-bye, bye-bye!",
+      "say": "Bye-bye, bye-bye!",
+      "ipa": "/ˈbaɪ baɪ ˈbaɪ baɪ/"
+    },
+    {
+      "id": "en-ch-bye-4",
+      "vo": "vo:eng.en_ch_bye_4",
+      "shown": "Goodbye to you!",
+      "say": "Goodbye to you!",
+      "ipa": "/ɡʊdˈbaɪ tə ˈju/"
+    },
+    {
+      "id": "en-ch-count-1",
+      "vo": "vo:eng.en_ch_count_1",
+      "shown": "One, two, three, four, five!",
+      "say": "One, two, three, four, five!",
+      "ipa": "/ˈwʌn ˈtu ˈθɹi ˈfɔɹ ˈfaɪv/"
+    },
+    {
+      "id": "en-ch-count-2",
+      "vo": "vo:eng.en_ch_count_2",
+      "shown": "Clap with me, clap with me!",
+      "say": "Clap with me, clap with me!",
+      "ipa": "/ˈklæp wɪð ˈmi ˈklæp wɪð ˈmi/"
+    },
+    {
+      "id": "en-ch-count-3",
+      "vo": "vo:eng.en_ch_count_3",
+      "shown": "One, two, three, four, five!",
+      "say": "One, two, three, four, five!",
+      "ipa": "/ˈwʌn ˈtu ˈθɹi ˈfɔɹ ˈfaɪv/"
+    },
+    {
+      "id": "en-ch-count-4",
+      "vo": "vo:eng.en_ch_count_4",
+      "shown": "Jump with me, jump with me!",
+      "say": "Jump with me, jump with me!",
+      "ipa": "/ˈdʒʌmp wɪð ˈmi ˈdʒʌmp wɪð ˈmi/"
+    },
+    {
+      "id": "en-ch-hello-1",
+      "vo": "vo:eng.en_ch_hello_1",
+      "shown": "Hello, hello!",
+      "say": "Hello, hello!",
+      "ipa": "/həˈloʊ həˈloʊ/"
+    },
+    {
+      "id": "en-ch-hello-2",
+      "vo": "vo:eng.en_ch_hello_2",
+      "shown": "Hello to you!",
+      "say": "Hello to you!",
+      "ipa": "/həˈloʊ tə ˈju/"
+    },
+    {
+      "id": "en-ch-hello-3",
+      "vo": "vo:eng.en_ch_hello_3",
+      "shown": "Clap, clap, clap!",
+      "say": "Clap, clap, clap!",
+      "ipa": "/ˈklæp ˈklæp ˈklæp/"
+    },
+    {
+      "id": "en-ch-hello-4",
+      "vo": "vo:eng.en_ch_hello_4",
+      "shown": "Hello to you!",
+      "say": "Hello to you!",
+      "ipa": "/həˈloʊ tə ˈju/"
+    },
+    {
+      "id": "en-ch-move-1",
+      "vo": "vo:eng.en_ch_move_1",
+      "shown": "Stand up! Clap, clap!",
+      "say": "Stand up! Clap, clap!",
+      "ipa": "/ˌstænd ˈʌp | ˈklæp ˈklæp/"
+    },
+    {
+      "id": "en-ch-move-2",
+      "vo": "vo:eng.en_ch_move_2",
+      "shown": "Jump, jump, jump!",
+      "say": "Jump, jump, jump!",
+      "ipa": "/ˈdʒʌmp ˈdʒʌmp ˈdʒʌmp/"
+    },
+    {
+      "id": "en-ch-move-3",
+      "vo": "vo:eng.en_ch_move_3",
+      "shown": "Look! Listen!",
+      "say": "Look! Listen!",
+      "ipa": "/ˈlʊk | ˈlɪsən/"
+    },
+    {
+      "id": "en-ch-move-4",
+      "vo": "vo:eng.en_ch_move_4",
+      "shown": "Sit down. Stop!",
+      "say": "Sit down. Stop!",
+      "ipa": "/ˌsɪt ˈdaʊn | ˈstɑp/"
+    },
+    {
       "id": "en-clap",
       "vo": "vo:eng.en_clap",
       "shown": "Clap!",
@@ -950,6 +1307,27 @@
       "ipa": "/ɛɡ/"
     },
     {
+      "id": "en-eight",
+      "vo": "vo:eng.en_eight",
+      "shown": "eight",
+      "say": "eight.",
+      "ipa": "/eɪt/"
+    },
+    {
+      "id": "en-elephant",
+      "vo": "vo:eng.en_elephant",
+      "shown": "elephant",
+      "say": "elephant.",
+      "ipa": "/ˈɛləfənt/"
+    },
+    {
+      "id": "en-elephant-slow",
+      "vo": "vo:eng.en_elephant_slow",
+      "shown": "elephant",
+      "say": "elephant.",
+      "ipa": "/ˈɛləfənt/"
+    },
+    {
       "id": "en-feet",
       "vo": "vo:eng.en_feet",
       "shown": "feet",
@@ -1020,6 +1398,13 @@
       "ipa": "/fɹɔɡ/"
     },
     {
+      "id": "en-give-apple",
+      "vo": "vo:eng.en_give_apple",
+      "shown": "Give Pip the apple.",
+      "say": "Give Pip the apple.",
+      "ipa": "/ˈɡɪv ˈpɪp ði ˈæpəl/"
+    },
+    {
       "id": "en-give-bread",
       "vo": "vo:eng.en_give_bread",
       "shown": "Give Pip the bread.",
@@ -1032,6 +1417,13 @@
       "shown": "Give Pip the juice.",
       "say": "Give Pip the juice.",
       "ipa": "/ˈɡɪv ˈpɪp ðə ˈdʒus/"
+    },
+    {
+      "id": "en-give-milk",
+      "vo": "vo:eng.en_give_milk",
+      "shown": "Give Pip the milk.",
+      "say": "Give Pip the milk.",
+      "ipa": "/ˈɡɪv ˈpɪp ðə ˈmɪlk/"
     },
     {
       "id": "en-goodbye",
@@ -1104,6 +1496,13 @@
       "ipa": "/ˈhæpi/"
     },
     {
+      "id": "en-head",
+      "vo": "vo:eng.en_head",
+      "shown": "head",
+      "say": "head.",
+      "ipa": "/hɛd/"
+    },
+    {
       "id": "en-hello",
       "vo": "vo:eng.en_hello",
       "shown": "Hello!",
@@ -1146,11 +1545,39 @@
       "ipa": "/hɑt/"
     },
     {
+      "id": "en-how-are-you",
+      "vo": "vo:eng.en_how_are_you",
+      "shown": "How are you?",
+      "say": "How are you?",
+      "ipa": "/ˌhaʊ ˈɑɹ ju/"
+    },
+    {
+      "id": "en-i-like-bananas",
+      "vo": "vo:eng.en_i_like_bananas",
+      "shown": "I like bananas! What do you like?",
+      "say": "I like bananas! What do you like?",
+      "ipa": "/aɪ ˈlaɪk bəˈnænəz | ˈwʌt də jə ˈlaɪk/"
+    },
+    {
+      "id": "en-im-cold",
+      "vo": "vo:eng.en_im_cold",
+      "shown": "I'm cold.",
+      "say": "I'm cold.",
+      "ipa": "/aɪm ˈkoʊld/"
+    },
+    {
       "id": "en-im-fine",
       "vo": "vo:eng.en_im_fine",
       "shown": "I'm fine.",
       "say": "I'm fine.",
       "ipa": "/aɪm ˈfaɪn/"
+    },
+    {
+      "id": "en-im-five-how-old",
+      "vo": "vo:eng.en_im_five_how_old",
+      "shown": "I'm five! How old are you?",
+      "say": "I'm five! How old are you?",
+      "ipa": "/aɪm ˈfaɪv | ˌhaʊ ˈoʊld ɚ ju/"
     },
     {
       "id": "en-im-happy",
@@ -1167,6 +1594,97 @@
       "ipa": "/aɪm ˈsæd/"
     },
     {
+      "id": "en-isit-apple",
+      "vo": "vo:eng.en_isit_apple",
+      "shown": "Is it an apple?",
+      "say": "Is it an apple?",
+      "ipa": "/ɪz ɪt ən ˈæpəl/"
+    },
+    {
+      "id": "en-isit-ball",
+      "vo": "vo:eng.en_isit_ball",
+      "shown": "Is it a ball?",
+      "say": "Is it a ball?",
+      "ipa": "/ɪz ɪt ə ˈbɔl/"
+    },
+    {
+      "id": "en-isit-boat",
+      "vo": "vo:eng.en_isit_boat",
+      "shown": "Is it a boat?",
+      "say": "Is it a boat?",
+      "ipa": "/ɪz ɪt ə ˈboʊt/"
+    },
+    {
+      "id": "en-isit-cake",
+      "vo": "vo:eng.en_isit_cake",
+      "shown": "Is it a cake?",
+      "say": "Is it a cake?",
+      "ipa": "/ɪz ɪt ə ˈkeɪk/"
+    },
+    {
+      "id": "en-isit-car",
+      "vo": "vo:eng.en_isit_car",
+      "shown": "Is it a car?",
+      "say": "Is it a car?",
+      "ipa": "/ɪz ɪt ə ˈkɑɹ/"
+    },
+    {
+      "id": "en-isit-cat",
+      "vo": "vo:eng.en_isit_cat",
+      "shown": "Is it a cat?",
+      "say": "Is it a cat?",
+      "ipa": "/ɪz ɪt ə ˈkæt/"
+    },
+    {
+      "id": "en-isit-cow",
+      "vo": "vo:eng.en_isit_cow",
+      "shown": "Is it a cow?",
+      "say": "Is it a cow?",
+      "ipa": "/ɪz ɪt ə ˈkaʊ/"
+    },
+    {
+      "id": "en-isit-dog",
+      "vo": "vo:eng.en_isit_dog",
+      "shown": "Is it a dog?",
+      "say": "Is it a dog?",
+      "ipa": "/ɪz ɪt ə ˈdɔɡ/"
+    },
+    {
+      "id": "en-isit-duck",
+      "vo": "vo:eng.en_isit_duck",
+      "shown": "Is it a duck?",
+      "say": "Is it a duck?",
+      "ipa": "/ɪz ɪt ə ˈdʌk/"
+    },
+    {
+      "id": "en-isit-egg",
+      "vo": "vo:eng.en_isit_egg",
+      "shown": "Is it an egg?",
+      "say": "Is it an egg?",
+      "ipa": "/ɪz ɪt ən ˈɛɡ/"
+    },
+    {
+      "id": "en-isit-fish",
+      "vo": "vo:eng.en_isit_fish",
+      "shown": "Is it a fish?",
+      "say": "Is it a fish?",
+      "ipa": "/ɪz ɪt ə ˈfɪʃ/"
+    },
+    {
+      "id": "en-isit-frog",
+      "vo": "vo:eng.en_isit_frog",
+      "shown": "Is it a frog?",
+      "say": "Is it a frog?",
+      "ipa": "/ɪz ɪt ə ˈfɹɔɡ/"
+    },
+    {
+      "id": "en-isit-pig",
+      "vo": "vo:eng.en_isit_pig",
+      "shown": "Is it a pig?",
+      "say": "Is it a pig?",
+      "ipa": "/ɪz ɪt ə ˈpɪɡ/"
+    },
+    {
       "id": "en-its-apple",
       "vo": "vo:eng.en_its_apple",
       "shown": "It's an apple.",
@@ -1181,11 +1699,25 @@
       "ipa": "/ɪts ə ˈbɔl/"
     },
     {
+      "id": "en-its-boat",
+      "vo": "vo:eng.en_its_boat",
+      "shown": "It's a boat.",
+      "say": "It's a boat.",
+      "ipa": "/ɪts ə ˈboʊt/"
+    },
+    {
       "id": "en-its-book",
       "vo": "vo:eng.en_its_book",
       "shown": "It's a book.",
       "say": "It's a book.",
       "ipa": "/ɪts ə ˈbʊk/"
+    },
+    {
+      "id": "en-its-car",
+      "vo": "vo:eng.en_its_car",
+      "shown": "It's a car.",
+      "say": "It's a car.",
+      "ipa": "/ɪts ə ˈkɑɹ/"
     },
     {
       "id": "en-its-duck",
@@ -1200,6 +1732,13 @@
       "shown": "It's an egg.",
       "say": "It's an egg.",
       "ipa": "/ɪts ən ˈɛɡ/"
+    },
+    {
+      "id": "en-its-frog",
+      "vo": "vo:eng.en_its_frog",
+      "shown": "It's a frog.",
+      "say": "It's a frog.",
+      "ipa": "/ɪts ə ˈfɹɔɡ/"
     },
     {
       "id": "en-its-kite",
@@ -1307,6 +1846,41 @@
       "ipa": "/mɑm/"
     },
     {
+      "id": "en-mouth",
+      "vo": "vo:eng.en_mouth",
+      "shown": "mouth",
+      "say": "mouth.",
+      "ipa": "/maʊθ/"
+    },
+    {
+      "id": "en-nice",
+      "vo": "vo:eng.en_nice",
+      "shown": "Nice!",
+      "say": "Nice!",
+      "ipa": "/naɪs/"
+    },
+    {
+      "id": "en-nice-to-meet-you",
+      "vo": "vo:eng.en_nice_to_meet_you",
+      "shown": "Nice to meet you!",
+      "say": "Nice to meet you!",
+      "ipa": "/ˈnaɪs tə ˈmit ju/"
+    },
+    {
+      "id": "en-nine",
+      "vo": "vo:eng.en_nine",
+      "shown": "nine",
+      "say": "nine.",
+      "ipa": "/naɪn/"
+    },
+    {
+      "id": "en-no",
+      "vo": "vo:eng.en_no",
+      "shown": "No!",
+      "say": "No!",
+      "ipa": "/noʊ/"
+    },
+    {
       "id": "en-nose",
       "vo": "vo:eng.en_nose",
       "shown": "nose",
@@ -1349,6 +1923,13 @@
       "ipa": "/pɪɡ/"
     },
     {
+      "id": "en-pip-hello",
+      "vo": "vo:eng.en_pip_hello",
+      "shown": "Hello! I'm Pip.",
+      "say": "Hello! I'm Pip.",
+      "ipa": "/həˈloʊ | aɪm ˈpɪp/"
+    },
+    {
       "id": "en-red",
       "vo": "vo:eng.en_red",
       "shown": "red",
@@ -1377,6 +1958,13 @@
       "ipa": "/sæd/"
     },
     {
+      "id": "en-seven",
+      "vo": "vo:eng.en_seven",
+      "shown": "seven",
+      "say": "seven.",
+      "ipa": "/ˈsɛvən/"
+    },
+    {
       "id": "en-sister",
       "vo": "vo:eng.en_sister",
       "shown": "sister",
@@ -1403,6 +1991,69 @@
       "shown": "Sit down!",
       "say": "Sit down!",
       "ipa": "/ˌsɪt ˈdaʊn/"
+    },
+    {
+      "id": "en-six",
+      "vo": "vo:eng.en_six",
+      "shown": "six",
+      "say": "six.",
+      "ipa": "/sɪks/"
+    },
+    {
+      "id": "en-small",
+      "vo": "vo:eng.en_small",
+      "shown": "small",
+      "say": "small.",
+      "ipa": "/smɔl/"
+    },
+    {
+      "id": "en-small-slow",
+      "vo": "vo:eng.en_small_slow",
+      "shown": "small",
+      "say": "small.",
+      "ipa": "/smɔl/"
+    },
+    {
+      "id": "en-st-bounce-1",
+      "vo": "vo:eng.en_st_bounce_1",
+      "shown": "Look! A red ball. Bounce, bounce, bounce!",
+      "say": "Look! A red ball. Bounce, bounce, bounce!",
+      "ipa": "/ˈlʊk | ə ˈɹɛd ˈbɔl | ˈbaʊns ˈbaʊns ˈbaʊns/"
+    },
+    {
+      "id": "en-st-bounce-2",
+      "vo": "vo:eng.en_st_bounce_2",
+      "shown": "Hello, cat! Bounce, bounce, bounce!",
+      "say": "Hello, cat! Bounce, bounce, bounce!",
+      "ipa": "/həˈloʊ ˈkæt | ˈbaʊns ˈbaʊns ˈbaʊns/"
+    },
+    {
+      "id": "en-st-bounce-3",
+      "vo": "vo:eng.en_st_bounce_3",
+      "shown": "Hello, duck! Bounce, bounce, bounce!",
+      "say": "Hello, duck! Bounce, bounce, bounce!",
+      "ipa": "/həˈloʊ ˈdʌk | ˈbaʊns ˈbaʊns ˈbaʊns/"
+    },
+    {
+      "id": "en-st-bounce-4",
+      "vo": "vo:eng.en_st_bounce_4",
+      "shown": "Hello, frog! Bounce, bounce, bounce!",
+      "say": "Hello, frog! Bounce, bounce, bounce!",
+      "ipa": "/həˈloʊ ˈfɹɔɡ | ˈbaʊns ˈbaʊns ˈbaʊns/"
+    },
+    {
+      "id": "en-st-bounce-5",
+      "vo": "vo:eng.en_st_bounce_5",
+      "shown": "Hello, dog! Stop, ball, stop!",
+      "say": "Hello, dog! Stop, ball, stop!",
+      "ipa": "/həˈloʊ ˈdɔɡ | ˈstɑp ˈbɔl ˈstɑp/"
+    },
+    {
+      "id": "en-st-bounce-6",
+      "vo": "vo:eng.en_st_bounce_6",
+      "shown": "The dog gives Pip the ball. Thank you, dog!",
+      "say": "The dog gives Pip the ball. Thank you, dog!",
+      "ipa": "/ðə ˈdɔɡ ˈɡɪvz ˈpɪp ðə ˈbɔl | ˈθæŋk ju ˈdɔɡ/"
     },
     {
       "id": "en-stand-up",
@@ -1447,6 +2098,20 @@
       "ipa": "/ˈtɛdi/"
     },
     {
+      "id": "en-thats-ok",
+      "vo": "vo:eng.en_thats_ok",
+      "shown": "That's OK!",
+      "say": "That's OK!",
+      "ipa": "/ˌðæts oʊˈkeɪ/"
+    },
+    {
+      "id": "en-this-is-my-family",
+      "vo": "vo:eng.en_this_is_my_family",
+      "shown": "This is my family: Mom, Dad and my sister.",
+      "say": "This is my family: Mom, Dad and my sister.",
+      "ipa": "/ðɪs ɪz maɪ ˈfæməli | ˈmɑm ˈdæd ən maɪ ˈsɪstɚ/"
+    },
+    {
       "id": "en-three",
       "vo": "vo:eng.en_three",
       "shown": "three",
@@ -1459,6 +2124,13 @@
       "shown": "three",
       "say": "three.",
       "ipa": "/θɹi/"
+    },
+    {
+      "id": "en-touch-ears",
+      "vo": "vo:eng.en_touch_ears",
+      "shown": "Touch your ears!",
+      "say": "Touch your ears!",
+      "ipa": "/ˈtʌtʃ jɚ ˈɪɹz/"
     },
     {
       "id": "en-touch-eyes",
@@ -1487,6 +2159,13 @@
       "shown": "Touch your mouth!",
       "say": "Touch your mouth!",
       "ipa": "/ˈtʌtʃ jɚ ˈmaʊθ/"
+    },
+    {
+      "id": "en-touch-nose",
+      "vo": "vo:eng.en_touch_nose",
+      "shown": "Touch your nose!",
+      "say": "Touch your nose!",
+      "ipa": "/ˈtʌtʃ jɚ ˈnoʊz/"
     },
     {
       "id": "en-touch-tummy",
@@ -1552,6 +2231,41 @@
       "ipa": "/weɪv/"
     },
     {
+      "id": "en-whats-in-the-box",
+      "vo": "vo:eng.en_whats_in_the_box",
+      "shown": "What's in the box?",
+      "say": "What's in the box?",
+      "ipa": "/ˌwʌts ɪn ðə ˈbɑks/"
+    },
+    {
+      "id": "en-whats-this",
+      "vo": "vo:eng.en_whats_this",
+      "shown": "What's this?",
+      "say": "What's this?",
+      "ipa": "/ˌwʌts ˈðɪs/"
+    },
+    {
+      "id": "en-whats-your-name",
+      "vo": "vo:eng.en_whats_your_name",
+      "shown": "What's your name?",
+      "say": "What's your name?",
+      "ipa": "/ˌwʌts jɚ ˈneɪm/"
+    },
+    {
+      "id": "en-who-in-family",
+      "vo": "vo:eng.en_who_in_family",
+      "shown": "Who is in your family?",
+      "say": "Who is in your family?",
+      "ipa": "/ˈhu ɪz ɪn jɚ ˈfæməli/"
+    },
+    {
+      "id": "en-wow",
+      "vo": "vo:eng.en_wow",
+      "shown": "Wow!",
+      "say": "Wow!",
+      "ipa": "/waʊ/"
+    },
+    {
       "id": "en-yellow",
       "vo": "vo:eng.en_yellow",
       "shown": "yellow",
@@ -1564,6 +2278,20 @@
       "shown": "yellow",
       "say": "yellow.",
       "ipa": "/ˈjɛloʊ/"
+    },
+    {
+      "id": "en-yes",
+      "vo": "vo:eng.en_yes",
+      "shown": "Yes!",
+      "say": "Yes!",
+      "ipa": "/jɛs/"
+    },
+    {
+      "id": "en-yum",
+      "vo": "vo:eng.en_yum",
+      "shown": "Yum!",
+      "say": "Yum!",
+      "ipa": "/jʌm/"
     }
   ]
 }

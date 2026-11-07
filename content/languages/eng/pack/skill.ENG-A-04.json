@@ -19,7 +19,9 @@
     }
   ],
   "representations": [
-    "pictorial"
+    "concrete",
+    "pictorial",
+    "story"
   ],
   "misconceptions": [
     "eng.lis.sem"

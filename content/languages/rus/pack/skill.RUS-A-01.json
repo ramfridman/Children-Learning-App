@@ -14,10 +14,13 @@
   "strand": "lis",
   "prerequisites": [],
   "representations": [
-    "pictorial"
+    "pictorial",
+    "story",
+    "embodied"
   ],
   "misconceptions": [
-    "rus.lis.sem"
+    "rus.lis.sem",
+    "rus.lis.tyvy"
   ],
   "retention": {
     "targetRetention": 0.9,

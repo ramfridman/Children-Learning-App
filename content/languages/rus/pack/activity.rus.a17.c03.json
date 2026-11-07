@@ -1,0 +1,110 @@
+{
+  "schema": "activity/v1",
+  "id": "rus.a17.c03",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sing_along",
+  "templateVersion": "1.0",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "RUS-A-17",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a17-c03",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "say the chant together",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנוֹת שֶׁל שִׁיר"
+  },
+  "prompt": {
+    "vo": "vo:rus.f26",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַקְשִׁיבוּ לַשִּׁיר."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:rus.he_fb_right_1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נָכוֹן!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:rus.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scene": {
+    "pictures": [
+      {
+        "picture": "asset:whale",
+        "label": "תְּמוּנָה"
+      }
+    ],
+    "lines": [
+      {
+        "clips": [
+          "vo:rus.rh3"
+        ],
+        "lights": []
+      },
+      {
+        "clips": [
+          "vo:rus.rh3"
+        ],
+        "lights": []
+      }
+    ]
+  },
+  "answer": {
+    "type": "none",
+    "mode": "chant"
+  }
+}

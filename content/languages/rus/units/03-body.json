@@ -1,444 +1,418 @@
 {
- "skill": {
-  "id": "RUS-A-03",
-  "strand": "voc",
-  "title": "הַגּוּף",
-  "prerequisites": [
-   {
-    "skill": "RUS-A-01"
-   }
+  "skill": {
+    "id": "RUS-A-03",
+    "strand": "voc",
+    "title": "הַגּוּף",
+    "prerequisites": [
+      {
+        "skill": "RUS-A-01"
+      }
+    ],
+    "setCoverage": true
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-nos",
+      "options": [
+        "nose",
+        "mouth",
+        "eyes"
+      ],
+      "right": "nose",
+      "wrong": {
+        "mouth": "sound",
+        "eyes": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "02",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-rot",
+      "options": [
+        "mouth",
+        "nose",
+        "ears"
+      ],
+      "right": "mouth",
+      "wrong": {
+        "nose": "sound",
+        "ears": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "03",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-glaza",
+      "options": [
+        "eyes",
+        "ears",
+        "nose"
+      ],
+      "right": "eyes",
+      "wrong": {
+        "ears": "sem",
+        "nose": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "04",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-ushi",
+      "options": [
+        "ears",
+        "eyes",
+        "arms"
+      ],
+      "right": "ears",
+      "wrong": {
+        "eyes": "sem",
+        "arms": "sound"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "05",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-ruki",
+      "options": [
+        "arms",
+        "legs",
+        "ears"
+      ],
+      "right": "arms",
+      "wrong": {
+        "legs": "sem",
+        "ears": "sound"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "06",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-nogi",
+      "options": [
+        "legs",
+        "arms",
+        "nose"
+      ],
+      "right": "legs",
+      "wrong": {
+        "arms": "sem",
+        "nose": "sound"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "07",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-zhivot",
+      "options": [
+        "tummy",
+        "head",
+        "legs"
+      ],
+      "right": "tummy",
+      "wrong": {
+        "head": "sem",
+        "legs": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "08",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-paltsy",
+      "options": [
+        "fingers",
+        "nose",
+        "hair"
+      ],
+      "right": "fingers",
+      "wrong": {
+        "nose": "sem",
+        "hair": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "09",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-zuby",
+      "options": [
+        "teeth",
+        "eyes",
+        "ears"
+      ],
+      "right": "teeth",
+      "wrong": {
+        "eyes": "sem",
+        "ears": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "10",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-volosy",
+      "options": [
+        "hair",
+        "tummy",
+        "arms"
+      ],
+      "right": "hair",
+      "wrong": {
+        "tummy": "sem",
+        "arms": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "11",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-golovu",
+      "options": [
+        "head",
+        "legs",
+        "tummy"
+      ],
+      "right": "head",
+      "wrong": {
+        "legs": "sem",
+        "tummy": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f08",
+      "target": "ch-pokazhi-ushi",
+      "options": [
+        {
+          "pic": "body-ears",
+          "clip": "w-ushi"
+        },
+        {
+          "pic": "body-eyes",
+          "clip": "w-glaza"
+        },
+        {
+          "pic": "body-arms",
+          "clip": "w-ruki"
+        }
+      ],
+      "wrong": {
+        "body-eyes": "sem",
+        "body-arms": "sound"
+      },
+      "purpose": "probe"
+    },
+    {
+      "id": "12",
+      "kind": "listen_do",
+      "frame": "f08",
+      "mode": "hotspots",
+      "picture": "doll-body",
+      "target": "ch-pokazhi-nos",
+      "options": [
+        "nose",
+        "mouth",
+        "eyes"
+      ],
+      "right": "nose",
+      "wrong": {
+        "mouth": "sound",
+        "eyes": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "13",
+      "kind": "listen_do",
+      "frame": "f08",
+      "mode": "hotspots",
+      "picture": "doll-body",
+      "target": "ch-pokazhi-ushi",
+      "options": [
+        "ears",
+        "eyes",
+        "arms"
+      ],
+      "right": "ears",
+      "wrong": {
+        "eyes": "sem",
+        "arms": "sound"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "14",
+      "kind": "listen_do",
+      "frame": "f08",
+      "purpose": "check",
+      "mode": "hotspots",
+      "picture": "doll-body",
+      "target": "ch-pokazhi-nogi",
+      "options": [
+        "legs",
+        "arms",
+        "nose"
+      ],
+      "right": "legs",
+      "wrong": {
+        "arms": "sem",
+        "nose": "sound"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "15",
+      "kind": "listen_do",
+      "frame": "f08",
+      "purpose": "check",
+      "mode": "hotspots",
+      "picture": "doll-body",
+      "target": "ch-pokazhi-zhivot",
+      "options": [
+        "belly",
+        "head",
+        "legs"
+      ],
+      "right": "belly",
+      "wrong": {
+        "head": "sem",
+        "legs": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "e01",
+      "kind": "listen_do",
+      "frame": "f10",
+      "mode": "embodied",
+      "picture": "mika-happy",
+      "purpose": "practice"
+    }
   ],
-  "setCoverage": true
- },
- "items": [
-  {
-   "id": "01",
-   "kind": "tap",
-   "frame": "f08",
-   "target": "ch-pokazhi-nos",
-   "options": [
+  "lessons": [
     {
-     "pic": "body-nose",
-     "clip": "w-nos"
+      "id": "body-1",
+      "title": "הַגּוּף",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
     },
     {
-     "pic": "body-mouth",
-     "clip": "w-rot"
+      "id": "body-2",
+      "title": "הַגּוּף",
+      "items": [
+        "05",
+        "06",
+        "07",
+        "11"
+      ]
     },
     {
-     "pic": "body-eyes",
-     "clip": "w-glaza"
+      "id": "body-3",
+      "title": "הַגּוּף",
+      "items": [
+        "08",
+        "09",
+        "10"
+      ]
+    },
+    {
+      "id": "body-more",
+      "title": "הַגּוּף",
+      "items": [
+        "12",
+        "13",
+        "e01"
+      ]
     }
-   ],
-   "wrong": {
-    "body-mouth": "sound",
-    "body-eyes": "sem"
-   },
-   "then": "listen_do hotspots on mika-body (LS11) when the recipe exists; until then the three close-up cards of the friend"
-  },
-  {
-   "id": "02",
-   "kind": "tap",
-   "frame": "f08",
-   "target": "ch-pokazhi-rot",
-   "options": [
-    {
-     "pic": "body-mouth",
-     "clip": "w-rot"
-    },
-    {
-     "pic": "body-nose",
-     "clip": "w-nos"
-    },
-    {
-     "pic": "body-ears",
-     "clip": "w-ushi"
-    }
-   ],
-   "wrong": {
-    "body-nose": "sound",
-    "body-ears": "sem"
-   },
-   "then": "listen_do hotspots on mika-body (LS11) when the recipe exists; until then the three close-up cards of the friend"
-  },
-  {
-   "id": "03",
-   "kind": "tap",
-   "frame": "f08",
-   "target": "ch-pokazhi-glaza",
-   "options": [
-    {
-     "pic": "body-eyes",
-     "clip": "w-glaza"
-    },
-    {
-     "pic": "body-ears",
-     "clip": "w-ushi"
-    },
-    {
-     "pic": "body-nose",
-     "clip": "w-nos"
-    }
-   ],
-   "wrong": {
-    "body-ears": "sem",
-    "body-nose": "sem"
-   },
-   "then": "listen_do hotspots on mika-body (LS11) when the recipe exists; until then the three close-up cards of the friend"
-  },
-  {
-   "id": "04",
-   "kind": "tap",
-   "frame": "f08",
-   "target": "ch-pokazhi-ushi",
-   "options": [
-    {
-     "pic": "body-ears",
-     "clip": "w-ushi"
-    },
-    {
-     "pic": "body-eyes",
-     "clip": "w-glaza"
-    },
-    {
-     "pic": "body-arms",
-     "clip": "w-ruki"
-    }
-   ],
-   "wrong": {
-    "body-eyes": "sem",
-    "body-arms": "sound"
-   },
-   "then": "listen_do hotspots on mika-body (LS11) when the recipe exists; until then the three close-up cards of the friend"
-  },
-  {
-   "id": "05",
-   "kind": "tap",
-   "frame": "f08",
-   "target": "ch-pokazhi-ruki",
-   "options": [
-    {
-     "pic": "body-arms",
-     "clip": "w-ruki"
-    },
-    {
-     "pic": "body-legs",
-     "clip": "w-nogi"
-    },
-    {
-     "pic": "body-ears",
-     "clip": "w-ushi"
-    }
-   ],
-   "wrong": {
-    "body-legs": "sem",
-    "body-ears": "sound"
-   },
-   "then": "listen_do hotspots on mika-body (LS11) when the recipe exists; until then the three close-up cards of the friend"
-  },
-  {
-   "id": "06",
-   "kind": "tap",
-   "frame": "f08",
-   "target": "ch-pokazhi-nogi",
-   "options": [
-    {
-     "pic": "body-legs",
-     "clip": "w-nogi"
-    },
-    {
-     "pic": "body-arms",
-     "clip": "w-ruki"
-    },
-    {
-     "pic": "body-nose",
-     "clip": "w-nos"
-    }
-   ],
-   "wrong": {
-    "body-arms": "sem",
-    "body-nose": "sound"
-   },
-   "then": "listen_do hotspots on mika-body (LS11) when the recipe exists; until then the three close-up cards of the friend"
-  },
-  {
-   "id": "07",
-   "kind": "tap",
-   "frame": "f08",
-   "target": "ch-pokazhi-zhivot",
-   "options": [
-    {
-     "pic": "body-tummy",
-     "clip": "w-zhivot"
-    },
-    {
-     "pic": "body-head",
-     "clip": "w-golova"
-    },
-    {
-     "pic": "body-legs",
-     "clip": "w-nogi"
-    }
-   ],
-   "wrong": {
-    "body-head": "sem",
-    "body-legs": "sem"
-   },
-   "then": "listen_do hotspots on mika-body (LS11) when the recipe exists; until then the three close-up cards of the friend"
-  },
-  {
-   "id": "08",
-   "kind": "tap",
-   "frame": "f08",
-   "target": "ch-pokazhi-paltsy",
-   "options": [
-    {
-     "pic": "body-fingers",
-     "clip": "w-paltsy"
-    },
-    {
-     "pic": "body-nose",
-     "clip": "w-nos"
-    },
-    {
-     "pic": "body-hair",
-     "clip": "w-volosy"
-    }
-   ],
-   "wrong": {
-    "body-nose": "sem",
-    "body-hair": "sem"
-   },
-   "then": "listen_do hotspots on mika-body (LS11) when the recipe exists; until then the three close-up cards of the friend"
-  },
-  {
-   "id": "09",
-   "kind": "tap",
-   "frame": "f08",
-   "target": "ch-pokazhi-zuby",
-   "options": [
-    {
-     "pic": "body-teeth",
-     "clip": "w-zuby"
-    },
-    {
-     "pic": "body-eyes",
-     "clip": "w-glaza"
-    },
-    {
-     "pic": "body-ears",
-     "clip": "w-ushi"
-    }
-   ],
-   "wrong": {
-    "body-eyes": "sem",
-    "body-ears": "sem"
-   },
-   "then": "listen_do hotspots on mika-body (LS11) when the recipe exists; until then the three close-up cards of the friend"
-  },
-  {
-   "id": "10",
-   "kind": "tap",
-   "frame": "f08",
-   "target": "ch-pokazhi-volosy",
-   "options": [
-    {
-     "pic": "body-hair",
-     "clip": "w-volosy"
-    },
-    {
-     "pic": "body-tummy",
-     "clip": "w-zhivot"
-    },
-    {
-     "pic": "body-arms",
-     "clip": "w-ruki"
-    }
-   ],
-   "wrong": {
-    "body-tummy": "sem",
-    "body-arms": "sem"
-   },
-   "then": "listen_do hotspots on mika-body (LS11) when the recipe exists; until then the three close-up cards of the friend"
-  },
-  {
-   "id": "11",
-   "kind": "tap",
-   "frame": "f08",
-   "target": "ch-pokazhi-golovu",
-   "options": [
-    {
-     "pic": "body-head",
-     "clip": "w-golova"
-    },
-    {
-     "pic": "body-legs",
-     "clip": "w-nogi"
-    },
-    {
-     "pic": "body-tummy",
-     "clip": "w-zhivot"
-    }
-   ],
-   "wrong": {
-    "body-legs": "sem",
-    "body-tummy": "sem"
-   },
-   "then": "listen_do hotspots on mika-body (LS11) when the recipe exists; until then the three close-up cards of the friend"
-  },
-  {
-   "id": "p01",
-   "kind": "tap",
-   "frame": "f08",
-   "target": "ch-pokazhi-ushi",
-   "options": [
-    {
-     "pic": "body-ears",
-     "clip": "w-ushi"
-    },
-    {
-     "pic": "body-eyes",
-     "clip": "w-glaza"
-    },
-    {
-     "pic": "body-arms",
-     "clip": "w-ruki"
-    }
-   ],
-   "wrong": {
-    "body-eyes": "sem",
-    "body-arms": "sound"
-   },
-   "purpose": "probe"
-  }
- ],
- "lessons": [
-  {
-   "id": "body-1",
-   "title": "הַגּוּף",
-   "items": [
-    "01",
-    "02",
-    "03",
-    "04"
-   ]
-  },
-  {
-   "id": "body-2",
-   "title": "הַגּוּף",
-   "items": [
-    "05",
-    "06",
-    "07",
-    "11"
-   ]
-  },
-  {
-   "id": "body-3",
-   "title": "הַגּוּף",
-   "items": [
-    "08",
-    "09",
-    "10"
-   ]
-  }
- ],
- "teach": [
-  [
-   "w-nos",
-   "w-rot",
-   "w-glaza",
-   "w-ushi"
   ],
-  [
-   "w-ruki",
-   "w-nogi",
-   "w-zhivot",
-   "w-golova"
+  "teach": [
+    [
+      "w-nos",
+      "w-rot",
+      "w-glaza",
+      "w-ushi"
+    ],
+    [
+      "w-ruki",
+      "w-nogi",
+      "w-zhivot",
+      "w-golova"
+    ],
+    [
+      "w-paltsy",
+      "w-zuby",
+      "w-volosy"
+    ]
   ],
-  [
-   "w-paltsy",
-   "w-zuby",
-   "w-volosy"
-  ]
- ],
- "routes": {
-  "new": "teach in three sets; items 01 to 15",
-  "heritage": {
-   "teach": false,
-   "order": "mixed",
-   "embodied": "after each right tap"
-  },
-  "reader": "as heritage or new"
- },
- "waiting": [
-  {
-   "id": "12",
-   "template": "listen_do",
-   "mode": "hotspots",
-   "frame": "f08",
-   "target": "ch-pokazhi-nos",
-   "scene": "doll-body (missing)",
-   "right": "hot.nose",
-   "wrong": {
-    "hot.mouth": "sound",
-    "hot.eyes": "sem"
-   },
-   "check": false,
-   "why": "LS11 recipe, and a doll picture with its hotspot map (not drawn)"
-  },
-  {
-   "id": "13",
-   "template": "listen_do",
-   "mode": "hotspots",
-   "frame": "f08",
-   "target": "ch-pokazhi-ushi",
-   "scene": "doll-body (missing)",
-   "right": "hot.ears",
-   "wrong": {
-    "hot.eyes": "sem",
-    "hot.arms": "sound"
-   },
-   "check": false,
-   "why": "LS11 recipe, and a doll picture with its hotspot map (not drawn)"
-  },
-  {
-   "id": "14",
-   "template": "listen_do",
-   "mode": "hotspots",
-   "frame": "f08",
-   "target": "ch-pokazhi-nogi",
-   "scene": "doll-body (missing)",
-   "right": "hot.legs",
-   "wrong": {
-    "hot.arms": "sem",
-    "hot.nose": "sound"
-   },
-   "check": true,
-   "why": "LS11 recipe, and a doll picture with its hotspot map (not drawn)"
-  },
-  {
-   "id": "15",
-   "template": "listen_do",
-   "mode": "hotspots",
-   "frame": "f08",
-   "target": "ch-pokazhi-zhivot",
-   "scene": "doll-body (missing)",
-   "right": "hot.belly",
-   "wrong": {
-    "hot.head": "sem",
-    "hot.legs": "sem"
-   },
-   "check": true,
-   "why": "LS11 recipe, and a doll picture with its hotspot map (not drawn)"
-  },
-  {
-   "id": "e01",
-   "template": "listen_do",
-   "mode": "embodied",
-   "frame": "f10",
-   "note": "after each right tap: the child shows the part on themself and taps done",
-   "why": "LS11 recipe (unscored, never counted alone)"
+  "routes": {
+    "new": "teach in three sets; items 01 to 15",
+    "heritage": {
+      "teach": false,
+      "order": "mixed",
+      "embodied": "after each right tap"
+    },
+    "reader": "as heritage or new"
   }
- ]
 }

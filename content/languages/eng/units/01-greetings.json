@@ -4,18 +4,17 @@
     {"id": "i01", "kind": "tap", "target": "en-hello", "options": ["pip-arrive", "pip-leave"], "wrong": {"pip-leave": "sem"}},
     {"id": "i02", "kind": "tap", "target": "en-goodbye", "options": ["pip-leave", "pip-arrive", "mika-eat"], "wrong": {"pip-arrive": "sem", "mika-eat": "l1_guess"}},
     {"id": "i03", "kind": "tap", "purpose": "check", "target": "en-hi", "options": ["mika-arrive", "mika-leave", "mika-eat"], "wrong": {"mika-leave": "sem", "mika-eat": "l1_guess"}},
-    {"id": "i04", "kind": "tap", "target": "en-bye", "options": ["mika-leave", "mika-arrive"], "wrong": {"mika-arrive": "sem"}},
+    {"id": "i04", "kind": "tap", "target": "en-bye", "options": ["mika-leave", "mika-arrive", "mika-eat"], "wrong": {"mika-arrive": "sem", "mika-eat": "l1_guess"}},
     {"id": "i05", "kind": "tap", "target": "en-hello", "options": ["mika-arrive", "mika-leave", "mika-eat"], "wrong": {"mika-leave": "sem", "mika-eat": "l1_guess"}},
     {"id": "i06", "kind": "tap", "purpose": "check", "target": "en-goodbye", "options": ["mika-leave", "mika-arrive", "mika-eat"], "wrong": {"mika-arrive": "sem", "mika-eat": "l1_guess"}},
-    {"id": "pr1", "kind": "tap", "purpose": "probe", "target": "en-hello", "options": ["pip-arrive", "pip-leave"], "wrong": {"pip-leave": "sem"}}
+    {"id": "pr1", "kind": "tap", "purpose": "probe", "target": "en-hello", "options": ["pip-arrive", "pip-leave"], "wrong": {"pip-leave": "sem"}},
+    {"id": "i07", "kind": "puppet", "frame": "he-ins-bubble", "rep": "story", "ladder": "HL-BUBBLE", "mode": "bubble", "picture": "pip-arrive", "prompt": ["en-pip-hello"], "options": [{"clip": "en-hello", "pic": "act-wave"}, {"clip": "en-goodbye", "pic": "pip-leave"}], "wrong": {"en-goodbye": "sem"}},
+    {"id": "i08", "kind": "puppet", "frame": "he-ins-bubble", "rep": "story", "ladder": "HL-BUBBLE", "mode": "bubble", "picture": "pip-leave", "prompt": ["en-goodbye"], "options": [{"clip": "en-bye", "pic": "act-wave"}, {"clip": "en-hi", "pic": "pip-arrive"}], "wrong": {"en-hi": "sem"}},
+    {"id": "p01", "kind": "puppet", "frame": "he-ins-personal", "mode": "personal", "topic": "name", "picture": "pip-happy", "prompt": ["en-pip-hello", "en-whats-your-name"], "purpose": "practice", "cards": [], "reply": "en-nice-to-meet-you", "pass": "en-thats-ok"},
+    {"id": "r01", "kind": "chant", "purpose": "practice", "frame": "he-ins-chant", "lines": ["en-ch-hello-1", "en-ch-hello-2", "en-ch-hello-3", "en-ch-hello-4"], "pictures": [{"pic": "act-wave", "clip": "en-hello"}, {"pic": "act-clap", "clip": "en-clap"}]}
   ],
   "lessons": [
-    {"id": "greet-1", "title": "בְּרָכוֹת", "items": ["i01", "i02", "i03", "i04", "i05"]}
-  ],
-  "waiting": [
-    {"id": "i07", "template": "LS10 puppet_talk bubble", "frame": "he-ins-bubble", "picture": "pip-arrive", "prompt": ["en-pip-hello"], "options": [{"clip": "en-hello", "pic": "act-wave"}, {"clip": "en-goodbye", "pic": "pip-leave"}], "wrong": {"en-goodbye": "sem"}, "ladder": "HL-BUBBLE", "rep": "story"},
-    {"id": "i08", "template": "LS10 puppet_talk bubble", "frame": "he-ins-bubble", "picture": "pip-leave", "prompt": ["en-goodbye"], "options": [{"clip": "en-bye", "pic": "act-wave"}, {"clip": "en-hi", "pic": "pip-arrive"}], "wrong": {"en-hi": "sem"}, "ladder": "HL-BUBBLE", "rep": "story"},
-    {"id": "p01", "template": "LS10 puppet_talk personal", "topic": "name", "frame": "he-ins-personal", "picture": "pip-happy", "prompt": ["en-pip-hello", "en-whats-your-name"], "cards": [], "voice": true, "reply": "en-nice-to-meet-you", "pass": "en-thats-ok", "note": "Pip answers first (\"I'm Pip\": en-pip-hello). The name is never matched, echoed, stored or sent; never scored."},
-    {"id": "r01", "template": "LS12 sing_along chant", "frame": "he-ins-chant", "chant": "hello", "purpose": "practice", "note": "The hello routine opens every visit (en-ch-hello-1 to 4), the goodbye routine ends it (en-ch-bye-1 to 4); the chants are in 13-chants.json."}
+    {"id": "greet-1", "title": "בְּרָכוֹת", "items": ["i01", "i02", "i03", "i04", "i05"]},
+    {"id": "greet-more", "title": "בְּרָכוֹת", "items": ["i07", "i08", "p01", "r01"]}
   ]
 }

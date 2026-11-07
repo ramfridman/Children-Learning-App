@@ -1,0 +1,161 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a16.i06",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.3",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-16",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "transfer",
+  "representation": "pictorial",
+  "variantGroup": "en-isit-apple",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 2,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "listen and choose",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "שְׁתֵּי תְּמוּנוֹת"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_ins_thumbs",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כֵּן אוֹ לֹא? גְּעוּ בַּאֲגוּדָל."
+      }
+    ],
+    "target": "vo:eng.en_isit_apple",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_8",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כׇּל הַכָּבוֹד!"
+        }
+      ],
+      "target": "vo:eng.en_no"
+    },
+    "incorrect": [
+      {
+        "when": "misconception:eng.lis.yesno",
+        "vo": "vo:eng.he_fb_look_again",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַתְּמוּנָה."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ],
+      "target": "vo:eng.en_isit_apple"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:eng.he_hint_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
+        }
+      ],
+      "target": "vo:eng.en_isit_apple"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:eng.he_gl_apple",
+      "caption": [
+        {
+          "t": "he",
+          "v": "תַּפּוּחַ"
+        }
+      ],
+      "target": "vo:eng.en_isit_apple"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:eng.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:eng.en_isit_apple"
+    }
+  ],
+  "scene": {
+    "group": {
+      "sprite": "asset:egg",
+      "count": 1
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:thumb_down",
+        "label": "תְּמוּנָה"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:thumb_up",
+        "label": "תְּמוּנָה",
+        "misconception": "eng.lis.yesno"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true,
+    "pole": "no",
+    "pairWith": "eng.a16.i05"
+  }
+}

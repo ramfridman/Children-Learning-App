@@ -15,8 +15,11 @@
     "RUS-A-17"
   ],
   "items": [
+    "rus.a17.c01",
     "rus.a17.01",
+    "rus.a17.c02",
     "rus.a17.02",
+    "rus.a17.c03",
     "rus.a17.03"
   ],
   "estimatedMinutes": 4,
@@ -29,5 +32,5 @@
       }
     ]
   },
-  "sequence": 33
+  "sequence": 55
 }

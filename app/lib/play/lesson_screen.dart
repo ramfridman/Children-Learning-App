@@ -401,10 +401,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     // A line is worth saying only until the child's next move; after that it would be about something already past.
     final int move = c.actionNonce;
     bool relevant() => c.actionNonce == move;
-    // A line of a language course is two clips: the Hebrew frame clip, then the target clip.
+    // A line of a language course is the Hebrew frame clip, then the target clip, and a second target clip when the line has one.
     unawaited(
       _director.sayClips(
-        <String?>[c.voice, c.voiceTarget],
+        <String?>[c.voice, c.voiceTarget, c.voiceTarget2],
         owner: this,
         relevant: relevant,
         replace: c.voiceReplaces,

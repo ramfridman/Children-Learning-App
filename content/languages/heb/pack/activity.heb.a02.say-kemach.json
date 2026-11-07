@@ -1,0 +1,127 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a02.say-kemach",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "say_it",
+  "templateVersion": "1.0",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "embodied",
+  "variantGroup": "a02-say-kemach",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 1,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "say the word with the voice",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנָה וּמִלָּה לוֹמַר"
+  },
+  "prompt": {
+    "vo": "vo:heb.say_together",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נֹאמַר יַחַד."
+      }
+    ],
+    "target": "vo:heb.heb_a_w_kemach",
+    "show": "קֶמַח",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_4",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִקְשַׁבְתֶּם עַד הַסּוֹף!"
+        }
+      ],
+      "target": "vo:heb.heb_a_w_kemach"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_kemach"
+    }
+  },
+  "hints": [],
+  "scene": {
+    "picture": {
+      "sprite": "asset:flour"
+    }
+  },
+  "say": {
+    "forms": [
+      "קֶמַח"
+    ],
+    "foils": [
+      "קְעָרָה",
+      "תַּנּוּר"
+    ],
+    "clip": "vo:heb.heb_a_w_kemach",
+    "heard": {
+      "vo": "vo:heb.heard",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שָׁמַעְתִּי:"
+        }
+      ],
+      "target": "vo:heb.heb_a_w_kemach"
+    },
+    "together": {
+      "vo": "vo:heb.say_together",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נֹאמַר יַחַד."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_kemach"
+    }
+  },
+  "answer": {
+    "type": "say_it",
+    "scored": false
+  }
+}

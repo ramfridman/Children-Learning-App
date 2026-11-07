@@ -19,11 +19,12 @@
     }
   ],
   "representations": [
-    "pictorial"
+    "pictorial",
+    "story"
   ],
   "misconceptions": [
-    "rus.lis.sem",
-    "rus.pho.rhyme_onset"
+    "rus.pho.rhyme_onset",
+    "rus.lis.sem"
   ],
   "retention": {
     "targetRetention": 0.9,

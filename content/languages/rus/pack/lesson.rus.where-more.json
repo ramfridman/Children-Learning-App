@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.where-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "אֵיפֹה?"
+    }
+  ],
+  "skills": [
+    "RUS-A-13"
+  ],
+  "items": [
+    "rus.a13.07",
+    "rus.a13.08",
+    "rus.a13.09",
+    "rus.a13.10"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 42
+}

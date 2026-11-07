@@ -14,7 +14,8 @@
   "strand": "voc",
   "prerequisites": [],
   "representations": [
-    "pictorial"
+    "pictorial",
+    "story"
   ],
   "misconceptions": [
     "rus.lis.sem",
