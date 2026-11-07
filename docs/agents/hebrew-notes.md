@@ -636,4 +636,4 @@ nikud like its Band B twins), 4 balance prompts (wrong for Band C, now reworded 
 The 81 items said `שְׁמוֹנֶה עֲשָׂרוֹת וְאֶחָד יְחִידוֹת`: `אֶחָד` is masculine singular and `יְחִידוֹת` is feminine plural, so the phrase agrees in neither gender nor number. The owner's words (11.6, question 4) were `אחד עשרות ו5 יחידות`, an example of one ten, not of one unit.
 `tens_words(1)` stays `אֶחָד עֲשָׂרוֹת`, exactly as the owner approved (the digit, then the plural; the owner's word). `ones_words(1)` is now `יְחִידָה אַחַת` (with the vav, `וִיחִידָה אַחַת`), the correct singular feminine; two stays `שְׁתֵּי יְחִידוֹת` and the others are unchanged.
 Changed rows: `activity.c.numc03.16` (prompt, alt text) and `activity.c.numc02.6` (hint 3); they are `text-ready` again, no longer `owner-approved` (the rule in `hebrew_voice_review.py` now covers `אֶחָד עֲשָׂרוֹת` only).
-For the owner: confirm `וִיחִידָה אַחַת`, or say if you want the school form `וְאֶחָד יְחִידוֹת` kept for one unit.
+**The owner approved `שְׁמוֹנֶה עֲשָׂרוֹת וִיחִידָה אַחַת` on 2026-11-07** (rule 4 in `OWNER_APPROVED`); the three rows are `owner-approved`.
