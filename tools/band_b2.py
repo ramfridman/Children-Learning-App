@@ -104,11 +104,11 @@ def colours():
               domain='colors', h3='כׇּל הַצּוּרוֹת הַדּוֹמוֹת הוֹלְכוֹת יַחַד, גַּם אִם הַצֶּבַע שׁוֹנֶה. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! מִיַּנְתֶּם לְפִי צוּרָה.')
 
-    # B-15 §1 (H9a, H9b): a friend sorted one way and one shape is in the wrong place
-    for cells, rule, how in ((['shape_circle_red', 'shape_square_red', 'shape_triangle_blue', 'shape_rect_red'], 'colour', 'לְפִי צֶבַע'),
-                             (['shape_circle_red', 'shape_circle_blue', 'shape_square_green', 'shape_circle_yellow'], 'shape', 'לְפִי צוּרָה')):
+    # B-15 §1 (H9a, H9b): a row sorted one way and one shape is in the wrong place; no unnamed "friend" (owner 2026-11-07), the prompt is the logic land's
+    for cells, rule, how in ((['shape_circle_red', 'shape_square_red', 'shape_triangle_blue', 'shape_rect_red'], 'colour', 'בְּאוֹתוֹ צֶבַע'),
+                             (['shape_circle_red', 'shape_circle_blue', 'shape_square_green', 'shape_circle_yellow'], 'shape', 'אוֹתָהּ צוּרָה')):
         u.act('COL-B-04', 'spot', cells=cells, wrong=2, tag='M-SORT-SHIFT', rule=rule, domain='colors', check='error_spotting', difficulty=0.6,
-              prompt='חָבֵר מִיֵּן %s, וְצוּרָה אַחַת לֹא בַּמָּקוֹם שֶׁלָּהּ. אֵיפֹה הַטָּעוּת?' % how)
+              prompt='הַצּוּרוֹת כֻּלָּן %s, חוּץ מֵאַחַת. אֵיזוֹ?' % how)
 
     u.skill('COL-B-06', 'קשת בענן', 'מְסַדְּרִים אֶת הַקֶּשֶׁת', 'pattern-door', ['COL-B-01'], ['concrete'], ['M-PAT-COPY'])
     rainbow = ['ball_red', 'ball_orange', 'ball_yellow', 'ball_green', 'ball_blue', 'ball_purple']
@@ -123,10 +123,10 @@ def colours():
     u.act('COL-B-06', 'build', palette=rainbow, sequence=rainbow, prompt='בּוֹנִים אֶת הַקֶּשֶׁת: %s.' % words, domain='colors',
           h3='הַקֶּשֶׁת: %s. עַכְשָׁו תּוֹרְכֶם.' % words)
 
-    # B-15 §1 (H10): a friend built the rainbow and one colour is not the one that belongs there
+    # B-15 §1 (H10): a rainbow with one colour (no unnamed "friend", owner 2026-11-07) and one colour is not the one that belongs there
     u.act('COL-B-06', 'spot', cells=['ball_red', 'ball_orange', 'ball_purple', 'ball_green', 'ball_blue', 'ball_purple'], wrong=2,
           tag='M-PAT-COPY', domain='colors', check='error_spotting', difficulty=0.6,
-          prompt='חָבֵר בָּנָה קֶשֶׁת, וְיֵשׁ בָּהּ טָעוּת. אֵיפֹה הַטָּעוּת?', h3='הַקֶּשֶׁת: %s. עַכְשָׁו תּוֹרְכֶם.' % words)
+          prompt='בַּקֶּשֶׁת יֵשׁ טָעוּת. אֵיפֹה הַטָּעוּת?', h3='הַקֶּשֶׁת: %s. עַכְשָׁו תּוֹרְכֶם.' % words)
 
     ids = lambda skill, a=0, b=None: lesson_ids(u, skill, a, b)
     u.lesson('mix-colours', 'מְעָרְבְּבִים צְבָעִים', ['COL-B-01'], ids('COL-B-01', 0, 3), 'כׇּל הַכָּבוֹד! עִרְבַּבְתֶּם צְבָעִים.')
@@ -165,7 +165,7 @@ def shapes():
               correct_text='כֵּן! %s יֵשׁ %s צְלָעוֹת.' % ('לַ' + SIDES_DEF[sh][2:], F[n]),
               h3='%s הוּא צוּרָה סְגוּרָה עִם %s צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם.' % (SIDES_DEF[sh], F[n]))
 
-    # B-15 §1 (H6): a friend collects only triangles; the open shape and the thin or turned triangle are the traps
+    # B-15 §1 (H6): only triangles are collected; the open shape and the thin or turned triangle are the traps
     for cells, w, tag in ((['shape_triangle', 'shape_triangle', 'shape_open', 'shape_triangle'], 2, 'M-SHP-CLOSED'),
                           (['shape_triangle', 'shape_triangle_thin', 'shape_triangle_down', 'shape_open'], 3, 'M-SHP-PROTO')):
         u.act('SHP-B-01', 'spot', cells=cells, wrong=w, tag=tag, domain='shapes', check='error_spotting', difficulty=0.6,
@@ -259,7 +259,7 @@ def logic():
                  'shape_circle_yellow', 'shape_square_yellow', 'shape_square_orange', 'shape_rect_red', 'shape_rect_blue', 'frog', 'chick',
                  'apple_size_l', 'star_size_l', 'fish_size_l', 'apple_size_s', 'star_size_s', 'fish_size_s', 'bin_basket', 'bin_grass'] + [
                  'clue_not_%s' % k for k in ('red', 'blue', 'green', 'yellow', 'orange', 'circle', 'square', 'triangle')])
-    u.tag('M-PAT-UNIT', ['LOG-B-02'], 'הילד לא מזהה איזה חלק חוזר בסדר, ולכן לא רואה איפה הוא נשבר.',
+    u.tag('M-PAT-UNIT', ['LOG-B-02'], 'הילד לא מזהה איזה חלק חוזר בסדר, ולכן לא רואה איזה חלק לא במקום שלו.',
           'לשיר שיר עם תנועות חוזרות, למשל טפיחה-טפיחה-מחיאה, ולעצור ולשאול: מה החלק שחוזר?',
           ['embodied', 'pictorial'], 'יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ.')
     u.tag('M-PAT-GROW', ['LOG-B-04'], 'בסדר שגדל, הילד חוזר על האחרון במקום להוסיף עוד אחד.',
@@ -294,7 +294,7 @@ def logic():
     pattern_row(8, 'ABB', 'fish', 'star', 'apple', check='transfer', difficulty=0.6)
     pattern_row(9, 'AAB', 'frog', 'chick', 'bird', check='transfer', difficulty=0.6)
 
-    u.skill('LOG-B-02', 'מוצאים את החלק החוזר', 'מוֹצְאִים מַה נִּשְׁבַּר בַּסֵּדֶר', 'pattern-door', ['LOG-B-01'], ['pictorial'], ['M-PAT-UNIT'])
+    u.skill('LOG-B-02', 'מה לא במקום שלו?', 'מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?', 'pattern-door', ['LOG-B-01'], ['pictorial'], ['M-PAT-UNIT'])
     # A1 of check-2026-11-06: an ABC row breaks only after the unit was shown twice (cells 6 and 7), so one reading is left
     # D19 of the logic sweep: the wrong cell never equals a neighbour (no run of alike cells to tap by mistake), so the ABC row
     # of .3 breaks at cell 7, where a third element fits between its neighbours
@@ -456,7 +456,7 @@ def logic():
     ids = lambda skill, a=0, b=None: lesson_ids(u, skill, a, b)
     u.lesson('longer-patterns', 'סֵדֶר שֶׁל שְׁלוֹשָׁה דְּבָרִים', ['LOG-B-01'], ids('LOG-B-01', 0, 4), 'כׇּל הַכָּבוֹד! הִמְשַׁכְתֶּם סֵדֶר.')
     u.lesson('longer-patterns-more', 'עוֹד סְדָרִים', ['LOG-B-01'], ids('LOG-B-01', 4), 'מְצֻיָּן! הַסֵּדֶר נִמְשָׁךְ.')
-    u.lesson('broken-pattern', 'מַה נִּשְׁבַּר', ['LOG-B-02'], ids('LOG-B-02'), 'כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַשּׁוֹנֶה.')
+    u.lesson('broken-pattern', 'מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?', ['LOG-B-02'], ids('LOG-B-02'), 'כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַשּׁוֹנֶה.')
     u.lesson('growing-towers', 'מִגְדָּלִים שֶׁגְּדֵלִים', ['LOG-B-04'], ids('LOG-B-04'), 'כׇּל הַכָּבוֹד! הַמִּגְדָּלִים גְּדֵלִים.')
     u.lesson('find-the-rule', 'מָה הַכְּלָל', ['LOG-B-06'], ids('LOG-B-06'), 'כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַכְּלָל.')
     u.lesson('if-then', 'אִם… אָז…', ['LOG-B-08'], ids('LOG-B-08'), 'כׇּל הַכָּבוֹד! עֲשִׂיתֶם לְפִי הַכְּלָל.')

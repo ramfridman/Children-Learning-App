@@ -136,8 +136,9 @@ class HebrewMasterTableTest(unittest.TestCase):
         # the editor's read of the logic land, 2026-11-07 (hebrew-notes section 13): the 207 rows and the rest are text-ready (the
         # list is empty), and the sources already hold the corrected wording; 1262 done rows differ (the rows now at the pack's text
         # no more differ) and 49 proposed ones (the V1 rows). The count of rows is the same
+        # 1260 done rows since the owner's LOG-B-02 title (2026-11-07): the skill child line and the lesson title are now the pack's own text
         self.assertEqual(len(self.rows), 12746)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1262)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1260)
         self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 49)
 
     def test_done_rows_have_ui_text(self):

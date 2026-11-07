@@ -884,6 +884,16 @@ OWNER_APPROVED = [
      'Logic sweep, owner Q3 (2026-11-07): "חָבֵר אוֹסֵף רַק …" becomes "אוֹסְפִים רַק …" in the colours and shapes lands as in the logic land, '
      'with the owner-approved question; where the old line named only a colour, the thing is named (כַּדּוּרִים, פְּרָחִים, דְּבָרִים) '
      '(owner-approved 2026-11-07).'),
+    # The owner's second answers of 2026-11-07 (logic sweep follow-up): LOG-B-02 says "מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?" as LOG-A-07 does, and no
+    # unnamed "friend" does anything in any land.
+    (r'^(skill\.LOG-B-02|lesson\.broken-pattern)\.json$', r'^(מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ\?|מה לא במקום שלו\?)$',
+     'Logic sweep follow-up, owner (2026-11-07): the LOG-B-02 skill title and child line and the lesson "broken-pattern" title say '
+     '"מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?", in place of "מוֹצְאִים מַה נִּשְׁבַּר בַּסֵּדֶר" and "מַה נִּשְׁבַּר" (owner-approved 2026-11-07).', r'^(title|childLine)'),
+    (r'^activity\.(b15\.numa0[1238]|b\.numb(03|11)|b\.mathb(03|09)|b\.colb0[46])\.',
+     r'^(סוֹפְרִים מִסְפָּרִים|כָּתוּבִים כָּאן מִסְפָּרִים|כָּתוּב כָּאן תַּרְגִּיל|הַצּוּרוֹת כֻּלָּן|בַּקֶּשֶׁת יֵשׁ טָעוּת)',
+     'Logic sweep follow-up, owner (2026-11-07): no unnamed "friend" (חָבֵר סָפַר / כָּתַב / מִיֵּן / בָּנָה) in any land; the line says what is on '
+     'the screen (an impersonal present or a participle, or what the shapes have in common), with the same question, "אֵיפֹה הַטָּעוּת?" '
+     '(owner-approved 2026-11-07).'),
 ]
 
 

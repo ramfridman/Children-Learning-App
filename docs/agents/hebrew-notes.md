@@ -670,3 +670,14 @@ Every row is `text-ready`, waiting for the owner, except 18 rows held by the old
 3. **`חָבֵר אוֹסֵף רַק …` is gone from the colours and shapes lands (15 items, not 7: 6 colours, 4 shapes A, 5 shapes B).** `אוֹסְפִים רַק X. מָה הִגִּיעַ לְכָאן בְּטָעוּת?`, as in the logic land. Where the old line named only a colour (an adjective with nothing to describe) the thing is named from the cells: `כַּדּוּרִים אֲדֻמִּים`, `פְּרָחִים כְּחֻלִּים`, `פְּרָחִים כְּתֻמִּים`, `כַּדּוּרִים שְׁחֹרִים`; a row that mixes balls, flowers and balloons says `דְּבָרִים חוּמִים`, `דְּבָרִים אֲפֹרִים`. The shape items already had a noun and only lose `חָבֵר`.
 
 `OWNER_APPROVED` has three new entries; the rows are `owner-approved` (the owner chose the wording of 1 and 2 and the pattern of 3; the nouns added in 3 are the editor's, within that pattern). No clip was voiced; the changed texts keep their voice ids (the list is in the hand-off).
+
+### 13b. The owner's follow-up answers of 2026-11-07 (applied)
+
+1. **LOG-B-02**: the skill (title and child line) and the lesson `broken-pattern` say `מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?` (adult title `מה לא במקום שלו?`), as LOG-A-07 does. The parent text of M-PAT-UNIT said "where it breaks" (`נשבר`); it now says `איזה חלק לא במקום שלו` (adult text, text-ready). Nothing else in the logic lands says "broken".
+2. **No unnamed "friend" does anything, in any land** (26 items; `חָבֵר` is left only in `לְכׇל חָבֵר לְפִי הַתּוֹר` (the sharing line) and the friends screens of `he.dart`, where a friend is a person on the screen):
+   - `חָבֵר סָפַר מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת` (NUM-A-01, 02, 03, NUM-B-03, NUM-B-11: 13 items) → `סוֹפְרִים מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת` (the impersonal present of the owner-approved `אוֹסְפִים רַק`; not the past `סָפְרוּ`, which a child hears as the command `סִפְרוּ`);
+   - `חָבֵר כָּתַב מִסְפָּרִים, …` (NUM-A-08, 2 items) → `כָּתוּבִים כָּאן מִסְפָּרִים, …`;
+   - `חָבֵר כָּתַב תַּרְגִּיל, וְהַתְּשׁוּבָה לֹא נְכוֹנָה` (MATH-B-03 and MATH-B-09, 8 items) → `כָּתוּב כָּאן תַּרְגִּיל, וְהַתְּשׁוּבָה לֹא נְכוֹנָה` (the same question; the sum is unchanged);
+   - `חָבֵר מִיֵּן לְפִי צֶבַע / צוּרָה, וְצוּרָה אַחַת לֹא בַּמָּקוֹם שֶׁלָּהּ. אֵיפֹה הַטָּעוּת?` (COL-B-04, 2 items) → the logic land's `הַצּוּרוֹת כֻּלָּן בְּאוֹתוֹ צֶבַע / אוֹתָהּ צוּרָה, חוּץ מֵאַחַת. אֵיזוֹ?` (same cells as LOG-B-06 .7 and .8);
+   - `חָבֵר בָּנָה קֶשֶׁת, וְיֵשׁ בָּהּ טָעוּת` (COL-B-06) → `בַּקֶּשֶׁת יֵשׁ טָעוּת` (`בּוֹנִים` would sound like the instruction of the build items).
+   The answers, the cells and the hints are untouched, so nothing these items check changes. Generators: `tools/band_b.py`, `tools/band_b2.py`; the hand-edited `content/units/counting-hills.json`.

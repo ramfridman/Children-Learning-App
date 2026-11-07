@@ -268,7 +268,7 @@ def numbers():
         right = list(shown)
         right[w] = shown[w - 1] - 1
         u.act('NUM-B-03', 'spot', cells=['n:%d' % v for v in shown], wrong=w, tag='M-CNT-SEQ', check='error_spotting', difficulty=0.5,
-              prompt='חָבֵר סָפַר מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?',
+              prompt='סוֹפְרִים מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?',
               h3='נִסְפֹּר אֲחוֹרָה: %s. עַכְשָׁו תּוֹרְכֶם.' % ', '.join(F[v] for v in right),
               correct_text='כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת %s.' % F[right[w]])
 
@@ -338,7 +338,7 @@ def numbers():
         cells = ['n:%d' % (start + k) for k in range(length)]
         cells[w] = 'n:%d' % v
         u.act('NUM-B-11', 'spot', cells=cells, wrong=w, tag='M-CNT-SEQ',
-              prompt='חָבֵר סָפַר מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?',
+              prompt='סוֹפְרִים מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?',
               h3='הַמִּסְפָּרִים גְּדֵלִים בְּאֶחָד כָּל פַּעַם. אֶחָד מֵהֶם לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת %s.' % F[start + w])
     for i, n in enumerate([3, 6, 8, 11, 14, 17]):
@@ -561,7 +561,7 @@ def math():
     for x, op, y, r, bad, w in [(3, '+', 4, 7, 8, 4), (6, '+', 2, 8, 9, 4), (9, '-', 4, 5, 6, 4), (7, '-', 2, 5, 4, 4)]:
         cells = ['n:%d' % x, 'op:' + op, 'n:%d' % y, 'op:=', 'n:%d' % bad]
         u.act('MATH-B-03', 'spot', cells=cells, wrong=w, tag='M-EQ-OPER',
-              prompt='חָבֵר כָּתַב תַּרְגִּיל, וְהַתְּשׁוּבָה לֹא נְכוֹנָה. אֵיפֹה הַטָּעוּת?',
+              prompt='כָּתוּב כָּאן תַּרְגִּיל, וְהַתְּשׁוּבָה לֹא נְכוֹנָה. אֵיפֹה הַטָּעוּת?',
               h3='%s %s %s שָׁוֶה %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַתְּשׁוּבָה הַלֹּא נְכוֹנָה.' % (F[x], 'וְעוֹד' if op == '+' else 'פָּחוֹת', F[y], F[r]),
               correct_text='כֵּן! %s %s %s שָׁוֶה %s.' % (F[x], 'וְעוֹד' if op == '+' else 'פָּחוֹת', F[y], F[r]))
 
@@ -655,7 +655,7 @@ def math():
     # the answer is wrong, and the answer (written first) is the wrong cell. Tapping the last number instead is M-EQ-OPER.
     for i, (x, y, z, bad) in enumerate([(3, 4, 7, 8), (5, 2, 7, 6), (6, 3, 9, 10), (4, 5, 9, 8)]):
         u.act('MATH-B-09', 'spot', cells=['n:%d' % bad, 'op:=', 'n:%d' % x, 'op:+', 'n:%d' % y], wrong=0, tag='M-EQ-OPER',
-              prompt='חָבֵר כָּתַב תַּרְגִּיל, וְהַתְּשׁוּבָה לֹא נְכוֹנָה. אֵיפֹה הַטָּעוּת?',
+              prompt='כָּתוּב כָּאן תַּרְגִּיל, וְהַתְּשׁוּבָה לֹא נְכוֹנָה. אֵיפֹה הַטָּעוּת?',
               h3='%s שָׁוֶה %s וְעוֹד %s. עַכְשָׁו תּוֹרְכֶם.' % (F[z], F[x], F[y]), correct_text='כֵּן! %s שָׁוֶה %s וְעוֹד %s.' % (F[z], F[x], F[y]))
 
     # ---- MATH-B-10: equal groups
