@@ -11,6 +11,7 @@ import 'hint_ladder.dart';
 import 'language_checks.dart';
 import 'ls01_checks.dart';
 import 'ls02_checks.dart';
+import 'own_name_docs.dart' show OwnNameDocs;
 import 'row_width.dart';
 import 'schema.dart';
 import 'schemas.dart';
@@ -822,7 +823,16 @@ List<Problem> validatePack({
   lessons.forEach((String id, Map<String, Object?> l) {
     final String file = 'lesson.$id.json';
     for (final (int i, Object? item) in (l['items']! as List<Object?>).indexed) {
-      if (!activityIds.contains(item)) say(file, 'items[$i]', 'there is no activity "$item" in this pack');
+      if (!activityIds.contains(item)) {
+        say(file, 'items[$i]', 'there is no activity "$item" in this pack');
+      } else if (activities[item] case final Map<String, Object?> doc when _isTeachScreen(doc)) {
+        // A teach screen is played from a `teach` set, which is filtered by route; among the items it would reach every route.
+        say(
+          file,
+          'items[$i]',
+          '"$item" is a teach screen, so it is not an item of any lesson (name it in `teach`)',
+        );
+      }
     }
     for (final (int i, Object? s) in (l['skills']! as List<Object?>).indexed) {
       checkSkill(file, 'skills[$i]', s);
@@ -836,8 +846,7 @@ List<Problem> validatePack({
         final Map<String, Object?>? doc = activities[item];
         if (doc == null) {
           say(file, 'teach[$i].items[$j]', 'there is no activity "$item" in this pack');
-        } else if (doc['template'] != 'say_it' ||
-            (doc['answer'] as Map<String, Object?>?)?['teach'] != true) {
+        } else if (!_isTeachScreen(doc)) {
           say(file, 'teach[$i].items[$j]', '"$item" is not a teach screen (a say_it with answer.teach)');
         } else if (l['items'] is List<Object?> && (l['items']! as List<Object?>).contains(item)) {
           say(
@@ -1115,6 +1124,10 @@ void _voiceAnswer(
   }
 }
 
+/// A teach screen: a `say_it` whose answer says `teach` (the child is shown the word, not asked it).
+bool _isTeachScreen(Map<String, Object?> doc) =>
+    doc['template'] == 'say_it' && (doc['answer'] as Map<String, Object?>?)?['teach'] == true;
+
 List<Map<String, Object?>> _maps(Object? v) => <Map<String, Object?>>[
   for (final Object? e in (v as List<Object?>? ?? const <Object?>[])) e! as Map<String, Object?>,
 ];
@@ -1330,6 +1343,18 @@ void _nameAnswer(
     say(file, 'answer.names', 'the closed list the distractor names come from is needed');
   }
   if (names.toSet().length != names.length) say(file, 'answer.names', 'a name is in the list twice');
+  // The device makes the options from the child's name, the companion's, or the house character's: with no name at all the last must work.
+  try {
+    if (OwnNameDocs().madeDoc(a) == null) {
+      say(
+        file,
+        'answer',
+        'no options can be made from the house character name (the list, the pairs or the options do not fit the rules)',
+      );
+    }
+  } on Object {
+    say(file, 'answer', 'the own-name item is not shaped so that its options can be made');
+  }
   final List<Map<String, Object?>> pairs = _maps(answer['pairs']);
   if (pairs.isEmpty && (unit == 'letter' || sources.contains('lookalike'))) {
     say(file, 'answer.pairs', 'the look-alike pairs of letters are needed');

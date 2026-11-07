@@ -60,6 +60,10 @@ SKILL_EXTRAS = ('worldObject', 'childLine', 'core', 'bundle', 'setCoverage', 'so
 VO_PART = re.compile(r'^[a-z0-9_.]{1,80}$')
 ASSET_ID = re.compile(r'^[a-z0-9_]{1,40}$')
 SKILL_ID = re.compile(r'^(ENG|HEB|RUS)-([ABC])-(\d{2})(\.[A-Z][0-9]{1,2})?$')
+GATE_ID = re.compile(r'^[a-z]{3}\.[a-z0-9_]{1,19}$')  # content/schemas/gate.schema.json `id`
+# The name of every file of the pack source: a plain name, no folder, no leading dot (a name is built from teacher text, so it is checked
+# again where the files are written).
+FILE_NAME = re.compile(r'^[A-Za-z0-9_][A-Za-z0-9_.-]{0,120}$')
 
 
 class SpecError(Exception):
@@ -284,7 +288,7 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
     def _unit(self, fname, unit):
         skill = unit.get('skill', {})
         sid = skill.get('id', '')
-        m = SKILL_ID.match(sid)
+        m = SKILL_ID.fullmatch(sid)
         if not m or m.group(1) != self.id.upper():
             self.problem(fname, 'skill.id "%s" must look like %s-A-01 (the prefix is the course in capitals)' % (sid, self.id.upper()))
             return
@@ -305,7 +309,7 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
 
     def _item(self, fname, sk, sid, item, where):
         item_id = item.get('id', '')
-        if not re.match(r'^[a-z0-9][a-z0-9-]{0,19}$', item_id):
+        if not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,19}', item_id):
             self.problem(where, 'id "%s" must be lower case letters, digits and hyphens (at most 20 characters)' % item_id)
             return
         where = '%s (%s)' % (where, item_id)
@@ -324,7 +328,9 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
             return
         self._add(sk, sid, aid, doc, item_id)
         follow = item.get('then')
-        if isinstance(follow, dict):
+        if isinstance(follow, dict) and follow.get('kind') not in RECIPES:
+            self.problem(where, 'then: unknown kind "%s"' % follow.get('kind'))
+        elif isinstance(follow, dict):
             # A step that goes with the item: the touch on the picture after a say step (`tap`), or the say step after a bubble
             # (`say`). It is an activity of its own, `<id>t` or `<id>s`, played right after.
             step = dict(follow, id=item_id + follow['kind'][0])
@@ -346,7 +352,7 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
 
     def _picture(self, picture, where):
         asset = picture.replace('-', '_')
-        if not ASSET_ID.match(asset):
+        if not ASSET_ID.fullmatch(asset):
             self.problem(where, 'the picture id "%s" gives no usable asset id' % picture)
             return asset
         have = self.used_pictures.get(asset)
@@ -381,6 +387,9 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
         if kind not in ('gate',) or not isinstance(did, str) or not isinstance(body, dict):
             self.problem(where, 'a doc is {"kind": "gate", "id": ..., "doc": {...}}')
             return
+        if not GATE_ID.fullmatch(did) or not did.startswith(self.id + '.'):
+            self.problem(where, 'the gate id "%s" must look like %s.oral (the course, a dot, then 1 to 19 of a-z, 0-9 and _)' % (did, self.id))
+            return
         full = {'schema': '%s/v1' % kind, 'id': did, 'review': 'needs-editor', 'course': self.id}
         full.update(body)
         full['id'] = did
@@ -408,7 +417,7 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
             for i, lesson in enumerate(unit.get('lessons', [])):
                 where = '%s lessons[%d]' % (fname, i)
                 lid = lesson.get('id', '')
-                if not re.match(r'^[a-z0-9][a-z0-9-]{1,30}$', lid):
+                if not re.fullmatch(r'[a-z0-9][a-z0-9-]{1,30}', lid):
                     self.problem(where, 'id "%s" must be lower case letters, digits and hyphens (2 to 31 characters)' % lid)
                     continue
                 full = '%s.%s' % (self.id, lid)
@@ -485,7 +494,7 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
     def _tag_docs(self):
         for key, t in sorted(self.tags.items()):
             where = 'course.json tags.%s' % key
-            if not re.match(r'^%s\.[a-z]{2,4}\.[a-z0-9_]{1,24}$' % self.id, t.get('id', '')):
+            if not re.fullmatch(r'%s\.[a-z]{2,4}\.[a-z0-9_]{1,24}' % self.id, t.get('id', '')):
                 self.problem(where, 'id must be <course>.<strand>.<slug>, for example %s.lis.sem' % self.id)
             if t.get('kind') not in TAG_KINDS:
                 self.problem(where, 'kind must be one of %s' % ', '.join(TAG_KINDS))
@@ -601,10 +610,24 @@ def outputs(course, root=ROOT):
     """(pack folder, {relative path: bytes}) of a course; raises SpecError."""
     c = Course(course, root)
     files = c.build()
+    odd = sorted(name for name in files if not FILE_NAME.fullmatch(name))
+    if odd:
+        raise SpecError(['%s: the file name %r is not a plain name (a pack file has no folder in its name)' % (course, n) for n in odd])
     base = os.path.join(root, 'content', 'languages', course)
     out = {os.path.join(base, 'pack', name): data for name, data in files.items()}
     out[os.path.join(base, 'voice-plan.json')] = c.plan_bytes()
     return os.path.join(base, 'pack'), out
+
+
+def refuse_outside(course, pack_dir, out, root):
+    """Raises SpecError unless every file of the pack lands directly in <course>/pack once links are resolved (the voice plan, next to the
+    pack, is the one other file). Called before any folder is made or any file is written."""
+    pack_real = os.path.normcase(os.path.realpath(pack_dir))
+    plan = os.path.join(root, 'content', 'languages', course, 'voice-plan.json')
+    bad = [p for p in out if p != plan and os.path.normcase(os.path.dirname(os.path.realpath(p))) != pack_real]
+    if bad:
+        raise SpecError(['%s: %s would be written outside content/languages/%s/pack' % (course, os.path.relpath(p, root), course)
+                         for p in sorted(bad)])
 
 
 def run(courses=COURSES, root=ROOT, check=False, quiet=False):
@@ -615,6 +638,7 @@ def run(courses=COURSES, root=ROOT, check=False, quiet=False):
         if not os.path.exists(os.path.join(root, 'content', 'languages', course, 'course.json')):
             continue
         pack_dir, out = outputs(course, root)
+        refuse_outside(course, pack_dir, out, root)
         existing = set(glob.glob(os.path.join(pack_dir, '*'))) if os.path.isdir(pack_dir) else set()
         for path in sorted(existing - set(out)):
             if check:

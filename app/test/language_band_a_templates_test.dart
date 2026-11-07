@@ -133,6 +133,12 @@ void main() {
           expect(samples.length, greaterThan(8), reason: 'the pack has several kinds of activity');
           for (final MapEntry<String, String> s in samples.entries) {
             final Activity a = content.activities[s.value]!;
+            // A teach screen is played only from the `teach` set of a lesson (it is no item of any lesson, and a mission has no teach set).
+            final Lesson? teachLesson = a.teachScreen
+                ? content.lessons.values.firstWhere(
+                    (Lesson l) => l.teach.any((TeachSet set) => set.itemIds.contains(a.id)),
+                  )
+                : null;
             final AppRig rig = AppRig(
               content: content,
               characters: await languageVoiceSource(_refs(pack.docs)),
@@ -155,12 +161,15 @@ void main() {
                     builder: (BuildContext c) => LessonScreen(
                       profileId: langKid,
                       course: course,
-                      mission: Lesson.mission(
-                        id: 'shot',
-                        itemIds: <String>[a.id],
-                        skillIds: <String>[a.skillId],
-                        celebration: const Spoken(vo: 'vo:x.celebrate', caption: 'x'),
-                      ),
+                      lessonId: teachLesson?.id ?? 'butterflies',
+                      mission: teachLesson != null
+                          ? null
+                          : Lesson.mission(
+                              id: 'shot',
+                              itemIds: <String>[a.id],
+                              skillIds: <String>[a.skillId],
+                              celebration: const Spoken(vo: 'vo:x.celebrate', caption: 'x'),
+                            ),
                     ),
                   ),
                 );

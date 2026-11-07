@@ -1328,6 +1328,13 @@
       "ipa": "[jɪjˈt͡so]"
     },
     {
+      "id": "w-jozhik",
+      "vo": "vo:rus.w_jozhik",
+      "shown": "ёжик",
+      "say": "ёжик",
+      "ipa": "[ˈjoʐɨk]"
+    },
+    {
       "id": "w-jula",
       "vo": "vo:rus.w_jula",
       "shown": "юла",

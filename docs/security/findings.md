@@ -67,6 +67,12 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-B29-2 | iOS local data: no backup-excluded data folder yet, and secure-storage items are not `ThisDeviceOnly` (not reachable: no iOS build can open the database today) | low | Dart part fixed (`b29-profile`: every item is `first_unlock_this_device`, not synchronizable; proof `secure_store_test.dart`); the Swift part (exclude the iOS database folder from backup) gates any iOS build and waits for the iOS platform channel | 2026-11-06 |
 | SEC-B29-3 | The birth-month source rule scans 7 of the `lib/` folders and misses some names (`childAgeProvider`, `ageInMonths`, `assumedMonths`) | low | fixed (`b29-profile`: an allowlist over all of `lib/`, and only `show SchoolStage` imports of `engine/age.dart` outside it; proof `profile_sync_test.dart`) | 2026-11-06 |
 | SEC-B29-4 | Rolling back `settings-put` or `child-put` while the B-29 app is in use stops its settings sync and the save of a child with a stage | info | open (a deploy note: roll back the app first) | 2026-11-06 |
+| SEC-BA-2 | Teach screens: the validator refuses a teach screen only among the items of the lesson that names it, not among another lesson's items | low | open | 2026-11-07 |
+| SEC-BA-3 | Own-name items: the validator does not prove the house character's name always gives a face, so a pack can make a lesson throw when it opens | low | open | 2026-11-07 |
+| SEC-BA-4 | Bundled language packs: an error other than `PackRejected` while installing or reading one course takes every language course out | low | open | 2026-11-07 |
+| SEC-BA-5 | Misconception skills: the pack schema takes 60, `content-publish` takes 10, so the English and Russian packs (15) cannot be published as they are | low | open | 2026-11-07 |
+| SEC-BA-6 | Own-name source test is a short deny list; the row test checks some of the record's fields | info | open | 2026-11-07 |
+| SEC-BA-7 | A look-alike tag on an own-name answer narrows the first letter of the child's name to two letters in the synced row (the server already holds the name) | info | open (accept; no action) | 2026-11-07 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
@@ -416,6 +422,27 @@ this check, a format mismatch between a deployed gateway and an installed app, i
     feature declare that version.
   - New findings: SEC-M10-1 to -3 (low) and SEC-M10-4 and -5 (info), in the table above. Their detail and proofs go to the
     orchestrator and stay out of the public file until they are fixed.
+- **Languages Band A, `languages-band-a` (`ff6d7578` against `origin/main`; 2026-11-07): one medium finding (SEC-BA-1, in the
+  generator tools, held privately), four low and two info, in the table above. Nothing in the app reaches a vendor.** In scope:
+  the bundled language packs (`bundled_packs.dart`, `ContentRepository.languagePacks`, `languagePacksProvider`,
+  `pack_builder build-language`), HEB-A-11 own name (`name_options.dart` and its wiring, `answer.type: name`), the schema
+  changes (misconception skills cap, `target2`, `font`, story 1.1 `zones` and `follow`, `cutClips`, `answer.teach` and lesson
+  `teach`), the response codes, and `tools/lang_pack.py` with `lang_recipes*.py` and `lang_routes.py`. Not in scope: the
+  pictures, the unit texts as teaching, and the generated pack files one by one (checked through the validator and tests).
+  - Bundled packs: installed only through the verifying installer; the asset name picks only course and version (the regex
+    takes `eng`, `heb` or `rus` and a three-part version), and the read-back checks the pack's own course; the installer refuses
+    a downgrade, so a damaged newer copy is never replaced by the older bundle; nothing is installed for a family with no
+    language on. No language pack is bundled yet (the owner signs them).
+  - Own name: the options are made on the device; a row holds only the option id (`o1` to `o3`) and a pack tag; release builds
+    log nothing and no log line prints an option; the tutor gets ids only, and every language item has `llmAllowed: false`
+    (validator); the validator refuses `voiceAnswer` on the item; there is no TTS package; the tile's label is read only by the
+    phone's own screen reader.
+  - Teach screens: the route filter and the schema both keep a heritage speaker from a teach set; the engine never sees a
+    teach screen; a teach screen opens no microphone and writes nothing. SEC-BA-2 is the gap.
+  - Response codes: every new answer is an option id inside `sync-push`'s pattern (schema `o[0-9]{1,2}`).
+  - Advisories: CVE-2026-27704 / GHSA-q739-79rh-vmvp (pub client path traversal; NVD, published 2026-02-25, updated
+    2026-03-12) is fixed in Flutter 3.41.0, and the local toolchain is 3.47.8. No package, lock file, workflow or host changed
+    on the branch. No secret-shaped string in the branch diff (a local grep; gitleaks is not installed locally, CI runs it).
 - **B-29 steps 3 and 4, `b29-profile` (`e27f6824` against `origin/m10-step0`; 2026-11-06): safe to deploy in the order
   migration, then `child-put`, `sync-pull` and `settings-put`, then the app. Nothing above low.** In scope: the migration, the
   three changed functions and the shared store, the device-only birth month and year, `engine/age.dart`, the sync field and

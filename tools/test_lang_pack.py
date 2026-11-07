@@ -744,5 +744,5 @@ class RecipesTest(RecipeBase):
 
 if __name__ == '__main__':
     # The tests of test_lang_pack_more.py run with these (it imports this file, so it is imported only when this one is the script).
-    from test_lang_pack_more import FontTest, OwnNameTest, PrintTest, TeachTest  # noqa: F401
+    from test_lang_pack_more import FontTest, NamesBecomeFilesTest, OwnNameTest, PrintTest, TeachTest  # noqa: F401
     unittest.main()

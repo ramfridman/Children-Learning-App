@@ -14,6 +14,8 @@ import 'package:nitznutz/parent/language_settings.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
 import 'package:nitznutz/play/lesson_screen.dart';
 import 'package:nitznutz/play/name_options.dart';
+import 'package:nitznutz/play/response_code.dart';
+import 'package:nitznutz/tutor/tutor.dart' show TutorAttempt;
 
 import '../tool/pack_builder_lib.dart';
 import 'support/app_harness.dart';
@@ -286,27 +288,75 @@ void main() {
       await c.chooseOption(a.correctId);
       expect(rows, isNotEmpty);
       for (final AttemptRecord r in rows) {
+        // every field of the row, so that a field added later is not forgotten here
         final String all = <Object?>[
+          r.at.toIso8601String(),
           r.profileId,
           r.packId,
+          r.packVersion,
           r.lessonId,
           r.activityId,
+          r.activityRevision,
+          r.template,
+          r.templateVersion,
           r.skillId,
           r.result,
+          r.attemptNo,
+          r.hintLevel,
           r.misconceptionTag,
           r.response,
-          r.template,
+          r.durationMs,
+          r.sessionId,
+          r.input,
         ].join(' ');
         expect(_hebrewLetter.hasMatch(all), isFalse, reason: 'no Hebrew text, so no name, in a row: $all');
         expect(r.response, matches(RegExp(r'^o[0-9]$')));
+        // what the tutor is told of an attempt is made from the same row (the controller's `_recent`): ids and enums only
+        final TutorAttempt told = TutorAttempt(
+          ResponseCode.tutorOption(r.response),
+          r.result,
+          misconception: r.misconceptionTag.isEmpty ? null : r.misconceptionTag,
+        );
+        expect(
+          _hebrewLetter.hasMatch(jsonEncode(told.toJson())),
+          isFalse,
+          reason: 'no name in ${told.toJson()}',
+        );
       }
       c.dispose();
     });
 
+    // The two files that touch a name: the rules on plain documents (pure Dart, so the pack tools can run them) and the activity adapter.
+    const String docsFile = 'lib/content/own_name_docs.dart';
+    const String adapterFile = 'lib/play/name_options.dart';
+
+    List<String> directives(String path) => <String>[
+      for (final String l in File(path).readAsLinesSync())
+        if (RegExp(r'^\s*(import|export|part)\s').hasMatch(l)) l.trim(),
+    ];
+
+    test('the code that makes the options imports only what it needs: a closed list of libraries', () {
+      const String why =
+          'a new import (a log, a store, a network) in a file that holds a name needs the security-engineer';
+      expect(directives(docsFile), <String>[
+        "import 'dart:convert';",
+        "import 'dart:math' as math;",
+        "import '../data/child_name.dart' show displayChildName;",
+        "import '../strings/he.dart';",
+      ], reason: why);
+      expect(directives(adapterFile), <String>[
+        "import 'dart:math' as math;",
+        "import '../content/models.dart';",
+        "import '../content/own_name_docs.dart';",
+        "export '../content/own_name_docs.dart' show houseName, printName;",
+      ], reason: why);
+    });
+
     test('the code that makes the options reads nothing but the name it is given and writes it nowhere', () {
       final String source = <String>[
-        for (final String l in File('lib/play/name_options.dart').readAsLinesSync())
-          if (!l.trimLeft().startsWith('//')) l,
+        for (final String path in <String>[docsFile, adapterFile])
+          for (final String l in File(path).readAsLinesSync())
+            if (!l.trimLeft().startsWith('//')) l,
       ].join('\n');
       for (final String forbidden in <String>[
         'core/log.dart',
@@ -323,21 +373,87 @@ void main() {
         'tutor',
         'voice',
       ]) {
-        expect(source.contains(forbidden), isFalse, reason: 'name_options.dart must not touch "$forbidden"');
+        expect(source.contains(forbidden), isFalse, reason: 'the own-name code must not touch "$forbidden"');
       }
     });
 
-    test('the only caller is the lesson screen and the controller\'s fallback', () {
-      final List<String> callers = <String>[
-        for (final FileSystemEntity f in Directory('lib').listSync(recursive: true))
-          if (f is File &&
-              f.path.endsWith('.dart') &&
-              f.readAsLinesSync().any(
-                (String l) => l.startsWith('import') && l.contains('name_options.dart'),
-              ))
-            f.path.replaceAll('\\', '/'),
-      ]..sort();
-      expect(callers, <String>['lib/play/lesson_controller.dart', 'lib/play/lesson_screen.dart']);
+    List<String> importersOf(String file) => <String>[
+      for (final FileSystemEntity f in Directory('lib').listSync(recursive: true))
+        if (f is File &&
+            f.path.endsWith('.dart') &&
+            f.readAsLinesSync().any(
+              (String l) => RegExp(r'^(import|export)\s').hasMatch(l) && l.contains(file),
+            ))
+          f.path.replaceAll('\\', '/'),
+    ]..sort();
+
+    test('the only callers are the lesson screen and the controller\'s fallback', () {
+      expect(importersOf('name_options.dart'), <String>[
+        'lib/play/lesson_controller.dart',
+        'lib/play/lesson_screen.dart',
+      ]);
+    });
+
+    test('the rules on documents are used by the adapter and by the validator, which runs them with no name at all', () {
+      expect(importersOf('own_name_docs.dart'), <String>[
+        'lib/content/pack_validation.dart',
+        'lib/play/name_options.dart',
+      ]);
+    });
+  });
+
+  group('an item that cannot be made (SEC-BA-3)', () {
+    /// The own-name item [id] of the Hebrew pack with its closed list cut to [names], as a pack that was never validated could hold it.
+    TapAnswerActivity broken(String id, List<String> names) {
+      final TapAnswerActivity a = item(id);
+      final Map<String, Object?> doc = jsonDecode(jsonEncode(a.json)) as Map<String, Object?>;
+      (doc['answer']! as Map<String, Object?>)['names'] = names;
+      return Activity.fromJson(doc, a.assets) as TapAnswerActivity;
+    }
+
+    test('even the house name gives nothing: the item comes back as it was, and never throws', () {
+      for (final String? name in <String?>[null, 'נועה', 'ךךך']) {
+        final Activity made = OwnName(childName: name).apply(broken('02', <String>[houseName]));
+        expect(
+          OwnName.stillToMake(made),
+          isTrue,
+          reason: 'the item cannot be drawn, so the lesson passes it over',
+        );
+      }
+      final TapAnswerActivity three = item('03');
+      final Activity junk = Activity.fromJson(<String, Object?>{
+        ...three.json,
+        'answer': <String, Object?>{
+          ...(three.json['answer']! as Map<String, Object?>),
+          'pairs': 'not a list',
+        },
+      }, three.assets);
+      expect(() => OwnName().apply(junk), returnsNormally);
+    });
+
+    test('the validator runs the house name on every own-name item and says which cannot be made', () async {
+      final Directory dir = Directory.systemTemp.createTempSync('nn_own_name_');
+      addTearDown(() => dir.deleteSync(recursive: true));
+      for (final FileSystemEntity e in languageSource('heb', _languages).listSync()) {
+        if (e is File) e.copySync('${dir.path}${Platform.pathSeparator}${e.uri.pathSegments.last}');
+      }
+      final File f = File('${dir.path}${Platform.pathSeparator}activity.heb.a11.02.json');
+      final Map<String, Object?> doc = jsonDecode(f.readAsStringSync()) as Map<String, Object?>;
+      // no name starts like the house character's (nun) or like its look-alike letter (gimel): the rules give it no NAME-FIRST option
+      final Map<String, Object?> answer = doc['answer']! as Map<String, Object?>;
+      answer['names'] = <String>[
+        for (final String n in (answer['names']! as List<Object?>).cast<String>())
+          if (!n.startsWith('נ') && !n.startsWith('ג')) n,
+      ];
+      f.writeAsStringSync(jsonEncode(doc));
+      String problems = '';
+      try {
+        await buildPack(dir, await newTestKey());
+      } on BuildFailed catch (e) {
+        problems = e.problems.join('\n');
+      }
+      expect(problems, contains('house character'));
+      expect(problems, contains('activity.heb.a11.02.json'));
     });
   });
 

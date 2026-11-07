@@ -2020,9 +2020,11 @@ class PackContent {
   /// The placement game of the course (LS13), or null: the lands have none, and a language pack may not have one yet.
   final PlacementDoc? placement;
 
-  /// The activities of a lesson, in order. An item that is hidden (see [PackContent.fromPack]) is left out.
+  /// The activities of a lesson, in order. An item that is hidden (see [PackContent.fromPack]) is left out, and so is a teach screen: the
+  /// validator refuses one among the items, and a teach screen is only ever played from a `teach` set, which [itemsFor] filters by route.
   List<Activity> itemsOf(Lesson lesson) => <Activity>[
-    for (final String id in lesson.itemIds) ?activities[id],
+    for (final String id in lesson.itemIds)
+      if (activities[id] case final Activity a when !a.teachScreen) a,
   ];
 
   /// What a child on [route] plays in [lesson]: the teach screens of the sets that route is shown, then the lesson's items. A route that

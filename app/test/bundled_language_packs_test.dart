@@ -201,6 +201,36 @@ void main() {
       expect(await load(b, <String>['rus']), isEmpty);
     });
 
+    test('a read that fails in a way that is not a rejection leaves that course out and the others in (SEC-BA-4)', () async {
+      final _Bundle b = _Bundle(built);
+      Future<Uint8List> read(String asset) async {
+        if (asset.contains('lang-eng-')) throw StateError('the asset cannot be read');
+        return b.read(asset);
+      }
+
+      final Map<String, PackContent> packs = await repo.languagePacks(
+        wanted: <String>['eng', 'heb'],
+        bundled: BundledLanguagePack.newestOf(await b.list()),
+        read: read,
+      );
+      expect(packs.keys, <String>['heb']);
+      expect(await repo.installedLanguages(), <String>['heb']);
+    });
+
+    test('an installed copy that cannot be read back, and a bundle that cannot be read to repair it, leave the other course (SEC-BA-4)', () async {
+      final _Bundle b = _Bundle(built);
+      await load(b, <String>['eng', 'heb']);
+      File('${installer.packDir('lang-eng', '0.1.0').path}${Platform.pathSeparator}skill.ENG-A-01.json')
+          .deleteSync();
+      Future<Uint8List> read(String asset) async => throw StateError('the asset cannot be read');
+      final Map<String, PackContent> packs = await repo.languagePacks(
+        wanted: <String>['eng', 'heb'],
+        bundled: BundledLanguagePack.newestOf(await b.list()),
+        read: read,
+      );
+      expect(packs.keys, <String>['heb']);
+    });
+
     test('a pack under the wrong name cannot stand for another course', () async {
       // The file says rus, the pack says eng: the installer installs the pack it proved (lang-eng), and the rus slot stays empty.
       final _Bundle b = _Bundle(<String, Uint8List>{

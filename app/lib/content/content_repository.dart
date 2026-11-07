@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import '../core/log.dart';
 import '../data/app_database.dart' show InstalledPack;
 import '../engine/course.dart';
 import 'bundled_packs.dart';
@@ -85,27 +86,38 @@ class ContentRepository {
     return out;
   }
 
+  /// The course's pack read back and proven, or null. Any failure of one course (a rejected pack, but also a file that cannot be read or a
+  /// pack that cannot be built into content) leaves the course out and the others as they are. Only the course and the type of the error
+  /// are logged, never the message (it could quote a file).
   Future<PackContent?> _proven(String course) async {
     try {
       return await languagePack(course);
     } on PackRejected {
       return null;
+    } on Object catch (e) {
+      Log.d('language pack $course not played: ${e.runtimeType}');
+      return null;
     }
   }
 
   /// Installs the bundled copy. Without [repair] only when nothing, or something older, is installed. A file the installer refuses
-  /// (a build defect the tests catch) or a newer copy already there changes nothing. True if the copy is now installed.
+  /// (a build defect the tests catch), a file that cannot be read or a newer copy already there changes nothing, for this course or
+  /// any other. True if the copy is now installed.
   Future<bool> _installBundled(
     BundledLanguagePack pack,
     Future<Uint8List> Function(String asset) read, {
     required bool repair,
   }) async {
-    final InstalledPack? row = await installer.registry.find(Course.packIdOf(pack.course)!);
-    if (!repair && row != null && compareSemver(row.version, pack.version) >= 0) return false;
+    final String course = pack.course;
     try {
+      final InstalledPack? row = await installer.registry.find(Course.packIdOf(course)!);
+      if (!repair && row != null && compareSemver(row.version, pack.version) >= 0) return false;
       await installer.install(await read(pack.asset));
       return true;
     } on PackRejected {
+      return false;
+    } on Object catch (e) {
+      Log.d('language pack $course not installed: ${e.runtimeType}');
       return false;
     }
   }

@@ -244,5 +244,36 @@ class OwnNameTest(MoreBase):
         self.assertProblem('`ownName.pairs`')
 
 
+class NamesBecomeFilesTest(Base):
+    """SEC-BA-1: an id from a teacher's file becomes part of a file name, so it is held to a plain id (tools/test_sec_lang_pack.py runs the
+    attack itself)."""
+
+    def gate(self, gate_id):
+        self.sb.unit['docs'] = [{'kind': 'gate', 'id': gate_id, 'doc': {'requires': ['ENG-A-01'], 'holds': ['ENG-B-01']}}]
+
+    def test_a_gate_id_is_the_courses_own_and_a_plain_id(self):
+        self.gate('eng.oral')
+        self.assertIn('gate.eng.oral.json', self.sb.build())
+        for bad in ('heb.oral', 'eng.', 'eng.Oral', 'eng.a/b', 'eng.a\\b', 'eng.oral\n', '../eng.oral', 'eng.' + 'x' * 20, 'eng.a.b'):
+            with self.subTest(gate_id=bad):
+                self.gate(bad)
+                self.assertProblem('the gate id')
+
+    def test_an_item_or_lesson_id_with_a_line_end_is_refused(self):
+        self.sb.unit['items'][0]['id'] += '\n'
+        self.assertProblem('must be lower case letters, digits and hyphens')
+
+    def test_a_file_outside_the_pack_is_refused_before_anything_is_written(self):
+        root = self.sb.root
+        pack = os.path.join(root, 'content', 'languages', 'eng', 'pack')
+        plan = os.path.join(root, 'content', 'languages', 'eng', 'voice-plan.json')
+        lang_pack.refuse_outside('eng', pack, {os.path.join(pack, 'pack.json'): b'', plan: b''}, root)  # what is right passes
+        for path in (os.path.join(pack, '..', 'x.json'), os.path.join(pack, 'sub', 'x.json'), os.path.join(root, 'x.json')):
+            with self.subTest(path=path):
+                with self.assertRaises(lang_pack.SpecError):
+                    lang_pack.refuse_outside('eng', pack, {path: b''}, root)
+        self.assertFalse(os.path.exists(os.path.join(pack, 'sub')), 'no folder is made by the check')
+
+
 if __name__ == '__main__':
     unittest.main()

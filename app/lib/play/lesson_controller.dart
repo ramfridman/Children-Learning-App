@@ -90,6 +90,16 @@ typedef AttemptSink = Future<void> Function(AttemptRecord record);
 
 Activity _ownNameWithoutAName(Activity a) => OwnName().apply(a);
 
+/// [made] without the own-name items that could not be made (they have no faces to draw; the validator makes sure of the house name, so
+/// this is a safety net). A lesson with nothing else keeps them rather than open empty.
+List<Activity> _playable(List<Activity> made) {
+  final List<Activity> ok = <Activity>[
+    for (final Activity a in made)
+      if (!OwnName.stillToMake(a)) a,
+  ];
+  return ok.isEmpty ? made : ok;
+}
+
 /// Chooses the activities of an adaptive visit one after another (the placement game, LS13): which comes next depends on how the
 /// last one went. The lesson's own item list holds only the first.
 abstract interface class ItemFlow {
@@ -148,13 +158,13 @@ class LessonController extends ChangeNotifier {
     Activity Function(Activity)? personalise,
     Clock clock = const SystemClock(),
   }) : _personalise = personalise ?? _ownNameWithoutAName,
-       items = <Activity>[
+       items = _playable(<Activity>[
          for (final Activity a
              in flow == null
                  ? content.itemsFor(lesson, route: route)
                  : <Activity>[content.activities[flow.first()]!])
            (personalise ?? _ownNameWithoutAName)(a),
-       ],
+       ]),
        _record = record,
        _clock = clock {
     _begin();
