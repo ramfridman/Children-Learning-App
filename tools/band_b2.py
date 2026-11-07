@@ -169,7 +169,7 @@ def shapes():
     for cells, w, tag in ((['shape_triangle', 'shape_triangle', 'shape_open', 'shape_triangle'], 2, 'M-SHP-CLOSED'),
                           (['shape_triangle', 'shape_triangle_thin', 'shape_triangle_down', 'shape_open'], 3, 'M-SHP-PROTO')):
         u.act('SHP-B-01', 'spot', cells=cells, wrong=w, tag=tag, domain='shapes', check='error_spotting', difficulty=0.6,
-              prompt='חָבֵר אוֹסֵף רַק מְשֻׁלָּשִׁים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?')
+              prompt='אוֹסְפִים רַק מְשֻׁלָּשִׁים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?')
 
     u.skill('SHP-B-02', 'סופרים צלעות', 'סוֹפְרִים צְלָעוֹת', 'cone-tree', ['SHP-B-01'], ['pictorial'], ['M-CNT-DOUBLE', 'M-CNT-SKIP'])
     for i, (sp, n) in enumerate([('shape_triangle', 3), ('shape_quad', 4), ('shape_pentagon', 5), ('shape_hexagon', 6), ('shape_square', 4),
@@ -201,7 +201,7 @@ def shapes():
     # B-15 §1 (H6): the square is a rectangle, so a tap on it is the M-SHP-SQRECT signal
     # its own line: the shared M-SHP-SQRECT line is about a rectangle taken for a square, and here the square was taken out
     u.act('SHP-B-03', 'spot', cells=['shape_rect', 'shape_square', 'shape_rect', 'shape_triangle'], wrong=3, tag='M-SHP-SQRECT', domain='shapes',
-          check='error_spotting', difficulty=0.6, prompt='חָבֵר אוֹסֵף רַק מַלְבֵּנִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?',
+          check='error_spotting', difficulty=0.6, prompt='אוֹסְפִים רַק מַלְבֵּנִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?',
           tag_lines={'M-SHP-SQRECT': ('vo:fb.sqrect.square_is_rect',
                                       'רִבּוּעַ הוּא גַּם מַלְבֵּן: מַלְבֵּן מְיֻחָד, שֶׁכׇּל הַצְּלָעוֹת שֶׁלּוֹ שָׁווֹת. בּוֹאוּ נִסְפֹּר אֶת הַצְּלָעוֹת בְּכׇל צוּרָה.')})
 
@@ -215,7 +215,7 @@ def shapes():
               h3='נִסְתַּכֵּל עַל הַקַּוִּים: אֶפְשָׁר לָלֶכֶת מִסָּבִיב וְלַחֲזֹר לַהַתְחָלָה? עַכְשָׁו תּוֹרְכֶם.')
 
     u.act('SHP-B-04', 'spot', cells=['shape_triangle', 'shape_square', 'shape_open', 'shape_pentagon'], wrong=2, tag='M-SHP-CLOSED', domain='shapes',
-          check='error_spotting', difficulty=0.6, prompt='חָבֵר אוֹסֵף רַק צוּרוֹת סְגוּרוֹת. מָה הִגִּיעַ לְכָאן בְּטָעוּת?')
+          check='error_spotting', difficulty=0.6, prompt='אוֹסְפִים רַק צוּרוֹת סְגוּרוֹת. מָה הִגִּיעַ לְכָאן בְּטָעוּת?')
 
     u.skill('SHP-B-08', 'גופים', 'גָּלִיל, חָרוּט, כַּדּוּר וּפִירָמִידָה', 'cone-tree', ['SHP-A-07'], ['pictorial', 'concrete'], [])
     solids = [('solid_cylinder', 'הַגָּלִיל'), ('solid_cone', 'הֶחָרוּט'), ('solid_sphere', 'הַכַּדּוּר'), ('solid_pyramid', 'הַפִּירָמִידָה'),
@@ -231,7 +231,7 @@ def shapes():
                   nm, 'שֶׁלָּהּ' if NAMES[sp]['g'] == 'f' else 'שֶׁלּוֹ'))
 
     u.act('SHP-B-08', 'spot', cells=['solid_cylinder', 'solid_cylinder', 'solid_cone', 'solid_cylinder'], wrong=2, tag='M-SHP-FACE', domain='shapes',
-          check='error_spotting', difficulty=0.6, prompt='חָבֵר אוֹסֵף רַק גְּלִילִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?')
+          check='error_spotting', difficulty=0.6, prompt='אוֹסְפִים רַק גְּלִילִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?')
 
     ids = lambda skill, a=0, b=None: lesson_ids(u, skill, a, b)
     u.lesson('polygon-detectives', 'בַּלָּשֵׁי צוּרוֹת', ['SHP-B-01'], ids('SHP-B-01', 0, 4), 'כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים צוּרוֹת חֲדָשׁוֹת.')
@@ -368,13 +368,13 @@ def logic():
 
     u.skill('LOG-B-08', 'אם אז', 'אִם… אָז…', 'sprout', ['LOG-B-06'], ['concrete'], ['M-SORT-SHIFT'])
     # the prompts wait for the owner (V1 rows, proposed): "אַחֶרֶת" → "אִם לֹא" and "הַצּוּרָה הִיא עִגּוּל" are not in yet
-    # D30 of the logic sweep: "שָׂמִים כׇּל צוּרָה אֲדֻמָּה בַּסַּל, וְאֶת כׇּל הַשְּׁאָר עַל הָעֵשֶׂב" says where each goes, with no "אַחֶרֶת"
+    # D30 of the logic sweep: "שָׂמִים כׇּל צוּרָה אֲדֻמָּה בַּסַּל, וְאֶת כׇּל הַשְּׁאָר עַל הַדֶּשֶׁא" says where each goes, with no "אַחֶרֶת"
     # (written register) and no "if"; hint 3 asks the same question of every shape (is it the rule? basket, else grass)
     def basket(what):
-        return 'שָׂמִים %s בַּסַּל, וְאֶת כׇּל הַשְּׁאָר עַל הָעֵשֶׂב.' % what
+        return 'שָׂמִים %s בַּסַּל, וְאֶת כׇּל הַשְּׁאָר עַל הַדֶּשֶׁא.' % what
 
     def ask(it):
-        return 'לְכׇל צוּרָה שׁוֹאֲלִים: הִיא %s? אִם כֵּן — בַּסַּל, וְאִם לֹא — עַל הָעֵשֶׂב. עַכְשָׁו תּוֹרְכֶם.' % it
+        return 'לְכׇל צוּרָה שׁוֹאֲלִים: הִיא %s? אִם כֵּן — בַּסַּל, וְאִם לֹא — עַל הַדֶּשֶׁא. עַכְשָׁו תּוֹרְכֶם.' % it
 
     ifs = [(basket('כׇּל צוּרָה אֲדֻמָּה'), ask('אֲדֻמָּה'), lambda s: s.endswith('_red')),
            (basket('כׇּל צוּרָה כְּחֻלָּה'), ask('כְּחֻלָּה'), lambda s: s.endswith('_blue')),
@@ -382,7 +382,7 @@ def logic():
            (basket('כׇּל רִבּוּעַ'), ask('רִבּוּעַ'), lambda s: s.startswith('shape_square'))]
     # D4 and D30 of the logic sweep: bin-sized pictures (the design-director's bin_basket and bin_grass) in place of the shrunk
     # basket scene and the grass comb; the basket is called a basket (סַל), never a box
-    BINS = [{'sprite': 'bin_basket', 'label': 'הַסַּל'}, {'sprite': 'bin_grass', 'label': 'הָעֵשֶׂב'}]
+    BINS = [{'sprite': 'bin_basket', 'label': 'הַסַּל'}, {'sprite': 'bin_grass', 'label': 'הַדֶּשֶׁא'}]
     pool = ['shape_circle_red', 'shape_square_blue', 'shape_triangle_red', 'shape_circle_blue', 'shape_square_red', 'shape_triangle_blue']
     for i, (text, h3, test) in enumerate(ifs):
         order = pool[i:] + pool[:i]

@@ -20,8 +20,10 @@ How the pictures are drawn:
 - Where colour is the content, the old hex value is kept: balls, balloons, flowers (`bloom_*`, `flower_red` #D62F2F,
   `flower_yellow` #FFD43B), shades, coloured shapes, apples, bananas.
 - The shade discs have no shade crescent, because a darker edge would change the shade being taught.
-- `robot` is drawn as Tza'adon, the Robot Harbour host, in a small front view. He walks the paths in the design spec.
-  The character file `design/assets/tzaadon.svg` is unchanged.
+- `robot` is a plain toy robot, nobody in particular (the owner, 2026-11-07): not Tza'adon, the Robot Harbour host, and
+  nothing that reads as him. A silver tin wind-up toy seen from the front (box head, red antenna ball, round lens eyes,
+  a grille mouth, a dial on the chest, orange claws and boots), so it faces no way on the path. The character file
+  `design/assets/tzaadon.svg` is unchanged and is not used on the paths. Sheet redrawn 2026-11-07.
 - Arrows and robot steps are not part of these pictures; the clocks never mirror.
 
 Canvases: 100 x 100, except `tower_1` to `tower_8` (100 x 220, so a cube is 24 units wide and all eight towers share one

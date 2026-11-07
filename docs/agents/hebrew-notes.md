@@ -662,3 +662,11 @@ Every row is `text-ready`, waiting for the owner, except 18 rows held by the old
 3. Outside this sweep, for the colours and shapes reviews: `חָבֵר אוֹסֵף רַק אֲדֻמִּים / כְּחֻלִּים / כְּתֻמִּים / מְשֻׁלָּשִׁים / מַלְבֵּנִים / צוּרוֹת סְגוּרוֹת / גְּלִילִים` (the same unnamed "friend"), and the shared M-SER-ENDS line in COL-B-02 (shades of one colour are called "smallest / biggest").
 
 **Pins.** `tools/test_hebrew_sources.py`: done-and-changed rows 1,262 (was 1,267), proposed 49 (was 81); rows 12,746 unchanged; `test_vav_before_a_labial` added. `tools/test_generators.py`: the colour-only sort line is a known rule line.
+
+### 13a. The owner's three answers of 2026-11-07 (applied)
+
+1. **LOG-A-07 title and child line** `מְתַקְּנִים סֵדֶר שֶׁנִּשְׁבַּר` is now the owner's `מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?` (adult title `מה לא במקום שלו?`; dagesh in the `ל` after `מַה`, in `שֶׁלּוֹ`, and `בַּמָּקוֹם` as in the LOG-B-02 prompts). The lesson `fix-patterns-again` keeps `עוֹד מְתַקְּנִים סֵדֶר` (it does not say "broken"). The LOG-B-02 titles (`מַה נִּשְׁבַּר`, `מוֹצְאִים מַה נִּשְׁבַּר בַּסֵּדֶר`) were not in the brief and are unchanged: see the report.
+2. **The second bin is `הַדֶּשֶׁא`** (was `הָעֵשֶׂב`): the label of `bin_grass`, the six LOG-B-08 prompts (`וְאֶת כׇּל הַשְּׁאָר עַל הַדֶּשֶׁא`), hint 3 (`וְאִם לֹא — עַל הַדֶּשֶׁא`) and the alt texts; `tools/band_b2.py`. No adjective or verb touches the word. The colours land keeps `עֵשֶׂב` where it names the plant (`מַה צֶּבַע הָעֵשֶׂב?`).
+3. **`חָבֵר אוֹסֵף רַק …` is gone from the colours and shapes lands (15 items, not 7: 6 colours, 4 shapes A, 5 shapes B).** `אוֹסְפִים רַק X. מָה הִגִּיעַ לְכָאן בְּטָעוּת?`, as in the logic land. Where the old line named only a colour (an adjective with nothing to describe) the thing is named from the cells: `כַּדּוּרִים אֲדֻמִּים`, `פְּרָחִים כְּחֻלִּים`, `פְּרָחִים כְּתֻמִּים`, `כַּדּוּרִים שְׁחֹרִים`; a row that mixes balls, flowers and balloons says `דְּבָרִים חוּמִים`, `דְּבָרִים אֲפֹרִים`. The shape items already had a noun and only lose `חָבֵר`.
+
+`OWNER_APPROVED` has three new entries; the rows are `owner-approved` (the owner chose the wording of 1 and 2 and the pattern of 3; the nouns added in 3 are the editor's, within that pattern). No clip was voiced; the changed texts keep their voice ids (the list is in the hand-off).

@@ -873,6 +873,17 @@ OWNER_APPROVED = [
     (r'he\.dart$', r'^בּוֹאוּ נְשַׂחֵק בְּמִלִּים\.$',
      'L0 (island-texts.md section 6, question 2): the owner approved "with words" for the Hebrew stop (owner-approved 2026-11-03).',
      r'^adventureLangHebrew$'),
+    # The owner's answers of 2026-11-07 to the riddles-island (logic land) sweep, hebrew-notes.md section 13 ("For the owner" 1 to 3).
+    (r'^skill\.LOG-A-07\.json$', r'^(מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ\?|מה לא במקום שלו\?)$',
+     'Logic sweep, owner Q1 (2026-11-07): the owner chose "מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?" for the LOG-A-07 title and child line, '
+     'in place of "מְתַקְּנִים סֵדֶר שֶׁנִּשְׁבַּר" (owner-approved 2026-11-07). Dagesh in the ל after מַה; the same phrase as the LOG-B-02 prompts.'),
+    (r'^activity\.b\.logb08\.', r'הַדֶּשֶׁא',
+     'Logic sweep, owner Q2 (2026-11-07): the second bin is "הַדֶּשֶׁא" (was "הָעֵשֶׂב"); the prompt, hint 3, the bin label and the alt text '
+     'say it (owner-approved 2026-11-07).'),
+    (r'^activity\.(b15\.(cola0[236]|shpa0[23])|b\.shpb0[1348])\.', r'^אוֹסְפִים רַק',
+     'Logic sweep, owner Q3 (2026-11-07): "חָבֵר אוֹסֵף רַק …" becomes "אוֹסְפִים רַק …" in the colours and shapes lands as in the logic land, '
+     'with the owner-approved question; where the old line named only a colour, the thing is named (כַּדּוּרִים, פְּרָחִים, דְּבָרִים) '
+     '(owner-approved 2026-11-07).'),
 ]
 
 

@@ -75,6 +75,12 @@ References for the second batch, looked at on 2026-11-06:
     page: an ordinary wall calendar (two binder rings, a coloured band at the top). Sticks, stone, feather, coin, the
     nest, the sky at four times of day: drawn from what they look like outdoors; the coin is not a real coin.
   The Languages pictures reused here carry their own references (tools/make_language_pictures.py and _b2.py).
+References for the plain path robot, looked at on 2026-11-07 (photographs; the look is ours):
+  Robot: the Wikimedia Commons media searches "wind-up robot toy" and "tin toy robot" (the generic tin wind-up toy
+    robots of the 1950s to 1970s: a box head on a short neck, a single antenna, round lens eyes, a small grille mouth,
+    plates or bolts at the sides of the head, a box body with a chest panel of dials and lights, ribbed arms with
+    pincer hands, short legs on flat boots). The many photographs of one well-known film robot in those searches were
+    left out; nothing is taken from any one toy or character.
 """
 import os
 import pathlib
@@ -1293,43 +1299,72 @@ def sign():
 # ---- Robot Harbour ---------------------------------------------------------------------------------------------------------
 
 def robot():
-    """The robot of the paths: Tza'adon, the Robot Harbour host, as a small sprite seen from the front (design/assets/
-    tzaadon.svg, design-spec section 4: a blue rounded-square body, a dark screen face with cyan eyes, a green sprout on
-    the antenna, chest buttons a circle, a triangle and a square). Front view, so it never faces a way on the path.
-    The character file itself is not changed."""
+    """The robot of the paths: a plain toy robot, nobody in particular (the owner, 2026-11-07: not Tza'adon the
+    Robot Harbour host, and nothing that reads as him). A wind-up tin toy seen from the front, so it never faces a way
+    on the path: a boxy silver head with a red ball on its antenna and a bolt-plate at each side, two round lens eyes
+    and a small light grille mouth, a ribbed neck, a box body with a cream panel holding a dial and two lights,
+    ribbed arms hanging down to orange pincer claws, two short legs on orange boots. Tza'adon is blue and rounded,
+    with a dark screen face, cyan eyes, a sprout, round ears and the circle, triangle and square buttons; this robot
+    has none of them. The character file design/assets/tzaadon.svg is not changed."""
+    import math
     p = Pic()
-    p.shadow(50, 95, 26, 2.8)
-    for x in (37, 55):
-        p.path('M%s 80 H%s V92 H%s Z' % (x, x + 8, x), '#4F7ED6', sw=2.4)
-        p.path('M%s 90 H%s C%s 90 %s 91 %s 92.5 C%s 94 %s 95 %s 95 H%s C%s 95 %s 94 %s 92.5 C%s 91 %s 90 %s 90 Z'
-               % (x - 2, x + 10, x + 11, x + 12, x + 12, x + 12, x + 11, x + 10, x - 2, x - 3, x - 4, x - 4, x - 4, x - 3,
-                  x - 2), '#CFD5EE', sw=2.2)
-    p.outlined_line('M26 62 L18 74', '#6E9BEA', 4)
-    p.outlined_line('M74 62 L82 74', '#6E9BEA', 4)
-    p.add('<circle cx="17" cy="76" r="4.4" fill="#CFD5EE" stroke="%s" stroke-width="2.2"/>' % INK)
-    p.add('<circle cx="83" cy="76" r="4.4" fill="#CFD5EE" stroke="%s" stroke-width="2.2"/>' % INK)
-    body = 'M24 60 C24 54 28 50 34 50 H66 C72 50 76 54 76 60 V74 C76 80 72 84 66 84 H34 C28 84 24 80 24 74 Z'
-    p.shaded(body, '#6E9BEA', '#4F7ED6', k=2.5)
-    p.path('M33 58 C33 56 34 55 36 55 H64 C66 55 67 56 67 58 V72 C67 74 66 75 64 75 H36 C34 75 33 74 33 72 Z', '#CFD5EE',
-           sw=2)
-    p.add('<circle cx="41" cy="65" r="3.4" fill="#F46A5E"/><path d="M47 68.5 L50.5 61.5 L54 68.5 Z" fill="#FFC83D"/>'
-          '<rect x="56.5" y="61.5" width="7" height="7" rx="1.4" fill="#1A9E9A"/>')
-    p.path('M44 46 H56 V52 H44 Z', '#4F7ED6', sw=2.2)
-    p.add('<circle cx="16" cy="32" r="4.6" fill="#4F7ED6" stroke="%s" stroke-width="2.2"/>' % INK)
-    p.add('<circle cx="84" cy="32" r="4.6" fill="#4F7ED6" stroke="%s" stroke-width="2.2"/>' % INK)
-    head = 'M18 26 C18 18 24 13 32 13 H68 C76 13 82 18 82 26 V38 C82 45 76 49 68 49 H32 C24 49 18 45 18 38 Z'
-    p.shaded(head, '#6E9BEA', '#4F7ED6', k=2.5)
-    p.path('M25 25 C25 21 28 18 32 18 H68 C72 18 75 21 75 25 V37 C75 41 72 43 68 43 H32 C28 43 25 41 25 37 Z', INK, sw=0)
-    p.line('M34 32 Q38.5 26 43 32 M57 32 Q61.5 26 66 32', '#7FF0FF', 2.8)
-    p.line('M45 37 Q50 40 55 37', '#7FF0FF', 2)
-    p.add('<ellipse cx="30" cy="38" rx="3" ry="2" fill="#F4A7B4" opacity="0.8"/>'
-          '<ellipse cx="70" cy="38" rx="3" ry="2" fill="#F4A7B4" opacity="0.8"/>')
-    p.line('M50 13 V5', INK, 4.4)
-    p.line('M50 13 V5', '#4F7ED6', 2)
-    p.path('M50 6 C44 6 41 2 42 -1 C46 -1 50 2 50 6 Z', '#A5D96E', sw=1.8)
-    p.path('M50 6 C55 4 58 0 57 -2 C53 -2 50 2 50 6 Z', '#A5D96E', sw=1.8)
-    p.hl('M22 26 Q24 19 30 17', 2.2)
-    return '<g transform="translate(0 3) scale(1 0.97)">%s</g>' % p.body()
+    steel, steel_d = '#D3D8E3', '#A3AABD'
+    org, org_d = '#FF9F43', '#D9762A'
+    p.shadow(50, 95, 27, 2.8)
+    # legs and boots
+    for x in (37, 54):
+        p.shaded('M%s 76 H%s V89 H%s Z' % (x, x + 9, x), steel, steel_d, k=1.5, sw=2.4)
+        p.line('M%s 81 H%s M%s 85 H%s' % (x + 1.5, x + 7.5, x + 1.5, x + 7.5), INK, 1.6)
+        p.shaded('M%s 94 V91 C%s 88 %s 87 %s 87 H%s C%s 87 %s 88 %s 91 V94 Z'
+                 % (x - 3, x - 3, x - 1.5, x + 1, x + 8, x + 10.5, x + 12, x + 12), org, org_d, k=1.5, sw=2.4)
+    # arms: ribbed tubes from the shoulders down to the pincer claws
+    for sx, hx in ((29, 20), (71, 80)):
+        p.outlined_line('M%s 54 L%s 70' % (sx, hx), steel, 6)
+        for t in (0.3, 0.55, 0.8):
+            cx, cy = sx + (hx - sx) * t, 54 + 16 * t
+            p.line('M%s %s L%s %s' % (round(cx - 3.2, 1), round(cy + 1.4 * (1 if hx < sx else -1), 1),
+                                      round(cx + 3.2, 1), round(cy - 1.4 * (1 if hx < sx else -1), 1)), INK, 1.4)
+        # a C claw opening downward: an annulus with a gap of 70 degrees at the bottom
+        cx, cy, ro, ri = hx, 75, 5.6, 2.6
+        a0, a1 = math.radians(90 + 35), math.radians(90 - 35 + 360)
+        pt = lambda r, a: '%s %s' % (round(cx + r * math.cos(a), 2), round(cy + r * math.sin(a), 2))
+        d = 'M%s A%s %s 0 1 1 %s L%s A%s %s 0 1 0 %s Z' % (pt(ro, a0), ro, ro, pt(ro, a1), pt(ri, a1), ri, ri, pt(ri, a0))
+        p.path(d, org, sw=2.2)
+    # body
+    body = 'M30 54 C30 51 32 49 35 49 H65 C68 49 70 51 70 54 V74 C70 77 68 79 65 79 H35 C32 79 30 77 30 74 Z'
+    p.shaded(body, steel, steel_d, k=2.5)
+    p.path('M37 56 C37 55 38 54 39 54 H61 C62 54 63 55 63 56 V70 C63 71 62 72 61 72 H39 C38 72 37 71 37 70 Z',
+           '#FFF1CF', sw=2)
+    p.add('<circle cx="45" cy="63" r="5.2" fill="#FFFFFF" stroke="%s" stroke-width="1.8"/>' % INK)
+    p.line('M45 63 L48 60', INK, 1.6)
+    p.add('<circle cx="56" cy="59.5" r="2.4" fill="#4CAF50" stroke="%s" stroke-width="1.4"/>'
+          '<circle cx="56" cy="66.5" r="2.4" fill="#E5484D" stroke="%s" stroke-width="1.4"/>' % (INK, INK))
+    for x, y in ((33.5, 52.5), (66.5, 52.5), (33.5, 75.5), (66.5, 75.5)):
+        p.add('<circle cx="%s" cy="%s" r="1.1" fill="%s" opacity="0.55"/>' % (x, y, INK))
+    # neck
+    p.path('M44 44 H56 V50 H44 Z', steel_d, sw=2.2)
+    p.line('M44.5 47 H55.5', INK, 1.4)
+    # antenna
+    p.line('M50 16 V7', INK, 4.2)
+    p.line('M50 16 V7', steel_d, 1.8)
+    p.add('<circle cx="50" cy="6" r="4.4" fill="#E5484D" stroke="%s" stroke-width="2.2"/>' % INK)
+    p.add('<circle cx="48.6" cy="4.6" r="1.3" fill="#FFFFFF" opacity="0.8"/>')
+    # bolt-plates at the sides of the head
+    for x in (20.5, 74.5):
+        p.path('M%s 24 H%s V36 H%s Z' % (x, x + 5, x), org, sw=2.2)
+        p.line('M%s 28 H%s M%s 32 H%s' % (x + 1, x + 4, x + 1, x + 4), org_d, 1.4)
+    # head
+    head = 'M25 20 C25 17 27 15 30 15 H70 C73 15 75 17 75 20 V40 C75 43 73 45 70 45 H30 C27 45 25 43 25 40 Z'
+    p.shaded(head, steel, steel_d, k=2.5)
+    for x in (39, 61):
+        p.add('<circle cx="%s" cy="28" r="7" fill="%s" stroke="%s" stroke-width="2.2"/>' % (x, org, INK))
+        p.add('<circle cx="%s" cy="28" r="4.6" fill="#FFFFFF"/>' % x)
+        p.eye(x, 28, 2.8)
+    p.path('M43 37 C43 36 43.6 35.6 44.4 35.8 Q50 37.4 55.6 35.8 C56.4 35.6 57 36 57 37 V38.4 C57 39.4 56.4 40 55.6 '
+           '40.2 Q50 41.9 44.4 40.2 C43.6 40 43 39.4 43 38.4 Z', '#EEF1F6', sw=1.8)
+    p.line('M47.3 37.3 V40.5 M52.7 37.3 V40.5', INK, 1.2)
+    p.hl('M29 21 Q30 18 34 18', 2.2)
+    return p.body()
 
 
 def flag():
