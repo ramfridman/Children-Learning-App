@@ -23,6 +23,13 @@ This file orders the work that is left. Each part already has its own approved p
 
 Parts 1, 2 and 3 run side by side: the lands' Band C and the language courses touch different files. Part 4 follows part 2 (L6 builds on L5). Part 6 starts only when every text is final, and part 7 only after part 6, so every line is voiced once.
 
+## The owner's order (2026-11-07)
+
+1. Finish part 0 (QA of Band C step 1 and of Languages Band A), then the owner signs one pack and installs the build on his phone.
+2. **L5 leftovers** (part 2): LS06 build a word, LS08 follow and echo, the co-play cards, the catalogue, then the Band B lessons of the three courses and their packs.
+3. **B-29 steps 5 to 9** (part 5): the parent screens, the look by age, the languages' gates, Today's Adventure, the guard tests.
+4. Then **Band C of the six lands** (part 3, C2 to C9), and the rest in the order of the table (L6 and Languages Band C, the head-of-line fix, the Hebrew sweep, the voices, the release).
+
 ## What only the owner does
 
 1. **Sign the starter pack** whenever its content changes (the pack check fails until then). To keep this rare, content is merged in a few batches, and each batch asks for one signature.
