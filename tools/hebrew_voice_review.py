@@ -834,12 +834,18 @@ PENDING = [
 UNREAD = 'NOT READ: new since the last table; the editor has not read it yet (no READ entry in tools/hebrew_voice_review.py covers it).'
 C1 = ('M10 batch C1 (docs/agents/hebrew-notes.md section 10): read by the editor on 2026-11-06, every distinct text (grammar, nikud, '
       'number and gender agreement, plural address, = as שָׁוֶה, < and > as גָּדוֹל מִ / קָטָן מִ, age 6 to 8). Draft of the math-teacher; waits for the owner.')
-_C1_UNITS = ('compare-to-100|count-and-compare-again|count-on-big|count-to-100|fact-families|facts-to-18-again|facts-to-18-more|facts-to-18|'
-             'line-to-100|read-numerals-more|read-numerals|read-to-100|ten-frame-glance|ten-frame-more|ten-more-ten-less|'
-             'tens-and-ones-more|tens-and-ones|whole-tens')
+_C1_UNITS = ('blocks-tens-and-ones|compare-to-100|count-and-compare-again|count-on-big|count-to-100|fact-families|facts-to-18-again|'
+             'facts-to-18-more|facts-to-18|hundred-chart|line-to-100|read-numerals-more|read-numerals|read-to-100|ten-frame-glance|'
+             'ten-frame-more|ten-more-ten-less|tens-and-ones-more|tens-and-ones|type-the-answer|whole-tens|write-numbers')
 _C1_SKILLS = 'MATH-B-04|MATH-C-01|MATH-C-02|MATH-C-03|NUM-B-06|NUM-B-09|NUM-C-01|NUM-C-02|NUM-C-03|NUM-C-04|NUM-C-06|NUM-C-09'
 _C1_TAGS = 'M-HC-ROW|M-OP-SWAP|M-PV-FACE|M-PV-ZERO|M-SIGN-DIR|M-SUB-SMALLBIG'
+# A row that is new in a table run (its text is not in the last table) and is covered by a READ entry gets READ_NEW in place of the day of
+# the first reading, because the editor read it in the pass that made the row: change this when a new pass is done (notes 11.8).
+READ_OLD_DAY = '2026-11-06'
+READ_NEW = "2026-11-07 (the math-teacher's QA changes and the hints shortened to 14 words, hebrew-notes.md section 11.8)"
 READ = [
+    ('1', r'^keypad(Delete|Done)Semantics$', r'he\.dart$', 'M10 C1 keypad (read by the editor on 2026-11-07): the screen-reader labels of the number keypad, plain adult text '
+     '(an infinitive for the key that deletes a digit, "זה המספר" for the key that sends the number); correct as written.'),
     ('3', r'', r'^activity\.c\.', C1),
     ('3', r'', r'^(lesson\.(%s)|skill\.(%s)|misconception\.(%s))\.json$' % (_C1_UNITS, _C1_SKILLS, _C1_TAGS), C1),
     # Band B rows whose text changed because a shared helper or a shared tag line was corrected for C1 (from_: מֵ before a guttural and
@@ -922,6 +928,12 @@ OWNER_APPROVED = [
     # (4) one unit: "וִיחִידָה אַחַת" (81), agreeing in gender and number (hebrew-notes.md 11.7).
     (r'', r'וִיחִידָה אַחַת',
      'M10 C1 (notes 11.7): the owner approved "שְׁמוֹנֶה עֲשָׂרוֹת וִיחִידָה אַחַת" for one unit (owner-approved 2026-11-07).'),
+    # The owner's answers of 2026-11-07 (in chat; hebrew-notes.md 11.8). (1) the dagesh after מִ on a letter with a shva (`from_`).
+    (r'^activity\.', r'(^|[^֐-׿])מִשְּׁ',
+     'M10 C1 (notes 11.8): the owner confirmed the dagesh after מִ on a letter with a shva, "מִשְּׁלוֹשִׁים" (owner-approved 2026-11-07).'),
+    # (2) NUM-C-04 hint 3 says both tens in full, with no "עַכְשָׁו תּוֹרְכֶם" (14 words).
+    (r'^activity\.c\.numc04\.(7|8|9|10|11|12)\.json$', r'עֲשָׂרוֹת\. הַצַּד הַפָּתוּחַ פּוֹנֶה לַגָּדוֹל\.$',
+     'M10 C1 (notes 11.8): the owner chose the tens in full, "וּבְאַרְבָּעִים וְשָׁלוֹשׁ … אַרְבַּע עֲשָׂרוֹת" (owner-approved 2026-11-07).', r'^hints\.2'),
 ]
 
 
@@ -1253,6 +1265,8 @@ def master(rows, result, rules):
                                                             'voice cannot misread it; please confirm. ') + read_batch(r)
                 else:
                     status, comment = 'text-ready', EDITOR + read_batch(r)
+                    if before is None:  # new in this run: read in the pass of READ_NEW
+                        comment = comment.replace(READ_OLD_DAY, READ_NEW, 1)
             elif reviewed(r):
                 doubt, note = first_match(DOUBT, r['text']), first_match(NOTE, r['text'])
                 v1 = is_spoken and any(n_.startswith(VOICE_AUDIT) for n_ in notes)

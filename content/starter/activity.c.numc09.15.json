@@ -1,0 +1,178 @@
+{
+  "schema": "activity/v1",
+  "id": "c.numc09.15",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.4",
+  "domain": "numbers",
+  "band": "C",
+  "skills": [
+    {
+      "id": "NUM-C-09",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.9
+  },
+  "prompt": {
+    "vo": "vo:c.numc09.15.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מָה הַמִּסְפָּר הַבָּא בַּטּוּר?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "picture": {
+      "kind": "hundred_chart",
+      "lit": [
+        6,
+        16,
+        26
+      ],
+      "blank": [
+        36
+      ]
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 27,
+        "label": "עֶשְׂרִים וְשֶׁבַע",
+        "misconception": "M-HC-ROW"
+      },
+      {
+        "id": "o2",
+        "numeral": 63,
+        "label": "שִׁשִּׁים וְשָׁלוֹשׁ",
+        "misconception": "M-NUM-REV"
+      },
+      {
+        "id": "o3",
+        "numeral": 36,
+        "label": "שְׁלוֹשִׁים וְשֵׁשׁ"
+      }
+    ],
+    "correct": "o3",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.numc09.15.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁלוֹשִׁים וְשֵׁשׁ! עֶשְׂרִים וְשֵׁשׁ וְעוֹד עֶשֶׂר שָׁוֶה שְׁלוֹשִׁים וְשֵׁשׁ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-HC-ROW",
+        "vo": "vo:fb.hc_row",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עֶשֶׂר יוֹתֵר זוֹ שׁוּרָה לְמַטָּה, בְּאוֹתוֹ טוּר. בּוֹאוּ נִרְאֶה."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-NUM-REV",
+        "vo": "vo:fb.num_rev",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.numc09.13.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בְּלוּחַ הַמֵּאָה, עֶשֶׂר יוֹתֵר זוֹ שׁוּרָה לְמַטָּה בְּאוֹתוֹ טוּר, וְעֶשֶׂר פָּחוֹת שׁוּרָה לְמַעְלָה."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.numc09.15.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מֵעֶשְׂרִים וְשֵׁשׁ יוֹרְדִים שׁוּרָה לְמַטָּה, בְּאוֹתוֹ טוּר: שְׁלוֹשִׁים וְשֵׁשׁ. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "מָה הַמִּסְפָּר הַבָּא בַּטּוּר?"
+  }
+}

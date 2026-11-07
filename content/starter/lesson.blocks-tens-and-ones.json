@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "blocks-tens-and-ones",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "קֻבִּיּוֹת שֶׁל עֲשָׂרוֹת"
+    }
+  ],
+  "skills": [
+    "NUM-C-03"
+  ],
+  "items": [
+    "c.numc03.18",
+    "c.numc03.19",
+    "c.numc03.20"
+  ],
+  "estimatedMinutes": 6,
+  "sequence": 112,
+  "celebration": {
+    "vo": "vo:celebrate.blocks_tens_and_ones",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! סְפַרְתֶּם אֶת הַמּוֹטוֹת בַּעֲשָׂרוֹת."
+      }
+    ]
+  }
+}

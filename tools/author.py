@@ -72,12 +72,13 @@ GUTTURAL = 'אהחער'
 def from_(word):
     """מִ before a word (the editor's rule G9/G10, decided 2026-11-06 for the number words too). Before a guttural, which cannot
     take the doubling, מֵ (מֵאֶפֶס, מֵאַרְבַּע, מֵחֲמִשִּׁים, מֵעֶשְׂרִים, מֵהַמִּסְפָּר). Before any other letter מִ doubles it, with a
-    dagesh (מִשֵּׁשׁ, מִשֶּׁבַע, מִשִּׁבְעִים, מִתֵּשַׁע), except before a shva, which cannot be doubled (מִשְׁלוֹשִׁים,
-    מִשְׁמוֹנֶה)."""
+    dagesh (מִשֵּׁשׁ, מִשֶּׁבַע, מִשִּׁבְעִים, מִתֵּשַׁע), and so before a letter that has a shva: the doubling stays and the shva
+    stays under it (מִשְּׁלוֹשִׁים, מִשְּׁמוֹנֶה, as the Bible points מִשְּׁנֵי and מִלְּפָנֶיךָ; the editor's correction of 2026-11-07,
+    the first version left the dagesh out). A yod with a shva takes none (מִיהוּדָה)."""
     letter, marks, rest = _first(word)
     if letter in GUTTURAL:
         return 'מֵ' + word
-    if SHVA in marks or DAGESH in marks:
+    if DAGESH in marks or (SHVA in marks and letter == 'י'):  # already doubled (מִתְּשַׁע), or a yod that cannot be
         return 'מִ' + word
     return 'מִ' + letter + ''.join(sorted(marks + DAGESH, key=unicodedata.combining)) + rest
 
@@ -680,6 +681,10 @@ def k_pick(a, ctx):
                           'scale': g.get('scale', 1)}
     if 'numeral' in a:
         scene['numeral'] = a['numeral']
+    if 'picture' in a:
+        scene['picture'] = a['picture']
+    if 'picture2' in a:
+        scene['picture2'] = a['picture2']
     if 'row' in a:
         scene['row'] = [r if r == '?' or r.startswith(('n:', 'op:')) else 'asset:' + r for r in a['row']]
     if 'chart' in a:

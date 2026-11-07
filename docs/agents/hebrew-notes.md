@@ -637,3 +637,24 @@ The 81 items said `שְׁמוֹנֶה עֲשָׂרוֹת וְאֶחָד יְחִ
 `tens_words(1)` stays `אֶחָד עֲשָׂרוֹת`, exactly as the owner approved (the digit, then the plural; the owner's word). `ones_words(1)` is now `יְחִידָה אַחַת` (with the vav, `וִיחִידָה אַחַת`), the correct singular feminine; two stays `שְׁתֵּי יְחִידוֹת` and the others are unchanged.
 Changed rows: `activity.c.numc03.16` (prompt, alt text) and `activity.c.numc02.6` (hint 3); they are `text-ready` again, no longer `owner-approved` (the rule in `hebrew_voice_review.py` now covers `אֶחָד עֲשָׂרוֹת` only).
 **The owner approved `שְׁמוֹנֶה עֲשָׂרוֹת וִיחִידָה אַחַת` on 2026-11-07** (rule 4 in `OWNER_APPROVED`); the three rows are `owner-approved`.
+
+### 11.8 The math-teacher's QA changes, the shortened hints and `from_` (2026-11-07, hebrew-text-editor)
+
+**Read:** every new or changed text of commit `cd6cc23e` (NUM-B-06 `c.numb06.1`-`.8`, `.11`-`.13`, hint 3 of `c.numc06.1` and `.6`, the new items `c.numc03.17` and `c.numc06.13`, the shared line `vo:fb.num_rev_digit`) and the items of the deferred modes now in content
+(`DRAWN` on: `c.numc03.18`-`.22`, `c.numc09.13`-`.16`, `c.numc01.13`-`.14`, `c.numc02.13`-`.15`, `c.mathc01.27`-`.31`, `c.mathc02.13`-`.14`, `c.mathc03.13`-`.14`, four lessons). Numbers agree with their nouns (a bare numeral is feminine: `אֵיפֹה הַמִּסְפָּר שְׁתַּיִם?`,
+`עֶשֶׂר`; `שְׁלֹשׁ מֵאוֹת וְשָׁלוֹשׁ`, `שֵׁשׁ מֵאוֹת וּשְׁתַּיִם`), the address is plural, the vavs and prefixes are pointed by the helpers. `vo:fb.num_rev_digit` (`יֵשׁ מִסְפָּרִים שֶׁנִּרְאִים דּוֹמִים כְּשֶׁהוֹפְכִים אוֹתָם. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַצּוּרָה.`) is correct and calm; the voice text is
+`יש מספרים שנראים דומים כשהופכים אותם. בואו נסתכל שוב על הצורה.` The `text-ready` rows got the comment of the pass (`READ_NEW` in `hebrew_voice_review.py`): 438 rows new since the last table, 427 `text-ready`, 9 `owner-approved` (the first-digit line), 2 `proposed` (not C1).
+
+**`from_` (QA item 3).** The 11.1 decision left the dagesh out before a shva (`מִשְׁלוֹשִׁים`). It is wrong: the nun of `מִן` doubles the next letter, and a letter with a shva keeps the doubling (the Bible has `מִשְּׁנֵי`, `מִשְּׁמֹעַ`, `מִלְּפָנֶיךָ`, `מִשְּׂדֵי`).
+`from_` now writes `מִשְּׁלוֹשִׁים`, `מִשְּׁמוֹנֶה`, `מִשְּׁתַּיִם`, `מִשְּׁמוֹנִים`; `מִתְּשַׁע` (already doubled) and a yod with a shva (`מִיהוּדָה`) are unchanged. Test: `PrefixHelpersTest.test_from`. 14 texts changed (also Band B: `b.numb13.13`, `.19`); the voice text keeps the number word
+pointed as before. **The owner confirmed it on 2026-11-07** (keep `מִשְּׁלוֹשִׁים`): the 22 rows with the dagesh form (14 hints and prompts, the NUM-C-04 correct lines) are `owner-approved` (`OWNER_APPROVED` in `hebrew_voice_review.py`).
+
+**Hints of 14 words or fewer (QA-C1-3).** A hint longer than 14 words covers the answer tiles on a phone. `fit()` and `HINT_WORDS` in `tools/band_c.py`: the hint is built in its full form and, when it is longer than 14 words, in a shorter form that keeps the move and the maths:
+a jump drops "starts from X and jumps k steps" (the prompt says it) and keeps the landing numbers; a long walk on the number line says the ten steps and then "וְעוֹד k צְעָדִים" instead of listing every number; the count by tens of coins and cubes says the tens and then the ones as a quantity
+(`וְעוֹד אַרְבָּעָה שְׁקָלִים: שְׁלוֹשִׁים וְאַרְבַּע`); a hint that ended `עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל X` ends `עַכְשָׁו תּוֹרְכֶם.` when X is already in the list. 46 hints (65 uses), none of them `owner-approved`; after the change no C1 hint is longer than 14 words (checked over the 275 distinct hints).
+Also `c.mathc02.13`/`.14` hint 2 `מָה עוֹשֶׂה אֶת הַתַּרְגִּיל נָכוֹן מִשְּׂמֹאל לְיָמִין?` (stilted) is `אֵיזֶה מִסְפָּר עוֹשֶׂה אֶת הַתַּרְגִּיל נָכוֹן?`, and two deferred texts got the rule `מַה` + dagesh (`מַה שֶּׁנִּשְׁאַר`, `מַה מִּסְתַּתֵּר`): 7 rows whose source now says what `ui_text` says.
+
+**NUM-C-04 hint 3 (owner, 2026-11-07).** The first shortening said the second number's tens by an ellipsis (`וּבְאַרְבָּעִים וְשָׁלוֹשׁ אַרְבַּע`). The owner asked for both tens in full. With `עַכְשָׁו תּוֹרְכֶם` the hint would have 15 words, so it ends after the open-side sentence (14 words): `בַּחֲמִשִּׁים וּשְׁמוֹנֶה יֵשׁ חָמֵשׁ עֲשָׂרוֹת, וּבְאַרְבָּעִים וְשָׁלוֹשׁ יֵשׁ אַרְבַּע עֲשָׂרוֹת. הַצַּד הַפָּתוּחַ פּוֹנֶה לַגָּדוֹל.` (`c.numc04.7`-`.12`, hint 2 of the file, `owner-approved`).
+
+**For the voice director.** The four NUM-B-06 count hints (`c.numb06.10`-`.13`) have an ellipsis before the last number: `סוֹפְרִים: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… שֵׁשׁ.` (a short pause, then the number). The shortened walk hints (`וְעוֹד שִׁשָּׁה צְעָדִים`) are plain. `docs/audio/voice-direction.csv` still holds the old
+hint texts of the changed ids.

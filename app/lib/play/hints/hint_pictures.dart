@@ -8,6 +8,7 @@ import '../../design/tokens.g.dart';
 import '../../child/activity_shell.dart' show ActivitySpec;
 import '../hint_hand.dart';
 import '../hint_widgets.dart';
+import '../stage_pictures.dart';
 import '../template_session.dart';
 import 'hint_marks.dart';
 import 'seesaw_picture.dart';
@@ -294,6 +295,28 @@ class HintOverlay extends StatelessWidget {
                       ),
                     ),
             ),
+          ),
+        );
+      case BlocksMark():
+        return Positioned.fromRect(
+          key: key,
+          rect: m.rect,
+          child: Appear(
+            child: BaseTenPicture(
+              key: const Key('hint-blocks'),
+              layoutOf: m.full,
+              shown: m.shown,
+              hint: true,
+              places: m.places,
+            ),
+          ),
+        );
+      case ChartMark():
+        return Positioned.fromRect(
+          key: key,
+          rect: m.rect,
+          child: Appear(
+            child: HundredChartPicture(key: const Key('hint-chart'), spec: m.spec, hint: true),
           ),
         );
       case PlaceMark():

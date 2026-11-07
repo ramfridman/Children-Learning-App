@@ -13,9 +13,11 @@ import 'hint_pictures.dart' show hintScale;
 import 'prompt_numbers.dart';
 import 'seesaw_picture.dart' show SeesawBox;
 import 'sprite_outline.dart';
+import '../stage_pictures.dart';
 import 'tap_geometry.dart';
 
 part 'tap_plans_b.dart';
+part 'tap_plans_c.dart';
 
 // What each family of `tap_answer` draws at each hint level (B-40 part 2; the plan is docs/curriculum/b40-visual-hint-ladder.md
 // section 5.1, the pictures are docs/design/b40-visual-hints.md section 5). Each level is a [HintPlan]: steps shown one after the
@@ -29,15 +31,17 @@ part 'tap_plans_b.dart';
 // activity as it is: the sprite names and counts of its options and groups, and for a number sequence the word "after" or
 // "before" of its question. A plan that cannot find what it needs falls back to the generic one, so a hint is never empty.
 
-/// The plan of [a] at [level] (1 to 3), or null when the activity's family has no pictures yet, or when it has no right option
-/// (a number answer, 1.4, which no session draws yet): every plan below names the right option, so none can be made for it.
+/// The plan of [a] at [level] (1 to 3), or null when the activity's family has no pictures yet, or when it has a number answer that the
+/// plans of Band C do not serve: every other plan names the right option, so none can be made for an answer typed on a keypad.
 HintPlan? tapHintPlan(TapAnswerActivity a, TapGeometry g, int level) {
-  if (g.correctIndex < 0) return null;
+  // A number answer has no option to name: only the Band C plans, which end on the keypad, can serve it.
+  if (g.correctIndex < 0 && a.numberAnswer == null) return null;
   final TapFamily? family = tapFamilyOf(a.skillId, numeralOnStage: a.stageNumeral != null);
   if (family == null) return null;
   final _Plans p = _Plans(a, g);
   final int l = level.clamp(1, 3);
-  final HintPlan? own = p.bandB(l);
+  if (a.numberAnswer != null) return p.bandC(l);
+  final HintPlan? own = p.bandB(l) ?? p.bandC(l);
   if (own != null) return own;
   return switch (family) {
     TapFamily.colour => p.colour(l),
@@ -312,6 +316,9 @@ class _Plans {
   int get _ci => g.correctIndex;
   ChoiceOption get _right => a.options[_ci];
 
+  /// The number the answer is: the right tile's numeral, or the number a keypad item asks for. Null for an answer that is no number.
+  int? get _answerValue => a.numberAnswer?.value ?? (_ci < 0 ? null : _right.numeral);
+
   String? _svg(String? ref) => ref == null ? null : a.assets.svgOrNull(ref);
 
   /// The picture of an option (a sprite, or the sprite of its set).
@@ -327,9 +334,43 @@ class _Plans {
     reserve: reserve,
   );
 
+  /// The last steps of a demonstration, over [base]: the hand on the right tile; for a number answer the hand types the number, a key
+  /// after another with the digits so far in the cell, and presses the check.
+  List<HintFrame> _answerSteps(List<HintMark> base, {double reserve = 0}) {
+    final int? value = a.numberAnswer?.value;
+    if (value == null) return <HintFrame>[_toAnswer(base, reserve: reserve)];
+    final String digits = '$value';
+    final Rect cell = g.answerCell;
+    return <HintFrame>[
+      for (int i = 0; i < digits.length; i++)
+        HintFrame(
+          <HintMark>[
+            ...base,
+            CardMark(
+              cell,
+              Text(digits.substring(0, i), style: AppText.fixed(size: 30, weight: 800, lineHeight: 1)),
+            ),
+            HandMark(g.keyTip(digits[i]), press: true),
+          ],
+          hold: _ms(700),
+          reserve: reserve,
+        ),
+      HintFrame(
+        <HintMark>[
+          ...base,
+          CardMark(cell, Text(digits, style: AppText.fixed(size: 30, weight: 800, lineHeight: 1))),
+          HandMark(g.keyTip('done'), press: true),
+        ],
+        hold: _ms(1300),
+        reserve: reserve,
+      ),
+    ];
+  }
+
   /// The hand goes along the other options (tiles) one after the other and ends on the right one: the demonstration of a question
   /// that has nothing else to do. The answer is the end of the demonstration, never shown before its last step.
   HintPlan _walkOptions({List<HintMark> base = const <HintMark>[], double reserve = 0}) {
+    if (a.numberAnswer != null) return _demo(_answerSteps(base, reserve: reserve));
     final List<int> order = <int>[
       for (int i = 0; i < _n; i++)
         if (i != _ci) i,
@@ -349,7 +390,16 @@ class _Plans {
   /// stage, the options are lit one after the other (each the same, none staying lit).
   HintPlan look() {
     final List<Rect> holes = _questionParts();
-    if (holes.isEmpty) return tilesInTurn();
+    if (holes.isEmpty) {
+      // With nothing of the question on the stage, a number answer lights the cell it is typed in.
+      return a.numberAnswer == null
+          ? tilesInTurn()
+          : HintPlan(<HintFrame>[
+              HintFrame(<HintMark>[
+                VeilMark(<Rect>[g.answerCell]),
+              ], hold: _ms(2400)),
+            ]);
+    }
     return HintPlan(<HintFrame>[
       HintFrame(<HintMark>[VeilMark(holes)], hold: _ms(2400)),
     ]);
@@ -363,7 +413,33 @@ class _Plans {
     if (a.group2 != null) ..._groupRects(g, 1),
     if (a.row.isNotEmpty) ...g.rowCells(),
     if (a.stageNumeral != null) g.stageNumeral,
+    ..._pictureParts(),
   ];
+
+  /// The parts of a stage picture a first hint lights: the rods and the cubes of blocks (each kind in a box), the lit cells of a chart.
+  List<Rect> _pictureParts() {
+    final Offset o = g.pictureArea.topLeft;
+    final BaseTenLayout? blocks = g.blocks;
+    if (blocks != null) {
+      return <Rect>[
+        for (final Rect? r in <Rect?>[
+          if (blocks.thousands.isNotEmpty) blocks.thousands.first.expandToInclude(blocks.thousands.last),
+          if (blocks.hundreds.isNotEmpty) blocks.hundreds.first.expandToInclude(blocks.hundreds.last),
+          blocks.tensBox,
+          blocks.onesBox,
+        ])
+          if (r != null) r.shift(o).inflate(2),
+      ];
+    }
+    final ChartLayout? chart = g.chart;
+    if (chart != null) {
+      return <Rect>[
+        for (final int n in chart.spec.lit)
+          if (chart.cellOf(n) case final Rect c) c.shift(o),
+      ];
+    }
+    return const <Rect>[];
+  }
 
   List<Rect> _groupRects(TapGeometry geo, int which) => geo.inReadingOrder(geo.groupObjects(which));
 
@@ -901,11 +977,11 @@ class _Plans {
   HintPlan sequence(int level) {
     if (a.skillId == 'NUM-A-13') return _ordinal(level);
     if (a.skillId == 'NUM-B-17') return _skipCount(level);
-    final int? c = _right.numeral;
+    final int? c = _answerValue;
     final int? given = c == null ? null : _givenFor(c);
     if (c == null || given == null) return generic(level);
-    final bool bandB = a.skillId.contains('-B-');
-    // Band B draws ten squares around the numbers whatever they are; Band A hops from 1 to the number, one square each.
+    // Band B and Band C draw ten squares around the numbers whatever they are; Band A hops from 1 to the number, one square each.
+    final bool bandB = !a.skillId.contains('-A-');
     if (!bandB && math.max(c, given) > _mostUnits) return generic(level);
     final bool before = given > c;
     // Band A counts from 1 on a path of five or ten squares; Band B shows ten squares around the two numbers.
@@ -961,7 +1037,7 @@ class _Plans {
           HandMark(squareTop(c), press: true),
         ], hold: _ms(900)),
         HintFrame(<HintMark>[strip(marker: c), hop, HandMark(squareTop(c))], hold: _ms(900)),
-        _toAnswer(<HintMark>[strip(marker: c), hop]),
+        ..._answerSteps(<HintMark>[strip(marker: c), hop]),
       ]);
     }
     return _demo(<HintFrame>[
@@ -1164,7 +1240,7 @@ class _Plans {
     final List<Rect> first = _groupRects(level == 1 ? g : g2, 0);
     final List<Rect> second = a.group2 != null ? _groupRects(level == 1 ? g : g2, 1) : <Rect>[];
     final bool adds = a.group2 != null;
-    final int total = _right.numeral ?? first.length;
+    final int total = _answerValue ?? first.length;
     final int start = first.length;
     if (level == 1) {
       return HintPlan(<HintFrame>[
@@ -1217,7 +1293,10 @@ class _Plans {
             reserve: _reserve,
           ),
         // The count card takes the hand card's place (drawn over it, the hand peeked out above the number).
-        _toAnswer(<HintMark>[...done(more), BadgeMark(_card.center, total, big: true)], reserve: _reserve),
+        ..._answerSteps(<HintMark>[
+          ...done(more),
+          BadgeMark(_card.center, total, big: true),
+        ], reserve: _reserve),
       ]);
     }
     // Take away: the hand shows the group, and the things taken away fold a finger each.
@@ -1243,7 +1322,7 @@ class _Plans {
           hold: _ms(900),
           reserve: _reserve,
         ),
-      _toAnswer(<HintMark>[BadgeMark(_card.center, total, big: true)], reserve: _reserve),
+      ..._answerSteps(<HintMark>[BadgeMark(_card.center, total, big: true)], reserve: _reserve),
     ]);
   }
 

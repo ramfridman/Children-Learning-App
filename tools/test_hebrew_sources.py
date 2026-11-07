@@ -134,8 +134,11 @@ class HebrewMasterTableTest(unittest.TestCase):
         # 12645 since B-39 (16 bottle and land-name rows added by the hebrew-text-editor)
         # 12757 since L0 (112 rows of he.dart added with the Languages screens: the island, the doors, the parent pages)
         # 14980 since M10 C1 (2,241 rows of 168 activities, 18 lessons, 12 skills and 6 misconceptions, 22 rows of he.dart)
-        self.assertEqual(len(self.rows), 14980)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1289)  # 1308 before C1: 19 corrections (מֵאֶפֶס, מֵאַחַת …) are now in the sources
+        # 15288 since the math-teacher's C1 QA changes (cd6cc23e), the deferred base-ten, hundred-chart and keypad items (DRAWN) and the hints
+        # shortened to 14 words (2026-11-07): new activities and lessons (and the he.dart rows added by the other agents meanwhile)
+        self.assertEqual(len(self.rows), 15288)
+        # 1308 before C1: 19 corrections (מֵאֶפֶס, מֵאַחַת …) are now in the sources; 1296 after the 7 of the deferred items (מַה שֶּׁ, מַה מִּסְתַּתֵּר)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1296)
         self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 44)  # 88 before the owner's V1 for M-NL-DIR (2026-11-06): its 44 rows now have the source's final nikud
 
     def test_done_rows_have_ui_text(self):
@@ -206,8 +209,9 @@ class PrefixHelpersTest(unittest.TestCase):
         self.assertEqual(self.a.from_('שֵׁשׁ'), 'מִשֵּׁשׁ')
         self.assertEqual(self.a.from_('שִׁבְעִים'), 'מִשִּׁבְעִים')
         self.assertEqual(self.a.from_('תֵּשַׁע'), 'מִתֵּשַׁע')  # already doubled
-        self.assertEqual(self.a.from_('שְׁלוֹשִׁים'), 'מִשְׁלוֹשִׁים')  # a shva cannot be doubled
-        self.assertEqual(self.a.from_('שְׁמוֹנֶה'), 'מִשְׁמוֹנֶה')
+        self.assertEqual(self.a.from_('שְׁלוֹשִׁים'), 'מִשְּׁלוֹשִׁים')  # the doubling stays under a shva (מִשְּׁנֵי, as the Bible points it; 2026-11-07)
+        self.assertEqual(self.a.from_('שְׁמוֹנֶה'), 'מִשְּׁמוֹנֶה')
+        self.assertEqual(self.a.from_('תְּשַׁע עֶשְׂרֵה'), 'מִתְּשַׁע עֶשְׂרֵה')  # already doubled
 
     def test_vav_before_a_prefixed_number(self):
         v, p = self.a.vav, self.a.prefix

@@ -348,6 +348,13 @@ List<Problem> validatePack({
           _options(file, answer, say, checkTag, checkAsset: checkAsset);
         }
         _stagePictureOf(file, scene['picture'], say);
+        _stagePictureOf(file, scene['picture2'], say, path: 'scene.picture2', blocksOnly: true);
+        if (scene['picture2'] != null && (scene['picture'] as Map<String, Object?>?)?['kind'] != 'base_ten') {
+          say(file, 'scene.picture2', 'a second picture needs a first, and both are blocks (base_ten)');
+        }
+        for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
+          _stagePictureOf(file, o['picture'], say, path: 'answer.options[$i].picture', blocksOnly: true);
+        }
         _tapVersion(file, a, scene, answer, say);
         _tapBigNumbers(file, a, scene, answer, say);
         _tapRowWidth(file, scene, say);
@@ -1151,7 +1158,10 @@ void _numberAnswer(
 /// What each kind of stage picture (`scene.picture`, X1) must say, and what belongs to no other kind.
 const Map<String, ({Set<String> needs, Set<String> may})> _pictureFields =
     <String, ({Set<String> needs, Set<String> may})>{
-      'base_ten': (needs: <String>{}, may: <String>{'thousands', 'hundreds', 'tens', 'ones'}),
+      'base_ten': (
+        needs: <String>{},
+        may: <String>{'thousands', 'hundreds', 'tens', 'ones', 'litRods', 'crossedRods'},
+      ),
       'array': (needs: <String>{'rows', 'columns'}, may: <String>{}),
       'hundred_chart': (needs: <String>{}, may: <String>{'lit', 'blank'}),
       'clock': (needs: <String>{'hour', 'minute'}, may: <String>{'digital'}),
@@ -1160,38 +1170,58 @@ const Map<String, ({Set<String> needs, Set<String> may})> _pictureFields =
       'fraction': (needs: <String>{'parts', 'shaded'}, may: <String>{}),
     };
 
-void _stagePictureOf(String file, Object? picture, void Function(String, String, String) say) {
+void _stagePictureOf(
+  String file,
+  Object? picture,
+  void Function(String, String, String) say, {
+  String path = 'scene.picture',
+  bool blocksOnly = false,
+}) {
   if (picture is! Map<String, Object?>) return;
   final ({Set<String> needs, Set<String> may})? fields = _pictureFields[picture['kind']];
   if (fields == null) return;
   final Object? kind = picture['kind'];
   final Set<String> given = picture.keys.toSet()..remove('kind');
   for (final String f in fields.needs.difference(given)) {
-    say(file, 'scene.picture.$f', 'a $kind picture needs it');
+    say(file, '$path.$f', 'a $kind picture needs it');
   }
   for (final String f in given.difference(fields.needs).difference(fields.may)) {
-    say(file, 'scene.picture.$f', 'does not belong to a $kind picture');
+    say(file, '$path.$f', 'does not belong to a $kind picture');
   }
   if (kind == 'base_ten' && given.isEmpty) {
-    say(file, 'scene.picture', 'a base_ten picture needs at least one of thousands, hundreds, tens or ones');
+    say(file, path, 'a base_ten picture needs at least one of thousands, hundreds, tens or ones');
+  }
+  if (blocksOnly && kind != 'base_ten') {
+    say(file, '$path.kind', 'only a picture of blocks (base_ten) goes here');
+  }
+  if (kind == 'base_ten') {
+    final Object? tens = picture['tens'];
+    final Object? lit = picture['litRods'];
+    final Object? crossed = picture['crossedRods'];
+    final int rods = tens is int ? tens : 0;
+    if (lit is int && lit > rods) say(file, '$path.litRods', 'is more than the tens rods');
+    if (crossed is int && crossed > rods) say(file, '$path.crossedRods', 'is more than the tens rods');
+    if (lit is int && crossed is int && lit + crossed > rods) {
+      say(file, '$path.crossedRods', 'a rod is lit or crossed out, not both');
+    }
   }
   if (kind == 'hundred_chart') {
     final Set<Object?> lit = <Object?>{...?(picture['lit'] as List<Object?>?)};
     final Set<Object?> blank = <Object?>{...?(picture['blank'] as List<Object?>?)};
     if (lit.intersection(blank).isNotEmpty) {
-      say(file, 'scene.picture.blank', 'a cell is lit or blank, not both');
+      say(file, '$path.blank', 'a cell is lit or blank, not both');
     }
   }
   // The fields a kind needs are reported above when missing, so a missing or odd one is skipped here (SEC-M10-2).
   final Object? parts = picture['parts'];
   final Object? shaded = picture['shaded'];
   if (kind == 'fraction' && parts is int && shaded is int && shaded > parts) {
-    say(file, 'scene.picture.shaded', 'is more than the parts');
+    say(file, '$path.shaded', 'is more than the parts');
   }
   final Object? top = picture['top'];
   final Object? bottom = picture['bottom'];
   if (kind == 'column' && top is String && bottom is String && top.length < bottom.length) {
-    say(file, 'scene.picture.bottom', 'a column sum has the longer number on top');
+    say(file, '$path.bottom', 'a column sum has the longer number on top');
   }
 }
 
@@ -1209,7 +1239,10 @@ void _tapVersion(
   void Function(String, String, String) say,
 ) {
   final List<Object?> row = (scene['row'] as List<Object?>?) ?? const <Object?>[];
-  final String? feature = scene['picture'] != null
+  final String? feature =
+      scene['picture'] != null ||
+          scene['picture2'] != null ||
+          _maps(answer['options']).any((Map<String, Object?> o) => o['picture'] != null)
       ? 'a stage picture'
       : answer['type'] == 'number'
       ? 'a number answer'
@@ -1366,8 +1399,13 @@ String _look(Map<String, Object?> o) {
       for (final MapEntry<String, Object?> e in set.entries) '${e.key}=${e.value}',
   ]..sort();
   // A sound button has no face, so its sound is all there is to tell it by.
-  final bool faceless = o['sprite'] == null && o['numeral'] == null && o['text'] == null && set == null;
-  return '${o['sprite']}|${o['numeral']}|${o['text']}|${parts.join(',')}${faceless ? '|${o['clip']}' : ''}';
+  final Object? picture = o['picture'];
+  final bool faceless =
+      o['sprite'] == null && o['numeral'] == null && o['text'] == null && set == null && picture == null;
+  final String blocks = picture is Map<String, Object?>
+      ? picture.entries.map((e) => '${e.key}=${e.value}').join(',')
+      : '';
+  return '${o['sprite']}|${o['numeral']}|${o['text']}|${parts.join(',')}|$blocks${faceless ? '|${o['clip']}' : ''}';
 }
 
 /// What an option of a `tap_answer` is: exactly one of a sprite, a numeral or a set; in a language course also a text, or only a
@@ -1379,10 +1417,10 @@ void _optionKind(
   void Function(String, String, String) say, {
   required bool language,
 }) {
-  final int faces = <String>['sprite', 'numeral', 'set', 'text'].where(o.containsKey).length;
+  final int faces = <String>['sprite', 'numeral', 'set', 'picture', 'text'].where(o.containsKey).length;
   if (!language) {
     if (faces - (o.containsKey('text') ? 1 : 0) != 1) {
-      say(file, path, 'must be exactly one of a sprite, a numeral or a set');
+      say(file, path, 'must be exactly one of a sprite, a numeral, a set or a picture of blocks');
     }
     return;
   }

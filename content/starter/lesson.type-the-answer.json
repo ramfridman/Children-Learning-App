@@ -1,0 +1,40 @@
+{
+  "schema": "lesson/v1",
+  "id": "type-the-answer",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "כּוֹתְבִים אֶת הַתְּשׁוּבָה"
+    }
+  ],
+  "skills": [
+    "MATH-C-01",
+    "MATH-C-02",
+    "MATH-C-03"
+  ],
+  "items": [
+    "c.mathc01.27",
+    "c.mathc01.28",
+    "c.mathc01.29",
+    "c.mathc01.30",
+    "c.mathc01.31",
+    "c.mathc02.13",
+    "c.mathc02.14",
+    "c.mathc03.13",
+    "c.mathc03.14"
+  ],
+  "estimatedMinutes": 7,
+  "sequence": 106,
+  "celebration": {
+    "vo": "vo:celebrate.type_the_answer",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! כְּתַבְתֶּם אֶת הַתְּשׁוּבוֹת."
+      }
+    ]
+  }
+}

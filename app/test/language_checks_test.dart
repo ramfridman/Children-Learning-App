@@ -698,7 +698,10 @@ void main() {
       final List<Problem> ps = _run(p);
       expect(
         ps,
-        _refused('$tapFile › answer.options[0]', 'must be exactly one of a sprite, a numeral or a set'),
+        _refused(
+          '$tapFile › answer.options[0]',
+          'must be exactly one of a sprite, a numeral, a set or a picture of blocks',
+        ),
       );
       expect(ps, _refused('$tapFile › answer.options[0].text', 'belongs to a language course'));
     });

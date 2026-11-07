@@ -22,10 +22,12 @@ import 'hints/tap_plans.dart';
 import 'lesson_controller.dart';
 import 'ls01_metrics.dart';
 import 'math_signs.dart';
+import 'number_entry.dart';
 import '../design/token_types.dart' show Band;
 import '../design/layout.dart';
 import 'option_faces.dart';
 import 'sprite_group.dart';
+import 'stage_pictures.dart';
 import 'template_session.dart';
 
 /// The tap-the-answer template (T01): two to four pictures on the stage, one of them is right.
@@ -75,11 +77,17 @@ class TapAnswerSession extends TemplateSession {
   bool _busy = false;
   int? pulsing;
 
+  /// A number answer (M10, X3): the child types the number on a keypad instead of choosing a tile.
+  bool get numberMode => activity.numberAnswer != null;
+
+  /// The digits typed so far, read left to right.
+  String typed = '';
+
   /// The option on the stage that is grown a little now: one of a pulse of all, or the one a hint lights.
   int? get pulsingNow => pulsing ?? (activity.optionsInTiles ? null : _hint.litOption);
 
   @override
-  bool get listensNow => !_busy && chosenState != AnswerState.correct;
+  bool get listensNow => !numberMode && !_busy && chosenState != AnswerState.correct;
 
   /// Answers that are numerals are spoken as numbers.
   @override
@@ -126,6 +134,64 @@ class TapAnswerSession extends TemplateSession {
     }
   }
 
+  /// A key of the keypad: a digit is added (never a leading zero, never past [mostDigits]), the back key takes the last one off, and the
+  /// check key gives the number as the answer.
+  void press(String key) {
+    if (!numberMode || _busy || chosenState == AnswerState.correct) return;
+    switch (key) {
+      case 'done':
+        _submit();
+        return;
+      case 'back':
+        if (typed.isEmpty) return;
+        typed = typed.substring(0, typed.length - 1);
+      default:
+        if (typed.length >= mostDigits || (typed == '0' && key == '0')) return;
+        typed = typed == '0' ? key : typed + key;
+    }
+    // A first hint's glow goes with the child's next touch, as it does for a tile.
+    if (controller.hintShown <= 1 && marks.isNotEmpty && !_hint.playing) _hint.clear();
+    notify();
+  }
+
+  /// The digits of the number the child is to type, when the item is being answered for the child (guided): their keys glow.
+  Set<String> get litKeys => numberMode && controller.answerShown
+      ? <String>{...'${activity.numberAnswer!.value}'.split(''), 'done'}
+      : const <String>{};
+
+  Future<void> _submit() async {
+    if (typed.isEmpty || _busy) return;
+    final int n = int.parse(typed);
+    // After the last allowed try the answer is shown and only the right number is taken.
+    if (controller.guided && n != activity.numberAnswer!.value) {
+      typed = '';
+      notify();
+      return;
+    }
+    _busy = true;
+    chosenId = 'n=$n';
+    final bool demonstrating = controller.hintShown >= 3 && _hint.playing;
+    if ((controller.hintShown <= 1 || demonstrating) && marks.isNotEmpty) _hint.clear();
+    final Outcome o = await controller.enterNumber(n);
+    if (disposed) return;
+    if (o.correct || o.settled) {
+      _hint.clear();
+      chosenState = o.settled ? AnswerState.selected : AnswerState.correct;
+      notify();
+      later(TemplateSession.praisePause, controller.next);
+    } else {
+      chosenState = AnswerState.notYet;
+      notify();
+      later(TemplateSession.notYetPause, () {
+        chosenId = null;
+        chosenState = AnswerState.idle;
+        typed = '';
+        _busy = false;
+        notify();
+      });
+    }
+  }
+
   /// Some tile has a speaker (a text with a clip): the row of tiles then keeps the room under it, see [layoutFor].
   bool get _hasSpeakers => activity.options.any((ChoiceOption o) => o.text != null && o.clip != null);
 
@@ -162,6 +228,7 @@ class TapAnswerSession extends TemplateSession {
 
   @override
   void onReset() {
+    typed = '';
     chosenId = null;
     chosenState = AnswerState.idle;
     _busy = false;
@@ -226,9 +293,11 @@ class TapAnswerSession extends TemplateSession {
   @override
   Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) {
     // A tile of sets is wider than a numeral's tile (see `buildTiles`): the hand that comes in from the side stops at its edge.
-    final double width = TapGeometry.tileWidthOf(activity, spec);
+    final double width = numberMode ? KeypadLayout.of(spec).key : TapGeometry.tileWidthOf(activity, spec);
     double? rowEnd;
-    if (activity.optionsInTiles) {
+    if (numberMode) {
+      rowEnd = TapGeometry(activity, size, spec, dir: _rowDir).keypadRight;
+    } else if (activity.optionsInTiles) {
       final TapGeometry g = TapGeometry(activity, size, spec, dir: _rowDir);
       rowEnd =
           <double>[for (int i = 0; i < activity.options.length; i++) g.optionTip(i).dx].reduce(math.max) +
@@ -240,8 +309,22 @@ class TapAnswerSession extends TemplateSession {
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) {
     if (!activity.optionsInTiles) return null;
+    if (numberMode) {
+      return ListenableBuilder(
+        listenable: this,
+        builder: (BuildContext c, Widget? _) => Center(
+          child: NumberKeypad(
+            layout: KeypadLayout.of(spec),
+            onKey: press,
+            lit: litKeys,
+            canCheck: typed.isNotEmpty,
+            enabled: !_busy && chosenState != AnswerState.correct,
+          ),
+        ),
+      );
+    }
     // Numerals sit on square tiles; a set of things gets a wider one, as wide as the row allows.
-    final bool sets = activity.options.any((ChoiceOption o) => o.set != null);
+    final bool sets = activity.options.any((ChoiceOption o) => o.set != null || o.picture != null);
     final double width = TapGeometry.tileWidthOf(activity, spec);
     final bool letterItem = activity.letterFace;
     return ListenableBuilder(
@@ -376,6 +459,10 @@ class TapAnswerSession extends TemplateSession {
   }
 }
 
+/// Whether the numeral [n] of an answer tile of [a] has its row of dots under it: for 1 to 10 only (above ten the dots are a hairline
+/// nobody can count), and never in an item of the facts (MATH-C-01), where a row of dots under each answer would be a way to count it.
+bool numeralHasDots(TapAnswerActivity a, int n) => n >= 1 && n <= 10 && a.skillId != 'MATH-C-01';
+
 /// What an option shows: a numeral on a tile with its dots, or a small set of things.
 Widget _face(
   TapAnswerActivity a,
@@ -396,15 +483,40 @@ Widget _face(
     );
   }
   if (o.soundOnly) return const SoundFace();
+  if (o.picture != null) {
+    // Blocks on the tile: tens left of ones, the digits never on them (M10, X1).
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: BaseTenPicture(layoutOf: BaseTen.fromScene(o.picture!)),
+      ),
+    );
+  }
   if (o.numeral != null) {
+    // A numeral stays on one line and shrinks to the tile by its digits (a third digit takes the size of the second's room); the tile
+    // keeps its size. Dots under it only where counting them can help: not above ten (a hairline), and not under a fact's answer.
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text('${o.numeral}', style: AppText.fixed(size: font, weight: 800, lineHeight: 1)),
-          const SizedBox(height: 4),
-          FittedBox(fit: BoxFit.scaleDown, child: Dots(o.numeral!)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                '${o.numeral}',
+                maxLines: 1,
+                softWrap: false,
+                style: AppText.fixed(size: font, weight: 800, lineHeight: 1),
+              ),
+            ),
+          ),
+          if (numeralHasDots(a, o.numeral!)) ...<Widget>[
+            const SizedBox(height: 4),
+            FittedBox(fit: BoxFit.scaleDown, child: Dots(o.numeral!)),
+          ],
         ],
       ),
     );
@@ -456,6 +568,10 @@ class _TapStage extends StatelessWidget {
     final double gap = (size.width - box * n) / (n + 1);
     // A course that reads right to left lays its pictures out from the right (F1); the lands keep the first on the left.
     final bool fromRight = courseRowDirection(a.course) == TextDirection.rtl;
+    // Where the typed number stands when the item has no row to hold it.
+    final Rect entryCell = s.numberMode && a.row.isEmpty
+        ? TapGeometry(a, size, s._spec ?? ActivitySpec.phone, dir: s._rowDir).entryCell
+        : Rect.zero;
     final Widget stage = ClipRRect(
       borderRadius: BorderRadius.circular(TokenRadius.lg),
       child: Stack(
@@ -463,6 +579,18 @@ class _TapStage extends StatelessWidget {
         children: <Widget>[
           if (a.background != null)
             Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
+          if (TapGeometry.stagePictureOf(a) != null)
+            AnimatedPositioned(
+              duration: MediaQuery.disableAnimationsOf(context)
+                  ? Duration.zero
+                  : const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              left: s.reserve,
+              top: 0,
+              width: size.width - s.reserve,
+              height: TapGeometry.groupAndRow(a) ? size.height * TapGeometry.pictureShare : size.height,
+              child: _picture(a),
+            ),
           if (hasGroup)
             AnimatedPositioned(
               duration: MediaQuery.disableAnimationsOf(context)
@@ -472,10 +600,21 @@ class _TapStage extends StatelessWidget {
               left: s.reserve,
               top: 0,
               width: size.width - s.reserve,
-              height: a.optionsInTiles ? size.height : top,
+              height: a.optionsInTiles
+                  ? (TapGeometry.groupAndRow(a) ? size.height * TapGeometry.pictureShare : size.height)
+                  : top,
               child: _groups(a),
             ),
-          if (a.row.isNotEmpty) Positioned.fill(child: _row(a, size)),
+          if (a.row.isNotEmpty)
+            Positioned(
+              left: 0,
+              right: 0,
+              top: TapGeometry.rowBandOf(a, size.height).top,
+              height: TapGeometry.rowBandOf(a, size.height).height,
+              child: _row(a, size),
+            ),
+          if (s.numberMode && a.row.isEmpty)
+            Positioned.fromRect(rect: entryCell, child: _entry(entryCell.height * 0.7)),
           if (a.chart.isNotEmpty) Positioned.fill(child: _chart(a)),
           if (a.stageNumeral != null)
             Positioned.fill(
@@ -581,8 +720,9 @@ class _TapStage extends StatelessWidget {
   Widget _row(TapAnswerActivity a, Size stage) {
     final ({List<double> widths, double textSize}) layout = TapGeometry.rowLayoutOf(a, stage);
     final bool fitted = layout.textSize > 0;
+    final double pad = TapGeometry.rowPadOf(a);
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, 10 + TapGeometry.rowLiftOf(a, stage.height), 0, 10),
+      padding: EdgeInsets.fromLTRB(0, pad + TapGeometry.rowLiftOf(a, stage.height), 0, pad),
       child: Directionality(
         textDirection: TextDirection.ltr,
         // The cells come one by one from the left, so the child sees where the row starts; the "?" is last.
@@ -610,6 +750,12 @@ class _TapStage extends StatelessWidget {
   /// One cell of the row: the gap, a picture of the pack, or a number or sign. With a [textSize] (a row of numbers and signs) the
   /// numbers and signs are drawn at that size and the gap is as wide as a number; without it they fill their cell.
   Widget _rowCell(TapAnswerActivity a, String r, BuildContext context, double? textSize) {
+    if (r == '?' && s.numberMode) {
+      final double size = textSize ?? 36;
+      return Center(
+        child: SizedBox(width: size * 1.2, height: size * 1.4, child: _entry(size * 0.8)),
+      );
+    }
     if (r == '?') {
       final Widget gap = DecoratedBox(
         decoration: BoxDecoration(
@@ -643,6 +789,57 @@ class _TapStage extends StatelessWidget {
           );
   }
 
+  /// The cell that holds what has been typed: its ring is lilac after a "not yet" and golden once it is right.
+  Widget _entry(double font) => EntryCell(
+    typed: s.typed,
+    fontSize: font,
+    ring: s.chosenState == AnswerState.correct
+        ? TokenColors.correctGlow
+        : s.chosenState == AnswerState.notYet
+        ? TokenColors.notYetRing
+        : null,
+  );
+
+  /// The picture of a number the question is about: blocks or a hundred chart. Not tappable.
+  Widget _picture(TapAnswerActivity a) {
+    final Map<String, Object?> p = a.picture!;
+    return Semantics(
+      container: true,
+      excludeSemantics: true,
+      label: a.altText,
+      child: Padding(
+        padding: EdgeInsets.all(TapGeometry.groupInsetOf(a)),
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: p['kind'] == 'hundred_chart'
+              ? HundredChartPicture(key: const Key('stage-chart'), spec: ChartSpec.fromScene(p))
+              : a.picture2 == null
+              ? BaseTenPicture(key: const Key('stage-blocks'), layoutOf: BaseTen.fromScene(p))
+              // Two pictures of blocks side by side, the first on the left (two towers to compare, `40 + 30` as rods).
+              : Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(TapGeometry.cellInsetOf(a)),
+                        child: BaseTenPicture(key: const Key('stage-blocks'), layoutOf: BaseTen.fromScene(p)),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(TapGeometry.cellInsetOf(a)),
+                        child: BaseTenPicture(
+                          key: const Key('stage-blocks-2'),
+                          layoutOf: BaseTen.fromScene(a.picture2!),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+
   /// The group (or the two groups, side by side) that the question is about. Not tappable.
   Widget _groups(TapAnswerActivity a) {
     // A group scattered to be counted, alone on the stage, is drawn cut to its ink: a ladybug or a sock fills its place (its
@@ -662,7 +859,7 @@ class _TapStage extends StatelessWidget {
       excludeSemantics: true,
       label: a.altText,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(TapGeometry.groupInsetOf(a)),
         // Two groups stand like "3 + 2", the first on the left, whatever the language (the hint stands on the same places).
         child: Directionality(
           textDirection: TextDirection.ltr,
@@ -671,7 +868,7 @@ class _TapStage extends StatelessWidget {
             children: <Widget>[
               for (final SpriteSet g in sets)
                 Expanded(
-                  child: Padding(padding: const EdgeInsets.all(6), child: one(g)),
+                  child: Padding(padding: EdgeInsets.all(TapGeometry.cellInsetOf(a)), child: one(g)),
                 ),
             ],
           ),

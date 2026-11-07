@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "write-numbers",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "כּוֹתְבִים מִסְפָּרִים"
+    }
+  ],
+  "skills": [
+    "NUM-C-02",
+    "NUM-C-03"
+  ],
+  "items": [
+    "c.numc02.13",
+    "c.numc02.14",
+    "c.numc02.15",
+    "c.numc03.21",
+    "c.numc03.22"
+  ],
+  "estimatedMinutes": 6,
+  "sequence": 114,
+  "celebration": {
+    "vo": "vo:celebrate.write_numbers",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! כׇּל סִפְרָה בִּמְקוֹמָהּ."
+      }
+    ]
+  }
+}

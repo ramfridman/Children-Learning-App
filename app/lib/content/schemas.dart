@@ -647,6 +647,10 @@ const SObject _stagePicture = SObject(<String, SField>{
   'hundreds': SField(SInt(min: 0, max: 9), required: false),
   'tens': SField(SInt(min: 0, max: 9), required: false),
   'ones': SField(SInt(min: 0, max: 9), required: false),
+  // base_ten, a question about the rods themselves: how many of the tens rods, counted from the left, are lit ("how much is this rod worth?"),
+  // and how many, counted from the right, are crossed out (taken away: 70 - 40).
+  'litRods': SField(SInt(min: 0, max: 9), required: false),
+  'crossedRods': SField(SInt(min: 0, max: 9), required: false),
   // array: rows by columns of objects.
   'rows': SField(SInt(min: 1, max: 12), required: false),
   'columns': SField(SInt(min: 1, max: 12), required: false),
@@ -928,6 +932,8 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'numeral': SField(SInt(min: 0, max: 10000), required: false),
           // A picture of a number or a measure, drawn on the stage (1.4): blocks, an array, a hundred chart, a clock, a ruler, a column sum.
           'picture': SField(_stagePicture, required: false),
+          // A second picture beside the first, as `group2` is beside `group` (two towers to compare, `40 + 30` as rods): blocks only.
+          'picture2': SField(_stagePicture, required: false),
           // Picture answers on tiles below the stage instead of on it (1.1): when the pictures are the whole point.
           'optionsOnTiles': SField(SBool(), required: false),
           // A written word, unit or letter on the stage that the child reads (1.4, LS01 d): the clip is what "read it to me" plays.
@@ -978,6 +984,8 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
             'sprite': const SField(_asset, required: false),
             'numeral': const SField(SInt(min: 0, max: 10000), required: false),
             'set': const SField(_spriteSet, required: false),
+            // Blocks drawn on the tile (1.4): "which one is thirty-four?" with a picture of rods and cubes for each choice. Blocks only.
+            'picture': const SField(_stagePicture, required: false),
             'text': const SField(SString(minLength: 1, maxLength: _targetTextMax), required: false),
             'clip': _optionClip,
             // The word shown under the picture once the answer is accepted (LS01 g), in the course's font.

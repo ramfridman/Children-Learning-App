@@ -265,9 +265,13 @@ class ChoiceOption {
     this.clip,
     this.reveal,
     this.ats = const <Rect>[],
+    this.picture,
   });
 
   final String id;
+
+  /// Blocks drawn on the tile (a `base_ten` picture: its `tens` and `ones`), for "which one is thirty-four?" (M10, X1); null for any other face.
+  final Map<String, Object?>? picture;
 
   /// The number a count option shows (`count_tap`).
   final int? value;
@@ -308,6 +312,7 @@ List<ChoiceOption> _options(Object? answer) => <ChoiceOption>[
       value: o['value'] as int?,
       numeral: o['numeral'] as int?,
       set: o['set'] == null ? null : SpriteSet.fromJson(o['set']),
+      picture: o['picture'] as Map<String, Object?>?,
       sprite: o['sprite'] as String?,
       label: o['label'] as String?,
       misconception: o['misconception'] as String?,
@@ -377,6 +382,10 @@ class NumberAnswer {
   final Map<String, String> rules;
 }
 
+/// The kinds of stage picture (`scene.picture.kind`) that `tap_answer` draws today (M10, X1). The other kinds in `stagePictureKinds` are
+/// in the schema and the validator, and wait for the batch that needs them (docs/knowledge/maths/c1-deferred.md).
+const Set<String> drawnStagePictureKinds = <String>{'base_ten', 'hundred_chart'};
+
 class TapAnswerActivity extends Activity implements ChoiceActivity {
   TapAnswerActivity._(super.json, super.assets)
     : options = _options(json['answer']),
@@ -387,6 +396,7 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
           ? NumberAnswer.fromJson(_map(json['answer']))
           : null,
       picture = _map(json['scene'])['picture'] as Map<String, Object?>?,
+      picture2 = _map(json['scene'])['picture2'] as Map<String, Object?>?,
       stem = _map(json['scene'])['stem'] == null
           ? null
           : (
@@ -440,6 +450,9 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
   /// null. The sessions draw each kind as the batch that needs it lands.
   final Map<String, Object?>? picture;
 
+  /// A second picture of blocks beside [picture], as [group2] is beside [group] (two towers to compare; `40 + 30` as rods); null for none.
+  final Map<String, Object?>? picture2;
+
   /// A text stem (LS01 d): a written word, unit or letter on the stage, and the clip that "read it to me" plays; null when the item has none.
   final ({String text, String? clip})? stem;
 
@@ -474,8 +487,18 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
   /// A numeral drawn large on the stage (1.1), or null.
   final int? stageNumeral;
 
-  /// Numerals and sets are answered on tiles below the stage (it is too small for them); pictures stay on the stage.
-  bool get optionsInTiles => _tilesFlag || options.any((ChoiceOption o) => o.sprite == null);
+  /// Numerals and sets are answered on tiles below the stage (it is too small for them); pictures stay on the stage. A number answer
+  /// is typed on a keypad where the tiles would be.
+  bool get optionsInTiles =>
+      _tilesFlag || numberAnswer != null || options.any((ChoiceOption o) => o.sprite == null);
+
+  /// The kind of the stage picture, when it is one that a session draws ([drawnStagePictureKinds]); null for none, and for a kind that
+  /// no session draws yet.
+  String? get drawnPictureKind {
+    final Object? kind = picture?['kind'];
+    return kind is String && drawnStagePictureKinds.contains(kind) ? kind : null;
+  }
+
   final bool _tilesFlag;
 
   /// The word that appears under the right picture once the answer is accepted (LS01 g), or null when there is none.
@@ -1898,9 +1921,10 @@ class PackContent {
         tags[t.id] = t;
       } else if (d.key.startsWith('activity.')) {
         final Activity a = Activity.fromJson(doc, assets);
-        // SEC-M10-1: the build claims `tap_answer` 1.4, but no session draws a number answer or a stage picture yet (the first batch
-        // that does removes this line for what it draws). Until then such an item is hidden, as a pack of a newer version is.
-        if (a is TapAnswerActivity && (a.numberAnswer != null || a.picture != null)) continue;
+        // SEC-M10-1: the build claims `tap_answer` 1.4, and a session draws the number answer (the keypad) and the stage pictures of
+        // blocks and the hundred chart; a stage picture of another kind is not drawn yet, so such an item is hidden, as a pack of a
+        // newer version is, until the batch that draws its kind takes it off [drawnStagePictureKinds].
+        if (a is TapAnswerActivity && a.picture != null && a.drawnPictureKind == null) continue;
         activities[a.id] = a;
       }
     }

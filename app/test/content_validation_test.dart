@@ -290,7 +290,7 @@ final List<Broken> _cases = <Broken>[
     'tap_answer: an option that is a picture and a numeral at once',
     (SamplePack p) => _m(_l(_m(p.doc(_t)['answer'])['options'])[0])['numeral'] = 3,
     '$_t › answer.options[0]',
-    'exactly one of a sprite, a numeral or a set',
+    'exactly one of a sprite, a numeral, a set or a picture of blocks',
   ),
   Broken(
     'tap_answer: two options that look the same',

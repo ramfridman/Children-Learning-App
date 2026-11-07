@@ -409,7 +409,7 @@ extension _BandB on _Plans {
   _Sentence? _readSentence() {
     final List<String> row = a.row;
     final int eq = row.indexOf('op:=');
-    final int c = _right.numeral ?? -1;
+    final int c = _answerValue ?? -1;
     if (eq < 0 || c < 0) return null;
     final List<int> left = <int>[for (int i = 0; i < eq; i++) i];
     final List<int> right = <int>[for (int i = eq + 1; i < row.length; i++) i];
@@ -483,61 +483,137 @@ extension _BandB on _Plans {
     }
     // A cube for each unit: a sentence with a number above the limit gets the generic hint (SEC-M10-3).
     if (s.value.values.any((int v) => v > _mostUnits)) return generic(level);
+    return _sentenceWith(level, s, (Rect cell, int n, {int? filled}) => _cubesAbove(cell, n, filled: filled));
+  }
+
+  /// A sentence drawn with [units]: for each number the things it is made of, over its cell (cubes here; the blocks of a number in the
+  /// plans of place value), and when [filled] is given only that many are there and the rest are empty places. With a [card] the numbers
+  /// do not stand over the row's cells: the card has a left half, a right half and a strip under them (see [_roles]), and the hint is drawn
+  /// there ([emptyOf] says where the empty places of a whole are, [perPlace] what each is worth when they are counted).
+  HintPlan _sentenceWith(
+    int level,
+    _Sentence s,
+    List<HintMark> Function(Rect cell, int n, {int? filled}) units, {
+    Rect? card,
+    List<Rect> Function(Rect cell, int whole, int known)? emptyOf,
+    int perPlace = 1,
+  }) {
+    final List<Rect> cells = card == null ? g.rowCells() : _virtualCells(card, s);
     final int av = s.value[s.a]!;
     final int bv = s.value[s.b]!;
     final int rv = s.value[s.r]!;
     final bool addition = a.row[s.sign] == 'op:+';
-    if (s.unknown == s.r) {
-      List<HintMark> cubes(int upTo) => <HintMark>[
-        if (upTo >= 1) ..._cubesAbove(cells[s.a], av),
-        if (upTo >= 2) ..._cubesAbove(cells[s.b], bv),
-      ];
-      if (level == 2) {
-        return HintPlan(<HintFrame>[
-          HintFrame(cubes(1), hold: _ms(1000)),
-          HintFrame(cubes(2), hold: _ms(1800)),
-        ], rest: cubes(2));
-      }
-      final Offset answerAt = cells[s.r].center + Offset(0, 24 * k);
-      return _demo(<HintFrame>[
-        HintFrame(<HintMark>[...cubes(1), HandMark(cells[s.a].center, press: true)], hold: _ms(800)),
-        HintFrame(<HintMark>[...cubes(2), HandMark(cells[s.b].center, press: true)], hold: _ms(800)),
-        HintFrame(<HintMark>[
-          ...cubes(2),
-          BadgeMark(answerAt, rv),
-          HandMark(answerAt, press: true),
-        ], hold: _ms(900)),
-        _toAnswer(<HintMark>[...cubes(2), BadgeMark(answerAt, rv)]),
-      ]);
+    final List<HintMark> base = card == null
+        ? const <HintMark>[]
+        : <HintMark>[CardMark(card, const SizedBox.shrink())];
+    if (s.unknown == s.r) return _together(level, units, cells, s.a, s.b, s.r, av, bv, rv, base: base);
+    // A part is missing. For an addition (`A + ? = R`) the whole is R; for a take away the whole is A (`A - ? = R`, the part that is
+    // left is R), or the unknown whole is the two known numbers together (`? - B = R`).
+    if (!addition && s.unknown == s.a) {
+      return _together(level, units, cells, s.b, s.r, s.a, bv, rv, av, base: base);
     }
-    // A part is missing: the whole is drawn as the known part (cubes) and the places that are left (empty), over the whole's cell.
-    final int knownCell = s.unknown == s.a ? s.b : s.a;
+    final int knownCell = addition ? (s.unknown == s.a ? s.b : s.a) : s.r;
+    final int wholeCell = addition ? s.r : s.a;
     final int known = s.value[knownCell]!;
-    final int whole = addition ? rv : av;
-    if (!addition || whole < known) return generic(level);
+    final int whole = s.value[wholeCell]!;
+    if (whole < known) return generic(level);
     final List<HintMark> parts = <HintMark>[
-      ..._cubesAbove(cells[knownCell], known),
-      ..._cubesAbove(cells[s.r], whole, filled: known),
+      ...base,
+      ...units(cells[knownCell], known),
+      ...units(cells[wholeCell], whole, filled: known),
     ];
     final int left = whole - known;
     if (level == 2) {
       return HintPlan(<HintFrame>[
-        HintFrame(_cubesAbove(cells[knownCell], known), hold: _ms(1000)),
+        HintFrame(<HintMark>[...base, ...units(cells[knownCell], known)], hold: _ms(1000)),
         HintFrame(parts, hold: _ms(1800)),
       ], rest: parts);
     }
     // The empty places are counted one by one in the cell of the unknown: a badge with how many so far.
-    final Offset counted = cells[s.unknown].center + Offset(0, 24 * k);
-    final List<HintMark> places = _cubesAbove(cells[s.r], whole, filled: known);
+    final Offset counted = cells[s.unknown].center + Offset(0, card == null ? 24 * k : 0);
+    final List<Rect> empty =
+        emptyOf?.call(cells[wholeCell], whole, known) ??
+        <Rect>[
+          for (final HintMark m in units(
+            cells[wholeCell],
+            whole,
+            filled: known,
+          ).skip(units(cells[wholeCell], known).length))
+            if (m is BlockMark) m.rect,
+        ];
+    final bool each = empty.length * perPlace == left;
     return _demo(<HintFrame>[
       HintFrame(<HintMark>[...parts, HandMark(cells[knownCell].center, press: true)], hold: _ms(800)),
-      for (int j = 1; j <= left; j++)
+      for (int j = 1; j <= (each ? empty.length : 1); j++)
         HintFrame(<HintMark>[
           ...parts,
-          BadgeMark(counted, j),
-          HandMark((places[known + j - 1] as BlockMark).rect.center, press: true),
+          BadgeMark(counted, each ? j * perPlace : left),
+          HandMark((each ? empty[j - 1] : cells[wholeCell]).center, press: true),
         ], hold: _ms(650)),
-      _toAnswer(<HintMark>[...parts, BadgeMark(counted, left)]),
+      ..._answerSteps(<HintMark>[...parts, BadgeMark(counted, left)]),
+    ]);
+  }
+
+  /// The three places of a sentence's numbers in a card: [_roles] says which number is on the left, which on the right and which is
+  /// the unknown (the strip under both, where the count shows). Every other cell is the whole card.
+  List<Rect> _virtualCells(Rect card, _Sentence s) {
+    final ({int left, int right, int strip}) r = _roles(s);
+    final Rect inner = card.deflate(8 * k);
+    final double half = (inner.width - 8 * k) / 2;
+    final List<Rect> cells = List<Rect>.filled(a.row.length, card);
+    cells[r.left] = Rect.fromLTWH(inner.left, inner.top, half, inner.height);
+    cells[r.right] = Rect.fromLTWH(inner.right - half, inner.top, half, inner.height);
+    cells[r.strip] = Rect.fromLTWH(inner.left, inner.bottom - 22 * k, inner.width, 22 * k);
+    return cells;
+  }
+
+  /// Which cell of a sentence holds the first thing drawn (the left half of a card), which the second and which is the unknown.
+  ({int left, int right, int strip}) _roles(_Sentence s) {
+    final bool addition = a.row[s.sign] == 'op:+';
+    if (s.unknown == s.r) return (left: s.a, right: s.b, strip: s.r);
+    if (!addition && s.unknown == s.a) return (left: s.b, right: s.r, strip: s.a);
+    return (
+      left: addition ? s.r : s.a,
+      right: addition ? (s.unknown == s.a ? s.b : s.a) : s.r,
+      strip: s.unknown,
+    );
+  }
+
+  /// A sentence whose unknown is the two numbers [x] and [y] put together (`A + B = ?`, `A - B = ?` as the two shown, `? - B = R`): the
+  /// units of the first, then of the second, then the hand over both and the total in the cell of the unknown [result] last.
+  HintPlan _together(
+    int level,
+    List<HintMark> Function(Rect cell, int n, {int? filled}) units,
+    List<Rect> cells,
+    int x,
+    int y,
+    int result,
+    int xv,
+    int yv,
+    int total, {
+    List<HintMark> base = const <HintMark>[],
+  }) {
+    List<HintMark> shown(int upTo) => <HintMark>[
+      ...base,
+      if (upTo >= 1) ...units(cells[x], xv),
+      if (upTo >= 2) ...units(cells[y], yv),
+    ];
+    if (level == 2) {
+      return HintPlan(<HintFrame>[
+        HintFrame(shown(1), hold: _ms(1000)),
+        HintFrame(shown(2), hold: _ms(1800)),
+      ], rest: shown(2));
+    }
+    final Offset answerAt = cells[result].center + Offset(0, base.isEmpty ? 24 * k : 0);
+    return _demo(<HintFrame>[
+      HintFrame(<HintMark>[...shown(1), HandMark(cells[x].center, press: true)], hold: _ms(800)),
+      HintFrame(<HintMark>[...shown(2), HandMark(cells[y].center, press: true)], hold: _ms(800)),
+      HintFrame(<HintMark>[
+        ...shown(2),
+        BadgeMark(answerAt, total),
+        HandMark(answerAt, press: true),
+      ], hold: _ms(900)),
+      ..._answerSteps(<HintMark>[...shown(2), BadgeMark(answerAt, total)]),
     ]);
   }
 
@@ -602,7 +678,7 @@ extension _BandB on _Plans {
   /// in a ten-frame uses its own frame; any other group gets a frame in a card.
   HintPlan _toTen(int level) {
     final SpriteSet? set = a.group;
-    if (set == null || _right.numeral != 10 - set.count || set.count >= 10) return generic(level);
+    if (set == null || _answerValue != 10 - set.count || set.count >= 10) return generic(level);
     if (level == 1) return look();
     final int n = set.count;
     final int left = 10 - n;
@@ -649,7 +725,7 @@ extension _BandB on _Plans {
           BadgeMark(badgeAt, j),
           HandMark(empties[j - 1].center, press: true),
         ], hold: _ms(700)),
-      _toAnswer(<HintMark>[...frame, BadgeMark(badgeAt, left)]),
+      ..._answerSteps(<HintMark>[...frame, BadgeMark(badgeAt, left)]),
     ]);
   }
 

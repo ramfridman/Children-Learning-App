@@ -52,37 +52,53 @@ int _marks(HintPlan p) => p.frames.fold<int>(0, (int s, HintFrame f) => s + f.ma
 
 void main() {
   group('SEC-M10-1: the items no session draws yet are hidden', () {
-    test('a number answer and a stage picture are left out of the pack content, a choice stays', () {
-      final SamplePack number = _tap(_numberItem);
-      final SamplePack picture = _tap(
+    test('a stage picture of a kind no session draws is left out of the pack content, a choice and a drawn kind stay', () {
+      final SamplePack array = _tap(
         (Map<String, Object?> d) =>
             _m(d['scene'])['picture'] = <String, Object?>{'kind': 'array', 'rows': 3, 'columns': 4},
       );
-      for (final SamplePack p in <SamplePack>[number, picture]) {
-        final PackContent content = PackContent.fromPack(p.verified());
-        expect(content.activities.containsKey('pick.red.flower'), isFalse);
-        expect(content.activities.keys, containsAll(<String>['count.butterflies.3', 'give.three.jar']));
-        // The lesson that lists it plays the rest, and does not fail on the missing id.
-        expect(content.itemsOf(content.lessons['butterflies']!).map((Activity a) => a.id), <String>[
-          'count.butterflies.3',
-          'give.three.jar',
-        ]);
-      }
+      expect(PackContent.fromPack(array.verified()).activities.containsKey('pick.red.flower'), isFalse);
+      final PackContent content = PackContent.fromPack(array.verified());
+      expect(content.activities.keys, containsAll(<String>['count.butterflies.3', 'give.three.jar']));
+      // The lesson that lists it plays the rest, and does not fail on the missing id.
+      expect(content.itemsOf(content.lessons['butterflies']!).map((Activity a) => a.id), <String>[
+        'count.butterflies.3',
+        'give.three.jar',
+      ]);
       expect(PackContent.fromPack(SamplePack().verified()).activities.containsKey('pick.red.flower'), isTrue);
+      // The blocks, the hundred chart and the keypad are drawn (batch C1, 2026-11-07), so their items play.
+      for (final SamplePack drawn in <SamplePack>[
+        _tap(_numberItem),
+        _tap(
+          (Map<String, Object?> d) =>
+              _m(d['scene'])['picture'] = <String, Object?>{'kind': 'base_ten', 'tens': 3, 'ones': 4},
+        ),
+        _tap(
+          (Map<String, Object?> d) => _m(d['scene'])['picture'] = <String, Object?>{
+            'kind': 'hundred_chart',
+            'lit': <Object?>[34],
+          },
+        ),
+      ]) {
+        expect(PackContent.fromPack(drawn.verified()).activities.containsKey('pick.red.flower'), isTrue);
+      }
     });
 
-    test('the hint plans of an item with no right option are none, not a RangeError', () {
-      final SamplePack p = _tap(_numberItem);
-      final PackAssets assets = PackContent.fromPack(p.verified(pictures: true)).assets;
-      final TapAnswerActivity a = Activity.fromJson(_m(p.docs[tapFile]), assets) as TapAnswerActivity;
-      expect(a.numberAnswer, isNotNull);
-      const ActivitySpec spec = ActivitySpec.phone;
-      final TapGeometry g = TapGeometry(a, spec.stage.size, spec);
-      expect(g.correctIndex, -1);
-      for (int level = 1; level <= 3; level++) {
-        expect(tapHintPlan(a, g, level), isNull, reason: 'level $level');
-      }
-    });
+    test(
+      'the hint plans of a number answer are none for a skill no Band C plan serves, not a RangeError',
+      () {
+        final SamplePack p = _tap(_numberItem);
+        final PackAssets assets = PackContent.fromPack(p.verified(pictures: true)).assets;
+        final TapAnswerActivity a = Activity.fromJson(_m(p.docs[tapFile]), assets) as TapAnswerActivity;
+        expect(a.numberAnswer, isNotNull);
+        const ActivitySpec spec = ActivitySpec.phone;
+        final TapGeometry g = TapGeometry(a, spec.stage.size, spec);
+        expect(g.correctIndex, -1);
+        for (int level = 1; level <= 3; level++) {
+          expect(tapHintPlan(a, g, level), isNull, reason: 'level $level');
+        }
+      },
+    );
   });
 
   group('SEC-M10-2: an incomplete stage picture is a problem, not an exception', () {

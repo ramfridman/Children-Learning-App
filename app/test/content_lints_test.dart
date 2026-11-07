@@ -52,7 +52,12 @@ String _expectedRepresentation(Map<String, Object?> a) {
     case 'spot_error':
       return _l(scene['cells']).any((Object? c) => '$c'.startsWith('asset:')) ? 'pictorial' : 'symbolic';
     case 'tap_answer':
-      if (scene['group'] != null || scene['group2'] != null || scene['chart'] != null) return 'pictorial';
+      if (scene['group'] != null ||
+          scene['group2'] != null ||
+          scene['chart'] != null ||
+          scene['picture'] != null) {
+        return 'pictorial';
+      }
       if (_l(answer['options']).any((Object? o) => _m(o)['sprite'] != null || _m(o)['set'] != null)) {
         return 'pictorial';
       }
@@ -117,13 +122,10 @@ void main() {
   final Map<String, Map<String, Object?>> acts = _load('activity.');
   final Map<String, Map<String, Object?>> skills = _load('skill.');
 
-  test(
-    'the sources are the 967 activities and 100 skills of pack 0.10.0, and the 168 and 12 of M10 batch C1',
-    () {
-      expect(acts.length, 967 + 168);
-      expect(skills.length, 100 + 12);
-    },
-  );
+  test('the sources are the 967 activities and 100 skills of pack 0.10.0, and the 193 and 12 of M10 batch C1 (170 for the sessions of 2026-11-06 and 23 for the block, chart and keypad modes)', () {
+    expect(acts.length, 967 + 193);
+    expect(skills.length, 100 + 12);
+  });
 
   test('the representation label of every activity follows the rule of spec section 2', () {
     final List<String> wrong = <String>[];
