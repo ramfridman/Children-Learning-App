@@ -4,6 +4,7 @@
     python -I tools/check_maths.py --band C --strict   # every Band C item, strict (ambiguous or unchecked items fail too)
     python -I tools/check_maths.py --ids c. --strict   # the gate of the Band C batches: every c.* id, its Band A and B bridge items too
     python -I tools/check_maths.py --coverage --ids c.  # each watched tag of the skills: its diagnostic and its lucky-right items
+    python -I tools/check_maths.py --coverage --ids c. --strict  # the coverage gate too: a watched tag with no diagnostic item fails
     python -I tools/check_maths.py --list          # also print every finding, not only the table
     python -I tools/check_maths.py --dir <folder>  # another folder of activity.*.json (a next-pack, a test)
 
@@ -645,6 +646,8 @@ def tag_candidates(tag, ctx):
     if tag == 'M-SUB-SMALLBIG' and a is not None and b is not None:
         r = smallbig(a, b)
         return {r} if r is not None else None
+    if tag == 'M-ADD-RECOUNT':  # counting all from one shows only where the first number is hidden: the drawn ones counted alone
+        return {ctx['seen']} if ctx.get('seen') is not None else set()
     if tag == 'M-REGROUP-FORGET':
         return near(-10, 10)
     if tag == 'M-MUL-ADD' and a is not None and b is not None:
@@ -1081,6 +1084,14 @@ def recognise_choice(it, svg):
         tens, ones = said_with('עשרות'), said_with('יחידות', 'יחידה')
         if tens is not None and ones is not None:
             return numeric('place-words', 10 * tens + ones, {'given': [tens, ones], 'face': tens + ones}, [10 * tens + ones]), out
+
+    # --- count on from a number in a closed basket (QA-C1b-5, MATH-B-04): the first number is said and not drawn, the ones added are
+    # drawn. Counting all from one has only the drawn ones to count: M-ADD-RECOUNT is their number (the hidden-collection task).
+    if g and not g2 and it.has('בסל הסגור') and it.has('מוסיפים') and it.has('כמה') and len(nums) >= 2:
+        hidden, seen = nums[0], nums[1]
+        picture(seen, gc, 'the ones added (the basket is closed)')
+        return numeric('hidden-count-on', hidden + seen, {'given': [hidden, seen], 'a': hidden, 'b': seen, 'op': '+',
+                                                          'hidden': hidden, 'seen': gc}, [hidden, seen]), out
 
     # --- stories with pictures
     if g and g2 and it.has('מוסיפים עוד', 'ובא עוד', 'ובאו עוד', 'בחוץ. כמה יש בסך הכל', 'ועוד') and it.has('כמה') \
@@ -2023,8 +2034,11 @@ def check_docs(docs, records, skills, catalogue, svg, band=None, ids=None):
 
 
 def item_tags(it):
-    """Every tag an item can record: its options' and expected numbers', and the item's own (a line, a spot, a balance)."""
-    out = {o.get('misconception') for o in it.options} | {e.get('misconception') for e in it.answer.get('expected') or []}
+    """Every tag an item can record: its options', its expected numbers', its classifiers' and number rules' (give_n's took_all,
+    the keypad's face_value), and the item's own (a line, a spot, a balance)."""
+    out = {o.get('misconception') for o in it.options}
+    for key in ('expected', 'classifiers', 'rules'):
+        out |= {c.get('misconception') for c in it.answer.get(key) or [] if isinstance(c, dict)}
     out |= {it.answer.get(k) for k in it.answer if 'isconception' in k and isinstance(it.answer.get(k), str)}
     return out - {None}
 
@@ -2037,7 +2051,8 @@ def heard(x):
 
 
 # The tags whose error can give the right answer, so that an item can be lucky-right on them (lucky() says when).
-LUCKY_TAGS = ('M-PV-FACE', 'M-NUM-REV', 'M-PV-ZERO', 'M-CNT-DECADE', 'M-SUB-SMALLBIG', 'M-EQ-OPER', 'M-NL-DIR', 'M-SUB-ORDER')
+LUCKY_TAGS = ('M-PV-FACE', 'M-NUM-REV', 'M-PV-ZERO', 'M-CNT-DECADE', 'M-SUB-SMALLBIG', 'M-EQ-OPER', 'M-NL-DIR', 'M-SUB-ORDER',
+              'M-ADD-RECOUNT')
 
 
 def lucky(tag, it, ctx):
@@ -2057,6 +2072,8 @@ def lucky(tag, it, ctx):
         return None if None in (lo, hi, t) else abs(lo + hi - 2 * t) <= it.answer.get('tolerance', 0)
     if not isinstance(x, (int, float)):
         return None
+    if tag == 'M-ADD-RECOUNT':  # untimed, counting all from one (on the fingers where a part is hidden) still reaches every sum
+        return True if op == '+' else None
     if tag == 'M-PV-FACE':  # in a comparison: the ones-first reading picks the right number too (58 vs 43)
         if rel is not None:
             return x in (tag_candidates(tag, ctx) or ())
@@ -2139,6 +2156,47 @@ def coverage_table(cov):
     return '\n'.join(lines)
 
 
+# The watched tags that no item can record, each with its reason: the coverage gate (--coverage --strict) does not ask them for a
+# diagnostic item. {(skill, tag): reason}. A tag goes here only when no template of today can make its error give a wrong answer
+# (it is seen in the trace, the time or the taps), never because an item has not been written yet. Empty since QA-C1b-5: the
+# closed-basket items of MATH-B-04 (c.mathb04.11, .12) record M-ADD-RECOUNT.
+NOT_ITEM_OBSERVABLE = {}
+
+
+def coverage_gate(cov, folder=STARTER, docs=None, skills=None, exempt=None):
+    """The coverage gate (QA-C1b-5): every watched tag of a skill with selected items has a diagnostic item. A tag missing over the
+    selection passes when an item of the same skill elsewhere in the pack records it (a bridge skill: NUM-B-01's Band B items
+    carry M-CNT-SEQ) or when it is in [exempt] (NOT_ITEM_OBSERVABLE) with its reason. Returns [(skill, tag, verdict, detail)],
+    verdict 'ok', 'elsewhere', 'exempt' or 'missing'."""
+    exempt = NOT_ITEM_OBSERVABLE if exempt is None else exempt
+    whole = None
+    out = []
+    for sk in sorted(cov):
+        for t in sorted(cov[sk]):
+            diag = cov[sk][t][0]
+            if diag:
+                out.append((sk, t, 'ok', '%d items' % len(diag)))
+                continue
+            if whole is None:
+                whole = coverage(folder, docs=docs, skills=skills)
+            other = ((whole.get(sk) or {}).get(t) or ([], None))[0]
+            if other:
+                out.append((sk, t, 'elsewhere', '%d items outside the selection (%s)' % (len(other), ', '.join(sorted(other)[:3]))))
+            elif (sk, t) in exempt:
+                out.append((sk, t, 'exempt', exempt[(sk, t)]))
+            else:
+                out.append((sk, t, 'missing', 'no item of the pack records it'))
+    return out
+
+
+def gate_lines(gate):
+    lines = ['coverage gate: %d watched tags, %d missing' % (len(gate), sum(v == 'missing' for _, _, v, _ in gate))]
+    for sk, t, v, d in gate:
+        if v != 'ok':
+            lines.append('%-9s %-10s %-16s %s' % (v.upper() if v == 'missing' else v, sk, t, d))
+    return '\n'.join(lines)
+
+
 def table(rows, counts):
     lines = []
     sev = Counter(r[0] for r in rows)
@@ -2165,7 +2223,9 @@ def main(argv=None):
                     help='only the items whose id starts with PREFIX (repeatable); --ids c. is every item of the Band C batches')
     ap.add_argument('--strict', action='store_true', help='ambiguous and unchecked items fail too (the Band C gate)')
     ap.add_argument('--coverage', action='store_true',
-                    help="also print each skill's watched tags with their diagnostic and lucky-right items")
+                    help="also print each skill's watched tags with their diagnostic and lucky-right items; with --strict, "
+                         'fail when a watched tag of a selected skill has no diagnostic item anywhere in the pack '
+                         '(NOT_ITEM_OBSERVABLE excepted, with its reason)')
     ap.add_argument('--list', action='store_true', help='print every finding')
     ap.add_argument('--json', help='also write the findings to this file')
     args = ap.parse_args(argv)
@@ -2180,15 +2240,22 @@ def main(argv=None):
             print('%-9s %-24s %-14s %s' % (s, i, c, m))
         print()
     print(table(rows, counts))
+    gap = False
     if args.coverage:
+        cov = coverage(args.dir, args.band, args.ids)
         print()
-        print(coverage_table(coverage(args.dir, args.band, args.ids)))
+        print(coverage_table(cov))
+        if args.strict:
+            gate = coverage_gate(cov, args.dir)
+            print()
+            print(gate_lines(gate))
+            gap = any(v == 'missing' for _, _, v, _ in gate)
     if args.json:
         with open(args.json, 'w', encoding='utf-8') as fh:
             json.dump([dict(zip(('severity', 'id', 'code', 'message'), r)) for r in rows], fh, ensure_ascii=False,
                       indent=1)
     fail = STRICT_FAILING if args.strict else FAILING
-    return 1 if any(r[0] in fail for r in rows) else 0
+    return 1 if gap or any(r[0] in fail for r in rows) else 0
 
 
 if __name__ == '__main__':

@@ -795,6 +795,12 @@ def numbers_c1_waiting(u):
 # needs every family answered right once (M10 §7.3 E1).
 FAMILIES = [(9, 3), (9, 5), (9, 7), (8, 4), (8, 6), (8, 7), (7, 5), (7, 6), (6, 5), (6, 6), (8, 8), (9, 9)]
 START_LINE = {'M-CNT-DOUBLE': ('vo:fb.count_on_start', 'כְּשֶׁמַּמְשִׁיכִים לִסְפֹּר, לֹא סוֹפְרִים שׁוּב אֶת הַמִּסְפָּר שֶׁמַּתְחִילִים מִמֶּנּוּ. בּוֹאוּ נִבְדֹּק.')}
+# The lines of the closed-basket items of MATH-B-04 (QA-C1b-5): drafts, needs-editor. The give-N line of M-CNT-CARD ("we took them
+# all") does not fit a sum, so these items say their own.
+HIDDEN_LINES = dict(START_LINE, **{
+    'M-ADD-RECOUNT': ('vo:fb.count_on_hidden', 'וּמַה שֶּׁבַּסַּל? מַתְחִילִים מִמַּה שֶּׁבַּסַּל וּמַמְשִׁיכִים לִסְפֹּר.'),
+    'M-CNT-CARD': ('vo:fb.count_on_card', 'זֶה מַה שֶּׁהָיָה בַּסַּל. הוֹסַפְנוּ עוֹד, אָז מַמְשִׁיכִים לִסְפֹּר.'),
+})
 
 
 @table('C1', 'math', assets=['frog', 'block', 'coin_s10', 'apple', 'star', 'fish', 'duck', 'ladybug', 'bird', 'tick', 'cross'],
@@ -824,6 +830,21 @@ def math_c1(u):
                ok='%s! %s וְעוֹד %s שָׁוֶה %s.' % (F[s], F[a], F[b], F[s]))
     for start, hop in [(7, 2), (8, 3), (9, 4), (6, 3)]:
         jump(u, 'MATH-B-04', 0, 20, start, hop, labels=[0, 10, 20], band='B')
+    # QA-C1b-5, the diagnostic of M-ADD-RECOUNT (c.mathb04.11 and .12): the hidden-collection task (Steffe and Cobb 1988; curriculum
+    # §5.2 R2 "a hidden cup"). The larger number is in a closed basket, said and not drawn; only the ones added are drawn. A child
+    # who can only count all from one has nothing to count but the drawn ones and says how many they are: that answer is the
+    # recount made visible. Counting on from the said number (or making it on the fingers first) gives the sum, so a right answer is
+    # still lucky-right for the tag (check_maths: every sum is).
+    for i, (hidden, seen, obj) in enumerate([(7, 2, 'apple'), (8, 3, 'star')]):
+        s, thing = hidden + seen, OBJECTS[obj]
+        choose(u, 'MATH-B-04', 'בַּסַּל הַסָּגוּר יֵשׁ %s. מוֹסִיפִים לַסַּל עוֹד %s. כַּמָּה %s יֵשׁ בַּסַּל עַכְשָׁו?' % (
+                   qty(hidden, thing), qty(seen, thing), thing['many']), s,
+               {seen: 'M-ADD-RECOUNT', hidden: 'M-CNT-CARD', s + 1: 'M-CNT-DOUBLE'}, i + 1, band='B', difficulty=0.5,
+               group={'sprite': obj, 'count': seen}, tag_lines=HIDDEN_LINES,
+               h2=fit('בַּסַּל כְּבָר יֵשׁ %s. מַתְחִילִים %s וּמַמְשִׁיכִים לִסְפֹּר אֶת מַה שֶּׁרוֹאִים.' % (qty(hidden, thing), from_(F[hidden]))),
+               h2_action='show_fingers',
+               h3=fit('%s… %s. %s' % (F[hidden], ', '.join(F[k] for k in range(hidden + 1, s + 1)), NOW % F[s])),
+               ok='%s! %s וְעוֹד %s הֵם %s.' % (F[s], F[hidden], F[seen], F[s]))
 
     # ---- MATH-C-01 (core): the facts to 9 + 9, with fact coverage (E1)
     u.skill('MATH-C-01', 'עובדות חיבור וחיסור עד 9 ועוד 9', 'חִבּוּר וְחִסּוּר עַד שְׁמוֹנֶה עֶשְׂרֵה', 'stall', ['MATH-B-08'],

@@ -774,6 +774,107 @@ class C1Deferred(unittest.TestCase):
                 self.assertEqual(on[doc['id']]['skill'], doc['skills'][0]['id'], doc['id'])
 
 
+def basket_item(hidden=7, seen=2, drawn=None, options=None, skill='MATH-B-04'):
+    """The closed-basket item of MATH-B-04 (QA-C1b-5): `hidden` said and not drawn, `seen` added and drawn."""
+    d = c1_item('בַּסַּל הַסָּגוּר יֵשׁ שִׁבְעָה תַּפּוּחִים. מוֹסִיפִים לַסַּל עוֹד שְׁנֵי תַּפּוּחִים. כַּמָּה תַּפּוּחִים יֵשׁ בַּסַּל עַכְשָׁו?',
+                options or [(hidden + seen, None), (seen, 'M-ADD-RECOUNT'), (hidden, 'M-CNT-CARD'), (hidden + seen + 1, 'M-CNT-DOUBLE')],
+                skill=skill, scene={'group': {'sprite': 'asset:apple', 'count': seen if drawn is None else drawn}})
+    d.update(domain='math', band='B')
+    return d
+
+
+class Recount(BatchC1):
+    """QA-C1b-5: M-ADD-RECOUNT is recorded by the closed-basket item, and the coverage gate (--coverage --strict)."""
+    TAGS = BatchC1.TAGS | {'M-ADD-RECOUNT'}
+
+    def test_the_closed_basket(self):
+        self.assertEqual(self.failing(basket_item()), [])
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(basket_item(drawn=9))), 'the basket is closed: only the 2 are drawn')
+        self.assertIn(('WRONG', 'answer'), codes(self.c1run(basket_item(options=[(2, None), (9, 'M-ADD-RECOUNT'), (7, 'M-CNT-CARD')]))))
+        wrong = basket_item(options=[(9, None), (1, 'M-ADD-RECOUNT'), (7, 'M-CNT-CARD'), (10, 'M-CNT-DOUBLE')])
+        self.assertIn(('RULE', 'tag-rule'), codes(self.c1run(wrong)), 'counting the drawn ones alone gives 2, not 1')
+
+    def test_recount_shows_only_where_a_part_is_hidden(self):
+        """Every number drawn: counting all from one gives the right sum, so a distractor tagged M-ADD-RECOUNT is a tag-rule error."""
+        plain = copy.deepcopy(SUM)
+        plain['answer']['options'][1]['misconception'] = 'M-ADD-RECOUNT'
+        self.assertIn(('RULE', 'tag-rule'), codes(self.c1run(plain)))
+        self.assertEqual(cm.tag_candidates('M-ADD-RECOUNT', {'x': 9, 'seen': 2}), {2})
+        self.assertEqual(cm.tag_candidates('M-ADD-RECOUNT', {'x': 9}), set())
+
+    def test_every_sum_is_lucky_right_for_recount(self):
+        docs = [basket_item()]
+        folder = tempfile.mkdtemp()
+        try:
+            cov = cm.coverage(folder, docs=docs, skills={'MATH-B-04': {'misconceptions': ['M-ADD-RECOUNT']}})
+        finally:
+            shutil.rmtree(folder)
+        self.assertEqual(cov['MATH-B-04']['M-ADD-RECOUNT'], (['plant.c1'], ['plant.c1']), 'the fingers reach 9 too')
+
+    def test_a_classifier_or_a_number_rule_records_its_tag(self):
+        give = {'id': 'plant.give', 'template': 'give_n', 'skills': [{'id': 'NUM-B-05'}],
+                'answer': {'type': 'give', 'n': 13, 'classifiers': [{'when': 'took_all', 'misconception': 'M-CNT-CARD'}]}}
+        keypad = number_doc('?', 34, [(43, 'M-NUM-REV')], rules=[('face_value', 'M-PV-FACE')])
+        self.assertEqual(cm.item_tags(cm.Item(give)), {'M-CNT-CARD'})
+        self.assertEqual(cm.item_tags(cm.Item(keypad)), {'M-NUM-REV', 'M-PV-FACE'})
+
+    def gate_folder(self, docs, skills):
+        folder = tempfile.mkdtemp()
+        for d in docs:
+            with open(os.path.join(folder, 'activity.%s.json' % d['id']), 'w', encoding='utf-8') as fh:
+                json.dump(d, fh, ensure_ascii=False)
+        for sk, watch in skills.items():
+            with open(os.path.join(folder, 'skill.%s.json' % sk), 'w', encoding='utf-8') as fh:
+                json.dump({'id': sk, 'misconceptions': watch}, fh)
+        for t in sorted(self.TAGS):
+            with open(os.path.join(folder, 'misconception.%s.json' % t), 'w', encoding='utf-8') as fh:
+                json.dump({'id': t}, fh)
+        return folder
+
+    def test_the_coverage_gate_fails_on_a_tag_with_no_diagnostic_item(self):
+        good = basket_item()
+        good['id'] = 'c.mathb04.1'
+        plain = basket_item(options=[(9, None), (7, 'M-CNT-CARD'), (10, 'M-CNT-DOUBLE')])
+        plain['id'] = 'c.mathb04.1'
+        for docs, want in (([good], 0), ([plain], 1)):
+            folder = self.gate_folder(docs, {'MATH-B-04': ['M-ADD-RECOUNT']})
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    self.assertEqual(cm.main(['--dir', folder, '--ids', 'c.', '--strict']), 0, 'the finding gate alone passes')
+                    self.assertEqual(cm.main(['--dir', folder, '--ids', 'c.', '--coverage']), 0, 'the table alone never fails')
+                    self.assertEqual(cm.main(['--dir', folder, '--ids', 'c.', '--coverage', '--strict']), want)
+            finally:
+                shutil.rmtree(folder)
+
+    def test_the_gate_takes_an_item_elsewhere_or_a_reasoned_exemption(self):
+        plain = basket_item(options=[(9, None), (7, 'M-CNT-CARD'), (10, 'M-CNT-DOUBLE')])
+        plain['id'] = 'c.mathb04.1'
+        elsewhere = basket_item()
+        elsewhere['id'] = 'b.mathb04.1'
+        folder = self.gate_folder([plain, elsewhere], {'MATH-B-04': ['M-ADD-RECOUNT']})
+        try:
+            cov = cm.coverage(folder, ids=['c.'])
+            self.assertEqual(cov['MATH-B-04']['M-ADD-RECOUNT'][0], [])
+            self.assertEqual([g[2] for g in cm.coverage_gate(cov, folder)], ['elsewhere'], 'a Band B item of the skill records it')
+            os.remove(os.path.join(folder, 'activity.b.mathb04.1.json'))
+            self.assertEqual([g[2] for g in cm.coverage_gate(cov, folder)], ['missing'])
+            gate = cm.coverage_gate(cov, folder, exempt={('MATH-B-04', 'M-ADD-RECOUNT'): 'seen in the taps only'})
+            self.assertEqual(gate, [('MATH-B-04', 'M-ADD-RECOUNT', 'exempt', 'seen in the taps only')])
+        finally:
+            shutil.rmtree(folder)
+
+    def test_the_content_has_them_and_passes_the_gate(self):
+        docs, records, skills = cm.load(cm.STARTER)
+        by = {d['id']: d for d in docs}
+        for i, (seen, hidden) in (('c.mathb04.11', (2, 7)), ('c.mathb04.12', (3, 8))):
+            tags = {o['numeral']: o.get('misconception') for o in by[i]['answer']['options']}
+            self.assertEqual((tags[seen], tags[hidden]), ('M-ADD-RECOUNT', 'M-CNT-CARD'))
+            self.assertEqual(by[i]['scene']['group']['count'], seen)
+        self.assertEqual(cm.NOT_ITEM_OBSERVABLE, {}, 'every watched tag of C1 has an item now')
+        cov = cm.coverage(ids=['c.'])
+        self.assertEqual([g for g in cm.coverage_gate(cov) if g[2] == 'missing'], [])
+
+
 class RealPack(unittest.TestCase):
     def test_every_maths_item_is_read_by_a_rule(self):
         rows, counts = cm.check()

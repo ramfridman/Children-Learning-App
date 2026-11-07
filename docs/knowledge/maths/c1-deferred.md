@@ -4,7 +4,7 @@ The maths teacher, 2026-11-06; prepared in the generator 2026-11-07 (QA-C1-5). B
 content with only the items that today's sessions draw. The items below need a mode that no session draws yet (security review of step
 0: `qa_m10s0_undrawn_modes_test.dart` fails on any `scene.picture` or `answer.type: number` in content).
 
-**State (2026-11-07, round 2): C1 is complete. Section 6 lists what is now in content and the only two things left, each with its reason.** Before that, **step 3 (2026-11-07): in content.** The app-developer drew the three modes and the new fields of the blocks picture (`litRods`,
+**State (2026-11-07, round 2): C1 is complete. Section 6 lists what is now in content; section 7 (QA-C1b-5) gives M-ADD-RECOUNT its diagnostic item and makes the coverage a CI gate.** Before that, **step 3 (2026-11-07): in content.** The app-developer drew the three modes and the new fields of the blocks picture (`litRods`,
 `crossedRods`, `scene.picture2`, `answer.options[].picture`) and switched every `DRAWN` entry on (commit d648af2b). The maths teacher
 then wrote the items that need the new fields and the items that criterion 2 and criterion 7 still lacked (section 5). `tools/author.py`
 `k_pick` carries `picture` and `picture2` into the scene and takes an option of blocks as `{'key', 'picture', 'label'}`; its
@@ -183,14 +183,31 @@ items, and fact-families-more with the other 4 and the four cards (8 and 8). The
 activity, its child line `vo:fb.sub_order`).
 
 The coverage of every watched tag over `--ids c.` (`check_maths --coverage`) now has a diagnostic item and, where the tag's error can give
-a right answer, a lucky-right item, with two exceptions.
+a right answer, a lucky-right item. Since QA-C1b-5 this is a gate: `check_maths --ids c. --coverage --strict` (CI, hygiene job, next to
+the C1 gate) fails when a watched tag of a skill with c.* items has no diagnostic item anywhere in the pack, unless the tag is in
+`NOT_ITEM_OBSERVABLE` with its reason (empty today). A classifier (give_n `took_all`) and a keypad rule (`face_value`) count as recording
+their tag.
 
-**Left in C1, each for a reason:**
-- **MATH-B-04 M-ADD-RECOUNT has no diagnostic item.** Counting all from one instead of counting on gives the right sum, so no distractor,
-  expected number or classifier of any template can record it; the curriculum (§4, MATH-B-04) has it "observed in the hint trace", and no
-  item of the whole pack carries it (MATH-B-01 and MATH-B-08 watch it too). It needs a trace classifier (the taps or the time of a count
-  on), an engine task for the app-developer, not a C1 item.
-- **NUM-B-01 M-CNT-SEQ has no C1 diagnostic item.** NUM-B-01 is a Band B skill: its 9 Band B items (b.numb01.*) carry M-CNT-SEQ, and the
-  C1 additions (four jumps) are its second representation for core mastery. The coverage table counts `--ids c.` only.
+## 7. QA-C1b-5 (2026-11-07): M-ADD-RECOUNT gets its diagnostic item
+
+Decided: **an item, not a dropped tag.** MATH-B-04 *is* the move from counting all to counting on (curriculum §4; Clements and Sarama's
+"Counting On" level), so dropping its one watched tag would leave the skill watching nothing. The tag stays, and the item that makes a
+recount visible in a tap-only, untimed setting is the hidden-collection task (Steffe and Cobb 1988; curriculum §5.2 R2 "a hidden cup"):
+the larger number is in a closed basket, said and not drawn, and only the ones added are drawn. A child who can only count all from one
+has nothing to count but the drawn ones and taps their number. With every set drawn (the six sentence items) counting all still gives the
+sum, so there the tag can only be lucky-right; `check_maths` now refuses M-ADD-RECOUNT on a distractor of an item where nothing is hidden.
+
+| Id | Item (tap_answer 1.1, one group drawn) | Answer | Wrong options and tags |
+|---|---|---|---|
+| c.mathb04.11 | בַּסַּל הַסָּגוּר יֵשׁ שִׁבְעָה תַּפּוּחִים. מוֹסִיפִים לַסַּל עוֹד שְׁנֵי תַּפּוּחִים. (2 apples drawn) | 9 | 2 M-ADD-RECOUNT, 7 M-CNT-CARD, 10 M-CNT-DOUBLE |
+| c.mathb04.12 | the same with 8 stars in the basket and 3 drawn | 11 | 3 M-ADD-RECOUNT, 8 M-CNT-CARD, 12 M-CNT-DOUBLE |
+
+Both join the lesson count-on-big (12 items). A right answer is no proof of counting on (a child can make the seven on the fingers and
+count all), so the rule `lucky` counts every sum of MATH-B-04 as lucky-right for the tag (8 items); the slower trace signal of §5.2 stays
+the engine's. What a recount looks like when it is not visible in the answer (time, taps) is still a trace classifier for the app-developer.
+
+Left outside C1 (the pack-wide `--coverage --strict`): MATH-B-01 and MATH-B-08 watch M-ADD-RECOUNT with no item (the closed basket fits
+both; Band B generator), and MATH-B-10 watches M-SHARE-UNEQ with no item. NUM-B-01 M-CNT-SEQ passes the C gate through its 9 Band B
+items (b.numb01.*).
 
 Not C1: the place-value mat (T26) of NUM-C-03 and X5's `open` mode are batch C2.
