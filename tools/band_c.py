@@ -644,11 +644,19 @@ def chart(lit=(), blank=()):
 RODS = {'M-PV-FACE': ('vo:fb.pv_face_rods', 'כׇּל מוֹט הוּא עֶשֶׂר קֻבִּיּוֹת, לֹא אַחַת. בּוֹאוּ נִסְפֹּר אֶת הַמּוֹטוֹת בַּעֲשָׂרוֹת.')}
 
 
+# The opening demonstration of the rods of ten linked cubes (docs/design/c1-blocks.md section 6, the owner's choice 2026-11-07): ten
+# loose cubes snap into a rod, and this is said at the snap. Plural address, five words, the same words as the hints ("כׇּל מוֹט הוּא
+# עֶשֶׂר קֻבִּיּוֹת"). It is a line of the C1 voice pool (content/voice-pool.c.json) and no pack file carries it yet: the app-developer
+# gives it a home (needs-editor). author.main pools the unit's `voiceLines` (the id is not a Band C activity's).
+DEMO_TEN_IS_ROD = ('vo:demo.ten_is_rod', 'עֶשֶׂר קֻבִּיּוֹת הֵן מוֹט אֶחָד.')
+
+
 def numbers_c1_waiting(u):
     """The Counting Hills items of c1-deferred.md §1 to §3 that wait for a mode (DRAWN). Each one is added after every drawn item of its
     skill, so switching a mode on adds ids and never renumbers one; they get lessons of their own."""
     blocks, hundred, typed = [], [], []
     if DRAWN['base_ten']:
+        u.d.setdefault('voiceLines', {})[DEMO_TEN_IS_ROD[0]] = DEMO_TEN_IS_ROD[1]  # author.main puts it in the C1 voice pool
         # §1. 34 and 62: 7 and 8 are every block counted as one (M-PV-FACE). 50: 5 is the rods counted as ones (M-PV-FACE, so the
         # two distractors carry two tags and the B-15 E1 rule holds with no exception; the maths teacher, 2026-11-07) and 500 the
         # zero written twice (M-PV-ZERO).
@@ -795,10 +803,14 @@ def numbers_c1_waiting(u):
 # needs every family answered right once (M10 §7.3 E1).
 FAMILIES = [(9, 3), (9, 5), (9, 7), (8, 4), (8, 6), (8, 7), (7, 5), (7, 6), (6, 5), (6, 6), (8, 8), (9, 9)]
 START_LINE = {'M-CNT-DOUBLE': ('vo:fb.count_on_start', 'כְּשֶׁמַּמְשִׁיכִים לִסְפֹּר, לֹא סוֹפְרִים שׁוּב אֶת הַמִּסְפָּר שֶׁמַּתְחִילִים מִמֶּנּוּ. בּוֹאוּ נִבְדֹּק.')}
+# The give-N line of M-CNT-CARD (vo:fb.card, "we took them all") does not fit a sum. On a sum the child answers with one of the two
+# numbers (the first addend, or the larger one) and has not put the other in: this line says so. needs-editor.
+SUM_CARD = {'M-CNT-CARD': ('vo:fb.sum_card', 'זֶה רַק אֶחָד מֵהַמִּסְפָּרִים. בּוֹאוּ נוֹסִיף גַּם אֶת הַמִּסְפָּר הַשֵּׁנִי.')}
+SUM_LINES = dict(START_LINE, **SUM_CARD)
 # The lines of the closed-basket items of MATH-B-04 (QA-C1b-5): drafts, needs-editor. The give-N line of M-CNT-CARD ("we took them
 # all") does not fit a sum, so these items say their own.
 HIDDEN_LINES = dict(START_LINE, **{
-    'M-ADD-RECOUNT': ('vo:fb.count_on_hidden', 'וּמַה שֶּׁבַּסַּל? מַתְחִילִים מִמַּה שֶּׁבַּסַּל וּמַמְשִׁיכִים לִסְפֹּר.'),
+    'M-ADD-RECOUNT': ('vo:fb.count_on_hidden', 'בַּסַּל יֵשׁ עוֹד, גַּם אִם לֹא רוֹאִים. מַתְחִילִים מִמַּה שֶּׁבַּסַּל וּמַמְשִׁיכִים לִסְפֹּר.'),
     'M-CNT-CARD': ('vo:fb.count_on_card', 'זֶה מַה שֶּׁהָיָה בַּסַּל. הוֹסַפְנוּ עוֹד, אָז מַמְשִׁיכִים לִסְפֹּר.'),
 })
 
@@ -823,7 +835,7 @@ def math_c1(u):
     for i, (a, b) in enumerate([(2, 7), (3, 8), (2, 8), (2, 9), (3, 6), (4, 9)]):
         s = a + b
         choose(u, 'MATH-B-04', 'כַּמָּה זֶה?', s, {s - 1: 'M-CNT-DOUBLE', b: 'M-CNT-CARD', s + 1: 'M-CNT-DOUBLE'}, i, band='B',
-               row=[a, '+', b, '=', '?'], tag_lines=START_LINE,
+               row=[a, '+', b, '=', '?'], tag_lines=SUM_LINES,
                h2='לֹא צָרִיךְ לִסְפֹּר הַכֹּל. מַתְחִילִים מֵהַמִּסְפָּר הַגָּדוֹל, %s, וּמוֹסִיפִים עוֹד %s עַל הָאֶצְבָּעוֹת.' % (F[b], F[a]),
                h2_action='show_fingers',
                h3='%s… %s. %s' % (F[b], ', '.join(F[k] for k in range(b + 1, s + 1)), NOW % F[s]),
@@ -837,7 +849,7 @@ def math_c1(u):
     # still lucky-right for the tag (check_maths: every sum is).
     for i, (hidden, seen, obj) in enumerate([(7, 2, 'apple'), (8, 3, 'star')]):
         s, thing = hidden + seen, OBJECTS[obj]
-        choose(u, 'MATH-B-04', 'בַּסַּל הַסָּגוּר יֵשׁ %s. מוֹסִיפִים לַסַּל עוֹד %s. כַּמָּה %s יֵשׁ בַּסַּל עַכְשָׁו?' % (
+        choose(u, 'MATH-B-04', 'בַּסַּל הַסָּגוּר יֵשׁ %s. מוֹסִיפִים עוֹד %s. כַּמָּה %s יֵשׁ בַּסַּל עַכְשָׁו?' % (
                    qty(hidden, thing), qty(seen, thing), thing['many']), s,
                {seen: 'M-ADD-RECOUNT', hidden: 'M-CNT-CARD', s + 1: 'M-CNT-DOUBLE'}, i + 1, band='B', difficulty=0.5,
                group={'sprite': obj, 'count': seen}, tag_lines=HIDDEN_LINES,
@@ -858,7 +870,7 @@ def math_c1(u):
             frames = {'group': {'sprite': sprites[i % 6], 'count': a, 'arrangement': 'ten_frame'},
                       'group2': {'sprite': sprites[i % 6], 'count': b, 'arrangement': 'ten_frame'}}
         choose(u, 'MATH-C-01', 'כַּמָּה זֶה?', s, {s - 1: 'M-CNT-DOUBLE', a: 'M-CNT-CARD', a - b: 'M-OP-SWAP'}, i,
-               row=[a, '+', b, '=', '?'], variantGroup=group, tag_lines=START_LINE, **frames,
+               row=[a, '+', b, '=', '?'], variantGroup=group, tag_lines=SUM_LINES, **frames,
                h2='מַשְׁלִימִים לְעֶשֶׂר: %s וְעוֹד %s הֵם עֶשֶׂר, וְנִשְׁאֲרוּ עוֹד %s.' % (F[a], F[10 - a], F[b - (10 - a)]),
                h3='עֶשֶׂר וְעוֹד %s הֵם %s. %s' % (F[s - 10], F[s], NOW % F[s]), ok='%s! %s וְעוֹד %s שָׁוֶה %s.' % (F[s], F[a], F[b], F[s]))
         if i % 2 == 0:  # the missing addend (reverse)
@@ -1028,6 +1040,8 @@ def math_c1_waiting(u):
         kw = {'variantGroup': 'fact-%d-%d' % fam} if fam else {}
         if '?' in row[:3]:
             kw['check'] = 'reverse'
+        if 'M-CNT-CARD' in wrong.values():  # 8 + 7 answered 8: the first addend alone (vo:fb.sum_card, not the give-N line)
+            kw['tag_lines'] = SUM_CARD
         typed.append(number_item(u, skill, 'אֵיזֶה מִסְפָּר חָסֵר?' if row[-1] != '?' or row[1] == '=' else 'כַּמָּה זֶה?', row, value,
                                  wrong, rules,
                                  h2=h2, h3='%s כּוֹתְבִים %s.' % (said, F[value]), ok='%s! %s' % (F[value], said), **kw))

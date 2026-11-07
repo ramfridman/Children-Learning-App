@@ -705,3 +705,14 @@ The same for hints 3 of `c.numc06.3`-`.5` (they were `מַתְחִילִים מ�
 
 **Left as is (see 11.9):** the `הֵם` of `שֶׁבַע פָּחוֹת אַרְבַּע הֵם שָׁלוֹשׁ` (hint 3 of `c.mathc01.34`) follows the older hints; `שְׁמוֹנֶה וְעוֹד שֵׁשׁ שָׁוֶה אַרְבַּע עֶשְׂרֵה, וְגַם שֵׁשׁ וְעוֹד שְׁמוֹנֶה` (hint 3 of `c.mathc02.19`) leaves the second sum without its result, to stay in 14 words; understandable.
 Table: 15806 rows (15704 + 144 new - 42 gone), 143 new rows `text-ready`, 1 `owner-approved` (M-NL-DIR), none `proposed`.
+
+### 11.11 The hidden-basket items, the sum-card line, the rod demonstration and the Layout T prompts (2026-11-07, hebrew-text-editor)
+
+**Hidden basket (`c.mathb04.11`, `.12`, `HIDDEN_LINES`).** The prompt had 15 words (the pack builder allows 14 per heard line). Now `בַּסַּל הַסָּגוּר יֵשׁ שִׁבְעָה תַּפּוּחִים. מוֹסִיפִים עוֹד שְׁנֵי תַּפּוּחִים. כַּמָּה תַּפּוּחִים יֵשׁ בַּסַּל עַכְשָׁו?` (14): `לַסַּל` is gone, the first sentence already says whose basket it is.
+`vo:fb.count_on_hidden` was `וּמַה שֶּׁבַּסַּל? מַתְחִילִים מִמַּה שֶּׁבַּסַּל…` (the same words twice, and a bare question after a wrong answer); now `בַּסַּל יֵשׁ עוֹד, גַּם אִם לֹא רוֹאִים. מַתְחִילִים מִמַּה שֶּׁבַּסַּל וּמַמְשִׁיכִים לִסְפֹּר.` (12 words, says what was forgotten, no blame). Read and kept: `vo:fb.count_on_card`, `h2`, the correct line, `vo:fb.count_on_start`, `h3` (the shared id of `c.mathb04.1.h3` / `.2.h3` is the same text, by design).
+
+**Sum card (`vo:fb.sum_card`).** On a sum the wrong answer that is one addend alone (M-CNT-CARD) is not "we took them all". New line `זֶה רַק אֶחָד מֵהַמִּסְפָּרִים. בּוֹאוּ נוֹסִיף גַּם אֶת הַמִּסְפָּר הַשֵּׁנִי.` (10 words), used by `c.mathb04.1-.6`, the MATH-C-01 sums and the two typed sums (8 + 7, 9 + 5); `vo:fb.card` stays for give-N. Voice text: `זה רק אחד מהמספרים. בואו נוסיף גם את המספר השני.`
+
+**Rod demonstration (`vo:demo.ten_is_rod`).** `עֶשֶׂר קֻבִּיּוֹת הֵן מוֹט אֶחָד.` Voice text: `עשר קוביות הן מוט אחד.` (`עשר` keeps its nikud as a number word: `עֶשֶׂר`.) It is in `content/voice-pool.c.json` (through the unit's `voiceLines`, `author.main`) and in no pack file yet, so it is not in the master table until the app-developer gives it a home (a lesson field needs a schema change). Plural, no name, no `!`.
+
+**Layout T prompts (text width = bubble 190 / 176 minus 2 x 16 of padding, Heebo 500 at 26 / 22 pt, measured in Chrome).** Two lines: `c.numc02.19`. Three lines: `c.numc02.18` (phone), `c.numc02.20` (phone), `c.numc03.25` (phone and SE). Shorter form without `הַמִּסְפָּר` (two lines on both boards): `אֵיפֹה שְׁלוֹשִׁים וְשֶׁבַע?`, `אֵיפֹה חֲמִשִּׁים וּשְׁתַּיִם?`, `אֵיפֹה שְׁלוֹשִׁים וְאַרְבַּע?`. Not applied: it changes three voiced prompts.

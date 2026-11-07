@@ -1386,6 +1386,9 @@ def main(path):
     for tag, text in spec.get('tagFeedback', {}).items():
         TAG_FEEDBACK[tag] = ('vo:fb.' + tag[2:].lower().replace('-', '_'), text)
     made = {'skill': 0, 'misconception': 0, 'activity': 0, 'lesson': 0}
+    # lines no pack file carries yet (a demonstration said by the app): into the voice pool of the band, one text for the id
+    for vo, text in spec.get('voiceLines', {}).items():
+        say(vo, text, pooled=spec.get('band') == 'C')
     for t in spec.get('misconceptions', []):
         write('misconception.%s.json' % t['id'], tag_file(t))
         made['misconception'] += 1
