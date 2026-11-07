@@ -816,8 +816,30 @@ def mika_body():
     sp = MIKA
     H, r, hc = sp['H'], sp['hr'], -sp['H'] + sp['hr']
     parts = mika_open(BODY_ARMS, expr='smile')
-    parts = parts[:-1] + [E(0, hc + r * 0.5, r * 0.36, r * 0.2, ch.SKIN[sp['skin']], 0)] + grin(r, hc) + [parts[-1]]
+    parts = parts[:-1] + [E(0, hc + r * 0.5, r * 0.36, r * 0.2, ch.SKIN[sp['skin']], 0)] + body_smile(r, hc) + [parts[-1]]
     return canvas(parts, crop=BODY_CROP)
+
+
+def body_smile(r, hc):
+    """The body map's open smile (2026-11-07, the owner's phone test: the striped grin read as a dark grimace at phone size).
+    The open happy mouth of the cast (face_front 'happy': the D shape and the pink tongue), a little wider, its top edge curved
+    up a little, and one soft band of top teeth with no lines between them, so it still shows teeth (teeth = mouth) and
+    reads as a smile at 30 pt as well as at 300."""
+    mw, my = r * 0.33, hc + r * 0.44
+    top, ctl, low = my - 2, my + mw * 0.22, my + mw * 1.75
+    mouth = 'M %s %s Q 0 %s %s %s Q 0 %s %s %s Z' % (f(-mw), f(top), f(ctl), f(mw), f(top), f(low), f(-mw), f(top))
+
+    def top_y(u):      # the mouth's top edge at x = u * mw
+        s = (1 - u) / 2
+        return top + 2 * s * (1 - s) * (ctl - top)
+    a, th = 0.76, mw * 0.24
+    y1, mid = top_y(a) + 1.6, top_y(0) + 1.6
+    c1 = 2 * mid - y1
+    teeth = 'M %s %s Q 0 %s %s %s L %s %s Q 0 %s %s %s Z' % (f(-mw * a), f(y1), f(c1), f(mw * a), f(y1), f(mw * a * 0.86), f(y1 + th),
+                                                              f(c1 + th), f(-mw * a * 0.86), f(y1 + th))
+    tongue = 'M %s %s Q 0 %s %s %s Q 0 %s %s %s Z' % (f(-mw * 0.48), f(my + mw * 0.62), f(my + mw * 0.36), f(mw * 0.48), f(my + mw * 0.62),
+                                                     f(my + mw * 1.1), f(-mw * 0.48), f(my + mw * 0.62))
+    return [P(mouth, ch.MOUTH, 0), P(tongue, '#F28AA0', 0), P(teeth, WHITE, 0), P(mouth, 'none', 2)]
 
 
 BODY_CROP = (-84, -152, 168, 166)

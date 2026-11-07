@@ -26,6 +26,14 @@ Writes content/languages/pictures/<id>.svg (256 x 256 like the objects) and, nex
 - shape cards for HEB-A-10 (letters or not): shape-dot, shape-ring, shape-triangle, shape-triangle-open, the four marks
   U+25CF, U+25CB, U+25B2 and U+25B3 drawn as pictures, because Heebo (and Secular One) has no glyph for any of them.
 
+Batch 6 (2026-11-07, contact sheet pictures_batch6a.png):
+- the Russian rooms for RUS-A-13 items 01 to 05 (Где ...? LS11 scene search): scene-room-ball, -cat, -mouse, -hat, -apple, one
+  square room (the listen_do scene is a square) with the item's three things drawn into their places, and a tap-area map each
+  (parts named by the option's picture id); scene-garden-family for item 06 (papa, mama, babushka of the approved family,
+  standing in the garden) with its map;
+- the tap-area maps of the Russian story pages st1-p1 (sobaka, mjach) and st2-p1 (jozhik) for RUS-A-16 01 and 04;
+- shape-heart and shape-flower for HEB-A-10 t05 and s06, in ink at the weight of shape-dot (U+2665 and U+273F as pictures).
+
 Same house style as batches 1 to 4 (tools/make_language_pictures.py): flat shapes, the ink outline, one soft shade, a white
 highlight, no text, no numeral, no franchise look.
 
@@ -42,6 +50,12 @@ References looked at on 2026-11-07 (facts and photographs; the drawings are ours
   Giving an apple (the Russian spasibo picture, redrawn in tools/make_language_people.py): Bing image search "grandmother giving
     apple to child illustration" (a grown-up bends a little toward the child and holds the apple out at the child's chest
     height; the child reaches for it).
+  Children's room (batch 6): Bing image search "children's bedroom illustration window wall shelf round rug toys" (picture-book
+    rooms: a window with short curtains and a sill, a wall shelf on brackets, an oval rug on a board floor, a skirting board,
+    toys on the rug and the shelf, a cat on the sill). The lying scarf: a knitted scarf dropped on a floor lies folded in two,
+    the fringed ends side by side (an S would read as a snake); its colours are scarf.svg's.
+  Heart and florette: the glyphs U+2665 and U+273F as Windows draws them (Segoe UI Symbol, rendered in Chrome): a filled heart
+    of two round lobes and a point; five round filled petals round a small open centre. Ours are drawn from circles and curves.
   The objects in the sets carry the references of their own drawings (tools/make_language_pictures.py and _b2.py).
 """
 import json
@@ -55,6 +69,7 @@ import make_language_pictures as m  # noqa: E402
 import make_language_pictures_b2 as b2  # noqa: E402
 import make_language_scenes as sc  # noqa: E402
 import make_language_people as pe  # noqa: E402
+import make_language_characters as ch  # noqa: E402
 
 ROOT, OUT = m.ROOT, m.OUT
 INK, WHITE, CREAM = m.INK, m.WHITE, m.CREAM
@@ -331,7 +346,176 @@ def shape_cards():
     }
 
 
-PARTS = {'batch5a': many_sets, 'batch5b': ten_frames, 'batch5c': lambda: dict(lit_sprites(), **doll_pictures(), **shape_cards())}
+
+# ---- batch 6: the Russian rooms (RUS-A-13 01 to 05), the family in the garden (06), the heart and the flower ------------
+# A listen_do scene is a square (the app draws the picture in its scene square and reads the areas as shares of its side), so
+# the rooms are 256 x 256, not the 384 x 216 background `scene-room`: one room (the lilac wall, the window with its sill and
+# curtains, the wall shelf, the rug), with the item's three things drawn into it, each in a place of its own: on the shelf, on
+# the window sill, on the rug or on the floor by the window. Where the right one stands changes from item to item.
+
+WALL, FLOOR, SKIRT, WOOD, WOOD_S = '#F4EEFB', '#E3D6C6', '#C9B89A', '#C98F52', '#A8743C'
+CURTAIN, CURTAIN_S, RUG = '#FFD66B', '#E9B93A', '#B9A2F7'
+MARK = '--mark' in sys.argv     # wrap each thing in <g data-thing> (only to measure the drawings; never in the files)
+
+
+def thing(name, svg):
+    return '<g data-thing="%s">%s</g>' % (name, svg) if MARK else svg
+
+
+def room_bg(shelf=True, peg=False):
+    out = ['<rect x="0" y="0" width="256" height="256" fill="%s"/>' % WALL]
+    out += ['<circle cx="%d" cy="%d" r="2.6" fill="#E6DAF5"/>' % (x + (16 if (y // 32) % 2 else 0), y)
+            for y in range(16, 172, 32) for x in range(8, 256, 32)]                          # a quiet dotted wallpaper
+    out += ['<rect x="0" y="178" width="256" height="78" fill="%s"/>' % FLOOR]
+    out += [L('M 0 %d L 256 %d' % (y, y), '#D3C3AF', 2.5) for y in (200, 226)]               # the floor boards
+    out += [L('M %d %d l 0 %d' % (x, y0, h), '#D3C3AF', 2.5) for x, y0, h in ((70, 180, 20), (190, 200, 26), (120, 226, 30))]
+    out += ['<rect x="0" y="171" width="256" height="9" fill="%s"/>' % SKIRT, L('M 0 180 L 256 180', '#B5A383', 2)]
+    # the window: a white frame, the sky with one cloud, the cross bars, two short curtains on a rod, a white sill
+    out += [RR(150, 22, 94, 80, 7, WHITE), RR(158, 30, 78, 64, 3, '#BFE6F7', 0),
+            '<path d="M 172 52 C 170 44, 182 40, 186 46 C 190 38, 204 40, 202 50 C 210 50, 210 60, 202 60 L 174 60 C 166 60, 166 52, 172 52 Z" '
+            'fill="#FFFFFF"/>',
+            L('M 197 30 L 197 94 M 158 62 L 236 62', WHITE, 6), RR(158, 30, 78, 64, 3, 'none', 2.5), RR(150, 22, 94, 80, 7, 'none')]
+    for x0, d in ((140, 1), (254, -1)):
+        out.append(P('M %d 16 L %d 16 C %d 40, %d 70, %d 96 C %d 100, %d 100, %d 96 C %d 70, %d 40, %d 16 Z'
+                     % (x0, x0 + 20 * d, x0 + 22 * d, x0 + 14 * d, x0 + 18 * d, x0 + 10 * d, x0 + 2 * d, x0, x0 - 2 * d, x0 + 2 * d, x0),
+                     CURTAIN, 3))
+        out.append(L('M %d 24 C %d 50, %d 74, %d 92' % (x0 + 9 * d, x0 + 11 * d, x0 + 8 * d, x0 + 9 * d), CURTAIN_S, 2.5))
+    out += [L('M 134 15 L 256 15', INK, 4), E(134, 15, 4, 4, WOOD, 2.5)]
+    out += [RR(142, 100, 112, 10, 4, WHITE, 3)]
+    if shelf:   # the wall shelf: a plank on two brackets
+        out += [P('M 24 101 L 40 101 L 24 120 Z', WOOD_S, 3), P('M 96 101 L 80 101 L 96 120 Z', WOOD_S, 3), RR(10, 92, 100, 10, 4, WOOD, 3)]
+    if peg:     # a coat peg on the wall instead of the shelf
+        out += [RR(36, 30, 48, 12, 5, WOOD, 3), E(60, 40, 6, 6, WOOD_S, 3)]
+    out += [E(128, 224, 106, 24, RUG, 3),
+            '<ellipse cx="128" cy="224" rx="88" ry="17" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="2 9" opacity="0.85"/>']
+    return out
+
+
+def lying_scarf():
+    """The scarf of scarf.svg (orange, cream stripes, fringed ends) lying on the rug folded in two: the fold at one side, the two
+    fringed ends side by side at the other, the way a scarf is dropped on a floor (a lazy S would read as a snake)."""
+    f_, s_ = '#F59E1B', '#D97E0A'
+    d = 'M 186 206 C 150 198, 86 196, 74 214 C 66 232, 140 238, 190 230'
+    out = ['<ellipse cx="134" cy="236" rx="66" ry="6" fill="%s" opacity="0.12"/>' % INK,
+           '<path d="%s" fill="none" stroke="%s" stroke-width="27" stroke-linecap="butt"/>' % (d, INK),
+           '<path d="%s" fill="none" stroke="%s" stroke-width="20" stroke-linecap="butt"/>' % (d, s_),
+           '<path d="%s" fill="none" stroke="%s" stroke-width="13" stroke-linecap="butt" transform="translate(-1 -2)"/>' % (d, f_),
+           '<path d="%s" fill="none" stroke="%s" stroke-width="20" stroke-linecap="butt" stroke-dasharray="7 15" stroke-dashoffset="-10"/>'
+           % (d, CREAM)]
+    for (x, y), (cx, cy) in (((186, 206), (150, 198)), ((190, 230), (140, 238))):   # the ends: an ink edge, the fringe beyond it
+        ux, uy = x - cx, y - cy
+        n = math.hypot(ux, uy)
+        ux, uy = ux / n, uy / n
+        nx, ny = -uy, ux
+        out.append(L('M %s %s L %s %s' % (f(x - nx * 13), f(y - ny * 13), f(x + nx * 13), f(y + ny * 13)), INK, 3.5))
+        fr = ''.join('M %s %s l %s %s ' % (f(x + nx * k + ux * 4), f(y + ny * k + uy * 4), f(ux * 10), f(uy * 10)) for k in (-9, -3, 3, 9))
+        out.append(L(fr, INK, 7))
+        out.append(L(fr, f_, 3.5))
+    return ''.join(out)
+
+
+SHELF, SILL, RUG_AT = 93, 101, 232        # where things stand: the shelf top, the sill top, the middle of the rug
+
+ROOMS = {   # picture: the item, the room's furniture, the three things (the option's pic id and its drawing in place)
+    'scene-room-ball': ('rus.a13.01', dict(shelf=True), [
+        ('doll', lambda: obj(m.doll(), 60, SHELF, 0.4)),
+        ('balloon', lambda: obj(m.balloon('red'), 198, SILL + 8, 0.36)),
+        ('ball', lambda: obj(m.ball('red'), 124, RUG_AT, 0.32))]),
+    'scene-room-cat': ('rus.a13.02', dict(shelf=True), [
+        ('porridge', lambda: obj(b2.porridge(), 60, SHELF, 0.38)),
+        ('cat', lambda: obj(m.cat(), 198, SILL, 0.36)),
+        ('dog', lambda: obj(m.dog(), 124, RUG_AT, 0.46))]),
+    'scene-room-mouse': ('rus.a13.03', dict(shelf=True), [
+        ('teddy', lambda: obj(m.teddy(), 60, SHELF, 0.38)),
+        ('cat', lambda: obj(m.cat(), 88, RUG_AT, 0.44)),
+        ('mouse', lambda: obj(m.mouse(), 210, 246, 0.32))]),
+    'scene-room-hat': ('rus.a13.04', dict(shelf=False, peg=True), [
+        ('jacket', lambda: sc.obj(b2.jacket(), 60, 122, 0.4, air=True)),
+        ('hat-warm', lambda: obj(m.hat_warm(), 198, SILL + 4, 0.34)),
+        ('scarf', lying_scarf)]),
+    'scene-room-apple': ('rus.a13.05', dict(shelf=True), [
+        ('milk', lambda: obj(m.milk(), 60, SHELF, 0.38)),
+        ('apple', lambda: obj(m.apple(), 198, SILL + 2, 0.3)),
+        ('pear', lambda: obj(b2.pear(), 124, RUG_AT, 0.36))]),
+}
+
+
+def rooms():
+    return {pid: sc.composite(room_bg(**bg) + [thing(name, draw()) for name, draw in things])
+            for pid, (item, bg, things) in ROOMS.items()}
+
+
+def garden_square():
+    return ['<rect x="0" y="0" width="256" height="256" fill="#DFF1FB"/>',
+            '<path d="M 0 150 C 70 140, 190 140, 256 150 L 256 256 L 0 256 Z" fill="#B5DFA0"/>',
+            '<path d="M 0 230 C 80 212, 180 212, 256 226 L 256 256 L 0 256 Z" fill="#EADBB8"/>',
+            obj(b2.bush(), 24, 160, 0.34), obj(b2.bush(), 236, 158, 0.3)]
+
+
+FAMILY_AT = (('father', 50), ('mother', 128), ('grandmother', 206))
+FAMILY_SCALE = 0.84
+
+
+def family_garden():
+    parts = garden_square()
+    for pid, x in FAMILY_AT:
+        body = ''.join(pe.standing(ch.BY_ID[pid], 'happy'))
+        parts.append(thing(pid, '<g transform="translate(%s 238) scale(%s)">%s</g>' % (f(x), f(FAMILY_SCALE), sc.unique(body, sc.tag()))))
+    return {'scene-garden-family': sc.composite(parts)}
+
+
+# ---- the HEB-A-10 heart and flower (t05 and s06; Heebo has no glyph for U+2665 or U+273F) ------------------------------
+
+def heart_flower():
+    heart = ('M 128 198 C 104 180, 52 150, 52 104 C 52 76, 72 58, 96 58 C 112 58, 123 67, 128 80 '
+             'C 133 67, 144 58, 160 58 C 184 58, 204 76, 204 104 C 204 150, 152 180, 128 198 Z')
+    petals = [E(128 + 40 * math.cos(math.radians(-90 + 72 * k)), 132 + 40 * math.sin(math.radians(-90 + 72 * k)), 35, 35, INK, 0)
+              for k in range(5)]
+    return {'shape-heart': sc.composite([P(heart, INK, 6)]),
+            'shape-flower': sc.composite(petals + [E(128, 132, 44, 44, INK, 0), E(128, 132, 19, 19, WHITE, 0)])}
+
+
+# The rooms' touch areas (256 units, x, y, w, h), measured from the drawn things (their bounding boxes in the browser, shadows
+# included) and padded to at least 72 x 72; the top places (shelf or peg, window) end at y 120 and the floor places start at 136
+# or lower, so no two areas of a room meet.
+TOP_LEFT, WINDOW, ON_RUG = [8, 4, 108, 116], [140, 8, 112, 112], [56, 136, 136, 112]
+ROOM_AREAS = {
+    'scene-room-ball': {'doll': [TOP_LEFT], 'balloon': [WINDOW], 'ball': [ON_RUG]},
+    'scene-room-cat': {'porridge': [TOP_LEFT], 'cat': [WINDOW], 'dog': [ON_RUG]},
+    'scene-room-mouse': {'teddy': [TOP_LEFT], 'cat': [[36, 136, 106, 112]], 'mouse': [[148, 164, 104, 88]]},
+    'scene-room-hat': {'jacket': [[8, 20, 108, 108]], 'hat-warm': [WINDOW], 'scarf': [[52, 140, 160, 108]]},
+    'scene-room-apple': {'milk': [TOP_LEFT], 'apple': [WINDOW], 'pear': [ON_RUG]},
+}
+FAMILY_AREAS = {'father': [[10, 44, 80, 204]], 'mother': [[90, 44, 78, 204]], 'grandmother': [[168, 56, 82, 192]]}
+ROOM_NOTE = ("Touch areas of the things drawn into the room (RUS-A-13 %s, LS11 scene search: Где ...? and a touch on the thing), as "
+             "shares of the picture's width and height (x, y, w, h from the top left), version 2 like doll-body.hotspots.json. A part "
+             "is named by the option's picture id. Every area is at least 72 of the 256 units (65.5 pt on the phone SE's 233 pt scene "
+             "square); the three never overlap, so the item is shown on the scene (show: body).")
+# The Russian story pages (RUS-A-16 01 and 04): a part is named by its word's clip without the 'w-' (the recipe looks up
+# 'w-sobaka', then 'sobaka'). Measured as for story-bounce, padded to at least 96 of the 384 x 216 units.
+RU_STORY_AREAS = {
+    'st1-p1': {'sobaka': [[88, 102, 120, 110]], 'mjach': [[222, 120, 96, 96]]},
+    'st2-p1': {'jozhik': [[140, 112, 126, 102]]},
+}
+
+
+def russian_maps():
+    out = {}
+    for pid, areas in ROOM_AREAS.items():
+        item = ROOMS[pid][0]
+        names = [n for n, _ in ROOMS[pid][2]]
+        assert sorted(names) == sorted(areas), pid
+        out[pid] = share_map(pid, areas, 256, 256, HIT, ROOM_NOTE % item.split('.')[-1], {item: {'parts': names, 'show': 'body'}})
+    out['scene-garden-family'] = share_map('scene-garden-family', FAMILY_AREAS, 256, 256, HIT, ROOM_NOTE.replace(
+        'the things drawn into the room', 'the family standing in the garden') % '06',
+        {'rus.a13.06': {'parts': ['mother', 'father', 'grandmother'], 'show': 'body'}})
+    for pid, areas in RU_STORY_AREAS.items():
+        out[pid] = share_map(pid, areas, 384, 216, STORY_HIT, STORY_NOTE.replace('ENG-A-15 s01 uses', 'RUS-A-16 01 and 04 use'))
+    return out
+
+
+PARTS = {'batch5a': many_sets, 'batch5b': ten_frames, 'batch5c': lambda: dict(lit_sprites(), **doll_pictures(), **shape_cards()),
+         'batch6a': lambda: dict(rooms(), **family_garden(), **heart_flower())}
 
 
 def write_json(name, data):
@@ -353,7 +537,7 @@ def main():
             m.sheet(list(pics), out, cols=6)
             print('sheet', os.path.relpath(out, ROOT))
     write_json('doll-body.hotspots.json', doll_map())
-    for pid, data in english_maps().items():
+    for pid, data in dict(english_maps(), **russian_maps()).items():
         write_json(pid + '.hotspots.json', data)
     print('wrote the tap-area maps')
 
