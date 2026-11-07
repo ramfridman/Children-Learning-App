@@ -58,8 +58,8 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:apple_size_s",
-        "label": "תַּפּוּחַ קָטָן"
+        "sprite": "asset:star_size_s",
+        "label": "כּוֹכָב קָטָן"
       }
     ],
     "correct": "o2",

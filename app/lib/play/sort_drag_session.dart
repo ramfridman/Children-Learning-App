@@ -13,6 +13,8 @@ import 'hints/hint_pictures.dart' show hintScale;
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
+import 'choice_row.dart' show withStageAtLeast;
+import 'size_scale.dart';
 import 'sprite_group.dart';
 import 'response_code.dart';
 import 'template_session.dart';
@@ -142,7 +144,19 @@ class SortDragSession extends TemplateSession {
     return spec.tileTip(n, i, slot: _traySide(spec) + 8, slop: 4);
   }
 
+  /// How much of its room the sample picture of each bin takes (see [sampleBoxSharesOf]): the small sample of a size rule is drawn larger
+  /// than its sprite's own third, so that it is not a dot beside the big one.
+  late final List<double> sampleBoxShares = sampleBoxSharesOf(<double>[
+    for (final SortBin b in activity.bins) sizeShareOf(activity.assets.svg(b.sprite)),
+  ]);
+
   bool get _canDraw => _spec != null && !_size.isEmpty;
+
+  /// A small phone's stage is as tall as a phone's, so that the sample picture of a bin is at least what its label and the pictures
+  /// that lie in the bin leave on a phone (see [binBands]); the tray stands lower by what it takes.
+  @override
+  ActivitySpec layoutFor(ActivitySpec base) =>
+      withStageAtLeast(base, ActivitySpec.phone.stage.height, tilesBox: _traySide(base) + 8);
 
   void select(String itemId) {
     _endDemo();
@@ -502,11 +516,11 @@ class _SortStage extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: Row(
                   children: <Widget>[
-                    for (final SortBin b in a.bins)
+                    for (final (int i, SortBin b) in a.bins.indexed)
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: _bin(b, band),
+                          child: _bin(b, band, s.sampleBoxShares[i]),
                         ),
                       ),
                   ],
@@ -520,7 +534,7 @@ class _SortStage extends StatelessWidget {
     );
   }
 
-  Widget _bin(SortBin b, BinBands band) {
+  Widget _bin(SortBin b, BinBands band, double boxShare) {
     final SortDragActivity a = s.activity;
     final List<SortItem> inside = <SortItem>[
       for (final SortItem i in a.items)
@@ -564,10 +578,10 @@ class _SortStage extends StatelessWidget {
                     // its place), so the picture is read at a glance.
                     child: b.count == 1
                         ? Center(
-                            child: ConstrainedBox(
+                            child: SizedBox.square(
                               key: const Key('bin-sample'),
-                              constraints: const BoxConstraints(maxWidth: _sampleMax, maxHeight: _sampleMax),
-                              child: AspectRatio(aspectRatio: 1, child: PackSvg(a.assets.svg(b.sprite))),
+                              dimension: math.min(band.sample, _sampleMax) * boxShare,
+                              child: PackSvg(a.assets.svg(b.sprite)),
                             ),
                           )
                         : SpriteGroup(

@@ -7,6 +7,7 @@ import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
+import '../design/token_types.dart' show Band;
 import '../design/tokens.g.dart';
 import 'choice_row.dart' show withTallStage;
 import 'hint_widgets.dart';
@@ -50,6 +51,12 @@ class SpotErrorSession extends TemplateSession {
   late final SizeLook? look = lookOf(activity);
   late final double aspect = look != null && look!.tall ? look!.aspect : 1;
 
+  /// The least a cell is: the token `touch.minControl` of band A (64: a child of 3 to 5 is wide and unsure with a finger) in the
+  /// logic land, whose sweep this is; none elsewhere, where the picture's own least (see [linesOf]) rules until the land's own sweep.
+  late final double minCell = activity.band == 'A' && activity.domain == 'logic'
+      ? TokenTouch.band[Band.a]!.minControl
+      : 0;
+
   /// The room a cell takes round its picture: the border (3 each side) and the margin inside it (5 each side).
   static const double _frame = 16;
 
@@ -60,21 +67,24 @@ class SpotErrorSession extends TemplateSession {
   /// How many lines the [n] cells of a stage of [size] stand in: one, unless its picture would be smaller than the token
   /// `stagePictureMin` (the 8 cells of a pattern on a phone), and then two. The picture is what the child reads, so the cell is
   /// made as large as the stage's width allows before the row is cut.
-  static int linesOf(Size size, int n) {
+  ///
+  /// A cell is also never smaller than [minCell], the least a control may be (the token `touch.minControl` of band A, 64): four cells
+  /// on the small phone's stage of 270 are 57 in one line, and stand in two of two.
+  static int linesOf(Size size, int n, {double minCell = 0}) {
     if (n < 2) return 1;
     final double one = math.min(size.height - 16, (size.width - 16) / n - _gap);
-    return one - _frame >= minPictureOf(size) ? 1 : 2;
+    return one - _frame >= minPictureOf(size) && one >= minCell ? 1 : 2;
   }
 
   /// How many cells stand on one line, the first lines full.
-  static int _perLine(Size size, int n) => (n / linesOf(size, n)).ceil();
+  static int _perLine(Size size, int n, double minCell) => (n / linesOf(size, n, minCell: minCell)).ceil();
 
   /// The side of a cell of a row of [n] in a stage of [size].
-  static double cellSide(Size size, int n) {
-    final int lines = linesOf(size, n);
+  static double cellSide(Size size, int n, {double minCell = 0}) {
+    final int lines = linesOf(size, n, minCell: minCell);
     final double fit = math.min(
       (size.height - 10) / lines - _gap,
-      (size.width - 16) / _perLine(size, n) - _gap,
+      (size.width - 16) / _perLine(size, n, minCell) - _gap,
     );
     // Two lines are given a limit, so that the room between them holds what the hints draw there (a path, a paint, a sample).
     return lines == 1 ? fit : math.min(fit, 1.8 * minPictureOf(size));
@@ -82,10 +92,10 @@ class SpotErrorSession extends TemplateSession {
 
   /// The height of a cell: its side, or, for a row of tall pictures (towers, of [aspect] width over height under 1), as tall as the
   /// stage leaves, so that the picture is as large as its width allows and its cubes can be counted.
-  static double cellHeight(Size size, int n, {double aspect = 1}) {
-    final double side = cellSide(size, n);
+  static double cellHeight(Size size, int n, {double aspect = 1, double minCell = 0}) {
+    final double side = cellSide(size, n, minCell: minCell);
     if (aspect >= 1) return side;
-    final double fit = (size.height - 10) / linesOf(size, n) - _gap;
+    final double fit = (size.height - 10) / linesOf(size, n, minCell: minCell) - _gap;
     return math.min(fit, (side - _frame) / aspect + _frame);
   }
 
@@ -98,11 +108,11 @@ class SpotErrorSession extends TemplateSession {
   /// Where the cells of a row of [n] stand in a stage of [size], left to right and line by line from the top: the same numbers the
   /// stage draws with. Every line starts at the same place, so the lines read as one row cut in two; the room that two lines leave
   /// over is shared out between them (a little, for the guide's card) and the stage's top and bottom.
-  static List<Offset> cellCentres(Size size, int n, {double aspect = 1}) {
-    final double side = cellSide(size, n);
-    final double height = cellHeight(size, n, aspect: aspect);
-    final int lines = linesOf(size, n);
-    final int per = _perLine(size, n);
+  static List<Offset> cellCentres(Size size, int n, {double aspect = 1, double minCell = 0}) {
+    final double side = cellSide(size, n, minCell: minCell);
+    final double height = cellHeight(size, n, aspect: aspect, minCell: minCell);
+    final int lines = linesOf(size, n, minCell: minCell);
+    final int per = _perLine(size, n, minCell);
     final double pitch = side + _gap;
     final double pitchY = height + _gap;
     final double lineGap = lines == 1
@@ -122,7 +132,9 @@ class SpotErrorSession extends TemplateSession {
   /// are too low for two lines of cells that a child can read); the tablets' stage is a card with room already.
   @override
   ActivitySpec layoutFor(ActivitySpec base) =>
-      !base.stageIsCard && linesOf(base.stage.size, activity.cells.length) > 1 ? withTallStage(base) : base;
+      !base.stageIsCard && linesOf(base.stage.size, activity.cells.length, minCell: minCell) > 1
+      ? withTallStage(base)
+      : base;
 
   Future<void> choose(int i) async {
     if (_busy || ring == AnswerState.correct) return;
@@ -208,9 +220,9 @@ class SpotErrorSession extends TemplateSession {
         : spotAnotherWay(
             activity,
             _size,
-            cellCentres(_size, activity.cells.length, aspect: aspect),
-            cellSide(_size, activity.cells.length),
-            cellHeight(_size, activity.cells.length, aspect: aspect),
+            cellCentres(_size, activity.cells.length, aspect: aspect, minCell: minCell),
+            cellSide(_size, activity.cells.length, minCell: minCell),
+            cellHeight(_size, activity.cells.length, aspect: aspect, minCell: minCell),
             (String sprite) => activity.assets.svg(sprite),
           );
     if (plan == null) {
@@ -228,7 +240,7 @@ class SpotErrorSession extends TemplateSession {
     hintCell = null;
     if (stopOnWrong && !_size.isEmpty) {
       // The hand reads the row from the left with the light, and stops on the mistake where the light stops.
-      final List<Offset> at = cellCentres(_size, activity.cells.length, aspect: aspect);
+      final List<Offset> at = cellCentres(_size, activity.cells.length, aspect: aspect, minCell: minCell);
       _hint.play(
         HintPlan(<HintFrame>[
           for (int i = 0; i <= to; i++)
@@ -266,11 +278,11 @@ class SpotErrorSession extends TemplateSession {
     final String? right = rightCellOf(activity.cells, activity.wrong);
     if (right == null) return const <HintMark>[];
     final double k = hintScale(_size);
-    final double height = cellHeight(_size, activity.cells.length, aspect: aspect);
+    final double height = cellHeight(_size, activity.cells.length, aspect: aspect, minCell: minCell);
     // In a row of two lines the card stands in the room between them, over the cell above only where that is too narrow.
     final double above = <double>[
       0,
-      for (final Offset o in cellCentres(_size, activity.cells.length, aspect: aspect))
+      for (final Offset o in cellCentres(_size, activity.cells.length, aspect: aspect, minCell: minCell))
         if ((o.dx - mistake.dx).abs() < 1 && o.dy < mistake.dy - 1) o.dy + height / 2,
     ].reduce(math.max);
     final double room = mistake.dy - height / 2 - above;
@@ -312,10 +324,10 @@ class _RowStage extends StatelessWidget {
   Widget build(BuildContext context) {
     final SpotErrorActivity a = s.activity;
     final int n = a.cells.length;
-    final double side = SpotErrorSession.cellSide(size, n);
-    final double height = SpotErrorSession.cellHeight(size, n, aspect: s.aspect);
-    final List<Offset> at = SpotErrorSession.cellCentres(size, n, aspect: s.aspect);
-    final bool oneLine = SpotErrorSession.linesOf(size, n) == 1;
+    final double side = SpotErrorSession.cellSide(size, n, minCell: s.minCell);
+    final double height = SpotErrorSession.cellHeight(size, n, aspect: s.aspect, minCell: s.minCell);
+    final List<Offset> at = SpotErrorSession.cellCentres(size, n, aspect: s.aspect, minCell: s.minCell);
+    final bool oneLine = SpotErrorSession.linesOf(size, n, minCell: s.minCell) == 1;
     // A cell has 3 of room round it that its touch counts (the cell is [side] and the room is part of the pitch).
     final double box = side + 6;
     final double boxHeight = height + 6;

@@ -42,13 +42,14 @@ class TapGeometry {
   /// With [count] the places of a group of that many (a ten-frame of ten, to see the cells that are still empty).
   List<Rect> groupObjects(int which, {int? count}) {
     final List<SpriteSet> sets = <SpriteSet>[a.group!, ?a.group2];
-    final Rect inner = groupArea.deflate(12);
+    final ({double outer, double inner}) pad = groupPadOf(a, size);
+    final Rect inner = groupArea.deflate(pad.outer);
     final double cellW = inner.width / sets.length;
     final Rect cell = Rect.fromLTWH(
-      inner.left + which * cellW + 6,
-      inner.top + 6,
-      cellW - 12,
-      inner.height - 12,
+      inner.left + which * cellW + pad.inner,
+      inner.top + pad.inner,
+      cellW - 2 * pad.inner,
+      inner.height - 2 * pad.inner,
     );
     final SpriteSet g = sets[which];
     return <Rect>[
@@ -58,7 +59,7 @@ class TapGeometry {
         count ?? g.count,
         seed: g.seed,
         scale: g.scale,
-        lineSlots: lineSlotsOf(a, g),
+        lineSlots: lineSlotsOf(a, g, size),
       ))
         r.shift(cell.topLeft),
     ];
@@ -66,19 +67,38 @@ class TapGeometry {
 
   /// How many places a `line` of [g] has room for (see [groupLayout]). A clock face or a shade of a colour alone on the stage is one
   /// thing to read, not a group to compare: it takes the whole room, so that its hands and its shade can be seen on a phone.
-  static int lineSlotsOf(TapAnswerActivity a, SpriteSet g) =>
+  static int lineSlotsOf(TapAnswerActivity a, SpriteSet g, Size stage) =>
       a.group2 == null &&
           g.count == 1 &&
-          (g.sprite.startsWith('asset:clock_') || g.sprite.startsWith('asset:shade_'))
+          (g.sprite.startsWith('asset:clock_') ||
+              g.sprite.startsWith('asset:shade_') ||
+              loneThingOf(a, stage))
       ? 1
       : 4;
+
+  /// A single thing alone on a phone's stage to be found among the tiles under it (the apple of "where is another apple?", the plate
+  /// of a pair): it takes the room the stage has, so that it is at least as large as the pictures on the tiles (76), which on the
+  /// small phone's stage of 104 it is not with the room round a group (18 on each side). A tablet's stage has the room.
+  static bool loneThingOf(TapAnswerActivity a, Size stage) =>
+      a.group != null && a.group2 == null && a.group!.count == 1 && a.optionsInTiles && stage.width <= 500;
+
+  /// The room round the groups of [a] in a stage of [stage]: round the box of all of them, and round each one (6 on each side for a
+  /// lone thing, 12 and 6 for a group).
+  static ({double outer, double inner}) groupPadOf(TapAnswerActivity a, Size stage) =>
+      loneThingOf(a, stage) ? (outer: 4, inner: 2) : (outer: 12, inner: 6);
 
   /// The whole box of group [which], for a group with no pictures (a count of 0) that still has a place.
   Rect groupCell(int which) {
     final int n = a.group2 == null ? 1 : 2;
-    final Rect inner = groupArea.deflate(12);
+    final ({double outer, double inner}) pad = groupPadOf(a, size);
+    final Rect inner = groupArea.deflate(pad.outer);
     final double cellW = inner.width / n;
-    return Rect.fromLTWH(inner.left + which * cellW + 6, inner.top + 6, cellW - 12, inner.height - 12);
+    return Rect.fromLTWH(
+      inner.left + which * cellW + pad.inner,
+      inner.top + pad.inner,
+      cellW - 2 * pad.inner,
+      inner.height - 2 * pad.inner,
+    );
   }
 
   /// A group's pictures in reading order: row by row from the top, each row from the left.
@@ -131,14 +151,28 @@ class TapGeometry {
   /// Whether the row of [a] draws tall pictures (the towers of a size item): its cells are then as tall as the stage leaves them.
   static bool rowIsTall(TapAnswerActivity a) => sizeLookOfTap(a)?.tall ?? false;
 
-  /// The side of a square cell of the row of [a] in a stage of [stage]: the cells of a line share the stage's width (10 in on each
-  /// side, 3 round each cell), and the lines share its height; no cell is taller than the stage leaves.
+  /// The room a row of [a] leaves at the stage's two ends and round each cell, in a stage of [stage]: 10 and 3, and 4 and 1 for a row
+  /// of six or fewer unlike pictures whose cell would be under the token `stagePictureMin` with those (the 6 of a pattern on a small
+  /// phone: 36 points a picture, and 42 with this).
+  static ({double edge, double pad}) rowRoomOf(TapAnswerActivity a, Size stage) {
+    const ({double edge, double pad}) usual = (edge: 10, pad: 3);
+    const ({double edge, double pad}) tight = (edge: 4, pad: 1);
+    if (a.row.length >= 7 || sizeLookOfTap(a) != null) return usual;
+    final double least = minPictureOf(stage);
+    final int n = a.row.length;
+    double side(({double edge, double pad}) r) => (stage.width - 2 * r.edge) / n - 2 * r.pad;
+    return side(usual) < least && side(tight) >= least ? tight : usual;
+  }
+
+  /// The side of a square cell of the row of [a] in a stage of [stage]: the cells of a line share the stage's width (see [rowRoomOf]
+  /// for what is left at the ends and round each cell), and the lines share its height; no cell is taller than the stage leaves.
   static double rowSideOf(TapAnswerActivity a, Size stage) {
     final int lines = rowLinesOf(a, stage);
     final double lift = rowLiftOf(a, stage.height);
     final int per = (a.row.length / lines).ceil();
+    final ({double edge, double pad}) room = rowRoomOf(a, stage);
     return math.min(
-      (stage.width - 20) / per - 6,
+      (stage.width - 2 * room.edge) / per - 2 * room.pad,
       (stage.height - 2 * rowInsetOf(a, stage) - lift) / lines - 6,
     );
   }
@@ -167,7 +201,8 @@ class TapGeometry {
     final int lines = rowLinesOf(a, size);
     final int per = (n / lines).ceil();
     final double lift = rowLiftOf(a, h);
-    final double cellW = (w - 20) / per;
+    final double edge = rowRoomOf(a, size).edge;
+    final double cellW = (w - 2 * edge) / per;
     final double side = rowSideOf(a, size);
     final Size box = rowIsTall(a) ? sameBoxOf(a, size)! : Size(side, side);
     final double inset = rowInsetOf(a, size);
@@ -175,7 +210,7 @@ class TapGeometry {
     return <Rect>[
       for (int i = 0; i < n; i++)
         Rect.fromCenter(
-          center: Offset(10 + (i % per + 0.5) * cellW, inset + lift + pitch * (i ~/ per + 0.5)),
+          center: Offset(edge + (i % per + 0.5) * cellW, inset + lift + pitch * (i ~/ per + 0.5)),
           width: box.width,
           height: box.height,
         ),

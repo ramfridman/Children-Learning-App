@@ -2098,7 +2098,7 @@
       "mode": "next",
       "a": "ball_size_l",
       "b": "ball_size_s",
-      "c": "apple_size_s",
+      "c": "star_size_s",
       "pos": 1,
       "difficulty": 0.45
     },

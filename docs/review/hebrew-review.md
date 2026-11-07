@@ -6075,7 +6075,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b15.loga06.1.json | prompt.caption.0.v | מַה בָּא אַחַר כָּךְ? | needs-editor |
 | activity.b15.loga06.1.json | answer.options.0.label | כַּדּוּר גָּדוֹל | needs-editor |
 | activity.b15.loga06.1.json | answer.options.1.label | כַּדּוּר קָטָן | needs-editor |
-| activity.b15.loga06.1.json | answer.options.2.label | תַּפּוּחַ קָטָן | needs-editor |
+| activity.b15.loga06.1.json | answer.options.2.label | כּוֹכָב קָטָן | needs-editor |
 | activity.b15.loga06.1.json | feedback.correct.caption.0.v | כֵּן! כַּדּוּר גָּדוֹל, כַּדּוּר קָטָן, כַּדּוּר גָּדוֹל, כַּדּוּר קָטָן, כַּדּוּר גָּדוֹל, כַּדּוּר קָטָן. | needs-editor |
 | activity.b15.loga06.1.json | feedback.incorrect.0.caption.0.v | בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא. | needs-editor |
 | activity.b15.loga06.1.json | feedback.incorrect.1.caption.0.v | בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |

@@ -26,15 +26,38 @@ String? sizeFamilyOf(String ref) {
 final RegExp _sized = RegExp(r'^asset:(.+)_size_[sml]$');
 final RegExp _tower = RegExp(r'^asset:(tower)_\d+$');
 
+/// How much of its box the ink of a size picture takes: the sprite is drawn at `scale(k)` round its middle (0.35 for the small ball, 1
+/// for the large), and a picture of no size family takes all of it.
+double sizeShareOf(String svg) {
+  final Match? m = _share.firstMatch(svg.length > 200 ? svg.substring(0, 200) : svg);
+  return m == null ? 1 : double.parse(m.group(1)!);
+}
+
+final RegExp _share = RegExp(r'<g transform="translate\(50 50\) scale\(([\d.]+)\) translate\(-50 -50\)"');
+
+/// The share of the biggest sample's ink that the sample of a size with the ink [share] has, where the sprites' own 0.35 would make a
+/// dot of the small one: about a half for the smallest (0.5 at 0.35, 0.54 at 0.4), the biggest as it is. The sample's box is made
+/// larger to give it (see [sampleBoxSharesOf]).
+double sampleInkShare(double share) => 1 - 0.77 * (1 - share);
+
+/// The side, as a share of the room, that the box of each sample takes so that the ink of the samples is [sampleInkShare] of the
+/// biggest's: the sprite with the most ink to the box has the box it can have (all the room), the others the less the more of their box
+/// is ink. [shares] are the ink shares of the samples' sprites ([sizeShareOf]); samples of no size family share 1 and are drawn alike.
+List<double> sampleBoxSharesOf(List<double> shares) {
+  final List<double> need = <double>[for (final double k in shares) sampleInkShare(k) / k];
+  final double most = need.fold(0, math.max);
+  return <double>[for (final double n in need) n / most];
+}
+
 /// The side of the answer tiles of a size item on a stage of [stage] (the tablet's stage is wider than any phone's): 96, or 112 on a
 /// tablet (the token `answerTablet` of the first band), and the picture inside a tile (4 point border, 2 point margin).
 double tileSideOf(Size stage) => stage.width > 500 ? 112 : 96;
 double tilePictureSideOf(Size stage) => tileSideOf(stage) - 2 * TokenBorder.thick - 4;
 
 /// A tall picture (a tower) cannot be drawn in a square box and still show its cubes, so the answer tile of such an item is taller
-/// than it is wide: [tallTileHeight] on a phone (and in a pattern to build), 136 on a tablet (its tile box is 160 high with 12 of tap margin each side).
+/// than it is wide: [tallTileHeight] on a phone (and in a pattern to build), 168 on a tablet (its tile box is 192 high with 12 of tap margin each side).
 const double tallTileHeight = 112;
-double tallTileHeightOf(Size stage) => stage.width > 500 ? 136 : tallTileHeight;
+double tallTileHeightOf(Size stage) => stage.width > 500 ? 168 : tallTileHeight;
 double tallTilePictureHeightOf(Size stage) => tallTileHeightOf(stage) - 2 * TokenBorder.thick - 4;
 
 /// How much bigger than its cell a round size picture is drawn: the sprites keep a margin round the biggest of the family, which a

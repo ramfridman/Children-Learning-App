@@ -61,7 +61,7 @@ class ActivityFrame extends StatelessWidget {
   final ({String text, String course})? bubbleTarget;
 
   /// The bubble keeps clear of the tiles under it: its text shrinks to the room and, when it must, it stands higher. On for the
-  /// items of a language course and for any bubble with a chip; the lands' layouts are as they were.
+  /// items of a language course and for any bubble with a chip; a bubble over answer tiles is always kept clear of them.
   final bool bubbleAboveTiles;
 
   /// Builds the stage for the room it has (its width and height, in board points).
@@ -93,6 +93,10 @@ class ActivityFrame extends StatelessWidget {
   /// While the guide asks "did you say ...?": the tick (yes) and the "again" button next to the microphone.
   final VoidCallback? onConfirmYes;
   final VoidCallback? onConfirmAgain;
+
+  /// How far over the top of the tiles' box the bubble ends: a tile is drawn 12 inside its box (its tap margin) or, where the tray's
+  /// tiles take less margin, 8, so the bubble then keeps at least 8 from the drawn tile and the shadow it casts.
+  static const double tileClear = 16;
 
   /// The largest font, down to [min], at which [text] (and [reserve], the room of a chip under it) fits in [maxHeight] (the
   /// board's own limit when null), and the height of the bubble at that font.
@@ -131,8 +135,8 @@ class ActivityFrame extends StatelessWidget {
     // The bubble keeps clear of the tiles under it: its text shrinks to the room there is between the progress trail and the tiles
     // (never below the minimum), and a bubble that is still too tall (a long line with a chip) stands higher, not over the tiles.
     final double floorTop = s.trailTop + 36 + 4;
-    final bool clear = (bubbleAboveTiles || target != null) && s.tilesTop > s.bubbleTop;
-    final double ceiling = clear ? s.tilesTop - 4 : double.infinity;
+    final bool clear = (bubbleAboveTiles || target != null || tiles != null) && s.tilesTop > s.bubbleTop;
+    final double ceiling = clear ? s.tilesTop - tileClear : double.infinity;
     final ({double font, double height}) fit = fitBubble(
       bubbleText,
       s,

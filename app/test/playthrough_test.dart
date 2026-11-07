@@ -310,7 +310,7 @@ void main() {
                       builder: (BuildContext ctx) => Center(
                         child: SizedBox(
                           width: device.$2.tilesWidth,
-                          height: device.$2.stage.height + 160,
+                          height: device.$2.stage.height + 192,
                           child: Column(
                             children: <Widget>[
                               SizedBox(

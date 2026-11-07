@@ -7,8 +7,9 @@ import 'package:nitznutz/child/activity_shell.dart';
 import 'package:nitznutz/design/board.dart' show boardClassFor;
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/design/tokens.g.dart';
-import 'package:nitznutz/play/choice_row.dart' show withTallStage;
+import 'package:nitznutz/play/choice_row.dart' show withStageAtLeast, withTallStage, withWideStage;
 import 'package:nitznutz/play/lesson_screen.dart';
+import 'package:nitznutz/play/build_pattern_session.dart';
 import 'package:nitznutz/play/hints/tap_geometry.dart';
 import 'package:nitznutz/play/size_scale.dart';
 import 'package:nitznutz/play/template_session.dart' show PackSvg;
@@ -469,6 +470,194 @@ void main() {
       // It is under the model's first cell and over the first place.
       expect(at.top, greaterThan(tester.getRect(find.byKey(const Key('pattern-model'))).top));
       expect(at.bottom, lessThanOrEqualTo(tester.getRect(find.byKey(const Key('slot-0'))).top + 1));
+    });
+  });
+
+  group('the sweep of 2026-11-07 (QA-LS-2, 3, 5, 6)', () {
+    group('samples on a bin', () {
+      test(
+        'a size sprite tells its ink share, and the small sample is drawn at about half the big one',
+        () async {
+          final PackContent content = await loadSourcePack();
+          final SortDragActivity a = content.activities['b15.loga03.1']! as SortDragActivity;
+          String svg(String ref) => a.assets.svg(ref);
+          expect(sizeShareOf(svg('asset:ball_size_s')), 0.35);
+          expect(sizeShareOf(svg('asset:ball_size_l')), 1);
+          expect(sizeShareOf(svg('asset:apple')), 1, reason: 'a picture of no size family fills its box');
+          final List<double> box = sampleBoxSharesOf(<double>[1, 0.35]);
+          expect(box[1], 1, reason: 'the small sample has all the room');
+          expect(box[0], closeTo(0.7, 0.01));
+          expect((box[1] * 0.35) / (box[0] * 1), closeTo(0.5, 0.02), reason: "its ink is half the big one's");
+          expect(sampleBoxSharesOf(<double>[1, 1]), <double>[
+            1,
+            1,
+          ], reason: 'samples that are alike are drawn alike');
+        },
+      );
+
+      for (final String board in <String>['phone', 'phone SE']) {
+        testWidgets('the smallest sample is not a dot, and is about half the big one, $board', (
+          WidgetTester tester,
+        ) async {
+          final PackContent content = (await tester.runAsync(loadSourcePack))!;
+          await _open(tester, 'b15.loga03.1', _windows[board]!, content: content);
+          final Finder samples = find.byKey(const Key('bin-sample'));
+          expect(samples, findsNWidgets(2));
+          final SortDragActivity a = content.activities['b15.loga03.1']! as SortDragActivity;
+          // The first bin is the big ball, the second the small one; a ball is 78 of the 100 of its sprite.
+          final List<double> ink = <double>[
+            for (final (int i, Element e) in samples.evaluate().indexed)
+              e.size!.width * sizeShareOf(a.assets.svg(a.bins[i].sprite)) * 0.78,
+          ];
+          expect(ink[1], greaterThanOrEqualTo(14), reason: 'a small sample of $ink');
+          expect(ink[1] / ink[0], inInclusiveRange(0.45, 0.55), reason: '$ink');
+        });
+      }
+
+      testWidgets("a small phone gives the bins a stage as tall as a phone's, and the tray stands lower", (
+        WidgetTester tester,
+      ) async {
+        await _open(tester, 'b.logb08.1', _windows['phone SE']!);
+        final Rect stage = tester.getRect(find.byKey(const Key('sort-stage')));
+        expect(stage.height, ActivitySpec.phone.stage.height);
+        final Rect tile = tester.getRect(find.byKey(const Key('answer-tile')).first);
+        expect(tile.top - stage.bottom, greaterThanOrEqualTo(12));
+        expect(tile.bottom, lessThanOrEqualTo(_windows['phone SE']!.height - TokenTouch.bottomNoHotspot));
+      });
+    });
+
+    test('a stage is made taller, a tablet is made wider, and nothing else changes', () {
+      final ActivitySpec tall = withStageAtLeast(ActivitySpec.phoneSE, 128, tilesBox: 96 + 12);
+      expect(tall.stage.height, 128);
+      expect(tall.tilesTop, ActivitySpec.phoneSE.tilesTop + 24);
+      expect(tall.stage.left, ActivitySpec.phoneSE.stage.left);
+      // Where the tiles would go under the edge where no hotspot may be, the stage grows less.
+      final ActivitySpec low = withStageAtLeast(ActivitySpec.phoneSE, 128, tilesBox: 400);
+      expect(low.stage.height, ActivitySpec.phoneSE.stage.height);
+      expect(low.tilesTop, ActivitySpec.phoneSE.tilesTop);
+      expect(withStageAtLeast(ActivitySpec.phone, 128, tilesBox: 108).stage, ActivitySpec.phone.stage);
+      expect(
+        withStageAtLeast(ActivitySpec.tabletLandscape, 128, tilesBox: 108).stage,
+        ActivitySpec.tabletLandscape.stage,
+      );
+      final ActivitySpec wide = withWideStage(ActivitySpec.tabletLandscape);
+      expect(wide.stage, const Rect.fromLTRB(24, 230, 872, 530));
+      expect(wide.tilesLeft, 24);
+      expect(wide.tilesLeft + wide.tilesWidth, 872);
+      expect(withWideStage(ActivitySpec.tabletPortrait).stage, ActivitySpec.tabletPortrait.stage);
+      expect(withWideStage(ActivitySpec.phone).stage, ActivitySpec.phone.stage);
+    });
+
+    testWidgets('on a tablet a row of eight balls has the whole width of the board and large balls', (
+      WidgetTester tester,
+    ) async {
+      await _open(tester, 'b.logb01.1', _windows['tablet landscape']!);
+      final Rect card = tester.getRect(find.byKey(const Key('lesson-stage')));
+      expect(card.width, greaterThan(800), reason: 'the stage is the board wide, not 584: $card');
+      final List<Size> balls = <Size>[
+        for (final Element e
+            in find
+                .descendant(of: find.byKey(const Key('tap-row')), matching: find.byType(PackSvg))
+                .evaluate())
+          e.size!,
+      ];
+      expect(balls.length, 7);
+      for (final Size b in balls) {
+        expect(b.shortestSide, greaterThanOrEqualTo(80));
+      }
+      // The tiles stand under the stage's middle.
+      final Rect tiles = Rect.fromPoints(
+        tester.getTopLeft(find.byKey(const Key('answer-tile')).first),
+        tester.getBottomRight(find.byKey(const Key('answer-tile')).last),
+      );
+      expect(tiles.center.dx, closeTo(card.center.dx, 1));
+    });
+
+    group('spot the mistake, band A', () {
+      test(
+        'a row of four cells stands in two lines on the small phone, where one line has cells under 64',
+        () {
+          const double least = 64;
+          expect(SpotErrorSession.linesOf(ActivitySpec.phoneSE.stage.size, 4), 1);
+          expect(SpotErrorSession.linesOf(ActivitySpec.phoneSE.stage.size, 4, minCell: least), 2);
+          expect(SpotErrorSession.linesOf(ActivitySpec.phone.stage.size, 4, minCell: least), 1);
+          final Size tall = withTallStage(ActivitySpec.phoneSE).stage.size;
+          expect(SpotErrorSession.cellSide(tall, 4, minCell: least), greaterThanOrEqualTo(least));
+        },
+      );
+
+      for (final String board in <String>['phone', 'phone SE', 'tablet landscape']) {
+        testWidgets('every cell of b15.loga01.5 is at least 64, with its tap margin round it, $board', (
+          WidgetTester tester,
+        ) async {
+          final PackContent content = (await tester.runAsync(loadSourcePack))!;
+          await _open(tester, 'b15.loga01.5', _windows[board]!, content: content);
+          final Rect stage = tester.getRect(find.byKey(const Key('spot-stage')));
+          for (int i = 0; i < 4; i++) {
+            final Rect cell = tester.getRect(find.byKey(Key('cell-$i')));
+            // The cell takes 3 of tap margin on every side of what is drawn (see `_RowStage`).
+            expect(cell.width - 6, greaterThanOrEqualTo(64), reason: 'cell $i is $cell on $board');
+            expect(cell.height - 6, greaterThanOrEqualTo(64), reason: 'cell $i is $cell on $board');
+            expect(stage.contains(cell.center), isTrue);
+          }
+        });
+      }
+    });
+
+    group('a pattern to copy', () {
+      for (final String board in <String>['phone', 'phone SE', 'tablet landscape']) {
+        testWidgets(
+          'the model row is as tall as the row of places, and its pictures are at least the token, $board',
+          (WidgetTester tester) async {
+            await _open(tester, 'b15.loga05.1', _windows[board]!);
+            final Rect model = tester.getRect(find.byKey(const Key('pattern-model')));
+            final Rect places = tester.getRect(find.byKey(const Key('pattern-slots')));
+            expect(model.height, closeTo(places.height, 0.01));
+            expect(model.width, closeTo(places.width, 0.01));
+            final Size stage = tester.getSize(find.byKey(const Key('pattern-stage')));
+            for (final Element e
+                in find
+                    .descendant(of: find.byKey(const Key('pattern-model')), matching: find.byType(PackSvg))
+                    .evaluate()) {
+              expect(
+                e.size!.shortestSide,
+                greaterThanOrEqualTo(minPictureOf(stage)),
+                reason: '${e.size} on $board',
+              );
+            }
+          },
+        );
+      }
+
+      test('a row has the usual room, and the tight room only where the usual one leaves a picture under the token', () {
+        expect(BuildPatternSession.chromeOf(const Size(330, 128), 6).edge, 8);
+        expect(BuildPatternSession.chromeOf(const Size(270, 128), 4).edge, 8);
+        expect(BuildPatternSession.chromeOf(const Size(270, 128), 6).edge, 4);
+        // Where even the tight room would not do, the usual one stays.
+        expect(BuildPatternSession.chromeOf(const Size(270, 128), 9).edge, 8);
+      });
+    });
+
+    group('a thing to find among the tiles', () {
+      for (final String board in <String>['phone', 'phone SE', 'tablet landscape']) {
+        for (final String id in <String>['log.same.apple', 'b15.loga09.1']) {
+          testWidgets('is at least as large as a picture on a tile: $id, $board', (
+            WidgetTester tester,
+          ) async {
+            final PackContent content = (await tester.runAsync(loadSourcePack))!;
+            await _open(tester, id, _windows[board]!, content: content);
+            final Size thing = tester.getSize(
+              find.descendant(of: find.byKey(const Key('tap-groups')), matching: find.byType(PackSvg)).first,
+            );
+            final Size onTile = tester.getSize(
+              find
+                  .descendant(of: find.byKey(const Key('answer-tile')).first, matching: find.byType(PackSvg))
+                  .first,
+            );
+            expect(thing.shortestSide, greaterThanOrEqualTo(onTile.shortestSide), reason: '$thing, $onTile');
+          });
+        }
+      }
     });
   });
 }
