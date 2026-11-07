@@ -79,7 +79,7 @@ class BaseTenLayout {
   // Steps in units: a flat leans on the one before it, a rod has a gap beside it, the groups of blocks are apart, ones stand in threes.
   static const double _flatStep = 2.4, _rodStep = 1.4, _thouStep = 3.2, _groupGap = 1.8, _cubeStep = 1.3;
 
-  factory BaseTenLayout(BaseTen n, Size area, {double maxUnit = 16}) {
+  factory BaseTenLayout(BaseTen n, Size area, {double maxUnit = 16, double? sharedUnit}) {
     const double flatStep = _flatStep,
         rodStep = _rodStep,
         thouStep = _thouStep,
@@ -88,10 +88,12 @@ class BaseTenLayout {
     final Size extent = extentOf(n);
     final double wide = extent.width;
     final double tall = extent.height;
-    final double unit = math.min(
+    final double fit = math.min(
       maxUnit,
       math.min(area.width / math.max(1, wide), area.height / math.max(1, tall)),
     );
+    // A [sharedUnit] is the side of one cube that a set of pictures all draw with; the blocks never go beyond what fits the box.
+    final double unit = math.min(fit, sharedUnit ?? fit);
     final Offset origin = Offset((area.width - wide * unit) / 2, (area.height - tall * unit) / 2);
     final double floor = origin.dy + tall * unit;
     final List<Rect> thousands = <Rect>[];
@@ -130,8 +132,8 @@ class BaseTenLayout {
   const BaseTenLayout._(this.unit, this.thousands, this.hundreds, this.tens, this.ones);
 
   /// The layout [BaseTenPicture] draws in a box of [size] (a bigger unit on a tablet's stage): the stage and the hints call this one.
-  factory BaseTenLayout.forBox(BaseTen n, Size size) =>
-      BaseTenLayout(n, size, maxUnit: size.shortestSide >= 200 ? 28 : 24);
+  factory BaseTenLayout.forBox(BaseTen n, Size size, {double? sharedUnit}) =>
+      BaseTenLayout(n, size, maxUnit: size.shortestSide >= 200 ? 28 : 24, sharedUnit: sharedUnit);
 
   final double unit;
   final List<Rect> thousands;
@@ -159,7 +161,11 @@ class BaseTenPicture extends StatelessWidget {
     this.shown,
     this.hint = false,
     this.places = false,
+    this.sharedUnit,
   });
+
+  /// The side of a cube that every picture of one item draws with (the options on a row of tiles), when it is not the box's own best fit.
+  final double? sharedUnit;
 
   /// The number whose places the picture keeps.
   final BaseTen layoutOf;
@@ -175,7 +181,7 @@ class BaseTenPicture extends StatelessWidget {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (BuildContext context, BoxConstraints box) {
       final Size size = box.biggest;
-      final BaseTenLayout l = BaseTenLayout.forBox(layoutOf, size);
+      final BaseTenLayout l = BaseTenLayout.forBox(layoutOf, size, sharedUnit: sharedUnit);
       return CustomPaint(size: size, painter: _BlocksPainter(l, shown ?? layoutOf, hint, places));
     },
   );
@@ -427,6 +433,11 @@ class ChartLayout {
   Rect get box => Rect.fromLTWH(origin.dx, origin.dy, cell * 10, cell * spec.rows);
 }
 
+/// The size of the number (and of the question mark) in a chart cell of [cell] points: 0.66 of it, 0.46 for a hundred. A cell of the
+/// small phone's stage is 19 to 27 points (five rows or four), so a two-digit number is 12.7 to 17.8 points there: never under 12
+/// (QA-C1b-4).
+double chartNumberSize(double cell, int n) => cell * (n >= 100 ? 0.46 : 0.66);
+
 /// A chart drawn by [ChartLayout]: plain squares, the lit ones golden with their number, the blank ones dashed with a question mark.
 class HundredChartPicture extends StatelessWidget {
   const HundredChartPicture({super.key, required this.spec, this.hint = false});
@@ -455,11 +466,7 @@ class HundredChartPicture extends StatelessWidget {
                       textScaler: TextScaler.noScaling,
                       maxLines: 1,
                       softWrap: false,
-                      style: AppText.fixed(
-                        size: c.height * (n >= 100 ? 0.4 : 0.52),
-                        weight: 800,
-                        lineHeight: 1,
-                      ),
+                      style: AppText.fixed(size: chartNumberSize(c.height, n), weight: 800, lineHeight: 1),
                     ),
                   ),
                 ),

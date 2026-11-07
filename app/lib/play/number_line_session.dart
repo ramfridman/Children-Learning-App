@@ -151,11 +151,18 @@ class NumberLineSession extends TemplateSession {
   }
 
   /// Hint 2: the guide hops the marker one unit from the start (counting back when the line is walked back) and stops. A hop that
-  /// would land on the tick of the answer is not taken: the marker only stands on the start.
+  /// would land on the tick of the answer is not taken: the marker only stands on the start. On a line of ticks of ten (the estimate)
+  /// the marker stands in the middle, as the hint says ("the middle is fifty, and the number is on the side of the hundred"), and
+  /// hops one tick towards the side the number is on, an arc and no number.
   void _hopOnce() {
     _stopWay();
-    final int from = activity.start ?? activity.from;
-    final int dir = activity.jump && activity.hops.isNotEmpty && activity.hops.first < 0 ? -1 : 1;
+    final List<int> middle = activity.jump || activity.tickStep <= 1 ? const <int>[] : _middleTicks();
+    final int from = middle.isEmpty ? activity.start ?? activity.from : middle.first;
+    final int dir = middle.isNotEmpty
+        ? (activity.target >= from ? 1 : -1)
+        : activity.jump && activity.hops.isNotEmpty && activity.hops.first < 0
+        ? -1
+        : 1;
     final int one = from + dir * (activity.jump ? 1 : activity.tickStep);
     markerAt = from;
     trail.add(from);
@@ -166,11 +173,14 @@ class NumberLineSession extends TemplateSession {
     notify();
     if (one == activity.target || one < activity.from || one > activity.to) return;
     final int id = _demo;
-    // The marker hops after 700 ms, and the arc and its number 1 stay where it landed.
+    // The marker hops after 700 ms, and the arc (and its number 1, but not on the estimate's line) stay where it landed.
     _hint.play(
-      HintPlan(<HintFrame>[
-        const HintFrame(<HintMark>[], hold: Duration(milliseconds: 700)),
-      ], rest: _hop(_size, from, one, (one - from).abs())),
+      HintPlan(
+        <HintFrame>[const HintFrame(<HintMark>[], hold: Duration(milliseconds: 700))],
+        rest: middle.isEmpty
+            ? _hop(_size, from, one, (one - from).abs())
+            : <HintMark>[ArcMark(_tickTop(_size, from), _tickTop(_size, one))],
+      ),
     );
     later(const Duration(milliseconds: 700), () {
       if (_demo != id) return;

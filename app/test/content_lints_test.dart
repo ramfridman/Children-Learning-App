@@ -123,8 +123,8 @@ void main() {
   final Map<String, Map<String, Object?>> acts = _load('activity.');
   final Map<String, Map<String, Object?>> skills = _load('skill.');
 
-  test('the sources are the 967 activities and 100 skills of pack 0.10.0, and the 237 and 12 of M10 batch C1 (170 of the first sessions, 58 for the block, chart, keypad and tolerance modes, 5 for the line by estimate and the true-or-false card, and 4 lucky-right items)', () {
-    expect(acts.length, 967 + 237);
+  test('the sources are the 967 activities and 100 skills of pack 0.10.0, and the 239 and 12 of M10 batch C1 (170 of the first sessions, 58 for the block, chart, keypad and tolerance modes, 5 for the line by estimate and the true-or-false card, 4 lucky-right items, and 2 hidden-basket count-on items)', () {
+    expect(acts.length, 967 + 239);
     expect(skills.length, 100 + 12);
   });
 

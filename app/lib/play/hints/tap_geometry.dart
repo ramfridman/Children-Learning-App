@@ -6,6 +6,7 @@ import '../../child/activity_shell.dart';
 import '../../content/models.dart';
 import '../../content/row_width.dart';
 import '../../design/course_text.dart';
+import '../../design/tokens.g.dart' show TokenBorder;
 import '../number_entry.dart' show KeypadLayout;
 import '../sprite_group.dart';
 import '../stage_pictures.dart';
@@ -275,6 +276,30 @@ class TapGeometry {
     if (a.options.any((ChoiceOption o) => o.set != null || o.picture != null)) return math.min(170, room);
     if (a.options.any((ChoiceOption o) => o.text != null) && !a.letterFace) return math.min(220, room);
     return 96;
+  }
+
+  /// Whether an option of [a] is blocks on its tile (`answer.options[].picture`).
+  static bool hasBlockTiles(TapAnswerActivity a) =>
+      a.optionsInTiles && a.options.any((ChoiceOption o) => o.picture != null);
+
+  /// The box the blocks of one option are drawn in: the tile (96 points tall) less its border, the 6 points a tile of pictures keeps
+  /// and the 8 of the picture's own (see `_face` in `tap_answer_session.dart`).
+  static Size blockBoxOf(TapAnswerActivity a, ActivitySpec spec) {
+    const double edge = TokenBorder.thick + 6 + 8;
+    return Size(tileWidthOf(a, spec) - 2 * edge, 96 - 2 * edge);
+  }
+
+  /// The side of one cube in every option of [a] that is blocks: the one size that fits the widest and tallest of them, so that a
+  /// cube is as big in a rod option as in an option of cubes only (a child compares the pictures). Null when no option is blocks.
+  static double? blockUnitOf(TapAnswerActivity a, ActivitySpec spec) {
+    final Size box = blockBoxOf(a, spec);
+    double? unit;
+    for (final ChoiceOption o in a.options) {
+      if (o.picture == null) continue;
+      final double own = BaseTenLayout.forBox(BaseTen.fromScene(o.picture!), box).unit;
+      unit = unit == null ? own : math.min(unit, own);
+    }
+    return unit;
   }
 
   /// The point on the top edge of option [i]'s tile (or, for an option on the stage, of its picture) where the hand's fingertip

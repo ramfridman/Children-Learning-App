@@ -30,8 +30,40 @@ extension _BandC on _Plans {
   HintPlan _facts(int level) {
     if (a.group != null && a.group2 != null) return add(level);
     if (a.group != null && a.row.isEmpty) return _toTen(level);
-    if (a.row.isNotEmpty) return _sentence(level);
+    if (a.row.isNotEmpty) return _isCard ? _trueFalseCard(level) : _sentence(level);
     return generic(level);
+  }
+
+  /// A true-or-false card: a whole sentence in the row (no gap to fill) to be told right or wrong, with a tick and a cross to touch.
+  bool get _isCard => a.row.contains('op:=') && !a.row.contains('?') && a.options.length == 2;
+
+  /// Level 2 of a card keeps its sentence and shows its numbers as things, over the numbers (not a "?" box in the place of one: the
+  /// question is not a gap to fill). A take-away that asks for more than there is (`6 - 15`): the six, then the fifteen places of which
+  /// only six are filled, "can you give fifteen of six?". Any other card: the things of each number in turn, the child compares the
+  /// sides; the plan never says which side is the same. Levels 1 and 3 are the family's.
+  HintPlan _trueFalseCard(int level) {
+    if (level != 2) return generic(level);
+    final List<int> at = <int>[
+      for (int i = 0; i < a.row.length; i++)
+        if (a.row[i].startsWith('n:')) i,
+    ];
+    final List<int> value = <int>[for (final int i in at) int.tryParse(a.row[i].substring(2)) ?? -1];
+    if (value.any((int v) => v < 0 || v > _mostUnits)) return generic(level);
+    final List<Rect> cells = g.rowCells();
+    List<HintMark> things(int i, {int? filled}) => _cubesAbove(cells[at[i]], value[i], filled: filled);
+    final int eq = a.row.indexOf('op:=');
+    final bool order = a.row.length == 5 && a.row[1] == 'op:-' && eq == 3 && value[0] < value[1];
+    final List<List<HintMark>> frames = order
+        ? <List<HintMark>>[
+            things(0),
+            <HintMark>[...things(0), ...things(1, filled: value[0])],
+          ]
+        : <List<HintMark>>[
+            for (int i = 0; i < at.length; i++) <HintMark>[for (int j = 0; j <= i; j++) ...things(j)],
+          ];
+    return HintPlan(<HintFrame>[
+      for (final List<HintMark> f in frames) HintFrame(f, hold: _ms(order ? 1300 : 900)),
+    ], rest: frames.last);
   }
 
   // ---- the shared pieces of the blocks ----

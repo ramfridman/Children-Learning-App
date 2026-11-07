@@ -32,7 +32,12 @@ void main() {
   });
 
   test('the source-built pack has the Band C activities to audit', () {
-    expect(activities.length, greaterThanOrEqualTo(168));
+    expect(activities.length, greaterThanOrEqualTo(239));
+    expect(
+      activities.map((Activity a) => a.id),
+      containsAll(<String>['c.mathb04.11', 'c.mathb04.12']),
+      reason: 'the hidden-basket count-on items are audited too',
+    );
   });
 
   for (final (String name, Size size) in boards) {

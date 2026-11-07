@@ -16,12 +16,22 @@ const List<String> keypadKeys = <String>['1', '2', '3', '4', '5', 'back', '6', '
 /// The most digits a number can take (the schema's numbers go to 10,000).
 const int mostDigits = 5;
 
-/// Where the keys of the keypad stand on a board: a key [key] points wide, a tap margin of [slop] round it, [columns] to a row.
+/// Where the keys of the keypad stand on a board: a key [key] points wide, a tap margin of [slop] round it (so that the gap between two
+/// keys is twice that), [columns] to a row.
 class KeypadLayout {
   const KeypadLayout._(this.spec, this.key, this.slop);
 
-  /// The keypad of [spec]'s board: 56 points a key on a phone (the least a child's control may be in Bands B and C), 64 on a tablet.
-  factory KeypadLayout.of(ActivitySpec spec) => KeypadLayout._(spec, spec.stageIsCard ? 64 : 56, 4);
+  /// The keypad of [spec]'s board, by the Band C row of design-spec 6.1: a gap of 12 points between keys on a phone and 16 on a tablet
+  /// (never less than 12), and the keys as big as the board's room allows: 56 points on a phone (the least a child's control may be, and
+  /// all two rows and their gap fit above the bottom 24 points), 80 on a tablet (the Band C target).
+  factory KeypadLayout.of(ActivitySpec spec) =>
+      spec.stageIsCard ? KeypadLayout._(spec, 80, 8) : KeypadLayout._(spec, 56, 6);
+
+  /// The room the keypad needs: from the top of its first row to the bottom of its second, and the tap margin under that.
+  double get roomHeight => 2 * key + 2 * slop + slop;
+
+  /// The gap between two keys.
+  double get gap => 2 * slop;
 
   final ActivitySpec spec;
   final double key;
@@ -30,8 +40,8 @@ class KeypadLayout {
   static const int columns = 6;
 
   /// How far the pad's first row stands below the top of the tiles' box: the box starts 12 over the tiles (an answer tile's tap margin)
-  /// and a key has 4 of its own.
-  static const double lift = 8;
+  /// and a key has [slop] of its own.
+  double get lift => 12 - slop;
 
   double get pitch => key + 2 * slop;
   double get width => columns * pitch;
@@ -80,13 +90,13 @@ class NumberKeypad extends StatelessWidget {
     child: SizedBox(
       key: const Key('keypad'),
       width: layout.width,
-      height: layout.height + KeypadLayout.lift,
+      height: layout.height + layout.lift,
       child: Stack(
         children: <Widget>[
           for (final (int i, String k) in keypadKeys.indexed)
             Positioned(
               left: (i % KeypadLayout.columns) * layout.pitch,
-              top: (i ~/ KeypadLayout.columns) * layout.pitch + KeypadLayout.lift,
+              top: (i ~/ KeypadLayout.columns) * layout.pitch + layout.lift,
               child: _key(context, k),
             ),
         ],

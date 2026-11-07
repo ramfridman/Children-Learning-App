@@ -195,17 +195,16 @@ class TapAnswerSession extends TemplateSession {
   /// Some tile has a speaker (a text with a clip): the row of tiles then keeps the room under it, see [layoutFor].
   bool get _hasSpeakers => activity.options.any((ChoiceOption o) => o.text != null && o.clip != null);
 
-  /// The tiles of an item with speakers stand higher, so that a speaker (64 points to touch) fits under each of them above the
-  /// bottom edge where no hotspot may be (24); the stage, empty in such an item, gives way. A board with the room is unchanged.
+  /// The tiles stand higher where their row needs more than the board's base room: an item with speakers (a speaker, 64 points to
+  /// touch, fits under each tile above the bottom edge where no hotspot may be, 24) and the keypad (its keys and the gap of 12 between
+  /// them). The stage, empty or small in such an item, gives way. A board with the room is unchanged.
   @override
   ActivitySpec layoutFor(ActivitySpec base) {
-    if (!_hasSpeakers) return base;
-    const double tile = 96;
     const double margin = 12;
-    final double top = math.min(
-      base.tilesTop,
-      base.boardHeight - TokenTouch.bottomNoHotspot - SpeakerMark.room - margin - tile - margin,
-    );
+    final double need = numberMode
+        ? KeypadLayout.of(base).roomHeight
+        : 96 + margin + (_hasSpeakers ? SpeakerMark.room + margin : 0);
+    final double top = math.min(base.tilesTop, base.boardHeight - TokenTouch.bottomNoHotspot - need);
     if (top >= base.tilesTop) return base;
     return base.withStageAndTiles(
       stage: Rect.fromLTWH(
@@ -326,6 +325,9 @@ class TapAnswerSession extends TemplateSession {
     // Numerals sit on square tiles; a set of things gets a wider one, as wide as the row allows.
     final bool sets = activity.options.any((ChoiceOption o) => o.set != null || o.picture != null);
     final double width = TapGeometry.tileWidthOf(activity, spec);
+    // One size for the numerals of the item and one for the cubes of its blocks: a tile never draws its own (see [numeralFontOf]).
+    final double numeralFont = numeralFontOf(activity, spec.tileFont, width);
+    final double? blockUnit = TapGeometry.blockUnitOf(activity, spec);
     final bool letterItem = activity.letterFace;
     return ListenableBuilder(
       listenable: this,
@@ -356,15 +358,23 @@ class TapAnswerSession extends TemplateSession {
                           child: sets
                               ? Padding(
                                   padding: const EdgeInsets.all(6),
-                                  child: _face(activity, o, 96, spec.tileFont, stress, letter: letterItem),
+                                  child: _face(
+                                    activity,
+                                    o,
+                                    spec.tileFont,
+                                    stress,
+                                    letter: letterItem,
+                                    numeralFont: numeralFont,
+                                    blockUnit: blockUnit,
+                                  ),
                                 )
                               : _face(
                                   activity,
                                   o,
-                                  96,
                                   spec.tileFont,
                                   stress,
                                   letter: letterItem,
+                                  numeralFont: numeralFont,
                                   reading: band == null
                                       ? null
                                       : Ls01Metrics.of(
@@ -463,15 +473,38 @@ class TapAnswerSession extends TemplateSession {
 /// nobody can count), and never in an item of the facts (MATH-C-01), where a row of dots under each answer would be a way to count it.
 bool numeralHasDots(TapAnswerActivity a, int n) => n >= 1 && n <= 10 && a.skillId != 'MATH-C-01';
 
+/// The size of the numerals on the tiles of [a]: [font], or smaller when the widest numeral of the item does not fit the room a
+/// tile of [tileWidth] leaves (its border and 8 points on each side); every numeral of the item is set at it.
+double numeralFontOf(TapAnswerActivity a, double font, double tileWidth) {
+  final double room = tileWidth - 2 * TokenBorder.thick - 16;
+  double widest = 0;
+  for (final ChoiceOption o in a.options) {
+    if (o.numeral == null) continue;
+    final TextPainter p = TextPainter(
+      text: TextSpan(
+        text: '${o.numeral}',
+        style: AppText.fixed(size: font, weight: 800, lineHeight: 1),
+      ),
+      textDirection: TextDirection.ltr,
+      textScaler: TextScaler.noScaling,
+      maxLines: 1,
+    )..layout();
+    widest = math.max(widest, p.width);
+    p.dispose();
+  }
+  return widest > room ? font * room / widest : font;
+}
+
 /// What an option shows: a numeral on a tile with its dots, or a small set of things.
 Widget _face(
   TapAnswerActivity a,
   ChoiceOption o,
-  double box,
   double font,
   bool stress, {
   bool letter = false,
   double? reading,
+  required double numeralFont,
+  double? blockUnit,
 }) {
   if (o.text != null) {
     return OptionTextFace(
@@ -484,18 +517,19 @@ Widget _face(
   }
   if (o.soundOnly) return const SoundFace();
   if (o.picture != null) {
-    // Blocks on the tile: tens left of ones, the digits never on them (M10, X1).
+    // Blocks on the tile: tens left of ones, the digits never on them (M10, X1), every option with the same cube.
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: BaseTenPicture(layoutOf: BaseTen.fromScene(o.picture!)),
+        child: BaseTenPicture(layoutOf: BaseTen.fromScene(o.picture!), sharedUnit: blockUnit),
       ),
     );
   }
   if (o.numeral != null) {
-    // A numeral stays on one line and shrinks to the tile by its digits (a third digit takes the size of the second's room); the tile
-    // keeps its size. Dots under it only where counting them can help: not above ten (a hairline), and not under a fact's answer.
+    // A numeral stays on one line, at the size the widest numeral of the item fits the tile in (so that the right answer is never the
+    // one that prints largest); the tile keeps its size. Dots under it only where counting them can help: not above ten (a hairline),
+    // and not under a fact's answer.
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Column(
@@ -507,9 +541,10 @@ Widget _face(
               fit: BoxFit.scaleDown,
               child: Text(
                 '${o.numeral}',
+                textScaler: TextScaler.noScaling,
                 maxLines: 1,
                 softWrap: false,
-                style: AppText.fixed(size: font, weight: 800, lineHeight: 1),
+                style: AppText.fixed(size: numeralFont, weight: 800, lineHeight: 1),
               ),
             ),
           ),
