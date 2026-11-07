@@ -219,6 +219,19 @@ const Map<String, TapFamily> _tapFamilyOfSkill = <String, TapFamily>{
   'MATH-B-14': TapFamily.time,
   'MATH-B-15': TapFamily.clockMoney,
   'MATH-B-16': TapFamily.clockMoney,
+  // Band C (M10, batch C1, section 7.2): the bridges MATH-B-04, NUM-B-06 and NUM-B-09 stand in the table of the skills they prepare.
+  'MATH-B-04': TapFamily.add,
+  'MATH-C-01': TapFamily.add,
+  'MATH-C-02': TapFamily.add,
+  'MATH-C-03': TapFamily.add,
+  'NUM-B-06': TapFamily.numerals,
+  'NUM-B-09': TapFamily.count,
+  'NUM-C-01': TapFamily.sequence,
+  'NUM-C-02': TapFamily.numerals,
+  'NUM-C-03': TapFamily.numerals,
+  'NUM-C-04': TapFamily.compare,
+  'NUM-C-06': TapFamily.sequence,
+  'NUM-C-09': TapFamily.sequence,
 };
 
 /// The family of a `tap_answer` activity with skill [skillId] whose stage shows a numeral ([numeralOnStage]) or not: null for a

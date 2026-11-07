@@ -133,9 +133,15 @@ class HebrewMasterTableTest(unittest.TestCase):
         # pinned at the regeneration of B-15 part 2 (200 new activities, the alert texts and word lists of main)
         # 12645 since B-39 (16 bottle and land-name rows added by the hebrew-text-editor)
         # 12757 since L0 (112 rows of he.dart added with the Languages screens: the island, the doors, the parent pages)
-        self.assertEqual(len(self.rows), 12757)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1308)
-        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 64)
+        # 14980 since M10 C1 (2,241 rows of 168 activities, 18 lessons, 12 skills and 6 misconceptions, 22 rows of he.dart)
+        # 15288 since the math-teacher's C1 QA changes (cd6cc23e), the deferred base-ten, hundred-chart and keypad items (DRAWN) and the hints
+        # shortened to 14 words (2026-11-07): new activities and lessons (and the he.dart rows added by the other agents meanwhile)
+        # 15704 since the 35 C1 items of 98f57707 (99 new texts, blocks, pay, counting by touch, the middle of two marks), 3 lessons and the he.dart rows of the other agents
+        # 15806 since the last C1 items of 2805fbf1 (the estimation line, true-or-false cards, ten-frames, lucky-right items; 144 rows new, 42 gone)
+        self.assertEqual(len(self.rows), 15806)
+        # 1308 before C1: 19 corrections (מֵאֶפֶס, מֵאַחַת …) are now in the sources; 1296 after the 7 of the deferred items (מַה שֶּׁ, מַה מִּסְתַּתֵּר)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1296)
+        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 44)  # 88 before the owner's V1 for M-NL-DIR (2026-11-06): its 44 rows now have the source's final nikud
 
     def test_done_rows_have_ui_text(self):
         want = lambda r: HELD[(r['source'], r['id'])][0] if (r['source'], r['id']) in HELD else r['ui_text']
@@ -195,8 +201,27 @@ class PrefixHelpersTest(unittest.TestCase):
         self.assertEqual(self.a.from_('אֶפֶס'), 'מֵאֶפֶס')
         self.assertEqual(self.a.from_('אַחַת'), 'מֵאַחַת')
         self.assertEqual(self.a.from_('הַמִּסְפָּר'), 'מֵהַמִּסְפָּר')
-        self.assertEqual(self.a.from_('שָׁלוֹשׁ'), 'מִ' + 'שָׁלוֹשׁ')
-        self.assertEqual(self.a.from_('אַרְבַּע'), 'מִאַרְבַּע')  # as the table has it (a question for the editor)
+        # decided by the editor on 2026-11-06: מֵ before every guttural (also the number words), מִ doubles the next letter
+        self.assertEqual(self.a.from_('אַרְבַּע'), 'מֵאַרְבַּע')
+        self.assertEqual(self.a.from_('אַרְבָּעִים'), 'מֵאַרְבָּעִים')
+        self.assertEqual(self.a.from_('חָמֵשׁ'), 'מֵחָמֵשׁ')
+        self.assertEqual(self.a.from_('חֲמִשִּׁים'), 'מֵחֲמִשִּׁים')
+        self.assertEqual(self.a.from_('עֶשֶׂר'), 'מֵעֶשֶׂר')
+        self.assertEqual(self.a.from_('שָׁלוֹשׁ'), 'מִשָּׁלוֹשׁ')
+        self.assertEqual(self.a.from_('שֵׁשׁ'), 'מִשֵּׁשׁ')
+        self.assertEqual(self.a.from_('שִׁבְעִים'), 'מִשִּׁבְעִים')
+        self.assertEqual(self.a.from_('תֵּשַׁע'), 'מִתֵּשַׁע')  # already doubled
+        self.assertEqual(self.a.from_('שְׁלוֹשִׁים'), 'מִשְּׁלוֹשִׁים')  # the doubling stays under a shva (מִשְּׁנֵי, as the Bible points it; 2026-11-07)
+        self.assertEqual(self.a.from_('שְׁמוֹנֶה'), 'מִשְּׁמוֹנֶה')
+        self.assertEqual(self.a.from_('תְּשַׁע עֶשְׂרֵה'), 'מִתְּשַׁע עֶשְׂרֵה')  # already doubled
+
+    def test_vav_before_a_prefixed_number(self):
+        v, p = self.a.vav, self.a.prefix
+        self.assertEqual(v(p('ב', 'שְׁלוֹשִׁים')), 'וּבִשְׁלוֹשִׁים')  # a labial takes the shureq, and is soft after it
+        self.assertEqual(v(p('ב', 'אַרְבָּעִים')), 'וּבְאַרְבָּעִים')
+        self.assertEqual(v('מַטְבֵּעַ'), 'וּמַטְבֵּעַ')
+        self.assertEqual(v('תֵּשַׁע'), 'וְתֵשַׁע')
+        self.assertEqual(v('שְׁתַּיִם'), 'וּשְׁתַּיִם')
 
     def test_robot_steps(self):
         self.assertEqual(self.a.robot_steps(['right', 'right', 'down']), 'שְׁנֵי צְעָדִים לְכִוּוּן הַדֶּגֶל, וְאָז צַעַד אֶחָד לְמַטָּה')

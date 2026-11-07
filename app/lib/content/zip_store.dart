@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'pack_limits.dart';
+
 // A deliberately narrow zip, written and read by us so no unpacking library is needed.
 //
 // What is allowed: stored files only (no compression, no encryption, no zip64, no data descriptors,
@@ -31,9 +33,9 @@ class ZipException implements Exception {
 }
 
 abstract final class ZipLimits {
-  /// 8,000 files of content plus `manifest.json` and `manifest.sig` (a pack of lessons or of one friend's voice: a line is
-  /// two files, its sound and its mouth cues).
-  static const int maxEntries = 8002;
+  /// The files a manifest may list plus `manifest.json` and `manifest.sig` (a pack of lessons or of one friend's voice: a
+  /// line is two files, its sound and its mouth cues). The count is [PackLimits.files], so the zip and the manifest agree.
+  static const int maxEntries = PackLimits.files + 2;
 
   /// The sum of all file sizes.
   static const int maxTotalBytes = 64 * 1024 * 1024;

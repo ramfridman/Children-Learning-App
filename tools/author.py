@@ -10,6 +10,7 @@ pack is built, and is the same every time it runs. Every text it writes is `need
 import json
 import os
 import sys
+import unicodedata
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 OUT = os.path.join(ROOT, 'content', 'starter')
@@ -30,8 +31,8 @@ def _first(word):
 
 def vav(word):
     """The conjunctive vav before a word (the editor's rules, docs/agents/hebrew-notes.md §4.1 G2, G3, G5): וּ before a
-    letter with a shva (וּשְׁתַּיִם), וַ / וֶ before a hataf (וַחֲמִשָּׁה), וִי for a yod with a shva, and no dagesh in a
-    בגדכפת letter after it (וְתֵשַׁע, וְכָחֹל)."""
+    letter with a shva (וּשְׁתַּיִם) or a labial ב ו מ פ (וּבִשְׁלוֹשִׁים), וַ / וֶ before a hataf (וַחֲמִשָּׁה), וִי for a yod
+    with a shva, and no dagesh in a בגדכפת letter after it (וְתֵשַׁע, וְכָחֹל)."""
     letter, marks, rest = _first(word)
     for hataf, full in HATAF.items():
         if hataf in marks:
@@ -40,6 +41,10 @@ def vav(word):
         if letter == 'י':
             return 'וִי' + rest
         return 'וּ' + letter + SHVA + marks.replace(SHVA, '').replace(DAGESH, '') + rest
+    if letter in 'בומפ':  # a labial takes the shureq whatever its vowel (וּבִשְׁלוֹשִׁים, וּמַטְבֵּעַ); ב and פ are soft after it
+        if letter in 'בפ':
+            marks = marks.replace(DAGESH, '')
+        return 'וּ' + letter + marks + rest
     if letter in BGDKPT:
         marks = marks.replace(DAGESH, '')
     return 'וְ' + letter + marks + rest
@@ -61,14 +66,21 @@ def prefix(p, word):
     return base + SHVA + dagesh + letter + marks + rest
 
 
-# The words the reviewed table writes with מֵ (hebrew-notes G9, G10). It keeps "מִאַרְבַּע" (activity.b.numb13.14), which
-# G9 would write "מֵאַרְבַּע": a question for the hebrew-text-editor; until it is answered the generator follows the table.
-FROM_TSERE = ('אֶפֶס', 'אַחַת')
+GUTTURAL = 'אהחער'
 
 
 def from_(word):
-    """מִ before a word; מֵ before the article and the words of FROM_TSERE (מֵאֶפֶס, מֵאַחַת, מֵהַמִּסְפָּר)."""
-    return ('מֵ' if word.startswith(FROM_TSERE) or word.startswith('ה') else 'מִ') + word
+    """מִ before a word (the editor's rule G9/G10, decided 2026-11-06 for the number words too). Before a guttural, which cannot
+    take the doubling, מֵ (מֵאֶפֶס, מֵאַרְבַּע, מֵחֲמִשִּׁים, מֵעֶשְׂרִים, מֵהַמִּסְפָּר). Before any other letter מִ doubles it, with a
+    dagesh (מִשֵּׁשׁ, מִשֶּׁבַע, מִשִּׁבְעִים, מִתֵּשַׁע), and so before a letter that has a shva: the doubling stays and the shva
+    stays under it (מִשְּׁלוֹשִׁים, מִשְּׁמוֹנֶה, as the Bible points מִשְּׁנֵי and מִלְּפָנֶיךָ; the editor's correction of 2026-11-07,
+    the first version left the dagesh out). A yod with a shva takes none (מִיהוּדָה)."""
+    letter, marks, rest = _first(word)
+    if letter in GUTTURAL:
+        return 'מֵ' + word
+    if DAGESH in marks or (SHVA in marks and letter == 'י'):  # already doubled (מִתְּשַׁע), or a yod that cannot be
+        return 'מִ' + word
+    return 'מִ' + letter + ''.join(sorted(marks + DAGESH, key=unicodedata.combining)) + rest
 
 
 # Counting words with niqqud. F: the abstract count and the numeral on a tile; M: with a masculine noun.
@@ -101,11 +113,22 @@ class NumWords(dict):
             w = teens[n]
         elif n in self.TENS:
             w = self.TENS[n]
+        elif 100 < n < 1000:
+            # M10: the hundreds (feminine מֵאָה, so the construct of the feminine count: שְׁלֹשׁ מֵאוֹת); the vav joins the last part only
+            # (מָאתַיִם וְשָׁלוֹשׁ, שְׁלֹשׁ מֵאוֹת אַרְבָּעִים וְחָמֵשׁ, מֵאָה וְעֶשְׂרִים). Band C labels; the editor checks them.
+            h, rest = n // 100, n % 100
+            w = self.HUNDREDS[h]
+            if rest:
+                part = NumWords(self.f)[rest]
+                w += ' ' + (part if rest > 20 and rest % 10 else self.vav(part))
         else:
             tens, one = n - n % 10, n % 10
             w = self.TENS[tens] + ' ' + self.vav(units[one])
         self[n] = w
         return w
+
+    HUNDREDS = {1: 'מֵאָה', 2: 'מָאתַיִם', 3: 'שְׁלֹשׁ מֵאוֹת', 4: 'אַרְבַּע מֵאוֹת', 5: 'חֲמֵשׁ מֵאוֹת', 6: 'שֵׁשׁ מֵאוֹת', 7: 'שְׁבַע מֵאוֹת',
+                8: 'שְׁמוֹנֶה מֵאוֹת', 9: 'תְּשַׁע מֵאוֹת'}
 
 
 F = NumWords(True)
@@ -152,8 +175,29 @@ UNSURE = ('vo:fb.unsure', 'שְׁאֵלָה טוֹבָה! בּוֹאוּ נִר�
 
 lines = {}  # voice id -> caption: one text for every id, checked below
 
+# M10: one voice id for one text. A Band C line (an activity's own id `vo:c.<activity>.<part>`, or the celebration of a Band C
+# lesson) that says what an earlier Band C line already says takes that line's id, so the voicing makes one clip for it. The pool
+# (text to id) is a file because every unit is its own run; tools/regen_content.py empties it before the Band C units run, and the
+# first unit to say a text names its id, so the same specs always give the same ids. Lines that are shared by design (`vo:fb.`,
+# `vo:hint.`) and every Band A and Band B id are never pooled or renamed: some of them are voiced already, and a clip is found by its id.
+POOL_PATH = os.path.join(ROOT, 'content', 'voice-pool.c.json')
+CHEER_PREFIXES = ('vo:celebrate.', 'vo:core.celebrate.', 'vo:core.ceremony.')  # voices.json styleRules: said in another voice
+try:
+    pool = json.load(open(POOL_PATH, encoding='utf-8'))
+except FileNotFoundError:
+    pool = {}
 
-def say(vo, text):
+
+def pool_key(vo, text):
+    """The pool key of a text: the same text said as a celebration and as a question are two clips (two voice styles)."""
+    return ('cheer\t' if vo.startswith(CHEER_PREFIXES) else '') + text
+
+
+def say(vo, text, pooled=None):
+    """A spoken line with its caption. `pooled` (default: the id is a Band C activity's own, `vo:c.`) lets the line take the id of an
+    earlier identical Band C line."""
+    if vo.startswith('vo:c.') if pooled is None else pooled:
+        vo = pool.setdefault(pool_key(vo, text), vo)
     assert vo not in lines or lines[vo] == text, 'the line %s has two texts: %r and %r' % (vo, lines[vo], text)
     lines[vo] = text
     return {'vo': vo, 'caption': [{'t': 'he', 'v': text}]}
@@ -262,7 +306,7 @@ def representation(template, scene, answer):
         return 'pictorial' if any(is_picture(c) for c in scene['cells']) else 'symbolic'
     assert template == 'tap_answer', template
     drawn = (any(k in scene for k in ('group', 'group2', 'chart', 'picture'))
-             or any('sprite' in o or 'set' in o for o in answer.get('options', []))
+             or any('sprite' in o or 'set' in o or 'picture' in o for o in answer.get('options', []))
              or any(is_picture(c) for c in scene.get('row', [])))
     return 'pictorial' if drawn else 'symbolic'
 
@@ -277,14 +321,20 @@ def is_new_cell(cell):
 def template_version(template, scene, answer):
     """The version of the template an item needs: the oldest that has everything the item uses (the validator makes an item say
     this or more). tap_answer: 1.1 numerals and sets, 1.2 charts, 1.4 stage pictures, the number answer, five choices, the signs
-    < > ( ) and numbers to 10,000, a row of more than eight cells. spot_error: 1.0, or 1.1 for the signs and numbers of 1.4."""
+    < > ( ) and numbers to 10,000, a row of more than eight cells. spot_error: 1.0, or 1.1 for the signs and numbers of 1.4.
+    number_line: 1.1 for `tickStep` or `tolerance`. give_n: 1.1 for `frame`."""
     if template == 'spot_error':
         return '1.1' if any(is_new_cell(c) for c in scene['cells']) else '1.0'
+    if template == 'number_line':  # 1.1: ticks at every tickStep-th number, a tolerance for a line placed by estimate (M10 X5)
+        return '1.1' if 'tickStep' in scene or 'tolerance' in answer else '1.0'
+    if template == 'give_n':  # 1.1: the target is a ten-frame (M10, NUM-B-09)
+        return '1.1' if scene.get('frame') else '1.0'
     if template != 'tap_answer':
         return '1.0'
     row = scene.get('row', [])
     options = answer.get('options', [])
-    if (scene.get('picture') or answer['type'] == 'number' or len(options) > 4 or len(row) > 8
+    if (scene.get('picture') or scene.get('picture2') or any(o.get('picture') for o in options) or answer['type'] == 'number'
+            or len(options) > 4 or len(row) > 8
             or any(is_new_cell(c) for c in row) or scene.get('numeral', 0) > 100
             or any(o.get('numeral', 0) > 100 for o in options)):
         return '1.4'
@@ -402,16 +452,21 @@ def k_flash(a, ctx):
 
 
 def k_give(a, ctx):
+    """Give N. `frame`: the target is a ten-frame (give_n 1.1) and the objects sit in its cells; the item then gives its own
+    hints (`h1`, `h2`, `h3`) and may add classifiers (`classifiers`, {when: tag}) to took_all."""
     obj, n = ctx['objects'][a['obj']], a['n']
+    scene = {'background': 'asset:meadow', 'source': {'sprite': 'asset:' + a.get('sprite', a['obj']), 'count': a['source']},
+             'target': {'sprite': 'asset:' + a.get('target', 'basket_target')}}
+    if a.get('frame'):
+        scene['frame'] = True
+    classifiers = {'took_all': 'M-CNT-CARD', **a.get('classifiers', {})}
     return activity(
-        a, 'give_n', skills_of(a), 'check', 'reverse',
-        {'background': 'asset:meadow', 'source': {'sprite': 'asset:' + a.get('sprite', a['obj']), 'count': a['source']},
-         'target': {'sprite': 'asset:' + a.get('target', 'basket_target')}},
-        {'type': 'give', 'n': n, 'classifiers': [{'when': 'took_all', 'misconception': 'M-CNT-CARD'}]},
-        {'M-CNT-CARD'},
-        hints(a['id'], 'תְּנוּ לִי %s. סוֹפְרִים בִּזְמַן שֶׁלּוֹקְחִים.' % qty(n, obj),
-              'נִסְפֹּר עִם הָאֶצְבָּעוֹת: %s.' % count_words(n),
-              '%s. עוֹצְרִים כְּשֶׁמַּגִּיעִים אֶל %s. עַכְשָׁו תּוֹרְכֶם.' % (count_words(n), F[n])),
+        a, 'give_n', skills_of(a), 'check', 'reverse', scene,
+        {'type': 'give', 'n': n, 'classifiers': [{'when': w, 'misconception': t} for w, t in classifiers.items()]},
+        set(classifiers.values()),
+        hints(a['id'], a.get('h1') or 'תְּנוּ לִי %s. סוֹפְרִים בִּזְמַן שֶׁלּוֹקְחִים.' % qty(n, obj),
+              a.get('h2') or 'נִסְפֹּר עִם הָאֶצְבָּעוֹת: %s.' % count_words(n),
+              a.get('h3') or '%s. עוֹצְרִים כְּשֶׁמַּגִּיעִים אֶל %s. עַכְשָׁו תּוֹרְכֶם.' % (count_words(n), F[n])),
         'child gives exactly the number asked for, not the whole pile',
         extra={'contradicts': 'M-CNT-CARD'},
         prompt=a.get('prompt') or 'תְּנוּ לִי %s.' % qty(n, obj),
@@ -420,7 +475,7 @@ def k_give(a, ctx):
 
 def k_count_tap(a, ctx):
     obj, n = ctx['objects'][a['obj']], a['count']
-    opts, cid, tags = options(a['options'], n, near_tag(n), lambda v: {'value': v}, lambda v: F[v])
+    opts, cid, tags = options(a['options'], n, near_tag(n), lambda v: {'value': v}, lambda v: F[v], own=a.get('tags'))
     for o in opts:
         o.pop('label')
     return activity(
@@ -432,7 +487,7 @@ def k_count_tap(a, ctx):
         choice(opts, cid), tags,
         hints(a['id'], 'נוֹגְעִים %s %s, וְאוֹמְרִים מִסְפָּר אֶחָד.' % (prefix('ב', obj['one']), F[1] if obj['g'] == 'f' else M[1]),
               'בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: %s…' % count_words(3),
-              '%s. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: %s! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
+              a.get('h3') or '%s. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: %s! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
                   count_words(n), F[n], F[n]),
               shared=(None, 'ucount')),
         'child touches each one once and answers with the last number counted',
@@ -611,7 +666,11 @@ def k_pick(a, ctx):
     tags_of = a.get('tags', {})
     opts, cid, tags = [], None, set()
     for k, sp in enumerate(a['options'], start=1):
-        if sp.startswith('n:'):  # "n:4": a numeral on a tile
+        if isinstance(sp, dict):  # {'key': 'b34', 'picture': {...base_ten...}, 'label': '...'}: blocks on a tile (tap_answer 1.4, X1)
+            assert sp['picture'].get('kind') == 'base_ten' and sp.get('label'), '%s: an option picture is blocks with a label' % a['id']
+            o = {'id': 'o%d' % k, 'picture': dict(sp['picture']), 'label': sp['label']}
+            sp = sp['key']
+        elif sp.startswith('n:'):  # "n:4": a numeral on a tile
             v = int(sp[2:])
             o = {'id': 'o%d' % k, 'numeral': v, 'label': F[v]}
         elif '*' in sp:  # "ball_red*3": a set of three things as the answer
@@ -637,6 +696,10 @@ def k_pick(a, ctx):
                           'scale': g.get('scale', 1)}
     if 'numeral' in a:
         scene['numeral'] = a['numeral']
+    if 'picture' in a:
+        scene['picture'] = a['picture']
+    if 'picture2' in a:
+        scene['picture2'] = a['picture2']
     if 'row' in a:
         scene['row'] = [r if r == '?' or r.startswith(('n:', 'op:')) else 'asset:' + r for r in a['row']]
     if 'chart' in a:
@@ -645,8 +708,12 @@ def k_pick(a, ctx):
         g = a['group2']
         scene['group2'] = {'sprite': 'asset:' + g['sprite'], 'count': g.get('count', 1),
                            'arrangement': g.get('arrangement', 'line'), 'seed': g.get('seed', 8), 'scale': g.get('scale', 1)}
-    right = F[int(a['correct'][2:])] if a['correct'].startswith('n:') else this_one(ctx, a['correct'].split('*')[0])
-    gender = 'm' if a['correct'].startswith('n:') else names[a['correct'].split('*')[0]]['g']
+    pictured = {sp['key']: sp['label'] for sp in a['options'] if isinstance(sp, dict)}
+    if a['correct'] in pictured:  # blocks on the tiles: the table gives the hints and the line for the right answer
+        right, gender = pictured[a['correct']], 'm'
+    else:
+        right = F[int(a['correct'][2:])] if a['correct'].startswith('n:') else this_one(ctx, a['correct'].split('*')[0])
+        gender = 'm' if a['correct'].startswith('n:') else names[a['correct'].split('*')[0]]['g']
     # a tick is pressed, not "pressed on": the editor's `לִלְחֹץ עַל הַוִּי` (b15-hebrew.md H7a)
     tick = a['correct'] == 'tick'
     h3_default = '%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ %s.' % ('כֵּן', 'עַל הַוִּי') if tick else (
@@ -1060,7 +1127,14 @@ def k_numline(a, ctx):
              'labels': sorted(set(labels))}
     answer = {'type': 'line', 'mode': a['mode'], 'target': target, 'misconception': a.get('tag', 'M-NL-SPACE')}
     tags = {answer['misconception']}
-    if frm + to - target != target:
+    tol = a.get('tolerance', 0)
+    if a.get('tickStep'):  # X5: ticks only at every tickStep-th number (0 to 100 in tens); the line must end on a tick
+        assert (to - frm) % a['tickStep'] == 0, '%s: a line from %d to %d does not end on a tick of %d' % (a['id'], frm, to, a['tickStep'])
+        scene['tickStep'] = a['tickStep']
+    if tol:  # X5: a touch within `tolerance` of the target is right (an estimate); a place item only, narrower than the line
+        assert not jump and 0 < tol < to - frm, '%s: a tolerance is for a place item and narrower than the line' % a['id']
+        answer['tolerance'] = tol
+    if abs(frm + to - 2 * target) > 2 * tol:  # the mirror is a place of its own: outside the right region (its region too)
         answer['mirrorMisconception'] = 'M-NL-DIR'
         tags.add('M-NL-DIR')
     if jump:
@@ -1070,7 +1144,8 @@ def k_numline(a, ctx):
                                                                            count_words(target) if not jump else F[target]))
     return activity(
         a, 'number_line', skills_of(a), 'practice', 'practice',
-        scene, answer, tags, hint_set(a, h3, ('pick', 'line')), a.get('goal', 'child finds the number on the line'),
+        scene, answer, tags, hint_set(a, h3, ('pick', None if a.get('h2') else 'line')),
+        a.get('goal', 'child finds the number on the line'),
         prompt=a['prompt'], correct=a.get('correct_text') or '%s! נְחַתֶּם בַּמָּקוֹם הַנָּכוֹן.' % F[target])
 
 
@@ -1246,6 +1321,8 @@ def skill_file(s):
     }
     if s.get('core'):
         d['core'] = True
+    if s.get('setCoverage'):  # M10 E1: fresh mastery also needs every variantGroup (a fact family) answered right once
+        d['setCoverage'] = True
     return d
 
 
@@ -1262,7 +1339,7 @@ def lesson_file(l, sequence):
     return {
         'schema': 'lesson/v1', 'id': l['id'], 'review': 'needs-editor', 'revision': 1, 'band': l.get('band', 'A'),
         'title': [{'t': 'he', 'v': l['title']}], 'skills': l['skills'], 'items': l['items'],
-        'estimatedMinutes': l.get('minutes', 4), 'sequence': sequence, 'celebration': say('vo:celebrate.%s' % l['id'].replace('-', '_'), l['done']),
+        'estimatedMinutes': l.get('minutes', 4), 'sequence': sequence, 'celebration': say('vo:celebrate.%s' % l['id'].replace('-', '_'), l['done'], pooled=l.get('band', 'A') == 'C'),
     }
 
 
@@ -1345,6 +1422,10 @@ def main(path):
             have.add(aid)
     json.dump(pack, open(pack_path, 'w', encoding='utf-8', newline='\n'), ensure_ascii=False, indent=2)
     open(pack_path, 'a', encoding='utf-8', newline='\n').write('\n')
+    if spec.get('band') == 'C':
+        with open(POOL_PATH, 'w', encoding='utf-8', newline='\n') as fh:
+            json.dump(dict(sorted(pool.items())), fh, ensure_ascii=False, indent=1)
+            fh.write('\n')
     print('wrote', made, 'and', len(lines), 'voice lines')
 
 

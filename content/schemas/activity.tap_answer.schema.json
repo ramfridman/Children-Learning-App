@@ -352,6 +352,176 @@
               "minimum": 0,
               "maximum": 9
             },
+            "litRods": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9
+            },
+            "crossedRods": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9
+            },
+            "rows": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12
+            },
+            "columns": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12
+            },
+            "lit": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "minItems": 0,
+              "maxItems": 100
+            },
+            "blank": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "minItems": 0,
+              "maxItems": 100
+            },
+            "hour": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12
+            },
+            "minute": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 59
+            },
+            "digital": {
+              "type": "boolean"
+            },
+            "length": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30
+            },
+            "from": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10
+            },
+            "op": {
+              "type": "string",
+              "enum": [
+                "+",
+                "-"
+              ]
+            },
+            "top": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5,
+              "pattern": "^(?:0|[1-9][0-9]{0,3}|10000)$"
+            },
+            "bottom": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5,
+              "pattern": "^(?:0|[1-9][0-9]{0,3}|10000)$"
+            },
+            "marks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "place": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 4
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "carry",
+                      "borrow"
+                    ]
+                  }
+                },
+                "required": [
+                  "place",
+                  "kind"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 0,
+              "maxItems": 5
+            },
+            "parts": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 12
+            },
+            "shaded": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 12
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        "picture2": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "base_ten",
+                "array",
+                "hundred_chart",
+                "clock",
+                "ruler",
+                "column",
+                "fraction"
+              ]
+            },
+            "thousands": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9
+            },
+            "hundreds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9
+            },
+            "tens": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9
+            },
+            "ones": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9
+            },
+            "litRods": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9
+            },
+            "crossedRods": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9
+            },
             "rows": {
               "type": "integer",
               "minimum": 1,
@@ -620,6 +790,166 @@
                 "required": [
                   "sprite",
                   "count"
+                ],
+                "additionalProperties": false
+              },
+              "picture": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "base_ten",
+                      "array",
+                      "hundred_chart",
+                      "clock",
+                      "ruler",
+                      "column",
+                      "fraction"
+                    ]
+                  },
+                  "thousands": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9
+                  },
+                  "hundreds": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9
+                  },
+                  "tens": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9
+                  },
+                  "ones": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9
+                  },
+                  "litRods": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9
+                  },
+                  "crossedRods": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 12
+                  },
+                  "columns": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 12
+                  },
+                  "lit": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 100
+                    },
+                    "minItems": 0,
+                    "maxItems": 100
+                  },
+                  "blank": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 100
+                    },
+                    "minItems": 0,
+                    "maxItems": 100
+                  },
+                  "hour": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 12
+                  },
+                  "minute": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 59
+                  },
+                  "digital": {
+                    "type": "boolean"
+                  },
+                  "length": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 30
+                  },
+                  "from": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10
+                  },
+                  "op": {
+                    "type": "string",
+                    "enum": [
+                      "+",
+                      "-"
+                    ]
+                  },
+                  "top": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 5,
+                    "pattern": "^(?:0|[1-9][0-9]{0,3}|10000)$"
+                  },
+                  "bottom": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 5,
+                    "pattern": "^(?:0|[1-9][0-9]{0,3}|10000)$"
+                  },
+                  "marks": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "place": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 4
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "carry",
+                            "borrow"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "place",
+                        "kind"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "minItems": 0,
+                    "maxItems": 5
+                  },
+                  "parts": {
+                    "type": "integer",
+                    "minimum": 2,
+                    "maximum": 12
+                  },
+                  "shaded": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 12
+                  }
+                },
+                "required": [
+                  "kind"
                 ],
                 "additionalProperties": false
               },

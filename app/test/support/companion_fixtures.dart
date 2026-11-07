@@ -20,8 +20,10 @@ Future<Character> loadNitzi() async => _nitzi ??= Character.fromPack(
   ),
 );
 
-/// Every voice line the starter pack asks for, and the greeting of the map.
-List<String> voiceLinesOfStarter() {
+/// The voice lines of the starter pack's [bands] (Band A by default) and the greeting of the map. The tests of a companion
+/// play the older lessons; a voice pack of every line of the starter pack (two files for a line) would pass the zip limit
+/// as Band C grows. A test that needs a line of Band B or C names that band.
+List<String> voiceLinesOfStarter({Set<String> bands = const <String>{'A'}}) {
   final Set<String> ids = <String>{
     'core.greeting.hello',
     'core.listen.mixed',
@@ -31,7 +33,9 @@ List<String> voiceLinesOfStarter() {
   };
   for (final FileSystemEntity e in Directory('../content/starter').listSync()) {
     if (e is! File || !e.path.endsWith('.json')) continue;
-    for (final RegExpMatch m in RegExp(r'"vo": "vo:([^"]+)"').allMatches(e.readAsStringSync())) {
+    final String text = e.readAsStringSync();
+    if (!bands.contains(RegExp(r'"band": "(\w)"').firstMatch(text)?[1])) continue;
+    for (final RegExpMatch m in RegExp(r'"vo": "vo:([^"]+)"').allMatches(text)) {
       ids.add(m.group(1)!);
     }
   }

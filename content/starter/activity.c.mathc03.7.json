@@ -1,0 +1,190 @@
+{
+  "schema": "activity/v1",
+  "id": "c.mathc03.7",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.4",
+  "domain": "math",
+  "band": "C",
+  "skills": [
+    {
+      "id": "MATH-C-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "symbolic",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.79
+  },
+  "prompt": {
+    "vo": "vo:c.mathb04.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה זֶה?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "row": [
+      "n:80",
+      "op:-",
+      "n:20",
+      "op:=",
+      "?"
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 6,
+        "label": "שֵׁשׁ",
+        "misconception": "M-PV-FACE"
+      },
+      {
+        "id": "o2",
+        "numeral": 600,
+        "label": "שֵׁשׁ מֵאוֹת",
+        "misconception": "M-PV-ZERO"
+      },
+      {
+        "id": "o3",
+        "numeral": 60,
+        "label": "שִׁשִּׁים"
+      },
+      {
+        "id": "o4",
+        "numeral": 100,
+        "label": "מֵאָה",
+        "misconception": "M-OP-SWAP"
+      }
+    ],
+    "correct": "o3",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.mathc03.7.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שִׁשִּׁים! שְׁמוֹנִים פָּחוֹת עֶשְׂרִים שָׁוֶה שִׁשִּׁים."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-OP-SWAP",
+        "vo": "vo:fb.op_swap",
+        "caption": [
+          {
+            "t": "he",
+            "v": "רֶגַע, מוֹסִיפִים כָּאן אוֹ מוֹרִידִים? בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַסִּימָן."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PV-FACE",
+        "vo": "vo:fb.pv_face",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַסִּפְרָה הַזֹּאת עוֹמֶדֶת בַּמָּקוֹם שֶׁל הָעֲשָׂרוֹת. בּוֹאוּ נִבְדֹּק כַּמָּה עֲשָׂרוֹת יֵשׁ."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PV-ZERO",
+        "vo": "vo:fb.pv_zero",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּמִסְפָּר עִם עֲשָׂרוֹת וִיחִידוֹת יֵשׁ רַק שְׁתֵּי סְפָרוֹת. בּוֹאוּ נִבְדֹּק אֶת הַמָּקוֹם שֶׁל כׇּל סִפְרָה."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.mathc03.7.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חוֹשְׁבִים בַּעֲשָׂרוֹת: שְׁמוֹנֶה עֲשָׂרוֹת פָּחוֹת שְׁתֵּי עֲשָׂרוֹת — כְּמוֹ שְׁמוֹנֶה פָּחוֹת שְׁתַּיִם."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.mathc03.4.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שֵׁשׁ עֲשָׂרוֹת הֵן שִׁשִּׁים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שִׁשִּׁים."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כַּמָּה זֶה?"
+  }
+}

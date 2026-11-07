@@ -1,4 +1,5 @@
 import '../engine/course.dart';
+import 'pack_limits.dart';
 import 'schema.dart';
 
 // The schemas of a content pack. Ids, tags and references use fixed shapes so that a file can never
@@ -63,13 +64,15 @@ const Map<String, String> supportedTemplates = <String, String>{
   'puppet_talk': '1.0',
   'sound_boxes': '1.0',
   'count_tap': '1.1',
-  'give_n': '1.0',
+  // 1.1: `scene.frame`, the target as a ten-frame (M10).
+  'give_n': '1.1',
   'flash': '1.0',
   'sort_drag': '1.1',
   'build_pattern': '1.1',
   'robot_path': '1.0',
   'shape_builder': '1.0',
-  'number_line': '1.0',
+  // 1.1: `tickStep` and a `tolerance` for a line placed by estimate (M10, X5).
+  'number_line': '1.1',
   'balance': '1.0',
   // 1.1: the language fields of L5-1 (text cells, the model picture) and, for M10, the signs `<` `>` `(` `)` and numbers to 10,000 in a cell.
   'spot_error': '1.1',
@@ -214,7 +217,7 @@ const SArray _fileList = SArray(
     'size': SField(SInt(min: 0, max: 16 * 1024 * 1024)),
   }),
   minItems: 1,
-  maxItems: 8000,
+  maxItems: PackLimits.files,
   uniqueKey: 'name',
 );
 
@@ -225,7 +228,7 @@ const SArray _assetFiles = SArray(
     'id': SField(SString(minLength: 1, maxLength: 40, pattern: Patterns.assetId)),
     'file': SField(_fileRef),
   }),
-  maxItems: 2000,
+  maxItems: PackLimits.assets,
   uniqueKey: 'id',
 );
 
@@ -234,7 +237,7 @@ const SArray _voFiles = SArray(
     'id': SField(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId)),
     'file': SField(_fileRef),
   }),
-  maxItems: 4000,
+  maxItems: PackLimits.voiceLines,
   uniqueKey: 'id',
 );
 
@@ -256,17 +259,18 @@ const SObject manifestSchema = SObject(<String, SField>{
   'files': SField(_fileList),
   'assets': SField(_assetFiles),
   'vo': SField(_voFiles),
-  'voPending': SField(SArray(_vo, maxItems: 4000)),
+  // M10: Band C adds lines that wait for their voice (B-45, text only now).
+  'voPending': SField(SArray(_vo, maxItems: PackLimits.voiceLines)),
   'entries': SField(
     SObject(<String, SField>{
-      'activities': SField(SArray(_id, maxItems: 1500)),
-      'lessons': SField(SArray(_lessonId, maxItems: 400)),
-      'skills': SField(SArray(_skill, maxItems: 600)),
-      'misconceptions': SField(SArray(_tag, maxItems: 400)),
+      'activities': SField(SArray(_id, maxItems: PackLimits.activities)),
+      'lessons': SField(SArray(_lessonId, maxItems: PackLimits.lessons)),
+      'skills': SField(SArray(_skill, maxItems: PackLimits.skills)),
+      'misconceptions': SField(SArray(_tag, maxItems: PackLimits.misconceptions)),
       // Characters and mouth cues (M4); absent in packs that have none.
       'characters': SField(SArray(_characterId, maxItems: 20), required: false),
       'cues': SField(
-        SArray(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId), maxItems: 4000),
+        SArray(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId), maxItems: PackLimits.voiceLines),
         required: false,
       ),
       // The gates of a course (docs/languages/frame.md section 3.3.6); absent in packs that have none.
@@ -645,6 +649,10 @@ const SObject _stagePicture = SObject(<String, SField>{
   'hundreds': SField(SInt(min: 0, max: 9), required: false),
   'tens': SField(SInt(min: 0, max: 9), required: false),
   'ones': SField(SInt(min: 0, max: 9), required: false),
+  // base_ten, a question about the rods themselves: how many of the tens rods, counted from the left, are lit ("how much is this rod worth?"),
+  // and how many, counted from the right, are crossed out (taken away: 70 - 40).
+  'litRods': SField(SInt(min: 0, max: 9), required: false),
+  'crossedRods': SField(SInt(min: 0, max: 9), required: false),
   // array: rows by columns of objects.
   'rows': SField(SInt(min: 1, max: 12), required: false),
   'columns': SField(SInt(min: 1, max: 12), required: false),
@@ -926,6 +934,8 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'numeral': SField(SInt(min: 0, max: 10000), required: false),
           // A picture of a number or a measure, drawn on the stage (1.4): blocks, an array, a hundred chart, a clock, a ruler, a column sum.
           'picture': SField(_stagePicture, required: false),
+          // A second picture beside the first, as `group2` is beside `group` (two towers to compare, `40 + 30` as rods): blocks only.
+          'picture2': SField(_stagePicture, required: false),
           // Picture answers on tiles below the stage instead of on it (1.1): when the pictures are the whole point.
           'optionsOnTiles': SField(SBool(), required: false),
           // A written word, unit or letter on the stage that the child reads (1.4, LS01 d): the clip is what "read it to me" plays.
@@ -976,6 +986,8 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
             'sprite': const SField(_asset, required: false),
             'numeral': const SField(SInt(min: 0, max: 10000), required: false),
             'set': const SField(_spriteSet, required: false),
+            // Blocks drawn on the tile (1.4): "which one is thirty-four?" with a picture of rods and cubes for each choice. Blocks only.
+            'picture': const SField(_stagePicture, required: false),
             'text': const SField(SString(minLength: 1, maxLength: _targetTextMax), required: false),
             'clip': _optionClip,
             // The word shown under the picture once the answer is accepted (LS01 g), in the course's font.
@@ -1166,6 +1178,9 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'hops': SField(SArray(SInt(min: -20, max: 20), maxItems: 6), required: false),
           // The numbers that carry a written numeral; the other ticks are plain marks.
           'labels': SField(SArray(SInt(min: 0, max: 100), maxItems: 21)),
+          // Ticks only at every `tickStep`th number from `from` (a line of 0 to 100 with ticks of 10); the child may still touch any
+          // number between them. Missing is 1: a tick for every number.
+          'tickStep': SField(SInt(min: 1, max: 25), required: false),
         }),
       ),
       'answer': const SField(
@@ -1173,6 +1188,8 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'type': SField(SConst('line')),
           'mode': SField(SEnum(<String>['place', 'jump'])),
           'target': SField(SInt(min: 0, max: 100)),
+          // `place` only (M10, X5): a touch within this many of the target is right ("about 70", an error of 8 or less). Missing is 0.
+          'tolerance': SField(SInt(min: 0, max: 20), required: false),
           'misconception': SField(_tag, required: false),
           // The tag for a child who runs the line from right to left (the mirror of the right answer).
           'mirrorMisconception': SField(_tag, required: false),
@@ -1318,6 +1335,9 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
             SObject(<String, SField>{'sprite': SField(_asset), 'count': SField(SInt(min: 1, max: 20))}),
           ),
           'target': SField(_sprite),
+          // The target is a ten-frame (two for more than ten) instead of the picture: the objects given sit in its cells, row by row
+          // from the left (M10, NUM-B-09: fill the ten-frame). The `target` picture is then only the frame's name for the pack.
+          'frame': SField(SBool(), required: false),
         }),
       ),
       'answer': const SField(

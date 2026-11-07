@@ -1,0 +1,180 @@
+{
+  "schema": "activity/v1",
+  "id": "c.mathb04.2",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "math",
+  "band": "B",
+  "skills": [
+    {
+      "id": "MATH-B-04",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "symbolic",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.44
+  },
+  "prompt": {
+    "vo": "vo:c.mathb04.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה זֶה?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "row": [
+      "n:3",
+      "op:+",
+      "n:8",
+      "op:=",
+      "?"
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 10,
+        "label": "עֶשֶׂר",
+        "misconception": "M-CNT-DOUBLE"
+      },
+      {
+        "id": "o2",
+        "numeral": 11,
+        "label": "אַחַת עֶשְׂרֵה"
+      },
+      {
+        "id": "o3",
+        "numeral": 8,
+        "label": "שְׁמוֹנֶה",
+        "misconception": "M-CNT-CARD"
+      },
+      {
+        "id": "o4",
+        "numeral": 12,
+        "label": "שְׁתֵּים עֶשְׂרֵה",
+        "misconception": "M-CNT-DOUBLE"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.mathb04.2.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַחַת עֶשְׂרֵה! שָׁלוֹשׁ וְעוֹד שְׁמוֹנֶה שָׁוֶה אַחַת עֶשְׂרֵה."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לָקַחְנוּ אֶת כֻּלָּם. בּוֹאוּ נִסְפֹּר וְנַעֲצֹר בַּמִּסְפָּר שֶׁצָּרִיךְ."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.count_on_start",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כְּשֶׁמַּמְשִׁיכִים לִסְפֹּר, לֹא סוֹפְרִים שׁוּב אֶת הַמִּסְפָּר שֶׁמַּתְחִילִים מִמֶּנּוּ. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "show_fingers",
+      "vo": "vo:c.mathb04.2.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "לֹא צָרִיךְ לִסְפֹּר הַכֹּל. מַתְחִילִים מֵהַמִּסְפָּר הַגָּדוֹל, שְׁמוֹנֶה, וּמוֹסִיפִים עוֹד שָׁלוֹשׁ עַל הָאֶצְבָּעוֹת."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.mathb04.2.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁמוֹנֶה… תֵּשַׁע, עֶשֶׂר, אַחַת עֶשְׂרֵה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַחַת עֶשְׂרֵה."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כַּמָּה זֶה?"
+  }
+}

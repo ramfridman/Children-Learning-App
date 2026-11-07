@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-PV-ZERO",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-C-02",
+    "NUM-C-03",
+    "MATH-C-03"
+  ],
+  "parentText": "הילד כותב מספר כמו שהוא שומע אותו, חלק אחרי חלק (עשרים ושלוש נכתב 203), או מוסיף ומשמיט אפסים (70 נכתב 7 או 700).",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לכתוב יחד על פתקים: פתק של עשרים ופתק של שלוש, ולהניח את פתק השלוש על האפס של העשרים. כך רואים שהמספר עשרים ושלוש כתוב בשתי ספרות."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "symbolic"
+  ]
+}

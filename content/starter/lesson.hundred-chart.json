@@ -1,0 +1,39 @@
+{
+  "schema": "lesson/v1",
+  "id": "hundred-chart",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "לוּחַ הַמֵּאָה"
+    }
+  ],
+  "skills": [
+    "NUM-C-09",
+    "NUM-C-01"
+  ],
+  "items": [
+    "c.numc09.13",
+    "c.numc09.14",
+    "c.numc09.15",
+    "c.numc09.16",
+    "c.numc09.17",
+    "c.numc01.13",
+    "c.numc01.14",
+    "c.numc01.15",
+    "c.numc01.16"
+  ],
+  "estimatedMinutes": 6,
+  "sequence": 115,
+  "celebration": {
+    "vo": "vo:celebrate.hundred_chart",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! מְצָאתֶם אֶת הַמִּשְׁבָּצוֹת."
+      }
+    ]
+  }
+}

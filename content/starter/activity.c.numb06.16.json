@@ -1,0 +1,193 @@
+{
+  "schema": "activity/v1",
+  "id": "c.numb06.16",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "count_tap",
+  "templateVersion": "1.0",
+  "domain": "numbers",
+  "band": "B",
+  "skills": [
+    {
+      "id": "NUM-B-06",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "transfer",
+  "representation": "concrete",
+  "variantGroup": "count-and-read",
+  "difficulty": {
+    "authored": 0.5
+  },
+  "prompt": {
+    "vo": "vo:c.numb06.15.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "objects": {
+      "sprite": "asset:fish",
+      "litSprite": "asset:fish_lit",
+      "count": 9,
+      "arrangement": "line",
+      "onTap": "glow",
+      "seed": 11
+    },
+    "target": {
+      "sprite": "asset:basket_target"
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "value": 8,
+        "misconception": "M-CNT-SKIP"
+      },
+      {
+        "id": "o2",
+        "value": 6,
+        "misconception": "M-NUM-REV"
+      },
+      {
+        "id": "o3",
+        "value": 9
+      }
+    ],
+    "correct": "o3",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": true,
+  "answerPrompt": {
+    "vo": "vo:c.numb06.16.how_many",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה דָּגִים?"
+      }
+    ]
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.numb06.16.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "תֵּשַׁע! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-SKIP",
+        "vo": "vo:fb.skip_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-NUM-REV",
+        "vo": "vo:fb.num_rev_digit",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ מִסְפָּרִים שֶׁנִּרְאִים דּוֹמִים כְּשֶׁהוֹפְכִים אוֹתָם. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַצּוּרָה."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:c.numb06.16.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נוֹגְעִים בְּדָג אֶחָד, וְאוֹמְרִים מִסְפָּר אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "show_fingers",
+      "vo": "vo:hint.ucount.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ…"
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.numb06.16.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה, תֵּשַׁע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל תֵּשַׁע."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child touches each one once and answers with the last number counted",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים."
+  },
+  "traceClassifiers": [
+    {
+      "when": "same_object_tapped_twice",
+      "misconception": "M-CNT-DOUBLE"
+    },
+    {
+      "when": "object_never_tapped",
+      "misconception": "M-CNT-SKIP"
+    }
+  ]
+}

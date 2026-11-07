@@ -1,0 +1,161 @@
+{
+  "schema": "activity/v1",
+  "id": "c.numc06.11",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "number_line",
+  "templateVersion": "1.0",
+  "domain": "numbers",
+  "band": "C",
+  "skills": [
+    {
+      "id": "NUM-C-06",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "predict",
+  "representation": "pictorial",
+  "variantGroup": "numline",
+  "difficulty": {
+    "authored": 0.9
+  },
+  "prompt": {
+    "vo": "vo:c.numc06.11.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל שְׁלוֹשִׁים וְחָמֵשׁ וְקוֹפֶצֶת שִׁשָּׁה צְעָדִים קָדִימָה. עַל אֵיזֶה מִסְפָּר הִיא תִּנְחַת?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "from": 30,
+    "to": 50,
+    "markerSprite": "asset:frog",
+    "labels": [
+      30,
+      35,
+      40,
+      50
+    ],
+    "start": 35,
+    "hops": [
+      6
+    ]
+  },
+  "answer": {
+    "type": "line",
+    "mode": "jump",
+    "target": 41,
+    "misconception": "M-NL-SPACE",
+    "mirrorMisconception": "M-NL-DIR"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.numc01.11.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַרְבָּעִים וְאַחַת! הַצְּפַרְדֵּעַ נָחֲתָה עַל אַרְבָּעִים וְאַחַת."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-NL-DIR",
+        "vo": "vo:fb.nl_dir",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמִּסְפָּרִים הַקְּטַנִּים בַּצַּד הַשְּׂמָאלִי, וְהֵם גְּדֵלִים לְכִוּוּן הַחֵץ."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-NL-SPACE",
+        "vo": "vo:fb.nl_space",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כׇּל הַקְּפִיצוֹת בְּאוֹתוֹ אֹרֶךְ. בּוֹאוּ נִקְפֹּץ יַחַד וְנִסְפֹּר."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.line.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.numc06.11.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "קוֹפְצִים: שְׁלוֹשִׁים וְשֵׁשׁ, שְׁלוֹשִׁים וְשֶׁבַע, שְׁלוֹשִׁים וּשְׁמוֹנֶה, שְׁלוֹשִׁים וְתֵשַׁע, אַרְבָּעִים, אַרְבָּעִים וְאַחַת. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child finds the number on the line",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל שְׁלוֹשִׁים וְחָמֵשׁ וְקוֹפֶצֶת שִׁשָּׁה צְעָדִים קָדִימָה. עַל אֵיזֶה מִסְפָּר הִיא תִּנְחַת?"
+  }
+}

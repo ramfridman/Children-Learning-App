@@ -78,7 +78,7 @@ FEM_PL = {'חִפּוּשִׁיּוֹת', 'צִפֳּרִים', 'צִפּוֹר�
           'אֲבָנִים', 'נוֹצוֹת', 'מַדְבֵּקוֹת', 'תְּמוּנוֹת', 'דְּרָכִים', 'אֲגוֹרוֹת', 'קְבוּצוֹת', 'נְקֻדּוֹת', 'שָׁעוֹת'}
 MASC_PL = {'תַּפּוּחִים', 'דָּגִים', 'כּוֹכָבִים', 'בַּרְוָזִים', 'צְעָדִים', 'מִגְדָּלִים', 'מִסְפָּרִים', 'מַטְבְּעוֹת', 'מַקְלוֹת',
            'כַּדּוּרִים', 'בָּלוֹנִים', 'פְּרָחִים', 'דְּבָרִים', 'פַּרְפָּרִים', 'צְדָדִים', 'שְׁקָלִים', 'גַּרְבַּיִם', 'עִגּוּלִים',
-           'רִבּוּעִים', 'מְשֻׁלָּשִׁים', 'חֲלָקִים', 'חֲתוּלִים', 'כְּלָבִים'}
+           'רִבּוּעִים', 'מְשֻׁלָּשִׁים', 'חֲלָקִים', 'חֲתוּלִים', 'כְּלָבִים', 'מוֹטוֹת'}
 FEM_SG, MASC_SG = set(), set()
 for _o in OBJECTS.values():
     (FEM_PL if _o['g'] == 'f' else MASC_PL).add(_o['many'])
@@ -350,6 +350,8 @@ def grammar(text, groups=()):
     # 3. שְׁתַּיִם / שְׁנַיִם directly before a noun: the construct form (שְׁתֵּי / שְׁנֵי)
     for m in list(re.finditer(r'(שְׁתַּיִם|שְׁנַיִם)\s+([֐-׿]+)', t)):
         nxt = m.group(2)
+        if t[max(0, m.start(1) - 2):m.start(1)] == 'וּ':  # the end of a compound number keeps its form: חמישים ושניים שקלים (M10 C1)
+            continue
         if nxt in FEM_PL | MASC_PL or unprefixed(nxt) in FEM_PL | MASC_PL:
             new = 'שְׁתֵּי' if m.group(1) == 'שְׁתַּיִם' else 'שְׁנֵי'
             t = t[:m.start(1)] + new + t[m.end(1):]
@@ -442,6 +444,7 @@ Q8_NOUN = 'number (owner Q8, 2026-10-29): never a masculine number without its n
 
 
 ONE_MORE = {'עוֹד', 'קְחוּ'}
+TEN_AS_NOUN_NEXT = {canon(x) for x in ('חֲדָשָׁה', 'מַגִּיעָה', 'מַתְחִילָה')}
 FEM_NUM = {w for _i in range(2, 21) for w in F[_i].split()} - {'עֶשְׂרֵה'}
 
 
@@ -470,6 +473,8 @@ def numbers_alone(t):
         # "עוֹד אֶחָד", "קְחוּ אֶחָד", "אֶחָד פָּחוֹת" in a sentence of numbers ("שְׁתֵּים עֶשְׂרֵה! עוֹד אֶחָד.") is a number;
         # alone ("אֶחָד יוֹתֵר, אֶחָד פָּחוֹת", "עוֹד אֶחָד הָלַךְ") it stays (owner Q12, 2026-10-29)
         one_num = w == 'אֶחָד' and (pw in ONE_MORE or nw in ('פָּחוֹת', 'יוֹתֵר')) and numeric(t, m)
+        if w == 'עֲשָׂרָה' and (canon(nw or '') in TEN_AS_NOUN_NEXT or pw == 'כׇּל'):
+            continue  # "a ten" (a group of ten, feminine): כׇּל עֲשָׂרָה, עֲשָׂרָה חֲדָשָׁה (M10 C1; "one ten" in tens-and-ones is אֶחָד עֲשָׂרוֹת, owner 2026-11-06)
         if nw and nw not in NOT_A_NOUN and not one_num:
             if nw in MASC_PL or nw == 'עָשָׂר' or w == 'אֶחָד':
                 continue  # before its noun, or "אֶחָד" before anything that is not a sum word
@@ -495,6 +500,7 @@ KTIV = {  # the plain form that the rules give -> the full spelling (only what t
     'עכשו': 'עכשיו', 'ששה': 'שישה', 'ששי': 'שישי', 'חמשה': 'חמישה', 'חמשים': 'חמישים', 'שלשים': 'שלושים',
     'תבה': 'תיבה', 'שתים': 'שתיים', 'שנים': 'שניים', 'ידים': 'ידיים', 'המאזנים': 'המאזניים', 'צהרים': 'צהריים',
     'ואו': 'וואו', 'הממ': 'המממ', 'קוביה': 'קובייה', 'האזניים': 'האוזניים', 'אזניים': 'אוזניים',
+    'נדמין': 'נדמיין', 'מישם': 'משם',
     'התכנית': 'התוכנית', 'תכנית': 'תוכנית', 'כסא': 'כיסא', 'צוהריים': 'צהריים', 'צהוריים': 'צהריים',
     'מחווג': 'מחוג', 'מחווגים': 'מחוגים', 'חייה': 'חיה', 'חייות': 'חיות',
     'מיבשים': 'מייבשים', 'שבקשו': 'שביקשו', 'כפים': 'כפיים',
@@ -505,16 +511,22 @@ KTIV_NO_PREFIX = {'ואו', 'הממ', 'שנים', 'שתים'}  # never looked up
 NO_YOD = set()
 YES_YOD_M = {'מילה', 'מילים', 'מידה', 'מיטה', 'מילון'}
 WATER_SKY = {p + w for p in ('', 'ב', 'ה', 'ל', 'ו', 'מ', 'וה', 'מה', 'וב') for w in ('מים', 'שמים')}
-NUMBER_PREFIX = ('וּבִ', 'וּבְ', 'וּלְ', 'וּמִ', 'וְ', 'וּ', 'וַ', 'לְ', 'לַ', 'לִ', 'בְּ', 'בַּ', 'בִּ', 'מִ', 'מֵ', 'שֶׁ', 'כְּ', 'כִּ', 'הַ')
+NUMBER_PREFIX = ('וּבִ', 'וּבַ', 'וּבְ', 'וּלְ', 'וּמִ', 'וּמֵ', 'וְ', 'וּ', 'וַ', 'לְ', 'לַ', 'לִ', 'בְּ', 'בַּ', 'בִּ', 'מִ', 'מֵ', 'שֶׁ', 'כְּ', 'כִּ', 'הַ', 'הָ')
+
+
+_ND = lambda w: w.replace(DAGESH, '')  # a dagesh never tells one number word from another (וְתֵשַׁע, מִשָּׁלוֹשׁ, בְּתִשְׁעִים)
+NUM_WORDS_ND = {_ND(w) for w in NUM_WORDS}
+NUMBER_PREFIX_ND = tuple(_ND(p) for p in NUMBER_PREFIX)
 
 
 def is_number_token(tok):
     if tok in NUM_WORDS:
         return True
-    for p in NUMBER_PREFIX:
-        if tok.startswith(p) and tok[len(p):] in NUM_WORDS:
+    nd = _ND(tok)
+    for p in NUMBER_PREFIX_ND:
+        if nd.startswith(p) and nd[len(p):] in NUM_WORDS_ND:
             return True
-    return False
+    return nd in NUM_WORDS_ND
 
 
 def hiriq_yod(cl, i):
@@ -552,6 +564,7 @@ def ktiv_token(tok):
         elif L == 'י' and i > 0 and DAGESH in mk and HIRIQ not in mk and not (
                 nxt and nxt[0] == 'ו' and (set(nxt[1]) & {HOLAM, DAGESH})) and not (
                 i == 1 and cl[0][0] in 'הבלכ' and set(cl[0][1]) & {'ַ', 'ָ'}) and not (
+                i == 2 and cl[0][0] == 'ו' and cl[1][0] in 'הבלכ' and set(cl[1][1]) & {'ַ', 'ָ'}) and not (
                 i == 1 and cl[0][0] == 'ש' and 'ֶ' in cl[0][1]) and not (set(cl[i - 1][1]) & {QUBUTS, HOLAM}):
             out.append('יי')  # a doubled consonant yod: שַׁיָּךְ → שייך, מְצַיְּרִים → מציירים, קֻבִּיָּה → קובייה
         else:
@@ -814,6 +827,32 @@ PENDING = [
     # Decided by the owner on 2026-10-29 and so no longer here (hebrew-notes.md D14): nitziHomeWelcome(NoName),
     # nitziHomeBottleDone, homeBubble, homeBubbleNoName (ROW_RULES, text-ready) and nitziHomeHi (OWNER_APPROVED).
 ]
+# A row that is NOT in the last table has not been read by the editor, whatever its group says: it stays `proposed` with the comment
+# below until a READ entry covers it (this is the guard the M10 C1 review added: before it, REVIEWED made every new row of a
+# reviewed group `text-ready` on the first run, unread). A READ entry is written only after the editor has read the texts it names:
+# (group digit, regex on the id, regex on the source, the comment, optional regex on the text).
+UNREAD = 'NOT READ: new since the last table; the editor has not read it yet (no READ entry in tools/hebrew_voice_review.py covers it).'
+C1 = ('M10 batch C1 (docs/agents/hebrew-notes.md section 10): read by the editor on 2026-11-06, every distinct text (grammar, nikud, '
+      'number and gender agreement, plural address, = as שָׁוֶה, < and > as גָּדוֹל מִ / קָטָן מִ, age 6 to 8). Draft of the math-teacher; waits for the owner.')
+_C1_UNITS = ('blocks-tens-and-ones|compare-to-100|count-and-compare-again|count-on-big|count-to-100|fact-families|facts-to-18-again|'
+             'facts-to-18-more|facts-to-18|hundred-chart|line-to-100|read-numerals-more|read-numerals|read-to-100|ten-frame-glance|'
+             'ten-frame-more|ten-more-ten-less|tens-and-ones-more|tens-and-ones|type-the-answer|whole-tens-more|whole-tens|write-numbers|compare-to-100-more|line-to-100-more|fact-families-more')
+_C1_SKILLS = 'MATH-B-04|MATH-C-01|MATH-C-02|MATH-C-03|NUM-B-06|NUM-B-09|NUM-C-01|NUM-C-02|NUM-C-03|NUM-C-04|NUM-C-06|NUM-C-09'
+_C1_TAGS = 'M-HC-ROW|M-OP-SWAP|M-PV-FACE|M-PV-ZERO|M-SIGN-DIR|M-SUB-SMALLBIG|M-SUB-ORDER'
+# A row that is new in a table run (its text is not in the last table) and is covered by a READ entry gets READ_NEW in place of the day of
+# the first reading, because the editor read it in the pass that made the row: change this when a new pass is done (notes 11.8).
+READ_OLD_DAY = '2026-11-06'
+READ_NEW = "2026-11-07 (the 35 C1 items of commit 98f57707, blocks, keypad, pay and the middle of two marks; hebrew-notes.md section 11.9)"
+READ = [
+    ('1', r'^keypad(Delete|Done)Semantics$', r'he\.dart$', 'M10 C1 keypad (read by the editor on 2026-11-07): the screen-reader labels of the number keypad, plain adult text '
+     '(an infinitive for the key that deletes a digit, "זה המספר" for the key that sends the number); correct as written.'),
+    ('3', r'', r'^activity\.c\.', C1),
+    ('3', r'', r'^(lesson\.(%s)|skill\.(%s)|misconception\.(%s))\.json$' % (_C1_UNITS, _C1_SKILLS, _C1_TAGS), C1),
+    # Band B rows whose text changed because a shared helper or a shared tag line was corrected for C1 (from_: מֵ before a guttural and
+    # the dagesh after מִ; "a new ten"; "the hops are the same length")
+    ('3', r'^(hints\.2|feedback\.incorrect)', r'^activity\.b\.', C1 + ' This Band B row changed with the shared helper `from_` or the shared tag line.',
+     r'^(מַתְחִילִים (מִ|מֵ)\S+ וְקוֹפְצִים|כׇּל הַקְּפִיצוֹת בְּאוֹתוֹ אֹרֶךְ\.|אַחֲרֵי הַתֵּשַׁע מַתְחִילָה עֲשָׂרָה חֲדָשָׁה\.)'),
+]
 # Texts the editor is not sure of, or drafts the owner must pick: (regex on the original text, the comment). The row stays
 # proposed for the owner. (Q2-Q8, Q11, Q12 were decided by the owner on 2026-10-29: ROW_RULES, SUBS, MANUAL, OWNER_APPROVED.)
 DOUBT = [
@@ -874,6 +913,27 @@ OWNER_APPROVED = [
     (r'he\.dart$', r'^בּוֹאוּ נְשַׂחֵק בְּמִלִּים\.$',
      'L0 (island-texts.md section 6, question 2): the owner approved "with words" for the Hebrew stop (owner-approved 2026-11-03).',
      r'^adventureLangHebrew$'),
+    # The owner's decisions of 2026-11-06 (in chat) for M10 batch C1; docs/agents/hebrew-notes.md section 11.5.
+    # (1) V1 for the M-NL-DIR line: yes. The source now has `שְּׂמָאלִי` (the rule below is no longer needed for it).
+    (r'', r'הַמִּסְפָּרִים הַקְּטַנִּים בַּצַּד הַשְּׂמָאלִי, וְהֵם גְּדֵלִים',
+     'M10 C1 (notes 11.5, question 2): the owner confirmed V1, "הַשְּׂמָאלִי" (owner-approved 2026-11-06).'),
+    # (2) "first digit from the left", so a child who counts from the right on a right-to-left screen knows which digit.
+    (r'', r'הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת',
+     'M10 C1 (notes 11.5, question 3): the owner approved adding "מִשְּׂמֹאל" to the first-digit line (owner-approved 2026-11-06).'),
+    # (3) tens and ones in the school pattern: the digit, then always the plural; "one ten" is "אֶחָד עֲשָׂרוֹת" (the owner's word).
+    #     Only the tens are covered here: one unit is "יְחִידָה אַחַת" (agrees; rule 4, owner 2026-11-07).
+    (r'', r'(^|[ ,.:])וְ?אֶחָד עֲשָׂרוֹת',
+     'M10 C1 (notes 11.5, question 4): the owner chose the school pattern for tens and ones, "אֶחָד עֲשָׂרוֹת וְחָמֵשׁ יְחִידוֹת" (tens only; one unit is יְחִידָה אַחַת) '
+     '(owner-approved 2026-11-06).'),
+    # (4) one unit: "וִיחִידָה אַחַת" (81), agreeing in gender and number (hebrew-notes.md 11.7).
+    (r'', r'וִיחִידָה אַחַת',
+     'M10 C1 (notes 11.7): the owner approved "שְׁמוֹנֶה עֲשָׂרוֹת וִיחִידָה אַחַת" for one unit (owner-approved 2026-11-07).'),
+    # The owner's answers of 2026-11-07 (in chat; hebrew-notes.md 11.8). (1) the dagesh after מִ on a letter with a shva (`from_`).
+    (r'^activity\.', r'(^|[^֐-׿])מִשְּׁ',
+     'M10 C1 (notes 11.8): the owner confirmed the dagesh after מִ on a letter with a shva, "מִשְּׁלוֹשִׁים" (owner-approved 2026-11-07).'),
+    # (2) NUM-C-04 hint 3 says both tens in full, with no "עַכְשָׁו תּוֹרְכֶם" (14 words).
+    (r'^activity\.c\.numc04\.(7|8|9|10|11|12)\.json$', r'עֲשָׂרוֹת\. הַצַּד הַפָּתוּחַ פּוֹנֶה לַגָּדוֹל\.$',
+     'M10 C1 (notes 11.8): the owner chose the tens in full, "וּבְאַרְבָּעִים וְשָׁלוֹשׁ … אַרְבַּע עֲשָׂרוֹת" (owner-approved 2026-11-07).', r'^hints\.2'),
 ]
 
 
@@ -1086,6 +1146,14 @@ def pending(r):
     return None
 
 
+def read_batch(r):
+    for g, i, s_, comment, *text in READ:
+        if (r['group'].startswith(g) and re.search(i, r['id']) and re.search(s_, r['source'])
+                and (not text or re.search(canon(text[0]), canon(r['text'])))):
+            return comment
+    return None
+
+
 def main():
     rows = list(csv.DictReader(open(SRC, encoding='utf-8-sig')))
     by_source = {}
@@ -1176,8 +1244,29 @@ def master(rows, result, rules):
             if (r['source'], r['id'], r['text']) not in kept:
                 new_rows.append(r)
             wait = pending(r)
+            before = kept.get((r['source'], r['id'], r['text']))
+            unread = bool(kept) and r['group'][0] in '1234' and not read_batch(r) and (
+                before is None or before['comment'].startswith(EDITOR + 'NOT READ'))
             if wait:
                 status, comment = 'proposed', EDITOR + wait
+            elif unread:
+                status, comment = 'proposed', EDITOR + UNREAD
+            elif read_batch(r) and not rule and (before is None or before['comment'].startswith(EDITOR + 'NOT READ')
+                                                  or before['comment'].startswith(EDITOR + read_batch(r)[:60])
+                                                  or before['comment'].startswith(EDITOR + 'V1 (pronunciation audit 2026-10-29): the voice text keeps')):
+                # covered by a READ entry: the editor's reading is the reason it is text-ready (or why it still waits)
+                doubt, v1 = first_match(DOUBT, r['text']), is_spoken and any(n_.startswith(VOICE_AUDIT) for n_ in notes)
+                if any(n_.startswith('REVIEW') for n_ in notes):
+                    status, comment = 'proposed', EDITOR + 'a rule flagged this row; not yet decided'
+                elif doubt:
+                    status, comment = 'proposed', EDITOR + doubt
+                elif v1:
+                    status, comment = 'proposed', EDITOR + ('V1 (pronunciation audit 2026-10-29): the voice text keeps a nikud or a beat so a '
+                                                            'voice cannot misread it; please confirm. ') + read_batch(r)
+                else:
+                    status, comment = 'text-ready', EDITOR + read_batch(r)
+                    if before is None or before['comment'].startswith(EDITOR + 'NOT READ'):  # new in this run (or unread until now): read in the pass of READ_NEW
+                        comment = comment.replace(READ_OLD_DAY, READ_NEW, 1)
             elif reviewed(r):
                 doubt, note = first_match(DOUBT, r['text']), first_match(NOTE, r['text'])
                 v1 = is_spoken and any(n_.startswith(VOICE_AUDIT) for n_ in notes)

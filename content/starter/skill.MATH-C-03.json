@@ -1,0 +1,43 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-C-03",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "מחברים ומחסרים עשרות שלמות"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְחַבְּרִים עֲשָׂרוֹת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-C-01",
+      "weight": 1
+    },
+    {
+      "skill": "NUM-C-03",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-PV-FACE",
+    "M-PV-ZERO",
+    "M-OP-SWAP"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

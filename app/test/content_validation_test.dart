@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/content/pack_limits.dart';
 import 'package:nitznutz/content/pack_validation.dart';
 import 'package:nitznutz/content/schema.dart';
 
@@ -90,12 +91,13 @@ final List<Broken> _cases = <Broken>[
     'is outside',
   ),
   Broken(
-    'manifest: more than 8,000 files',
+    'manifest: more than 24,000 files',
     (SamplePack p) => p.manifest['files'] = <Object?>[
-      for (int i = 0; i < 8001; i++) <String, Object?>{'name': 'f$i.bin', 'sha256': '1' * 64, 'size': 1},
+      for (int i = 0; i <= PackLimits.files; i++)
+        <String, Object?>{'name': 'f$i.bin', 'sha256': '1' * 64, 'size': 1},
     ],
     'manifest.json › files',
-    '8001 items is outside 1 to 8000',
+    '24001 items is outside 1 to 24000',
   ),
   Broken(
     'manifest: no files',
@@ -288,7 +290,7 @@ final List<Broken> _cases = <Broken>[
     'tap_answer: an option that is a picture and a numeral at once',
     (SamplePack p) => _m(_l(_m(p.doc(_t)['answer'])['options'])[0])['numeral'] = 3,
     '$_t › answer.options[0]',
-    'exactly one of a sprite, a numeral or a set',
+    'exactly one of a sprite, a numeral, a set or a picture of blocks',
   ),
   Broken(
     'tap_answer: two options that look the same',

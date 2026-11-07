@@ -4,8 +4,8 @@ While the repository is public, open findings of medium severity or higher, and 
 
 | Id | Title | Severity | Status | Since |
 |---|---|---|---|---|
-| SEC-6 | Pack reader: cap the manifest size before the signature check; header room for 8,002 entries | low | open | 2026-10-28 |
-| SEC-7 | A pack is proven three times per app start, on the UI isolate | low | open | 2026-10-28 |
+| SEC-6 | Pack reader: cap the manifest size before the signature check; header room for 24,002 entries (8,002 before M10) | low | open (grew with the M10 C1 caps; measured again 2026-11-06) | 2026-10-28 |
+| SEC-7 | A pack is proven three times per app start, on the UI isolate | low | open (grows with Band C; measured on a PC 2026-11-06, not on a phone) | 2026-10-28 |
 | SEC-8 | A deployed Edge Function differs from `main` (branch deploy not recorded) | low | open | 2026-10-28 |
 | SEC-9 | Secret scanning: add rules for the pack-signing key file and the publish secret | low | open | 2026-10-28 |
 | SEC-10 | Voice tool: validate the voice id and output format before building the request URL | low | open | 2026-10-28 |
@@ -63,6 +63,9 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-M10-3 | The 1.4 number range is not tied to Band C, and some hint plans grow with the size of the number | low | closed (numerals above 100 and `n:` cells of four digits or more only in Band C, in the validator; the hint plans fall back to the generic plan above 20 units, and a test holds every starter item with big numbers under 2,000 marks; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-M10-4 | Number cells and column numbers take 10,001 to 99,999 and leading zeros | info | closed (the patterns take 0 to 10,000 with no leading zero; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-M10-5 | An activity's `templateVersion` is not checked against the manifest's template version | info | closed (validator rule; proof `sec_m10s0_test.dart`) | 2026-11-06 |
+| SEC-M10-6 | `content-publish` caps are not tied to `PackLimits` (items by comment only; misconceptions 200 against the pack's 400) | info | open | 2026-11-06 |
+| SEC-M10-7 | PLAN.md still gives the pack reader's old limits in the pack format section | info | open | 2026-11-06 |
+| SEC-M10-8 | The coin hint reads a coin's worth from its sprite id with `int.parse`, which throws on a long run of digits | info | open | 2026-11-07 |
 | SEC-B29-1 | School stage: a `child-put` with another band and no stage keeps the stored stage, so the server can hold and send a stage that disagrees with the band | low | fixed (`b29-profile`: the upsert keeps a stored stage only while its band is the saved band, a table check ties stage to band, the app clears a stage of another band on pull; proofs `sync_test.ts`, `11_school_stage.test.sql`, `profile_sync_test.dart`) | 2026-11-06 |
 | SEC-B29-2 | iOS local data: no backup-excluded data folder yet, and secure-storage items are not `ThisDeviceOnly` (not reachable: no iOS build can open the database today) | low | Dart part fixed (`b29-profile`: every item is `first_unlock_this_device`, not synchronizable; proof `secure_store_test.dart`); the Swift part (exclude the iOS database folder from backup) gates any iOS build and waits for the iOS platform channel | 2026-11-06 |
 | SEC-B29-3 | The birth-month source rule scans 7 of the `lib/` folders and misses some names (`childAgeProvider`, `ageInMonths`, `assumedMonths`) | low | fixed (`b29-profile`: an allowlist over all of `lib/`, and only `show SchoolStage` imports of `engine/age.dart` outside it; proof `profile_sync_test.dart`) | 2026-11-06 |
@@ -377,6 +380,19 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   frame draws neither button. The proofs are `ls10_personal_safety_test.dart` (no eye or lamp before a card or during the
   switched-off wait, no attempt row) and `unscored_steps_test.dart` (the four unscored kinds write nothing). Both are green in
   QA's full run (4,073 passed, 0 failed, `218f63d`). SEC-L4-2 and SEC-L1-3 closed in the same run.
+- **M10 C1 pack limits, `m10-c1` (`bd4ae981`; 2026-11-06): the raised caps are still bounded. Nothing above low.** In
+  scope: `app/lib/content/pack_limits.dart`, the caps in `schemas.dart` and `zip_store.dart`, the exported JSON schemas, and
+  `content-publish` at 3,000 items and 4 MB. Not in scope: the C1 Hebrew content and `tools/`, and timing on a phone.
+  - Every cap is still finite. The memory bound is the 64 MB byte cap, which did not change. A zip bomb is still impossible:
+    stored files only, compressed size must equal size, files in order with no gaps, and the canonical re-write. The u16 entry
+    count of the zip still has room (24,002 against 65,535). The exported JSON schemas match the Dart caps.
+  - Before the signature is checked, the reader does one Ed25519 check over `manifest.json`, so the work an unsigned pack can
+    cause does not grow with the entry caps. Unsigned packs still reach the app only through the dev page (dev flavour, adb).
+  - `content-publish` checks the publish secret before it reads the body. The reader stops at the cap. A 4 MB index is far
+    below the Edge Function's 256 MB and 2 s CPU limits (Supabase limits page, read 2026-11-06).
+  - Open findings SEC-6 and SEC-7 grow with these caps and were measured again; SEC-M10-6 and -7 are new (info). Their detail
+    goes to the orchestrator and stays out of this file until they are fixed. No package, lock file, host, workflow or
+    database change, so no advisory check was needed. gitleaks was not on this PC's PATH, so CI is the scan for this commit.
 - **L5-2b LS02 write a letter, `languages-l5-2b` (`12fb249a`; 2026-11-06): a light review. Safe to merge, one low finding.**
   Verified by reading:
   - Stroke sets are a signed-pack document, read only after the signature, the hashes, the schema and the cross-file rules.
@@ -446,3 +462,24 @@ this check, a format mismatch between a deployed gateway and an installed app, i
     `profile_births_test` and `look_settings_test` (42 passed). CI run 42245546284 on `origin/b29-profile`: the gateway
     (Deno tests), database (pgTAP), gitleaks (full history) and OSV jobs passed; the app test shards were still running.
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.
+- **M10 C1 keypad and block pictures, `m10-c1` (PR 46, `98f57707` against `origin/main`; 2026-11-07): a light review of the
+  committed HEAD. Safe to merge; one info finding.** In scope: the number keypad (`number_entry.dart`, `number_rules.dart`,
+  `LessonController.enterNumber`), the `base_ten` and `hundred_chart` pictures and their new fields (`litRods`,
+  `crossedRods`, `picture2`, option pictures) in the schema and validator, the SEC-M10-1 hiding rule as changed, and the
+  sync pattern for the new codes. Not in scope: the C1 content, the Hebrew rows, the goldens and the app-developer's
+  uncommitted work in the tree.
+  - Keypad: only the 12 fixed keys reach `press`, at most 5 digits (the schema's numbers go to 10,000), no leading zero, and
+    `int.parse` runs on at most 5 digits, so it cannot throw. Nothing is stored or sent until the check, and then only
+    `n=<number>` (at most `n=99999`, 7 characters). It fits `sync-push`'s pattern and the tutor's option pattern: a number,
+    never text (rule 2). `sync_engine.dart` still sends an empty response for any code that does not fit (the SEC-1 guard).
+  - `numberTag` cannot throw for any number: the expected values and rules come from a validated answer (at most 8 and 5),
+    and the rule arithmetic loops over digits only.
+  - Pictures: `litRods` and `crossedRods` are 0 to 9 and no more than the tens rods (together too); `picture2` needs a first
+    picture of blocks and is blocks only; an option picture is blocks only; hundred-chart lists are at most 100 cells of 1 to
+    100, and a cell is lit or blank, not both. Every drawing loop is bounded by these numbers (at most 9 of each block).
+  - SEC-M10-1 as changed: number answers and the two drawn kinds are shown; a stage picture of any other kind is still hidden
+    (`drawnStagePictureKinds`), and the validator refuses an option picture or `picture2` of any other kind.
+  - No new input path, microphone, network host, storage, package, lock file or gateway change. The CI change adds two
+    standard-library Python steps with `-I`, no secret and no new action.
+  - New: SEC-M10-8 (info), in the table above. No dependency changed, so the advisory check was not run again. Tests were not
+    run by the security-engineer: the tree holds uncommitted work, and the review read the committed HEAD.

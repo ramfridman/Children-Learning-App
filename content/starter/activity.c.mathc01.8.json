@@ -1,0 +1,190 @@
+{
+  "schema": "activity/v1",
+  "id": "c.mathc01.8",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "math",
+  "band": "C",
+  "skills": [
+    {
+      "id": "MATH-C-01",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "symbolic",
+  "variantGroup": "fact-8-4",
+  "difficulty": {
+    "authored": 0.86
+  },
+  "prompt": {
+    "vo": "vo:c.mathb04.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה זֶה?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "row": [
+      "n:12",
+      "op:-",
+      "n:4",
+      "op:=",
+      "?"
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 16,
+        "label": "שֵׁשׁ עֶשְׂרֵה",
+        "misconception": "M-OP-SWAP"
+      },
+      {
+        "id": "o2",
+        "numeral": 9,
+        "label": "תֵּשַׁע",
+        "misconception": "M-CNT-DOUBLE"
+      },
+      {
+        "id": "o3",
+        "numeral": 12,
+        "label": "שְׁתֵּים עֶשְׂרֵה",
+        "misconception": "M-SUB-SMALLBIG"
+      },
+      {
+        "id": "o4",
+        "numeral": 8,
+        "label": "שְׁמוֹנֶה"
+      }
+    ],
+    "correct": "o4",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.mathc01.8.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁמוֹנֶה! שְׁתֵּים עֶשְׂרֵה פָּחוֹת אַרְבַּע שָׁוֶה שְׁמוֹנֶה."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-OP-SWAP",
+        "vo": "vo:fb.op_swap",
+        "caption": [
+          {
+            "t": "he",
+            "v": "רֶגַע, מוֹסִיפִים כָּאן אוֹ מוֹרִידִים? בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַסִּימָן."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SUB-SMALLBIG",
+        "vo": "vo:fb.sub_smallbig",
+        "caption": [
+          {
+            "t": "he",
+            "v": "רֶגַע, מוֹרִידִים מֵהַמִּסְפָּר הַגָּדוֹל. בּוֹאוּ נִפְתַּח אֶת הָעֶשֶׂר וְנִרְאֶה."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.mathc01.8.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יוֹרְדִים קֹדֶם לְעֶשֶׂר: שְׁתֵּים עֶשְׂרֵה פָּחוֹת שְׁתַּיִם הֵם עֶשֶׂר, וּמוֹרִידִים עוֹד שְׁתַּיִם."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.mathc01.8.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עֶשֶׂר פָּחוֹת שְׁתַּיִם הֵם שְׁמוֹנֶה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁמוֹנֶה."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כַּמָּה זֶה?"
+  }
+}

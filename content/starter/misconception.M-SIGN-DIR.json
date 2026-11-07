@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SIGN-DIR",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-C-04"
+  ],
+  "parentText": "הילד קורא את הסימנים \"גדול מ\" ו\"קטן מ\" הפוך, או בוחר את הסימן לפי המקום של המספר הגדול ולא לפי הצד הפתוח של הסימן.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לצייר תנין רעב שהפה שלו פתוח תמיד אל הערמה הגדולה יותר של עוגיות, ואז להפוך את התנין לסימן."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial",
+    "concrete"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-OP-SWAP",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-C-09",
+    "MATH-C-01",
+    "MATH-C-02",
+    "MATH-C-03"
+  ],
+  "parentText": "הילד עושה את הפעולה ההפוכה: מחבר כשצריך לחסר, או מחסר כשצריך לחבר.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לספר סיפור קטן לכל תרגיל עם חפצים אמיתיים: יש שבע כפיות, לוקחים שלוש. ואז לשאול: נשארו לנו יותר כפיות או פחות?"
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "story"
+  ]
+}

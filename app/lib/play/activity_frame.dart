@@ -60,9 +60,14 @@ class ActivityFrame extends StatelessWidget {
   /// (fonts.md section 6), in the teaching font of its [course].
   final ({String text, String course})? bubbleTarget;
 
-  /// The bubble keeps clear of the tiles under it: its text shrinks to the room and, when it must, it stands higher. On for the
-  /// items of a language course and for any bubble with a chip; the lands' layouts are as they were.
+  /// The bubble keeps clear of the tiles under it: its text shrinks to the room and, when it must, it stands higher. Always so when the
+  /// frame has answer tiles (a hint's longer line must never lie over one, in any land); this switch is for a bubble over something
+  /// else, and for the items of a language course.
   final bool bubbleAboveTiles;
+
+  /// How far above the top of the drawn tiles the bubble ends, so that it keeps clear of a tile and of the shadow it casts (the tiles'
+  /// box, with its 12 point tap margin, starts 12 higher).
+  static const double tileClear = 16;
 
   /// Builds the stage for the room it has (its width and height, in board points).
   final Widget Function(Size room) stage;
@@ -131,8 +136,8 @@ class ActivityFrame extends StatelessWidget {
     // The bubble keeps clear of the tiles under it: its text shrinks to the room there is between the progress trail and the tiles
     // (never below the minimum), and a bubble that is still too tall (a long line with a chip) stands higher, not over the tiles.
     final double floorTop = s.trailTop + 36 + 4;
-    final bool clear = (bubbleAboveTiles || target != null) && s.tilesTop > s.bubbleTop;
-    final double ceiling = clear ? s.tilesTop - 4 : double.infinity;
+    final bool clear = (bubbleAboveTiles || target != null || tiles != null) && s.tilesTop > s.bubbleTop;
+    final double ceiling = clear ? s.tilesTop - tileClear : double.infinity;
     final ({double font, double height}) fit = fitBubble(
       bubbleText,
       s,

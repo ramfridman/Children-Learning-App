@@ -1,0 +1,172 @@
+{
+  "schema": "activity/v1",
+  "id": "c.numc06.14",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "C",
+  "skills": [
+    {
+      "id": "NUM-C-06",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "symbolic",
+  "variantGroup": "middle",
+  "difficulty": {
+    "authored": 0.9
+  },
+  "prompt": {
+    "vo": "vo:c.numc06.14.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "עַל הַצִּיר, אֵיזֶה מִסְפָּר נִמְצָא בְּדִיּוּק בָּאֶמְצַע?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "row": [
+      "n:40",
+      "?",
+      "n:50"
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 45,
+        "label": "אַרְבָּעִים וְחָמֵשׁ"
+      },
+      {
+        "id": "o2",
+        "numeral": 41,
+        "label": "אַרְבָּעִים וְאַחַת",
+        "misconception": "M-NL-SPACE"
+      },
+      {
+        "id": "o3",
+        "numeral": 90,
+        "label": "תִּשְׁעִים",
+        "misconception": "M-EQ-OPER"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.numc06.14.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַרְבָּעִים וְחָמֵשׁ! זֶה בְּדִיּוּק בָּאֶמְצַע."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-EQ-OPER",
+        "vo": "vo:fb.middle_not_added",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כְּשֶׁמְּחַפְּשִׂים אֶת הָאֶמְצַע, לֹא מְחַבְּרִים. הָאֶמְצַע נִמְצָא בֵּין שְׁנֵי הַמִּסְפָּרִים. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-NL-SPACE",
+        "vo": "vo:fb.nl_space",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כׇּל הַקְּפִיצוֹת בְּאוֹתוֹ אֹרֶךְ. בּוֹאוּ נִקְפֹּץ יַחַד וְנִסְפֹּר."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.numc06.14.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הָאֶמְצַע הוּא אוֹתוֹ מֶרְחָק מִשְּׁנֵי הַמִּסְפָּרִים. מֵאַרְבָּעִים עַד חֲמִשִּׁים יֵשׁ עֲשָׂרָה צְעָדִים."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.numc06.14.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מֵאַרְבָּעִים חֲמִשָּׁה צְעָדִים קָדִימָה הֵם אַרְבָּעִים וְחָמֵשׁ, וְעוֹד חֲמִשָּׁה צְעָדִים הֵם חֲמִשִּׁים."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "עַל הַצִּיר, אֵיזֶה מִסְפָּר נִמְצָא בְּדִיּוּק בָּאֶמְצַע?"
+  }
+}

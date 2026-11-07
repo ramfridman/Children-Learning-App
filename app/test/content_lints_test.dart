@@ -52,8 +52,14 @@ String _expectedRepresentation(Map<String, Object?> a) {
     case 'spot_error':
       return _l(scene['cells']).any((Object? c) => '$c'.startsWith('asset:')) ? 'pictorial' : 'symbolic';
     case 'tap_answer':
-      if (scene['group'] != null || scene['group2'] != null || scene['chart'] != null) return 'pictorial';
-      if (_l(answer['options']).any((Object? o) => _m(o)['sprite'] != null || _m(o)['set'] != null)) {
+      if (scene['group'] != null ||
+          scene['group2'] != null ||
+          scene['chart'] != null ||
+          scene['picture'] != null) {
+        return 'pictorial';
+      }
+      if (_l(answer['options'])
+          .any((Object? o) => _m(o)['sprite'] != null || _m(o)['set'] != null || _m(o)['picture'] != null)) {
         return 'pictorial';
       }
       if (_l(scene['row']).any((Object? c) => '$c'.startsWith('asset:'))) return 'pictorial';
@@ -117,9 +123,9 @@ void main() {
   final Map<String, Map<String, Object?>> acts = _load('activity.');
   final Map<String, Map<String, Object?>> skills = _load('skill.');
 
-  test('the sources are the 967 activities and 100 skills of pack 0.10.0', () {
-    expect(acts.length, 967);
-    expect(skills.length, 100);
+  test('the sources are the 967 activities and 100 skills of pack 0.10.0, and the 239 and 12 of M10 batch C1 (170 of the first sessions, 58 for the block, chart, keypad and tolerance modes, 5 for the line by estimate and the true-or-false card, 4 lucky-right items, and 2 hidden-basket count-on items)', () {
+    expect(acts.length, 967 + 239);
+    expect(skills.length, 100 + 12);
   });
 
   test('the representation label of every activity follows the rule of spec section 2', () {

@@ -2,7 +2,7 @@ import { assert } from "./_shared/testassert.ts";
 import { makeHandler } from "./_shared/handler.ts";
 import { fakeServices, FakeStore, plainPost, PUBLISH_SECRET } from "./_shared/testkit.ts";
 import { PUBLISH_FAILS_PER_HOUR_PER_IP } from "./_shared/publish_secret.ts";
-import { MAX_PUBLISH_BYTES, spec } from "./content-publish/handler.ts";
+import { MAX_PUBLISH_BYTES, MAX_PUBLISH_ITEMS, spec } from "./content-publish/handler.ts";
 
 const goodItem = () => ({
   item_id: "count.butterflies.3",
@@ -180,7 +180,24 @@ Deno.test("content-publish: the shape is strict", async () => {
   );
 });
 
-Deno.test("content-publish: the body is capped at 256 KB, and only POST is served", async () => {
+Deno.test("content-publish: the index of Band C (about 2,500 items) passes, one over the item limit does not", async () => {
+  const { store, publish } = setup();
+  const items = (n: number) =>
+    Array.from({ length: n }, (_, i) => ({ ...goodItem(), item_id: `c.item.${i}` }));
+  assert.equal(MAX_PUBLISH_ITEMS, 3000);
+  const r = await publish(goodBody({ items: items(2500) }));
+  assert.equal(r.status, 200, "2,500 items");
+  assert.equal(store.packs.get("starter")!.items.length, 2500);
+  const body = JSON.stringify(goodBody({ items: items(MAX_PUBLISH_ITEMS) }));
+  assert.equal(
+    new TextEncoder().encode(body).length < MAX_PUBLISH_BYTES,
+    true,
+    "the most items fit the byte cap",
+  );
+  assert.equal((await publish(goodBody({ items: items(MAX_PUBLISH_ITEMS + 1) }))).status, 400, "3,001 items");
+});
+
+Deno.test("content-publish: the body is capped at 4 MB, and only POST is served", async () => {
   const { publish, handler } = setup();
   const big = goodBody({
     items: Array.from({ length: 5 }, (_, i) => ({ ...goodItem(), item_id: `i${i}`, goal: "x".repeat(300) })),

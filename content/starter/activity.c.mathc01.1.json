@@ -1,0 +1,204 @@
+{
+  "schema": "activity/v1",
+  "id": "c.mathc01.1",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "math",
+  "band": "C",
+  "skills": [
+    {
+      "id": "MATH-C-01",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "fact-9-3",
+  "difficulty": {
+    "authored": 0.37
+  },
+  "prompt": {
+    "vo": "vo:c.mathb04.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה זֶה?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "group": {
+      "sprite": "asset:apple",
+      "count": 9,
+      "arrangement": "ten_frame",
+      "seed": 3,
+      "scale": 1
+    },
+    "row": [
+      "n:9",
+      "op:+",
+      "n:3",
+      "op:=",
+      "?"
+    ],
+    "group2": {
+      "sprite": "asset:apple",
+      "count": 3,
+      "arrangement": "ten_frame",
+      "seed": 8,
+      "scale": 1
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 12,
+        "label": "שְׁתֵּים עֶשְׂרֵה"
+      },
+      {
+        "id": "o2",
+        "numeral": 11,
+        "label": "אַחַת עֶשְׂרֵה",
+        "misconception": "M-CNT-DOUBLE"
+      },
+      {
+        "id": "o3",
+        "numeral": 9,
+        "label": "תֵּשַׁע",
+        "misconception": "M-CNT-CARD"
+      },
+      {
+        "id": "o4",
+        "numeral": 6,
+        "label": "שֵׁשׁ",
+        "misconception": "M-OP-SWAP"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.mathc01.1.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁתֵּים עֶשְׂרֵה! תֵּשַׁע וְעוֹד שָׁלוֹשׁ שָׁוֶה שְׁתֵּים עֶשְׂרֵה."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לָקַחְנוּ אֶת כֻּלָּם. בּוֹאוּ נִסְפֹּר וְנַעֲצֹר בַּמִּסְפָּר שֶׁצָּרִיךְ."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.count_on_start",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כְּשֶׁמַּמְשִׁיכִים לִסְפֹּר, לֹא סוֹפְרִים שׁוּב אֶת הַמִּסְפָּר שֶׁמַּתְחִילִים מִמֶּנּוּ. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-OP-SWAP",
+        "vo": "vo:fb.op_swap",
+        "caption": [
+          {
+            "t": "he",
+            "v": "רֶגַע, מוֹסִיפִים כָּאן אוֹ מוֹרִידִים? בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַסִּימָן."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.mathc01.1.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מַשְׁלִימִים לְעֶשֶׂר: תֵּשַׁע וְעוֹד אַחַת הֵם עֶשֶׂר, וְנִשְׁאֲרוּ עוֹד שְׁתַּיִם."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.mathc01.1.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עֶשֶׂר וְעוֹד שְׁתַּיִם הֵם שְׁתֵּים עֶשְׂרֵה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתֵּים עֶשְׂרֵה."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כַּמָּה זֶה?"
+  }
+}

@@ -9,6 +9,7 @@ import '../core/clock.dart';
 import '../core/log.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
+import 'number_rules.dart';
 import 'response_code.dart';
 
 /// What the tutor needs to know about the lesson: ids and enums only.
@@ -465,6 +466,17 @@ class LessonController extends ChangeNotifier {
     final bool right = optionId == correctId;
     final String tag = right ? (traceTag ?? '') : (chosen.misconception ?? traceTag ?? '');
     return _answered(right: right, tag: tag, response: optionId, byVoice: byVoice);
+  }
+
+  /// The child typed [n] on the keypad of a number answer (M10, X3) and pressed the check. Right when it is the item's number; a wrong
+  /// one carries the tag the item gives that number, or the rule it breaks (`numberTag`), and is written as the number, `n=34`.
+  Future<Outcome> enterNumber(int n) async {
+    final Object a = current;
+    if (a is! TapAnswerActivity || a.numberAnswer == null) {
+      throw StateError('${current.template} has no number answer');
+    }
+    final bool right = n == a.numberAnswer!.value;
+    return _answered(right: right, tag: right ? '' : numberTag(a, n), response: ResponseCode.count(n));
   }
 
   /// The child picked the cards [pickedIds] of a tap-all (LS01), as many as there are right ones: right when they are exactly the right

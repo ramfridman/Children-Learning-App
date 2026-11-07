@@ -6,7 +6,8 @@ committed files:
 1. tools/band_b.py writes the Band B specs (content/units/band-b-*.json; it runs band_b2.py and band_b3.py too);
 2. tools/band_c.py writes the Band C specs (content/units/band-c*.json; none until the batches add their tables, M10);
 3. tools/author.py turns each unit spec into content/starter, Band A first, then Band B, then Band C (each reads lines and
-   assets the files before it already wrote).
+   assets the files before it already wrote). Band C lines that say the same text share one voice id; the pool that does it
+   (content/voice-pool.c.json) is emptied first, so the ids depend on the specs alone.
 
 A handful of the oldest starter files (the M2 butterflies lesson and its skills and misconceptions) have no spec and
 are edited by hand. Nothing is published or voiced here.
@@ -31,6 +32,9 @@ def run(root=ROOT, quiet=False):
     subprocess.run([sys.executable, '-s', os.path.join(tools, 'band_b.py')], cwd=root, env=env, check=True, stdout=out)
     subprocess.run([sys.executable, '-s', os.path.join(tools, 'band_c.py')], cwd=root, env=env, check=True, stdout=out)
     band_c = sorted(os.path.basename(f)[:-5] for f in glob.glob(os.path.join(root, 'content', 'units', 'band-c*.json')))
+    pool = os.path.join(root, 'content', 'voice-pool.c.json')
+    if os.path.exists(pool):
+        os.remove(pool)
     for u in UNITS + band_c:
         spec = os.path.join(root, 'content', 'units', u + '.json')
         subprocess.run([sys.executable, '-s', os.path.join(tools, 'author.py'), spec], cwd=root, env=env, check=True,
