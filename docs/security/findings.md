@@ -58,6 +58,9 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-LC-1 | The microphone is decided once per lesson: a language's voice switch turned off mid-lesson takes effect at the next lesson | info | open | 2026-11-05 |
 | SEC-LC-2 | The answer path of the lesson controller does not itself refuse an unscored step (not reachable; defence in depth) | info | open | 2026-11-05 |
 | SEC-L5-1 | Stroke sets: the `d` path is checked by its characters only, not by its grammar or the range of its numbers | low | fixed on `languages-l5-2b`: `strokePathFault` in `checkStrokeSet` holds the grammar (M first, M and L two numbers, C six, each number `-?\d+(\.\d+)?` from 0 to 100), `_addD` stops at the first bad token (tryParse, an index check), the `strokesSchema` comment says what the schema does not (`ls02_validation_test.dart` "the bounds of a stroke", `ls02_whole_letter_session_test.dart` paints a bad path without an exception); closes when the security-engineer has run the proof again | 2026-11-06 |
+| SEC-L5-2 | A hint's borrowed screen (`hints[].screen`) names voice lines that the validator does not check against the pack | low | open (proof `sec_l5_3_test.dart`, failing) | 2026-11-07 |
+| SEC-L5-3 | LS03: a colouring with both kinds of mistake writes two `incorrect` rows, so one move counts as two errors for the engine's runs and the parent alerts | info | open | 2026-11-07 |
+| SEC-L5-4 | The response contract test does not pin the longest `boxes` and `parts` codes | info | open | 2026-11-07 |
 | SEC-M10-1 | The app says it plays `tap_answer` 1.4, but no session draws a number answer or a stage picture yet | low | closed (`PackContent.fromPack` hides every item with a number answer or a stage picture until a session draws it, `itemsOf` leaves a hidden id out, `tapHintPlan` gives no plan when there is no right option; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-M10-2 | The validator throws instead of refusing some incomplete stage pictures | low | closed (null-guarded reads in `_stagePictureOf`; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-M10-3 | The 1.4 number range is not tied to Band C, and some hint plans grow with the size of the number | low | closed (numerals above 100 and `n:` cells of four digits or more only in Band C, in the validator; the hint plans fall back to the generic plan above 20 units, and a test holds every starter item with big numbers under 2,000 marks; proof `sec_m10s0_test.dart`) | 2026-11-06 |
@@ -446,3 +449,25 @@ this check, a format mismatch between a deployed gateway and an installed app, i
     `profile_births_test` and `look_settings_test` (42 passed). CI run 42245546284 on `origin/b29-profile`: the gateway
     (Deno tests), database (pgTAP), gitleaks (full history) and OSV jobs passed; the app test shards were still running.
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.
+- **L5-3 to L5-5, `languages-l5-3` (`f8b7d7cf` against `origin/main`; 2026-11-07): a light review. Safe to merge; one low
+  and two info findings.** In scope: LS03 `boxes` (sound_boxes 1.1), LS05 `change_part`, LS04 `blend_slide`, hint borrowing
+  (`hints[].screen`), their schemas and validators, the new response codes and the second `incorrect` row of a two-tag
+  colouring. Not in scope: the teaching logic, the layouts and the goldens.
+  - Parsing: every new field has a closed schema with caps (units 6, steps 4, `classify` 12 keys of a fixed pattern, colours
+    `[rbg]{1,6}`, parts 11, part ids `p[0-9]{1,2}`, results 60, frame text 12, slots 1 to 2, slide parts 6, hints 3).
+    Patterns match the whole value. The LS03, LS04, LS05 and borrowed-hint checks run only on documents that passed the
+    schema, so their loops (at most 11 x 11 combinations against 60 results) are bounded. `HintShow.fromJson` reads only
+    validated documents.
+  - Response codes: `ResponseCode.boxes` writes numbers and the letters r, b and g (at most `n=7.c=rbgrbg.s=6.w=6`, 20
+    characters). `ResponseCode.parts` writes at most two part ids (`p99.p99`). Both fit `sync-push`'s pattern, and
+    `sync_engine.dart` sends an empty response for any code that does not fit (the SEC-1 guard), so sync cannot stall. The
+    tutor gets `move` for a dotted code. No word, text or name goes on the wire (rule 2).
+  - The second `incorrect` row: same response, its own event id, and a tag from the pack's catalogue (`checkTag`). No table
+    has a unique key on the attempt number, so neither the local database nor the server refuses it. See SEC-L5-3 for what it
+    does to the counts.
+  - No new input path, microphone, network host, storage, package, lock file, workflow or gateway change (checked in the
+    diff). A grep of the diff found no secret-shaped string; gitleaks is not installed here.
+  - New: SEC-L5-2 (low), SEC-L5-3 and SEC-L5-4 (info), in the table above. No dependency changed, so the advisory check was
+    not run again.
+  - Run by the security-engineer: `flutter test` on `response_contract_test`, `ls03_boxes_test`, `ls05_change_part_test` and
+    `l5_borrowed_hints_test` (81 passed); the SEC-L5-2 proof `sec_l5_3_test.dart` fails as expected (2 tests).
