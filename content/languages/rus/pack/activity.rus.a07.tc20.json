@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_pomidor",
-    "show": "помидор",
     "replayButton": true
   },
   "feedback": {

@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_nogi",
-    "show": "ноги",
     "replayButton": true
   },
   "feedback": {

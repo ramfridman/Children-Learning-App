@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_mashina",
-    "show": "машина",
     "replayButton": true
   },
   "feedback": {

@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:eng.en_ball",
-    "show": "ball",
     "replayButton": true
   },
   "feedback": {

@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_belka",
-    "show": "белка",
     "replayButton": true
   },
   "feedback": {

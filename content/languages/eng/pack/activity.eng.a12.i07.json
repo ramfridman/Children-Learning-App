@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:eng.en_apple",
-    "show": "apple",
     "replayButton": true
   },
   "feedback": {

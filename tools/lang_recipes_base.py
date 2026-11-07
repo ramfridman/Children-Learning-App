@@ -7,6 +7,10 @@ PURPOSES = ('learn', 'practice', 'probe', 'repair', 'check')
 CHECK_TYPES = ('practice', 'transfer', 'reverse', 'error_spotting', 'explain_back', 'predict')
 HINT_ACTIONS = ('replay_prompt_slow', 'highlight_objects_sequentially', 'show_fingers', 'worked_example')
 
+# Band A has no reading (band-a-build.md 7.2 and 7.6): no step prints a target-language word and no bin a printed word, except in the
+# skills whose content is letters, the child's own name and print.
+LETTER_SKILLS_OF_BAND_A = ('HEB-A-10', 'HEB-A-11', 'HEB-A-12')
+
 # The Hebrew a screen reader says of an activity when the item gives none (adult text: needs-editor like every generated text).
 ALT = {
     'tap_answer': {2: 'שְׁתֵּי תְּמוּנוֹת', 3: 'שָׁלוֹשׁ תְּמוּנוֹת'},

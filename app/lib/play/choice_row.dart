@@ -287,7 +287,8 @@ class ChoiceRow extends StatelessWidget {
                         : Center(
                             child: SpeakerMark(
                               key: Key('speaker-${o.id}'),
-                              touch: AppLayout.of(context).touch.minControl,
+                              // The room under a tile is 64, the Band A floor of a child control (QA-BA-6): a speaker fills it.
+                              touch: math.max(SpeakerMark.room, AppLayout.of(context).touch.minControl),
                               onTap: () => onSpeak!(o),
                             ),
                           ),

@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:eng.en_fish",
-    "show": "fish",
     "replayButton": true
   },
   "feedback": {

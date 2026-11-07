@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_karandash",
-    "show": "карандаш",
     "replayButton": true
   },
   "feedback": {

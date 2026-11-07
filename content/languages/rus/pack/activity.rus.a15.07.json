@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_mysh",
-    "show": "мышь",
     "replayButton": true
   },
   "feedback": {

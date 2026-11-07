@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_ruki",
-    "show": "руки",
     "replayButton": true
   },
   "feedback": {

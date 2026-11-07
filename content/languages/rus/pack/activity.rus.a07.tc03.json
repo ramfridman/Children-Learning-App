@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_sok",
-    "show": "сок",
     "replayButton": true
   },
   "feedback": {

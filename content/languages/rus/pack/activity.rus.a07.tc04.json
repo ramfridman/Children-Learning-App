@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_chaj",
-    "show": "чай",
     "replayButton": true
   },
   "feedback": {

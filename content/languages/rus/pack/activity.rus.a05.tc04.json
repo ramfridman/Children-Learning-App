@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_ryba",
-    "show": "рыба",
     "replayButton": true
   },
   "feedback": {

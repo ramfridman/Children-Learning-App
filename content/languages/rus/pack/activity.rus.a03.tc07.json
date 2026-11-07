@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_zhivot",
-    "show": "живот",
     "replayButton": true
   },
   "feedback": {

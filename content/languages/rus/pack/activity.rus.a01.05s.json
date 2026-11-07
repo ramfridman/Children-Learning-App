@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_poka",
-    "show": "Пока",
     "replayButton": true
   },
   "feedback": {

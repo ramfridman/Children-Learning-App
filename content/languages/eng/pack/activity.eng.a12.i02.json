@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:eng.en_dog",
-    "show": "dog",
     "replayButton": true
   },
   "feedback": {

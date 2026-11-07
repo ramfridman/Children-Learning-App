@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_prygaj",
-    "show": "Прыгай",
     "replayButton": true
   },
   "feedback": {

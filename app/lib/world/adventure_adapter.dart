@@ -4,6 +4,7 @@ import '../engine/course.dart';
 import '../engine/engine.dart';
 import '../rewards/award.dart';
 import 'adventure_land.dart';
+import 'check_visits.dart';
 import 'language_placement.dart' show PlacementStatus, placedLanguageLessons;
 import 'path_gate.dart';
 import 'placement.dart';
@@ -90,6 +91,13 @@ AdventureInput adventureInput({
           PathLesson(l.id, lessonLevel(c.content, l, Course.languagesDomain)),
       ],
   };
+  final Map<String, int> seen = withPlaced(finished, playable);
+  final List<Visit> visits = visitsFrom(
+    content,
+    attempts,
+    sessions,
+    languages: playable.map((LanguageCourse c) => c.content),
+  );
   return AdventureInput(
     today: today,
     band: band,
@@ -98,8 +106,8 @@ AdventureInput adventureInput({
         if (e.value.isNotEmpty) e.key,
     },
     paths: paths,
-    finished: withPlaced(finished, playable),
-    visits: visitsFrom(content, attempts, sessions, languages: playable.map((LanguageCourse c) => c.content)),
+    finished: seen,
+    visits: visits,
     due: <DueSkill>[
       for (final String id in engine.dueChecks(now))
         if (_dueSkill(content, engine, id, now, today) case final DueSkill d) d,
@@ -108,9 +116,29 @@ AdventureInput adventureInput({
           if (_dueSkill(c.content, c.engine, id, now, today, land: LanguageLand(c.course))
               case final DueSkill d)
             d,
+      // A course's check visit takes the revisit's slot after every revisit of a fresh skill (owner's OK 2026-11-07).
+      for (final LanguageCourse c in playable)
+        if (_checkVisit(c, seen, visits, now, band) case final DueSkill d) d,
     ],
   );
 }
+
+/// The course's check visit of today as the rule's due skill, or null.
+DueSkill? _checkVisit(
+  LanguageCourse c,
+  Map<String, int> seen,
+  Iterable<Visit> visits,
+  DateTime now,
+  int band,
+) => checkVisitDue(
+  content: c.content,
+  engine: c.engine,
+  assumed: c.assumed,
+  seen: seen,
+  visits: visits,
+  now: now,
+  band: band,
+);
 
 /// A land's path for the rule: its lessons in order, each with its level, and the ones the path gate holds back marked [locked].
 List<PathLesson> _pathOf(PackContent content, String domain, Set<String> locked) => <PathLesson>[
@@ -148,20 +176,23 @@ TodaysAdventure courseStopFor({
       PathLesson(l.id, lessonLevel(course.content, l, Course.languagesDomain)),
   ];
   if (path.isEmpty) return const TodaysAdventure.none();
+  final Map<String, int> seen = withPlaced(finished, <LanguageCourse>[course]);
+  final List<Visit> visits = <Visit>[
+    for (final Visit v in visitsFrom(null, attempts, sessions, languages: <PackContent>[course.content]))
+      if (v.land == land) v,
+  ];
   return todaysAdventure(
     AdventureInput(
       today: today,
       band: band,
       enabledLands: <AdventureLand>{land},
       paths: <AdventureLand, List<PathLesson>>{land: path},
-      finished: withPlaced(finished, <LanguageCourse>[course]),
-      visits: <Visit>[
-        for (final Visit v in visitsFrom(null, attempts, sessions, languages: <PackContent>[course.content]))
-          if (v.land == land) v,
-      ],
+      finished: seen,
+      visits: visits,
       due: <DueSkill>[
         for (final String id in course.engine.dueChecks(now))
           if (_dueSkill(course.content, course.engine, id, now, today, land: land) case final DueSkill d) d,
+        if (_checkVisit(course, seen, visits, now, band) case final DueSkill d) d,
       ],
     ),
   );
@@ -304,5 +335,6 @@ Visit? _visit(
       _ => VisitEnd.open,
     },
     lastIncorrect: last.result == 'incorrect',
+    check: kind == VisitKind.revisit && isCheckVisitId(first.lessonId),
   );
 }

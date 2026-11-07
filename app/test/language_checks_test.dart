@@ -532,6 +532,22 @@ void main() {
       );
     });
 
+    test('a probe is not counted in the half: it is no evidence of mastery (band-a-build.md 7.7, D6)', () {
+      final LangPack p = LangPack();
+      _three(p, 'mix.i01');
+      _three(p, 'mix.i02', at: 1);
+      _two(p, 'mix.i03');
+      _two(p, 'mix.i04', at: 1);
+      _two(p, 'mix.p01', at: 2, purpose: 'probe');
+      _two(p, 'mix.p02', at: 3, purpose: 'probe');
+      expect(_run(p.pack), isEmpty, reason: 'two of four scored items, and two probes on top');
+      _two(p, 'mix.i05', at: 2);
+      expect(
+        _run(p.pack),
+        _refused('skill.ENG-A-02.json', '3 of its 5 scored items have two choices; at most half may'),
+      );
+    });
+
     test('exactly half is allowed; one more is refused', () {
       final LangPack p = LangPack();
       _three(p, 'mix.i01');

@@ -183,6 +183,9 @@ sealed class Activity {
   /// another face (docs/languages/hebrew/band-a-content.md, A-10.6 and A-11.4). Hebrew only.
   bool get displayFont => json['font'] == 'display';
 
+  /// The activity that forms a balanced pair with this one (a yes and a no: `answer.pairWith`), or null.
+  String? get pairWith => _map(json['answer'])['pairWith'] as String?;
+
   /// A teach screen: shown before a lesson to a route that needs the words, never an item of the engine's catalogue.
   bool get teachScreen => false;
 
@@ -497,8 +500,13 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
   /// A numeral drawn large on the stage (1.1), or null.
   final int? stageNumeral;
 
-  /// Numerals and sets are answered on tiles below the stage (it is too small for them); pictures stay on the stage.
-  bool get optionsInTiles => _tilesFlag || options.any((ChoiceOption o) => o.sprite == null);
+  /// Numerals and sets are answered on tiles below the stage (it is too small for them); pictures stay on the stage. In a language
+  /// course a picture the question stands on (a group: the dog of "is it a cat?", the family, the box) has the whole stage and the
+  /// pictures that answer are tiles under it (QA-BA-6): sharing the phone's 128-point stage made both a thumbnail.
+  bool get optionsInTiles =>
+      _tilesFlag ||
+      options.any((ChoiceOption o) => o.sprite == null) ||
+      (group != null && Course.isLanguage(course));
   final bool _tilesFlag;
 
   /// The word that appears under the right picture once the answer is accepted (LS01 g), or null when there is none.

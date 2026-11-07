@@ -82,8 +82,9 @@ class Talk:
             self.problem(where, 'a say item lists the `forms` it accepts and the `foils` it must not take for them')
             return None
         doc = self.head(sk, sid, aid, item, where, 'say_it', rep='embodied', goal='say the word with the voice', attempts=1)
-        # A single word is shown in a chip under the line; a chunk (a sentence) is only heard.
-        item = dict(item, target=word, show=item.get('show', bool(row) and ' ' not in (row.get('shown') or '').strip()))
+        # No word is shown in a chip: Band A has no reading (the curriculum-expert's decision of 2026-11-07, band-a-build.md 7.2). A step may
+        # still say `show: true`, and `spoken` refuses it in a Band A skill (the letters of Hebrew A-10 to A-12 aside).
+        item = dict(item, target=word, show=item.get('show', False))
         # A say step of a course with routes (docs/languages/band-a-build.md 2.6.1 R4): the prompt is the echo one ("let's say it together",
         # then the word), and `say.order` and `say.pictureFirst` let the player ask for the word before it is heard. A teach or hearing
         # screen is always echo.

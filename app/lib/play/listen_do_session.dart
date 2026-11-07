@@ -403,19 +403,28 @@ class _DoStage extends StatelessWidget {
                       if (option.text != null) _stoneText(context, option),
                     ],
                   )
-                : DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: TokenColors.skyTint.withValues(alpha: over.isEmpty ? 0.4 : 0.9),
-                      borderRadius: BorderRadius.circular(TokenRadius.xl),
-                      border: Border.all(color: TokenColors.hintHalo, width: 4),
-                    ),
-                    child: sprite == null
-                        ? null
-                        : Padding(padding: const EdgeInsets.all(6), child: PackSvg(a.assets.svg(sprite))),
-                  ),
+                : _targetFace(sprite, ready: over.isNotEmpty || s.selectedId != null),
           ),
         ),
       ),
+    );
+  }
+
+  /// The target of a drag as it is drawn (QA-BA-5): at rest nothing over the picture (the target is a thing drawn in it, a bowl or
+  /// a plate, or the friend, whose face is never covered by a box), only its own sprite if it has one; while a thing is held or
+  /// selected, a thin outline with no fill shows where it goes.
+  Widget _targetFace(String? sprite, {required bool ready}) {
+    final Widget? face = sprite == null
+        ? null
+        : Padding(padding: const EdgeInsets.all(6), child: PackSvg(s.doing.assets.svg(sprite)));
+    if (!ready) return SizedBox.expand(key: const Key('do-target-rest'), child: face);
+    return DecoratedBox(
+      key: const Key('do-target-ready'),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(TokenRadius.xl),
+        border: Border.all(color: TokenColors.hintHalo.withValues(alpha: 0.95), width: 4),
+      ),
+      child: face,
     );
   }
 

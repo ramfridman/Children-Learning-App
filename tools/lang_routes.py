@@ -172,8 +172,6 @@ class Routes:
         item = {'id': item_id, 'kind': 'say', 'purpose': 'practice', 'picture': picture, 'clip': clip, 'rep': 'embodied',
                 'forms': [plain_word(row.get('shown'))], 'foils': self._foils(clip, others, where),
                 'frame': settings.get('frame'), 'heard': settings.get('heard'), 'together': settings.get('together'), '_screen': kind}
-        if kind == 'hear':
-            item['show'] = False  # the word is heard, not read; the picture follows it
         if ' ' in item['forms'][0]:
             item['keyWords'] = item['forms'][0].split(' ')
         doc = self.recipe_say(sk, sid, aid, {k: v for k, v in item.items() if v is not None}, where)

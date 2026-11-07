@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.mp_ljuk",
-    "show": "люк",
     "replayButton": true
   },
   "feedback": {

@@ -9,7 +9,9 @@ import 'lesson_path.dart';
 
 enum AdventureKind { revisit, lesson, replay, none }
 
-enum AdventureReason { welcome, callForHelp, sameLand, otherLand, playAgain, nothing }
+/// [checkVisit]: a language course's check visit, the short visit of one skill on a later day that gives it the evidence a lesson cannot
+/// (docs/languages/band-a-build.md section 7.4). The child sees a visit, like a revisit; nothing says "check" or "test".
+enum AdventureReason { welcome, callForHelp, checkVisit, sameLand, otherLand, playAgain, nothing }
 
 /// What one visit of the child was.
 enum VisitKind { lesson, warmUp, revisit }
@@ -53,6 +55,7 @@ class Visit {
     required this.day,
     this.end = VisitEnd.finished,
     this.lastIncorrect = false,
+    this.check = false,
   });
 
   final VisitKind kind;
@@ -65,6 +68,9 @@ class Visit {
 
   /// The visit's last answer was incorrect (an unsure answer is never incorrect).
   final bool lastIncorrect;
+
+  /// A revisit that was a course's check visit (`mission-<skill>-check`), not the revisit of a fresh skill.
+  final bool check;
 }
 
 /// A skill whose check is due, in a land the bottle may open.
@@ -74,11 +80,20 @@ class DueSkill {
     required this.land,
     required this.dueAt,
     this.reviewedToday = false,
+    this.check = false,
+    this.reteachLessonId,
   });
 
   final String skillId;
   final AdventureLand land;
   final DateTime dueAt;
+
+  /// A course's check visit (the skill's lessons are done, it is not fresh yet) and not the revisit of a fresh skill. It comes after
+  /// every revisit of a fresh skill, in the revisit's slot (owner's OK 2026-11-07).
+  final bool check;
+
+  /// A check visit whose skill failed its checks on two visits in a row: the lesson to play again before the next check visit.
+  final String? reteachLessonId;
 
   /// The engine already took today's memory review of this skill, so a second check only feels like being asked again.
   final bool reviewedToday;
@@ -119,6 +134,10 @@ class TodaysAdventure {
   /// A call for help: the revisit of [skillId].
   const TodaysAdventure.revisit(AdventureLand land, String skillId)
     : this._(AdventureKind.revisit, AdventureReason.callForHelp, land: land, skillId: skillId);
+
+  /// A course's check visit of [skillId] (a revisit by kind: it takes the revisit's slot).
+  const TodaysAdventure.checkVisit(AdventureLand land, String skillId)
+    : this._(AdventureKind.revisit, AdventureReason.checkVisit, land: land, skillId: skillId);
 
   /// The land's next lesson, as the path offers it (before any warm-up).
   const TodaysAdventure.lesson(AdventureLand land, String? lessonId, AdventureReason reason)
@@ -169,7 +188,12 @@ TodaysAdventure todaysAdventure(AdventureInput input, {AdventureParams? params})
       v.visitsSinceRevisitToday == null || v.visitsSinceRevisitToday! >= p.newAfterRevisit;
   final DueSkill? revisit = _firstDue(v);
   if (revisit != null && (revisitAllowed || newPick == null)) {
-    return TodaysAdventure.revisit(revisit.land, revisit.skillId);
+    if (revisit.reteachLessonId != null) {
+      return TodaysAdventure.replay(revisit.land, revisit.reteachLessonId!);
+    }
+    return revisit.check
+        ? TodaysAdventure.checkVisit(revisit.land, revisit.skillId)
+        : TodaysAdventure.revisit(revisit.land, revisit.skillId);
   }
   if (newPick != null) {
     final AdventureReason reason = input.visits.isEmpty
@@ -209,7 +233,8 @@ AdventureLand? _newLearning(_View v, AdventureParams p) {
   return others.first;
 }
 
-/// The check that fell due earliest, in an open land and not taken today; at the same time the current land first.
+/// The check that fell due earliest, in an open land and not taken today; at the same time the current land first. A course's check
+/// visit comes after every revisit of a fresh skill.
 DueSkill? _firstDue(_View v) {
   final List<DueSkill> waiting = <DueSkill>[
     for (final DueSkill d in v.input.due)
@@ -217,6 +242,8 @@ DueSkill? _firstDue(_View v) {
   ];
   if (waiting.isEmpty) return null;
   waiting.sort((DueSkill a, DueSkill b) {
+    final int byKind = (a.check ? 1 : 0).compareTo(b.check ? 1 : 0);
+    if (byKind != 0) return byKind;
     final int byTime = a.dueAt.compareTo(b.dueAt);
     if (byTime != 0) return byTime;
     final int byCurrent = (a.land == v.current ? 0 : 1).compareTo(b.land == v.current ? 0 : 1);

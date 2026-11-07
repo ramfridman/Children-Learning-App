@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_mjach",
-    "show": "мяч",
     "replayButton": true
   },
   "feedback": {

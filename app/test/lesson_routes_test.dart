@@ -287,7 +287,11 @@ void main() {
       final Catalog catalog = engineCatalog(rus);
       final Set<String> ids = catalog.items.keys.toSet();
       for (final Activity a in rus.activities.values) {
-        expect(ids.contains(a.id), !a.teachScreen, reason: a.id);
+        // A teach screen is never an item; neither is a step that writes no answer (a chant, a personal turn) nor a say step of a skill that
+        // is not a speaking one (their words could never be covered by an answer); every other step is.
+        final bool noAnswer =
+            a.teachScreen || a.unscored || (a is SayItActivity && rus.skills[a.skillId]?.strand != 'spk');
+        expect(ids.contains(a.id), !noAnswer, reason: a.id);
       }
       expect(rus.activities.values.where((Activity a) => a.teachScreen), isNotEmpty);
     });
@@ -298,12 +302,15 @@ void main() {
         for (final Lesson l in rus.lessons.values.where((Lesson x) => x.id.startsWith('rus.animals-')))
           l.id: <String>[for (final TeachSet s in l.teach) ...s.itemIds],
       };
+      // The Russian teacher's sets of the QA batch: 5, 4, 3, 4, 4 and 2 words (the giraffe and the whale are in the last two lessons).
       expect(before['rus.animals-1'], hasLength(5));
       expect(before['rus.animals-2'], hasLength(4));
+      expect(before['rus.animals-5'], hasLength(4));
+      expect(before['rus.animals-6'], hasLength(2), reason: 'the last set stands before the last lesson');
       expect(
-        before['rus.animals-5'],
-        hasLength(6),
-        reason: 'the fifth and the sixth set both come before animals-5',
+        <int>[for (final String id in before.keys.toList()..sort()) before[id]!.length]
+            .fold(0, (int a, int b) => a + b),
+        22,
       );
       expect(before['rus.animals-1']!.first, 'rus.a05.tc01');
     });
@@ -459,7 +466,7 @@ void main() {
       final LessonController fresh = openSay('rus.a01.04s', route: 'new');
       expect(fresh.pictureFirst, isFalse);
       expect(<Object?>[fresh.voice, fresh.voiceTarget], <Object?>['vo:rus.f03', 'vo:rus.w_privet']);
-      expect(fresh.bubbleShow, 'Привет');
+      expect(fresh.bubbleShow, isNull, reason: 'no chip: a Band A step prints no word (band-a-build.md 7.2)');
       final LessonController unset = openSay('rus.a01.04s');
       expect(unset.pictureFirst, isFalse, reason: 'a route that is not set is a new learner');
       for (final LessonController c in <LessonController>[heritage, fresh, unset]) {
@@ -467,24 +474,21 @@ void main() {
       }
     });
 
-    test(
-      'R4: A-15 is picture first for a new learner too, and the word shows when the voice has said it',
-      () {
-        final LessonController c = openSay('rus.a15.01', route: 'new');
-        expect(c.pictureFirst, isTrue);
-        expect(<Object?>[c.voice, c.voiceTarget, c.bubbleShow], <Object?>['vo:rus.f06', null, null]);
-        int told = 0;
-        c.addListener(() => told++);
-        final int said = c.voiceNonce;
-        c.showWord();
-        expect(c.bubbleShow, 'мама');
-        expect(c.voiceNonce, said, reason: 'showing the chip says nothing');
-        expect(told, 1);
-        c.showWord();
-        expect(told, 1, reason: 'once');
-        c.dispose();
-      },
-    );
+    test('R4: A-15 is picture first for a new learner too, and no word shows when the voice has said it (no chip in Band A)', () {
+      final LessonController c = openSay('rus.a15.01', route: 'new');
+      expect(c.pictureFirst, isTrue);
+      expect(<Object?>[c.voice, c.voiceTarget, c.bubbleShow], <Object?>['vo:rus.f06', null, null]);
+      int told = 0;
+      c.addListener(() => told++);
+      final int said = c.voiceNonce;
+      c.showWord();
+      expect(c.bubbleShow, isNull, reason: 'the step has no chip to show');
+      expect(c.voiceNonce, said, reason: 'showing the chip says nothing');
+      expect(told, 0);
+      c.showWord();
+      expect(told, 0);
+      c.dispose();
+    });
 
     test('R4: the quiet fallback turns picture first back into echo, silently, and the replay asks the question again', () {
       bool quiet = false;

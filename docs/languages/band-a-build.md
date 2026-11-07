@@ -281,6 +281,13 @@ The key is read from `%USERPROFILE%\nitznutz-secrets\pack-signing.key`, the same
 | `tools/test_lang_pack_more.py` (run by `test_lang_pack.py`) | the teach screens and routes (10), the routes of 2.6.1 (13: `readerAs`, the hearing screens and the lessons they go before, the say order and its overrides, the invariant), the own-name items, the print-direction items, the font |
 | `app/test/language_pilot_test.dart` | the **playthrough**: for each course, door, course home, the placement visit (a wrong touch at each probe, so that the first lesson stays next), first lesson to the celebration, back home, with every answer written as a row of the course (pack `lang-<course>`, ids only); a wrong touch is the diagnosed error of its distractor; goldens of the first activity on the phone and the tablet (`app/test/goldens/pilot_<course>_first_<board>.png`) |
 
+| `tools/test_lang_band_a_rules.py` (run by `test_lang_pack.py`, 25) | the QA decisions in the generator: no chip in Band A, reverse items and their ladder, no check in a lesson without `inLesson`, picture bins, and the same on the committed packs |
+| `app/test/engine/check_visit_test.dart` (25), `app/test/check_visit_world_test.dart` (16) | the check visit: readiness, items, a failed check, two failed visits, pairs; where it stands in the course stop and in Today's Adventure |
+| `app/test/language_band_a_rules_test.dart` | no chip in a built Band A pack, HEB-A-14 (met after 05 to 08, never fresh), what the engine does not know of a course |
+| `app/test/qa_band_a_mastery_test.dart` | QA's proofs: every skill can be fresh, and a child who follows the course stop reaches fresh mastery of every skill in 19, 27 and 36 days |
+| `app/test/count_tall_stage_test.dart`, `bin_geometry_test.dart`, `read_page_test.dart` | the layouts of `docs/design/languages-band-a-qa.md` sections 3, 4.2 and 5.2 |
+| `app/test/qa_band_a_shots_test.dart`, `qa_band_a_sizes_test.dart` | QA's diagnostics (pictures and sizes of every kind on four boards): a half-hour run, so they run only with `NN_SHOTS=<folder>` or `NN_QA_VISUAL=1`; the suite keeps the quick guard that no sample is a teach or hearing screen |
+
 CI: add `python3 -I -X utf8 tools/test_lang_pack.py` next to `tools/test_generators.py` in `.github/workflows/ci.yml` (infrastructure-engineer).
 
 ## 6. For the teachers, in order
@@ -695,6 +702,28 @@ Reverse items use frame `f38` and ladder `HL-REV`. Add `HL-REV` to `course.json`
   - HEB-A-14 is met after items 05 to 08, not after 01 to 04;
   - the bins of a Band A sort have pictures and no text.
 - **orchestrator:** asks the owner about the Today's Adventure slot of the check visit (7.4 C-2). 7.9 item 13 stays open.
+
+### 7.15 Built (app-developer, 2026-11-07)
+
+What was built for 7.13, and what the build found. The PLAN.md bullet "Build detail (Languages Band A, the QA decisions D1 to D5)" says the same in one paragraph.
+
+| Decision | Built | Where | Proof |
+|---|---|---|---|
+| D1 | `recipe_say` shows nothing by default; the generator refuses any `show` in a Band A skill's activity (Hebrew A-10 to A-12 aside), whatever way it was written | `tools/lang_recipes_talk.py`, `lang_routes.py` (the hearing-screen override is gone), `lang_pack.py` `_no_chips` | `tools/test_lang_band_a_rules.py` `NoChipTest`, `CommittedPacksTest`; `language_band_a_rules_test.dart` (0 activities with a chip in the three packs); `route_screens_test.dart` now expects no chip |
+| D2 | `reverse` in the recipes: stage, sound-only options, `HL-REV`, a clip-less item's word is its `hintWord`; the generator refuses a reverse item that plays the right clip in its prompt, hints 1 and 2 or first-error line, that is not a check, has no picture or has picture options | `tools/lang_recipes.py` `check_reverse`, `head` | `ReverseItemTest`; the app already played sound-only options of a tap (the generic hint of `tap_answer_session.dart`) |
+| D3, C-1 to C-5 | the check visit, pairs and the failed-check rules | `engine/check_visit.dart`, `engine/state.dart` `CheckTrail`, `engine/engine.dart`, `world/check_visits.dart`, `world/course_path.dart` `courseCheckVisit`, `world/adventure_adapter.dart`, `world/todays_adventure.dart`, `app/course_visit.dart` | `engine/check_visit_test.dart` (25), `check_visit_world_test.dart` (16), `todays_adventure_languages_test.dart` |
+| D3, C-6 | a check in a lesson is refused unless `"inLesson": true` | `tools/lang_pack.py` `_no_checks_in` | `ChecksAndLessonsTest`, `CommittedPacksTest` |
+| D3, Today's Adventure | the check visit takes the revisit slot after every revisit of a mastered skill (owner's OK 2026-11-07) | `todays-adventure-rule.md` section 15 | `check_visit_world_test.dart`, `todays_adventure_languages_test.dart` |
+| D4 | `startGuide` for a T04 trace with the start dot; the validator accepts `writing: practised` on T04 items | `content/engine_adapter.dart`, `content/ls02_checks.dart` | `language_band_a_rules_test.dart` (not met after 01 to 04, met after 05 to 08, never fresh) |
+| D5 | a Band A bin has a picture (a letter in A-10 to A-12 aside); a bin with a picture shows no text | `tools/lang_recipes_more.py` `check_bin_sign`, `play/ls01_sort_session.dart` | `BinSignTest`, `CommittedPacksTest` |
+
+**How the check visit is chosen** (the rules are 7.4; these are the choices the build made). A skill is **taught** when every lesson of the path that names it is finished or placed, or placement assumed it (`taughtSkills`). Of the ready skills of a course the one whose last answer is oldest goes first, then the path's order, and at most one visit a day per course (`Visit.check`, a revisit visit whose lesson id ends with `-check`). The visit holds at most 5, 8 or 12 items for Band A, B or C (`checkVisitMax`) and at least 3 when the skill has them. "Ends on a success" is planned, not reacted to: the plan ends on a learn item the child already got right when it would end on a check. A balanced pair is taken whole or not at all. The check type "failed" and the "two failed visits" are kept per skill in the engine's replay (`CheckTrail`), so nothing is stored.
+
+**What the build found, beyond 7.1 to 7.13.**
+1. **Items that write no answer were counted as words of a set.** A chant, a story only heard, a personal turn, a movement and a say step of a skill that is not a speaking one are no evidence, but their variant groups counted in the set coverage, so RUS-A-01 to A-04 and ENG-A-17 could never be fresh for a real child (QA's first test answered those items, which the real app never records). The engine catalogue no longer holds them (`engine_adapter.dart`). A word that only the say steps of a *speaking* skill ask (ENG-A-17's "how are you" answers) is not one that fresh mastery waits for either: without the microphone nothing could cover it (`Catalog.coverageGroupsOf`).
+2. **The two-choice half counted probes** (frame 2.3), which refused ENG-A-16 once its two yes and no probes were added (8 of 14). Probes are not evidence of mastery, so the half is counted over the other items (`language_checks.dart`; frame 2.3 says so). **Decision for the curriculum-expert to confirm**; the other way is two more three-choice items in ENG-A-16.
+3. **Counts of 5 to 10, the SE's bins and the print page** are built as the design-director specified (`docs/design/languages-band-a-qa.md`), with one limit: the corner speaker is Band A's and for cards that are pictures or letters.
+4. **QA's flow test follows the course stop** (7.13): every skill fresh, HEB-A-14 met, in 19, 27 and 36 days of three visits (Hebrew, English, Russian; about one check visit a day). It also needed the engine facts above.
 
 ### 7.14 Sources
 

@@ -224,7 +224,12 @@ class _StoryStage extends StatelessWidget {
           children: <Widget>[
             if (a.background != null)
               Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
-            if (s.showRow) Positioned.fill(child: _pagesRow(a)) else Positioned.fill(child: _page(a)),
+            if (s.showRow)
+              Positioned.fill(child: _pagesRow(a))
+            else
+              Positioned.fill(
+                child: _page(a, arrow: s.asking ? 0 : _arrowSide(context), rtl: rtl),
+              ),
             if (!s.asking && !s.showRow) _arrow(context, rtl),
           ],
         ),
@@ -232,8 +237,10 @@ class _StoryStage extends StatelessWidget {
     );
   }
 
-  /// The page: its picture, and the things in it that say their word when touched.
-  Widget _page(StoryActivity a) {
+  /// The page: its picture, and the things in it that say their word when touched. With the arrow on the stage ([arrow] is its
+  /// side), a page that would lie under it is made smaller and moved off it, above it or beside it, whichever keeps the page larger
+  /// (QA-BA-9: the arrow is never drawn over the picture).
+  Widget _page(StoryActivity a, {required double arrow, required bool rtl}) {
     final StoryPage p = s.current;
     return Padding(
       padding: const EdgeInsets.all(6),
@@ -242,9 +249,16 @@ class _StoryStage extends StatelessWidget {
           // The page keeps its own proportions (a 16:9 picture is not made a square and then shrunk again); the touch boxes of its words
           // are shares of its width and height.
           final double aspect = svgAspect(a.assets.svg(p.picture));
-          final double width = math.min(box.maxWidth, box.maxHeight * aspect);
-          final double height = width / aspect;
-          return Center(
+          final ({Size size, Alignment align}) place = storyPagePlace(
+            Size(box.maxWidth, box.maxHeight),
+            aspect,
+            arrow: arrow,
+            rtl: rtl,
+          );
+          final double width = place.size.width;
+          final double height = place.size.height;
+          return Align(
+            alignment: place.align,
             child: SizedBox(
               key: Key('story-page-${s.page}'),
               width: width,
@@ -314,18 +328,20 @@ class _StoryStage extends StatelessWidget {
     );
   }
 
+  /// The side of the arrow's button.
+  double _arrowSide(BuildContext context) => math.max(72, AppLayout.of(context).touch.minControl);
+
   /// The arrow that turns the page, at the end corner of the stage in the story's direction; the last page has a tick.
   Widget _arrow(BuildContext context, bool rtl) {
     final bool end = s.atEnd;
-    final double touch = AppLayout.of(context).touch.minControl;
     return Positioned(
-      left: rtl ? 12 : null,
-      right: rtl ? null : 12,
-      bottom: 12,
+      left: rtl ? storyArrowInset : null,
+      right: rtl ? null : storyArrowInset,
+      bottom: storyArrowInset,
       child: PebbleButton(
         key: const Key('story-turn'),
         semanticLabel: (end ? He.storyEndSemantics : He.storyNextSemantics).text,
-        size: math.max(72, touch),
+        size: _arrowSide(context),
         onPressed: s.turn,
         // An arrow never mirrors with the screen: it points the way the story is read.
         child: Icon(
@@ -337,6 +353,48 @@ class _StoryStage extends StatelessWidget {
       ),
     );
   }
+}
+
+/// How far the arrow stands from the stage's bottom and end edges.
+const double storyArrowInset = 12;
+
+/// Where a story page of [aspect] (width over height) stands in a [box] (the stage less its padding of 6): as large as the box allows,
+/// centred; but when the arrow ([arrow] points square, at the bottom end corner, [rtl] says which) would lie over the centred page, the
+/// page is fitted to the box less the arrow's band, under the top (the room above the arrow) or beside it at the start side, whichever
+/// is larger. [arrow] 0 is a stage with no arrow.
+({Size size, Alignment align}) storyPagePlace(
+  Size box,
+  double aspect, {
+  required double arrow,
+  required bool rtl,
+}) {
+  Size fit(double w, double h) {
+    final double width = math.max(0, math.min(w, h * aspect));
+    return Size(width, width / aspect);
+  }
+
+  final Size centred = fit(box.width, box.height);
+  if (arrow <= 0) return (size: centred, align: Alignment.center);
+  const double inset = storyArrowInset - 6;
+  final Rect page = Rect.fromLTWH(
+    (box.width - centred.width) / 2,
+    (box.height - centred.height) / 2,
+    centred.width,
+    centred.height,
+  );
+  final Rect button = Rect.fromLTWH(
+    rtl ? inset : box.width - inset - arrow,
+    box.height - inset - arrow,
+    arrow,
+    arrow,
+  );
+  if (!page.overlaps(button.inflate(4))) return (size: centred, align: Alignment.center);
+  final double band = arrow + inset + 6;
+  final Size above = fit(box.width, box.height - band);
+  final Size beside = fit(box.width - band, box.height);
+  return above.width >= beside.width
+      ? (size: above, align: Alignment.topCenter)
+      : (size: beside, align: rtl ? Alignment.centerRight : Alignment.centerLeft);
 }
 
 /// The width over the height of a picture, from the `viewBox` of its SVG text; 1 when it has none.

@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_ris",
-    "show": "рис",
     "replayButton": true
   },
   "feedback": {

@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_brat",
-    "show": "брат",
     "replayButton": true
   },
   "feedback": {

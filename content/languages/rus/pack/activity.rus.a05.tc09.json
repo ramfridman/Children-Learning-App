@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_koza",
-    "show": "коза",
     "replayButton": true
   },
   "feedback": {

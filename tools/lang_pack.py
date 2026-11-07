@@ -39,6 +39,7 @@ ROOT = os.path.normpath(os.path.join(TOOLS, '..'))
 if TOOLS not in sys.path:  # `python -I` keeps the script's own folder off the path
     sys.path.insert(0, TOOLS)
 import lang_recipes  # noqa: E402
+from lang_recipes_base import LETTER_SKILLS_OF_BAND_A  # noqa: E402
 import lang_routes  # noqa: E402
 
 COURSES = ('eng', 'heb', 'rus')
@@ -81,6 +82,21 @@ def he(text):
 
 def slug(text):
     return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
+
+
+def chip_places(node, path=''):
+    """Where a document has a `show` (the word a line prints in a chip), as dotted paths."""
+    found = []
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if key == 'show' and isinstance(value, str) and value:
+                found.append(path + 'show')
+            else:
+                found += chip_places(value, '%s%s.' % (path, key))
+    elif isinstance(node, list):
+        for n, value in enumerate(node):
+            found += chip_places(value, '%s%d.' % (path, n))
+    return found
 
 
 class Course(lang_recipes.Recipes, lang_routes.Routes):
@@ -271,6 +287,7 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
         self.derived = {}
         for name, unit in self.units:
             self._unit(name, unit)
+        self._no_chips()
         self._lessons()
         self._skills()
         self._tag_docs()
@@ -280,6 +297,18 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
         if self.problems:
             raise SpecError(self.problems)
         return self.files
+
+    def _no_chips(self):
+        """Band A has no reading (band-a-build.md 7.2): no prompt, say or teach or hearing screen, hint or feedback line of a Band A skill
+        shows a target-language word in a chip, whatever way it was written (`show` on an item, a `then`, a ladder or a feedback step, a raw
+        activity). The letters, the own name and the print of Hebrew A-10 to A-12 are the exception."""
+        for aid, info in sorted(self.items.items()):
+            sid = info['skill']
+            if self.skills[sid]['band'] != 'A' or sid in LETTER_SKILLS_OF_BAND_A:
+                continue
+            for where in chip_places(info['doc']):
+                self.problem(aid, 'shows a target-language word in a chip (%s): a Band A skill has no reading, so no chip on a prompt, a say '
+                                  'or teach or hearing screen, a hint or a feedback line' % where)
 
     def put(self, name, doc):
         self.files[name] = (json.dumps(doc, ensure_ascii=False, indent=2) + '\n').encode('utf-8')
@@ -327,7 +356,7 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
             return
         if doc is None:
             return
-        self._add(sk, sid, aid, doc, item_id)
+        self._add(sk, sid, aid, doc, item_id, item)
         follow = item.get('then')
         if isinstance(follow, dict) and follow.get('kind') not in RECIPES:
             self.problem(where, 'then: unknown kind "%s"' % follow.get('kind'))
@@ -340,12 +369,13 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
             step_id = aid + follow['kind'][0]
             step_doc = getattr(self, 'recipe_' + RECIPES[follow['kind']])(sk, sid, step_id, step, where + ' then')
             if step_doc is not None:
-                self._add(sk, sid, step_id, step_doc, step['id'])
+                self._add(sk, sid, step_id, step_doc, step['id'], dict(item, **follow))
                 self.groups[aid] = [aid, step_id]
 
-    def _add(self, sk, sid, aid, doc, item_id):
+    def _add(self, sk, sid, aid, doc, item_id, item=None):
         sk['items'].append(aid)
-        self.items[aid] = {'doc': doc, 'skill': sid, 'purpose': doc.get('purpose', 'learn'), 'short': '%s.%s' % (sk['slug'], item_id)}
+        self.items[aid] = {'doc': doc, 'skill': sid, 'purpose': doc.get('purpose', 'learn'), 'short': '%s.%s' % (sk['slug'], item_id),
+                           'inLesson': bool((item or {}).get('inLesson'))}
         if doc.get('representation') in REPRESENTATIONS:
             self._skill_reps.setdefault(sid, set()).add(doc['representation'])
         self.put('activity.%s.json' % aid, doc)
@@ -409,6 +439,15 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
             ids.extend(self.groups.get(qualified, [qualified]))
         return ids
 
+    def _no_checks_in(self, where, ids):
+        """A check is served by the check visit, on a later day (band-a-build.md 7.4 C-6), so a lesson holds none unless the item says
+        `"inLesson": true`: a question about the story or chant the lesson has just played, which makes no sense without it."""
+        for aid in ids:
+            info = self.items.get(aid)
+            if info and info['purpose'] == 'check' and not info['inLesson']:
+                self.problem(where, 'the item "%s" is a check, and a lesson holds none: the check visit serves it on a later day (a question '
+                                    'about the story or chant the lesson just played says `"inLesson": true`)' % info['short'])
+
     def _lessons(self):
         number = 0
         seen = set()
@@ -428,6 +467,7 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
                     self.problem(where, 'the lesson id %s is used twice' % full)
                 seen.add(full)
                 ids = unit_ids[i]
+                self._no_checks_in(where, ids)
                 skills = []
                 for aid in ids:
                     s = self.items.get(aid, {}).get('skill')

@@ -402,6 +402,10 @@
       "file": "pip_family.svg"
     },
     {
+      "id": "pip_feed",
+      "file": "pip_feed.svg"
+    },
+    {
       "id": "pip_happy",
       "file": "pip_happy.svg"
     },

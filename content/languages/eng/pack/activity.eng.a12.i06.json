@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:eng.en_blue",
-    "show": "blue",
     "replayButton": true
   },
   "feedback": {

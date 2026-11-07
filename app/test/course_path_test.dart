@@ -184,7 +184,11 @@ void main() {
       ]);
       expect(m.nextIndex, 4);
       expect(m.placementDue, isFalse, reason: 'the visits are over');
-      expect(m.pebbleLesson?.lessonId, 'eng.animals_1');
+      // What placement took as known is verified by a visit before the path goes on (band-a-build.md 7.4, C-1 and C-2); the day after the
+      // placement the pebble is that visit, and the lesson the path opens at stays the next stone.
+      expect(m.stop, TodaysAdventure.checkVisit(LanguageLand('eng'), 'ENG-A-01'));
+      expect(m.pebbleLesson, isNull);
+      expect(m.next!.lessonId, 'eng.animals_1');
     });
 
     test('a child who misses the first two probes starts at the beginning, and is not asked again', () {

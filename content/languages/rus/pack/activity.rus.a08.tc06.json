@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_sharik",
-    "show": "шарик",
     "replayButton": true
   },
   "feedback": {

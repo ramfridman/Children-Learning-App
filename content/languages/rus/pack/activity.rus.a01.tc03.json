@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_zdravstvujte",
-    "show": "здравствуйте",
     "replayButton": true
   },
   "feedback": {

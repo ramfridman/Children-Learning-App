@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_rot",
-    "show": "рот",
     "replayButton": true
   },
   "feedback": {

@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_koshka",
-    "show": "кошка",
     "replayButton": true
   },
   "feedback": {

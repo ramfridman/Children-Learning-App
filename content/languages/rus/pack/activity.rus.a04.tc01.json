@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_idi",
-    "show": "Иди",
     "replayButton": true
   },
   "feedback": {

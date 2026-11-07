@@ -32,7 +32,8 @@ class Recipes(Talk, More, Print):
         check = check or self._choose(item, 'check', 'transfer' if purpose == 'check' else 'practice', CHECK_TYPES, where)
         rep = self._choose(item, 'rep', self.defaults.get('rep', rep) if 'rep' not in item and rep == 'pictorial' else rep,
                            REPRESENTATIONS, where)
-        variant = item.get('variant') or variant or slug(item.get('target') or '%s-%s' % (sk['slug'], item['id']))
+        # The word of an item is the clip it plays; one that plays none (a reverse item, which shows the picture) is of the word it names.
+        variant = item.get('variant') or variant or slug(item.get('target') or item.get('hintWord') or '%s-%s' % (sk['slug'], item['id']))
         doc = {
             'schema': 'activity/v1',
             'id': aid,
@@ -295,7 +296,33 @@ class Recipes(Talk, More, Print):
             return None
         doc['scene'] = scene
         doc['answer'] = answer
+        if doc['checkType'] == 'reverse':
+            self.check_reverse(doc, faces, where)
         return doc
+
+    def check_reverse(self, doc, faces, where):
+        """A reverse check (band-a-build.md 7.3) shows the picture and the child finds its word among 2 or 3 sound buttons. No line before
+        the third hint may play the right word: not the prompt, not the first two hints, not the first-error lines (the ladder `HL-REV` and
+        the item's `feedback` see to it). A clip that is not the answer, such as the question "who is this?", may be played."""
+        if doc['purpose'] != 'check':
+            self.problem(where, 'a reverse item is a check (`"purpose": "check"`)')
+        if not doc['scene'].get('group'):
+            self.problem(where, 'a reverse item shows the picture of the word it asks for (`stage`)')
+        if not all(set(f) <= {'clip', 'label'} and 'clip' in f for f in faces):
+            self.problem(where, 'the options of a reverse item are sound buttons only: {"clip": ...}')
+        right = {o['clip'] for o in doc['answer']['options'] if o['id'] == doc['answer']['correct'] and 'clip' in o}
+
+        def says_right(line):
+            return bool(right & {line.get('target'), line.get('target2')})
+
+        if says_right(doc['prompt']):
+            self.problem(where, 'the prompt of a reverse item plays the right word: that is the answer')
+        for hint in doc['hints']:
+            if hint['level'] < 3 and says_right(hint):
+                self.problem(where, 'hint %d of a reverse item plays the right word: only the third hint may say it (ladder HL-REV)' % hint['level'])
+        for rule in doc['feedback']['incorrect']:
+            if says_right(rule):
+                self.problem(where, 'the first-error line of a reverse item plays the right word: it names no option (`feedback.wrong`, `byTag`)')
 
     # ------------------------------------------------------------ LS11 listen and do
     def recipe_listen_do(self, sk, sid, aid, item, where):

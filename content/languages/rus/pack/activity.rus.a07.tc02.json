@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_voda",
-    "show": "вода",
     "replayButton": true
   },
   "feedback": {

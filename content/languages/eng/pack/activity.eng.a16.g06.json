@@ -17,7 +17,7 @@
   "purpose": "check",
   "checkType": "transfer",
   "representation": "story",
-  "variantGroup": "a16-g06",
+  "variantGroup": "en-cow",
   "difficulty": {
     "authored": 0.2
   },

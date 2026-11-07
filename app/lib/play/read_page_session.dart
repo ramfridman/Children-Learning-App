@@ -6,10 +6,10 @@ import '../child/activity_shell.dart';
 import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
-
 import '../design/layout.dart';
+import '../design/token_types.dart' show Band;
 import '../design/tokens.g.dart';
-import 'choice_row.dart' show withTallStage;
+import 'choice_row.dart' show withLs01Zones, withTallStage;
 import 'choice_session.dart';
 import 'hint_hand.dart';
 import 'lesson_controller.dart' show LessonController;
@@ -179,15 +179,38 @@ class ReadPageSession extends ChoiceSession {
 
   // ---- layout ----
 
+  /// On the phones the picture is the stage and the print stands in the answer zone under it, one sentence to a line (docs/design/
+  /// languages-band-a-qa.md section 5.2): the stage of a card is as wide as a phone's tall stage is not, and a five-word sentence wrapped
+  /// into it and scaled down was a narrow column. The tablets keep the tall stage with both.
+  bool zoned = false;
+
   @override
-  ActivitySpec layoutFor(ActivitySpec base) => withTallStage(base);
+  ActivitySpec layoutFor(ActivitySpec base) {
+    zoned = !base.stageIsCard;
+    return zoned ? withLs01Zones(base, Band.a) : withTallStage(base);
+  }
 
   @override
   Widget buildStage(BuildContext context, Size size, ActivitySpec spec) =>
       ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _ReadStage(this, size));
 
   @override
-  Widget? buildTiles(BuildContext context, ActivitySpec spec) => null;
+  Widget? buildTiles(BuildContext context, ActivitySpec spec) {
+    if (!zoned) return null;
+    // The answer zone's height, to the edge where no touch place may be: two lines of print are scaled down to it, never cut.
+    final double room = spec.boardHeight - TokenTouch.bottomNoHotspot - (spec.tilesTop - 12);
+    return ListenableBuilder(
+      listenable: this,
+      builder: (BuildContext c, Widget? _) => ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: spec.tilesWidth, maxHeight: room),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: AlignmentDirectional.topStart,
+          child: SizedBox(width: spec.tilesWidth, child: _ReadPrint(this, zoned: true)),
+        ),
+      ),
+    );
+  }
 }
 
 /// The print of a page is large: a size for the words that the stage holds in two or three lines.
@@ -215,13 +238,15 @@ class _ReadStage extends StatelessWidget {
               Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
             Padding(
               padding: const EdgeInsets.all(8),
-              child: Column(
-                children: <Widget>[
-                  Expanded(flex: 5, child: _picture(a, p)),
-                  const SizedBox(height: 6),
-                  Expanded(flex: 4, child: _print(context, p)),
-                ],
-              ),
+              child: s.zoned
+                  ? _picture(a, p)
+                  : Column(
+                      children: <Widget>[
+                        Expanded(flex: 5, child: _picture(a, p)),
+                        const SizedBox(height: 6),
+                        Expanded(flex: 4, child: _ReadPrint(s, zoned: false)),
+                      ],
+                    ),
             ),
           ],
         ),
@@ -260,32 +285,55 @@ class _ReadStage extends StatelessWidget {
       },
     );
   }
+}
 
-  /// The lines of print, one under the other, each starting at the right (the reading direction of Hebrew).
-  Widget _print(BuildContext context, StoryPage p) {
+/// The lines of print, one under the other, each starting at the right (the reading direction of Hebrew). In the stage of a card the words
+/// wrap to its width and a page of more rows than the stage holds is scaled down, never cut; [zoned] (a phone's answer zone) sets each line
+/// of the page in one row, which is shrunk only when it is wider than the zone.
+class _ReadPrint extends StatelessWidget {
+  const _ReadPrint(this.s, {required this.zoned});
+
+  final ReadPageSession s;
+  final bool zoned;
+
+  @override
+  Widget build(BuildContext context) {
     final double touch = AppLayout.of(context).touch.minControl;
+    final StoryPage p = s.page;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Column(
         key: const Key('read-print'),
+        mainAxisSize: zoned ? MainAxisSize.min : MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           for (final (int l, List<({String text, String? clip})> line) in p.lines.indexed)
-            Flexible(
-              child: s.follow
-                  // The words wrap to the width of the page; a page of more rows than the stage holds is scaled down, never cut.
-                  ? LayoutBuilder(
-                      builder: (BuildContext context, BoxConstraints box) => FittedBox(
+            if (zoned)
+              SizedBox(
+                height: touch,
+                child: s.follow
+                    ? FittedBox(
                         fit: BoxFit.scaleDown,
                         alignment: AlignmentDirectional.centerStart,
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(maxWidth: box.maxWidth),
-                          child: _FollowLine(s, l, line, touch),
+                        child: _FollowLine(s, l, line, touch, oneRow: true),
+                      )
+                    : _ZoneLine(s, l, line.map((w) => w.text).join(' '), touch),
+              )
+            else
+              Flexible(
+                child: s.follow
+                    ? LayoutBuilder(
+                        builder: (BuildContext context, BoxConstraints box) => FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: AlignmentDirectional.centerStart,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: box.maxWidth),
+                            child: _FollowLine(s, l, line, touch),
+                          ),
                         ),
-                      ),
-                    )
-                  : _ZoneLine(s, l, line.map((w) => w.text).join(' '), touch),
-            ),
+                      )
+                    : _ZoneLine(s, l, line.map((w) => w.text).join(' '), touch),
+              ),
         ],
       ),
     );
@@ -402,7 +450,17 @@ class _ZoneLine extends StatelessWidget {
                   painter: _ArrowPainter(TokenColors.hintHalo),
                 ),
               ),
-            if (s.reading != null || s.pointing)
+            // The finger resting on the start (level 3) comes from the guide's side, the upper right, as every pointing hand does: its
+            // tip touches the top of the first letter and the hand lies above the line, so no letter of the first word is covered
+            // (QA-BA-10). It ends 6 past the line's start, inside the stage's padding of 8.
+            if (s.pointing && s.reading == null)
+              PositionedDirectional(
+                key: const Key('read-finger'),
+                start: -6,
+                top: 4 - PointingHand.tipAt(handHeight).dy,
+                child: PointingHand(height: handHeight),
+              )
+            else if (s.reading != null || s.pointing)
               AnimatedPositionedDirectional(
                 key: const Key('read-finger'),
                 duration: s.reading == null || MediaQuery.disableAnimationsOf(context)
@@ -422,31 +480,31 @@ class _ZoneLine extends StatelessWidget {
 
 /// A line of print whose words are touched one after the other (`follow`): the voice reads the word that is due and waits for a touch on it.
 class _FollowLine extends StatelessWidget {
-  const _FollowLine(this.s, this.index, this.line, this.touch);
+  const _FollowLine(this.s, this.index, this.line, this.touch, {this.oneRow = false});
 
   final ReadPageSession s;
   final int index;
   final List<({String text, String? clip})> line;
   final double touch;
 
+  /// The whole line is one row of words (the phone's answer zone); otherwise the words wrap onto as many rows as the width needs.
+  final bool oneRow;
+
   @override
   Widget build(BuildContext context) {
     final int first = <int>[for (int l = 0; l < index; l++) s.page.lines[l].length]
         .fold(0, (int a, int b) => a + b);
     // The words wrap onto as many rows as the width needs, so that the print stays large; the first word is at the right.
+    final List<Widget> words = <Widget>[
+      for (final (int k, ({String text, String? clip}) w) in line.indexed)
+        Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: _word(context, first + k, w.text)),
+    ];
+    if (oneRow) {
+      return Row(textDirection: TextDirection.rtl, mainAxisSize: MainAxisSize.min, children: words);
+    }
     return Align(
       alignment: AlignmentDirectional.centerStart,
-      child: Wrap(
-        textDirection: TextDirection.rtl,
-        runSpacing: 2,
-        children: <Widget>[
-          for (final (int k, ({String text, String? clip}) w) in line.indexed)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: _word(context, first + k, w.text),
-            ),
-        ],
-      ),
+      child: Wrap(textDirection: TextDirection.rtl, runSpacing: 2, children: words),
     );
   }
 

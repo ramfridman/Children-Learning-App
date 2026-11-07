@@ -122,13 +122,13 @@
     }
   ],
   "scene": {
-    "picture": "asset:pip_happy",
+    "picture": "asset:pip_feed",
     "target": {
       "at": {
-        "x": 0.34,
-        "y": 0.25,
-        "w": 0.38,
-        "h": 0.55
+        "x": 0.3125,
+        "y": 0.4688,
+        "w": 0.3906,
+        "h": 0.4922
       }
     }
   },

@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:eng.en_duck",
-    "show": "duck",
     "replayButton": true
   },
   "feedback": {

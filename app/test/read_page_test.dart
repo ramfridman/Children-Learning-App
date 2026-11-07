@@ -277,6 +277,71 @@ void main() {
     });
   });
 
+  group('one sentence to a line on the phones (docs/design/languages-band-a-qa.md section 5.2)', () {
+    for (final MapEntry<String, Size> b in boards.entries.where(
+      (MapEntry<String, Size> e) => e.key.startsWith('phone'),
+    )) {
+      testWidgets('${b.key}: the picture is the stage, the print stands under it and each line is one row', (
+        WidgetTester t,
+      ) async {
+        final Rig<ReadPageSession> r = rig('04');
+        await r.pump(t, size: b.value);
+        final Rect stage = t.getRect(find.byKey(const Key('read-stage')));
+        final Rect print = t.getRect(find.byKey(const Key('read-print')));
+        expect(
+          print.top,
+          greaterThanOrEqualTo(stage.bottom - 1),
+          reason: 'the print is in the answer zone, not in the stage',
+        );
+        expect(find.byKey(const Key('read-picture')), findsOneWidget);
+        final StoryActivity a = item('04');
+        final int words = a.pages.first.lines.fold<int>(
+          0,
+          (int n, List<({String text, String? clip})> l) => n + l.length,
+        );
+        final List<double> rows = <double>{
+          for (int i = 0; i < words; i++)
+            t.getRect(find.byKey(Key('read-word-$i'))).center.dy.roundToDouble(),
+        }.toList();
+        expect(
+          rows.length,
+          a.pages.first.lines.length,
+          reason: 'the words of a line stand in one row: no wrapping',
+        );
+        for (int i = 0; i < words; i++) {
+          expect(t.getSize(find.byKey(Key('read-word-$i'))).height, greaterThanOrEqualTo(48));
+        }
+        expect(
+          print.bottom,
+          lessThanOrEqualTo(b.value.height - 24 + 1),
+          reason: 'above the edge where no touch place may be',
+        );
+        await r.done(t);
+      });
+
+      testWidgets('${b.key}: a zones page keeps its lines in the answer zone, with its two ends to touch', (
+        WidgetTester t,
+      ) async {
+        final Rig<ReadPageSession> r = rig('01');
+        await r.pump(t, size: b.value);
+        final Rect stage = t.getRect(find.byKey(const Key('read-stage')));
+        expect(t.getRect(find.byKey(const Key('read-print'))).top, greaterThanOrEqualTo(stage.bottom - 1));
+        expect(t.getRect(find.byKey(const Key('read-zone-line1-start'))).width, greaterThanOrEqualTo(48));
+        expect(t.getRect(find.byKey(const Key('read-zone-line1-end'))).width, greaterThanOrEqualTo(48));
+        await r.done(t);
+      });
+    }
+
+    testWidgets('a tablet keeps the tall stage with the picture and the print in it', (WidgetTester t) async {
+      final Rig<ReadPageSession> r = rig('04');
+      await r.pump(t, size: boards['tabletLandscape']!);
+      final Rect stage = t.getRect(find.byKey(const Key('read-stage')));
+      final Rect print = t.getRect(find.byKey(const Key('read-print')));
+      expect(stage.contains(print.center), isTrue);
+      await r.done(t);
+    });
+  });
+
   // The pictures of each state, to look at (they are written only when NN_SHOTS names a folder; nothing is compared).
   if (shots != null) {
     for (final MapEntry<String, Size> b in boards.entries.where(

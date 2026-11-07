@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_kot",
-    "show": "кот",
     "replayButton": true
   },
   "feedback": {

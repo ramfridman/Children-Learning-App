@@ -49,7 +49,8 @@ def base_unit():
         'skill': {'id': 'ENG-A-01', 'strand': 'lis', 'title': 'בְּרָכוֹת'},
         'items': [
             {'id': 'i01', 'kind': 'tap', 'target': 'en-hello', 'options': ['a', 'b', 'c'], 'wrong': {'b': 'sem', 'c': 'guess'}},
-            {'id': 'i02', 'kind': 'tap', 'target': 'en-bye', 'options': ['b', 'a'], 'wrong': {'a': 'sem'}, 'purpose': 'check'},
+            {'id': 'i02', 'kind': 'tap', 'target': 'en-bye', 'options': ['b', 'a'], 'wrong': {'a': 'sem'}, 'purpose': 'check',
+             'inLesson': True},
         ],
         'lessons': [{'id': 'greet-1', 'title': 'בְּרָכוֹת', 'items': ['i01', 'i02']}],
     }
@@ -745,4 +746,5 @@ class RecipesTest(RecipeBase):
 if __name__ == '__main__':
     # The tests of test_lang_pack_more.py run with these (it imports this file, so it is imported only when this one is the script).
     from test_lang_pack_more import FontTest, NamesBecomeFilesTest, OwnNameTest, PrintTest, RoutesTest, TeachTest  # noqa: F401
+    from test_lang_band_a_rules import BinSignTest, ChecksAndLessonsTest, CommittedPacksTest, NoChipTest, ReverseItemTest  # noqa: F401
     unittest.main()

@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_sup",
-    "show": "суп",
     "replayButton": true
   },
   "feedback": {

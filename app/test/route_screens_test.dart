@@ -1,7 +1,7 @@
 // The Russian routes on the lesson screen (docs/languages/band-a-build.md 2.6.1, R3 and R4), with the real Band A pack and fake clips:
 //  * the hearing screen of A-20 (a heritage speaker): the line and the word once, no microphone, no "I said it", the picture after the word,
 //    the word again on the replay button, nothing written;
-//  * the say step picture first: the question alone, the pause, then the word and its chip; the microphone and "I said it" from the start;
+//  * the say step picture first: the question alone, the pause, then the word (no chip: Band A has no reading); the microphone and "I said it" from the start;
 //    echo for a new learner (and a reader the placement has not put past its first level);
 //  * the pictures of batch 6: the rooms of RUS-A-13 as a listen-and-do, the heart and the flower cards of Hebrew A-10.
 //
@@ -228,7 +228,7 @@ void main() {
 
   group('the say step picture first (R4)', () {
     testWidgets(
-      'a heritage speaker: the question alone, the microphone and "I said it" from the start, the word after the pause, with its chip',
+      'a heritage speaker: the question alone, the microphone and "I said it" from the start, the word after the pause, and no chip: Band A has no reading',
       (WidgetTester t) async {
         final AppRig rig = await open(
           t,
@@ -251,7 +251,11 @@ void main() {
           'rus.f06',
           'rus.w_mama',
         ], reason: 'after the pause the voice says the word');
-        expect(find.text('мама'), findsOneWidget, reason: 'and the chip shows it');
+        expect(
+          find.text('мама'),
+          findsNothing,
+          reason: 'and no chip shows it: a Band A step prints no word (band-a-build.md 7.2)',
+        );
         expect(_mic, findsOneWidget);
         expect(rig.speech.listens, 0, reason: 'only a tap opens the microphone');
         expect(await rig.db.attemptsOf(langKid), isEmpty);
@@ -289,7 +293,11 @@ void main() {
         for (final String route in <String>['new', 'reader']) {
           final AppRig rig = await open(t, rus, activity: 'rus.a01.04s', route: route, settle: 600);
           expect(lines(rig), <String>['rus.f03', 'rus.w_privet'], reason: route);
-          expect(find.text('Привет'), findsOneWidget, reason: '$route: the word is on show');
+          expect(
+            find.text('Привет'),
+            findsNothing,
+            reason: '$route: the word is heard, not shown (no chip in Band A)',
+          );
           await waitFor(t, 3600);
           expect(times(rig, 'rus.w_privet'), 2, reason: route);
           await t.pumpWidget(const SizedBox());

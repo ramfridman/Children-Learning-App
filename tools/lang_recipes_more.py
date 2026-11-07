@@ -3,7 +3,7 @@
 Standard library only."""
 import re
 
-from lang_recipes_base import ALT
+from lang_recipes_base import ALT, LETTER_SKILLS_OF_BAND_A
 
 
 class More:
@@ -126,6 +126,7 @@ class More:
                 entry['sprite'] = self.asset(b['picture'], where)
             else:
                 entry['text'] = text
+                self.check_bin_sign(sk, sid, b, text, where)
             entry['clip'] = self.clip(b['label'], where)
             entry['label'] = text or b['id']
             bins.append(entry)
@@ -162,6 +163,17 @@ class More:
         doc['scene'] = {'bins': bins, 'items': cards}
         doc['answer'] = {'type': 'sort', 'mode': 'sort', 'misconception': first_tag}
         return doc
+
+    def check_bin_sign(self, sk, sid, bin_in, text, where):
+        """A bin of a Band A sort has a picture for its sign (band-a-build.md 7.6): a pre-reader cannot read a word on a bin, and the bin
+        still says its word on a touch. A letter is the one text a bin may show, in the skills whose content is letters (Hebrew A-10 to A-12)."""
+        if sk['band'] != 'A':
+            return
+        letters = len([c for c in text if c.isalpha()])
+        if sid in LETTER_SKILLS_OF_BAND_A and letters == 1:
+            return
+        self.problem(where, 'the bin "%s" has no `picture`: a Band A bin has a picture for its sign, not a printed word (the clip stays: it '
+                            'says its word on a touch)' % bin_in.get('id'))
 
     # ------------------------------------------------------------ a story line
     def recipe_sequence(self, sk, sid, aid, item, where):

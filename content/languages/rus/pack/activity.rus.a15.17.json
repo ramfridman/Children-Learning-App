@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_hleb",
-    "show": "хлеб",
     "replayButton": true
   },
   "feedback": {

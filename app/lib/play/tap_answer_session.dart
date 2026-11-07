@@ -6,6 +6,7 @@ import '../child/activity_shell.dart';
 import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
+import '../engine/course.dart' show Course;
 import '../design/components.dart';
 import '../design/course_text.dart';
 import '../design/tokens.g.dart';
@@ -423,6 +424,10 @@ Widget _face(
   );
 }
 
+/// The white label on the front of the sorting bin (content/languages/pictures/bin-box.svg), as shares of its square: the group
+/// of a binned item is drawn there. It is BIN_LABEL of tools/make_language_scenes.py; the two change together.
+const Rect binLabel = Rect.fromLTWH(0.2, 0.41, 0.56, 0.46);
+
 /// The room under the pictures of the stage for the word revealed after the answer.
 const double _captionRoom = 34;
 
@@ -456,14 +461,28 @@ class _TapStage extends StatelessWidget {
     final double gap = (size.width - box * n) / (n + 1);
     // A course that reads right to left lays its pictures out from the right (F1); the lands keep the first on the left.
     final bool fromRight = courseRowDirection(a.course) == TextDirection.rtl;
+    // A language item whose question stands on one picture (the dog of "is it a cat?", the family) draws it as large as the stage
+    // allows, in a square of the stage's height (QA-BA-6: as a group of one it was a thumbnail); when that picture stands in a
+    // background (the sorting bin of "what got into the animals' box?"), the background is drawn whole, as the square, with the
+    // picture in its label (QA-BA-5: a cover fit cut the carton's flaps and bottom off).
+    final bool binned =
+        hasGroup &&
+        a.group2 == null &&
+        a.group!.count == 1 &&
+        a.optionsInTiles &&
+        Course.isLanguage(a.course);
     final Widget stage = ClipRRect(
       borderRadius: BorderRadius.circular(TokenRadius.lg),
       child: Stack(
         key: const Key('tap-stage'),
         children: <Widget>[
-          if (a.background != null)
+          if (binned)
+            Positioned.fill(
+              child: Center(child: _binned(a, math.max(0, math.min(size.width, size.height) - 12))),
+            )
+          else if (a.background != null)
             Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
-          if (hasGroup)
+          if (hasGroup && !binned)
             AnimatedPositioned(
               duration: MediaQuery.disableAnimationsOf(context)
                   ? Duration.zero
@@ -642,6 +661,38 @@ class _TapStage extends StatelessWidget {
             child: Text(text, textScaler: TextScaler.noScaling, maxLines: 1, softWrap: false, style: style),
           );
   }
+
+  /// The one picture of the question, [side] points square; with a background, the background is the square and the picture
+  /// stands in its label ([binLabel]). Not tappable.
+  Widget _binned(TapAnswerActivity a, double side) => Semantics(
+    container: true,
+    excludeSemantics: true,
+    label: a.altText,
+    child: SizedBox(
+      key: Key(a.background == null ? 'tap-picture' : 'tap-bin'),
+      width: side,
+      height: side,
+      child: Stack(
+        children: <Widget>[
+          if (a.background == null)
+            Positioned.fill(child: PackSvg(a.assets.svg(a.group!.sprite)))
+          else ...<Widget>[
+            Positioned.fill(child: PackSvg(a.assets.svg(a.background!))),
+            Positioned(
+              left: binLabel.left * side,
+              top: binLabel.top * side,
+              width: binLabel.width * side,
+              height: binLabel.height * side,
+              child: Padding(
+                padding: EdgeInsets.all(side * 0.03),
+                child: PackSvg(a.assets.svg(a.group!.sprite)),
+              ),
+            ),
+          ],
+        ],
+      ),
+    ),
+  );
 
   /// The group (or the two groups, side by side) that the question is about. Not tappable.
   Widget _groups(TapAnswerActivity a) {

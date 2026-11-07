@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_korova",
-    "show": "корова",
     "replayButton": true
   },
   "feedback": {

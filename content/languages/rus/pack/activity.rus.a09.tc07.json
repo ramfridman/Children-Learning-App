@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_botinki",
-    "show": "ботинки",
     "replayButton": true
   },
   "feedback": {

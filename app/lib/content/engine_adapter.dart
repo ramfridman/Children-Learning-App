@@ -35,7 +35,10 @@ Catalog engineCatalog(PackContent content) {
     ],
     items: <ItemMeta>[
       for (final Activity a in content.activities.values)
-        if (!a.teachScreen)
+        // What is no evidence is not an item of the engine: a teach screen; a step of a course that is never scored (a chant, a story only
+        // heard, a personal turn, a movement); and a say step of a skill that is not a speaking one (a spoken answer counts for a speaking
+        // skill alone). Counted as items, their words would be groups of a set that no answer can ever cover, and a visit could pick one.
+        if (!a.teachScreen && !_writesNoAnswer(a) && !_saysForNothing(a, content))
           ItemMeta(
             id: a.id,
             course: a.course,
@@ -51,8 +54,16 @@ Catalog engineCatalog(PackContent content) {
             revision: a.revision,
             writingMode: a is LetterWriteActivity ? writingModeOf(a) : null,
             cue: a is LetterWriteActivity ? a.cue : null,
-            startGuide: a is LetterWriteActivity && a.startGuide,
+            // A trace with the start dot only marks its letter as practised: an LS02 trace of a letter, or a stroke of the pre-writing
+            // trace (T04, HEB-A-14), whose paths are the four strokes of the pre-writing skill (rule E-1).
+            startGuide: switch (a) {
+              LetterWriteActivity() => a.startGuide,
+              TraceActivity() => !a.fullGuide,
+              _ => false,
+            },
             practiceOnly: a is LetterWriteActivity && a.practiceOnly,
+            pairWith: a.pairWith,
+            speech: a is SayItActivity,
           ),
     ],
     tags: <TagInfo>[
@@ -69,6 +80,14 @@ Catalog engineCatalog(PackContent content) {
     ],
   );
 }
+
+/// A step of a course that is never scored (a chant, a story only heard, a personal turn, a movement) writes no answer. The intro of a
+/// letter (LS02) is left to the writing rules, which already know it.
+bool _writesNoAnswer(Activity a) => a.isLanguage && a.unscored && a is! LetterWriteActivity;
+
+/// A say step (LS09) of a skill that is not a speaking one: its answers are ignored by the engine, whatever they are.
+bool _saysForNothing(Activity a, PackContent content) =>
+    a is SayItActivity && content.skills[a.skillId]?.strand != 'spk';
 
 /// How the engine reads the mode of an LS02 item: a trace is practice, a copy a hinted answer, a memory answer a full one. An intro is
 /// never answered, so it has no mode.

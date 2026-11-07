@@ -46,6 +46,7 @@ Not looked at in the app: pip-feed on the stage (the items still name `pip-happy
 Phone and SE counts of 5 to 10 (RUS-A-10, A-11), and the SE's bin speakers. Specs 3 and 4.2.
 
 ## 3. Spec for the app-developer: counts of 5 to 10 on the phones
+**Built 2026-11-07** (`count_tap_session.dart`: `layoutFor`, `buildBoardLayer`; `CountLayout._language` tries up to four rows; test `count_tall_stage_test.dart`: phone cells 64 or more, the SE's 58 or more, none touching, the stage given back at the question, hint 2's card in the close-up slot outside the stage). It applies to a language count in place of 5 or more on the phones; the tablets are unchanged. The SE's ten objects are 4 rows of 3.
 `CountTapSession.layoutFor`: while the objects are counted (`!answering`) and the count is in place (`CountLayout.countsInPlace`), use
 `withTallStage(base)` (phone about 330 x 253, SE 262 x 245); at the question, the usual board. `CountLayout._language` then gives 10
 objects cells of 64.5 on the phone (3 rows of 4) and 58 on the SE (4 rows of 3); 5 to 8 get 64 or more on both. The objects slide to their
@@ -54,6 +55,7 @@ area, which the tall stage takes: give it the close-up slot of `ListenDoSession.
 y 222), outside the stage. Goldens: `ls01_count_answer_*`, and a new `count_ten_counting_{phone,phoneSE}`.
 
 ## 4. The SE's sort bins
+**Built 2026-11-07 (4.2), with one limit.** The corner speaker is 64 and under the sign (`BinGeometry.cornerSpeaker`, `chipRoomFor`, `ls01_sort_session.dart`); the sign has the whole row, and the chips keep out of the 70-wide end side. It holds in **Band A and where no card is a word** (`BinGeometry.bigSpeakersFor`): a text chip of Band B or C (a word of 45 to 80 points, "pan", "lemon") does not fit the 39 points a corner speaker leaves the chips of an SE bin (121 wide, 54 high), and the fit check (`text_fit_test`) refuses it, so Bands B and C, and a Band A sort whose cards are words (the old Hebrew fixture), keep the 52 speaker beside the sign. Band A's own cards are pictures and single letters, so every real Band A sort has the corner speaker on the SE. The SE's chip room is about 39 by 54, so the pictures of a bin with three or more cards are about 39 wide: the design-director may want to look at `heb.a03.01` on the SE with all its cards in the bin. Test: `bin_geometry_test.dart`.
 
 ### 4.1 Why not done
 On the SE two bins are 121 wide: a 64 speaker beside the sign leaves 29 for it, and the Band A letter is 37 (`golden_ls01_rest_test`'s fit
@@ -77,6 +79,7 @@ Goldens: `ls01r_sort_*_phoneSE`, `ls01r_sounds_*_phoneSE`.
   inside the stage's padding of 8). The moving finger of level 2 is unchanged.
 
 ### 5.2 Spec for the app-developer: one sentence to a line on the phones (A-12 follow and zones)
+**Built 2026-11-07** (`read_page_session.dart`: `zoned`, `layoutFor` uses `withLs01Zones` on the phones, the picture is the stage, the print is the answer zone's tiles, `_ReadPrint`, `_FollowLine(oneRow:)`). Where the two lines are taller than the zone (the SE's 123) the block is scaled down, never cut. Tests in `read_page_test.dart`: the print is under the stage, every line is one row, every word is 48 high or more, the tablet keeps the tall stage.
 The SE's tall stage is 262 wide, and a five-word sentence at the print size (34, line height 1.7) is about 560 wide, so it wraps into a
 narrow column that is then scaled down. On the phones only, `ReadPageSession.layoutFor` uses `withLs01Zones(base, Band.a)`: the picture
 in S (phone 24, 96, 377 x 148; SE 24, 86, 262 x 136), and the print as the tiles in A (phone x 24, y 258, 581 wide; SE x 24, y 240, 484
@@ -90,7 +93,7 @@ Drawn (batch 7, `pictures_batch7a.png`): `sign-one` and `sign-many`, the same bl
 seven, **every marble the same size (r 22)**, so "one" is never the bigger thing; `sign-letters` (an open book whose lines of print are
 too small to read) and `sign-other` (an open carton holding a red ball, a crayon drawing and a toy block), the two the same size and
 weight. No letter or digit in any. Teachers: HEB-A-05 items 07 and 09 as 7.6 says (`"picture": "sign-one"`, `"sign-many"`); HEB-A-10
-s01, s02 and s06 already name `sign-letters` and `sign-other`. The developer: a bin with a picture shows no text (7.6).
+s01, s02 and s06 already name `sign-letters` and `sign-other`. The developer: a bin with a picture shows no text (7.6): **built** (the generator refuses a Band A bin with no picture, and `_sign` draws the picture first whatever else the bin holds).
 
 **A-10's shapes**: no unit or pack has a shape character left (searched `content/languages` for the shape and star characters); items 01
 to 07, p1 to p5, t03 to t05, s01, s02 and s06 use `shape-dot`, `shape-ring`, `shape-triangle`, `shape-triangle-open`, `shape-heart`,

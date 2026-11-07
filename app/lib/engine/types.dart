@@ -169,9 +169,21 @@ class ItemMeta {
     this.cue,
     this.startGuide = false,
     this.practiceOnly = false,
+    this.pairWith,
+    this.speech = false,
   });
 
   final String id;
+
+  /// A say step (LS09): its answer is a word the child says, which the microphone, when the parent turned it on, may hear. A word that only
+  /// such steps ask is never a word a skill's fresh mastery waits for ([Catalog.coverageGroupsOf]): without the microphone nothing could
+  /// ever cover it (a speaking skill is met when its set is met, whatever the answer; docs/languages/frame.md section 3.3.8).
+  final bool speech;
+
+  /// The item that forms a balanced pair with this one (a yes and a no, docs/languages/frame.md section 2.3), or null. The check type of
+  /// either counts only when both are answered right, without a hint, in one visit ([Engine] enforces it): one half alone has a
+  /// 1 in 2 chance of being a guess.
+  final String? pairWith;
 
   /// The mode of an LS02 2.0 item; null for every item that is not one (the tracing of the lands keeps its behaviour).
   final WritingMode? writingMode;
@@ -326,6 +338,13 @@ class Catalog {
   }();
 
   Set<String> variantGroupsOf(String skillId) => _groups[skillId] ?? const <String>{};
+
+  /// The words fresh mastery of a set skill waits for: [variantGroupsOf] less the words that only say steps ask.
+  late final Map<String, Set<String>> _coverage = _groupsWhere(
+    (ItemMeta i) => !i.speech && i.purpose != Purpose.probe,
+  );
+
+  Set<String> coverageGroupsOf(String skillId) => _coverage[skillId] ?? const <String>{};
 
   /// The letters of a writing skill that a memory success must cover: the variant groups of its memory items, probes aside.
   late final Map<String, Set<String>> _memoryGroups = _groupsWhere(

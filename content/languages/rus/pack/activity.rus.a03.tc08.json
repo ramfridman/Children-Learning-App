@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_golova",
-    "show": "голова",
     "replayButton": true
   },
   "feedback": {

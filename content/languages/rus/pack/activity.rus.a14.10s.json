@@ -47,7 +47,6 @@
       }
     ],
     "target": "vo:rus.w_na",
-    "show": "На",
     "replayButton": true
   },
   "feedback": {

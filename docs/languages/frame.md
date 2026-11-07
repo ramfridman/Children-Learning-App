@@ -144,7 +144,7 @@ Every template keeps the rules of curriculum §6.1, without exception:
 - An item with **3 choices** has two tagged distractors. The two may carry the **same tag** when one misconception explains both (one beat more and one beat fewer are both `M-HEB-SYLL`).
 - An item with **2 choices** (yes / no, same / different, two names, the guided step of a 3-choice item) has **one** distractor, and it is tagged. This is allowed only when:
   1. the skill also has items with 3 choices, **or** the skill is binary by nature (yes / no, same / different), and its items are balanced (as many "yes" as "no" answers right, as many "same" as "different");
-  2. 2-choice items are **at most half of the skill's scored items** (the authoring side of the engine's 2-choice guard, curriculum §10.2, which caps them at 50% of the success evidence);
+  2. 2-choice items are **at most half of the skill's scored items** (the authoring side of the engine's 2-choice guard, curriculum §10.2, which caps them at 50% of the success evidence). **Probes are not counted** (decided in the build of 2026-11-07, band-a-build.md 7.7 D6): a probe is no evidence of mastery, and the two yes and no probes of ENG-A-16 would otherwise take its two-choice share to 8 of 14;
   3. a 2-choice item is **never a check on its own**. An understanding check or a delayed check uses a 3-choice item, or, in a binary skill, a **balanced pair** (one item of each answer) that passes only if both are right (chance 1 in 4, not 1 in 2).
 - A 2-choice item allows one retry only (curriculum §9.2), and a guided 2-choice item (the Hebrew "hidden second distractor") is a scaffold step that the engine credits as a 2-choice item.
 - **Free-response modes** (LS02 trace, LS03 drum, LS06 build) have no fixed distractors. Their classifiers map each error they can name to a tag; an error they cannot name (a beat count off by 2, leaving a trace path) is a retry with no tag and no misconception evidence.
@@ -469,6 +469,7 @@ Curriculum §10.2 applies unchanged: BKT, credit by hint level, fresh mastery (P
 - **The rule's inputs gain** the course of each land and lesson.
 - A course that is off is not a land.
 - This is a change to the rule document (app-developer, after the owner's OK).
+- **The course's check visit** (band-a-build.md section 7.4) also takes the revisit's slot: the owner's OK of 2026-11-07. It comes after every revisit of a mastered skill, at most once a day per course (`todays-adventure-rule.md` section 15).
 
 ---
 
