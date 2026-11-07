@@ -17,7 +17,8 @@
   "items": [
     "eng.a07.i04",
     "eng.a07.i05",
-    "eng.a07.i06"
+    "eng.a07.i06",
+    "eng.a07.i09"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,5 +30,5 @@
       }
     ]
   },
-  "sequence": 17
+  "sequence": 18
 }

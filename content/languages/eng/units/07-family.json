@@ -7,13 +7,14 @@
     {"id": "i04", "kind": "tap", "target": "en-brother", "options": ["fam-brother", "fam-sister", "fam-mother"], "wrong": {"fam-sister": "sem", "fam-mother": "l1_guess"}},
     {"id": "i05", "kind": "tap", "target": "en-sister", "options": ["fam-sister", "fam-brother", "fam-father"], "wrong": {"fam-brother": "sem", "fam-father": "l1_guess"}},
     {"id": "i06", "kind": "tap", "target": "en-grandma", "options": ["fam-grandmother", "fam-mother", "fam-brother"], "wrong": {"fam-mother": "sem", "fam-brother": "l1_guess"}},
+    {"id": "i09", "kind": "tap", "target": "en-grandpa", "options": ["fam-grandfather", "fam-father", "fam-sister"], "wrong": {"fam-father": "sem", "fam-sister": "l1_guess"}},
     {"id": "i07", "kind": "tap", "purpose": "check", "target": "en-grandpa", "options": ["fam-grandfather", "fam-father", "fam-baby"], "wrong": {"fam-father": "sem", "fam-baby": "l1_guess"}},
     {"id": "i08", "kind": "tap", "purpose": "check", "target": "en-sister", "options": ["fam-sister", "fam-mother", "fam-baby"], "wrong": {"fam-mother": "sem", "fam-baby": "l1_guess"}, "stage": "fam-all"},
     {"id": "p01", "kind": "puppet", "frame": "he-ins-personal", "mode": "personal", "topic": "family", "picture": "pip-family", "prompt": ["en-this-is-my-family", "en-who-in-family"], "purpose": "practice", "cards": [{"pic": "fam-mother", "clip": "en-mom"}, {"pic": "fam-father", "clip": "en-dad"}, {"pic": "fam-brother", "clip": "en-brother"}, {"pic": "fam-sister", "clip": "en-sister"}, {"pic": "fam-baby", "clip": "en-baby"}, {"pic": "fam-grandmother", "clip": "en-grandma"}, {"pic": "fam-grandfather", "clip": "en-grandpa"}, {"pic": "fam-someone"}], "reply": "en-nice", "pass": "en-thats-ok"}
   ],
   "lessons": [
     {"id": "fam-1", "title": "הַמִּשְׁפָּחָה", "items": ["i01", "i02", "i03"]},
-    {"id": "fam-2", "title": "הַמִּשְׁפָּחָה הַגְּדוֹלָה", "items": ["i04", "i05", "i06"]},
+    {"id": "fam-2", "title": "הַמִּשְׁפָּחָה הַגְּדוֹלָה", "items": ["i04", "i05", "i06", "i09"]},
     {"id": "fam-more", "title": "הַמִּשְׁפָּחָה הַגְּדוֹלָה", "items": ["p01"]}
   ]
 }

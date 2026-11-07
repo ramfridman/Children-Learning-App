@@ -390,6 +390,10 @@
       "file": "pip_arrive.svg"
     },
     {
+      "id": "pip_basket",
+      "file": "pip_basket.svg"
+    },
+    {
       "id": "pip_cold",
       "file": "pip_cold.svg"
     },

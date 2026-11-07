@@ -14,7 +14,8 @@
     "HL-YN": [{"line": "he-hint-again", "action": "replay_prompt_slow", "target": "@target"}, {"line": "@gloss", "action": "highlight_objects_sequentially", "target": "@target"}, {"line": "he-hint-showme", "action": "worked_example", "target": "@target"}],
     "HL-STORY": [{"line": "he-hint-again", "action": "replay_prompt_slow", "target": "@target"}, {"line": "he-hint-page", "action": "highlight_objects_sequentially", "target": "@target"}, {"line": "he-hint-showme", "action": "worked_example", "target": "@target"}],
     "HL-BUBBLE": [{"line": "he-hint-again", "action": "replay_prompt_slow", "target": "@target"}, {"line": "@gloss", "action": "highlight_objects_sequentially", "target": "@target"}, {"line": "he-hint-showme", "action": "worked_example", "target": "@target"}],
-    "HL-PAIRS": [{"line": "he-hint-again", "action": "replay_prompt_slow", "target": "@slow"}, {"line": "@gloss", "action": "highlight_objects_sequentially", "target": "@target"}, {"line": "he-hint-showme", "action": "worked_example", "target": "@target"}]
+    "HL-PAIRS": [{"line": "he-hint-again", "action": "replay_prompt_slow", "target": "@slow"}, {"line": "@gloss", "action": "highlight_objects_sequentially", "target": "@target"}, {"line": "he-hint-showme", "action": "worked_example", "target": "@target"}],
+    "HL-REV": [{"line": "he-hint-again", "action": "highlight_objects_sequentially"}, {"line": "@gloss", "orLine": "he-hint-again", "action": "replay_prompt_slow"}, {"line": "he-hint-showme", "action": "worked_example", "target": "@target"}]
   },
   "glosses": {
     "en-apple": "he-gl-apple",
@@ -143,6 +144,8 @@
     "he-ins-how-many": {"he": "כַּמָּה יֵשׁ? הַקְשִׁיבוּ לַכַּפְתּוֹרִים, וּגְעוּ בַּמִּסְפָּר הַנָּכוֹן.", "voice": "כמה יש? הקשיבו לכפתורים, וגעו במספר הנכון.", "review": "text-ready"},
     "he-ins-touch-body": {"he": "הַקְשִׁיבוּ, וּגְעוּ בַּגּוּף שֶׁל מִיקָה.", "voice": "הקשיבו, וגעו בגוף של מיקה.", "review": "text-ready"},
     "he-ins-give": {"he": "הַקְשִׁיבוּ, וְגִרְרוּ אֶת הָאֹכֶל לְפִיפּ.", "voice": "הקשיבו, וגררו את הָאֹכֶל לפיפ.", "review": "text-ready"},
+    "he-ins-give-it": {"he": "הַקְשִׁיבוּ, וְגִרְרוּ לְפִיפּ:", "voice": "הקשיבו, וגררו לפיפ:", "review": "needs-editor"},
+    "he-ins-which-word": {"he": "אֵיזוֹ מִלָּה מַתְאִימָה לַתְּמוּנָה?", "voice": "איזו מילה מתאימה לתמונה?", "review": "needs-editor"},
     "he-ins-say": {"he": "עַכְשָׁו תּוֹרְכֶם. אִמְרוּ גַּם אַתֶּם!", "voice": "עכשיו תורכם. אִמְרוּ גם אתם.", "review": "text-ready"},
     "he-ins-mic": {"he": "גְּעוּ בַּמִּיקְרוֹפוֹן, וְאִמְרוּ.", "voice": "געו במיקרופון, וְאִמְרוּ.", "review": "text-ready"},
     "he-ins-said-it": {"he": "אָמַרְתֶּם? גְּעוּ בַּכַּפְתּוֹר \"אָמַרְתִּי\".", "voice": "אמרתם? געו בכפתור — אמרתי.", "review": "text-ready"},

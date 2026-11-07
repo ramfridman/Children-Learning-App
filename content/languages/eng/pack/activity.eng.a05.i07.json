@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_4",
+      "vo": "vo:eng.he_fb_right_3",
       "caption": [
         {
           "t": "he",
-          "v": "מְצָאתֶם!"
+          "v": "יָפֶה מְאֹד!"
         }
       ],
       "target": "vo:eng.en_pig"
@@ -140,7 +140,7 @@
         "id": "o3",
         "sprite": "asset:frog",
         "label": "תְּמוּנָה",
-        "misconception": "eng.lis.l1_guess"
+        "misconception": "eng.lis.sem"
       }
     ],
     "correct": "o1",

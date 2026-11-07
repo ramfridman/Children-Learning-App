@@ -2,18 +2,18 @@
   "skill": {"id": "ENG-A-13", "strand": "spk", "title": "דִּקְלוּמִים", "prerequisites": [{"skill": "ENG-A-02"}]},
   "items": [
     {"id": "c01", "kind": "chant", "purpose": "practice", "frame": "he-ins-chant", "rep": "story", "lines": ["en-ch-hello-1", "en-ch-hello-2", "en-ch-hello-3", "en-ch-hello-4"], "pictures": [{"pic": "act-wave", "clip": "en-hello"}, {"pic": "act-clap", "clip": "en-clap"}]},
-    {"id": "i01", "kind": "tap", "purpose": "check", "target": "en-clap", "options": ["act-clap", "act-wave", "act-sit"], "wrong": {"act-wave": "sem", "act-sit": "l1_guess"}},
+    {"id": "i01", "kind": "tap", "purpose": "learn", "target": "en-clap", "options": ["act-clap", "act-wave", "act-sit"], "wrong": {"act-wave": "sem", "act-sit": "l1_guess"}},
     {"id": "c02", "kind": "chant", "purpose": "practice", "frame": "he-ins-chant", "rep": "story", "lines": ["en-ch-bye-1", "en-ch-bye-2", "en-ch-bye-3", "en-ch-bye-4"], "pictures": [{"pic": "act-wave", "clip": "en-wave"}, {"pic": "pip-leave", "clip": "en-goodbye"}]},
-    {"id": "i02", "kind": "tap", "purpose": "check", "target": "en-wave", "options": ["act-wave", "act-clap", "act-look"], "wrong": {"act-clap": "sem", "act-look": "l1_guess"}},
+    {"id": "i02", "kind": "tap", "purpose": "learn", "target": "en-wave", "options": ["act-wave", "act-clap", "act-look"], "wrong": {"act-clap": "sem", "act-look": "l1_guess"}},
     {"id": "c03", "kind": "chant", "purpose": "practice", "frame": "he-ins-chant", "rep": "story", "lines": ["en-ch-move-1", "en-ch-move-2", "en-ch-move-3", "en-ch-move-4"], "pictures": [{"pic": "act-stand", "clip": "en-stand-up"}, {"pic": "act-clap", "clip": "en-clap"}, {"pic": "act-jump", "clip": "en-jump"}, {"pic": "act-look", "clip": "en-look"}, {"pic": "act-listen", "clip": "en-listen"}, {"pic": "act-sit", "clip": "en-sit-down"}]},
     {"id": "i03", "kind": "tap", "purpose": "check", "target": "en-jump", "options": ["act-jump", "act-stop", "act-listen"], "wrong": {"act-stop": "sem", "act-listen": "l1_guess"}},
     {"id": "c04", "kind": "chant", "purpose": "practice", "frame": "he-ins-chant", "rep": "story", "lines": ["en-ch-body-1", "en-ch-body-2", "en-ch-body-3", "en-ch-body-4"], "pictures": [{"pic": "body-head", "clip": "en-head"}, {"pic": "body-nose", "clip": "en-nose"}, {"pic": "body-mouth", "clip": "en-mouth"}, {"pic": "body-feet", "clip": "en-feet"}]},
-    {"id": "i04", "kind": "tap", "purpose": "check", "target": "en-nose", "options": ["body-nose", "body-mouth", "body-feet"], "wrong": {"body-mouth": "sem", "body-feet": "l1_guess"}},
+    {"id": "i04", "kind": "tap", "purpose": "learn", "target": "en-nose", "options": ["body-nose", "body-mouth", "body-feet"], "wrong": {"body-mouth": "sem", "body-feet": "l1_guess"}},
     {"id": "c05", "kind": "chant", "purpose": "practice", "frame": "he-ins-chant", "rep": "story", "lines": ["en-ch-count-1", "en-ch-count-2", "en-ch-count-3", "en-ch-count-4"], "pictures": [{"pic": "set-ducks-5", "clip": "en-five"}, {"pic": "act-clap", "clip": "en-clap"}, {"pic": "act-jump", "clip": "en-jump"}]},
     {"id": "i05", "kind": "tap", "purpose": "check", "target": "en-five", "options": ["set-ducks-5", "set-ducks-4", "set-ducks-3"], "wrong": {"set-ducks-4": "sem", "set-ducks-3": "l1_guess"}}
   ],
   "lessons": [
     {"id": "chant-1", "title": "שָׁלוֹם וּלְהִתְרָאוֹת", "items": ["c01", "i01", "c02", "i02"]},
-    {"id": "chant-2", "title": "זָזִים וְסוֹפְרִים", "items": ["c03", "i03", "c04", "i04", "c05", "i05"]}
+    {"id": "chant-2", "title": "זָזִים וְסוֹפְרִים", "items": ["c03", "c04", "i04", "c05"]}
   ]
 }

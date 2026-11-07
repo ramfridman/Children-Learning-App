@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_4",
+      "vo": "vo:eng.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "מְצָאתֶם!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:eng.en_touch_mouth"

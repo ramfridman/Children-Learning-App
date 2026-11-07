@@ -64,10 +64,13 @@
         {
           "items": [
             "eng.a11.pr1",
-            "eng.a11.pr2"
+            "eng.a11.pr2",
+            "eng.a16.pr1",
+            "eng.a16.pr2"
           ],
           "assumes": [
-            "ENG-A-11"
+            "ENG-A-11",
+            "ENG-A-16"
           ]
         }
       ]

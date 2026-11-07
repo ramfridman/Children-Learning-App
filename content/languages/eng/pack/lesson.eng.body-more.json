@@ -16,6 +16,8 @@
   ],
   "items": [
     "eng.a06.i03",
+    "eng.a06.i13",
+    "eng.a06.i14",
     "eng.a06.e01"
   ],
   "estimatedMinutes": 4,
@@ -28,5 +30,5 @@
       }
     ]
   },
-  "sequence": 15
+  "sequence": 16
 }

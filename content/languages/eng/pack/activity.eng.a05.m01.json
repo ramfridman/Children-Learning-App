@@ -14,8 +14,8 @@
       "weight": 1
     }
   ],
-  "purpose": "check",
-  "checkType": "transfer",
+  "purpose": "learn",
+  "checkType": "practice",
   "representation": "pictorial",
   "variantGroup": "a05-m01",
   "difficulty": {
@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_6",
+      "vo": "vo:eng.he_fb_right_5",
       "caption": [
         {
           "t": "he",
-          "v": "שְׁמַעְתֶּם טוֹב!"
+          "v": "בְּדִיּוּק!"
         }
       ],
       "target": "vo:eng.en_cat"

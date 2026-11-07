@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_1",
+      "vo": "vo:eng.he_fb_right_8",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "כׇּל הַכָּבוֹד!"
         }
       ],
       "target": "vo:eng.en_baby"

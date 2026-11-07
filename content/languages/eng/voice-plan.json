@@ -675,6 +675,13 @@
       "review": "text-ready"
     },
     {
+      "id": "he-ins-give-it",
+      "vo": "vo:eng.he_ins_give_it",
+      "he": "הַקְשִׁיבוּ, וְגִרְרוּ לְפִיפּ:",
+      "voice": "הקשיבו, וגררו לפיפ:",
+      "review": "needs-editor"
+    },
+    {
       "id": "he-ins-how-many",
       "vo": "vo:eng.he_ins_how_many",
       "he": "כַּמָּה יֵשׁ? הַקְשִׁיבוּ לַכַּפְתּוֹרִים, וּגְעוּ בַּמִּסְפָּר הַנָּכוֹן.",
@@ -757,6 +764,13 @@
       "he": "הַקְשִׁיבוּ לַשְּׁאֵלָה וְלַתְּשׁוּבָה, וּגְעוּ בַּתְּמוּנָה.",
       "voice": "הקשיבו לשאלה ולתשובה, וגעו בתמונה.",
       "review": "text-ready"
+    },
+    {
+      "id": "he-ins-which-word",
+      "vo": "vo:eng.he_ins_which_word",
+      "he": "אֵיזוֹ מִלָּה מַתְאִימָה לַתְּמוּנָה?",
+      "voice": "איזו מילה מתאימה לתמונה?",
+      "review": "needs-editor"
     },
     {
       "id": "he-ins-who-doing",

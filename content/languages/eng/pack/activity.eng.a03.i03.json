@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_5",
+      "vo": "vo:eng.he_fb_right_8",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "כׇּל הַכָּבוֹד!"
         }
       ],
       "target": "vo:eng.en_yellow"
@@ -140,7 +140,7 @@
         "id": "o3",
         "sprite": "asset:balloon_blue",
         "label": "תְּמוּנָה",
-        "misconception": "eng.lis.l1_guess"
+        "misconception": "eng.lis.sem"
       }
     ],
     "correct": "o1",

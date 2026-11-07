@@ -44,10 +44,13 @@
         {
           "items": [
             "a11.pr1",
-            "a11.pr2"
+            "a11.pr2",
+            "a16.pr1",
+            "a16.pr2"
           ],
           "assumes": [
-            "ENG-A-11"
+            "ENG-A-11",
+            "ENG-A-16"
           ]
         }
       ]

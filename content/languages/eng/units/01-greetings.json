@@ -10,11 +10,14 @@
     {"id": "pr1", "kind": "tap", "purpose": "probe", "target": "en-hello", "options": ["pip-arrive", "pip-leave"], "wrong": {"pip-leave": "sem"}},
     {"id": "i07", "kind": "puppet", "frame": "he-ins-bubble", "rep": "story", "ladder": "HL-BUBBLE", "mode": "bubble", "picture": "pip-arrive", "prompt": ["en-pip-hello"], "options": [{"clip": "en-hello", "pic": "act-wave"}, {"clip": "en-goodbye", "pic": "pip-leave"}], "wrong": {"en-goodbye": "sem"}},
     {"id": "i08", "kind": "puppet", "frame": "he-ins-bubble", "rep": "story", "ladder": "HL-BUBBLE", "mode": "bubble", "picture": "pip-leave", "prompt": ["en-goodbye"], "options": [{"clip": "en-bye", "pic": "act-wave"}, {"clip": "en-hi", "pic": "pip-arrive"}], "wrong": {"en-hi": "sem"}},
+    {"id": "i09", "kind": "tap", "target": "en-hi", "options": ["pip-arrive", "pip-leave", "mika-eat"], "wrong": {"pip-leave": "sem", "mika-eat": "l1_guess"}},
+    {"id": "i10", "kind": "tap", "purpose": "check", "check": "reverse", "frame": "he-ins-which-word", "ladder": "HL-REV", "stage": "mika-arrive", "options": [{"clip": "en-hi"}, {"clip": "en-goodbye"}, {"clip": "en-bye"}], "wrong": {"en-goodbye": "sem", "en-bye": "sem"}, "hintWord": "en-hi", "feedback": {"wrong": "he-fb-check", "byTag": {"sem": "he-fb-check"}, "unsure": "he-hint-again"}},
+    {"id": "i11", "kind": "tap", "purpose": "check", "check": "reverse", "frame": "he-ins-which-word", "ladder": "HL-REV", "stage": "pip-leave", "options": [{"clip": "en-goodbye"}, {"clip": "en-hello"}, {"clip": "en-hi"}], "wrong": {"en-hello": "sem", "en-hi": "sem"}, "hintWord": "en-goodbye", "feedback": {"wrong": "he-fb-check", "byTag": {"sem": "he-fb-check"}, "unsure": "he-hint-again"}},
     {"id": "p01", "kind": "puppet", "frame": "he-ins-personal", "mode": "personal", "topic": "name", "picture": "pip-happy", "prompt": ["en-pip-hello", "en-whats-your-name"], "purpose": "practice", "cards": [], "reply": "en-nice-to-meet-you", "pass": "en-thats-ok"},
     {"id": "r01", "kind": "chant", "purpose": "practice", "frame": "he-ins-chant", "lines": ["en-ch-hello-1", "en-ch-hello-2", "en-ch-hello-3", "en-ch-hello-4"], "pictures": [{"pic": "act-wave", "clip": "en-hello"}, {"pic": "act-clap", "clip": "en-clap"}]}
   ],
   "lessons": [
-    {"id": "greet-1", "title": "בְּרָכוֹת", "items": ["i01", "i02", "i03", "i04", "i05"]},
+    {"id": "greet-1", "title": "בְּרָכוֹת", "items": ["i01", "i02", "i09", "i04", "i05"]},
     {"id": "greet-more", "title": "בְּרָכוֹת", "items": ["i07", "i08", "p01", "r01"]}
   ]
 }
