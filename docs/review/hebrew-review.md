@@ -8426,7 +8426,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.c.numc02.6.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.c.numc02.6.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.c.numc02.6.json | hints.1.caption.0.v | שׁוֹמְעִים קֹדֶם אֶת הָעֲשָׂרוֹת וְאַחַר כָּךְ אֶת הַיְּחִידוֹת. כּוֹתְבִים רַק שְׁתֵּי סְפָרוֹת: סִפְרַת הָעֲשָׂרוֹת מִשְּׂמֹאל. | needs-editor |
-| activity.c.numc02.6.json | hints.2.caption.0.v | שְׁמוֹנִים וְאַחַת: שְׁמוֹנֶה עֲשָׂרוֹת, וְאֶחָד יְחִידוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁמוֹנִים וְאַחַת. | needs-editor |
+| activity.c.numc02.6.json | hints.2.caption.0.v | שְׁמוֹנִים וְאַחַת: שְׁמוֹנֶה עֲשָׂרוֹת, וִיחִידָה אַחַת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁמוֹנִים וְאַחַת. | needs-editor |
 | activity.c.numc02.6.json | a11y.altText | אֵיפֹה הַמִּסְפָּר שְׁמוֹנִים וְאַחַת? | needs-editor |
 | activity.c.numc02.7.json | prompt.caption.0.v | אֵיפֹה הַמִּסְפָּר תִּשְׁעִים וְאַרְבַּע? | needs-editor |
 | activity.c.numc02.7.json | answer.options.0.label | תִּשְׁעִים וְאַרְבַּע | needs-editor |
@@ -8562,7 +8562,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.c.numc03.15.json | hints.1.caption.0.v | אֶת הָעֲשָׂרוֹת כּוֹתְבִים קֹדֶם, מִשְּׂמֹאל, וְאֶת הַיְּחִידוֹת אַחֲרֵיהֶן — גַּם אִם שׁוֹמְעִים אוֹתָן קֹדֶם. | needs-editor |
 | activity.c.numc03.15.json | hints.2.caption.0.v | שְׁתֵּי עֲשָׂרוֹת הֵן עֶשְׂרִים, וְעוֹד שֶׁבַע: עֶשְׂרִים וְשֶׁבַע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל עֶשְׂרִים וְשֶׁבַע. | needs-editor |
 | activity.c.numc03.15.json | a11y.altText | שֶׁבַע יְחִידוֹת וּשְׁתֵּי עֲשָׂרוֹת. אֵיזֶה מִסְפָּר זֶה? | needs-editor |
-| activity.c.numc03.16.json | prompt.caption.0.v | שְׁמוֹנֶה עֲשָׂרוֹת וְאֶחָד יְחִידוֹת. אֵיזֶה מִסְפָּר זֶה? | needs-editor |
+| activity.c.numc03.16.json | prompt.caption.0.v | שְׁמוֹנֶה עֲשָׂרוֹת וִיחִידָה אַחַת. אֵיזֶה מִסְפָּר זֶה? | needs-editor |
 | activity.c.numc03.16.json | answer.options.0.label | שְׁמוֹנִים וְאַחַת | needs-editor |
 | activity.c.numc03.16.json | answer.options.1.label | שְׁמוֹנֶה עֶשְׂרֵה | needs-editor |
 | activity.c.numc03.16.json | answer.options.2.label | שְׁמוֹנֶה מֵאוֹת וְאַחַת | needs-editor |
@@ -8574,7 +8574,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.c.numc03.16.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.c.numc03.16.json | hints.1.caption.0.v | אֶת הָעֲשָׂרוֹת כּוֹתְבִים קֹדֶם, מִשְּׂמֹאל, וְאֶת הַיְּחִידוֹת אַחֲרֵיהֶן — גַּם אִם שׁוֹמְעִים אוֹתָן קֹדֶם. | needs-editor |
 | activity.c.numc03.16.json | hints.2.caption.0.v | שְׁמוֹנֶה עֲשָׂרוֹת הֵן שְׁמוֹנִים, וְעוֹד אַחַת: שְׁמוֹנִים וְאַחַת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁמוֹנִים וְאַחַת. | needs-editor |
-| activity.c.numc03.16.json | a11y.altText | שְׁמוֹנֶה עֲשָׂרוֹת וְאֶחָד יְחִידוֹת. אֵיזֶה מִסְפָּר זֶה? | needs-editor |
+| activity.c.numc03.16.json | a11y.altText | שְׁמוֹנֶה עֲשָׂרוֹת וִיחִידָה אַחַת. אֵיזֶה מִסְפָּר זֶה? | needs-editor |
 | activity.c.numc03.2.json | prompt.caption.0.v | כַּמָּה זֶה? | needs-editor |
 | activity.c.numc03.2.json | answer.options.0.label | שֵׁשׁ מֵאוֹת וְשֶׁבַע | needs-editor |
 | activity.c.numc03.2.json | answer.options.1.label | שִׁשִּׁים וְשֶׁבַע | needs-editor |

@@ -116,8 +116,10 @@ def tens_words(t):
 
 
 def ones_words(o):
-    """'four ones', the same pattern (owner, 2026-11-06): אֶחָד יְחִידוֹת, שְׁתֵּי יְחִידוֹת, אַרְבַּע יְחִידוֹת, אֶפֶס יְחִידוֹת."""
-    return {1: 'אֶחָד יְחִידוֹת', 2: 'שְׁתֵּי יְחִידוֹת'}.get(o, '%s יְחִידוֹת' % F[o])
+    """'four ones': שְׁתֵּי יְחִידוֹת, אַרְבַּע יְחִידוֹת, אֶפֶס יְחִידוֹת. One unit is a singular feminine noun, so it agrees:
+    יְחִידָה אַחַת (never "אֶחָד יְחִידוֹת", which agrees in neither gender nor number; the owner's "אחד עשרות" covers the tens
+    only, and the owner is asked about the units, M10 C1 note 11.7)."""
+    return {1: 'יְחִידָה אַחַת', 2: 'שְׁתֵּי יְחִידוֹת'}.get(o, '%s יְחִידוֹת' % F[o])
 
 
 def placed(correct, wrong, i):

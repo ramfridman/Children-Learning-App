@@ -630,3 +630,10 @@ nikud like its Band B twins), 4 balance prompts (wrong for Band C, now reworded 
 - **Question 3 (first digit): yes.** `הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב.` (the only "first digit" wording in the sources; 63 rows, `owner-approved`).
 - **Question 4 ("one ten"): the school pattern, the owner's words** ("אחד עשרות ו5 יחידות בחמש עשרה. This is the right way to say it."): the digit, then always the plural. `tens_words` and `ones_words` in `tools/band_c.py`: one is `אֶחָד עֲשָׂרוֹת` / `אֶחָד יְחִידוֹת` (the owner's `אֶחָד`), two stays `שְׁתֵּי`, three to nine and zero as before. `עֲשָׂרָה אַחַת` and `יְחִידָה אַחַת` are gone. Today only ones = 1 occurs in the items (81: `שְׁמוֹנֶה עֲשָׂרוֹת וְאֶחָד יְחִידוֹת`, 3 rows, `owner-approved`); a number such as 15 will read `אֶחָד עֲשָׂרוֹת וְחָמֵשׁ יְחִידוֹת`.
   The "a new ten" line (`עֲשָׂרָה חֲדָשָׁה`, a group of ten as a noun) is a different use and is unchanged.
+
+### 11.7 One unit (2026-11-07, from the math-teacher's finding)
+
+The 81 items said `שְׁמוֹנֶה עֲשָׂרוֹת וְאֶחָד יְחִידוֹת`: `אֶחָד` is masculine singular and `יְחִידוֹת` is feminine plural, so the phrase agrees in neither gender nor number. The owner's words (11.6, question 4) were `אחד עשרות ו5 יחידות`, an example of one ten, not of one unit.
+`tens_words(1)` stays `אֶחָד עֲשָׂרוֹת`, exactly as the owner approved (the digit, then the plural; the owner's word). `ones_words(1)` is now `יְחִידָה אַחַת` (with the vav, `וִיחִידָה אַחַת`), the correct singular feminine; two stays `שְׁתֵּי יְחִידוֹת` and the others are unchanged.
+Changed rows: `activity.c.numc03.16` (prompt, alt text) and `activity.c.numc02.6` (hint 3); they are `text-ready` again, no longer `owner-approved` (the rule in `hebrew_voice_review.py` now covers `אֶחָד עֲשָׂרוֹת` only).
+For the owner: confirm `וִיחִידָה אַחַת`, or say if you want the school form `וְאֶחָד יְחִידוֹת` kept for one unit.

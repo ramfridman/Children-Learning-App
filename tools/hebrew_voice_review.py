@@ -915,8 +915,9 @@ OWNER_APPROVED = [
     (r'', r'הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת',
      'M10 C1 (notes 11.5, question 3): the owner approved adding "מִשְּׂמֹאל" to the first-digit line (owner-approved 2026-11-06).'),
     # (3) tens and ones in the school pattern: the digit, then always the plural; "one ten" is "אֶחָד עֲשָׂרוֹת" (the owner's word).
-    (r'', r'(^|[ ,.:])וְ?אֶחָד (עֲשָׂרוֹת|יְחִידוֹת)',
-     'M10 C1 (notes 11.5, question 4): the owner chose the school pattern for tens and ones, "אֶחָד עֲשָׂרוֹת וְחָמֵשׁ יְחִידוֹת" '
+    #     Only the tens are covered: one unit is "יְחִידָה אַחַת" (agrees), pending the owner (hebrew-notes.md 11.7).
+    (r'', r'(^|[ ,.:])וְ?אֶחָד עֲשָׂרוֹת',
+     'M10 C1 (notes 11.5, question 4): the owner chose the school pattern for tens and ones, "אֶחָד עֲשָׂרוֹת וְחָמֵשׁ יְחִידוֹת" (tens only; one unit is יְחִידָה אַחַת) '
      '(owner-approved 2026-11-06).'),
 ]
 
