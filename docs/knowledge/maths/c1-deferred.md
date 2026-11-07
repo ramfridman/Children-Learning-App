@@ -4,7 +4,7 @@ The maths teacher, 2026-11-06; prepared in the generator 2026-11-07 (QA-C1-5). B
 content with only the items that today's sessions draw. The items below need a mode that no session draws yet (security review of step
 0: `qa_m10s0_undrawn_modes_test.dart` fails on any `scene.picture` or `answer.type: number` in content).
 
-**State (2026-11-07, step 3): in content.** The app-developer drew the three modes and the new fields of the blocks picture (`litRods`,
+**State (2026-11-07, round 2): C1 is complete. Section 6 lists what is now in content and the only two things left, each with its reason.** Before that, **step 3 (2026-11-07): in content.** The app-developer drew the three modes and the new fields of the blocks picture (`litRods`,
 `crossedRods`, `scene.picture2`, `answer.options[].picture`) and switched every `DRAWN` entry on (commit d648af2b). The maths teacher
 then wrote the items that need the new fields and the items that criterion 2 and criterion 7 still lacked (section 5). `tools/author.py`
 `k_pick` carries `picture` and `picture2` into the scene and takes an option of blocks as `{'key', 'picture', 'label'}`; its
@@ -88,7 +88,7 @@ item of MATH-C-01 is in one of its fact families (`variantGroup` `fact-a-b`; set
 
 Number entry is also the place for the M-SUB-ORDER diagnostic of MATH-C-02 (M10 §4.2: "6 − 15 = 9 accepted"). A choice item cannot
 show it without a true-or-false sentence card; I recommend a keypad item `9 = 15 − ?` with 24 M-OP-SWAP and a `spot_error` sentence
-`6 − 15 = 9` once T25 or a true/false card exists. Until then MATH-C-02 watches M-OP-SWAP and M-EQ-OPER only (its skill file says so).
+`6 − 15 = 9` once T25 or a true/false card exists. **Done in round 2 (section 6):** the keypad `9 = 15 − ?` is c.mathc02.15 and the true-or-false card c.mathc02.16 to .19; MATH-C-02 now watches M-SUB-ORDER too.
 
 ## 4. `number_line` 0 to 100 with a tolerance (X5)
 
@@ -103,8 +103,8 @@ only an exact tick and 101 ticks do not fit a phone. The skill as written (curri
 | place | 0 to 100 | 0, 100 | 88 | 8 | 12 M-NL-DIR, 8 M-PV-FACE |
 | estimate (predict) | 0 to 100, the frog stands on an unlabelled tick near 60 | 0, 100 | 60 | 8 | 40 M-NL-DIR |
 
-When X5 is drawn, these replace four of the window items (keep two windows for the transfer check). Not prepared: the number line
-schema has no tolerance yet, and X5 is not in the app-developer's step-3 work (base_ten, hundred_chart and the keypad).
+When X5 is drawn, these replace four of the window items (keep two windows for the transfer check). **Done in round 2 (section 6)**, with
+the changes said there.
 
 ## 5. Step 3 (2026-11-07): the items the new fields allow, and the gaps of criteria 2 and 7
 
@@ -136,11 +136,61 @@ row, and M-NL-SPACE is the mark next to an end.
 The 58 and 43 towers of §1 are not written: the ones-first reading picks 58 too, so the one wrong tile would carry no tag; the lucky-right
 item of M-PV-FACE in NUM-C-04 stays `58 > ?`.
 
-**Still missing for C1 to be complete (M10 §1):**
-- X5, the number line 0 to 100 with a tolerance (§4): the number_line schema has no tolerance; NUM-C-06 stays on windows of twenty.
-- The M-SUB-ORDER diagnostic of MATH-C-02 (`6 − 15 = 9` accepted): needs a true-or-false sentence card (T25 or a new mode).
-- Criterion 3, from before this step: no diagnostic item for MATH-B-04 M-ADD-RECOUNT and NUM-B-01 M-CNT-SEQ; no lucky-right item for
-  MATH-C-01 M-SUB-SMALLBIG (every fact crosses ten), NUM-B-06 M-NUM-REV, NUM-C-01 M-CNT-DECADE and NUM-C-02 M-NUM-REV.
-- NUM-B-09's concrete items count by touch in a line; a ten-frame to fill (a give_n target) would carry the skill better.
-- The place-value mat (T26) of NUM-C-03 is batch C2.
+What step 3 still lacked (X5, the M-SUB-ORDER card, NUM-B-09's ten-frame and six gaps of criterion 3) is done in section 6.
 
+## 6. Round 2 (2026-11-07): the last pieces of C1
+
+The app-developer drew the last fields (commit f02c57f9): number_line 1.1 (`scene.tickStep`, `answer.tolerance`; the validator refuses a
+line that does not end on a tick, a tolerance on a jump or as wide as the line, and a mirror inside the tolerance), give_n 1.1
+(`scene.frame`, a ten-frame target) and the true-or-false card (a tap_answer whose row is a whole sentence, the tick and the cross on the
+tiles). `tools/author.py` `template_version` gives number_line 1.1 for `tickStep` or `tolerance` and give_n 1.1 for `frame`; `k_numline`
+writes both fields (the mirror tag only when the mirror is more than twice the tolerance away, the validator's rule) and takes an item's
+own hint 2; `k_give` writes `frame`, extra classifiers and an item's own hints. `tools/check_maths.py` reads the new items: the tolerance
+line (the right region is the target ± the tolerance; WRONG for a step that does not end the line or a tolerance off a place item, RULE for
+a mirror tag inside twice the tolerance or one other than M-NL-DIR, AMBIG for a written number inside the right region, RULE for a written
+target; M-NL-DIR is lucky-right when the mirrored touch lands in the region), the true-or-false card (the tick is right when the sentence
+is true; M-SUB-ORDER only on the tick of a false take-away that is true the other way round, M-EQ-OPER only on the cross of a true sentence
+whose = is not just before its answer; M-SUB-ORDER is lucky-right on a true take-away card), and M-CNT-DECADE is now lucky-right on "after
+34" (the next number or the one before, neither at a ten). Tests: `tools/test_check_maths.py` class `C1Last`. Every answer and tag below is
+recomputed by `check_maths --ids c. --strict` (0 WRONG, RULE, AMBIG, UNCHECKED over 237 items).
+
+| Id | Skill | Item | Answer | Wrong answers and tags |
+|---|---|---|---|---|
+| c.numc06.3 | NUM-C-06 | line 0 to 100, ticks of ten, 0, 50 and 100 written: about 23 (X5, tolerance 8) | 15 to 31 | the mirror 77 ± 8 M-NL-DIR; any other miss M-NL-SPACE |
+| c.numc06.4 to .6 | NUM-C-06 | the same line, only 0 and 100 written: about 70, 35, 88 | the target ± 8 | the mirror (30, 65, 12) ± 8 M-NL-DIR; any other miss M-NL-SPACE |
+| c.numc06.17 | NUM-C-06 | the same, about 64 (the second lesson ends on the whole line) | 56 to 72 | 36 ± 8 M-NL-DIR; any other miss M-NL-SPACE |
+| c.mathc02.16, .18 | MATH-C-02 | true or false: `6 − 15 = 9`, `8 − 17 = 9` | the cross | the tick M-SUB-ORDER (15 − 6 and 17 − 8 are 9) |
+| c.mathc02.17 | MATH-C-02 | true or false: `9 = 15 − 6` (= first; lucky-right for M-SUB-ORDER) | the tick | the cross M-EQ-OPER |
+| c.mathc02.19 | MATH-C-02 | true or false: `8 + 6 = 6 + 8` (an addition can be turned round, a take-away cannot) | the tick | the cross M-EQ-OPER |
+| c.numb09.15, .16 | NUM-B-09 | fill a ten-frame with 8 stars, 7 ducks, from a jar of ten (give_n 1.1, concrete) | 8; 7 | all ten M-CNT-CARD; fewer M-CNT-DOUBLE (two numbers for one); more M-CNT-SKIP (one put down uncounted) |
+| c.numc01.16 | NUM-C-01 | the chart, 34 lit: what comes after 34? (lucky-right for M-CNT-DECADE; two options) | 35 | 36 M-CNT-SEQ |
+| c.numc02.21 | NUM-C-02 | keypad: write 55 (lucky-right for M-NUM-REV) | 55 | 505, 550 M-PV-ZERO |
+| c.numb06.17 | NUM-B-06 | count 8 birds by touch, then the numeral (lucky-right for M-NUM-REV: 8 turned is 8) | 8 | 7 M-CNT-SKIP, 9 M-CNT-DOUBLE |
+| c.mathc01.34 | MATH-C-01 | `17 − 4 = ?` (no ten to open; lucky-right for M-SUB-SMALLBIG; its own family, 13 + 4) | 13 | 21 M-OP-SWAP, 14 M-CNT-DOUBLE |
+
+Changes from section 4: 45 is 35, because the mirror of 45 (55) is inside the tolerance (|100 − 2 × 45| = 10 ≤ 16): a child who runs the
+line from the right would be marked right and M-NL-DIR could not show (the validator refuses it). The fifth row is 64 on the same line,
+since the number_line template has no "which number does the frog stand on?" reading mode for the predict row. The miss tag is
+M-NL-SPACE, not M-PV-FACE: the session gives every miss outside the tolerance and the mirror one tag, and a miss on a 0 to 100 line is
+the line read with unequal gaps (the logarithmic placement of young children, Siegler and Opfer 2003), not digits read by face value.
+
+The four windows 60 to 80, 80 to 100, 30 to 50 and 70 to 90 became c.numc06.3 to .6 (no other id moved); the two counts by touch of
+NUM-B-09 became the ten-frames under the same ids (a row of five, then the rest, is the structure the flash items ask the child to see).
+Lessons: line-to-100 is the two windows of twenty with three marks, the two with the ends only, then the four estimates; line-to-100-more
+is the jumps, the middle of a line, the middles of two marks and the fifth estimate (8 and 9 items). fact-families is split: its first 8
+items, and fact-families-more with the other 4 and the four cards (8 and 8). The lucky-right items join hundred-chart (9), write-numbers
+(9), read-numerals-more (9) and facts-to-18-again (11). The misconception record M-SUB-ORDER is new in the pack (parent text, home
+activity, its child line `vo:fb.sub_order`).
+
+The coverage of every watched tag over `--ids c.` (`check_maths --coverage`) now has a diagnostic item and, where the tag's error can give
+a right answer, a lucky-right item, with two exceptions.
+
+**Left in C1, each for a reason:**
+- **MATH-B-04 M-ADD-RECOUNT has no diagnostic item.** Counting all from one instead of counting on gives the right sum, so no distractor,
+  expected number or classifier of any template can record it; the curriculum (§4, MATH-B-04) has it "observed in the hint trace", and no
+  item of the whole pack carries it (MATH-B-01 and MATH-B-08 watch it too). It needs a trace classifier (the taps or the time of a count
+  on), an engine task for the app-developer, not a C1 item.
+- **NUM-B-01 M-CNT-SEQ has no C1 diagnostic item.** NUM-B-01 is a Band B skill: its 9 Band B items (b.numb01.*) carry M-CNT-SEQ, and the
+  C1 additions (four jumps) are its second representation for core mastery. The coverage table counts `--ids c.` only.
+
+Not C1: the place-value mat (T26) of NUM-C-03 and X5's `open` mode are batch C2.

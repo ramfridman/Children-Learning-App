@@ -557,6 +557,115 @@ class Pictures(BatchC1):
         self.assertIn(('WRONG', 'answer'), codes(self.c1run(moved)))
 
 
+def estimate_item(target, labels=(0, 100), tolerance=8, mirror='M-NL-DIR', step=10, mode='place'):
+    """An X5 item (number_line 1.1): the frog goes about to `target` on the line 0 to 100 (ticks of `step`), right within `tolerance`."""
+    import author  # noqa: E402
+    answer = {'type': 'line', 'mode': mode, 'target': target, 'tolerance': tolerance, 'misconception': 'M-NL-SPACE'}
+    if mirror:
+        answer['mirrorMisconception'] = mirror
+    return {'schema': 'activity/v1', 'id': 'plant.x5', 'template': 'number_line', 'templateVersion': '1.1', 'domain': 'numbers',
+            'band': 'C', 'skills': [{'id': 'NUM-C-06', 'weight': 1}],
+            'prompt': {'caption': [{'t': 'he', 'v': 'הַצְּפַרְדֵּעַ '
+                                                   'רוֹצָה לַעֲמֹד '
+                                                   'עַל %s.' % author.F[target]}]},
+            'scene': {'from': 0, 'to': 100, 'tickStep': step, 'labels': list(labels)}, 'answer': answer}
+
+
+def card_item(row, right, tags, skill='MATH-C-02'):
+    """A true-or-false card: a whole sentence in the row, the tick and the cross on the tiles; `tags` is {'tick'|'cross': tag}."""
+    options = [dict({'id': 'o%d' % (k + 1), 'sprite': 'asset:' + n},
+                    **({'misconception': tags[n]} if n in tags else {})) for k, n in enumerate(('tick', 'cross'))]
+    return {'schema': 'activity/v1', 'id': 'plant.card', 'template': 'tap_answer', 'domain': 'math', 'band': 'C',
+            'skills': [{'id': skill, 'weight': 1}],
+            'prompt': {'caption': [{'t': 'he', 'v': 'הַתַּרְגִּיל '
+                                                   'נָכוֹן?'}]},
+            'scene': {'row': row, 'optionsOnTiles': True},
+            'answer': {'type': 'choice', 'correct': 'o1' if right else 'o2', 'options': options}}
+
+
+class C1Last(BatchC1):
+    """The last pieces of C1 (2026-11-07): the line 0 to 100 placed by estimate (X5) and the true-or-false card of M-SUB-ORDER."""
+    TAGS = BatchC1.TAGS | {'M-NL-DIR', 'M-NL-SPACE'}
+
+    def test_the_tolerance_line(self):
+        """Right within the tolerance of the target; its mirror a place of its own; no written number in the right region."""
+        good = estimate_item(70)
+        self.assertEqual(self.failing(good), [])
+        self.assertEqual(self.failing(estimate_item(23, labels=(0, 50, 100))), [])
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(estimate_item(70, step=30))), '100 is no tick of 30')
+        self.assertIn(('WRONG', 'answer'), codes(self.c1run(estimate_item(70, mode='jump'))), 'a jump has no tolerance')
+        self.assertIn(('WRONG', 'answer'), codes(self.c1run(estimate_item(70, tolerance=100))), 'as wide as the line')
+        self.assertIn(('RULE', 'tag-rule'), codes(self.c1run(estimate_item(45))), 'the mirror 55 is within 16 of 45')
+        self.assertIn(('RULE', 'tag-rule'), codes(self.c1run(estimate_item(70, mirror='M-PV-FACE'))))
+        self.assertIn(('AMBIG', 'labelled'), codes(self.c1run(estimate_item(46, labels=(0, 50, 100), mirror=None))), '50 is right')
+        self.assertIn(('RULE', 'labelled'), codes(self.c1run(estimate_item(50, labels=(0, 50, 100), mirror=None))))
+        self.assertEqual(self.failing(estimate_item(45, mirror=None)), [], 'no mirror tag: the mirror is simply right')
+        wrong = estimate_item(70)
+        wrong['answer']['target'] = 60
+        self.assertIn(('WRONG', 'answer'), codes(self.c1run(wrong)), 'the caption asks for 70')
+
+    def test_a_mirrored_estimate_is_lucky_right_inside_the_tolerance(self):
+        docs = [estimate_item(70), dict(estimate_item(46, mirror=None), id='plant.x5b')]
+        folder = tempfile.mkdtemp()
+        try:
+            cov = cm.coverage(folder, docs=docs, skills={'NUM-C-06': {'misconceptions': ['M-NL-DIR']}})
+        finally:
+            shutil.rmtree(folder)
+        self.assertEqual(cov['NUM-C-06']['M-NL-DIR'], (['plant.x5'], ['plant.x5b']), 'the mirror of 46 is 54, within 8')
+
+    def test_the_true_or_false_card(self):
+        false = card_item(['n:6', 'op:-', 'n:15', 'op:=', 'n:9'], False, {'tick': 'M-SUB-ORDER'})
+        true = card_item(['n:9', 'op:=', 'n:15', 'op:-', 'n:6'], True, {'cross': 'M-EQ-OPER'})
+        both = card_item(['n:8', 'op:+', 'n:6', 'op:=', 'n:6', 'op:+', 'n:8'], True, {'cross': 'M-EQ-OPER'})
+        for good in (false, true, both):
+            self.assertEqual(self.failing(good), [], good['scene']['row'])
+        moved = copy.deepcopy(false)
+        moved['answer']['correct'] = 'o1'
+        self.assertIn(('WRONG', 'answer'), codes(self.c1run(moved)), '6 - 15 = 9 is not true')
+        self.assertIn(('RULE', 'tag-rule'), codes(self.c1run(card_item(['n:7', 'op:-', 'n:15', 'op:=', 'n:9'], False,
+                                                                       {'tick': 'M-SUB-ORDER'}))), '15 - 7 is not 9 either')
+        self.assertIn(('RULE', 'tag-rule'), codes(self.c1run(card_item(['n:15', 'op:-', 'n:6', 'op:=', 'n:9'], True,
+                                                                       {'cross': 'M-EQ-OPER'}))), 'the answer is after =')
+        self.assertIn(('RULE', 'tag-rule'), codes(self.c1run(card_item(['n:6', 'op:-', 'n:15', 'op:=', 'n:9'], False,
+                                                                       {'tick': 'M-EQ-OPER'}))), 'M-EQ-OPER is a cross')
+
+    def test_the_card_covers_sub_order_and_a_true_take_away_is_lucky_right(self):
+        docs = [card_item(['n:6', 'op:-', 'n:15', 'op:=', 'n:9'], False, {'tick': 'M-SUB-ORDER'}),
+                dict(card_item(['n:9', 'op:=', 'n:15', 'op:-', 'n:6'], True, {'cross': 'M-EQ-OPER'}), id='plant.card2')]
+        folder = tempfile.mkdtemp()
+        try:
+            cov = cm.coverage(folder, docs=docs, skills={'MATH-C-02': {'misconceptions': ['M-SUB-ORDER']}})
+        finally:
+            shutil.rmtree(folder)
+        self.assertEqual(cov['MATH-C-02']['M-SUB-ORDER'], (['plant.card'], ['plant.card2']))
+
+    def test_after_a_number_inside_a_ten_is_lucky_right_for_the_decade(self):
+        """After 34 no ten is crossed: the child who stumbles at the tens says 35 too; after 39 and after 40 are diagnostic."""
+        import author  # noqa: E402
+        docs = [dict(c1_item('מַה בָּא אַחֲרֵי %s?' % author.F[n], [(n + 1, None), (n + 2, 'M-CNT-SEQ')], skill='NUM-C-01'),
+                     id='plant.after%d' % n) for n in (34, 39, 40)]
+        folder = tempfile.mkdtemp()
+        try:
+            cov = cm.coverage(folder, docs=docs, skills={'NUM-C-01': {'misconceptions': ['M-CNT-DECADE']}})
+        finally:
+            shutil.rmtree(folder)
+        self.assertEqual(cov['NUM-C-01']['M-CNT-DECADE'], ([], ['plant.after34']))
+
+    def test_the_content_has_them(self):
+        """The five estimates of NUM-C-06, the four cards of MATH-C-02 and the two ten-frames of NUM-B-09 are on disk and pass."""
+        docs, records, skills = cm.load(cm.STARTER)
+        by = {d['id']: d for d in docs}
+        x5 = [i for i, d in by.items() if d['template'] == 'number_line' and d['answer'].get('tolerance')]
+        cards = [i for i, d in by.items() if d.get('variantGroup') == 'true-or-false']
+        frames = [i for i, d in by.items() if d['template'] == 'give_n' and d['scene'].get('frame')]
+        self.assertEqual(sorted(x5), ['c.numc06.17', 'c.numc06.3', 'c.numc06.4', 'c.numc06.5', 'c.numc06.6'])
+        self.assertEqual(sorted(cards), ['c.mathc02.16', 'c.mathc02.17', 'c.mathc02.18', 'c.mathc02.19'])
+        self.assertEqual(sorted(frames), ['c.numb09.15', 'c.numb09.16'])
+        self.assertTrue(all(by[i]['templateVersion'] == '1.1' for i in x5 + frames))
+        f, _ = cm.check_docs([by[i] for i in x5 + cards + frames], records, skills, CATALOGUE, cm.Svg(cm.STARTER))
+        self.assertEqual([r for r in f.rows if r[0] in cm.STRICT_FAILING], [])
+
+
 def c1_waiting_docs():
     """The items of tools/band_c.py that wait for a mode (DRAWN), built in memory with every mode on, as tools/author.py would write
     them; nothing is written to content. Returns (documents of the waiting items only, ids whose picture the test carried, units)."""

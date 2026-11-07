@@ -16,12 +16,12 @@
   "items": [
     "c.numc06.1",
     "c.numc06.2",
+    "c.numc06.7",
+    "c.numc06.8",
     "c.numc06.3",
     "c.numc06.4",
     "c.numc06.5",
-    "c.numc06.6",
-    "c.numc06.7",
-    "c.numc06.8"
+    "c.numc06.6"
   ],
   "estimatedMinutes": 8,
   "sequence": 111,

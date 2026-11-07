@@ -321,9 +321,14 @@ def is_new_cell(cell):
 def template_version(template, scene, answer):
     """The version of the template an item needs: the oldest that has everything the item uses (the validator makes an item say
     this or more). tap_answer: 1.1 numerals and sets, 1.2 charts, 1.4 stage pictures, the number answer, five choices, the signs
-    < > ( ) and numbers to 10,000, a row of more than eight cells. spot_error: 1.0, or 1.1 for the signs and numbers of 1.4."""
+    < > ( ) and numbers to 10,000, a row of more than eight cells. spot_error: 1.0, or 1.1 for the signs and numbers of 1.4.
+    number_line: 1.1 for `tickStep` or `tolerance`. give_n: 1.1 for `frame`."""
     if template == 'spot_error':
         return '1.1' if any(is_new_cell(c) for c in scene['cells']) else '1.0'
+    if template == 'number_line':  # 1.1: ticks at every tickStep-th number, a tolerance for a line placed by estimate (M10 X5)
+        return '1.1' if 'tickStep' in scene or 'tolerance' in answer else '1.0'
+    if template == 'give_n':  # 1.1: the target is a ten-frame (M10, NUM-B-09)
+        return '1.1' if scene.get('frame') else '1.0'
     if template != 'tap_answer':
         return '1.0'
     row = scene.get('row', [])
@@ -447,16 +452,21 @@ def k_flash(a, ctx):
 
 
 def k_give(a, ctx):
+    """Give N. `frame`: the target is a ten-frame (give_n 1.1) and the objects sit in its cells; the item then gives its own
+    hints (`h1`, `h2`, `h3`) and may add classifiers (`classifiers`, {when: tag}) to took_all."""
     obj, n = ctx['objects'][a['obj']], a['n']
+    scene = {'background': 'asset:meadow', 'source': {'sprite': 'asset:' + a.get('sprite', a['obj']), 'count': a['source']},
+             'target': {'sprite': 'asset:' + a.get('target', 'basket_target')}}
+    if a.get('frame'):
+        scene['frame'] = True
+    classifiers = {'took_all': 'M-CNT-CARD', **a.get('classifiers', {})}
     return activity(
-        a, 'give_n', skills_of(a), 'check', 'reverse',
-        {'background': 'asset:meadow', 'source': {'sprite': 'asset:' + a.get('sprite', a['obj']), 'count': a['source']},
-         'target': {'sprite': 'asset:' + a.get('target', 'basket_target')}},
-        {'type': 'give', 'n': n, 'classifiers': [{'when': 'took_all', 'misconception': 'M-CNT-CARD'}]},
-        {'M-CNT-CARD'},
-        hints(a['id'], 'תְּנוּ לִי %s. סוֹפְרִים בִּזְמַן שֶׁלּוֹקְחִים.' % qty(n, obj),
-              'נִסְפֹּר עִם הָאֶצְבָּעוֹת: %s.' % count_words(n),
-              '%s. עוֹצְרִים כְּשֶׁמַּגִּיעִים אֶל %s. עַכְשָׁו תּוֹרְכֶם.' % (count_words(n), F[n])),
+        a, 'give_n', skills_of(a), 'check', 'reverse', scene,
+        {'type': 'give', 'n': n, 'classifiers': [{'when': w, 'misconception': t} for w, t in classifiers.items()]},
+        set(classifiers.values()),
+        hints(a['id'], a.get('h1') or 'תְּנוּ לִי %s. סוֹפְרִים בִּזְמַן שֶׁלּוֹקְחִים.' % qty(n, obj),
+              a.get('h2') or 'נִסְפֹּר עִם הָאֶצְבָּעוֹת: %s.' % count_words(n),
+              a.get('h3') or '%s. עוֹצְרִים כְּשֶׁמַּגִּיעִים אֶל %s. עַכְשָׁו תּוֹרְכֶם.' % (count_words(n), F[n])),
         'child gives exactly the number asked for, not the whole pile',
         extra={'contradicts': 'M-CNT-CARD'},
         prompt=a.get('prompt') or 'תְּנוּ לִי %s.' % qty(n, obj),
@@ -1117,7 +1127,14 @@ def k_numline(a, ctx):
              'labels': sorted(set(labels))}
     answer = {'type': 'line', 'mode': a['mode'], 'target': target, 'misconception': a.get('tag', 'M-NL-SPACE')}
     tags = {answer['misconception']}
-    if frm + to - target != target:
+    tol = a.get('tolerance', 0)
+    if a.get('tickStep'):  # X5: ticks only at every tickStep-th number (0 to 100 in tens); the line must end on a tick
+        assert (to - frm) % a['tickStep'] == 0, '%s: a line from %d to %d does not end on a tick of %d' % (a['id'], frm, to, a['tickStep'])
+        scene['tickStep'] = a['tickStep']
+    if tol:  # X5: a touch within `tolerance` of the target is right (an estimate); a place item only, narrower than the line
+        assert not jump and 0 < tol < to - frm, '%s: a tolerance is for a place item and narrower than the line' % a['id']
+        answer['tolerance'] = tol
+    if abs(frm + to - 2 * target) > 2 * tol:  # the mirror is a place of its own: outside the right region (its region too)
         answer['mirrorMisconception'] = 'M-NL-DIR'
         tags.add('M-NL-DIR')
     if jump:
@@ -1127,7 +1144,8 @@ def k_numline(a, ctx):
                                                                            count_words(target) if not jump else F[target]))
     return activity(
         a, 'number_line', skills_of(a), 'practice', 'practice',
-        scene, answer, tags, hint_set(a, h3, ('pick', 'line')), a.get('goal', 'child finds the number on the line'),
+        scene, answer, tags, hint_set(a, h3, ('pick', None if a.get('h2') else 'line')),
+        a.get('goal', 'child finds the number on the line'),
         prompt=a['prompt'], correct=a.get('correct_text') or '%s! נְחַתֶּם בַּמָּקוֹם הַנָּכוֹן.' % F[target])
 
 

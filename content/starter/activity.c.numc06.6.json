@@ -4,7 +4,7 @@
   "review": "needs-editor",
   "revision": 1,
   "template": "number_line",
-  "templateVersion": "1.0",
+  "templateVersion": "1.1",
   "domain": "numbers",
   "band": "C",
   "skills": [
@@ -16,36 +16,37 @@
   "purpose": "practice",
   "checkType": "practice",
   "representation": "pictorial",
-  "variantGroup": "numline",
+  "variantGroup": "estimate",
   "difficulty": {
-    "authored": 0.72
+    "authored": 0.6
   },
   "prompt": {
     "vo": "vo:c.numc06.6.prompt",
     "caption": [
       {
         "t": "he",
-        "v": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל שִׁבְעִים וּשְׁמוֹנֶה. נוֹגְעִים בַּמָּקוֹם."
+        "v": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל שְׁמוֹנִים וּשְׁמוֹנֶה. אֵיפֹה זֶה בְּעֵרֶךְ? נוֹגְעִים בַּמָּקוֹם."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "from": 70,
-    "to": 90,
+    "from": 0,
+    "to": 100,
     "markerSprite": "asset:frog",
     "labels": [
-      70,
-      80,
-      90
-    ]
+      0,
+      100
+    ],
+    "tickStep": 10
   },
   "answer": {
     "type": "line",
     "mode": "place",
-    "target": 78,
+    "target": 88,
     "misconception": "M-NL-SPACE",
+    "tolerance": 8,
     "mirrorMisconception": "M-NL-DIR"
   },
   "voiceAnswer": false,
@@ -55,7 +56,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "שִׁבְעִים וּשְׁמוֹנֶה! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן."
+          "v": "יָפֶה! שְׁמוֹנִים וּשְׁמוֹנֶה נִמְצָא בְּעֵרֶךְ כָּאן."
         }
       ]
     },
@@ -116,11 +117,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.line.h2",
+      "vo": "vo:c.numc06.6.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
+          "v": "הָאֶמְצַע שֶׁל הַצִּיר הוּא חֲמִשִּׁים. שְׁמוֹנִים וּשְׁמוֹנֶה גָּדוֹל מֵחֲמִשִּׁים, אָז הוּא בַּצַּד שֶׁל הַמֵּאָה."
         }
       ]
     },
@@ -131,7 +132,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "מַתְחִילִים מִשְּׁמוֹנִים וְסוֹפְרִים אֲחוֹרָה: שִׁבְעִים וְתֵשַׁע, שִׁבְעִים וּשְׁמוֹנֶה. עַכְשָׁו תּוֹרְכֶם."
+          "v": "סוֹפְרִים אֶת הַקַּוִּים בַּעֲשָׂרוֹת עַד שְׁמוֹנִים. שְׁמוֹנִים וּשְׁמוֹנֶה הוּא קְצָת פָּחוֹת מִתִּשְׁעִים. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -151,6 +152,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל שִׁבְעִים וּשְׁמוֹנֶה. נוֹגְעִים בַּמָּקוֹם."
+    "altText": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל שְׁמוֹנִים וּשְׁמוֹנֶה. אֵיפֹה זֶה בְּעֵרֶךְ? נוֹגְעִים בַּמָּקוֹם."
   }
 }

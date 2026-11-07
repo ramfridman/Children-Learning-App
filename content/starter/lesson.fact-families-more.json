@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "fact-families-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מִשְׁפָּחוֹת"
+    }
+  ],
+  "skills": [
+    "MATH-C-02"
+  ],
+  "items": [
+    "c.mathc02.9",
+    "c.mathc02.10",
+    "c.mathc02.11",
+    "c.mathc02.12",
+    "c.mathc02.16",
+    "c.mathc02.17",
+    "c.mathc02.18",
+    "c.mathc02.19"
+  ],
+  "estimatedMinutes": 8,
+  "sequence": 105,
+  "celebration": {
+    "vo": "vo:celebrate.fact_families_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! בְּחִסּוּר הַסֵּדֶר חָשׁוּב."
+      }
+    ]
+  }
+}

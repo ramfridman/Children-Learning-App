@@ -920,6 +920,34 @@ def check_number(f, it):
     return kind, list(ctx.get('given', [])) + [x]  # the expected wrong numbers may be bigger (203 for twenty-three)
 
 
+def sentence_card_tags(it, seq, verdict):
+    """The tag rules of a true-or-false sentence card: the option a child with the tag picks must be the one tagged.
+    M-SUB-ORDER (subtraction taken as commutative) is the tick on a false sentence that one take-away written the other way round
+    makes true (6 - 15 = 9, since 15 - 6 = 9); M-EQ-OPER ("the answer comes after =") is the cross on a true sentence whose = is not
+    followed by the answer of what stands before it (9 = 15 - 6, 8 + 6 = 6 + 8). Any other tag on a card has no rule (a NOTE)."""
+    out = []
+    k = next(i for i, t in enumerate(seq) if t in ('=',) + RELATIONS)
+    for o in it.options:
+        tag, name = o.get('misconception'), opt_info(o)['name']
+        if not tag:
+            continue
+        if tag == 'M-SUB-ORDER':
+            swapped = [seq[:i - 1] + [seq[i + 1], t, seq[i - 1]] + seq[i + 2:] for i, t in enumerate(seq)
+                       if t in ('-', '−') and 0 < i < len(seq) - 1]
+            if name != 'tick' or verdict or not any(relation_true(x) for x in swapped):
+                out.append(('RULE', 'tag-rule', '%s on the %s: M-SUB-ORDER is the tick on a false take-away that is true the other way '
+                            'round, and %s is %s' % (o['id'], name, seq, verdict)))
+        elif tag == 'M-EQ-OPER':
+            left, right = seq[:k], seq[k + 1:]
+            plain = seq[k] == '=' and len(right) == 1 and len(left) > 1  # 15 - 6 = 9: the answer comes after =
+            if name != 'cross' or not verdict or plain:
+                out.append(('RULE', 'tag-rule', '%s on the %s: M-EQ-OPER is the cross on a true sentence with = not before its '
+                            'answer, and %s is %s' % (o['id'], name, seq, verdict)))
+        else:
+            out.append(('NOTE', 'tag-rule', '%s on a sentence card: no rule checks it' % tag))
+    return out
+
+
 def recognise_choice(it, svg):
     """The recogniser of a choice item (tap_answer, count_tap, flash), or None."""
     cap, sc = it.cap, it.scene
@@ -1184,6 +1212,13 @@ def recognise_choice(it, svg):
             verdict = periodic(row) is not None
         elif it.has('זו בננה', 'זה תפוח') and g:
             verdict = sprite_info(g)['kind'] == ('banana' if it.has('בננה') else 'apple')
+        elif it.has('נכון') and seq and None not in seq and any(t in ('=',) + RELATIONS for t in seq):
+            # the true-or-false card (MATH-C-02, M10 §4.2): a whole number sentence with no gap; the tick says it is true
+            verdict = relation_true(seq)
+            if verdict is not None:
+                out.extend(sentence_card_tags(it, seq, verdict))
+                return Choice('true-false', lambda o: (opt_info(o)['name'] == 'tick') == verdict,
+                              {'card': seq, 'verdict': verdict}, [t for t in seq if isinstance(t, (int, float))]), out
         if verdict is None:
             return None, out
         return Choice('yes-no', lambda o: (opt_info(o)['name'] == 'tick') == verdict,
@@ -1605,10 +1640,32 @@ def check_number_line(f, it):
         f.add('WRONG', it, 'ltr', 'the labels %s do not grow left to right' % labels)
     if labels and (labels[0] < lo or labels[-1] > hi):
         f.add('WRONG', it, 'picture', 'labels %s outside %s..%s' % (labels, lo, hi))
-    if not a.get('mirrorMisconception'):
-        f.add('NOTE', it, 'ltr', 'no mirrorMisconception (M-NL-DIR) on a number line')
     nums = numbers(it.caption)
     target = a.get('target')
+    if not a.get('mirrorMisconception'):
+        f.add('NOTE', it, 'ltr', 'no mirrorMisconception (M-NL-DIR) on a number line')
+    step, tol = sc.get('tickStep', 1), a.get('tolerance', 0)
+    if lo is not None and hi is not None and lo < hi:
+        if not isinstance(step, int) or step < 1 or (hi - lo) % step:
+            f.add('WRONG', it, 'picture', 'the line %s..%s does not end on a tick of %s' % (lo, hi, step))
+        if tol and (a.get('mode') != 'place' or tol >= hi - lo):
+            f.add('WRONG', it, 'answer', 'a tolerance of %s on a %s item of a line %s..%s: only a place item, narrower than the line' %
+                  (tol, a.get('mode'), lo, hi))
+        if tol and target is not None:
+            # X5, a line placed by estimate: every touch within tol of the target is right (the right region)
+            region = (max(lo, target - tol), min(hi, target + tol))
+            mirror = lo + hi - target
+            if a.get('mirrorMisconception') and abs(mirror - target) <= 2 * tol:
+                f.add('RULE', it, 'tag-rule', 'the mirror %s and the right region %s..%s overlap (within %s): a touch there is right '
+                      'or %s, and the item cannot tell' % (mirror, region[0], region[1], 2 * tol, a['mirrorMisconception']))
+            if a.get('mirrorMisconception') not in (None, 'M-NL-DIR'):
+                f.add('RULE', it, 'tag-rule', 'the mirror of a line is M-NL-DIR, not %s' % a['mirrorMisconception'])
+            near = [v for v in labels if v != target and region[0] <= v <= region[1]]
+            if near:
+                f.add('AMBIG', it, 'labelled', 'the written %s is inside the right region %s..%s: the child can touch it and be right '
+                      'without estimating' % (', '.join(map(str, near)), region[0], region[1]))
+            if target in labels:
+                f.add('RULE', it, 'labelled', 'the target %s is written on the line: an estimate reads it' % target)
     if a.get('mode') == 'jump':
         start, hops = sc.get('start'), sc.get('hops') or []
         back = it.has('אחורה')
@@ -1980,7 +2037,7 @@ def heard(x):
 
 
 # The tags whose error can give the right answer, so that an item can be lucky-right on them (lucky() says when).
-LUCKY_TAGS = ('M-PV-FACE', 'M-NUM-REV', 'M-PV-ZERO', 'M-CNT-DECADE', 'M-SUB-SMALLBIG', 'M-EQ-OPER', 'M-NL-DIR')
+LUCKY_TAGS = ('M-PV-FACE', 'M-NUM-REV', 'M-PV-ZERO', 'M-CNT-DECADE', 'M-SUB-SMALLBIG', 'M-EQ-OPER', 'M-NL-DIR', 'M-SUB-ORDER')
 
 
 def lucky(tag, it, ctx):
@@ -1989,11 +2046,15 @@ def lucky(tag, it, ctx):
     if tag not in LUCKY_TAGS:
         return None
     x, rel, op = ctx.get('x'), ctx.get('relation'), ctx.get('op')
+    if tag == 'M-SUB-ORDER':  # a true-or-false card: a true take-away is true to the child who swaps its numbers too
+        card = ctx.get('card')
+        return None if card is None or not any(t in ('-', '−') for t in card) else bool(ctx.get('verdict'))
     if it.template == 'number_line':
         if tag != 'M-NL-DIR':
             return None
         lo, hi, t = it.scene.get('from'), it.scene.get('to'), it.answer.get('target')
-        return None if None in (lo, hi, t) else t * 2 == lo + hi  # the middle of the line, mirrored, is the middle
+        # the mirrored touch lands in the right region: the middle of the line, or within the tolerance of it (X5)
+        return None if None in (lo, hi, t) else abs(lo + hi - 2 * t) <= it.answer.get('tolerance', 0)
     if not isinstance(x, (int, float)):
         return None
     if tag == 'M-PV-FACE':  # in a comparison: the ones-first reading picks the right number too (58 vs 43)
@@ -2007,8 +2068,12 @@ def lucky(tag, it, ctx):
     if tag == 'M-PV-ZERO':  # written as heard it is right: a whole ten (40)
         return heard(x) == x if x >= 10 else None
     if tag == 'M-CNT-DECADE':  # counting with no ten to cross
-        if 'prev' not in ctx and rel is None and not ctx.get('sentence') and it.has('אחרי', 'לפני', 'חסר'):
-            return x % 10 not in (0, 9)
+        if rel is None and not ctx.get('sentence') and it.has('אחרי', 'לפני', 'חסר'):
+            prev = ctx.get('prev')
+            if prev is None:
+                return x % 10 not in (0, 9)
+            if abs(x - prev) == 1:  # the next or the one before (not a count by tens): neither number at a ten (34 -> 35)
+                return x % 10 not in (0, 9) and prev % 10 not in (0, 9)
         return None
     if tag == 'M-SUB-SMALLBIG':  # no ten to trade: the smaller digit from the larger is right (58 - 23)
         a, b = ctx.get('a'), ctx.get('b')

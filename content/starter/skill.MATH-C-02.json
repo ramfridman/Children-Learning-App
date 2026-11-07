@@ -25,11 +25,13 @@
   ],
   "representations": [
     "symbolic",
-    "concrete"
+    "concrete",
+    "pictorial"
   ],
   "misconceptions": [
     "M-OP-SWAP",
-    "M-EQ-OPER"
+    "M-EQ-OPER",
+    "M-SUB-ORDER"
   ],
   "retention": {
     "targetRetention": 0.9,

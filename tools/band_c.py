@@ -9,7 +9,7 @@ sentence in tokens, a number-entry item), and nothing else. There is no content 
 nine steps (docs/milestones/M10.md section 10), from the batch spec of the curriculum-expert and the checked item tables of the
 maths and CS teachers; a table is a function that fills one unit and is registered with @table:
 
-    @table('C1', 'numbers', assets=['apple'])
+@table('C1', 'numbers', assets=['apple'])
     def numbers_c1(u):
         u.skill('NUM-C-01', 'title', 'line for the child', 'cone-tree', ['NUM-B-02'], ['pictorial', 'symbolic'], tags=['M-CNT-DECADE'])
         number_item(u, 'NUM-C-01', 'the question', [39, '+', 1, '=', '?'], 40, {30: 'M-CNT-DECADE'}, h2='...', h3='...', ok='...')
@@ -114,7 +114,7 @@ DRAWN = {
 # שָׁוֶה.
 
 from author import F, M, from_, prefix, qty, vav  # noqa: E402
-from band_b import NAMES, SHEKEL, steps as step_words  # noqa: E402
+from band_b import NAMES, OBJECTS, SHEKEL, steps as step_words  # noqa: E402
 
 BLOCK = NAMES['block'] | {'many': 'קֻבִּיּוֹת'}
 NOW = 'עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.'
@@ -251,6 +251,33 @@ def place_on(u, skill, frm, to, target, labels, **kw):
                  correct_text='%s! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן.' % F[target], **kw)
 
 
+def estimate_on(u, skill, target, labels, **kw):
+    """X5 (number_line 1.1): the frog goes about to `target` on the line 0 to 100, ticks of ten, `labels` the written numbers; a
+    touch within 8 is right (curriculum §4, NUM-C-06: error 8 or less). The mirror of the target is outside the right region (the
+    validator's rule), so a child who runs the line from the right is seen (M-NL-DIR); any other miss is M-NL-SPACE, the line read
+    with unequal gaps (the small numbers spread out, Siegler and Opfer 2003). Hint 2 is the middle, 50, as the benchmark; hint 3
+    counts the ticks in tens and says where the number sits between two tens."""
+    assert abs(100 - 2 * target) > 16 and target not in labels, 'an estimate: the mirror outside the region, the target unwritten'
+    side = 'גָּדוֹל %s, אָז הוּא בַּצַּד שֶׁל הַמֵּאָה' if target > 50 else 'קָטָן %s, אָז הוּא בַּצַּד שֶׁל הָאֶפֶס'
+    h2 = fit('הָאֶמְצַע שֶׁל הַצִּיר הוּא חֲמִשִּׁים. %s %s.' % (F[target], side % from_(F[50])))
+    low, r = target - target % 10, target % 10
+    if r == 0:
+        where = ''
+    elif r <= 3:
+        where = '%s הוּא קְצָת יוֹתֵר %s.' % (F[target], from_(F[low]))
+    elif r >= 7:
+        where = '%s הוּא קְצָת פָּחוֹת %s.' % (F[target], from_(F[low + 10]))
+    else:
+        where = '%s הוּא %s בֵּין %s %s.' % (F[target], 'בָּאֶמְצַע' if r == 5 else 'קָרוֹב לָאֶמְצַע', F[low], prefix('ל', F[low + 10]))
+    walk = ', '.join(F[10 * k] for k in range(1, low // 10 + 1))
+    h3 = fit('סוֹפְרִים אֶת הַקַּוִּים בַּעֲשָׂרוֹת: %s. %s %s' % (walk, where, TURN),
+             'סוֹפְרִים אֶת הַקַּוִּים בַּעֲשָׂרוֹת עַד %s. %s %s' % (F[low], where, TURN),
+             '%s %s' % (where, TURN))
+    return u.act(skill, 'numline', mode='place', **{'from': 0}, to=100, target=target, labels=labels, tickStep=10, tolerance=8,
+                 variantGroup='estimate', prompt='הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל %s. אֵיפֹה זֶה בְּעֵרֶךְ? נוֹגְעִים בַּמָּקוֹם.' % F[target],
+                 h2=h2, h3=h3.replace('  ', ' '), correct_text='יָפֶה! %s נִמְצָא בְּעֵרֶךְ כָּאן.' % F[target], **kw)
+
+
 @table('C1', 'numbers', assets=['frog', 'coin_s10', 'coin_s1', 'apple', 'star', 'fish', 'duck', 'ladybug', 'bird'],
        note='Band C, batch C1, Counting Hills: numbers to 100 (NUM-C-01 to C-04, C-06, C-09) and the bridge skills NUM-B-06 and '
             'NUM-B-09. Only items that today\'s sessions draw; the base_ten, hundred_chart and number-entry items are in '
@@ -341,10 +368,19 @@ def numbers_c1(u):
                h2='חִשְׁבוּ עַל מִסְגֶּרֶת שֶׁל עֶשֶׂר עִם %s בִּפְנִים. כַּמָּה מִשְׁבָּצוֹת רֵיקוֹת?' % F[n],
                h3='%s וְעוֹד %s שָׁוֶה עֶשֶׂר. %s' % (F[n], F[10 - n], NOW % F[10 - n]),
                ok='%s! %s וְעוֹד %s שָׁוֶה עֶשֶׂר.' % (F[10 - n], F[n], F[10 - n]))
-    # QA-C1-5: concrete, touch each one and count (count_tap has no ten-frame; a ten-frame to fill waits for a give_n target)
-    for obj, n, opts in [('star', 8, [7, 8, 9]), ('duck', 7, [7, 6, 8])]:
-        u.act('NUM-B-09', 'count_tap', band='B', obj=obj, count=n, arrangement='line', options=opts, variantGroup='count-tap',
-              h3=count_all(n))
+    # Concrete (QA-C1-5; give_n 1.1, M10 step 3): fill a ten-frame with N from a jar of ten. Filling builds the frame's structure (a row of
+    # five, then the rest: 8 is 5 and 3) that the flash items ask the child to see at a glance; it replaced the two counts by touch
+    # in a line of step 1 (same ids). A child who gives two numbers to one object stops short (M-CNT-DOUBLE); one who puts an object
+    # down with no number goes over (M-CNT-SKIP); one who fills the whole frame has not stopped at N (M-CNT-CARD).
+    for obj, n in [('star', 8), ('duck', 7)]:
+        thing = OBJECTS[obj]
+        u.act('NUM-B-09', 'give', band='B', obj=obj, n=n, source=10, frame=True, variantGroup='fill-frame',
+              classifiers={'took_fewer': 'M-CNT-DOUBLE', 'took_more': 'M-CNT-SKIP'},
+              prompt='שִׂימוּ בַּמִּסְגֶּרֶת %s.' % qty(n, thing),
+              h1=fit('שִׂימוּ %s, אֶחָד בְּכׇל מִשְׁבֶּצֶת. סוֹפְרִים בִּזְמַן שֶׁשָּׂמִים.' % qty(n, thing)),
+              h2=fit('בְּשׁוּרָה יֵשׁ חָמֵשׁ מִשְׁבָּצוֹת. מְמַלְּאִים שׁוּרָה אַחַת, וּמוֹסִיפִים עוֹד %s.' % F[n - 5]),
+              h3=fit('חָמֵשׁ בַּשּׁוּרָה הָרִאשׁוֹנָה, וְעוֹד %s: %s. %s' % (F[n - 5], ', '.join(F[k] for k in range(6, n + 1)), TURN)),
+              correct_text='%s! שׁוּרָה מְלֵאָה שֶׁל חָמֵשׁ, וְעוֹד %s.' % (F[n], F[n - 5]))
 
     # ---- NUM-C-01: counts to 100 from any number; counts on over the tens
     u.skill('NUM-C-01', 'סופרים עד 100 מכל מספר', 'סוֹפְרִים עַד מֵאָה', 'cone-tree', ['NUM-B-02', 'NUM-B-17'], ['symbolic', 'pictorial'],
@@ -479,11 +515,16 @@ def numbers_c1(u):
                                                 rods(other // 10), TURN)),
                    ok='כֵּן! %s %s יוֹתֵר.' % (F[right], word))
 
-    # ---- NUM-C-06: places numbers on the line between the tens (a window of twenty; the 0 to 100 line waits for X5)
+    # ---- NUM-C-06: places numbers on the line to 100: first on a window of twenty (ticks of one), then on the whole line 0 to 100
+    # (ticks of ten, X5) by estimate, a touch within 8 right (c1-deferred.md §4; the four windows 60-80, 80-100, 30-50 and 70-90 of
+    # step 1 became the estimates c.numc06.3 to .6, so no other id moved)
     u.skill('NUM-C-06', 'מספרים על ציר עד 100', 'שָׂמִים מִסְפָּרִים עַל הַצִּיר', 'dock', ['NUM-C-03', 'NUM-B-13'], ['pictorial', 'symbolic'],
             ['M-NL-DIR', 'M-NL-SPACE'])
-    for frm, target in [(40, 47), (20, 33), (60, 72), (80, 91), (30, 44), (70, 78)]:
+    for frm, target in [(40, 47), (20, 33)]:
         place_on(u, 'NUM-C-06', frm, frm + 20, target, [frm, frm + 10, frm + 20])
+    estimates = [estimate_on(u, 'NUM-C-06', 23, [0, 50, 100], difficulty=0.5)]  # the middle written first, then the ends only
+    for target in (70, 35, 88):
+        estimates.append(estimate_on(u, 'NUM-C-06', target, [0, 100], difficulty=0.6))
     for frm, target in [(50, 64), (10, 26)]:  # only the two ends are marked (transfer)
         place_on(u, 'NUM-C-06', frm, frm + 20, target, [frm, frm + 20], check='transfer', difficulty=0.6)
     jump(u, 'NUM-C-06', 40, 60, 48, 5, labels=[40, 50, 60])
@@ -504,6 +545,7 @@ def numbers_c1(u):
                                                                     F[hi], NOW % F[mid]),
                       '%s %s קָדִימָה הֵם %s, וְעוֹד %s הֵם %s.' % (from_(F[lo]), step_words(half), F[mid], step_words(half), F[hi])),
                ok='%s! זֶה בְּדִיּוּק בָּאֶמְצַע.' % F[mid])
+    estimates.append(estimate_on(u, 'NUM-C-06', 64, [0, 100], difficulty=0.7))  # the whole line again, at the end of the second lesson
 
     # ---- NUM-C-09: ten more and ten less (the hundred chart: one row down or up, the same column)
     u.skill('NUM-C-09', 'עשר יותר, עשר פחות', 'עֶשֶׂר יוֹתֵר וְעֶשֶׂר פָּחוֹת', 'cone-tree', ['NUM-C-03'], ['symbolic', 'pictorial'],
@@ -568,10 +610,18 @@ def numbers_c1(u):
     lesson_of(u, 'tens-and-ones-more', 'עוֹד עֲשָׂרוֹת וִיחִידוֹת', 'NUM-C-03', 'נִפְלָא! הָעֲשָׂרוֹת וְהַיְּחִידוֹת מוּכָּרוֹת.', 8, minutes=7)
     lesson_of(u, 'compare-to-100', 'מַשְׁוִים מִסְפָּרִים', 'NUM-C-04', 'יָפֶה מְאֹד! הַסִּימָן פּוֹנֶה לַגָּדוֹל.', 0, 8, minutes=8)
     lesson_of(u, 'compare-to-100-more', 'עוֹד מַשְׁוִים', 'NUM-C-04', 'כׇּל הַכָּבוֹד! הִשְׁוִיתֶם קֹדֶם אֶת הָעֲשָׂרוֹת.', 8, minutes=8)
-    lesson_of(u, 'line-to-100', 'הַצִּיר הַגָּדוֹל', 'NUM-C-06', 'כׇּל הַכָּבוֹד! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן.', 0, 8, minutes=8)
+    # the windows of twenty first (ticks of one), then the whole line by estimate; the second lesson ends on the whole line again
+    line = [x['id'] for x in u.d['activities'] if x['skill'] == 'NUM-C-06']
+    first = [i for i in line[:8] if i not in estimates] + [i for i in line[:8] if i in estimates]
+    u.lesson('line-to-100', 'הַצִּיר הַגָּדוֹל', ['NUM-C-06'], first, 'כׇּל הַכָּבוֹד! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן.', minutes=8)
     lesson_of(u, 'line-to-100-more', 'עוֹד עַל הַצִּיר', 'NUM-C-06', 'מְצֻיָּן! מְצָאתֶם אֶת הַמָּקוֹם עַל הַצִּיר.', 8, minutes=8)
     lesson_of(u, 'ten-more-ten-less', 'עֶשֶׂר יוֹתֵר, עֶשֶׂר פָּחוֹת', 'NUM-C-09', 'מְצֻיָּן! שׁוּרָה לְמַטָּה, שׁוּרָה לְמַעְלָה.', minutes=8)
     numbers_c1_waiting(u)
+    # criterion 3, the lucky-right item of M-NUM-REV in NUM-B-06: 8 turned round is 8, so reading it right is no evidence (c.numb06.17,
+    # after every item of the skill); the neighbours are the count's own errors
+    read = u.act('NUM-B-06', 'count_tap', band='B', obj='bird', count=8, arrangement='line', options=[7, 8, 9],
+                 variantGroup='count-and-read', h3=count_all(8))
+    next(x for x in u.d['lessons'] if x['id'] == 'read-numerals-more')['items'].append(read)
 
 
 def tens_then_ones(t, o):
@@ -642,7 +692,11 @@ def numbers_c1_waiting(u):
                  '%s, וְאַחֲרָיו %s, בַּשּׁוּרָה הַבָּאָה. ' % (F[40], F[41])),
                 # QA-C1-5: the ten that comes at the end of a row (60 is the tens said again, M-CNT-DECADE)
                 (chart([69], [70]), 'מַה בָּא אַחֲרֵי %s?' % F[69], 70, {60: 'M-CNT-DECADE', 71: 'M-CNT-SEQ'},
-                 '%s, וְאַחֲרָיו %s, בְּסוֹף הַשּׁוּרָה. ' % (F[69], F[70]))]):
+                 '%s, וְאַחֲרָיו %s, בְּסוֹף הַשּׁוּרָה. ' % (F[69], F[70])),
+                # criterion 3, the lucky-right item of M-CNT-DECADE: no ten to cross, so the child who stumbles at the tens is right
+                # here (a right answer is no evidence the misconception is gone); two options, the one wrong a skipped number
+                (chart([34], [35]), 'מַה בָּא אַחֲרֵי %s?' % F[34], 35, {36: 'M-CNT-SEQ'},
+                 '%s, וְאַחֲרָיו %s, בְּאוֹתָהּ שׁוּרָה. ' % (F[34], F[35]))]):
             hundred.append(choose(
                 u, 'NUM-C-01', ask, ans, wrong, i, picture=pic,
                 h2='בְּלוּחַ הַמֵּאָה סוֹפְרִים בַּשּׁוּרָה מִשְּׂמֹאל לְיָמִין, וּבְסוֹף הַשּׁוּרָה מַמְשִׁיכִים בַּמִּשְׁבֶּצֶת הָרִאשׁוֹנָה שֶׁל הַשּׁוּרָה הַבָּאָה.',
@@ -714,6 +768,16 @@ def numbers_c1_waiting(u):
                 correct_text='כֵּן! שִׁלַּמְתֶּם בְּדִיּוּק %s.' % qty(n, SHEKEL)))
         more = next(x for x in u.d['lessons'] if x['id'] == 'tens-and-ones-more')
         more['items'] += pays
+    if DRAWN['number']:
+        # criterion 3, the lucky-right item of M-NUM-REV in NUM-C-02: 55 read the other way round is 55 (c.numc02.21, after the
+        # blocks on the tiles); 505 is the number written as it is heard and 550 a zero too many (M-PV-ZERO)
+        n = 55
+        typed.append(u.act(
+            'NUM-C-02', 'number', prompt='כִּתְבוּ אֶת הַמִּסְפָּר %s.' % F[n], value=n, expected={505: 'M-PV-ZERO', 550: 'M-PV-ZERO'},
+            rules={}, check='practice',
+            h2='כּוֹתְבִים רַק שְׁתֵּי סְפָרוֹת: קֹדֶם אֶת סִפְרַת הָעֲשָׂרוֹת, מִשְּׂמֹאל, וְאַחֲרֶיהָ אֶת סִפְרַת הַיְּחִידוֹת.',
+            h3='%s: %s, %s. כּוֹתְבִים %s וְאַחַר כָּךְ %s.' % (F[n], tens_words(n // 10), vav(ones_words(n % 10)), F[n // 10], F[n % 10]),
+            correct_text='כֵּן! %s.' % F[n]))
     # their lessons, after the drawn ones (only the modes that are on)
     for lid, title, items, done in [
             ('blocks-tens-and-ones', 'קֻבִּיּוֹת שֶׁל עֲשָׂרוֹת', blocks, 'כׇּל הַכָּבוֹד! סְפַרְתֶּם אֶת הַמּוֹטוֹת בַּעֲשָׂרוֹת.'),
@@ -733,7 +797,7 @@ FAMILIES = [(9, 3), (9, 5), (9, 7), (8, 4), (8, 6), (8, 7), (7, 5), (7, 6), (6, 
 START_LINE = {'M-CNT-DOUBLE': ('vo:fb.count_on_start', 'כְּשֶׁמַּמְשִׁיכִים לִסְפֹּר, לֹא סוֹפְרִים שׁוּב אֶת הַמִּסְפָּר שֶׁמַּתְחִילִים מִמֶּנּוּ. בּוֹאוּ נִבְדֹּק.')}
 
 
-@table('C1', 'math', assets=['frog', 'block', 'coin_s10', 'apple', 'star', 'fish', 'duck', 'ladybug', 'bird'],
+@table('C1', 'math', assets=['frog', 'block', 'coin_s10', 'apple', 'star', 'fish', 'duck', 'ladybug', 'bird', 'tick', 'cross'],
        note='Band C, batch C1, Market: the facts to 9 + 9 (MATH-C-01), fact families (MATH-C-02), whole tens (MATH-C-03) and the bridge '
             'skill MATH-B-04 (count on from the larger number, §8 P8). Hebrew is a draft, needs-editor.')
 def math_c1(u):
@@ -741,6 +805,10 @@ def math_c1(u):
           'הילד מחסר בכל טור את הספרה הקטנה מהגדולה, בלי לשים לב מי למעלה: 15 פחות 7 נראה לו 12, כי 7 פחות 5 הם 2.',
           'לסדר 15 כפיות בערמה של עשר ועוד חמש לבד, ולהוריד שבע. כך רואים שצריך לפתוח את הערמה של העשר.',
           ['concrete', 'pictorial'], 'רֶגַע, מוֹרִידִים מֵהַמִּסְפָּר הַגָּדוֹל. בּוֹאוּ נִפְתַּח אֶת הָעֶשֶׂר וְנִרְאֶה.')
+    u.tag('M-SUB-ORDER', ['MATH-C-02'],
+          'הילד חושב שבחיסור אפשר להחליף את הסדר כמו בחיבור: 6 פחות 15 שווה 9 נראה לו נכון, כי 15 פחות 6 שווה 9.',
+          'לתת לילד 6 כפיות ולבקש ממנו לתת לכם 15. אי אפשר לתת יותר ממה שיש: בחיסור הסדר חשוב, ובחיבור לא.',
+          ['concrete', 'symbolic'], 'רֶגַע, בְּחִסּוּר הַסֵּדֶר חָשׁוּב: אִי אֶפְשָׁר לָתֵת יוֹתֵר מִמַּה שֶּׁיֵּשׁ. בּוֹאוּ נִבְדֹּק.')
 
     # ---- MATH-B-04 (bridge): counts on from the larger number
     u.skill('MATH-B-04', 'ממשיכים לספור מהמספר הגדול', 'מַמְשִׁיכִים מֵהַמִּסְפָּר הַגָּדוֹל', 'stall', ['MATH-B-01', 'NUM-B-01'],
@@ -786,8 +854,8 @@ def math_c1(u):
     jump(u, 'MATH-C-01', 0, 20, 9, 6, labels=[0, 10, 20])
 
     # ---- MATH-C-02: the inverse relation; fact families
-    u.skill('MATH-C-02', 'חיבור וחיסור הם משפחה', 'מִשְׁפְּחוֹת שֶׁל תַּרְגִּילִים', 'stall', ['MATH-C-01'], ['symbolic', 'concrete'],
-            ['M-OP-SWAP', 'M-EQ-OPER'])
+    u.skill('MATH-C-02', 'חיבור וחיסור הם משפחה', 'מִשְׁפְּחוֹת שֶׁל תַּרְגִּילִים', 'stall', ['MATH-C-01'], ['symbolic', 'concrete', 'pictorial'],
+            ['M-OP-SWAP', 'M-EQ-OPER', 'M-SUB-ORDER'])
     for i, (s, a) in enumerate([(15, 8), (13, 9), (17, 8), (14, 6), (16, 9)]):  # s − ? = a
         b = s - a
         choose(u, 'MATH-C-02', 'אֵיזֶה מִסְפָּר חָסֵר?', b, {s + a: 'M-OP-SWAP', s: 'M-EQ-OPER'}, i, row=[s, '-', '?', '=', a], check='reverse',
@@ -842,9 +910,63 @@ def math_c1(u):
     lesson_of(u, 'facts-to-18', 'חִבּוּר עַד שְׁמוֹנֶה עֶשְׂרֵה', 'MATH-C-01', 'כׇּל הַכָּבוֹד! הִשְׁלַמְתֶּם לְעֶשֶׂר.', 0, 9, minutes=7)
     lesson_of(u, 'facts-to-18-more', 'עוֹד תַּרְגִּילִים', 'MATH-C-01', 'מְצֻיָּן! עֲשִׂיתֶם הַרְבֵּה תַּרְגִּילִים.', 9, 18, minutes=7)
     lesson_of(u, 'facts-to-18-again', 'שׁוּב חִבּוּר וְחִסּוּר', 'MATH-C-01', 'נִפְלָא! עֲבַרְתֶּם אֶת כׇּל הַמִּשְׁפָּחוֹת.', 18, minutes=7)
-    lesson_of(u, 'fact-families', 'מִשְׁפְּחוֹת שֶׁל תַּרְגִּילִים', 'MATH-C-02', 'כׇּל הַכָּבוֹד! חִבּוּר וְחִסּוּר הֵם מִשְׁפָּחָה.', minutes=8)
+    lesson_of(u, 'fact-families', 'מִשְׁפְּחוֹת שֶׁל תַּרְגִּילִים', 'MATH-C-02', 'כׇּל הַכָּבוֹד! חִבּוּר וְחִסּוּר הֵם מִשְׁפָּחָה.', 0, 8,
+              minutes=8)
     lesson_of(u, 'whole-tens', 'עֲשָׂרוֹת שְׁלֵמוֹת', 'MATH-C-03', 'מְצֻיָּן! חֲשַׁבְתֶּם בַּעֲשָׂרוֹת.', 0, 8, minutes=8)
     math_c1_waiting(u)
+    true_or_false(u)
+    # criterion 3, the lucky-right item of M-SUB-SMALLBIG in MATH-C-01 (every fact family crosses ten): 17 - 4 needs no ten opened,
+    # so the smaller digit taken from the larger gives the right 13 (c.mathc01.34, its own family 13 + 4)
+    plain = choose(u, 'MATH-C-01', 'כַּמָּה זֶה?', 13, {21: 'M-OP-SWAP', 14: 'M-CNT-DOUBLE'}, 1, row=[17, '-', 4, '=', '?'],
+                   variantGroup='fact-13-4', tag_lines=START_LINE,
+                   h2=fit('כָּאן לֹא עוֹבְרִים דֶּרֶךְ הָעֶשֶׂר: %s פָּחוֹת %s, וְהָעֶשֶׂר נִשְׁאָר.' % (F[7], F[4])),
+                   h3=fit('%s פָּחוֹת %s הֵם %s, וְעֶשֶׂר וְעוֹד %s הֵם %s. %s' % (F[7], F[4], F[3], F[3], F[13], NOW % F[13]),
+                          '%s פָּחוֹת %s הֵם %s, וְעֶשֶׂר וְעוֹד %s הֵם %s. %s' % (F[7], F[4], F[3], F[3], F[13], TURN)),
+                   ok='%s! %s פָּחוֹת %s שָׁוֶה %s.' % (F[13], F[17], F[4], F[13]))
+    next(x for x in u.d['lessons'] if x['id'] == 'facts-to-18-again')['items'].append(plain)
+
+
+SWEETS = 'יֵשׁ לָכֶם %s סֻכָּרִיּוֹת. אֶפְשָׁר לָתֵת מֵהֶן %s?'  # the re-teach R3 of M-SUB-ORDER (curriculum §5.2)
+EQUALS = 'סִימַן הַשָּׁוֶה אוֹמֵר: בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר.'  # the editor's wording (hebrew-notes G10)
+
+
+def true_or_false(u):
+    """MATH-C-02, the M-SUB-ORDER diagnostic (M10 §4.2: "6 − 15 = 9 accepted"; c1-deferred.md §3): a true-or-false card, a whole
+    number sentence with no gap and the tick and the cross on the tiles. Two sentences are false, the take-away written the other way
+    round (the tick is M-SUB-ORDER: subtraction taken as commutative); two are true and put = where the child does not expect it
+    (9 = 15 − 6, 8 + 6 = 6 + 8: the cross is M-EQ-OPER, "the answer comes after ="), so the cross is not always right and a true
+    take-away is the lucky-right item of M-SUB-ORDER. Their lesson is the second of the fact families, after the families' items."""
+    cards = []
+    for i, (row, right) in enumerate([
+            ([6, '-', 15, '=', 9], False), ([9, '=', 15, '-', 6], True), ([8, '-', 17, '=', 9], False), ([8, '+', 6, '=', 6, '+', 8], True)]):
+        if right and row[1] == '=':  # c = a − b
+            c, a, b = row[0], row[2], row[4]
+            h3 = fit('%s פָּחוֹת %s שָׁוֶה %s, אָז הַתַּרְגִּיל נָכוֹן. %s' % (F[a], F[b], F[c], NOW % 'הַוִּי'),
+                     '%s פָּחוֹת %s שָׁוֶה %s, אָז הַתַּרְגִּיל נָכוֹן. %s' % (F[a], F[b], F[c], TURN))
+            ok = 'כֵּן! %s שָׁוֶה %s פָּחוֹת %s.' % (F[c], F[a], F[b])
+            h2 = EQUALS
+        elif right:  # a + b = b + a
+            a, b = row[0], row[2]
+            h3 = fit('%s וְעוֹד %s שָׁוֶה %s, וְגַם %s וְעוֹד %s. אָז זֶה נָכוֹן.' % (F[a], F[b], F[a + b], F[b], F[a]))
+            ok = 'כֵּן! בְּחִבּוּר אֶפְשָׁר לְהַחֲלִיף אֶת הַסֵּדֶר.'
+            h2 = EQUALS
+        else:  # a − b = c with a < b: the true sentence is b − a = c
+            a, b, c = row[0], row[2], row[4]
+            assert b - a == c and a < b
+            h3 = fit('%s פָּחוֹת %s שָׁוֶה %s. כָּאן הַסֵּדֶר הָפוּךְ, אָז זֶה לֹא נָכוֹן. %s' % (F[b], F[a], F[c], TURN),
+                     '%s פָּחוֹת %s שָׁוֶה %s. כָּאן הַסֵּדֶר הָפוּךְ, אָז זֶה לֹא נָכוֹן.' % (F[b], F[a], F[c]))
+            ok = 'כֵּן! הַתַּרְגִּיל לֹא נָכוֹן: %s פָּחוֹת %s שָׁוֶה %s.' % (F[b], F[a], F[c])
+            h2 = fit(SWEETS % (F[a], F[b]))
+        cards.append(u.act(
+            'MATH-C-02', 'pick', prompt='הַתַּרְגִּיל נָכוֹן? אִם כֵּן, לוֹחֲצִים עַל הַוִּי. אִם לֹא, עַל הָאִיקְס.', row=tokens(*row),
+            options=['cross', 'tick'] if i % 2 else ['tick', 'cross'], correct='tick' if right else 'cross',
+            tags={'cross': 'M-EQ-OPER'} if right else {'tick': 'M-SUB-ORDER'}, variantGroup='true-or-false', check='error_spotting',
+            difficulty=0.6, h2=fit(h2), h3=h3, correct_text=ok))
+    families = [x['id'] for x in u.d['activities'] if x['skill'] == 'MATH-C-02' and x['kind'] != 'number' and x['id'] not in cards]
+    at = next(k for k, x in enumerate(u.d['lessons']) if x['id'] == 'fact-families') + 1
+    u.lesson('fact-families-more', 'עוֹד מִשְׁפָּחוֹת', ['MATH-C-02'], families[8:] + cards, 'כׇּל הַכָּבוֹד! בְּחִסּוּר הַסֵּדֶר חָשׁוּב.',
+             minutes=8)
+    u.d['lessons'].insert(at, u.d['lessons'].pop())
 
 
 def math_c1_waiting(u):

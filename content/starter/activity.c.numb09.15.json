@@ -3,8 +3,8 @@
   "id": "c.numb09.15",
   "review": "needs-editor",
   "revision": 1,
-  "template": "count_tap",
-  "templateVersion": "1.0",
+  "template": "give_n",
+  "templateVersion": "1.1",
   "domain": "numbers",
   "band": "B",
   "skills": [
@@ -13,80 +13,74 @@
       "weight": 1
     }
   ],
-  "purpose": "learn",
-  "checkType": "practice",
+  "purpose": "check",
+  "checkType": "reverse",
   "representation": "concrete",
-  "variantGroup": "count-tap",
+  "variantGroup": "fill-frame",
   "difficulty": {
     "authored": 0.9
   },
   "prompt": {
-    "vo": "vo:c.numb06.15.prompt",
+    "vo": "vo:c.numb09.15.prompt",
     "caption": [
       {
         "t": "he",
-        "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים."
+        "v": "שִׂימוּ בַּמִּסְגֶּרֶת שְׁמוֹנָה כּוֹכָבִים."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "objects": {
+    "source": {
       "sprite": "asset:star",
-      "litSprite": "asset:star_lit",
-      "count": 8,
-      "arrangement": "line",
-      "onTap": "glow",
-      "seed": 11
+      "count": 10
     },
     "target": {
       "sprite": "asset:basket_target"
-    }
+    },
+    "frame": true
   },
   "answer": {
-    "type": "choice",
-    "options": [
+    "type": "give",
+    "n": 8,
+    "classifiers": [
       {
-        "id": "o1",
-        "value": 7,
-        "misconception": "M-CNT-SKIP"
+        "when": "took_all",
+        "misconception": "M-CNT-CARD"
       },
       {
-        "id": "o2",
-        "value": 8
-      },
-      {
-        "id": "o3",
-        "value": 9,
+        "when": "took_fewer",
         "misconception": "M-CNT-DOUBLE"
-      }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
-  },
-  "voiceAnswer": true,
-  "answerPrompt": {
-    "vo": "vo:c.numb09.15.how_many",
-    "caption": [
+      },
       {
-        "t": "he",
-        "v": "כַּמָּה כּוֹכָבִים?"
+        "when": "took_more",
+        "misconception": "M-CNT-SKIP"
       }
     ]
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:c.numb09.15.correct",
       "caption": [
         {
           "t": "he",
-          "v": "שְׁמוֹנֶה! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת."
+          "v": "שְׁמוֹנֶה! שׁוּרָה מְלֵאָה שֶׁל חָמֵשׁ, וְעוֹד שָׁלוֹשׁ."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לָקַחְנוּ אֶת כֻּלָּם. בּוֹאוּ נִסְפֹּר וְנַעֲצֹר בַּמִּסְפָּר שֶׁצָּרִיךְ."
+          }
+        ]
+      },
       {
         "when": "misconception:M-CNT-DOUBLE",
         "vo": "vo:fb.double_set",
@@ -136,18 +130,18 @@
       "caption": [
         {
           "t": "he",
-          "v": "נוֹגְעִים בְּכוֹכָב אֶחָד, וְאוֹמְרִים מִסְפָּר אֶחָד."
+          "v": "שִׂימוּ שְׁמוֹנָה כּוֹכָבִים, אֶחָד בְּכׇל מִשְׁבֶּצֶת. סוֹפְרִים בִּזְמַן שֶׁשָּׂמִים."
         }
       ]
     },
     {
       "level": 2,
       "action": "show_fingers",
-      "vo": "vo:hint.ucount.h2",
+      "vo": "vo:c.numb09.15.h2",
       "caption": [
         {
           "t": "he",
-          "v": "בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ…"
+          "v": "בְּשׁוּרָה יֵשׁ חָמֵשׁ מִשְׁבָּצוֹת. מְמַלְּאִים שׁוּרָה אַחַת, וּמוֹסִיפִים עוֹד שָׁלוֹשׁ."
         }
       ]
     },
@@ -158,7 +152,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁמוֹנֶה."
+          "v": "חָמֵשׁ בַּשּׁוּרָה הָרִאשׁוֹנָה, וְעוֹד שָׁלוֹשׁ: שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -174,20 +168,11 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child touches each one once and answers with the last number counted",
+    "goal": "child gives exactly the number asked for, not the whole pile",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים."
+    "altText": "שִׂימוּ בַּמִּסְגֶּרֶת שְׁמוֹנָה כּוֹכָבִים."
   },
-  "traceClassifiers": [
-    {
-      "when": "same_object_tapped_twice",
-      "misconception": "M-CNT-DOUBLE"
-    },
-    {
-      "when": "object_never_tapped",
-      "misconception": "M-CNT-SKIP"
-    }
-  ]
+  "contradicts": "M-CNT-CARD"
 }
