@@ -39,6 +39,12 @@ class ActivitySpec {
     required this.tilesTop,
     required this.tilesWidth,
     required this.tileFont,
+    this.tileHeight = 96,
+    this.stageDrawn = true,
+    this.blocksStageTop,
+    this.blocksBubbleTop,
+    this.blocksBubbleEdge,
+    this.blocksBubbleRight,
   });
 
   /// The height of the board, in board points.
@@ -75,15 +81,37 @@ class ActivitySpec {
   final double tilesWidth;
   final double tileFont;
 
+  /// How tall an answer tile is: 96, or what the blocks on the tiles of a "which one" item need (docs/design/c1-blocks.md section 5.2).
+  final double tileHeight;
+
+  /// False when nothing is drawn on the stage and the tiles take its room: the box stays for what a hint draws (a card of blocks), but
+  /// the scene and the tablet's card are not drawn.
+  final bool stageDrawn;
+
+  /// Where the stage starts, and where the bubble starts, on a phone when the blocks have the board's height (Layouts S and T of
+  /// docs/design/c1-blocks.md section 5): the top bar's height, and the old stage's top line. Null on a tablet, which keeps its card.
+  final double? blocksStageTop;
+  final double? blocksBubbleTop;
+
+  /// Where the bubble's right edge is on a phone (where the guide's tail meets it), as a place on the board and as the distance from the
+  /// board's right edge: Layout T widens the bubble to the left from there, so that a long "where is ..." line fits two lines at the
+  /// band's size.
+  final double? blocksBubbleEdge;
+  final double? blocksBubbleRight;
+
   /// The same board with another stage and another box for the answer tiles (the numbers of the rest stay).
   ActivitySpec withStageAndTiles({
     required Rect stage,
     required double tilesLeft,
     required double tilesTop,
     required double tilesWidth,
+    double? bubbleTop,
+    double? tileHeight,
+    bool? stageDrawn,
+    double? bubbleWidth,
   }) => ActivitySpec(
     boardHeight: boardHeight,
-    bubbleMaxWidth: bubbleMaxWidth,
+    bubbleMaxWidth: bubbleWidth ?? bubbleMaxWidth,
     bubbleMaxHeight: bubbleMaxHeight,
     homeRight: homeRight,
     controlsTop: controlsTop,
@@ -98,9 +126,10 @@ class ActivitySpec {
     micLeft: micLeft,
     micTop: micTop,
     micSize: micSize,
-    bubbleLeft: bubbleLeft,
-    bubbleRight: bubbleRight,
-    bubbleTop: bubbleTop,
+    // A widened bubble (Layout T) keeps its right edge by the guide and grows to the left.
+    bubbleLeft: bubbleWidth == null ? bubbleLeft : null,
+    bubbleRight: bubbleWidth == null ? bubbleRight : blocksBubbleRight,
+    bubbleTop: bubbleTop ?? this.bubbleTop,
     bubbleFont: bubbleFont,
     stage: stage,
     stageIsCard: stageIsCard,
@@ -108,6 +137,12 @@ class ActivitySpec {
     tilesTop: tilesTop,
     tilesWidth: tilesWidth,
     tileFont: tileFont,
+    tileHeight: tileHeight ?? this.tileHeight,
+    stageDrawn: stageDrawn ?? this.stageDrawn,
+    blocksStageTop: blocksStageTop,
+    blocksBubbleTop: blocksBubbleTop,
+    blocksBubbleEdge: blocksBubbleEdge,
+    blocksBubbleRight: blocksBubbleRight,
   );
 
   // Board 13.
@@ -137,6 +172,10 @@ class ActivitySpec {
     tilesTop: 244,
     tilesWidth: 534,
     tileFont: 56,
+    blocksStageTop: 88,
+    blocksBubbleTop: 96,
+    blocksBubbleEdge: 603,
+    blocksBubbleRight: 249,
   );
 
   // No board: board 13 re-composed for 667 by 375 with the same sizes.
@@ -168,6 +207,10 @@ class ActivitySpec {
     tilesTop: 214,
     tilesWidth: 480,
     tileFont: 56,
+    blocksStageTop: 80,
+    blocksBubbleTop: 86,
+    blocksBubbleEdge: 476,
+    blocksBubbleRight: 191,
   );
 
   // Board 23.

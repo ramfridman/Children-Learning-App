@@ -3,11 +3,13 @@
 // as rods) and blocks on an answer tile (`answer.options[].picture`). The validator, the model and the drawing of each.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/content/block_geometry.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/content/pack_validation.dart';
 import 'package:nitznutz/content/schema.dart' show Problem;
 import 'package:nitznutz/play/stage_pictures.dart';
 
+import 'support/c1_screens.dart' show loadSourceVerified;
 import 'support/golden_comparator.dart';
 import 'support/harness.dart';
 import 'support/sample_pack.dart';
@@ -153,6 +155,110 @@ void main() {
         isNotEmpty,
         reason: 'only blocks go on a tile',
       );
+    });
+
+    test('blocks on tiles keep the cube at 12 points on the smallest phone: at most three options and no option too wide', () {
+      List<String> options(List<Map<String, Object?>> pictures) => _problems(
+        _tap((Map<String, Object?> d) {
+          final Map<String, Object?> answer = _m(d['answer']);
+          answer['options'] = <Object?>[
+            for (final (int i, Map<String, Object?> p) in pictures.indexed)
+              <String, Object?>{'id': 'o${i + 1}', 'picture': p, 'label': 'ציור ${i + 1}'},
+          ];
+          answer['correct'] = 'o1';
+        }),
+      );
+      Map<String, Object?> blocks(int tens, int ones) => <String, Object?>{
+        'kind': 'base_ten',
+        'tens': tens,
+        'ones': ones,
+      };
+      expect(options(<Map<String, Object?>>[blocks(4, 3), blocks(3, 4), blocks(0, 7)]), isEmpty);
+      expect(
+        options(<Map<String, Object?>>[blocks(5, 2), blocks(3, 4), blocks(0, 7)]),
+        isEmpty,
+        reason: 'five rods and two cubes still fit',
+      );
+      expect(
+        options(<Map<String, Object?>>[blocks(8, 3), blocks(3, 7)]),
+        isEmpty,
+        reason: 'two options have room for eight rods',
+      );
+      expect(
+        options(<Map<String, Object?>>[blocks(5, 6), blocks(3, 4), blocks(0, 7)]),
+        isNotEmpty,
+        reason: 'five rods and six cubes are too wide',
+      );
+      expect(
+        options(<Map<String, Object?>>[blocks(6, 1), blocks(3, 4), blocks(0, 7)]),
+        isNotEmpty,
+        reason: 'six rods and a cube are too wide',
+      );
+      expect(
+        options(<Map<String, Object?>>[blocks(1, 1), blocks(2, 2), blocks(3, 3), blocks(4, 4)]),
+        isNotEmpty,
+        reason: 'four tiles',
+      );
+    });
+
+    test('two pictures to compare: four rods with six or more cubes, or five rods with five or fewer', () {
+      List<String> pair(int t1, int o1, int t2, int o2) => _problems(
+        _tap((Map<String, Object?> d) {
+          _m(d['scene'])['picture'] = <String, Object?>{'kind': 'base_ten', 'tens': t1, 'ones': o1};
+          _m(d['scene'])['picture2'] = <String, Object?>{'kind': 'base_ten', 'tens': t2, 'ones': o2};
+        }),
+      );
+      expect(pair(4, 1, 3, 9), isEmpty);
+      expect(pair(4, 9, 4, 8), isEmpty);
+      expect(pair(5, 5, 4, 9), isEmpty);
+      expect(pair(5, 6, 4, 9), isNotEmpty);
+      expect(pair(6, 4, 5, 9), isNotEmpty);
+    });
+
+    test('the pack keeps to the limits, but for the items that wait for their content to change', () async {
+      final Map<String, Object?> docs = (await loadSourceVerified()).docs;
+      final Set<String> over = <String>{};
+      for (final MapEntry<String, Object?> e in docs.entries) {
+        if (!e.key.startsWith('activity.')) continue;
+        final Map<String, Object?> a = _m(e.value);
+        if (a['template'] != 'tap_answer') continue;
+        if (blockLimits(_m(a['scene']), _m(a['answer'])).isNotEmpty) over.add(a['id']! as String);
+      }
+      expect(
+        over,
+        blockLimitWaivers,
+        reason: 'a waived item that keeps the limits is to leave the list, and no other may break them',
+      );
+    });
+
+    test('a lesson opens with the demonstration only when one of its items has blocks', () {
+      final Map<String, Object?> demo = <String, Object?>{
+        'kind': 'ten_is_rod',
+        'vo': 'vo:demo.ten_is_rod',
+        'caption': <Object?>[
+          <String, Object?>{'t': 'he', 'v': 'עֶשֶׂר קֻבִּיּוֹת הֵן מוֹט אֶחָד.'},
+        ],
+      };
+      List<String> demoProblems({required bool blocks}) {
+        final SamplePack p = SamplePack();
+        final Map<String, Object?> lesson = _m(p.docs[lessonFile]);
+        lesson['demo'] = demo;
+        if (blocks) {
+          lesson['items'] = <Object?>['pick.red.flower'];
+          final Map<String, Object?> doc = _m(p.docs[tapFile]);
+          doc['templateVersion'] = '1.4';
+          doc['band'] = 'C';
+          _m(p.manifest['templates'])['tap_answer'] = '1.4';
+          _m(doc['scene'])['picture'] = <String, Object?>{'kind': 'base_ten', 'tens': 3, 'ones': 4};
+        }
+        return <String>[
+          for (final Problem x in validatePack(manifest: p.manifest, docs: p.docs, files: p.files))
+            if (x.path.startsWith(lessonFile) && x.toString().contains('demonstration')) x.toString(),
+        ];
+      }
+
+      expect(demoProblems(blocks: false), isNotEmpty, reason: 'the sample lesson has no blocks');
+      expect(demoProblems(blocks: true), isEmpty);
     });
 
     test('the model reads them', () {

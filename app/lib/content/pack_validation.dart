@@ -6,6 +6,7 @@ import '../speech/hebrew_text.dart';
 import '../speech/lexicon.dart';
 import '../speech/spoken_options.dart';
 import '../speech/word_text.dart' show normalizeWords;
+import 'block_geometry.dart';
 import 'capabilities.dart' show compareTemplateVersion;
 import 'hint_ladder.dart';
 import 'language_checks.dart';
@@ -354,6 +355,16 @@ List<Problem> validatePack({
         }
         for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
           _stagePictureOf(file, o['picture'], say, path: 'answer.options[$i].picture', blocksOnly: true);
+        }
+        if (!blockLimitWaivers.contains(a['id'])) {
+          for (final String problem in blockLimits(scene, answer)) {
+            final int colon = problem.indexOf(': ');
+            say(
+              file,
+              colon < 0 ? 'scene' : problem.substring(0, colon),
+              colon < 0 ? problem : problem.substring(colon + 2),
+            );
+          }
         }
         _tapVersion(file, a, scene, answer, say);
         _tapBigNumbers(file, a, scene, answer, say);
@@ -857,6 +868,17 @@ List<Problem> validatePack({
     }
     final Map<String, Object?> cel = l['celebration']! as Map<String, Object?>;
     checkVo(file, 'celebration.vo', cel['vo']);
+    final Object? demo = l['demo'];
+    if (demo is Map<String, Object?>) {
+      checkVo(file, 'demo.vo', demo['vo']);
+      if (!(l['items']! as List<Object?>).any((Object? i) => _hasBlocks(activities[i]))) {
+        say(
+          file,
+          'demo',
+          'a lesson opens with the demonstration of blocks only when one of its items has blocks',
+        );
+      }
+    }
     _targetClips(file, l, checkVo);
     _hebrew(file, l, say, pointed: l['band'] != 'C');
   });
@@ -1248,6 +1270,15 @@ void _stagePictureOf(
   if (kind == 'column' && top is String && bottom is String && top.length < bottom.length) {
     say(file, '$path.bottom', 'a column sum has the longer number on top');
   }
+}
+
+/// Whether a tap-the-answer item shows base-ten blocks, on its stage or on its tiles.
+bool _hasBlocks(Map<String, Object?>? a) {
+  final Object? scene = a?['scene'];
+  final Object? answer = a?['answer'];
+  if (scene is! Map<String, Object?> || answer is! Map<String, Object?>) return false;
+  return (scene['picture'] as Map<String, Object?>?)?['kind'] == 'base_ten' ||
+      _maps(answer['options']).any((Map<String, Object?> o) => o['picture'] != null);
 }
 
 final RegExp _bigNumberCell = RegExp(r'^n:[0-9]{4,}$');

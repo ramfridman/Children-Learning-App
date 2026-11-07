@@ -3,8 +3,10 @@ import 'dart:ui' show PathMetric;
 
 import 'package:flutter/material.dart';
 
+import '../content/block_geometry.dart';
 import '../design/app_text.dart';
 import '../design/tokens.g.dart';
+import 'block_art.dart';
 
 // The pictures of a number that `tap_answer` 1.4 draws on its stage (M10, X1): base-ten blocks (`scene.picture.kind` `base_ten`) and the
 // hundred chart (`hundred_chart`). The stage draws them, and the hints of the same skills draw them again (a card of blocks, a chart
@@ -54,53 +56,96 @@ class BaseTen {
   int get blocks => thousands + hundreds + tens + ones;
 }
 
-/// Where the blocks of a [BaseTen] stand in a box of [area], left to right: thousands, hundreds, tens, ones. [unit] is one cell's side;
-/// a rod is one unit wide and ten tall, a flat is ten by ten, a cube of thousand is ten by ten with its top and side showing, ones
-/// stand in columns of three. The whole is centred in the box. All rects are in the box's own points.
+/// Where the blocks of a [BaseTen] stand in a box of [area], left to right: thousands, hundreds, tens, ones. [unit] is one cube's side;
+/// a rod is one unit wide and ten tall (ten cubes that touch), a flat is ten by ten, a cube of thousand is ten by ten with its top and
+/// side showing. Rods stand half a unit apart, the groups of blocks 1.2 apart, and the ones stand in a 2 by 5 frame filled from the bottom,
+/// the left column first, so that 7 reads as 5 and 2 (docs/design/c1-blocks.md section 4.4). The whole is centred in the box. All rects are
+/// in the box's own points.
 class BaseTenLayout {
   /// How wide and how tall the blocks of [n] are, in units (one cube's side): what a box needs, whatever size it is drawn at.
   static Size extentOf(BaseTen n) {
-    final int cubeCols = n.ones == 0 ? 0 : math.min(3, n.ones);
-    final int cubeRows = (n.ones / 3).ceil();
-    final List<double> parts = <double>[
-      if (n.thousands > 0) 10 + 3 + (n.thousands - 1) * _thouStep,
-      if (n.hundreds > 0) 10 + (n.hundreds - 1) * _flatStep,
-      if (n.tens > 0) 1 + (n.tens - 1) * _rodStep,
-      if (n.ones > 0) 1 + (cubeCols - 1) * _cubeStep,
-    ];
-    final double wide =
-        parts.fold(0.0, (double s, double w) => s + w) + math.max(0, parts.length - 1) * _groupGap;
-    final double tall = n.thousands > 0
-        ? 13
-        : (n.hundreds > 0 || n.tens > 0 ? 10 : (n.ones > 0 ? 1 + (cubeRows - 1) * _cubeStep : 1));
-    return Size(wide, tall);
+    final ({double width, double height}) e = BlockGeometry.extent(
+      thousands: n.thousands,
+      hundreds: n.hundreds,
+      tens: n.tens,
+      ones: n.ones,
+      crossed: n.crossedRods,
+    );
+    return Size(e.width, e.height);
   }
 
-  // Steps in units: a flat leans on the one before it, a rod has a gap beside it, the groups of blocks are apart, ones stand in threes.
-  static const double _flatStep = 2.4, _rodStep = 1.4, _thouStep = 3.2, _groupGap = 1.8, _cubeStep = 1.3;
+  /// The room kept round a picture that stands on the ground (the stage's and a tile's), on each side, in units: a lit rod's glow and
+  /// ring need more than a plain picture (the unit fit counts it).
+  static double padOf(BaseTen n) => BlockGeometry.padOf(lit: n.litRods > 0);
 
-  factory BaseTenLayout(BaseTen n, Size area, {double maxUnit = 16, double? sharedUnit}) {
-    const double flatStep = _flatStep,
-        rodStep = _rodStep,
-        thouStep = _thouStep,
-        groupGap = _groupGap,
-        cubeStep = _cubeStep;
+  /// What a picture needs in units, with the room round it ([padOf]).
+  static Size roomOf(BaseTen n) {
+    final Size e = extentOf(n);
+    final double pad = padOf(n);
+    return Size(e.width + 2 * pad, e.height + 2 * pad);
+  }
+
+  // Steps in units (see [BlockGeometry]): a flat leans on the one before it, a rod has half a unit beside it, the groups of blocks are
+  // apart, loose cubes have 0.3 between them, and the rods that are taken away stand 0.6 further from those that are left.
+  static const double _flatStep = BlockGeometry.flatStep, _thouStep = BlockGeometry.thouStep;
+  static const double _groupGap = BlockGeometry.groupGap, _looseStep = BlockGeometry.looseStep;
+  static const double _crossGap = BlockGeometry.crossGap, _rodStep = BlockGeometry.rodStep;
+  static const int _frameRows = BlockGeometry.frameRows;
+
+  /// What the layouts of the blocks fix (docs/design/c1-blocks.md section 5): the stage's margin round a picture, the gap between two
+  /// pictures (a comparison), a tile's border and the margin the blocks keep inside it, the cube that no item may go under, and the biggest
+  /// cube on a phone and on a tablet (so that a small number is not drawn larger than a big one on the next screen).
+  static const double stageMargin = BlockGeometry.stageMargin, pairGap = BlockGeometry.pairGap;
+  static const double tileEdge = BlockGeometry.tileEdge, floorUnit = BlockGeometry.floorUnit;
+
+  static double unitCap({required bool tablet}) => tablet ? 28 : 22;
+
+  static double _crossedGap(BaseTen n) => n.crossedRods > 0 && n.crossedRods < n.tens ? _crossGap : 0;
+
+  /// The side of a cube at which [n] fits a box of [area] (standing on the ground, with its room), at most [maxUnit].
+  static double fitUnit(BaseTen n, Size area, {double maxUnit = 22, bool standing = false}) {
+    final Size room = standing ? roomOf(n) : extentOf(n);
+    return math.min(
+      maxUnit,
+      math.min(area.width / math.max(1, room.width), area.height / math.max(1, room.height)),
+    );
+  }
+
+  /// The side of one cube that every picture of one item draws with (the pictures on the stage and the options on the tiles): the
+  /// largest that fits each picture in its own box, so that a cube is as big in a rod as in a handful of ones. Null when none is given.
+  static double? commonUnit(Iterable<(BaseTen, Size)> pictures, {double maxUnit = 22, bool standing = true}) {
+    double? unit;
+    for (final (BaseTen n, Size box) in pictures) {
+      final double own = fitUnit(n, box, maxUnit: maxUnit, standing: standing);
+      unit = unit == null ? own : math.min(unit, own);
+    }
+    return unit;
+  }
+
+  /// [standing] puts the picture on the ground of its box (the grass of the stage, the bottom of a tile) with the room round it that the unit
+  /// fit counts ([padOf]); without it the blocks are centred in the box, which is how a card of a hint holds them.
+  factory BaseTenLayout(
+    BaseTen n,
+    Size area, {
+    double maxUnit = 22,
+    double? sharedUnit,
+    bool standing = false,
+  }) {
+    const double flatStep = _flatStep, rodStep = _rodStep, thouStep = _thouStep, groupGap = _groupGap;
     final Size extent = extentOf(n);
     final double wide = extent.width;
     final double tall = extent.height;
-    final double fit = math.min(
-      maxUnit,
-      math.min(area.width / math.max(1, wide), area.height / math.max(1, tall)),
-    );
+    final double fit = fitUnit(n, area, maxUnit: maxUnit, standing: standing);
     // A [sharedUnit] is the side of one cube that a set of pictures all draw with; the blocks never go beyond what fits the box.
     final double unit = math.min(fit, sharedUnit ?? fit);
-    final Offset origin = Offset((area.width - wide * unit) / 2, (area.height - tall * unit) / 2);
-    final double floor = origin.dy + tall * unit;
+    final double pad = standing ? padOf(n) : 0;
+    final double left = (area.width - wide * unit) / 2;
+    final double floor = standing ? area.height - pad * unit : (area.height + tall * unit) / 2;
     final List<Rect> thousands = <Rect>[];
     final List<Rect> hundreds = <Rect>[];
     final List<Rect> tens = <Rect>[];
     final List<Rect> ones = <Rect>[];
-    double x = origin.dx;
+    double x = left;
     if (n.thousands > 0) {
       for (int i = 0; i < n.thousands; i++) {
         thousands.add(Rect.fromLTWH(x + i * thouStep * unit, floor - 13 * unit, 13 * unit, 13 * unit));
@@ -114,17 +159,18 @@ class BaseTenLayout {
       x += (10 + (n.hundreds - 1) * flatStep + groupGap) * unit;
     }
     if (n.tens > 0) {
+      final int firstCrossed = n.tens - n.crossedRods;
       for (int i = 0; i < n.tens; i++) {
-        tens.add(Rect.fromLTWH(x + i * rodStep * unit, floor - 10 * unit, unit, 10 * unit));
+        final double apart = n.crossedRods > 0 && i >= firstCrossed && firstCrossed > 0 ? _crossGap : 0;
+        tens.add(Rect.fromLTWH(x + (i * rodStep + apart) * unit, floor - 10 * unit, unit, 10 * unit));
       }
-      x += (1 + (n.tens - 1) * rodStep + groupGap) * unit;
+      x += (1 + (n.tens - 1) * rodStep + _crossedGap(n) + groupGap) * unit;
     }
-    if (n.ones > 0) {
-      for (int i = 0; i < n.ones; i++) {
-        ones.add(
-          Rect.fromLTWH(x + (i % 3) * cubeStep * unit, floor - unit - (i ~/ 3) * cubeStep * unit, unit, unit),
-        );
-      }
+    for (int i = 0; i < n.ones; i++) {
+      final int col = i ~/ _frameRows, row = i % _frameRows;
+      ones.add(
+        Rect.fromLTWH(x + col * _looseStep * unit, floor - unit - row * _looseStep * unit, unit, unit),
+      );
     }
     return BaseTenLayout._(unit, thousands, hundreds, tens, ones);
   }
@@ -132,8 +178,19 @@ class BaseTenLayout {
   const BaseTenLayout._(this.unit, this.thousands, this.hundreds, this.tens, this.ones);
 
   /// The layout [BaseTenPicture] draws in a box of [size] (a bigger unit on a tablet's stage): the stage and the hints call this one.
-  factory BaseTenLayout.forBox(BaseTen n, Size size, {double? sharedUnit}) =>
-      BaseTenLayout(n, size, maxUnit: size.shortestSide >= 200 ? 28 : 24, sharedUnit: sharedUnit);
+  factory BaseTenLayout.forBox(
+    BaseTen n,
+    Size size, {
+    double? sharedUnit,
+    bool standing = false,
+    double? maxUnit,
+  }) => BaseTenLayout(
+    n,
+    size,
+    maxUnit: maxUnit ?? (size.shortestSide >= 200 ? 28 : 22),
+    sharedUnit: sharedUnit,
+    standing: standing,
+  );
 
   final double unit;
   final List<Rect> thousands;
@@ -153,7 +210,7 @@ class BaseTenLayout {
 }
 
 /// The blocks of [n] drawn in the box they are given. [shown] draws only the first of each kind of [layoutOf] (a hint builds the number
-/// block by block on the places the whole number has); [hint] draws them in the hint's sky, the stage in the warm colours of the world.
+/// block by block on the places the whole number has); [hint] draws them in the hint's sky, the stage in the sea colourway of the world.
 class BaseTenPicture extends StatelessWidget {
   const BaseTenPicture({
     super.key,
@@ -162,10 +219,18 @@ class BaseTenPicture extends StatelessWidget {
     this.hint = false,
     this.places = false,
     this.sharedUnit,
+    this.standing = false,
+    this.maxUnit,
   });
 
   /// The side of a cube that every picture of one item draws with (the options on a row of tiles), when it is not the box's own best fit.
   final double? sharedUnit;
+
+  /// The picture stands on the ground of its box, with the room round it (the stage and the tiles); a card of a hint is centred.
+  final bool standing;
+
+  /// The biggest cube the picture may have (22 on a phone, 28 on a tablet); the box's own size says when it is null.
+  final double? maxUnit;
 
   /// The number whose places the picture keeps.
   final BaseTen layoutOf;
@@ -181,7 +246,13 @@ class BaseTenPicture extends StatelessWidget {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (BuildContext context, BoxConstraints box) {
       final Size size = box.biggest;
-      final BaseTenLayout l = BaseTenLayout.forBox(layoutOf, size, sharedUnit: sharedUnit);
+      final BaseTenLayout l = BaseTenLayout.forBox(
+        layoutOf,
+        size,
+        sharedUnit: sharedUnit,
+        standing: standing,
+        maxUnit: maxUnit,
+      );
       return CustomPaint(size: size, painter: _BlocksPainter(l, shown ?? layoutOf, hint, places));
     },
   );
@@ -197,15 +268,12 @@ class _BlocksPainter extends CustomPainter {
 
   Color get _flat => hint ? TokenColors.sky : TokenColors.lilac;
   Color get _flatEdge => hint ? TokenColors.skyDeep : TokenColors.lilacDeep;
-  Color get _rod => hint ? TokenColors.sky : TokenColors.sea;
-  Color get _rodEdge => hint ? TokenColors.skyDeep : TokenColors.seaDeep;
-  Color get _cube => hint ? TokenColors.sky : TokenColors.spark;
-  Color get _cubeEdge => hint ? TokenColors.skyDeep : TokenColors.sparkDeep;
 
   @override
   void paint(Canvas canvas, Size size) {
     final double u = l.unit;
     final double line = math.max(1, u * 0.12);
+    final CubeColours colours = hint ? CubeColours.sky : CubeColours.sea;
     Paint fill(Color c) => Paint()..color = c;
     Paint edge(Color c, [double w = 1]) => Paint()
       ..color = c
@@ -252,37 +320,20 @@ class _BlocksPainter extends CustomPainter {
       final Rect rod = l.tens[i];
       final bool lit = i < shown.litRods;
       final bool crossed = i >= shown.tens - shown.crossedRods;
-      if (lit) {
-        // A lit rod: the one the question is about, in a wide golden glow with a golden body and a dark golden edge.
-        canvas.drawRRect(r(rod.inflate(u * 0.9), u * 0.9), fill(TokenColors.spark.withValues(alpha: 0.35)));
-        canvas.drawRRect(r(rod.inflate(u * 0.5), u * 0.6), fill(TokenColors.spark.withValues(alpha: 0.75)));
-      }
-      canvas.drawRRect(
-        r(rod, u * 0.25),
-        fill(lit ? TokenColors.spark : (crossed ? _rod.withValues(alpha: 0.35) : _rod)),
-      );
-      if (u >= 3.5) {
-        final Paint seg = edge((lit ? TokenColors.sparkDeep : _rodEdge).withValues(alpha: 0.6), 0.7);
-        for (int k = 1; k < 10; k++) {
-          canvas.drawLine(Offset(rod.left, rod.top + k * u), Offset(rod.right, rod.top + k * u), seg);
-        }
-      }
-      canvas.drawRRect(
-        r(rod, u * 0.25),
-        lit ? edge(TokenColors.sparkDeep, math.max(2, u * 0.3)) : edge(_rodEdge, line),
-      );
+      // A lit rod (the one the question is about) keeps its cubes; a glow, a tint and a ring stand behind it.
+      if (lit) paintRodGlow(canvas, rod);
       if (crossed) {
-        // Taken away: a cross over the rod, in the ink of the page.
-        final Paint cross = edge(TokenColors.ink, math.max(1.5, u * 0.22))..strokeCap = StrokeCap.round;
-        final Rect x = Rect.fromCenter(center: rod.center, width: u * 2.2, height: u * 2.2);
-        canvas.drawLine(x.topLeft, x.bottomRight, cross);
-        canvas.drawLine(x.topRight, x.bottomLeft, cross);
+        // Taken away: the rod fades to a third and a tall cross lies over it, in the ink of the page.
+        canvas.saveLayer(rod.inflate(u), fill(TokenColors.paper.withValues(alpha: 0.32)));
+        paintRod(canvas, rod, colours);
+        canvas.restore();
+        paintRodCross(canvas, rod);
+      } else {
+        paintRod(canvas, rod, colours);
       }
     }
     for (int i = 0; i < math.min(shown.ones, l.ones.length); i++) {
-      final Rect c = l.ones[i];
-      canvas.drawRRect(r(c, u * 0.25), fill(_cube));
-      canvas.drawRRect(r(c, u * 0.25), edge(_cubeEdge, line));
+      paintCube(canvas, l.ones[i], colours);
     }
     if (places) {
       // What is still to come: an empty place of each kind (a faint outline, the same size).
@@ -294,10 +345,10 @@ class _BlocksPainter extends CustomPainter {
         canvas.drawRRect(r(f, u * 0.3), ghost);
       }
       for (final Rect rod in l.tens.skip(shown.tens)) {
-        canvas.drawRRect(r(rod, u * 0.25), ghost);
+        paintPlace(canvas, rod);
       }
       for (final Rect c in l.ones.skip(shown.ones)) {
-        canvas.drawRRect(r(c, u * 0.25), ghost);
+        paintPlace(canvas, c);
       }
     }
   }

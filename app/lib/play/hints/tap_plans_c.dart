@@ -166,7 +166,8 @@ extension _BandC on _Plans {
 
   /// How long each of [steps] counting steps is held: a quicker count when there is much to count, so that a demonstration is over in ten
   /// seconds.
-  Duration _stepHold(int steps) => _ms((6000 / math.max(1, steps)).clamp(350, 800).round());
+  Duration _stepHold(int steps, {int spent = 0}) =>
+      _ms(((6000 - spent) / math.max(1, steps)).clamp(300, 800).round());
 
   // ---- place value (NUM-C-02, NUM-C-03, MATH-C-03) ----
 
@@ -251,13 +252,69 @@ extension _BandC on _Plans {
       return HintPlan(<HintFrame>[HintFrame(digits, hold: _ms(2800))], rest: digits);
     }
     final List<(Rect, int, BaseTen)> steps = _countSteps(l, o, n);
-    final Duration hold = _stepHold(steps.length);
+    final List<HintFrame> intro = _rodIntro(n, l, o);
+    final Duration hold = _stepHold(
+      steps.length,
+      spent: intro.fold(0, (int s, HintFrame f) => s + f.hold.inMilliseconds),
+    );
     final Offset totalAt = g.pictureArea.topCenter + Offset(0, 10 * k);
     return _demo(<HintFrame>[
+      ...intro,
       for (final (Rect at, int counted, BaseTen _) in steps)
         HintFrame(<HintMark>[BadgeMark(at.topRight, counted), HandMark(at.center, press: true)], hold: hold),
       ..._answerSteps(<HintMark>[if (v != null) BadgeMark(totalAt, v)]),
     ]);
+  }
+
+  /// What comes before the count of a picture with rods (docs/design/c1-blocks.md section 6): the cubes of a rod are counted, each lit as its
+  /// number comes, so that a child sees that the rod is ten of the cubes. For a question about one rod (a lit rod: how much is it worth) or
+  /// about taking rods away, the rod is first broken into ten loose cubes in a card, and it is those that are counted.
+  List<HintFrame> _rodIntro(BaseTen n, BaseTenLayout l, Offset o) {
+    if (l.tens.isEmpty) return const <HintFrame>[];
+    final bool one = n.litRods > 0 || n.crossedRods > 0;
+    List<Rect> top(Rect rod) => <Rect>[
+      for (int c = 0; c < 10; c++) Rect.fromLTWH(rod.left, rod.top + c * rod.width, rod.width, rod.width),
+    ];
+    final Duration each = _ms(220);
+    if (!one) {
+      final List<Rect> cells = top(l.tens.first.shift(o));
+      return <HintFrame>[
+        for (int c = 1; c <= 10; c++)
+          HintFrame(<HintMark>[CubeLitMark(cells, c), BadgeMark(cells[c - 1].topRight, c)], hold: each),
+      ];
+    }
+    final Rect card = _blocksCard;
+    final Rect inner = card.deflate(8 * k);
+    // One cube for the rod and for the ten it breaks into, the biggest the card lets it be; the rod on the start side, the cubes in their frame.
+    final double u = math.min(22.0, math.min(inner.height / 10, inner.width / 5));
+    final Rect rod = Rect.fromLTWH(inner.left + inner.width * 0.22 - u / 2, inner.bottom - 10 * u, u, 10 * u);
+    final Size frame = BaseTenLayout.extentOf(const BaseTen(ones: 10)) * u;
+    final Rect loose = Rect.fromLTWH(
+      inner.left + inner.width * 0.66 - frame.width / 2,
+      inner.bottom - frame.height,
+      frame.width,
+      frame.height,
+    );
+    final List<Rect> cubes = BaseTenLayout.forBox(
+      const BaseTen(ones: 10),
+      loose.size,
+      maxUnit: u,
+    ).ones.map((Rect c) => c.shift(loose.topLeft)).toList();
+    List<HintMark> base({bool broken = false}) => <HintMark>[
+      CardMark(card, const SizedBox.shrink()),
+      BlocksMark(rod, const BaseTen(tens: 1)),
+      if (broken) BlocksMark(loose, const BaseTen(ones: 10)),
+    ];
+    return <HintFrame>[
+      HintFrame(base(), hold: _ms(700)),
+      HintFrame(base(broken: true), hold: _ms(900)),
+      for (int c = 1; c <= 10; c++)
+        HintFrame(<HintMark>[
+          ...base(broken: true),
+          CubeLitMark(cubes, c),
+          BadgeMark(cubes[c - 1].topRight, c),
+        ], hold: each),
+    ];
   }
 
   /// The shekels that are in the Israeli coins and notes (1, 2, 5 and 10 are coins, 20, 50, 100 and 200 notes).

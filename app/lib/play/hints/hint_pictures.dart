@@ -297,6 +297,11 @@ class HintOverlay extends StatelessWidget {
             ),
           ),
         );
+      case CubeLitMark():
+        return Positioned.fill(
+          key: key,
+          child: CustomPaint(key: const Key('hint-cubes-lit'), painter: _CubeLitPainter(m.cells, m.lit)),
+        );
       case BlocksMark():
         return Positioned.fromRect(
           key: key,
@@ -684,6 +689,37 @@ class _RipplePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_RipplePainter old) => old.t != t || old.scale != scale;
+}
+
+/// The cubes that have been counted: a warm tint over each, and over the one counted now a brighter one with a ring (a shape, so that the cue is
+/// not only a colour).
+class _CubeLitPainter extends CustomPainter {
+  _CubeLitPainter(this.cells, this.lit);
+
+  final List<Rect> cells;
+  final int lit;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (int i = 0; i < math.min(lit, cells.length); i++) {
+      final Rect c = cells[i];
+      final bool now = i == lit - 1;
+      final RRect body = RRect.fromRectAndRadius(c.deflate(c.width * 0.04), Radius.circular(c.width * 0.2));
+      canvas.drawRRect(body, Paint()..color = TokenColors.spark.withValues(alpha: now ? 0.7 : 0.35));
+      if (now) {
+        canvas.drawRRect(
+          body.inflate(c.width * 0.06),
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = math.max(2, c.width * 0.16)
+            ..color = TokenColors.sparkDeep,
+        );
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_CubeLitPainter old) => old.lit != lit || old.cells != cells;
 }
 
 /// P1: `cream` at half over the stage with a clear, ringed hole 8 beyond each target.

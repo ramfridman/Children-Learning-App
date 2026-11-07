@@ -116,6 +116,10 @@ const List<String> domains = <String>['numbers', 'colors', 'shapes', 'logic', 'c
 const String languagesDomain = Course.languagesDomain;
 const List<String> bands = <String>['A', 'B', 'C'];
 
+/// The demonstrations a lesson may open with (docs/design/c1-blocks.md section 6): `ten_is_rod`, ten loose cubes counted, gliding into a column
+/// and snapping into a rod. The app draws it; the lesson only says that it opens with it and carries the line the voice says at the snap.
+const List<String> lessonDemos = <String>['ten_is_rod'];
+
 /// The parent switches a gate may name (docs/languages/frame.md section 1.4): the English "oral only" keeps its gate closed,
 /// the Russian "letters before 5" opens its gate.
 const List<String> gateSwitchNames = <String>['oralOnly', 'lettersBefore5'];
@@ -550,6 +554,15 @@ const SObject lessonSchema = SObject(<String, SField>{
   'items': SField(SArray(_id, minItems: 1, maxItems: 12)),
   'estimatedMinutes': SField(SInt(min: 1, max: 30)),
   'celebration': SField(_spoken),
+  // The demonstration the lesson opens with, for a lesson whose items have base-ten blocks, and the line said at its end. Optional.
+  'demo': SField(
+    SObject(<String, SField>{
+      'kind': SField(SEnum(lessonDemos)),
+      'vo': SField(_vo),
+      'caption': SField(_caption),
+    }),
+    required: false,
+  ),
   // The place of the lesson on the path of its land (M9): the island plays the first lesson, in this order, that the
   // child has not finished yet. Lessons without one come last.
   'sequence': SField(SInt(min: 1, max: 500), required: false),

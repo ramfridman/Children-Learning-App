@@ -207,6 +207,15 @@ final class BlocksMark extends HintMark {
   final bool places;
 }
 
+/// The cubes of a rod, or ten loose cubes, counted: the first [lit] of [cells] (in the order they are counted) are lit with a warm tint, the
+/// last of them brightest. The blocks themselves are drawn under it (the stage's, or a [BlocksMark]); this only lights them, one by one.
+final class CubeLitMark extends HintMark {
+  const CubeLitMark(this.cells, this.lit);
+
+  final List<Rect> cells;
+  final int lit;
+}
+
 /// A piece of the hundred chart drawn in [rect] (a card, or over the chart of the stage with the same box): the lit cells with their
 /// numbers and the shaded column that a ten-rod is laid down. A cell lies where `ChartLayout.forBox(spec, rect.size)` puts it.
 final class ChartMark extends HintMark {

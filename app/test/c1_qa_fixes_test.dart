@@ -15,6 +15,7 @@ import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/design/tokens.g.dart';
 import 'package:nitznutz/play/hint_hand.dart';
 import 'package:nitznutz/play/hints/hint_marks.dart';
+import 'package:nitznutz/play/block_layout.dart';
 import 'package:nitznutz/play/hints/tap_geometry.dart';
 import 'package:nitznutz/play/hints/tap_plans.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
@@ -58,11 +59,12 @@ void main() {
     test('the unit of an item is the one that fits its widest and tallest option, on every board', () {
       for (final MapEntry<String, ActivitySpec> e in _specs.entries) {
         for (final TapAnswerActivity a in taps.where(TapGeometry.hasBlockTiles)) {
-          final double unit = TapGeometry.blockUnitOf(a, e.value)!;
+          final ActivitySpec laid = BlockLayout.of(a, e.value);
+          final double unit = TapGeometry.blockUnitOf(a, laid)!;
           expect(unit, greaterThan(0), reason: '${a.id} on ${e.key}');
-          final Size box = TapGeometry.blockBoxOf(a, e.value);
+          final Size box = TapGeometry.blockBoxOf(a, laid);
           for (final ChoiceOption o in a.options) {
-            final double own = BaseTenLayout.forBox(BaseTen.fromScene(o.picture!), box).unit;
+            final double own = BaseTenLayout.forBox(BaseTen.fromScene(o.picture!), box, standing: true).unit;
             expect(own, greaterThanOrEqualTo(unit), reason: '${a.id} ${o.id} fits at the shared unit');
           }
         }
@@ -94,12 +96,20 @@ void main() {
                 final Finder tile = find.byKey(Key('tile-${o.id}'));
                 final Finder pic = find.descendant(of: tile, matching: find.byType(BaseTenPicture));
                 final BaseTenPicture p = t.widget<BaseTenPicture>(pic);
-                units.add(BaseTenLayout.forBox(p.layoutOf, t.getSize(pic), sharedUnit: p.sharedUnit).unit);
+                units.add(
+                  BaseTenLayout.forBox(
+                    p.layoutOf,
+                    t.getSize(pic),
+                    sharedUnit: p.sharedUnit,
+                    standing: p.standing,
+                    maxUnit: p.maxUnit,
+                  ).unit,
+                );
               }
               expect(units.toSet().length, 1, reason: '${a.id} draws one cube size: $units');
               expect(
                 units.first,
-                TapGeometry.blockUnitOf(a, _specs[name]!),
+                TapGeometry.blockUnitOf(a, BlockLayout.of(a, _specs[name]!)),
                 reason: '${a.id} the unit the geometry says',
               );
               problems.addAll(problemsOnScreen(t, sink).map((String p) => '${a.id}: $p'));

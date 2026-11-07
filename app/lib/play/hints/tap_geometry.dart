@@ -6,7 +6,6 @@ import '../../child/activity_shell.dart';
 import '../../content/models.dart';
 import '../../content/row_width.dart';
 import '../../design/course_text.dart';
-import '../../design/tokens.g.dart' show TokenBorder;
 import '../number_entry.dart' show KeypadLayout;
 import '../sprite_group.dart';
 import '../stage_pictures.dart';
@@ -53,8 +52,12 @@ class TapGeometry {
 
   /// The room kept round the pictures of a group and round each picture's cell: a stage that holds a row under them has little height
   /// to spare, so it takes less.
-  static double groupInsetOf(TapAnswerActivity a) => groupAndRow(a) || stagePictureOf(a) != null ? 4 : 12;
-  static double cellInsetOf(TapAnswerActivity a) => groupAndRow(a) || stagePictureOf(a) != null ? 2 : 6;
+  /// A picture of blocks keeps a margin of 6 on the stage (docs/design/c1-blocks.md section 5.1) and its cells touch the margin.
+  static double groupInsetOf(TapAnswerActivity a) => stagePictureOf(a) == 'base_ten'
+      ? BaseTenLayout.stageMargin
+      : (groupAndRow(a) || stagePictureOf(a) != null ? 4 : 12);
+  static double cellInsetOf(TapAnswerActivity a) =>
+      stagePictureOf(a) == 'base_ten' ? 0 : (groupAndRow(a) || stagePictureOf(a) != null ? 2 : 6);
 
   /// The box the group (or the two groups) is drawn in.
   Rect get groupArea => Rect.fromLTWH(
@@ -117,8 +120,29 @@ class TapGeometry {
   /// The layout of the blocks of the stage picture, in the picture's own box (add [pictureArea]'s top left for the stage's points), or
   /// null when the activity has no picture of blocks.
   BaseTenLayout? get blocks => stagePictureOf(a) == 'base_ten' && a.picture2 == null
-      ? BaseTenLayout.forBox(BaseTen.fromScene(a.picture!), pictureArea.size)
+      ? BaseTenLayout.forBox(
+          BaseTen.fromScene(a.picture!),
+          pictureArea.size,
+          standing: true,
+          maxUnit: BaseTenLayout.unitCap(tablet: spec.stageIsCard),
+        )
       : null;
+
+  /// The boxes the pictures of blocks of the stage are drawn in, in the coordinates of [area] (the room the stage gives the picture: its
+  /// width less a hint's card, and its height or the share of it a row leaves): one box, or two for a comparison, 16 apart, each inside the
+  /// stage's margin. The stage draws them, and a hint stands on the same places.
+  static List<Rect> blockCells(TapAnswerActivity a, Size area) {
+    const double gap = BaseTenLayout.pairGap;
+    final double inset = groupInsetOf(a);
+    final double w = area.width - 2 * inset, h = area.height - 2 * inset;
+    if (a.picture2 == null) return <Rect>[Rect.fromLTWH(inset, inset, w, h)];
+    final double cell = (w - gap) / 2;
+    return <Rect>[for (int i = 0; i < 2; i++) Rect.fromLTWH(inset + i * (cell + gap), inset, cell, h)];
+  }
+
+  /// The height of the room of the stage's picture: the whole stage, or the share a row under it leaves.
+  static double pictureHeightOf(TapAnswerActivity a, double stageH) =>
+      groupAndRow(a) ? stageH * pictureShare : stageH;
 
   /// The layout of the chart of the stage picture, in the same way, or null when there is none.
   ChartLayout? get chart => stagePictureOf(a) == 'hundred_chart'
@@ -273,7 +297,8 @@ class TapGeometry {
   /// wide as the row allows for a set of things (170 at most) and for words (220 at most).
   static double tileWidthOf(TapAnswerActivity a, ActivitySpec spec) {
     final double room = spec.tilesWidth / a.options.length - 24;
-    if (a.options.any((ChoiceOption o) => o.set != null || o.picture != null)) return math.min(170, room);
+    if (a.options.any((ChoiceOption o) => o.set != null)) return math.min(170, room);
+    if (a.options.any((ChoiceOption o) => o.picture != null)) return math.min(260, room);
     if (a.options.any((ChoiceOption o) => o.text != null) && !a.letterFace) return math.min(220, room);
     return 96;
   }
@@ -282,24 +307,19 @@ class TapGeometry {
   static bool hasBlockTiles(TapAnswerActivity a) =>
       a.optionsInTiles && a.options.any((ChoiceOption o) => o.picture != null);
 
-  /// The box the blocks of one option are drawn in: the tile (96 points tall) less its border, the 6 points a tile of pictures keeps
-  /// and the 8 of the picture's own (see `_face` in `tap_answer_session.dart`).
-  static Size blockBoxOf(TapAnswerActivity a, ActivitySpec spec) {
-    const double edge = TokenBorder.thick + 6 + 8;
-    return Size(tileWidthOf(a, spec) - 2 * edge, 96 - 2 * edge);
-  }
+  /// The box the blocks of one option are drawn in: the tile less its border and the 5 points of margin round the blocks (the blocks stand
+  /// on the bottom of the tile, see `BaseTenPicture.standing`).
+  static Size blockBoxOf(TapAnswerActivity a, ActivitySpec spec) =>
+      Size(tileWidthOf(a, spec) - 2 * BaseTenLayout.tileEdge, spec.tileHeight - 2 * BaseTenLayout.tileEdge);
 
   /// The side of one cube in every option of [a] that is blocks: the one size that fits the widest and tallest of them, so that a
   /// cube is as big in a rod option as in an option of cubes only (a child compares the pictures). Null when no option is blocks.
   static double? blockUnitOf(TapAnswerActivity a, ActivitySpec spec) {
     final Size box = blockBoxOf(a, spec);
-    double? unit;
-    for (final ChoiceOption o in a.options) {
-      if (o.picture == null) continue;
-      final double own = BaseTenLayout.forBox(BaseTen.fromScene(o.picture!), box).unit;
-      unit = unit == null ? own : math.min(unit, own);
-    }
-    return unit;
+    return BaseTenLayout.commonUnit(<(BaseTen, Size)>[
+      for (final ChoiceOption o in a.options)
+        if (o.picture != null) (BaseTen.fromScene(o.picture!), box),
+    ], maxUnit: BaseTenLayout.unitCap(tablet: spec.stageIsCard));
   }
 
   /// The point on the top edge of option [i]'s tile (or, for an option on the stage, of its picture) where the hand's fingertip

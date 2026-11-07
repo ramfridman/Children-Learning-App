@@ -99,6 +99,21 @@ class ActivityFrame extends StatelessWidget {
   final VoidCallback? onConfirmYes;
   final VoidCallback? onConfirmAgain;
 
+  /// How tall the bubble of [text] at [font] is when it wraps inside [maxWidth] (its padding included).
+  static double bubbleHeight(String text, double font, double maxWidth) {
+    const EdgeInsets pad = EdgeInsets.symmetric(horizontal: 16, vertical: 8);
+    final TextPainter p = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: AppText.fixed(size: font, weight: 500),
+      ),
+      textDirection: TextDirection.rtl,
+    )..layout(maxWidth: maxWidth - pad.horizontal);
+    final double height = p.height + pad.vertical;
+    p.dispose();
+    return height;
+  }
+
   /// The largest font, down to [min], at which [text] (and [reserve], the room of a chip under it) fits in [maxHeight] (the
   /// board's own limit when null), and the height of the bubble at that font.
   static ({double font, double height}) fitBubble(
@@ -108,17 +123,7 @@ class ActivityFrame extends StatelessWidget {
     double reserve = 0,
     double? maxHeight,
   }) {
-    const EdgeInsets pad = EdgeInsets.symmetric(horizontal: 16, vertical: 8);
-    double heightAt(double size) =>
-        (TextPainter(
-          text: TextSpan(
-            text: text,
-            style: AppText.fixed(size: size, weight: 500),
-          ),
-          textDirection: TextDirection.rtl,
-        )..layout(maxWidth: s.bubbleMaxWidth - pad.horizontal)).height +
-        pad.vertical +
-        reserve;
+    double heightAt(double size) => bubbleHeight(text, size, s.bubbleMaxWidth) + reserve;
     for (double size = s.bubbleFont; size > min; size -= 1) {
       final double height = heightAt(size);
       if (height <= (maxHeight ?? s.bubbleMaxHeight)) return (font: size, height: height);
@@ -301,11 +306,14 @@ class ActivityFrame extends StatelessWidget {
       rect: s.stage,
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: TokenColors.paper,
-          borderRadius: BorderRadius.circular(TokenRadius.xl),
-          boxShadow: clayShadows(TokenColors.cardLip, soft16: true),
-        ),
+        // A board whose stage is not drawn (the tiles took its room) keeps the box, and its margin, for what a hint draws in it: no card.
+        decoration: s.stageDrawn
+            ? BoxDecoration(
+                color: TokenColors.paper,
+                borderRadius: BorderRadius.circular(TokenRadius.xl),
+                boxShadow: clayShadows(TokenColors.cardLip, soft16: true),
+              )
+            : null,
         child: content,
       ),
     );

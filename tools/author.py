@@ -1335,12 +1335,28 @@ def tag_file(t):
     }
 
 
+# The demonstration a lesson with base-ten blocks opens with (docs/design/c1-blocks.md section 6): ten loose cubes are counted, glide into a
+# column and snap into a rod; the app draws it and says this line at the snap. The text is the hebrew-text-editor's (the owner approved it
+# on 2026-11-07), the id is `vo:demo.ten_is_rod`.
+DEMO_VO, DEMO_TEXT = 'vo:demo.ten_is_rod', 'עֶשֶׂר קֻבִּיּוֹת הֵן מוֹט אֶחָד.'
+
+
+def has_blocks(activity_id):
+    """Whether an activity shows base-ten blocks, on its stage or on its tiles (its file is on disk before its lesson is written)."""
+    a = json.load(open(os.path.join(OUT, 'activity.%s.json' % activity_id), encoding='utf-8'))
+    scene, answer = a.get('scene', {}), a.get('answer', {})
+    return (scene.get('picture') or {}).get('kind') == 'base_ten' or any('picture' in o for o in answer.get('options', []))
+
+
 def lesson_file(l, sequence):
-    return {
+    doc = {
         'schema': 'lesson/v1', 'id': l['id'], 'review': 'needs-editor', 'revision': 1, 'band': l.get('band', 'A'),
         'title': [{'t': 'he', 'v': l['title']}], 'skills': l['skills'], 'items': l['items'],
         'estimatedMinutes': l.get('minutes', 4), 'sequence': sequence, 'celebration': say('vo:celebrate.%s' % l['id'].replace('-', '_'), l['done'], pooled=l.get('band', 'A') == 'C'),
     }
+    if any(has_blocks(i) for i in l['items']):
+        doc['demo'] = dict(kind='ten_is_rod', **say(DEMO_VO, DEMO_TEXT, pooled=True))
+    return doc
 
 
 REP_ORDER = ('concrete', 'pictorial', 'symbolic', 'embodied', 'story')

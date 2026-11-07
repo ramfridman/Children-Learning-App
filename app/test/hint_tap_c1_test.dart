@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/play/block_layout.dart';
 import 'package:nitznutz/play/hints/hint_marks.dart';
 import 'package:nitznutz/play/hints/tap_geometry.dart';
 import 'package:nitznutz/play/hints/tap_plans.dart';
@@ -30,8 +31,11 @@ void main() {
     ActivitySpec.tabletPortrait,
   ];
 
-  HintPlan? planOf(TapAnswerActivity a, int level, ActivitySpec s) =>
-      tapHintPlan(a, TapGeometry(a, stageOf(s), s), level);
+  // The board as the item lays it out (blocks have their own layouts, see `BlockLayout`), the stage the session draws.
+  HintPlan? planOf(TapAnswerActivity a, int level, ActivitySpec s) {
+    final ActivitySpec laid = BlockLayout.of(a, s);
+    return tapHintPlan(a, TapGeometry(a, stageOf(laid), laid), level);
+  }
 
   Iterable<HintMark> marksOf(HintPlan p) sync* {
     for (final HintFrame f in p.frames) {
@@ -82,8 +86,8 @@ void main() {
 
   test('level 1 and 2 never mark the answer: no hand, nothing outside the stage, every tile glows alike or none does', () {
     for (final ActivitySpec board in boards) {
-      final Size room = stageOf(board);
       for (final TapAnswerActivity a in items) {
+        final Size room = stageOf(BlockLayout.of(a, board));
         for (int level = 1; level <= 2; level++) {
           final HintPlan p = planOf(a, level, board)!;
           expect(marksOf(p).whereType<HandMark>(), isEmpty, reason: '${a.id} level $level draws no hand');
@@ -123,7 +127,8 @@ void main() {
 
   test('level 3 is the hand: it ends on the right tile, or on the key that gives the number', () {
     for (final TapAnswerActivity a in items) {
-      final TapGeometry g = TapGeometry(a, stageOf(ActivitySpec.phone), ActivitySpec.phone);
+      final ActivitySpec laid = BlockLayout.of(a, ActivitySpec.phone);
+      final TapGeometry g = TapGeometry(a, stageOf(laid), laid);
       final HintPlan p = planOf(a, 3, ActivitySpec.phone)!;
       final HandMark last = p.frames.last.marks.whereType<HandMark>().single;
       final Offset tip = a.numberAnswer != null ? g.keyTip('done') : g.optionTip(g.correctIndex);
@@ -147,22 +152,16 @@ void main() {
     }
   });
 
-  test('blocks are as large as the stage allows: a cube is at least 9 points on a stage with no row, 5 with one, 7 in a hint', () {
+  test('blocks are as large as the stage allows: a cube is at least 7 points beside a row on the stage, 7 in a hint', () {
     for (final ActivitySpec board in boards) {
-      final Size room = stageOf(board);
       for (final TapAnswerActivity a in items) {
-        final TapGeometry g = TapGeometry(a, room, board);
-        final Map<String, Object?>? picture = a.picture;
-        if (picture != null && a.drawnPictureKind == 'base_ten') {
-          final Size area = a.picture2 == null
-              ? g.pictureArea.size
-              : Size(g.pictureArea.width / 2 - 2 * TapGeometry.cellInsetOf(a), g.pictureArea.height - 4);
-          final double unit = BaseTenLayout.forBox(BaseTen.fromScene(picture), area).unit;
-          final double least = TapGeometry.groupAndRow(a) ? 5 : 9;
+        // The cube of an item that has blocks on its own is held to 12 points by `c1_block_units_test.dart`; here the number sentences
+        // that keep a row under the rods (no more than the picture's share of the stage) and the cards of the hints.
+        if (TapGeometry.groupAndRow(a) && BlockLayout.onStage(a)) {
           expect(
-            unit,
-            greaterThanOrEqualTo(least),
-            reason: '${a.id} on ${board.stage}: a cube is $unit points',
+            BlockLayout.unitOf(a, board)!,
+            greaterThanOrEqualTo(7),
+            reason: '${a.id} on ${board.stage}: a cube beside a row',
           );
         }
         for (int level = 2; level <= 3; level++) {
@@ -172,6 +171,52 @@ void main() {
             expect(unit, greaterThanOrEqualTo(7), reason: '${a.id} level $level on ${board.stage}: $unit');
           }
         }
+      }
+    }
+  });
+
+  test('level 3 of an item with rods counts the cubes of a rod, each lit as its number comes (docs/design/c1-blocks.md section 6)', () {
+    for (final ActivitySpec board in boards) {
+      // 34 as blocks: the first rod is counted in place, ten cubes in turn.
+      final HintPlan plain = planOf(
+        items.firstWhere((TapAnswerActivity a) => a.id == 'c.numc03.18'),
+        3,
+        board,
+      )!;
+      final List<int> counted = <int>[
+        for (final HintFrame f in plain.frames)
+          for (final HintMark m in f.marks)
+            if (m is CubeLitMark) m.lit,
+      ];
+      expect(counted, <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], reason: 'on ${board.stage}');
+      final CubeLitMark last = plain.frames.expand((HintFrame f) => f.marks).whereType<CubeLitMark>().last;
+      expect(last.cells, hasLength(10));
+      expect(last.cells.map((Rect c) => c.width).toSet(), hasLength(1), reason: 'ten cubes of one size');
+      expect(last.cells.first.top, lessThan(last.cells.last.top), reason: 'counted from the top down');
+    }
+  });
+
+  test('a question about one rod (lit, or taken away) breaks it into ten loose cubes in a card, and counts those', () {
+    for (final ActivitySpec board in boards) {
+      for (final String id in <String>['c.numc03.24', 'c.mathc03.17']) {
+        final HintPlan plan = planOf(items.firstWhere((TapAnswerActivity a) => a.id == id), 3, board)!;
+        final List<HintMark> all = <HintMark>[for (final HintFrame f in plan.frames) ...f.marks];
+        expect(
+          all.whereType<BlocksMark>().any((BlocksMark m) => m.full.ones == 10 && m.full.tens == 0),
+          isTrue,
+          reason: '$id on ${board.stage}: the ten loose cubes',
+        );
+        final List<CubeLitMark> lit = all.whereType<CubeLitMark>().toList();
+        expect(lit.map((CubeLitMark m) => m.lit).toSet(), <int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, reason: id);
+        // The rod comes first and stands whole, before it breaks.
+        final int rodOnly = plan.frames.indexWhere(
+          (HintFrame f) =>
+              f.marks.whereType<BlocksMark>().length == 1 && f.marks.whereType<CubeLitMark>().isEmpty,
+        );
+        final int broken = plan.frames.indexWhere(
+          (HintFrame f) => f.marks.whereType<BlocksMark>().any((BlocksMark m) => m.full.ones == 10),
+        );
+        expect(rodOnly, lessThan(broken), reason: id);
       }
     }
   });

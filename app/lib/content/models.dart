@@ -1648,7 +1648,8 @@ class Lesson {
       skillIds = <String>[for (final Object? s in json['skills']! as List<Object?>) s! as String],
       sequence = (json['sequence'] as int?) ?? 1000,
       stopAfterStruggles = 0,
-      celebration = Spoken.fromJson(json['celebration']);
+      celebration = Spoken.fromJson(json['celebration']),
+      demo = json['demo'] == null ? null : Spoken.fromJson(json['demo']);
 
   /// A short lesson made on the spot for one skill's revisit (M8): the bell flag on the map. It is not in any pack.
   Lesson.mission({
@@ -1659,6 +1660,7 @@ class Lesson {
     this.stopAfterStruggles = 0,
   }) : revision = 1,
        sequence = 1000,
+       demo = null,
        course = skillIds.isEmpty ? Course.core : Course.ofSkillId(skillIds.first),
        title = '';
 
@@ -1676,6 +1678,10 @@ class Lesson {
   /// row (the placement warm-up: it must never become a string of failures). 0 means it never stops early.
   final int stopAfterStruggles;
   final Spoken celebration;
+
+  /// The line said at the end of the demonstration this lesson opens with (ten loose cubes snapping into a rod, see `block_demo.dart`), or
+  /// null for a lesson that has none (every revisit mission).
+  final Spoken? demo;
 }
 
 /// A skill of the pack, for the learning engine.

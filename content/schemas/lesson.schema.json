@@ -142,6 +142,52 @@
       ],
       "additionalProperties": false
     },
+    "demo": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "ten_is_rod"
+          ]
+        },
+        "vo": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 83,
+          "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+        },
+        "caption": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "t": {
+                "const": "he"
+              },
+              "v": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 240
+              }
+            },
+            "required": [
+              "t",
+              "v"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 1
+        }
+      },
+      "required": [
+        "kind",
+        "vo",
+        "caption"
+      ],
+      "additionalProperties": false
+    },
     "sequence": {
       "type": "integer",
       "minimum": 1,

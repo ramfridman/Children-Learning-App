@@ -19,6 +19,8 @@ import 'hints/hint_pictures.dart';
 import 'hints/hint_player.dart';
 import 'hints/tap_geometry.dart';
 import 'hints/tap_plans.dart';
+import 'block_demo.dart';
+import 'block_layout.dart';
 import 'lesson_controller.dart';
 import 'ls01_metrics.dart';
 import 'math_signs.dart';
@@ -37,9 +39,47 @@ import 'template_session.dart';
 /// direction, with a speaker that plays its own clip without answering, or a sound button; a picture or a sound button says its
 /// word as it is chosen; and, when [captions] is on, the word appears under the right picture once the answer is accepted.
 class TapAnswerSession extends TemplateSession {
-  TapAnswerSession(super.controller, this.activity, {this.captions = false, this.stress = true, this.band});
+  TapAnswerSession(
+    super.controller,
+    this.activity, {
+    this.captions = false,
+    this.stress = true,
+    this.band,
+    BlockDemoKind? demo,
+    this.demoVo,
+  }) : _demo = demo;
 
   final TapAnswerActivity activity;
+
+  /// The demonstration of blocks that is on the stage now (the opening of a lesson, or the eye pressed on an item with rods), or null; and
+  /// the line of the lesson that is said at its snap (the pack's own id, `vo:demo.ten_is_rod`, when a lesson has none).
+  BlockDemoKind? _demo;
+  final String? demoVo;
+  BlockDemoKind? get demo => _demo;
+
+  /// The demonstration ends: at its own end, at any touch of the item, and when a hint begins.
+  void endDemo() {
+    if (_demo == null) return;
+    _demo = null;
+    notify();
+  }
+
+  /// The eye on an item with rods shows the demonstration (the child may see again why a rod is ten) in place of the picture of the hint that
+  /// the eye brings with it (the lamp still has all of its own): [_eyeHint] is the hint of the eye, which draws nothing on the stage.
+  @override
+  void onShowMe() {
+    if (!BlockLayout.hasRods(activity) || _demo != null) return;
+    _demo = BlockDemoKind.full;
+    _eyeHint = controller.hintNonce + 1;
+    notify();
+  }
+
+  int? _eyeHint;
+
+  /// The voice says that ten cubes are one rod, once the ten have snapped together (nothing is said by a short demonstration).
+  void sayDemoLine() {
+    if (_demo == BlockDemoKind.full) playClips?.call(<String>[demoVo ?? blockDemoLine], replace: false);
+  }
 
   /// The presentation band of a language course: its text tiles are read at the reading size of the band (docs/design/languages-l5-ls01.md
   /// section 3.2). Null for a land, and for a test that does not say: the text keeps the size the tile gives it.
@@ -107,6 +147,7 @@ class TapAnswerSession extends TemplateSession {
   Future<void> choose(String id, {bool byVoice = false}) async {
     if (_busy || chosenState == AnswerState.correct) return;
     if (controller.guided && id != activity.correctId) return;
+    endDemo();
     _busy = true;
     chosenId = id;
     if (!byVoice) _sayWord(id);
@@ -171,6 +212,7 @@ class TapAnswerSession extends TemplateSession {
     _busy = true;
     chosenId = 'n=$n';
     final bool demonstrating = controller.hintShown >= 3 && _hint.playing;
+    endDemo();
     if ((controller.hintShown <= 1 || demonstrating) && marks.isNotEmpty) _hint.clear();
     final Outcome o = await controller.enterNumber(n);
     if (disposed) return;
@@ -200,6 +242,8 @@ class TapAnswerSession extends TemplateSession {
   /// them). The stage, empty or small in such an item, gives way. A board with the room is unchanged.
   @override
   ActivitySpec layoutFor(ActivitySpec base) {
+    // Blocks have their own two layouts (docs/design/c1-blocks.md section 5), which give the cubes the board's height.
+    if (BlockLayout.hasBlocks(activity)) return BlockLayout.of(activity, base);
     const double margin = 12;
     final double need = numberMode
         ? KeypadLayout.of(base).roomHeight
@@ -241,6 +285,12 @@ class TapAnswerSession extends TemplateSession {
 
   @override
   void onHint() {
+    if (_demo != null && _eyeHint == controller.hintNonce) {
+      // The hint the eye brought: the demonstration is its picture. A worked example that it stands for has been shown.
+      if (hintPictureOf(activity) == HintPicture.demonstration) controller.demoDone();
+      return;
+    }
+    endDemo();
     final TapGeometry? geo = _geometry();
     final HintPlan? plan = geo == null ? null : tapHintPlan(activity, geo, controller.hintShown);
     if (plan == null) {
@@ -328,6 +378,7 @@ class TapAnswerSession extends TemplateSession {
     // One size for the numerals of the item and one for the cubes of its blocks: a tile never draws its own (see [numeralFontOf]).
     final double numeralFont = numeralFontOf(activity, spec.tileFont, width);
     final double? blockUnit = TapGeometry.blockUnitOf(activity, spec);
+    final double tileHeight = spec.tileHeight;
     final bool letterItem = activity.letterFace;
     return ListenableBuilder(
       listenable: this,
@@ -349,13 +400,16 @@ class TapAnswerSession extends TemplateSession {
                           key: Key('tile-${o.id}'),
                           semanticLabel: o.label ?? '',
                           width: width == 96 ? null : width,
+                          size: tileHeight,
                           state: chosenId == o.id
                               ? chosenState
                               : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
                                     ? AnswerState.selected
                                     : AnswerState.idle),
                           onPressed: () => choose(o.id),
-                          child: sets
+                          child: o.picture != null
+                              ? _blocksFace(o, blockUnit, spec)
+                              : sets
                               ? Padding(
                                   padding: const EdgeInsets.all(6),
                                   child: _face(
@@ -469,6 +523,21 @@ class TapAnswerSession extends TemplateSession {
   }
 }
 
+/// Blocks on a tile: tens left of ones, the digits never on them (M10, X1), every option with the same cube, standing on the bottom of the
+/// tile with a margin of 5 inside its border.
+Widget _blocksFace(ChoiceOption o, double? unit, ActivitySpec spec) => Directionality(
+  textDirection: TextDirection.ltr,
+  child: Padding(
+    padding: const EdgeInsets.all(BaseTenLayout.tileEdge - TokenBorder.thick),
+    child: BaseTenPicture(
+      layoutOf: BaseTen.fromScene(o.picture!),
+      sharedUnit: unit,
+      standing: true,
+      maxUnit: BaseTenLayout.unitCap(tablet: spec.stageIsCard),
+    ),
+  ),
+);
+
 /// Whether the numeral [n] of an answer tile of [a] has its row of dots under it: for 1 to 10 only (above ten the dots are a hairline
 /// nobody can count), and never in an item of the facts (MATH-C-01), where a row of dots under each answer would be a way to count it.
 bool numeralHasDots(TapAnswerActivity a, int n) => n >= 1 && n <= 10 && a.skillId != 'MATH-C-01';
@@ -516,16 +585,6 @@ Widget _face(
     );
   }
   if (o.soundOnly) return const SoundFace();
-  if (o.picture != null) {
-    // Blocks on the tile: tens left of ones, the digits never on them (M10, X1), every option with the same cube.
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: BaseTenPicture(layoutOf: BaseTen.fromScene(o.picture!), sharedUnit: blockUnit),
-      ),
-    );
-  }
   if (o.numeral != null) {
     // A numeral stays on one line, at the size the widest numeral of the item fits the tile in (so that the right answer is never the
     // one that prints largest); the tile keeps its size. Dots under it only where counting them can help: not above ten (a hairline),
@@ -612,9 +671,9 @@ class _TapStage extends StatelessWidget {
       child: Stack(
         key: const Key('tap-stage'),
         children: <Widget>[
-          if (a.background != null)
+          if (a.background != null && !BlockLayout.onTiles(a))
             Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
-          if (TapGeometry.stagePictureOf(a) != null)
+          if (TapGeometry.stagePictureOf(a) != null && s.demo == null)
             AnimatedPositioned(
               duration: MediaQuery.disableAnimationsOf(context)
                   ? Duration.zero
@@ -625,6 +684,22 @@ class _TapStage extends StatelessWidget {
               width: size.width - s.reserve,
               height: TapGeometry.groupAndRow(a) ? size.height * TapGeometry.pictureShare : size.height,
               child: _picture(a),
+            ),
+          if (s.demo != null)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: BlockDemo(
+                  key: const Key('block-demo'),
+                  kind: s.demo!,
+                  maxUnit: BaseTenLayout.unitCap(tablet: s._spec?.stageIsCard ?? false),
+                  reduce: MediaQuery.disableAnimationsOf(context),
+                  onSnap: s.sayDemoLine,
+                  onDone: s.endDemo,
+                  background: a.background == null
+                      ? null
+                      : PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover),
+                ),
+              ),
             ),
           if (hasGroup)
             AnimatedPositioned(
@@ -842,38 +917,71 @@ class _TapStage extends StatelessWidget {
       container: true,
       excludeSemantics: true,
       label: a.altText,
-      child: Padding(
-        padding: EdgeInsets.all(TapGeometry.groupInsetOf(a)),
-        child: Directionality(
-          textDirection: TextDirection.ltr,
-          child: p['kind'] == 'hundred_chart'
-              ? HundredChartPicture(key: const Key('stage-chart'), spec: ChartSpec.fromScene(p))
-              : a.picture2 == null
-              ? BaseTenPicture(key: const Key('stage-blocks'), layoutOf: BaseTen.fromScene(p))
-              // Two pictures of blocks side by side, the first on the left (two towers to compare, `40 + 30` as rods).
-              : Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(TapGeometry.cellInsetOf(a)),
-                        child: BaseTenPicture(key: const Key('stage-blocks'), layoutOf: BaseTen.fromScene(p)),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(TapGeometry.cellInsetOf(a)),
-                        child: BaseTenPicture(
-                          key: const Key('stage-blocks-2'),
-                          layoutOf: BaseTen.fromScene(a.picture2!),
+      child: p['kind'] == 'hundred_chart'
+          ? Padding(
+              padding: EdgeInsets.all(TapGeometry.groupInsetOf(a)),
+              child: Directionality(
+                textDirection: TextDirection.ltr,
+                child: HundredChartPicture(key: const Key('stage-chart'), spec: ChartSpec.fromScene(p)),
+              ),
+            )
+          : Directionality(textDirection: TextDirection.ltr, child: _blocks(a)),
+    );
+  }
+
+  /// One picture of blocks on the stage, or two side by side, the first on the left (two numbers to compare, `40 + 30` as rods), each on a
+  /// mat of its own. Every picture of the item draws with one cube, the largest that fits each in its box (docs/design/c1-blocks.md 4.7).
+  Widget _blocks(TapAnswerActivity a) => LayoutBuilder(
+    builder: (BuildContext context, BoxConstraints box) {
+      final List<Rect> cells = TapGeometry.blockCells(a, box.biggest);
+      final List<Map<String, Object?>> pictures = <Map<String, Object?>>[a.picture!, ?a.picture2];
+      final double cap = BaseTenLayout.unitCap(tablet: s._spec?.stageIsCard ?? false);
+      final List<BaseTen> blocks = <BaseTen>[
+        for (final Map<String, Object?> p in pictures) BaseTen.fromScene(p),
+      ];
+      final double? shared = blocks.length < 2
+          ? null
+          : BaseTenLayout.commonUnit(<(BaseTen, Size)>[
+              for (int i = 0; i < blocks.length; i++) (blocks[i], cells[i].size),
+            ], maxUnit: cap);
+      return Stack(
+        children: <Widget>[
+          for (int i = 0; i < blocks.length; i++)
+            Positioned.fromRect(
+              rect: cells[i],
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: <Widget>[
+                  if (blocks.length > 1)
+                    Positioned(
+                      left: -4,
+                      right: -4,
+                      top: -2,
+                      bottom: -2,
+                      child: DecoratedBox(
+                        key: Key('stage-mat-${i + 1}'),
+                        decoration: BoxDecoration(
+                          color: TokenColors.paper.withValues(alpha: 0.6),
+                          borderRadius: BorderRadius.circular(16),
                         ),
                       ),
                     ),
-                  ],
-                ),
-        ),
-      ),
-    );
-  }
+                  Positioned.fill(
+                    child: BaseTenPicture(
+                      key: Key(i == 0 ? 'stage-blocks' : 'stage-blocks-2'),
+                      layoutOf: blocks[i],
+                      standing: true,
+                      maxUnit: cap,
+                      sharedUnit: shared,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      );
+    },
+  );
 
   /// The group (or the two groups, side by side) that the question is about. Not tappable.
   Widget _groups(TapAnswerActivity a) {

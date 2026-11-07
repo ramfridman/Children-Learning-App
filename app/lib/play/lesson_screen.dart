@@ -40,6 +40,8 @@ import '../strings/he.dart';
 import '../tutor/tutor.dart';
 import '../voice/voice_director.dart';
 import 'activity_frame.dart';
+import 'block_demo.dart';
+import 'block_layout.dart';
 import 'count_tap_session.dart';
 import 'flash_session.dart';
 import 'build_pattern_session.dart';
@@ -111,6 +113,12 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   late final SyncRunner _sync;
   late final Future<List<Reward>> Function(String) _evaluate;
 
+  /// The opening demonstration of blocks (see [_openingDemo]): how many lessons this child has opened with one (until it is read, the short
+  /// form is shown), and whether this lesson has given its one.
+  static const int _fullDemos = 3;
+  int _demoLessons = _fullDemos;
+  bool _demoGiven = false;
+
   /// The key of the sticker just earned, shown in the celebration.
   String? _sticker;
   late final Future<int> _visit;
@@ -157,6 +165,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         )
         .then((int id) => _visitId = id);
     unawaited(_loadTime());
+    unawaited(_loadDemoCount());
   }
 
   Future<void> _loadTime() async {
@@ -464,6 +473,38 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     return family != null && family.of(widget.profileId, a.course).personal;
   }
 
+  /// The demonstration that a rod is ten cubes opens a lesson whose first item with rods this is (docs/design/c1-blocks.md section 6): all
+  /// of it for a child's first three such lessons, then its short form. A lesson that says no `demo` (a mission) has none. Once for a lesson.
+  BlockDemoKind? _openingDemo(LessonController c, TapAnswerActivity a) {
+    if (_demoGiven || c.lesson.demo == null || !BlockLayout.hasRods(a)) return null;
+    _demoGiven = true;
+    final BlockDemoKind kind = _demoLessons < _fullDemos ? BlockDemoKind.full : BlockDemoKind.short;
+    unawaited(_countDemo());
+    return kind;
+  }
+
+  /// How many lessons with the demonstration this child has opened: read when the lesson starts, one more once this one has (a setting of
+  /// this phone, by the child's local id).
+  Future<void> _loadDemoCount() async {
+    try {
+      final AppDatabase db = await ref.read(databaseProvider.future);
+      _demoLessons = int.tryParse(await db.setting(_demoKey) ?? '') ?? 0;
+    } on Object {
+      // Without the count the short form is shown; a failure here never stops a child.
+    }
+  }
+
+  Future<void> _countDemo() async {
+    try {
+      final AppDatabase db = await ref.read(databaseProvider.future);
+      await db.putSetting(_demoKey, '${_demoLessons + 1}');
+    } on Object {
+      // The demonstration is only a picture: a count that was not written costs one more full showing.
+    }
+  }
+
+  String get _demoKey => 'blocks.demo.${widget.profileId}';
+
   /// A fresh session whenever the lesson moves to the next activity.
   TemplateSession _sessionFor(LessonController c) {
     if (_session == null || _sessionIndex != c.index) {
@@ -484,6 +525,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           captions: caption.captions,
           stress: caption.stress,
           band: a.isLanguage ? _presentationBand(a) : null,
+          demo: _openingDemo(c, a),
+          demoVo: c.lesson.demo?.vo,
         ),
         StoryActivity() => StorySession(c, a, stress: caption.stress),
         ListenDoActivity() => ListenDoSession(c, a, band: _presentationBand(a), stress: caption.stress),
@@ -728,7 +771,12 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           hintGlow: helpOffered,
           onShowMe: controller.finished || controller.noHelp
               ? null
-              : (controller.current is SayItActivity ? controller.replayPrompt : () => controller.unsure()),
+              : (controller.current is SayItActivity
+                    ? controller.replayPrompt
+                    : () {
+                        session.onShowMe();
+                        unawaited(controller.unsure());
+                      }),
           onReplay: controller.finished ? null : controller.replayPrompt,
           mic: controller.finished ? null : _mic(spec, session, controller.current),
           onConfirmYes: heard == MicState.confirming ? _voice?.answer.confirmYes : null,

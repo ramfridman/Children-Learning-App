@@ -96,6 +96,10 @@ abstract class TemplateSession extends ChangeNotifier {
   /// The question is asked again: a gentle show of the objects, no help.
   void onReplay();
 
+  /// The child pressed the eye ("show me"), just before the answer is recorded as unsure: a template may show something of its own (the
+  /// blocks' demonstration that a rod is ten cubes). Nothing by default.
+  void onShowMe() {}
+
   // ---- voice ----
 
   /// The card the voice has understood or half heard: lit like a hint, until the voice lets go of it.
