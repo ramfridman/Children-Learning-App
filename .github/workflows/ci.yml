@@ -49,6 +49,8 @@ jobs:
         run: python3 -I -X utf8 tools/check_maths.py --ids c. --strict
       - name: The coverage gate of the Band C batches (every watched tag has a diagnostic item)
         run: python3 -I -X utf8 tools/check_maths.py --ids c. --coverage --strict
+      - name: Backup retention filter test (bash, date and jq from the runner image)
+        run: bash tools/backup_retention_test.sh
 
   osv:
     name: osv (dependency vulnerabilities)
