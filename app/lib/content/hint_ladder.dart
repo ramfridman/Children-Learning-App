@@ -109,6 +109,18 @@ enum HintPicture {
   /// Hands clap once for each beat while each beat lights: the beats as movement and light (LS03 drum).
   clapEach('clap_each'),
 
+  /// The target again, then what the child has made so far (LS05 make): the two ends of the task, lit one after the other.
+  targetAndResult('target_and_result'),
+
+  /// The key word of the target unit, with its picture, in a card; the unit lit in it (LS05 make, Hebrew); or the mouth of a soft consonant (Russian).
+  keyWordCard('key_word_card'),
+
+  /// The slide runs by itself, slowly, each part lit as it sounds: the parts only, never the whole (LS04).
+  slideParts('slide_parts'),
+
+  /// The parts another way: each sound as a token with its mouth, the vowel strip, or the small wheel on the unit missed (LS04).
+  partsAnotherWay('parts_another_way'),
+
   /// The worked example: the guide does the whole thing and the answer is marked as its last step. Level 3 only.
   demonstration('demonstration', marksAnswer: true);
 
@@ -348,6 +360,17 @@ class HintLadder {
     'sound_boxes': HintLadder._(<HintPicture>[
       HintPicture.slowBeats,
       HintPicture.clapEach,
+      HintPicture.demonstration,
+    ]),
+    // The wave 2 templates (L5): change one part and blend slide.
+    'change_part': HintLadder._(<HintPicture>[
+      HintPicture.targetAndResult,
+      HintPicture.keyWordCard,
+      HintPicture.demonstration,
+    ]),
+    'blend_slide': HintLadder._(<HintPicture>[
+      HintPicture.slideParts,
+      HintPicture.partsAnotherWay,
       HintPicture.demonstration,
     ]),
   };

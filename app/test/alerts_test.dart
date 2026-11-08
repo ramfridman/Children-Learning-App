@@ -20,7 +20,14 @@ Session session(int id, DateTime from, int minutes, {String reason = 'home'}) =>
   endReason: reason,
 );
 
-Attempt attempt(int id, DateTime at, String result, {int ms = 4000, int? sessionId = 1}) => Attempt(
+Attempt attempt(
+  int id,
+  DateTime at,
+  String result, {
+  int ms = 4000,
+  int? sessionId = 1,
+  String response = 'o1',
+}) => Attempt(
   id: id,
   at: at,
   profileId: 'p-1',
@@ -36,7 +43,7 @@ Attempt attempt(int id, DateTime at, String result, {int ms = 4000, int? session
   attemptNo: 1,
   hintLevel: 0,
   misconceptionTag: '',
-  response: 'o1',
+  response: response,
   durationMs: ms,
   sessionId: sessionId,
   input: 'tap',
@@ -150,6 +157,22 @@ void main() {
       );
       final Session stayed = session(1, DateTime(2026, 11, 20, 9, 58), 20, reason: 'finished');
       expect(behaviourAlerts(child(sessions: <Session>[stayed], attempts: three)), isEmpty);
+    });
+
+    test('one move with two misconceptions (two rows, the second marked) is one wrong answer, not two (SEC-L5-3)', () {
+      // A colouring with both kinds of mistake, then one more wrong move: two moves, three rows.
+      final List<Attempt> rows = <Attempt>[
+        attempt(0, DateTime(2026, 11, 20, 10, 0), 'incorrect', response: 'n=4.c=bbbr'),
+        attempt(1, DateTime(2026, 11, 20, 10, 0), 'incorrect', response: 'n=4.c=bbbr.also'),
+        attempt(2, DateTime(2026, 11, 20, 10, 1), 'incorrect', response: 'n=4.c=bbrr'),
+      ];
+      final Session left = session(1, DateTime(2026, 11, 20, 9, 58), 4);
+      expect(behaviourAlerts(child(sessions: <Session>[left], attempts: rows)), isEmpty);
+      // The same rows as three separate wrong moves are frustration, as before.
+      final List<Attempt> three = <Attempt>[
+        for (int i = 0; i < 3; i++) attempt(i, DateTime(2026, 11, 20, 10, i), 'incorrect'),
+      ];
+      expect(behaviourAlerts(child(sessions: <Session>[left], attempts: three)), isNotEmpty);
     });
 
     test('eight answers inside half a minute is rapid tapping', () {

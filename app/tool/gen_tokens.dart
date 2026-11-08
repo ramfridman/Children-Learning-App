@@ -91,6 +91,12 @@ String generateTokens(Map<String, Object?> t) {
     o.writeln('  static const Color ${_camel('teach_${e.key}')} = ${_color(c['value']! as String)};');
     o.writeln('  static const Color ${_camel('teach_${e.key}_lip')} = ${_color(c['lip']! as String)};');
   }
+  for (final MapEntry<String, Object?> e in _map(color['languages']).entries) {
+    if (e.key.startsWith(r'$')) continue;
+    final Map<String, Object?> c = _map(e.value);
+    o.writeln('  static const Color ${_camel('languages_${e.key}')} = ${_color(c['value']! as String)};');
+    o.writeln('  static const Color ${_camel('languages_${e.key}_lip')} = ${_color(c['lip']! as String)};');
+  }
   for (final MapEntry<String, Object?> e in _map(color['world']).entries) {
     if (e.key.startsWith(r'$')) continue;
     o.writeln(

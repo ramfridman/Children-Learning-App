@@ -60,6 +60,10 @@ class Engine {
     if (item == null) return;
     // Evidence never crosses courses, even when two packs use the same activity id.
     if (e.course != null && e.course != item.course) return;
+    if (e.secondary) {
+      _applySecondary(item, e);
+      return;
+    }
     final bool probe = item.purpose == Purpose.probe;
     final int day = dayKey(e.at);
     // A word of a speaking skill's practice set was met, whatever becomes of the answer (frame section 3.3.8).
@@ -114,6 +118,21 @@ class Engine {
     }
     _updateSearch(item, e, probe, expectedProbe);
     _updateGaps(item, e, probe, eff);
+  }
+
+  /// The second tag of one move (see [AttemptEvent.secondary]): evidence of its misconception, and it joins the tags of the run so that a gap can be
+  /// traced to it. It is not an answer: no estimate, no count, no run, no session record, no statistics of a way of explaining.
+  void _applySecondary(ItemMeta item, AttemptEvent e) {
+    if (item.delight || item.purpose == Purpose.probe || e.result != Result.incorrect || e.tag.isEmpty) {
+      return;
+    }
+    bool evidence = false;
+    for (final String id in item.skills.keys) {
+      if (!catalog.skills.containsKey(id) || _isPractice(id, item)) continue;
+      evidence = true;
+      state.skills[id]?.runTags.add(e.tag);
+    }
+    if (evidence) _updateTags(item, e);
   }
 
   // ---- writing (rule E-1) ----

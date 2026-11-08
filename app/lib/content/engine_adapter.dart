@@ -4,6 +4,7 @@ import '../engine/engine.dart';
 import '../engine/gates.dart';
 import '../engine/state.dart';
 import '../engine/types.dart';
+import '../play/response_code.dart';
 import 'models.dart';
 
 /// Turns the documents of a pack into what the learning engine reads.
@@ -116,6 +117,8 @@ AttemptEvent eventOf(Attempt row) => AttemptEvent(
   course: Course.ofPackId(row.packId) ?? '',
   // A heard word of a say-it activity (written only for a confident result); a spoken choice answer is a plain answer.
   viaSpeech: row.template == 'say_it' && row.input == 'voice',
+  // The second tag of one move (see [AttemptEvent.secondary]).
+  secondary: row.result == 'incorrect' && ResponseCode.isAlso(row.response),
 );
 
 /// What the engine concluded about one child, as plain text for the developer page.

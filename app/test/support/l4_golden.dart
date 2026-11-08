@@ -37,13 +37,14 @@ Future<void> waitFor(WidgetTester t, int ms) async {
 }
 
 /// The lesson of the activity [id] of [p] on the screen, on a board of [size]. [personal] is the parent's switch for personal turns;
-/// [flow] is an adaptive visit (the placement game).
+/// [flow] is an adaptive visit (the placement game); [band] is the parent's presentation band for the course (0 to 2).
 Future<AppRig> openLesson(
   WidgetTester t,
   LangPack p,
   String id,
   Size size, {
   bool personal = true,
+  int? band,
   ItemFlow? flow,
   List<String>? itemIds,
   int settle = 2500,
@@ -57,11 +58,11 @@ Future<AppRig> openLesson(
     extraOverrides: overrides,
   );
   await rig.seedFinishedSetup(name: 'נֹעָה', id: langKid);
-  if (!personal) {
+  if (!personal || band != null) {
     await rig.db.putSetting(
       languagesSettingKey,
       const FamilyLanguages()
-          .withSwitches(langKid, p.course, const LanguageSwitches(on: true, personal: false))!
+          .withSwitches(langKid, p.course, LanguageSwitches(on: true, personal: personal, band: band))!
           .encode(),
     );
   }

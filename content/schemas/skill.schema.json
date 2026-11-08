@@ -195,6 +195,9 @@
     "letters": {
       "type": "boolean"
     },
+    "stress": {
+      "type": "boolean"
+    },
     "writing": {
       "type": "string",
       "enum": [

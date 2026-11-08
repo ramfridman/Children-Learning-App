@@ -63,6 +63,22 @@ abstract final class He {
   /// LS09 say-it (needs-editor): the button of a child who says the word without the microphone ("I said it", the batches'
   /// `he-ins-said-it`), practice only.
   static const Str sayDone = Str('אָמַרְתִּי', nikud: true);
+  // L5-3 to L5-5: sound boxes, change one part, blend slide (screen-reader labels; the child's own lines are authored in the content).
+  static const Str boxBowlSemantics = Str('קערת עיגולים');
+  static const Str boxStampVowelSemantics = Str('צבע לתנועה');
+  static const Str boxStampHardSemantics = Str('צבע לעיצור קשה');
+  static const Str boxStampSoftSemantics = Str('צבע לעיצור רך');
+  static const Str boxSoundSemantics = Str('הצליל לחיפוש');
+  static const Str boxPlaceSemantics = Str('קופסה');
+  static const Str changeTargetSemantics = Str('מה צריך לעשות');
+  static const Str changeThatsItSemantics = Str('זהו');
+  static const Str wheelHubSemantics = Str('מה שיצא');
+  static const Str wheelLetterSemantics = Str('אות');
+  static const Str wheelSignSemantics = Str('ניקוד');
+  static const Str stripTileSemantics = Str('תנועה');
+  static const Str stripWindowSemantics = Str('החלון');
+  static const Str slideKnobSemantics = Str('החלקה');
+  static const Str mergeTileSemantics = Str('הצליל שמחליק');
   // L4: screen-reader labels of the Band A templates of the language courses (adult text, no nikud; all needs-editor).
   static const Str storyNextSemantics = Str('העמוד הבא בסיפור');
   static const Str storyEndSemantics = Str('סוף הסיפור');

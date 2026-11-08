@@ -526,8 +526,16 @@ class LessonController extends ChangeNotifier {
   /// The child made a move in a drag template (sort, share, build a pattern): [right] says whether it was the right one, [tag]
   /// the misconception it shows if not. A right move ends the activity (it is written once, as `correct`); every wrong
   /// move is written as `incorrect`, and after the third the help is at its top and only the right move is taken.
-  Future<Outcome> submitPlacement({required bool right, String tag = '', String response = ''}) =>
-      _answered(right: right, tag: tag, response: response);
+  ///
+  /// [alsoTag] is a second misconception that the same wrong move shows (a colouring that mixes up a vowel and a hard consonant, LS03): it is written as
+  /// one more `incorrect` attempt with the same response marked [ResponseCode.also]: the engine reads it as evidence of that misconception only, so
+  /// the one move is one error, and it does not escalate the help again.
+  Future<Outcome> submitPlacement({
+    required bool right,
+    String tag = '',
+    String response = '',
+    String alsoTag = '',
+  }) => _answered(right: right, tag: tag, response: response, alsoTag: alsoTag);
 
   // ---- LS09 say it (docs/languages/frame.md section 5.1) ----
 
@@ -587,6 +595,7 @@ class LessonController extends ChangeNotifier {
     required String tag,
     required String response,
     bool byVoice = false,
+    String alsoTag = '',
   }) async {
     final Activity a = current;
     actionNonce++;
@@ -613,6 +622,14 @@ class LessonController extends ChangeNotifier {
       return Outcome(correct: true, tag: tag);
     }
     await _write(result: 'incorrect', tag: tag, response: response, byVoice: byVoice);
+    if (alsoTag.isNotEmpty && alsoTag != tag) {
+      await _write(
+        result: 'incorrect',
+        tag: alsoTag,
+        response: ResponseCode.also(response),
+        byVoice: byVoice,
+      );
+    }
     attemptNo++;
     errors++;
     feedback = FeedbackKind.notYet;

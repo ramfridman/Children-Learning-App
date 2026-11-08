@@ -17,6 +17,7 @@ AttemptEvent ev(
   String tag = '',
   int attemptNo = 1,
   int id = 0,
+  bool secondary = false,
 }) => AttemptEvent(
   id: id,
   at: at.toUtc(),
@@ -25,6 +26,7 @@ AttemptEvent ev(
   hintLevel: hint,
   tag: tag,
   attemptNo: attemptNo,
+  secondary: secondary,
 );
 
 Session session(DateTime from, int minutes, {String reason = 'home'}) => Session(
@@ -219,6 +221,23 @@ void main() {
       expect(p.habits.usedHints, 1);
       expect(p.habits.keptTrying, 2);
       expect(p.habits.any, isTrue);
+    });
+
+    test('a two-tag colouring is one answer in the habits: its second row counts for nothing (SEC-L5-5)', () {
+      final DateTime at = DateTime(2026, 11, 15, 9);
+      final Progress p = build(
+        attempts: <AttemptEvent>[
+          ev(at, 'A.1', Result.incorrect, hint: 1, tag: 'M-A', attemptNo: 2),
+          ev(at, 'A.1', Result.incorrect, hint: 1, tag: 'M-B', attemptNo: 2, secondary: true),
+          ev(at.add(const Duration(minutes: 1)), 'A.2', Result.unsure, hint: 1),
+          ev(at.add(const Duration(minutes: 1)), 'A.2', Result.unsure, hint: 1, tag: 'M-B', secondary: true),
+          ev(at.add(const Duration(minutes: 2)), 'A.3', Result.correct, attemptNo: 2),
+          ev(at.add(const Duration(minutes: 2)), 'A.3', Result.correct, attemptNo: 2, secondary: true),
+        ],
+      );
+      expect(p.habits.usedHints, 2, reason: 'one hint on each of two moves, not four rows');
+      expect(p.habits.askedWhenUnsure, 1);
+      expect(p.habits.keptTrying, 1);
     });
   });
 

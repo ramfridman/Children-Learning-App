@@ -1,4 +1,5 @@
 import '../data/app_database.dart';
+import '../play/response_code.dart';
 import '../speech/alert_words.dart';
 import 'parent_rules.dart';
 import 'time_rules.dart';
@@ -167,7 +168,10 @@ List<AlertDraft> behaviourAlerts(ChildHistory child) {
   final List<AlertDraft> out = <AlertDraft>[];
   final Map<int, List<Attempt>> bySession = <int, List<Attempt>>{};
   for (final Attempt a in child.attempts) {
-    if (a.sessionId != null) (bySession[a.sessionId!] ??= <Attempt>[]).add(a);
+    // The second tag of one move is not a second answer (SEC-L5-3).
+    if (a.sessionId != null && !ResponseCode.isAlso(a.response)) {
+      (bySession[a.sessionId!] ??= <Attempt>[]).add(a);
+    }
   }
   final Map<int, Session> sessions = <int, Session>{for (final Session s in child.sessions) s.id: s};
   for (final MapEntry<int, List<Attempt>> e in bySession.entries) {
