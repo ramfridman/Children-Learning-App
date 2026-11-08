@@ -174,8 +174,12 @@ enable_refresh_token_rotation = true
 # Allows refresh tokens to be reused after expiry, up to the specified interval in seconds.
 # Requires enable_refresh_token_rotation = true.
 refresh_token_reuse_interval = 10
-# Allow/disallow new user signups to your project. Off: the owner creates the parent account himself.
-enable_signup = false
+# Allow/disallow new user signups to your project. On, as on the live project (owner, 2026-11-08), but only for an
+# approved address: the "Before User Created" hook below refuses any other. See docs/setup/open-signup.md before ever
+# running `supabase config push` against the live project: it would write every [auth] value in this file over the
+# dashboard's (sign-up, Confirm email, the email limits and the hook), including `email_sent` and `max_frequency` below,
+# which are the local stack's, not the live ones.
+enable_signup = true
 # Allow/disallow anonymous sign-ins to your project.
 enable_anonymous_sign_ins = false
 # Allow/disallow testing manual linking of accounts
@@ -219,13 +223,14 @@ web3 = 30
 # secret = ""
 
 [auth.email]
-# Allow/disallow new user signups via email to your project. Off (see above).
-enable_signup = false
+# Allow/disallow new user signups via email to your project. On (see above).
+enable_signup = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
-# If enabled, users need to confirm their email address before signing in.
-enable_confirmations = false
+# If enabled, users need to confirm their email address before signing in. Must stay on (SEC-SU-3): with it off a sign-up
+# with a password returns a session at once, with no mailbox.
+enable_confirmations = true
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
 secure_password_change = false
 # Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
@@ -278,10 +283,11 @@ max_frequency = "5s"
 # Force log out if the user has been inactive longer than the specified duration.
 # inactivity_timeout = "8h"
 
-# This hook runs before a new user is created and allows developers to reject the request based on the incoming user object.
-# [auth.hook.before_user_created]
-# enabled = true
-# uri = "pg-functions://postgres/auth/before-user-created-hook"
+# This hook runs before a new user is created and refuses any address that is not on the owner's list (SEC-SU-1). The
+# function and the list are in the migration 20261108120000_signup_allowlist.sql, in the schema `signup_gate`.
+[auth.hook.before_user_created]
+enabled = true
+uri = "pg-functions://postgres/signup_gate/before_user_created"
 
 # This hook runs before a token is issued and allows you to add additional claims based on the authentication method used.
 # [auth.hook.custom_access_token]

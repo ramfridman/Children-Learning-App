@@ -19,6 +19,7 @@ import {
 } from "./canonical.ts";
 import { GatewayError } from "./errors.ts";
 import { verifyDeviceSignature } from "./sig.ts";
+import type { AuthMethod, TokenClaims } from "./token.ts";
 
 export type Role = "parent" | "child";
 
@@ -33,7 +34,7 @@ export interface DeviceRecord {
 export interface AuthDeps {
   nowMs(): number;
   /** Verifies the bearer token against the project's signing keys. Null if it is not valid. */
-  verifyToken(bearer: string): Promise<{ userId: string; issuedAt: number | null } | null>;
+  verifyToken(bearer: string): Promise<TokenClaims | null>;
   getDevice(id: string): Promise<DeviceRecord | null>;
   isGuardian(userId: string, familyId: string): Promise<boolean>;
   /** Stores the nonce; returns false if this device has already used it. */
@@ -42,7 +43,7 @@ export interface AuthDeps {
 
 export interface Authenticated {
   userId: string;
-  issuedAt: number | null;
+  amr: AuthMethod[];
   device: DeviceRecord;
   body: Bytes;
 }
@@ -121,7 +122,7 @@ export async function authenticate(
   // 4. Role.
   if (!allowedRoles.includes(device.role)) throw new GatewayError("forbidden", "role_not_allowed");
 
-  return { userId: claims.userId, issuedAt: claims.issuedAt, device, body };
+  return { userId: claims.userId, amr: claims.amr, device, body };
 }
 
 /**

@@ -4,10 +4,10 @@ import { b64urlEncode } from "../_shared/b64.ts";
 import { GatewayError } from "../_shared/errors.ts";
 import { type FunctionSpec, hourStart } from "../_shared/handler.ts";
 import { ipKey } from "../_shared/keyed.ts";
+import { signedInByCodeRecently } from "../_shared/token.ts";
 
 /** The database caps a challenge at 5 minutes; we ask for 4 so clock drift cannot break the insert. */
 export const CHALLENGE_SECONDS = 240;
-export const FRESH_SIGN_IN_SECONDS = 600;
 export const ENROLL_LIMIT_PER_HOUR = 10;
 export const PAIR_LIMIT_PER_HOUR_PER_IP = 20;
 
@@ -28,8 +28,8 @@ export const spec: FunctionSpec = {
       const m = /^Bearer ([A-Za-z0-9._-]{10,4096})$/.exec(ctx.req.headers.get("authorization") ?? "");
       const claims = m ? await ctx.svc.verifyToken(m[1]) : null;
       if (!claims) throw new GatewayError("unauthorized", "bad_token");
-      // The first device may only be enrolled right after a sign-in, so a stolen old token is not enough.
-      if (claims.issuedAt === null || now - claims.issuedAt * 1000 > FRESH_SIGN_IN_SECONDS * 1000) {
+      // The first device may only be enrolled right after a sign-in by emailed code (see device-enroll).
+      if (!signedInByCodeRecently(claims.amr, now)) {
         throw new GatewayError("unauthorized", "stale_sign_in");
       }
       userId = claims.userId;

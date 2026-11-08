@@ -213,6 +213,79 @@ Deno.test("enrolment checks: self-signature, fresh sign-in, challenge owner, sha
   assert.equal((await callSelfSigned(enroll, chain.devicePrivateKey, "device-enroll", body)).status, 200);
 });
 
+// SEC-SU-2: enrolment needs a sign-in by emailed code in the last 10 minutes. A password sign-in (an address registered
+// first with someone else's password) and a refreshed session (a new `iat`, but the old time in `amr`) do not count.
+Deno.test("enrolment: a password sign-in is not a fresh sign-in, at the challenge or at the enrolment", async () => {
+  const { store, h, svc } = await setup();
+  const ask = (token: string) =>
+    h(enrollChallenge)(
+      plainPost("enroll-challenge", { purpose: "enroll" }, { authorization: `Bearer ${token}` }),
+    );
+  const password = tokenFor(USER_A, NOW / 1000 - 5, "password");
+  assert.equal((await ask(password)).status, 401, "the challenge is refused");
+  assert.equal(store.challenges.length, 0, "and none is stored");
+
+  const { chain, body } = await enrolBody(h, svc);
+  const enroll = h(deviceEnroll);
+  const viaPassword = await callSelfSigned(enroll, chain.devicePrivateKey, "device-enroll", body, {
+    token: password,
+  });
+  assert.equal(viaPassword.status, 401, "the enrolment is refused");
+  assert.equal(store.devices.size, 0);
+  // Nothing was consumed: the honest sign-in by code still enrols with the same challenge.
+  assert.equal((await callSelfSigned(enroll, chain.devicePrivateKey, "device-enroll", body)).status, 200);
+});
+
+Deno.test("enrolment: a code sign-in from hours ago is refused, however new the token is", async () => {
+  const { store, h, svc } = await setup();
+  const old = tokenFor(USER_A, NOW / 1000 - 7200, "otp");
+  const r = await h(enrollChallenge)(
+    plainPost("enroll-challenge", { purpose: "enroll" }, { authorization: `Bearer ${old}` }),
+  );
+  assert.equal(r.status, 401);
+  assert.deepEqual(await r.json(), { error: "unauthorized" });
+
+  const { chain, body } = await enrolBody(h, svc);
+  const refused = await callSelfSigned(h(deviceEnroll), chain.devicePrivateKey, "device-enroll", body, {
+    token: old,
+  });
+  assert.equal(refused.status, 401);
+  assert.equal(store.devices.size, 0);
+});
+
+Deno.test("enrolment: a token with no sign-in methods at all is refused, a fresh code a minute ago is accepted", async () => {
+  const { store, h, svc } = await setup();
+  const bare: Services = {
+    ...svc,
+    verifyToken: (b) => svc.verifyToken(b).then((c) => c && { ...c, amr: [] }),
+  };
+  const bareHandler = (s: FunctionSpec) => makeHandler(s, () => bare);
+  const r = await bareHandler(enrollChallenge)(
+    plainPost("enroll-challenge", { purpose: "enroll" }, { authorization: `Bearer ${tokenFor(USER_A)}` }),
+  );
+  assert.equal(r.status, 401, "no amr: no challenge");
+
+  const { chain, body } = await enrolBody(h, svc);
+  const noAmr = await callSelfSigned(
+    bareHandler(deviceEnroll),
+    chain.devicePrivateKey,
+    "device-enroll",
+    body,
+  );
+  assert.equal(noAmr.status, 401, "no amr: no enrolment");
+
+  const minuteAgo = tokenFor(USER_A, NOW / 1000 - 60, "otp");
+  const ok = await h(enrollChallenge)(
+    plainPost("enroll-challenge", { purpose: "enroll" }, { authorization: `Bearer ${minuteAgo}` }),
+  );
+  assert.equal(ok.status, 200);
+  const enrolled = await callSelfSigned(h(deviceEnroll), chain.devicePrivateKey, "device-enroll", body, {
+    token: minuteAgo,
+  });
+  assert.equal(enrolled.status, 200);
+  assert.equal(store.devices.size, 1);
+});
+
 Deno.test("dev allowlist: only when switched on, and only with a known secret", async () => {
   const off = await setup({ dev: false });
   const on = await setup({ dev: true });
