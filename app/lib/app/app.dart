@@ -27,6 +27,7 @@ import '../child/adventure_line.dart' show AdventureLine, adventureLine;
 import 'bottle_hold.dart';
 import 'lesson_launch.dart';
 import 'language_providers.dart';
+import 'look_providers.dart';
 import 'reward_providers.dart';
 import 'world_providers.dart';
 import '../child/companion_views.dart';
@@ -39,6 +40,7 @@ import '../child/profile_picker.dart';
 import '../data/app_database.dart';
 import '../data/profile_age.dart';
 import '../design/layout.dart';
+import '../design/stage_spec.dart';
 import '../design/theme.dart';
 import '../design/token_types.dart';
 import '../design/tokens.g.dart';
@@ -73,12 +75,33 @@ class NitznutzApp extends ConsumerWidget {
         child: PushScope(
           child: LayoutScope(
             band: active == null ? Band.b : Band.values[active.ageBand],
-            child: _OrientationLock(child: child!),
+            child: _StageHost(
+              profileId: active?.id,
+              child: _OrientationLock(child: child!),
+            ),
           ),
         ),
       ),
       home: const _Root(),
     );
+  }
+}
+
+/// Gives every screen below it the look of the child who is playing (B-29): the home map, the island and the lesson read their sizes
+/// from it. It is read when the child is chosen and again when a parent changes a setting (the parent's pages refresh it), never in the
+/// middle of an activity: a lesson takes its own look once, when it starts.
+class _StageHost extends ConsumerWidget {
+  const _StageHost({required this.profileId, required this.child});
+
+  final String? profileId;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final String? id = profileId;
+    final LookNow? look = id == null ? null : ref.watch(lookNowProvider(id)).value;
+    if (look == null) return child;
+    return StageScope(stage: StageSpec.of(look.stage), captionsShown: look.captionsShown, child: child);
   }
 }
 
@@ -339,7 +362,9 @@ class _HomeState extends ConsumerState<_Home> {
         sessions: await db.sessionsOf(id),
         finished: finishedLessons(content, attempts, rewards.map((Reward r) => r.awardKey)),
         now: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
-        band: widget.profile.ageBand,
+        // The school stage the parent confirmed (else the middle of the band) chooses the row of Today's Adventure (B-29 step 8).
+        band: widget.profile.stage.band,
+        stage: widget.profile.stage,
         // Each language the parent turned on, with its installed pack, is a land of its own (docs/languages/frame.md 3.7).
         languages: ref.read(languagesAvailableProvider(id)).isEmpty
             ? const <LanguageCourse>[]

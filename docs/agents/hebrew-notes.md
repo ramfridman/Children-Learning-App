@@ -995,3 +995,32 @@ and `band-a-content.md`, `tools/hebrew_voice_review.py`; then `tools/lang_pack.p
   (`COURSE_LINE_KEEP` is for course lines only; the app's table is untouched: `hebrew_voice_review.py` gives the same 15,823 rows and statuses).
 - **Left as written:** the carrier `הַקְשִׁיבוּ, וְגִרְרוּ לְפִיפּ:` (no object: the colon hands over to the English word, like `בּוֹאוּ נִמְצָא:`); `זו אמא` (the tool's ktiv is `אימא`; both are standard).
 - **The tag rows** (`tags.*.review` in the Hebrew `course.json`, 31 parent texts) still say `needs-editor`; they were read in the sweep of 14.1 and are not frame lines.
+
+## 15. B-29 steps 5 to 9: the age and school-stage texts (editor's pass, 2026-11-08)
+
+The design-director's drafts (`docs/design/b29-steps5-6.md` section 5) and the two the app-developer added (`ageBirthYearSemantics`, `ageStageSemantics`), in `app/lib/strings/he.dart` (commit `b27bb4b8`). All are parent-area, adult, screen-only texts (no nikud, not voiced) except `idleOffer`, which a child sees and, later, hears. The placeholders are unchanged (`stage`, `suggested`, `current`, `next`, `range`, `year`, `child`). Every row is still `needs-editor` (the `Str.review` rule).
+
+**Rules applied.** (1) The parents are addressed in the plural (`בדקו`, `אפשר לבחור`), and the infinitive on buttons. (2) The child is "הילד" as a noun, as in the rest of the parent area, but **no verb or pronoun is built on it** (the owner asked for neutral wording): `אם הילד נשאר שנה` and `מהפעם הבאה שהילד ישחק` became `אם נשארים שנה` and `בפעם הבאה שמשחקים`; `לילד בן 3` became `בגיל הצעיר הזה`; `מה שהוא יודע` became `מה שכבר נלמד`. `{child} עולה` stays: unpointed, the verb is the same for a boy and a girl. (3) Nitzi is not named in the parent texts (the child's friend may be another character): `ניצי תמיד מקריאה` became `השאלה תמיד מוקראת בקול`. (4) The stage names are the everyday Israeli terms, written one way everywhere: `גן טרום־טרום חובה`, `גן טרום חובה`, `גן חובה`, `כיתה א׳`, `כיתה ב׳`, `כיתה ג׳ ומעלה` (maqaf in `טרום־טרום`, geresh U+05F3). The "to" form drops `ומעלה` (`לכיתה ג׳`: a child moving up from grade 2 is moving to grade 3); the "in" form keeps it (`בכיתה ג׳ ומעלה`).
+
+| Key | Old | New |
+|---|---|---|
+| `ageBirthHelp` | נשמר בחשבון המשפחה כדי שמכשיר חדש יכיר אותו, ולא נמסר לאף אחד. בעזרתו המסכים מתאימים לגיל. (`אותו` and `בעזרתו` had no clear referent) | המידע נשמר בחשבון המשפחה, כדי שגם מכשיר חדש יתאים את המסכים לגיל. הוא לא נמסר לאף אחד. |
+| `ageBirthNone` | לא הוזנו (a form word; the parent chose chips) | לא נבחרו |
+| `ageStageHelp` | קובע מאיפה מתחילים בכל אי. משם הילד מתקדם לפי מה שהוא יודע. (no subject; `הוא`) | המשחק מתחיל בכל אי לפי השלב הזה, ומשם ממשיך לפי מה שכבר נלמד. |
+| `ageStageSuggested` | לפי שנת הלידה הצענו {stage}. אפשר לשנות, למשל אם הילד נשאר שנה נוספת בגן חובה. (`הצענו גן חובה` reads as offering a place) | לפי שנת הלידה, השלב המתאים הוא {stage}. אפשר לשנות, למשל אם נשארים שנה נוספת בגן חובה. |
+| `ageStageDiffers` | לפי שנת הלידה: {suggested}. כרגע: {current}. (`כרגע` is vague) | לפי שנת הלידה: {suggested}. השלב שנבחר: {current}. |
+| `ageChangeNote` | השינוי יחול מהפעם הבאה שהילד ישחק. … | השינוי יתחיל בפעם הבאה שמשחקים. השיעורים שכבר נלמדו וההתקדמות נשארים. |
+| `septHelp` | … השינוי יחול מהפעם הבאה שהילד ישחק. | … השינוי יתחיל בפעם הבאה שמשחקים. |
+| `septKeep` | להשאיר {current} (`להשאיר בגן חובה` can sound like holding a child back) | להישאר {current} (`להישאר בגן חובה`) |
+| `lookNow` | עכשיו: מראה של {range} (`מראה של גילאי 3 עד 4`) | עכשיו: מראה ל{range} (`מראה לגילאי 3 עד 4`; `range` is `He.langBandA/B/C`, which start with `גילאי`) |
+| `lookTablet` | לילד בן 3 מתאים יותר טאבלט: המסך גדול יותר והלחיצות קלות יותר. (`בן`, `יותר` twice, `קלות`) | בגיל הצעיר הזה נוח יותר עם טאבלט: המסך גדול יותר וקל יותר ללחוץ. אפשר גם בטלפון. (the last sentence keeps it calm, never a warning) |
+| `captionsHelp` | ניצי תמיד מקריאה את השאלה. מספרים ושם הילד מופיעים תמיד. ההגדרה הזאת נשמרת רק במכשיר הזה. | השאלה תמיד מוקראת בקול. גם כשהכתוביות מוסתרות, מספרים ושם הילד מופיעים על המסך. ההגדרה הזאת נשמרת רק במכשיר הזה. |
+| `idleOffer` | רוצים רמז, או לחשוב עוד קצת? (unpointed; a child sees it) | `רוֹצִים רֶמֶז, אוֹ לַחְשֹׁב עוֹד קְצָת?` with `nikud: true`. Voice text (for the voice director, when it is voiced): `רוצים רמז, או לחשוב עוד קצת?` (7 words, plural, a question, no variable). |
+
+**Kept as drafted:** `ageBirthTitle`, `ageBirthOptional`, `ageYearLabel`, `ageMonthLabel`, the twelve `months`, `ageBirthClear`, `ageBirthBoth`, `ageStageTitle`, the three `stageNames*` lists, `ageStageNeeded`, `ageStageYounger`, `agePageTitle`, `ageCardTitle`, `ageStageRow`, `ageChange`, `screensTitle`, `lookTitle`, `lookHelp`, `lookAuto`, `captionsTitle`, `captionsAuto`, `captionsOn`, `captionsOff`, `captionsNowOn`, `captionsNowOff`, `septTitle`, `septQuestion`, `septYes`, `septOther`, `addAgeTitle`, `addAgeBody`, `addAgeYes`, `addAgeLater`, `areaChildSettings`, `ageBirthYearSemantics`, `ageStageSemantics`.
+
+**For the owner / the app-developer.**
+1. `idleOffer`: `רֶמֶז` (the spec's word) or `עֶזְרָה` for a 3-year-old (`רוֹצִים עֶזְרָה, אוֹ לַחְשֹׁב עוֹד קְצָת?`)? I kept the spec's word.
+2. `septYes` gets `{next}` as the plain stage name (`כן, כיתה ג׳ ומעלה` from grade 2) while the question above says `לכיתה ג׳`. If the code passes `He.stageNamesTo[...]` instead, the button reads `כן, לכיתה ג׳`, which matches the question. Not blocking.
+3. `ageBirthOptional` `(לא חובה)` sits in a form with `גן חובה`; understandable, kept (`(רשות)` is the other choice).
+4. `areaChildSettings` is just `הגדרות` on each child row; a screen reader should add the child's name (semantic label, `ההגדרות של {child}`).

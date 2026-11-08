@@ -158,6 +158,8 @@ class LessonController extends ChangeNotifier {
     this.route,
     this.routeOfSkill,
     this.echoOnly,
+    this.captionsShown,
+    this.fastHints = false,
     Activity Function(Activity)? personalise,
     Clock clock = const SystemClock(),
   }) : _personalise = personalise ?? _ownNameWithoutAName,
@@ -172,6 +174,14 @@ class LessonController extends ChangeNotifier {
        _clock = clock {
     _begin();
   }
+
+  /// Whether the Hebrew words of the question are drawn (the captions setting of B-29), which also decides whether the tutor's live line has a
+  /// caption. Null: as before the setting, a child in Band A gets none.
+  final bool? captionsShown;
+
+  /// The youngest look's pace of help (B-29): the first mistake already shows the second picture, and the worked example comes after two
+  /// tries, as it does on a two-choice item. The other looks keep the author's ladder.
+  final bool fastHints;
 
   /// An adaptive visit: the next activity is chosen by this after each one (see [ItemFlow]); null for every ordinary lesson.
   final ItemFlow? flow;
@@ -394,8 +404,9 @@ class LessonController extends ChangeNotifier {
           liveLine = line;
           liveNonce++;
           voice = null;
-          // A child in Band A gets no caption for a live line (PLAN); the older ones read it.
-          bubble = tutorContext!.band == 'A' ? '' : (line.caption ?? '');
+          // A child who does not read the captions (the setting, by school stage unless the parent chose) gets no caption for a live line;
+          // without the setting a child in Band A is taken not to read (PLAN).
+          bubble = (captionsShown ?? tutorContext!.band != 'A') ? (line.caption ?? '') : '';
         }
         notifyListeners();
       }),
@@ -715,7 +726,7 @@ class LessonController extends ChangeNotifier {
     if (_recent.length > 3) _recent.removeAt(0);
     final bool first = errors == 1 || a.hints.isEmpty;
     // A child who has two choices has one retry: the first mistake already shows the second kind of help (B-40, A6).
-    final bool twoChoices = a.optionCount == 2;
+    final bool twoChoices = a.optionCount == 2 || fastHints;
     final int attempts = twoChoices ? math.min(2, a.maxAttempts) : a.maxAttempts;
     final String mistake = tag.isEmpty ? 'default' : tag;
     // The tutor speaks for an unexpected first mistake (the authored line would be the generic one) and for the second

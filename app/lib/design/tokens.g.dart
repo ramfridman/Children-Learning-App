@@ -218,6 +218,60 @@ abstract final class TokenTouch {
   static const double bottomNoHotspot = 24.0;
 }
 
+/// How a screen looks for each presentation stage P1 to P4 (B-29, docs/design/b29-steps5-6.md section 6.2), in stage order.
+abstract final class TokenStage {
+  static const List<StageToken> all = <StageToken>[
+    StageToken(
+      maxChoices: 3,
+      tilePhone: 96.0, tileTablet: 112.0,
+      gapPhone: 32.0, gapTablet: 32.0,
+      hitSlopPhone: 16.0, hitSlopTablet: 16.0,
+      numeralPhone: 56.0, numeralTablet: 72.0,
+      captionPhone: 26.0, captionPhoneSE: 24.0, captionTablet: 32.0, captionFloorDrop: 2.0,
+      speakerPhone: 64.0, speakerTablet: 72.0,
+      idleSeconds: <int>[8, 15, 30, 120],
+      transitionMs: 450, overshoot: 1.12, tier1Ms: 800, tier2Ms: 3000, tier2SkipAfterMs: 1500, focal: 1,
+      signPhone: <double>[18.0, 15.0], signTablet: <double>[18.0, 15.0], plusPebble: 64.0,
+    ),
+    StageToken(
+      maxChoices: 3,
+      tilePhone: 96.0, tileTablet: 112.0,
+      gapPhone: 32.0, gapTablet: 32.0,
+      hitSlopPhone: 16.0, hitSlopTablet: 16.0,
+      numeralPhone: 56.0, numeralTablet: 72.0,
+      captionPhone: 26.0, captionPhoneSE: 24.0, captionTablet: 32.0, captionFloorDrop: 2.0,
+      speakerPhone: 64.0, speakerTablet: 72.0,
+      idleSeconds: <int>[8, 15, 30, 120],
+      transitionMs: 450, overshoot: 1.12, tier1Ms: 800, tier2Ms: 3000, tier2SkipAfterMs: 1500, focal: 1,
+      signPhone: <double>[18.0, 15.0], signTablet: <double>[18.0, 15.0], plusPebble: 64.0,
+    ),
+    StageToken(
+      maxChoices: 4,
+      tilePhone: 88.0, tileTablet: 104.0,
+      gapPhone: 24.0, gapTablet: 24.0,
+      hitSlopPhone: 12.0, hitSlopTablet: 12.0,
+      numeralPhone: 48.0, numeralTablet: 64.0,
+      captionPhone: 24.0, captionPhoneSE: 22.0, captionTablet: 30.0, captionFloorDrop: 2.0,
+      speakerPhone: 64.0, speakerTablet: 72.0,
+      idleSeconds: <int>[12, 25, 45, 120],
+      transitionMs: 350, overshoot: 1.08, tier1Ms: 700, tier2Ms: 2500, tier2SkipAfterMs: 1500, focal: 1,
+      signPhone: <double>[20.0, 17.0], signTablet: <double>[22.0, 19.0], plusPebble: 56.0,
+    ),
+    StageToken(
+      maxChoices: 5,
+      tilePhone: 80.0, tileTablet: 96.0,
+      gapPhone: 20.0, gapTablet: 16.0,
+      hitSlopPhone: 10.0, hitSlopTablet: 8.0,
+      numeralPhone: 40.0, numeralTablet: 56.0,
+      captionPhone: 22.0, captionPhoneSE: 20.0, captionTablet: 28.0, captionFloorDrop: 2.0,
+      speakerPhone: 64.0, speakerTablet: 72.0,
+      idleSeconds: <int>[20, 40, 60, 120],
+      transitionMs: 280, overshoot: 1.04, tier1Ms: 500, tier2Ms: 2000, tier2SkipAfterMs: 0, focal: 2,
+      signPhone: <double>[20.0, 17.0], signTablet: <double>[22.0, 19.0], plusPebble: 56.0,
+    ),
+  ];
+}
+
 /// Reference devices of the boards and the layout numbers per size class.
 abstract final class TokenLayout {
   static const DeviceToken devicePhone = DeviceToken(width: 852.0, height: 393.0, safeStart: 59.0, safeEnd: 59.0, safeTop: 0.0, safeBottom: 21.0);

@@ -34,9 +34,18 @@ class AuthClient {
   final NetGate _gate;
   final Clock _clock;
 
-  /// Sends a 6-digit sign-in code to an existing user. Never creates a new user.
+  /// Sends a 6-digit code by email. A new address becomes a new parent account (open sign-up, owner,
+  /// 2026-11-08); the server's "Allow new users to sign up" switch decides, and every other call still
+  /// needs an enrolled device. The same code flow signs a returning parent in. An address the owner did
+  /// not invite is refused by the sign-up hook with 403 (or 422); that is `not_invited`, and only the
+  /// status is read, never the server's text.
   Future<void> sendEmailCode(String email) async {
-    await _post('/auth/v1/otp', <String, Object?>{'email': email, 'create_user': false});
+    try {
+      await _post('/auth/v1/otp', <String, Object?>{'email': email, 'create_user': true});
+    } on GatewayException catch (e) {
+      if (e.status == 403 || e.status == 422) throw GatewayException('not_invited', status: e.status);
+      rethrow;
+    }
   }
 
   Future<AuthSession> verifyEmailCode(String email, String code) async {

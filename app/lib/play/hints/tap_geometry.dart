@@ -419,12 +419,12 @@ class TapGeometry {
   /// The width of one answer tile of [a] on [spec]'s board: a square 96 points for a numeral, a letter, a sound or a picture; as
   /// wide as the row allows for a set of things (170 at most) and for words (220 at most).
   static double tileWidthOf(TapAnswerActivity a, ActivitySpec spec) {
-    final double room = spec.tilesWidth / a.options.length - 24;
+    final double room = spec.tilesWidth / a.options.length - 2 * spec.tileSlop;
     if (a.options.any((ChoiceOption o) => o.set != null)) return math.min(170, room);
     if (a.options.any((ChoiceOption o) => o.picture != null)) return math.min(260, room);
     if (a.options.any((ChoiceOption o) => o.text != null) && !a.letterFace) return math.min(220, room);
     // A size item's tiles are as large as its pictures need (see `size_scale.dart`).
-    return comparesSizes(a) ? tileSideOf(stageSizeOf(spec)) : 96;
+    return comparesSizes(a) ? tileSideOf(stageSizeOf(spec)) : spec.tileSize;
   }
 
   /// Whether an option of [a] is blocks on its tile (`answer.options[].picture`).
@@ -454,8 +454,8 @@ class TapGeometry {
       return Offset(r.center.dx, r.top + r.height * 0.18);
     }
     final int n = a.options.length;
-    // Each tile takes its width and a 12 point tap margin on both sides (see `AnswerTile`).
-    final double tileW = tileWidthOf(a, spec) + 24;
+    // Each tile takes its width and its tap margin on both sides (see `AnswerTile`): 12 points, or the look's.
+    final double tileW = tileWidthOf(a, spec) + 2 * spec.tileSlop;
     final double fromStart = (spec.tilesWidth - n * tileW) / 2 + (i + 0.5) * tileW;
     final double cx = dir == TextDirection.rtl
         ? spec.tilesLeft + spec.tilesWidth - fromStart

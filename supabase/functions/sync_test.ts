@@ -107,6 +107,7 @@ Deno.test("child-put: a parent saves a child with a nickname and every device of
     address_form: "f",
     age_band: 1,
     school_stage: null,
+    birth: null,
   });
   const theirs = await j(await call(h.pull, other, "sync-pull", { after: 0, limit: 10 }));
   assert.equal(theirs.children.length, 0, "another family sees nothing of it");
@@ -498,6 +499,8 @@ const PROFILE_VECTORS = JSON.parse(
   school_stages: string[];
   band_of_stage: Record<string, number>;
   refused_keys_of_child_put: string[];
+  birth_examples: Array<{ year: number; month: number }>;
+  birth_refused: unknown[];
 };
 
 Deno.test("child-put: the school stage is the six words of testvectors/profile-sync.json and each one has its band", () => {
@@ -562,7 +565,7 @@ Deno.test("child-put: a school stage that is not one of the six, in another type
   }
 });
 
-Deno.test("child-put: nothing about a birth, an age in months or a look can be sent (the month and year stay on the device)", async () => {
+Deno.test("child-put: no other key about a birth, an age in months or a look can be sent", async () => {
   const { h, parent, profile } = await setup();
   for (const key of PROFILE_VECTORS.refused_keys_of_child_put) {
     for (const value of [2020, 5, "2020-05", "2020-05-17", "A"]) {
@@ -572,5 +575,94 @@ Deno.test("child-put: nothing about a birth, an age in months or a look can be s
         `${key}=${value}`,
       );
     }
+  }
+});
+
+Deno.test("child-put: the birth month and year are saved, every device of the family gets them, another family does not", async () => {
+  const { h, parent, child, other, profile, j } = await setup();
+  const pull = async (who: typeof child) =>
+    (await j(await call(h.pull, who, "sync-pull", { after: 0, limit: 10 }))).children;
+  for (const birth of PROFILE_VECTORS.birth_examples) {
+    const r = await call(h.put, parent, "child-put", profile(KID, { birth }));
+    assert.equal(r.status, 200, JSON.stringify(birth));
+    assert.deepEqual((await pull(child))[0].birth, birth);
+  }
+  assert.deepEqual(await pull(other), [], "another family sees nothing of it");
+  await call(h.put, parent, "child-put", profile(KID2, { nickname: "גלעד", age_band: 0 }));
+  assert.equal(
+    (await pull(child)).find((c: { id: string }) => c.id === KID2).birth,
+    null,
+    "a child with none has null",
+  );
+});
+
+Deno.test("child-put: a save without a birth keeps the stored one, null clears it, a new one replaces it", async () => {
+  const { h, parent, child, profile, j } = await setup();
+  const birth = async () =>
+    (await j(await call(h.pull, child, "sync-pull", { after: 0, limit: 10 }))).children[0].birth;
+  await call(h.put, parent, "child-put", profile(KID, { birth: { year: 2021, month: 5 } }));
+  assert.equal((await call(h.put, parent, "child-put", profile(KID, { nickname: "נועה כהן" }))).status, 200);
+  assert.deepEqual(await birth(), { year: 2021, month: 5 }, "absent keeps (an older app cannot wipe it)");
+  await call(h.put, parent, "child-put", profile(KID, { birth: { year: 2020, month: 12 } }));
+  assert.deepEqual(await birth(), { year: 2020, month: 12 });
+  assert.equal((await call(h.put, parent, "child-put", profile(KID, { birth: null }))).status, 200);
+  assert.equal(await birth(), null, "null clears it");
+  assert.equal((await call(h.put, parent, "child-put", profile(KID, { age_band: 1 }))).status, 200);
+  assert.equal(await birth(), null, "and a save without one does not bring it back");
+});
+
+Deno.test("child-put: a birth that is not exactly a month 1 to 12 and a year 2010 to 2100 is refused", async () => {
+  const { h, parent, profile } = await setup();
+  for (const birth of PROFILE_VECTORS.birth_refused) {
+    assert.equal(
+      (await call(h.put, parent, "child-put", profile(KID, { birth }))).status,
+      400,
+      JSON.stringify(birth),
+    );
+  }
+});
+
+Deno.test("child-put: a deleted child's birth goes with the child and cannot be sent again", async () => {
+  const { h, parent, child, profile, j } = await setup();
+  await call(h.put, parent, "child-put", profile(KID, { birth: { year: 2021, month: 5 } }));
+  await call(h.del, parent, "child-delete", { child_id: KID });
+  const pulled = await j(await call(h.pull, child, "sync-pull", { after: 0, limit: 10 }));
+  assert.deepEqual(pulled.children, []);
+  assert.equal(
+    (await call(h.put, parent, "child-put", profile(KID, { birth: { year: 2021, month: 5 } }))).status,
+    400,
+  );
+});
+
+Deno.test("sync-pull: the birth is in the response of sync-pull and in no other function's response", async () => {
+  const { h, parent, child, profile, j } = await setup();
+  await call(h.put, parent, "child-put", profile(KID, { birth: { year: 2021, month: 5 } }));
+  const put = await j(
+    await call(h.put, parent, "child-put", profile(KID, { birth: { year: 2021, month: 5 } })),
+  );
+  assert.deepEqual(put, { ok: true }, "child-put answers with nothing about it");
+  const push = await j(await call(h.push, parent, "sync-push", { events: [] }));
+  assert.ok(!JSON.stringify(push).includes("2021"));
+  const pulled = await j(await call(h.pull, child, "sync-pull", { after: 0, limit: 10 }));
+  assert.deepEqual(pulled.children[0].birth, { year: 2021, month: 5 });
+});
+
+Deno.test("no log line of child-put, sync-pull or a refused birth holds the month or the year", async () => {
+  const { h, parent, child, profile } = await setup();
+  const lines: string[] = [];
+  const old = console.log;
+  console.log = (...a: unknown[]) => void lines.push(a.map(String).join(" "));
+  try {
+    await call(h.put, parent, "child-put", profile(KID, { birth: { year: 2013, month: 7 } }));
+    await call(h.pull, child, "sync-pull", { after: 0, limit: 10 });
+    await call(h.put, parent, "child-put", profile(KID, { birth: { year: 1999, month: 14 } }));
+    await call(h.put, parent, "child-put", profile(KID, { birth: "2013-07" }));
+  } finally {
+    console.log = old;
+  }
+  assert.ok(lines.length >= 4, "the calls did log");
+  // A refusal names the field (like `school_stage:enum`), never what was in it.
+  for (const l of lines) {
+    assert.ok(!/2013|1999|-07|"month"|"year"/.test(l), l);
   }
 });

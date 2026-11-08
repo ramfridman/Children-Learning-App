@@ -147,7 +147,7 @@ class Ls01SequenceSession extends Ls01Session {
       }
       done = true;
       notify();
-      later(TemplateSession.praisePause + Duration(milliseconds: 320 * n), controller.next);
+      later(praise + Duration(milliseconds: 320 * n), controller.next);
       return;
     }
     wobbling = true;

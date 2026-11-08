@@ -362,7 +362,9 @@ export class FakeStore implements Store {
     // As the table: a save without a school stage keeps the stored one only while its band is the saved band (SEC-B29-1).
     const kept = m.get(c.id)?.schoolStage ?? null;
     const keptBand = kept === null ? null : STAGE_BAND[kept];
-    m.set(c.id, { ...c, schoolStage: c.schoolStage ?? (keptBand === c.ageBand ? kept : null) });
+    // A birth that is not sent is kept; null clears it; a value replaces it.
+    const birth = c.birth === undefined ? (m.get(c.id)?.birth ?? null) : c.birth;
+    m.set(c.id, { ...c, schoolStage: c.schoolStage ?? (keptBand === c.ageBand ? kept : null), birth });
     this.children.set(familyId, m);
     return Promise.resolve("saved" as const);
   }
@@ -493,16 +495,21 @@ export class FakeStore implements Store {
   }
 }
 
-/** Fake token: "tok.<user uuid>.<issued-at seconds>". Anything else is invalid. */
-export const tokenFor = (userId: string, iat = NOW / 1000 - 5) => `tok.${userId}.${iat}`;
+/**
+ * Fake token: "tok.<user uuid>.<sign-in time in seconds>.<method>", which the fake verifier turns into the one-entry
+ * `amr` claim `[{method, timestamp}]`. By default the user signed in by emailed code (`otp`) five seconds ago.
+ * Anything that is not of this shape is invalid.
+ */
+export const tokenFor = (userId: string, signedInAt = NOW / 1000 - 5, method = "otp") =>
+  `tok.${userId}.${signedInAt}.${method}`;
 
 export function fakeServices(store: FakeStore, nowMs = () => NOW): Services {
   return {
     nowMs,
     store,
     verifyToken: (b) => {
-      const m = /^tok\.([0-9a-f-]{36})\.(\d+)$/.exec(b);
-      return Promise.resolve(m ? { userId: m[1], issuedAt: Number(m[2]) } : null);
+      const m = /^tok\.([0-9a-f-]{36})\.(\d+)\.([a-z_]+)$/.exec(b);
+      return Promise.resolve(m ? { userId: m[1], amr: [{ method: m[3], timestamp: Number(m[2]) }] } : null);
     },
     secrets: {
       pairingCodeKey: new Uint8Array(32).fill(7) as Bytes,

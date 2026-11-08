@@ -399,6 +399,9 @@ void main() {
         await tester.pump();
         await tester.enterText(find.byType(TextField), 'דנה');
         await tester.pump();
+        await tester.ensureVisible(find.byKey(const Key('stage-gan5')));
+        await tester.tap(find.byKey(const Key('stage-gan5')));
+        await tester.pump();
         await tester.tap(find.text(He.setupSave.text));
         await tester.pumpAndSettle();
         final List<Profile> kids = await rig.db.allProfiles();

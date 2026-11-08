@@ -95,6 +95,14 @@ void main() {
 
       await tester.enterText(find.byType(TextField), 'נועה');
       await tester.pump();
+      expect(
+        tester.widget<ParentButton>(find.byKey(const Key('form-save'))).onPressed,
+        isNull,
+        reason: 'a name is not enough: the school stage is needed too (B-29)',
+      );
+      await tester.ensureVisible(find.byKey(const Key('stage-gan5')));
+      await tester.tap(find.byKey(const Key('stage-gan5')));
+      await tester.pump();
       await tester.tap(find.text(He.setupSave.text));
       await tester.pumpAndSettle();
 
@@ -102,7 +110,91 @@ void main() {
       expect(find.text('נועה'), findsOneWidget);
       final List<Profile> saved = await rig.db.allProfiles();
       expect(saved.single.name, 'נועה');
-      expect(saved.single.ageBand, 1, reason: 'age 5 is band B');
+      expect(saved.single.ageBand, 1, reason: 'gan hova is band B');
+      expect(saved.single.schoolStage, 'gan5');
+    });
+
+    testWidgets('a new parent is told that the first sign-in creates the account', (
+      WidgetTester tester,
+    ) async {
+      final AppRig rig = AppRig(butterfliesFirst: true);
+      await rig.pump(tester);
+
+      expect(find.text(He.setupNewAccountHint.text), findsNothing, reason: 'the welcome page stays short');
+      await tester.tap(find.text(He.setupStart.text));
+      await tester.pumpAndSettle();
+      expect(find.text(He.setupNewAccountHint.text), findsOneWidget);
+    });
+
+    testWidgets('too many code requests say to wait, not that the connection is bad', (
+      WidgetTester tester,
+    ) async {
+      final AppRig rig = AppRig(butterfliesFirst: true);
+      rig.setup.sendFails = 'rate_limited';
+      await rig.pump(tester);
+
+      await tester.tap(find.text(He.setupStart.text));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'parent@example.com');
+      await tester.tap(find.text(He.setupSendCode.text));
+      await tester.pumpAndSettle();
+
+      expect(find.text(He.setupRateLimited.text), findsOneWidget);
+      expect(find.text(He.setupCodeSent.text), findsNothing);
+    });
+
+    testWidgets('an address that is not invited gets its own message, not the connection one', (
+      WidgetTester tester,
+    ) async {
+      final AppRig rig = AppRig(butterfliesFirst: true);
+      rig.setup.sendFails = 'not_invited';
+      await rig.pump(tester);
+
+      await tester.tap(find.text(He.setupStart.text));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'parent@example.com');
+      await tester.tap(find.text(He.setupSendCode.text));
+      await tester.pumpAndSettle();
+
+      expect(find.text(He.setupNotInvited.text), findsOneWidget);
+      expect(find.text(He.setupError.text), findsNothing);
+      expect(find.text(He.setupCodeSent.text), findsNothing);
+    });
+
+    testWidgets('a setup resumed after the sign-in went stale returns to the email sign-in', (
+      WidgetTester tester,
+    ) async {
+      final AppRig rig = AppRig(butterfliesFirst: true);
+      rig.setup.signedIn = true;
+      rig.setup.enrolFails = 'unauthorized';
+      await rig.pump(tester);
+      expect(
+        find.text(He.setupEnrolBody.text),
+        findsOneWidget,
+        reason: 'a session exists: resume at enrolment',
+      );
+
+      await tester.tap(find.text(He.setupEnrolButton.text).last);
+      await tester.pumpAndSettle();
+
+      expect(rig.setup.calls, containsAllInOrder(<String>['enrol', 'sign out']));
+      expect(rig.setup.signedIn, isFalse, reason: 'the old session is dropped');
+      expect(find.text(He.setupSendCode.text), findsOneWidget, reason: 'back at the email sign-in');
+      expect(find.text(He.setupSignInAgain.text), findsOneWidget);
+      expect(find.text(He.setupError.text), findsNothing, reason: 'not the connection message');
+      expect(find.text(He.setupVerify.text), findsNothing, reason: 'the code field starts empty again');
+
+      // And a fresh code works from there.
+      rig.setup.enrolFails = null;
+      await tester.enterText(find.byType(TextField), 'parent@example.com');
+      await tester.tap(find.text(He.setupSendCode.text));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField).last, testEmailCode);
+      await tester.tap(find.text(He.setupVerify.text));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(He.setupEnrolButton.text).last);
+      await tester.pumpAndSettle();
+      expect(find.byType(PinSetupScreen), findsOneWidget);
     });
 
     testWidgets('an interrupted setup resumes at the PIN, not at the start', (WidgetTester tester) async {

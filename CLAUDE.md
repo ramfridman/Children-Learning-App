@@ -31,7 +31,7 @@ A Hebrew learning app (the interface is Hebrew; the Languages category also teac
 ## Child safety
 - No child audio is stored or sent. The mic opens only on tap, and only when a parent enabled voice.
 - No personal data to any vendor, with one exception the owner chose on 2026-10-25: a child's first name (parent-reviewed spelling) may be sent to ElevenLabs inside a line to be voiced. The model (Anthropic) only ever sees placeholders (`{child}`, `{companion}`). Never a surname, audio, transcript or device id to any vendor.
-- A child's month and year of birth (never the day) stay on the device: never synced, logged, sent to a vendor or exported. Only the age band and the school stage enum go to the server, and neither changes on a birthday (owner, 2026-11-06, B-29).
+- A child's month and year of birth (never the day) are kept on the device and synced to the family's own server so a new phone gets them back (owner, 2026-11-08, replacing the device-only rule of 2026-11-06). They are never logged, sent to a vendor (the tutor sees only the band) or exported, except inside the encrypted weekly backup in the project's private bucket, which keeps a cleared value up to 4 weeks; the age in months is computed on the device.
 - No ads, purchases, timers, streaks or guilt in the child's space.
 - Unclear speech is never "wrong". The AI tutor never asks personal questions, and says it is a computer helper when asked. Scripted lesson items may ask a child's name, age, likes and family, handled on the device only; never an address (owner, 2026-11-03).
 

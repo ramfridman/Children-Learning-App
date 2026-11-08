@@ -1,5 +1,6 @@
 import '../content/models.dart';
 import '../data/app_database.dart';
+import '../engine/age.dart' show SchoolStage;
 import '../engine/course.dart';
 import '../engine/engine.dart';
 import '../rewards/award.dart';
@@ -49,9 +50,11 @@ TodaysAdventure todaysAdventureFor({
   required Map<String, int> finished,
   required DateTime now,
   required int band,
+  SchoolStage? stage,
   Iterable<LanguageCourse> languages = const <LanguageCourse>[],
   Set<String> enabledCourses = const <String>{},
 }) => todaysAdventure(
+  params: stage == null ? null : paramsForStage(stage),
   adventureInput(
     content: content,
     engine: engine,

@@ -10,6 +10,7 @@ abstract interface class SetupBackend {
   Future<void> sendCode(String email);
   Future<void> verifyCode(String email, String code);
   Future<bool> hasSession();
+  Future<void> signOut();
   Future<bool> isEnrolled();
   Future<void> enrol();
 }
@@ -30,6 +31,9 @@ class RealSetupBackend implements SetupBackend {
 
   @override
   Future<bool> hasSession() async => (await _ref.read(sessionManagerProvider).accessToken()) != null;
+
+  @override
+  Future<void> signOut() => _ref.read(sessionManagerProvider).signOut();
 
   @override
   Future<bool> isEnrolled() async => (await _ref.read(enrolmentProvider).enrolledDeviceId()) != null;

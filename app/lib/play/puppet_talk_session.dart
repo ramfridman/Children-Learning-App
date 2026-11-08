@@ -77,7 +77,7 @@ class PuppetTalkSession extends ChoiceSession {
   void _reply(Spoken? line) {
     notify();
     controller.completePractice(line: line);
-    later(TemplateSession.praisePause, controller.next);
+    later(praise, controller.next);
   }
 
   // ---- hints (bubble) ----

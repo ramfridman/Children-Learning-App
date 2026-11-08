@@ -63,8 +63,16 @@ Future<void> _openForm(WidgetTester tester) async {
   expect(find.byType(ChildFormScreen), findsOneWidget);
 }
 
-bool _canSave(WidgetTester tester) =>
-    tester.widget<ParentButton>(find.widgetWithText(ParentButton, He.setupSave.text)).onPressed != null;
+/// Whether Save works for the name as typed: the school stage (B-29) is chosen first, so that only the name decides.
+Future<bool> _canSave(WidgetTester tester) async {
+  final Finder stage = find.byKey(const Key('stage-gan5'));
+  if (stage.evaluate().isNotEmpty) {
+    await tester.ensureVisible(stage);
+    await tester.tap(stage);
+    await tester.pump();
+  }
+  return tester.widget<ParentButton>(find.widgetWithText(ParentButton, He.setupSave.text)).onPressed != null;
+}
 
 TextEditingValue _typed(String text) => TextEditingValue(
   text: text,
@@ -195,14 +203,14 @@ void main() {
       await _openForm(tester);
       expect(find.text('0/24'), findsOneWidget, reason: 'the counter counts UTF-16 units');
       expect(find.text(He.setupNameTooLong.text), findsNothing);
-      expect(_canSave(tester), isFalse, reason: 'an empty name cannot be saved');
+      expect(await _canSave(tester), isFalse, reason: 'an empty name cannot be saved');
 
       await tester.enterText(find.byType(TextField), '${'a' * 24}b');
       await tester.pump();
       expect(tester.widget<TextField>(find.byType(TextField)).controller!.text, 'a' * 24);
       expect(find.text('24/24'), findsOneWidget);
       expect(find.text(He.setupNameTooLong.text), findsOneWidget);
-      expect(_canSave(tester), isTrue);
+      expect(await _canSave(tester), isTrue);
 
       await tester.tap(find.text(He.setupSave.text));
       await tester.pumpAndSettle();
@@ -218,7 +226,7 @@ void main() {
       await tester.pump();
       expect(find.text('25/24'), findsOneWidget);
       expect(find.text(He.setupNameTooLong.text), findsOneWidget);
-      expect(_canSave(tester), isFalse);
+      expect(await _canSave(tester), isFalse);
     });
 
     testWidgets('an emoji that would end at unit 25 is not let in by halves', (WidgetTester tester) async {
@@ -228,7 +236,7 @@ void main() {
       await tester.pump();
       expect(tester.widget<TextField>(find.byType(TextField)).controller!.text, 'a' * 23);
       expect(find.text('23/24'), findsOneWidget);
-      expect(_canSave(tester), isTrue);
+      expect(await _canSave(tester), isTrue);
     });
 
     testWidgets('an angle bracket or an invisible mark says why, and the name cannot be saved', (
@@ -241,12 +249,12 @@ void main() {
         await tester.pump();
         expect(find.text(He.setupNameBadChars.text), findsOneWidget, reason: bad);
         expect(find.text(He.setupNameTooLong.text), findsNothing, reason: bad);
-        expect(_canSave(tester), isFalse, reason: bad);
+        expect(await _canSave(tester), isFalse, reason: bad);
       }
       await tester.enterText(find.byType(TextField), 'נועה');
       await tester.pump();
       expect(find.text(He.setupNameBadChars.text), findsNothing);
-      expect(_canSave(tester), isTrue);
+      expect(await _canSave(tester), isTrue);
     });
 
     testWidgets('spaces alone cannot be saved, and nothing is said about them', (WidgetTester tester) async {
@@ -254,7 +262,7 @@ void main() {
       await _openForm(tester);
       await tester.enterText(find.byType(TextField), '   ');
       await tester.pump();
-      expect(_canSave(tester), isFalse);
+      expect(await _canSave(tester), isFalse);
       expect(find.text(He.setupNameBadChars.text), findsNothing);
       expect(find.text(He.setupNameTooLong.text), findsNothing);
     });

@@ -9,6 +9,8 @@
 *.jks
 *.keystore
 key.properties
+# SEC-RS-3: the Gradle release-signing file (docs/setup/ci-m9.md step 7) names the keystore and its passwords
+*signing*.properties
 service-account*.json
 supabase/.env
 supabase/functions/.env

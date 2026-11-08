@@ -257,7 +257,7 @@ class CountTapSession extends TemplateSession {
     if (o.correct) {
       chosenState = AnswerState.correct;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
     } else {
       chosenState = AnswerState.notYet;
       notify();
@@ -413,8 +413,7 @@ class CountTapSession extends TemplateSession {
             // The row follows the course's reading direction, as in every language item (F1).
             child: Directionality(
               textDirection: courseRowDirection(activity.course) ?? Directionality.of(c),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: TileRow(
                 children: <Widget>[
                   for (final ChoiceOption o in activity.options)
                     Opacity(

@@ -1,3 +1,4 @@
+import '../engine/age.dart' show SchoolStage;
 import 'adventure_land.dart';
 import 'lesson_path.dart';
 
@@ -35,6 +36,10 @@ const List<AdventureParams> _paramsByBand = <AdventureParams>[
 ];
 
 AdventureParams paramsFor({required int band}) => _paramsByBand[band.clamp(0, _paramsByBand.length - 1)];
+
+/// The row the school stage chooses (B-29 step 8): the stage the parent confirmed, or the middle of the band. The stage sets the row through
+/// its band and nothing else: no age, no birth month and no look reaches the rule.
+AdventureParams paramsForStage(SchoolStage stage) => paramsFor(band: stage.band);
 
 /// A lesson on a land's path with its level: 0, 1 or 2 for the bands A, B and C. A [locked] lesson has a skill that is not unlocked
 /// yet (the path gate, `path_gate.dart`): the path skips it and comes back to it.

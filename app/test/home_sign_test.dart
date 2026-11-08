@@ -201,14 +201,20 @@ void main() {
     });
 
     testWidgets(
-      'Alexandra is whole on the phone and the SE; the double name is shortened to its first part',
+      // The sign is Heebo 500 since B-29 (D4: pointed text below 24 points is at most 500), a little narrower than the 700 it was: the double name
+      // that had to be shortened to its first part now fits whole on the phone (it still does not on the SE, which has the least room).
+      'Alexandra is whole on the phone and the SE; the double name is whole on the phone and shortened to its first part on the SE',
       (WidgetTester tester) async {
         for (final BoardBox b in boards.take(2)) {
           await pumpHome(tester, b.size, island: homeIslandName('אלכסנדרה'));
           expect(tester.widget<Text>(signText()).data, homeIslandName('אלכסנדרה').sign, reason: b.name);
           final HomeIslandName double = homeIslandName('אביגיל-אלכסנדרה');
           await pumpHome(tester, b.size, island: double);
-          expect(tester.widget<Text>(signText()).data, endsWith('אביגיל…$pdi'), reason: b.name);
+          expect(
+            tester.widget<Text>(signText()).data,
+            b.size == boards.first.size ? double.sign : endsWith('אביגיל…$pdi'),
+            reason: b.name,
+          );
         }
       },
     );

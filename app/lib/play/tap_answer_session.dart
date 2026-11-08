@@ -183,7 +183,7 @@ class TapAnswerSession extends TemplateSession {
       _hint.clear();
       chosenState = o.settled ? AnswerState.selected : AnswerState.correct;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
     } else {
       chosenState = AnswerState.notYet;
       notify();
@@ -241,7 +241,7 @@ class TapAnswerSession extends TemplateSession {
       _hint.clear();
       chosenState = o.settled ? AnswerState.selected : AnswerState.correct;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
     } else {
       chosenState = AnswerState.notYet;
       notify();
@@ -266,22 +266,27 @@ class TapAnswerSession extends TemplateSession {
     // Blocks have their own two layouts (docs/design/c1-blocks.md section 5), which give the cubes the board's height.
     if (BlockLayout.hasBlocks(activity)) return BlockLayout.of(activity, base, scaler: bubbleScaler);
     if (!_hasSpeakers && !numberMode) return _sizeLayout(_longRow ? withWideStage(base) : base);
-    const double margin = 12;
+    final double margin = base.tileSlop;
     final double need = numberMode
         ? KeypadLayout.of(base).roomHeight
-        : 96 + margin + (_hasSpeakers ? SpeakerMark.room + margin : 0);
+        : base.tileSize + margin + (_hasSpeakers ? SpeakerMark.room + margin : 0);
     final double top = math.min(base.tilesTop, base.boardHeight - TokenTouch.bottomNoHotspot - need);
-    if (top >= base.tilesTop) return base;
+    // The keypad has its own keys and their own 12 points of touch margin, whatever the look's slop is.
+    final double? slop = numberMode ? 12 : null;
+    if (top >= base.tilesTop && slop == null) return base;
     return base.withStageAndTiles(
-      stage: Rect.fromLTWH(
-        base.stage.left,
-        base.stage.top,
-        base.stage.width,
-        math.max(0, math.min(base.stage.height, top - 16 - base.stage.top)),
-      ),
+      stage: top >= base.tilesTop
+          ? base.stage
+          : Rect.fromLTWH(
+              base.stage.left,
+              base.stage.top,
+              base.stage.width,
+              math.max(0, math.min(base.stage.height, top - 16 - base.stage.top)),
+            ),
       tilesLeft: base.tilesLeft,
       tilesTop: top,
       tilesWidth: base.tilesWidth,
+      tileSlop: slop,
     );
   }
 
@@ -293,7 +298,10 @@ class TapAnswerSession extends TemplateSession {
   /// above them (a selected tile is lifted 6, its ring 6 wider), so that the pictures are as large as they can be.
   ActivitySpec _sizeLayout(ActivitySpec base) {
     if (base.stageIsCard || TapGeometry.rowLinesOf(activity, base.stage.size) < 2) return base;
-    final double top = math.max(base.tilesTop, base.boardHeight - TokenTouch.bottomNoHotspot - 96 - 12);
+    final double top = math.max(
+      base.tilesTop,
+      base.boardHeight - TokenTouch.bottomNoHotspot - base.tileSize - base.tileSlop,
+    );
     return base.withStageAndTiles(
       stage: Rect.fromLTWH(base.stage.left, base.stage.top, base.stage.width, top - 14 - base.stage.top),
       tilesLeft: base.tilesLeft,
@@ -429,8 +437,7 @@ class TapAnswerSession extends TemplateSession {
       listenable: this,
       builder: (BuildContext c, Widget? _) => Directionality(
         textDirection: _rowDir,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: TileRow(
           children: <Widget>[
             for (final (int i, ChoiceOption o) in activity.options.indexed)
               Column(
@@ -445,7 +452,8 @@ class TapAnswerSession extends TemplateSession {
                           key: Key('tile-${o.id}'),
                           semanticLabel: o.label ?? '',
                           size: tileHeight,
-                          width: width == 96 && tileHeight == 96 ? null : width,
+                          slop: spec.tileSlop,
+                          width: width == spec.tileSize && tileHeight == spec.tileSize ? null : width,
                           state: chosenId == o.id
                               ? chosenState
                               : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
@@ -491,7 +499,7 @@ class TapAnswerSession extends TemplateSession {
                         Positioned(
                           left: 0,
                           right: 0,
-                          top: 12 + 96 + 6,
+                          top: spec.tileSlop + tileHeight + 6,
                           child: IgnorePointer(
                             child: AnimatedOpacity(
                               opacity: captionShown ? 1 : 0,

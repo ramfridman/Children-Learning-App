@@ -332,7 +332,7 @@ class BoxesSession extends TemplateSession {
     if (disposed) return;
     state = o.settled ? AnswerState.selected : AnswerState.correct;
     notify();
-    later(TemplateSession.praisePause, controller.next);
+    later(praise, controller.next);
   }
 
   Future<void> _wrong(String tag, String code, {String also = ''}) async {
@@ -346,7 +346,7 @@ class BoxesSession extends TemplateSession {
       // A probe of the placement game ends on its one answer, right or not, and shows nothing "not yet".
       state = AnswerState.selected;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
       return;
     }
     later(TemplateSession.notYetPause, _afterWrong);

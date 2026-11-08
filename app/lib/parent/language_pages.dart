@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app/language_providers.dart';
+import '../app/state.dart' show appStateProvider;
 import '../app/sync_providers.dart';
 import '../app/voice_input.dart' show microphonePermissionProvider;
 import '../child/languages_doors.dart' show languageName;
@@ -14,9 +15,11 @@ import '../design/components.dart';
 import '../design/tokens.g.dart';
 import '../engine/course.dart';
 import '../strings/he.dart';
+import 'age_page.dart';
 import 'language_progress.dart';
 import 'language_settings.dart';
 import 'rules_screen.dart';
+import 'screens_card.dart';
 
 // The parent's pages for the languages (docs/design/languages-island.md section 6): the "Languages" card of a child, a page for
 // each language with the switches of docs/languages/frame.md section 1.4, the home-language questionnaire, and the progress in a
@@ -120,11 +123,29 @@ class ChildSettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final FamilyLanguages languages = ref.watch(languagesProvider).value ?? const FamilyLanguages();
+    // The page is opened with the profile as it was; a stage saved on the age page changes it, so the newest copy is read here.
+    final Profile profile =
+        ref
+            .watch(appStateProvider)
+            .value
+            ?.profiles
+            .where((Profile p) => p.id == this.profile.id)
+            .firstOrNull ??
+        this.profile;
     return _page(
       context,
       _fill(He.childSettingsTitle, <String, String>{'child': displayChildName(profile.name)}),
       onClose,
       <Widget>[
+        AgeSummaryCard(
+          profile: profile,
+          onChange: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (BuildContext c) => AgePage(profile: profile, onClose: () => Navigator.pop(c)),
+            ),
+          ),
+        ),
+        ScreensCard(profile: profile),
         _card(He.areaLanguages.text, <Widget>[
           Text(He.areaLanguagesHelp.text, style: AppText.parent(TokenType.parentSmall)),
           const SizedBox(height: 8),

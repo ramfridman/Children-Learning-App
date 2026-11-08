@@ -100,7 +100,7 @@ class Ls01OrderSession extends Ls01Session {
       if (disposed) return;
       done = true;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
       return;
     }
     await controller.submitPlacement(right: false, tag: pattern.wrongTag ?? '', response: code);
