@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/misc.dart' show FutureProviderFamily;
 import '../app/age_providers.dart';
 import '../app/look_providers.dart';
 import '../app/providers.dart' show clockProvider;
+import '../app/push_providers.dart' show isParentDeviceProvider;
 import '../app/state.dart';
 import '../app/sync_providers.dart';
 import '../data/app_database.dart';
@@ -137,7 +138,8 @@ class _AgePageState extends ConsumerState<AgePage> {
     final AppDatabase db = await ref.read(databaseProvider.future);
     final DateTime now = _now;
     await db.confirmStage(widget.profile.id, stage, now);
-    await db.setBirth(widget.profile.id, v.birthAt(now));
+    // Only a parent's phone sends a birth, so only there is one edited (SEC-B29-6): a child's tablet keeps the server's copy.
+    if (await ref.read(isParentDeviceProvider.future)) await db.setBirth(widget.profile.id, v.birthAt(now));
     await ref.read(appStateProvider.notifier).reload();
     ref
       ..invalidate(birthOfProvider(widget.profile.id))
@@ -201,6 +203,7 @@ class _AgePageState extends ConsumerState<AgePage> {
                         suggestFromYear: widget.profile.confirmedStage == null,
                         currentStage: widget.profile.confirmedStage,
                         storedBand: widget.profile.ageBand,
+                        showBirth: ref.watch(isParentDeviceProvider).value ?? true,
                         onChanged: (AgeValue next) => setState(() => _value = next),
                       ),
                       const SizedBox(height: 12),

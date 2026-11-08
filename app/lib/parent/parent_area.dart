@@ -298,6 +298,10 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                         child: ParentButton(
                           key: Key('languages-${p.id}'),
                           label: He.areaChildSettings.text,
+                          // A screen reader hears whose settings these are, with the title the page itself has.
+                          semanticLabel: He.childSettingsTitle.fill(<String, String>{
+                            'child': displayChildName(p.name),
+                          }),
                           quiet: true,
                           onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute<void>(

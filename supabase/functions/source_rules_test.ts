@@ -93,3 +93,24 @@ Deno.test("a child's month and year of birth are named only by child-put, sync-p
     assert.ok(!aboutBirth.test(text), `${rel(u)} mentions a birth or an age in months`);
   }
 });
+
+Deno.test("the children's rows (with their birth) are read only by sync-pull and written only by child-put (SEC-B29-9)", async () => {
+  // A function that read the rows of the family's children and passed them on would carry the birth without naming it, so the word
+  // rule above would not see it. The store's own files define the two calls, and the tests may call them.
+  const only: Record<string, string> = {
+    "listChildren": "sync-pull/handler.ts",
+    "upsertChild": "child-put/handler.ts",
+  };
+  const defining = new Set(["_shared/store.ts", "_shared/db.ts", "_shared/testkit.ts"]);
+  const seen = new Map<string, string[]>();
+  for (const u of await sourceFiles()) {
+    if (isTest(u) || defining.has(rel(u))) continue;
+    const text = await Deno.readTextFile(u);
+    for (const call of Object.keys(only)) {
+      if (new RegExp(`\\b${call}\\b`).test(text)) seen.set(call, [...(seen.get(call) ?? []), rel(u)]);
+    }
+  }
+  for (const [call, file] of Object.entries(only)) {
+    assert.deepEqual(seen.get(call), [file], `${call} may be used only in ${file}`);
+  }
+});

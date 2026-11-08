@@ -587,6 +587,16 @@ void main() {
       expect(ageRuleBreaks(Directory('lib')), isEmpty);
     });
 
+    test('every file on the age lists exists and names what its list allows (a stale entry fails)', () {
+      expect(staleAgeRuleEntries(Directory('lib')), isEmpty);
+    });
+
+    test('the stale-entry check finds a missing file and a file that names nothing', () {
+      final Directory root = Directory.systemTemp.createTempSync('age_stale_');
+      addTearDown(() => root.deleteSync(recursive: true));
+      expect(staleAgeRuleEntries(root).length, ageFiles.length + birthFiles.length + lookFiles.length);
+    });
+
     test('the net, the tutor, the log, the push, the auth, the voice and the sync files other than the sync engine never name a birth', () {
       for (final String dir in <String>[
         'net',
@@ -641,50 +651,65 @@ final RegExp birthNames = RegExp(
 
 /// The names that carry an age in months, an age bundle or a look stage.
 final RegExp ageNames = RegExp(
-  r'ChildAge|childAge|ageInMonths|assumedMonths|PresentationStage|effectiveStage',
+  r'ChildAge|childAge|ageInMonths|ageMonths|\.months|assumedMonths|PresentationStage|effectiveStage',
 );
+
+/// The age files: the types, the tables and database that keep the month, the providers that read it, and the generated code.
+const Set<String> ageFiles = <String>{
+  'engine/age.dart',
+  'data/tables.dart',
+  'data/app_database.dart',
+  'data/app_database.g.dart',
+  'app/age_providers.dart',
+  'app/look_providers.dart',
+};
+
+/// Also allowed to name a birth: the sync engine (sends and takes the family's copy) and the parent pages that ask for it.
+const Set<String> birthFiles = <String>{
+  'sync/sync_engine.dart',
+  'parent/age_fields.dart',
+  'parent/age_page.dart',
+  'parent/child_form.dart',
+};
+
+/// Also allowed to name an age in months or a look stage: the files that choose the look and the pace of a screen.
+const Set<String> lookFiles = <String>{
+  'design/stage_spec.dart',
+  'engine/gates.dart',
+  'parent/language_progress.dart',
+  'parent/screens_card.dart',
+  'parent/age_cards.dart',
+  'app/language_providers.dart',
+  'play/lesson_screen.dart',
+};
+
+/// The entries of the three lists that are stale (SEC-B29-7): a file that does not exist under [root], or one that names none of what
+/// its list lets it name, so the list stays as narrow as the code. An age file may name a birth or an age; a birth file a birth; a
+/// look file an age in months or a look stage.
+List<String> staleAgeRuleEntries(Directory root) {
+  final List<String> stale = <String>[];
+  void check(Set<String> files, String list, bool Function(String source) names) {
+    for (final String name in files) {
+      final File f = File('${root.path}/$name');
+      if (!f.existsSync()) {
+        stale.add('$list: $name does not exist');
+      } else if (!names(f.readAsStringSync())) {
+        stale.add('$list: $name names nothing its list allows');
+      }
+    }
+  }
+
+  check(ageFiles, 'ageFiles', (String s) => birthNames.hasMatch(s) || ageNames.hasMatch(s));
+  check(birthFiles, 'birthFiles', birthNames.hasMatch);
+  check(lookFiles, 'lookFiles', ageNames.hasMatch);
+  return stale;
+}
 
 /// The files under [root] that break the age rule (B-29, SEC-B29-3, changed 2026-11-08): the month and year of birth may be named only by
 /// the age files and by the few files that must handle them (the sync engine that sends and takes them, and the parent pages that
 /// ask for them); an age in months or a look stage may be named only by the age files and the files that choose how a screen looks;
 /// and any other file may import `engine/age.dart` only as `show SchoolStage`. The report names files by their path under [root].
 List<String> ageRuleBreaks(Directory root) {
-  // The age files: the types, the tables and database that keep the month, the providers that read it, and the generated code.
-  const Set<String> ageFiles = <String>{
-    'engine/age.dart',
-    'data/tables.dart',
-    'data/app_database.dart',
-    'data/app_database.g.dart',
-    'app/age_providers.dart',
-    'app/look_providers.dart',
-  };
-  // Also allowed to name a birth: the sync engine (sends and takes the family's copy) and the parent pages that ask for it.
-  const Set<String> birthFiles = <String>{
-    'sync/sync_engine.dart',
-    'parent/age_fields.dart',
-    'parent/age_page.dart',
-    'parent/child_form.dart',
-  };
-  // Also allowed to name an age in months or a look stage: the files that choose the look and the pace of a screen.
-  const Set<String> lookFiles = <String>{
-    'design/stage_spec.dart',
-    'engine/presentation.dart',
-    'engine/gates.dart',
-    'parent/look_settings.dart',
-    'parent/screens_card.dart',
-    'parent/age_cards.dart',
-    'app/language_providers.dart',
-    'app/lesson_launch.dart',
-    'app/app.dart',
-    'play/lesson_controller.dart',
-    'play/lesson_screen.dart',
-    'play/idle_ladder.dart',
-    'play/choice_cap.dart',
-    'play/activity_frame.dart',
-    'child/home_screen.dart',
-    'child/land_screen.dart',
-    'child/profile_picker.dart',
-  };
   final RegExp ageImport = RegExp(r'''\b(?:import|export)\s+['"]([^'"]*)['"]([^;]*);''');
   final List<String> breaks = <String>[];
   for (final FileSystemEntity f in root.listSync(recursive: true)) {

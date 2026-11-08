@@ -48,7 +48,7 @@ select ok(has_column_privilege('app_gateway', 'app.child_profile', 'school_stage
 select ok(has_column_privilege('app_gateway', 'app.child_profile', 'school_stage', 'update'), 'and writes it');
 select ok((select relrowsecurity from pg_class where oid = 'app.child_profile'::regclass), 'row level security stays on for the table');
 
--- ---- the table holds no date, no day of birth, no age in months and no look (the month and year of birth are file 12) ----------
+-- ---- the table holds no date, no day of birth, no age in months and no look (the month and year of birth are file 14) ----------
 select is(
   (select count(*)::int from information_schema.columns
     where table_schema = 'app' and table_name = 'child_profile'

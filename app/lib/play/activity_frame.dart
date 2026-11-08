@@ -143,7 +143,8 @@ class ActivityFrame extends StatelessWidget {
     return height;
   }
 
-  /// The least room a phone's stage keeps beside a bubble that widens to the left (the same as the hint card's in `BlockLayout`).
+  /// The least room a phone's stage keeps beside a bubble that has to spill into it (the same as the hint card's in `BlockLayout`): the
+  /// limit of the spill, which only a line too long for its own column at 14 points ever reaches (B-29, docs/design/b29-caption-overlap.md).
   static const double minStageRoom = 150;
 
   /// The smallest the font ever goes, in points as drawn: the last resort when a line still does not fit its widest bubble at [fitBubble]'s
@@ -159,6 +160,12 @@ class ActivityFrame extends StatelessWidget {
   /// [min] widens the bubble, [widest] at most (a width; the bubble grows to the side away from the guide), and only if the widest bubble
   /// is still too short does the font go on down to [hardMinFont]. The width is the board's own when [widest] is null (and then the font
   /// stops at [min]) or not wider. [ActivityFrame.build] gives the room it has.
+  ///
+  /// On a phone the bubble must not cover the scene, so [widest] stops at the stage's right edge and a [spill] is given: before the bubble
+  /// reaches over the stage the text goes on down to [longFloor] points as drawn at [widest], and only a line that still does not fit
+  /// there widens, at [longFloor], up to [spill] (the stage's old limit), and last of all down to [hardMinFont] there. A line that gets
+  /// past [widest] is a defect of the content, which the audit lists (docs/design/b29-caption-overlap.md). Without [spill] the order is
+  /// the old one: the font goes down to [hardMinFont] at [widest].
   static ({double font, double height, double width}) fitBubble(
     String text,
     ActivitySpec s, {
@@ -167,6 +174,8 @@ class ActivityFrame extends StatelessWidget {
     double? maxHeight,
     double? room,
     double? widest,
+    double? spill,
+    double longFloor = 14,
     TextScaler scaler = TextScaler.noScaling,
   }) {
     final double factor = scaler.scale(1);
@@ -187,12 +196,29 @@ class ActivityFrame extends StatelessWidget {
     if (widest == null) {
       return (font: floor, height: heightAt(floor, s.bubbleMaxWidth), width: s.bubbleMaxWidth);
     }
+    double end = wide;
+    if (spill != null) {
+      // Smaller text in the bubble's own column first, down to [longFloor] drawn; then into the stage at that size.
+      for (final double size in <double>[
+        for (double z = floor - 1; z * factor > longFloor; z -= 1) z,
+        if (floor * factor > longFloor) longFloor / factor,
+      ]) {
+        final double height = heightAt(size, wide);
+        if (height <= wall) return (font: size, height: height, width: wide);
+      }
+      end = math.max(wide, spill);
+      final double at = math.min(floor, longFloor / factor);
+      for (double width = wide + 4; width <= end; width += 4) {
+        final double height = heightAt(at, width);
+        if (height <= wall) return (font: at, height: height, width: width);
+      }
+    }
     for (double size = floor - 1; size * factor >= hardMinFont; size -= 1) {
-      final double height = heightAt(size, wide);
-      if (height <= wall) return (font: size, height: height, width: wide);
+      final double height = heightAt(size, end);
+      if (height <= wall) return (font: size, height: height, width: end);
     }
     final double last = hardMinFont / factor;
-    return (font: last, height: heightAt(last, wide), width: wide);
+    return (font: last, height: heightAt(last, end), width: end);
   }
 
   @override
@@ -224,7 +250,15 @@ class ActivityFrame extends StatelessWidget {
         : board.size.width - (s.bubbleRight ?? 0);
     // A tall stage (the wheel, a close-up) holds its picture across its whole width, so a bubble never widens into it; a short one keeps 150.
     final double keep = !s.tailAtMouth && s.stage.height > 180 ? s.stage.width : minStageRoom;
-    final double? widest = clear ? rightEdge - s.stage.left - (s.stageIsCard ? 0 : keep) : null;
+    // A phone board (a stage that is not a card, a tail that does not move to the guide's mouth): the bubble widens only to the stage's
+    // right edge, so the scene is never covered; what does not fit there goes smaller, and only then into the stage (`spill`).
+    final bool phoneBoard = !s.stageIsCard && !s.tailAtMouth;
+    final double? widest = clear
+        ? phoneBoard
+              ? rightEdge - s.stage.right
+              : rightEdge - s.stage.left - (s.stageIsCard ? 0 : keep)
+        : null;
+    final double? spill = clear && phoneBoard ? rightEdge - s.stage.left - keep : null;
     final ({double font, double height, double width}) fit = fitBubble(
       bubbleText,
       s,
@@ -232,6 +266,7 @@ class ActivityFrame extends StatelessWidget {
       maxHeight: math.min(s.bubbleMaxHeight + mathRoom, ceiling - floorTop),
       room: ceiling - floorTop,
       widest: widest,
+      spill: spill,
       scaler: scaler,
       // The caption keeps its stage's size down to two points under it, drawn; only then does the bubble widen (B-29 D1).
       // (A layout whose tail must meet the guide's mouth wherever the bubble stands, the blocks', keeps the old floor of 14.)

@@ -785,12 +785,16 @@ class ParentButton extends StatelessWidget {
     required this.onPressed,
     this.destructive = false,
     this.quiet = false,
+    this.semanticLabel,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final bool destructive;
   final bool quiet;
+
+  /// What a screen reader says, when it must say more than the visible [label] (which child a bare "Settings" is for).
+  final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -803,7 +807,7 @@ class ParentButton extends StatelessWidget {
     return Semantics(
       button: true,
       enabled: onPressed != null,
-      label: label,
+      label: semanticLabel ?? label,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onPressed,

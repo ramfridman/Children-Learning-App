@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/data/profile_age.dart';
 import 'package:nitznutz/design/components.dart' show ParentButton;
+import 'package:nitznutz/device/secure_store.dart' show StoreKeys;
 import 'package:nitznutz/engine/age.dart';
 import 'package:nitznutz/parent/age_fields.dart';
 import 'package:nitznutz/parent/age_page.dart';
@@ -261,6 +262,24 @@ void main() {
       expect(await rig.db.birthOf(p.id), isNull);
     });
 
+    testWidgets('on a child tablet the form has no month and year, and keeps none (SEC-B29-6)', (
+      WidgetTester tester,
+    ) async {
+      final AppRig rig = await _rig();
+      await rig.store.write(StoreKeys.role, 'child');
+      await rig.db.removeProfile(langKid);
+      await pumpParentScreen(tester, rig, ChildFormScreen(onSaved: () {}), size: const Size(820, 2400));
+      expect(find.byKey(const Key('age-years')), findsNothing);
+      expect(find.byKey(const Key('age-months')), findsNothing);
+      await tester.enterText(find.byType(TextField), 'דנה');
+      await _tap(tester, const Key('stage-gan4'));
+      await _tap(tester, const Key('form-save'));
+      await tester.pumpAndSettle();
+      final Profile p = (await rig.db.allProfiles()).single;
+      expect(p.schoolStage, 'gan4');
+      expect(await rig.db.birthOf(p.id), isNull);
+    });
+
     testWidgets('a month without a year blocks Save', (WidgetTester tester) async {
       final AppRig rig = await _rig();
       await rig.db.removeProfile(langKid);
@@ -300,6 +319,47 @@ void main() {
         expect(await rig.db.stageYearOf(langKid), 2026);
       },
     );
+
+    testWidgets(
+      "on a child's tablet the page has no month and year (only a parent's phone sends a birth, SEC-B29-6), and Save keeps the one held",
+      (WidgetTester tester) async {
+        final AppRig rig = await _rig(band: 1, stage: SchoolStage.gan5, birth: const BirthMonth(2021, 3));
+        await rig.store.write(StoreKeys.role, 'child');
+        final Profile p = await langProfile(rig);
+        await pumpParentScreen(
+          tester,
+          rig,
+          AgePage(profile: p, onClose: () {}),
+          size: const Size(820, 2400),
+        );
+        expect(find.byKey(const Key('age-years')), findsNothing);
+        expect(find.byKey(const Key('age-months')), findsNothing);
+        expect(find.byKey(const Key('age-clear')), findsNothing);
+        expect(find.byKey(const Key('age-stages')), findsOneWidget);
+        await _tap(tester, const Key('stage-grade1'));
+        await _tap(tester, const Key('age-save'));
+        await tester.pumpAndSettle();
+        expect((await langProfile(rig)).schoolStage, 'grade1');
+        expect(
+          await rig.db.birthOf(langKid),
+          const BirthMonth(2021, 3),
+          reason: 'the server copy stays as it is here',
+        );
+      },
+    );
+
+    testWidgets("on a parent's phone the month and year are there", (WidgetTester tester) async {
+      final AppRig rig = await _rig(band: 1, stage: SchoolStage.gan5);
+      final Profile p = await langProfile(rig);
+      await pumpParentScreen(
+        tester,
+        rig,
+        AgePage(profile: p, onClose: () {}),
+        size: const Size(820, 2400),
+      );
+      expect(find.byKey(const Key('age-years')), findsOneWidget);
+      expect(find.byKey(const Key('age-months')), findsOneWidget);
+    });
 
     testWidgets('Cancel writes nothing', (WidgetTester tester) async {
       final AppRig rig = await _rig(band: 0, stage: SchoolStage.gan4, birth: const BirthMonth(2022, 6));
@@ -509,6 +569,13 @@ void main() {
       await rig.db.markStageConfirmed(langKid, DateTime(2026, 10, 26));
       await area(tester, rig);
       expect(find.text(He.areaChildSettings.text), findsOneWidget);
+      // The word on the button is the same for every child; a screen reader says whose settings it opens.
+      final SemanticsHandle semantics = tester.ensureSemantics();
+      expect(
+        tester.getSemantics(find.byKey(const Key('languages-$langKid'))).label,
+        He.childSettingsTitle.fill(<String, String>{'child': 'נועה'}),
+      );
+      semantics.dispose();
       await tester.tap(find.byKey(const Key('languages-$langKid')));
       await tester.pumpAndSettle();
       expect(find.byType(ChildSettingsScreen), findsOneWidget);
@@ -536,7 +603,7 @@ void main() {
         find.text(He.septQuestion.fill(<String, String>{'child': 'נועה', 'next': He.stageNamesTo[3].text})),
         findsOneWidget,
       );
-      expect(find.text(He.septYes.fill(<String, String>{'next': He.stageNames[3].text})), findsOneWidget);
+      expect(find.text(He.septYes.fill(<String, String>{'next': He.stageNamesTo[3].text})), findsOneWidget);
       expect(
         find.text(He.septKeep.fill(<String, String>{'current': He.stageNamesIn[2].text})),
         findsOneWidget,

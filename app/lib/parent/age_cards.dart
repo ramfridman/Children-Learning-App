@@ -17,7 +17,6 @@ import '../design/components.dart';
 import '../design/tokens.g.dart';
 import '../engine/age.dart' show SchoolStage, addAgeCardDue, septemberCardDue;
 import '../strings/he.dart';
-import 'age_fields.dart' show stageName;
 import 'age_page.dart';
 import 'age_settings.dart';
 
@@ -95,7 +94,6 @@ class SeptemberCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final SchoolStage stage = profile.stage;
-    final String next = stage.next.index == stage.index ? '' : stageName(stage.next);
     return Container(
       key: Key('september-card-${profile.id}'),
       margin: const EdgeInsets.only(bottom: 16),
@@ -128,7 +126,7 @@ class SeptemberCard extends ConsumerWidget {
               IntrinsicWidth(
                 child: ParentButton(
                   key: Key('sept-yes-${profile.id}'),
-                  label: He.septYes.fill(<String, String>{'next': next}),
+                  label: He.septYes.fill(<String, String>{'next': He.stageNamesTo[stage.next.index].text}),
                   onPressed: () => _answer(ref, moveUp: true),
                 ),
               ),

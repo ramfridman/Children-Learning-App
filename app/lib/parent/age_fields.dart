@@ -53,6 +53,7 @@ class AgeFields extends StatelessWidget {
     this.suggestFromYear = true,
     this.currentStage,
     this.storedBand,
+    this.showBirth = true,
   });
 
   final AgeValue value;
@@ -68,6 +69,10 @@ class AgeFields extends StatelessWidget {
 
   /// The band the child has now: a stage of a lower band makes the screens look younger, which one line says before Save.
   final int? storedBand;
+
+  /// False on a child's tablet: only a parent's phone sends a birth to the family's server, so a birth edited on the tablet would
+  /// never leave it and would hide the server's copy for good (SEC-B29-6). The stage is still chosen.
+  final bool showBirth;
 
   /// The years offered: nine years back to two years back, earliest first (so the earliest is at the start, the right).
   List<int> get years => <int>[for (int y = now.year - 9; y <= now.year - 2; y++) y];
@@ -97,72 +102,77 @@ class AgeFields extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 20, bottom: 4),
-          child: Text.rich(
-            TextSpan(
-              children: <InlineSpan>[
-                TextSpan(text: He.ageBirthTitle.text, style: AppText.parent(TokenType.parentH3)),
-                const TextSpan(text: ' '),
-                TextSpan(
-                  text: He.ageBirthOptional.text,
-                  style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+        if (showBirth) ...<Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 20, bottom: 4),
+            child: Text.rich(
+              TextSpan(
+                children: <InlineSpan>[
+                  TextSpan(text: He.ageBirthTitle.text, style: AppText.parent(TokenType.parentH3)),
+                  const TextSpan(text: ' '),
+                  TextSpan(
+                    text: He.ageBirthOptional.text,
+                    style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Text(
+            He.ageBirthHelp.text,
+            style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+          ),
+          _Caption(He.ageYearLabel.text),
+          ChipGrid(
+            key: const Key('age-years'),
+            columns: 4,
+            cells: <ChipCell>[
+              for (final int y in years)
+                ChipCell(
+                  key: Key('year-$y'),
+                  label: '$y',
+                  semantics: He.ageBirthYearSemantics.fill(<String, String>{'year': '$y'}),
+                  selected: value.year == y,
+                  onTap: () => _year(y),
                 ),
-              ],
-            ),
+            ],
           ),
-        ),
-        Text(He.ageBirthHelp.text, style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft)),
-        _Caption(He.ageYearLabel.text),
-        ChipGrid(
-          key: const Key('age-years'),
-          columns: 4,
-          cells: <ChipCell>[
-            for (final int y in years)
-              ChipCell(
-                key: Key('year-$y'),
-                label: '$y',
-                semantics: He.ageBirthYearSemantics.fill(<String, String>{'year': '$y'}),
-                selected: value.year == y,
-                onTap: () => _year(y),
-              ),
-          ],
-        ),
-        _Caption(He.ageMonthLabel.text),
-        ChipGrid(
-          key: const Key('age-months'),
-          columns: 4,
-          cells: <ChipCell>[
-            for (int m = 1; m <= 12; m++)
-              ChipCell(
-                key: Key('month-$m'),
-                label: He.months[m - 1].text,
-                selected: value.month == m,
-                onTap: () => onChanged(value.copyWith(month: m)),
-              ),
-          ],
-        ),
-        if (value.year != null || value.month != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: _QuietButton(
-                key: const Key('age-clear'),
-                label: He.ageBirthClear.text,
-                onTap: () => onChanged(value.copyWith(clearBirth: true)),
+          _Caption(He.ageMonthLabel.text),
+          ChipGrid(
+            key: const Key('age-months'),
+            columns: 4,
+            cells: <ChipCell>[
+              for (int m = 1; m <= 12; m++)
+                ChipCell(
+                  key: Key('month-$m'),
+                  label: He.months[m - 1].text,
+                  selected: value.month == m,
+                  onTap: () => onChanged(value.copyWith(month: m)),
+                ),
+            ],
+          ),
+          if (value.year != null || value.month != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: _QuietButton(
+                  key: const Key('age-clear'),
+                  label: He.ageBirthClear.text,
+                  onTap: () => onChanged(value.copyWith(clearBirth: true)),
+                ),
               ),
             ),
-          ),
-        if (value.birthHalf)
-          Padding(
-            padding: const EdgeInsets.only(top: 6),
-            child: Text(
-              He.ageBirthBoth.text,
-              key: const Key('age-birth-both'),
-              style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+          if (value.birthHalf)
+            Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Text(
+                He.ageBirthBoth.text,
+                key: const Key('age-birth-both'),
+                style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+              ),
             ),
-          ),
+        ],
         Padding(
           padding: const EdgeInsets.only(top: 20, bottom: 4),
           child: Text(He.ageStageTitle.text, style: AppText.parent(TokenType.parentH3)),

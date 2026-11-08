@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/content/pack_verify.dart';
+import 'package:nitznutz/engine/age.dart' show BirthMonth, SchoolStage;
+import 'package:nitznutz/parent/age_settings.dart';
 import 'package:nitznutz/play/lesson_screen.dart';
 
 import '../../tool/pack_builder_lib.dart';
@@ -73,11 +75,21 @@ Future<void> closeOne(WidgetTester t) async {
 }
 
 /// Pumps the app on [board] with the child of the rig chosen, ready for [openOne].
-Future<AppRig> startOn(WidgetTester t, PackContent content, Size board) async {
+Future<AppRig> startOn(
+  WidgetTester t,
+  PackContent content,
+  Size board, {
+  ({String name, SchoolStage school, BirthMonth birth, String? captions})? look,
+}) async {
   final AppRig rig = AppRig(content: content);
   // The child is of the oldest look (Band C, grade 2): the lessons of Band C show up to five choices, which the look of a younger child would
-  // cap (B-29).
-  await rig.seedFinishedSetup(name: 'נֹעָה', ageBand: 2);
+  // cap (B-29). The stage audit asks for another look.
+  await rig.seedFinishedSetup(name: 'נֹעָה', ageBand: look?.school.band ?? 2);
+  if (look != null) {
+    await rig.db.confirmStage('p-1', look.school, DateTime(2026, 10, 26));
+    await rig.db.setBirth('p-1', look.birth);
+    if (look.captions != null) await rig.db.putSetting(readingKey('p-1'), look.captions!);
+  }
   await rig.pump(t, size: board);
   await t.tap(find.text('נֹעָה'));
   await t.pumpAndSettle();

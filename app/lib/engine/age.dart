@@ -2,8 +2,10 @@
 //
 //  - the SCHOOL STAGE (gan 3 to grade 3), which a parent confirms. It sets the band (A, B or C), and it is the only age value that
 //    syncs. It is never worked out from a birthday.
-//  - the MONTH AND YEAR OF BIRTH (never the day), kept on this device only (`ProfileBirths`). From it come the age in months and the
-//    presentation stage P1 to P4, in memory, at the moment they are asked for. They are never stored, synced, logged, sent or exported.
+//  - the MONTH AND YEAR OF BIRTH (never the day), kept in the encrypted database (`ProfileBirths`) and, since the owner's decision of
+//    2026-11-08, on the family's own server (`child-put` and `sync-pull` carry it, and nothing else does), so a new phone gets it back.
+//    From it come the age in months and the presentation stage P1 to P4, in memory, at the moment they are asked for; those are never
+//    stored, synced, logged, sent or exported. The birth itself is in no log, no tutor request, no vendor payload and no export.
 //  - the BAND of a profile that has no school stage yet (a child made before B-29): the middle of the band stands in for both.
 //
 // Presentation (how things look) follows the age; content (which lessons) follows mastery. Nothing here is an input of mastery, of

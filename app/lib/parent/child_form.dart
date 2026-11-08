@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 
 import '../app/language_providers.dart';
 import '../app/providers.dart' show clockProvider;
+import '../app/push_providers.dart' show isParentDeviceProvider;
 import '../app/state.dart';
 import '../child/art.dart';
 import '../data/app_database.dart';
@@ -108,7 +109,8 @@ class _ChildFormScreenState extends ConsumerState<ChildFormScreen> {
       ),
     );
     await db.markStageConfirmed(id, _now);
-    final BirthMonth? birth = _age.birthAt(_now);
+    // Only a parent's phone sends a birth, so only there is one kept (SEC-B29-6).
+    final BirthMonth? birth = await ref.read(isParentDeviceProvider.future) ? _age.birthAt(_now) : null;
     if (birth != null) await db.setBirth(id, birth);
     for (final String course in _languages) {
       await ref.read(languagesProvider.notifier).setSwitches(id, course, const LanguageSwitches(on: true));
@@ -193,7 +195,12 @@ class _ChildFormScreenState extends ConsumerState<ChildFormScreen> {
                       ),
                     ),
                   ),
-                AgeFields(value: _age, now: _now, onChanged: (AgeValue v) => setState(() => _age = v)),
+                AgeFields(
+                  value: _age,
+                  now: _now,
+                  showBirth: ref.watch(isParentDeviceProvider).value ?? true,
+                  onChanged: (AgeValue v) => setState(() => _age = v),
+                ),
                 _label(He.setupAvatar.text),
                 Wrap(
                   spacing: 12,

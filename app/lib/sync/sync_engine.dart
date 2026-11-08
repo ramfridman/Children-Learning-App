@@ -296,12 +296,26 @@ class SyncEngine {
 
   // ---- out ----
 
+  /// How long a `child-put` that carries `birth` is not tried again after the gateway refused it (SEC-B29-5): until the app starts
+  /// again, or this long.
+  static const Duration _birthRefusedFor = Duration(hours: 24);
+
+  /// When the gateway last refused a `child-put` only because of `birth` (a `child-put` older than this app: the functions were not
+  /// deployed yet, or were rolled back), or null. It lives in memory, so a new start tries again.
+  int? _birthRefusedAtMs;
+
+  bool get _birthRefused {
+    final int? at = _birthRefusedAtMs;
+    return at != null && nowMs() - at < _birthRefusedFor.inMilliseconds;
+  }
+
   Future<void> _pushProfiles() async {
     final Set<String> gone = await _tombstoned();
     for (final Profile p in await db.allProfiles()) {
       if (gone.contains(p.id)) continue;
       final BirthMonth? birth = await db.birthOf(p.id);
-      final String fingerprint = _profileFingerprint(
+      final String? pushed = await db.setting('profile_pushed_${p.id}');
+      String fingerprintWith(String birthPart) => _profileFingerprint(
         p.name,
         p.avatar,
         p.addressForm,
@@ -309,38 +323,59 @@ class SyncEngine {
         p.companionId,
         p.outfitId,
         SchoolStage.fromWire(p.schoolStage),
-        birth,
+        birthPart,
       );
-      final String? pushed = await db.setting('profile_pushed_${p.id}');
-      if (pushed == fingerprint) continue;
+      final String fingerprint = fingerprintWith(_birthText(birth));
+      // What the server holds while it takes no birth: what it was last given, so the birth here keeps waiting (and a clear too).
+      final String heldFingerprint = fingerprintWith(_birthOf(pushed) ?? '');
+      if (pushed == fingerprint || (_birthRefused && pushed == heldFingerprint)) continue;
       // A name saved before B-28 could be longer than the server takes, or hold a character it refuses: it goes cut to
       // fit. One with nothing left would only be refused, so it is not sent (its answers are then refused like those of
       // any child the server does not have).
       final String nickname = fitChildNameForServer(p.name);
       if (nickname.isEmpty) continue;
+      // The month and year of birth, never the day (owner, 2026-11-08): sent here and nowhere else, so a new phone gets them
+      // back. Absent keeps the server's; null clears it, and is sent only when this phone last saved one that is now gone.
+      final Object? birthWire = birth != null
+          ? <String, Object?>{'year': birth.year, 'month': birth.month}
+          : null;
+      final bool withBirth = birth != null || _birthOf(pushed) != null;
+      Future<void> put({required bool sendBirth}) => call('child-put', <String, Object?>{
+        'child_id': p.id,
+        'nickname': nickname,
+        'avatar_id': p.avatar,
+        'companion_id': ?p.companionId,
+        'outfit_id': ?p.outfitId,
+        'address_form': p.addressForm,
+        'age_band': p.ageBand,
+        // The school stage a parent confirmed, as its word. The age in months and the look stage are never sent (B-29).
+        if (SchoolStage.fromWire(p.schoolStage) case final SchoolStage stage) 'school_stage': stage.wire,
+        if (sendBirth) 'birth': birthWire,
+      });
+      // True when the birth (or its clearing) went with this call; false when it was left out and still waits.
+      bool birthSent = withBirth;
       try {
-        await call('child-put', <String, Object?>{
-          'child_id': p.id,
-          'nickname': nickname,
-          'avatar_id': p.avatar,
-          'companion_id': ?p.companionId,
-          'outfit_id': ?p.outfitId,
-          'address_form': p.addressForm,
-          'age_band': p.ageBand,
-          // The school stage a parent confirmed, as its word. The age in months and the look stage are never sent (B-29).
-          if (SchoolStage.fromWire(p.schoolStage) case final SchoolStage stage) 'school_stage': stage.wire,
-          // The month and year of birth, never the day (owner, 2026-11-08): sent here and nowhere else, so a new phone gets them
-          // back. Absent keeps the server's; null clears it, and is sent only when this phone last saved one that is now gone.
-          if (birth != null)
-            'birth': <String, Object?>{'year': birth.year, 'month': birth.month}
-          else if (_birthOf(pushed) != null)
-            'birth': null,
-        });
+        if (withBirth && !_birthRefused) {
+          try {
+            await put(sendBirth: true);
+          } on GatewayException catch (e) {
+            if (e.code != 'bad_request') rethrow;
+            // A `child-put` that does not know `birth` (the app came before the functions, or they were rolled back) refuses the
+            // whole call: it is sent once more without it, so the child and its answers reach the server (SEC-B29-5).
+            _birthRefusedAtMs = nowMs();
+            birthSent = false;
+            await put(sendBirth: false);
+          }
+        } else {
+          birthSent = false;
+          await put(sendBirth: false);
+        }
       } on Object {
         // One child that cannot be saved (a deleted one, a bad value) must not stop the others or the answers.
         continue;
       }
-      await db.putSetting('profile_pushed_${p.id}', fingerprint);
+      // A birth left out: the fingerprint keeps what the server holds, so the birth here keeps waiting and goes again later.
+      await db.putSetting('profile_pushed_${p.id}', withBirth && !birthSent ? heldFingerprint : fingerprint);
     }
   }
 
@@ -354,9 +389,9 @@ class SyncEngine {
     String? companionId,
     String? outfitId,
     SchoolStage? stage,
-    BirthMonth? birth,
+    String birthPart,
   ) =>
-      '$name|$avatar|$addressForm|$ageBand|${companionId ?? ''}|${outfitId ?? ''}|${stage?.wire ?? ''}|${_birthText(birth)}';
+      '$name|$avatar|$addressForm|$ageBand|${companionId ?? ''}|${outfitId ?? ''}|${stage?.wire ?? ''}|$birthPart';
 
   /// A birth as the last part of a fingerprint: `2021-05`, or nothing.
   static String _birthText(BirthMonth? birth) =>
@@ -995,7 +1030,8 @@ class SyncEngine {
         // something that is not a birth, leaves the one here alone.
         final String? pushedBefore = await db.setting('profile_pushed_$id');
         final BirthMonth? localBirth = here == null ? null : await db.birthOf(id);
-        final bool birthWaits = here != null && (_birthOf(pushedBefore) ?? '') != _birthText(localBirth);
+        final bool birthWaits =
+            isParent && here != null && (_birthOf(pushedBefore) ?? '') != _birthText(localBirth);
         final BirthMonth? serverBirth = _birthFromServer(m['birth']);
         final BirthMonth? birthAfter = birthWaits
             ? localBirth
@@ -1038,7 +1074,7 @@ class SyncEngine {
             // What this phone holds after the pull: the server's stage when it fits, else the one already here if it fits.
             stageFits ? stage : (localFits ? local : null),
             // What the server holds: when a change here waits to be sent, the server's own, so the next round sends it.
-            birthWaits ? serverBirth : birthAfter,
+            _birthText(birthWaits ? serverBirth : birthAfter),
           ),
         );
       }
