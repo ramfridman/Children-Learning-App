@@ -30,6 +30,15 @@ Parts 1, 2 and 3 run side by side: the lands' Band C and the language courses to
 3. **B-29 steps 5 to 9** (part 5): the parent screens, the look by age, the languages' gates, Today's Adventure, the guard tests.
 4. Then **Band C of the six lands** (part 3, C2 to C9), and the rest in the order of the table (L6 and Languages Band C, the head-of-line fix, the Hebrew sweep, the voices, the release).
 
+## The owner's order, revised (2026-11-08): a working app to try with children first
+
+Before any new feature (the L5 leftovers, Band C C2 to C9, L6 wait):
+1. Merge the signed release (starter 0.11.0, lang-eng/heb/rus 0.1.0; branch `content-release`).
+2. **The full text sweep** (part 6, now): every text in the app (lessons, hints, feedback, screens, parent area, the language courses' Hebrew frame), for grammar and vocabulary by the hebrew-text-editor, and for pronunciation by the voice-and-sound-director (how each voice will say it: pointed words, the lexicon, short listening pilots).
+3. **B-29 steps 5 to 9** (part 5).
+4. **The voices** (part 7): every line so far, Hebrew and the English and Russian target clips, after the voice pilots for those languages; the owner runs and pays after seeing the counts and cost.
+5. Build the app, install it on the owner's phone, and give him an APK to share with test families.
+
 ## What only the owner does
 
 1. **Sign the starter pack** whenever its content changes (the pack check fails until then). To keep this rare, content is merged in a few batches, and each batch asks for one signature.
