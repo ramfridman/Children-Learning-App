@@ -1407,7 +1407,7 @@ Future<BuiltPack> _buildPart(
 /// pack once. The stage is removed at the end.
 Future<BuiltPack> buildStagedPack(Directory workDir, List<Map<String, String>> vo, PackKey key) async {
   final Directory stage = Directory('${normalisedFolder(workDir)}.pack-stage');
-  if (stage.existsSync()) stage.deleteSync(recursive: true);
+  _removeStage(stage);
   stage.createSync();
   try {
     final Set<String> names = <String>{
@@ -1419,6 +1419,23 @@ Future<BuiltPack> buildStagedPack(Directory workDir, List<Map<String, String>> v
     }
     return await buildPack(stage, key);
   } finally {
+    // Only a copy of clips that are kept: if Windows still holds a file in it, a pack that was built is not lost for that.
+    try {
+      _removeStage(stage);
+    } on FileSystemException {
+      // The next build clears it before it starts.
+    }
+  }
+}
+
+/// Removes a stage folder; Windows sometimes reports "not empty" for a moment after its files were closed, so it tries
+/// again once before it gives up.
+void _removeStage(Directory stage) {
+  if (!stage.existsSync()) return;
+  try {
+    stage.deleteSync(recursive: true);
+  } on FileSystemException {
+    sleep(const Duration(milliseconds: 200));
     stage.deleteSync(recursive: true);
   }
 }

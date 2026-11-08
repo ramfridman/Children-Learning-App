@@ -24,6 +24,7 @@ class InstalledCharacterSource implements CharacterSource {
     required this.installer,
     required this.bundledHouse,
     this.housePackId = 'char-nitzi',
+    this.maxVoiceClipBytes = maxVoiceBytes,
   });
 
   final PackInstaller installer;
@@ -31,6 +32,9 @@ class InstalledCharacterSource implements CharacterSource {
   /// The bytes of the pack file of the house character that is part of the app.
   final Future<Uint8List> Function() bundledHouse;
   final String housePackId;
+
+  /// The most clip bytes one voice may hold across its parts (tests make it small).
+  final int maxVoiceClipBytes;
 
   @override
   Future<CharacterResolver> resolver() async {
@@ -57,18 +61,24 @@ class InstalledCharacterSource implements CharacterSource {
   }
 
   /// The voice of a character: `voice-<id>` and any `voice-<id>-N` (N from 2 to 9) that are installed, each proven again on
-  /// its own as any pack is, and joined into one bank. A part that is not installed, is hidden, fails its checks, or has a
-  /// line that is in an earlier part is left out: those lines are text only, never an error. The parts are read one after
-  /// the other and each one's files are let go as soon as its clips are in the bank, so no two parts are held whole at once.
+  /// its own as any pack is, and joined into one bank. The first part read sets the version of the build: a part of
+  /// another version is left out (SEC-VP-3), and so is a part that would take the voice over [maxVoiceClipBytes]
+  /// (SEC-VP-4), one that is not installed, is hidden, fails its checks, or has a line that is in an earlier part: those
+  /// lines are text only, never an error. The parts are read one after the other and each one's files are let go as soon
+  /// as its clips are in the bank, so no two parts are held whole at once.
   @override
   Future<VoiceBank> voice(String characterId) async {
     VoiceBank bank = VoiceBank.empty(characterId);
+    String? version;
     for (int part = 1; part <= lastVoicePart; part++) {
       if (part > 1 && await _isAnotherVoice(characterId, part)) continue;
-      final VoiceBank? loaded = await _loadVoicePart(voicePackId(characterId, part));
+      final ({VoiceBank bank, String version})? loaded = await _loadVoicePart(voicePackId(characterId, part));
       if (loaded == null) continue;
+      if (version != null && loaded.version != version) continue;
+      if (bank.clipBytes + loaded.bank.clipBytes > maxVoiceClipBytes) continue;
       try {
-        bank = bank.withPart(loaded);
+        bank = bank.withPart(loaded.bank);
+        version ??= loaded.version;
       } on PackRejected {
         continue;
       }
@@ -76,15 +86,16 @@ class InstalledCharacterSource implements CharacterSource {
     return bank;
   }
 
-  /// `voice-<id>-N` is the voice of the character `<id>-N` when there is one: it is not a part of `<id>`.
+  /// `voice-<id>-N` is the voice of the character `<id>-N` when there is one: it is not a part of `<id>`. A character id
+  /// never ends in `-2` to `-9` (the character schema), so this is a second layer.
   Future<bool> _isAnotherVoice(String characterId, int part) async =>
       await installer.registry.find('char-$characterId-$part') != null;
 
-  Future<VoiceBank?> _loadVoicePart(String packId) async {
+  Future<({VoiceBank bank, String version})?> _loadVoicePart(String packId) async {
     try {
       final VerifiedPack? pack = await installer.load(packId);
       if (pack == null || pack.hidden) return null;
-      return VoiceBank.fromPack(pack);
+      return (bank: VoiceBank.fromPack(pack), version: pack.version);
     } on PackRejected {
       return null;
     }

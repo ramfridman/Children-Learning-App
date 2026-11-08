@@ -976,8 +976,20 @@ void main() {
       'no paid path takes the count from the command line, and the voice is made only after the typed count',
       () {
         expect(cli, isNot(contains("_option(args, '--confirm-chars')")));
-        final String gated = lib.substring(lib.indexOf('Future<BuiltPack> generateGated('));
+        final int start = lib.indexOf('Future<List<BuiltPack>> generateGated(');
+        expect(
+          start,
+          isNot(-1),
+          reason: 'the guard must find the gate; if the signature changed, change it here',
+        );
+        final String gated = lib.substring(
+          start,
+          lib.indexOf('/// The voice ids of each part, from the part of each voice id.', start),
+        );
+        expect(gated.indexOf('requireTyped('), isNot(-1));
         expect(gated.indexOf('requireTyped('), lessThan(gated.indexOf('synth()')));
+        expect(gated.indexOf('requireTyped('), lessThan(gated.indexOf('generateVoiceParts(')));
+        expect(gated.indexOf('requireTyped('), lessThan(gated.indexOf('generateVoicePack(')));
         final String run = audition.substring(audition.indexOf('Future<List<File>> runAudition('));
         expect(run.indexOf('requireTerminal('), lessThan(run.indexOf('write(plan.describe')));
         expect(run.indexOf('requireTyped('), lessThan(run.indexOf('synth()')));

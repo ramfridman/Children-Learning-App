@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import '../characters/lip_sync.dart';
 import '../content/pack_verify.dart';
+import '../content/zip_store.dart' show ZipLimits;
 
 /// One recorded line: the sound and when the mouth is open in it.
 class VoiceClip {
@@ -11,6 +12,10 @@ class VoiceClip {
   final String mime;
   final MouthTrack mouth;
 }
+
+/// The most clip bytes one voice may hold across all its parts: twice what one pack may hold (SEC-VP-4). A part that would
+/// take the voice over it is left out, so the audio of a guide in memory is bounded however many parts are installed.
+const int maxVoiceBytes = 2 * ZipLimits.maxTotalBytes;
 
 /// The last part of a voice (`voice-<id>-9`): a voice is at most nine packs, so a pack named with a number outside 2 to 9
 /// is never read as a part of anything.
@@ -65,6 +70,9 @@ class VoiceBank {
   final VoiceBank? fallback;
 
   int get length => _clips.length;
+
+  /// The bytes of all the clips of this bank.
+  int get clipBytes => _clips.values.fold<int>(0, (int s, VoiceClip c) => s + c.mp3.length);
 
   Iterable<String> get ids => _clips.keys;
 

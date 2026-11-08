@@ -14,6 +14,8 @@ import 'package:nitznutz/content/pack_verify.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/voice/voice_bank.dart';
 
+import 'package:nitznutz/content/schemas.dart';
+
 import '../tool/pack_builder_lib.dart';
 import 'support/character_fixtures.dart';
 import 'support/pack_fixtures.dart';
@@ -48,11 +50,12 @@ void main() {
   });
 
   /// Installs the voice pack `voice-<packOf>` with [lines]; every clip says whose pack it is and which line.
-  Future<void> install(String packOf, List<String> lines) async => installer.install(
-    (await buildVoicePack(key, packOf, <String, List<(int, int)>>{
-      for (final String l in lines) l: _cues,
-    })).bytes,
-  );
+  Future<void> install(String packOf, List<String> lines, {String version = '1.0.0'}) async =>
+      installer.install(
+        (await buildVoicePack(key, packOf, <String, List<(int, int)>>{
+          for (final String l in lines) l: _cues,
+        }, version: version)).bytes,
+      );
 
   String played(VoiceBank bank, String line) => utf8.decode(bank.clip('vo:$line')!.mp3);
 
@@ -179,16 +182,107 @@ void main() {
       expect(bank.ids, <String>['vo:a.one']);
     });
 
+    test('a character whose id ends in -2 to -9 cannot exist: the character builder and the schema refuse it (SEC-VP-2)', () async {
+      final Directory tmp = Directory('${dir.path}/chars')..createSync();
+      for (final String id in <String>['hero-son-2', 'hero-son-5', 'hero-son-9', 'abc-3']) {
+        await expectLater(
+          buildCharacterPack(writeCharacterFolder(tmp, id), key),
+          throwsA(isA<BuildFailed>()),
+          reason: id,
+        );
+      }
+      // Other endings are ordinary ids.
+      for (final String id in <String>[
+        'hero-son',
+        'hero-son-1',
+        'hero-son-10',
+        'hero-son-0',
+        'hero-son2',
+        'abc-12',
+      ]) {
+        await buildCharacterPack(writeCharacterFolder(tmp, id), key);
+      }
+      final RegExp pattern = RegExp('^(?:${Patterns.characterId})\$');
+      expect(pattern.hasMatch('hero-son-2'), isFalse);
+      expect(pattern.hasMatch('hero-son-9'), isFalse);
+      expect(pattern.hasMatch('hero-son-1'), isTrue);
+      expect(pattern.hasMatch('hero-son-22'), isTrue);
+      expect(
+        RegExp('^(?:${Patterns.packId})\$').hasMatch('hero-son-2'),
+        isTrue,
+        reason: 'pack ids are as they were',
+      );
+    });
+
     test(
-      'voice-<id>-N of a character that is called <id>-N is that character\'s own voice, not a part of <id>',
+      'as a second layer, voice-<id>-N is not a part of <id> while a character <id>-N is installed',
       () async {
-        final Directory tmp = Directory('${dir.path}/chars')..createSync();
-        final BuiltPack friend = await buildCharacterPack(writeCharacterFolder(tmp, 'hero-son-2'), key);
-        await installer.install(friend.bytes);
         await install('hero-son', <String>['a.one']);
         await install('hero-son-2', <String>['own.one']);
-        expect((await source.voice('hero-son')).ids, <String>['vo:a.one'], reason: 'not a part of hero-son');
+        expect((await source.voice('hero-son')).ids.toSet(), <String>{
+          'vo:a.one',
+          'vo:own.one',
+        }, reason: 'a part today');
+        await installer.registry.save(
+          id: 'char-hero-son-2',
+          version: '1.0.0',
+          manifestSha256: 'a' * 64,
+          at: DateTime.utc(2026, 11, 8),
+          hidden: false,
+          hiddenReason: '',
+        );
+        expect((await source.voice('hero-son')).ids, <String>['vo:a.one']);
         expect((await source.voice('hero-son-2')).ids, <String>['vo:own.one']);
+      },
+    );
+  });
+
+  group('one build at a time, and a bound on the audio (SEC-VP-3, SEC-VP-4)', () {
+    test('a part from another build (another version than the first part read) is left out', () async {
+      await install('hero-son', <String>['a.one'], version: '2.0.0');
+      await install('hero-son-2', <String>['b.one'], version: '1.0.0');
+      await install('hero-son-3', <String>['c.one'], version: '2.0.0');
+      final VoiceBank bank = await source.voice('hero-son');
+      expect(bank.ids.toSet(), <String>{'vo:a.one', 'vo:c.one'});
+    });
+
+    test('the first part that is read sets the version, also when part 1 is not installed', () async {
+      await install('hero-son-2', <String>['b.one'], version: '3.0.0');
+      await install('hero-son-3', <String>['c.one'], version: '2.0.0');
+      await install('hero-son-4', <String>['d.one'], version: '3.0.0');
+      expect((await source.voice('hero-son')).ids.toSet(), <String>{'vo:b.one', 'vo:d.one'});
+    });
+
+    test('a stale part cannot keep an old recording or refuse a fresh part of the same build', () async {
+      await install('hero-son', <String>['a.one', 'a.two'], version: '2.0.0');
+      await install('hero-son-2', <String>['a.two', 'b.one'], version: '1.0.0');
+      final VoiceBank bank = await source.voice('hero-son');
+      expect(bank.ids.toSet(), <String>{'vo:a.one', 'vo:a.two'});
+      expect(played(bank, 'a.two'), 'mp3:hero-son:a.two');
+    });
+
+    test(
+      'the clips of one voice are bounded across its parts: a part over the cap is left out, the others stay',
+      () async {
+        expect(maxVoiceBytes, 2 * 64 * 1024 * 1024);
+        // Each clip is 'mp3:hero-son:a.one' (18 bytes); the cap here is 40.
+        final InstalledCharacterSource small = InstalledCharacterSource(
+          installer: installer,
+          bundledHouse: () async => Uint8List(0),
+          maxVoiceClipBytes: 40,
+        );
+        await install('hero-son', <String>['a.one', 'a.two']);
+        await install('hero-son-2', <String>['b.one', 'b.two', 'b.three']);
+        await install('hero-son-3', <String>['c.one']);
+        final VoiceBank bank = await small.voice('hero-son');
+        expect(bank.clipBytes, lessThanOrEqualTo(40));
+        expect(bank.ids.toSet(), <String>{
+          'vo:a.one',
+          'vo:a.two',
+        }, reason: 'part 2 would pass 40, part 3 as well');
+        final VoiceBank wide = await source.voice('hero-son');
+        expect(wide.length, 6);
+        expect(wide.clipBytes, greaterThan(40));
       },
     );
   });
