@@ -57,6 +57,12 @@ void main() {
   /// What a child can do on [a] that is wrong: each option, or each wrong number to give.
   List<Future<Outcome> Function(LessonController)> wrongMoves(Activity a) => switch (a) {
     SayItActivity() => const <Future<Outcome> Function(LessonController)>[],
+    // A number typed on the keypad (M10): each wrong number the author expects, and one more than the right one.
+    TapAnswerActivity(numberAnswer: final NumberAnswer number?) =>
+      <Future<Outcome> Function(LessonController)>[
+        for (final int n in <int>{...number.expected.keys, number.value + 1}..remove(number.value))
+          (LessonController c) => c.enterNumber(n),
+      ],
     TapAnswerActivity() => <Future<Outcome> Function(LessonController)>[
       for (final ChoiceOption o in a.options)
         if (o.id != a.correctId) (LessonController c) => c.chooseOption(o.id),
@@ -122,6 +128,7 @@ void main() {
     final Activity a = c.current;
     return switch (a) {
       SayItActivity() => throw StateError('the lands have no say-it'),
+      TapAnswerActivity(numberAnswer: final NumberAnswer number?) => c.enterNumber(number.value),
       TapAnswerActivity() => c.chooseOption(a.correctId),
       CountTapActivity() => c.chooseOption(a.correctId),
       FlashActivity() => c.chooseOption(a.correctId),

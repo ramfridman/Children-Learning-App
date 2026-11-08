@@ -19,6 +19,10 @@ import 'placement.dart';
 const int _lessonsPerUnit = 3;
 const int _mostUnits = 4;
 
+/// The fewest right answers (first try, no help) that place a child: one lucky tap never puts a lesson behind a child (audit F7), however
+/// far down a long ladder the misses went before it.
+const int _fewestRights = 2;
+
 /// The most probes in one unit: the staircase asks two thirds right of what it asked there, so a unit needs a few to draw on.
 const int _mostProbes = 4;
 
@@ -144,7 +148,7 @@ int startLevelFor(List<PlacementLevel> levels, SchoolStage stage) {
 
 /// Where one child's warm-up in one land stands: the ladder, the staircase with the child's answers replayed into it, and what it found.
 class LandPlacement {
-  LandPlacement._(this.domain, this.levels, this.game, this.answered);
+  LandPlacement._(this.domain, this.levels, this.game, this.answered, this.rights);
 
   final String domain;
   final List<PlacementLevel> levels;
@@ -152,6 +156,9 @@ class LandPlacement {
 
   /// How many probes the child has answered.
   final int answered;
+
+  /// How many of them were right at the first try with no help.
+  final int rights;
 
   Staircase get stairs => game.stairs(domain)!;
 
@@ -169,8 +176,11 @@ class LandPlacement {
   /// The unit a probe belongs to, or null for an activity that is no probe of this land.
   int? levelOfProbe(String id) => game.whereIs(id)?.level;
 
-  /// The lessons of the units below the entry: they count as finished once.
-  Set<String> get placedLessons => <String>{for (int i = 0; i < (entry ?? 0); i++) ...levels[i].lessons};
+  /// The lessons of the units below the entry: they count as finished once. With fewer than two probes right there are none: a long
+  /// ladder lets a run of misses end on one lucky answer, and that places nobody.
+  Set<String> get placedLessons => rights < _fewestRights
+      ? const <String>{}
+      : <String>{for (int i = 0; i < (entry ?? 0); i++) ...levels[i].lessons};
 
   /// The skills of this land that those lessons teach: taken as probably known (the engine's prior for an assumed skill), until the
   /// child's own answers say otherwise.
@@ -217,17 +227,17 @@ LandPlacement? landPlacementOf(
     ],
     perVisit: Staircase.mostItems,
   );
+  int rights = 0;
   for (final MapEntry<String, List<Attempt>> e in byProbe.entries) {
     final List<Attempt> rows = e.value;
-    game.record(
-      e.key,
-      right:
-          rows.every((Attempt a) => a.result == 'correct') &&
-          rows.first.attemptNo == 1 &&
-          rows.first.hintLevel == 0,
-    );
+    final bool right =
+        rows.every((Attempt a) => a.result == 'correct') &&
+        rows.first.attemptNo == 1 &&
+        rows.first.hintLevel == 0;
+    if (right) rights++;
+    game.record(e.key, right: right);
   }
-  return LandPlacement._(domain, levels, game, byProbe.length);
+  return LandPlacement._(domain, levels, game, byProbe.length, rights);
 }
 
 /// What the warm-ups of every land found for one child: the lessons they put behind the child (counted as finished once) and the

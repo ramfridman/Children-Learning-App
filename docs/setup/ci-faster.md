@@ -86,7 +86,7 @@ The other 68 files take under half a minute each. 1,054 tests passed and 4 were 
 secrets, hygiene, osv, database, gateway        unchanged, in parallel as before
 app-static      format, analyze, debug APK      ~3 to 5.5 min
 app-tests       2 shards of the 83 test files   ~4 to 5 min each   (every test but the every-byte one)
-app-pack-bytes  the every-byte test             6 parts (stage 2), ~8 to 9.5 min each (estimate), job limit 25 min
+app-pack-bytes  the every-byte test             9 parts (2026-11-08, after starter 0.11.0), ~14 to 17 min each, job limit 25 min
 app             "app (Flutter analyze, tests, Android debug build)": green only if all three parts succeeded
 ```
 

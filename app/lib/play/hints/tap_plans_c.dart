@@ -29,9 +29,26 @@ extension _BandC on _Plans {
 
   HintPlan _facts(int level) {
     if (a.group != null && a.group2 != null) return add(level);
-    if (a.group != null && a.row.isEmpty) return _toTen(level);
+    if (a.group != null && a.row.isEmpty) {
+      final int? hidden = _hiddenStart;
+      return hidden == null || _isToTen ? _toTen(level) : add(level, hiddenStart: hidden);
+    }
     if (a.row.isNotEmpty) return _isCard ? _trueFalseCard(level) : _sentence(level);
     return generic(level);
+  }
+
+  /// The number of "how many more to make ten" (the group is what is there, the answer what is missing).
+  bool get _isToTen => a.group != null && _answerValue == 10 - a.group!.count && a.group!.count < 10;
+
+  /// The number a closed basket holds when the question says it and adds the group on the stage to it ("seven apples in the basket,
+  /// two more are put in"): the answer less the group, when the question says that number. Null for any other question.
+  int? get _hiddenStart {
+    final int? total = _answerValue;
+    final SpriteSet? set = a.group;
+    if (total == null || set == null) return null;
+    final int start = total - set.count;
+    if (start < 1 || total > _mostUnits || !numbersIn(a.promptLine.caption).contains(start)) return null;
+    return start;
   }
 
   /// A true-or-false card: a whole sentence in the row (no gap to fill) to be told right or wrong, with a tick and a cross to touch.
