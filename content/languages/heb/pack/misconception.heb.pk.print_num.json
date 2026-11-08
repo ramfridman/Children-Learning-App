@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pk.print_num",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "PRINT",
+  "skills": [
+    "HEB-A-10"
+  ],
+  "parentText": "הילד עוד מתבלבל בין אותיות לספרות.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "חפשו יחד על קופסאות במטבח או על שלט ברחוב: איפה יש אותיות, ואיפה יש מספרים? בזה קוראים, ובזה סופרים."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "symbolic",
+    "concrete"
+  ]
+}

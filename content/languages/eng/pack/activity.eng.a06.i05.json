@@ -1,0 +1,171 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a06.i05",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "listen_do",
+  "templateVersion": "1.0",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-06",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "embodied",
+  "variantGroup": "en-touch-mouth",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "do what is said",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנָה וְחָבֵר שֶׁעוֹשֶׂה מַה שֶּׁאוֹמְרִים"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_ins_touch_body",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַקְשִׁיבוּ, וּגְעוּ בַּגּוּף שֶׁל מִיקָה."
+      }
+    ],
+    "target": "vo:eng.en_touch_mouth",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נָכוֹן!"
+        }
+      ],
+      "target": "vo:eng.en_touch_mouth"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ],
+      "target": "vo:eng.en_touch_mouth"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:eng.he_hint_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
+        }
+      ],
+      "target": "vo:eng.en_touch_mouth"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:eng.he_gl_mouth",
+      "caption": [
+        {
+          "t": "he",
+          "v": "פֶּה"
+        }
+      ],
+      "target": "vo:eng.en_touch_mouth"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:eng.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:eng.en_touch_mouth"
+    }
+  ],
+  "scene": {
+    "picture": "asset:mika_body"
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "cards",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:body_mouth",
+        "label": "mouth",
+        "at": {
+          "x": 0.3594,
+          "y": 0.175,
+          "w": 0.2812,
+          "h": 0.2812
+        }
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:body_nose",
+        "label": "nose",
+        "at": {
+          "x": 0.3594,
+          "y": 0.1414,
+          "w": 0.2812,
+          "h": 0.2812
+        },
+        "misconception": "eng.lis.sem"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:body_head",
+        "label": "head",
+        "at": {
+          "x": 0.3516,
+          "y": 0.0641,
+          "w": 0.2969,
+          "h": 0.3359
+        },
+        "misconception": "eng.lis.l1_guess"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

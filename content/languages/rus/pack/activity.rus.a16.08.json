@@ -1,0 +1,180 @@
+{
+  "schema": "activity/v1",
+  "id": "rus.a16.08",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "story",
+  "templateVersion": "1.0",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "RUS-A-16",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a16-08",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "answer the question the story asks",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "סִפּוּר בִּתְמוּנוֹת"
+  },
+  "prompt": {
+    "vo": "vo:rus.f21",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נַקְשִׁיב לְסִפּוּר."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:rus.he_fb_right_7",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
+        }
+      ],
+      "target": "vo:rus.st3_3"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:rus.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:rus.f21",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב לְסִפּוּר."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:rus.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ]
+    }
+  ],
+  "scene": {
+    "pages": [
+      {
+        "picture": "asset:st3_p1",
+        "clips": [
+          "vo:rus.st3_1"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      },
+      {
+        "picture": "asset:st3_p2",
+        "clips": [
+          "vo:rus.st3_2"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      },
+      {
+        "picture": "asset:st3_p3",
+        "clips": [
+          "vo:rus.st3_3"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      }
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "dialogic",
+    "pauseAfter": 1,
+    "question": {
+      "vo": "vo:rus.f22",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מַה יִּקְרֶה עַכְשָׁו?"
+        }
+      ]
+    },
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:st3_p3",
+        "label": "תְּמוּנָה"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:st3_beach",
+        "label": "תְּמוּנָה",
+        "misconception": "rus.lis.seq"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:st3_boy",
+        "label": "תְּמוּנָה",
+        "misconception": "rus.lis.seq"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

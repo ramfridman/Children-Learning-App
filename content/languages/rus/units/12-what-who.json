@@ -1,0 +1,421 @@
+{
+  "skill": {
+    "id": "RUS-A-12",
+    "strand": "grm",
+    "title": "מִי זֶה? מַה זֶּה?",
+    "prerequisites": [
+      {
+        "skill": "RUS-A-05"
+      },
+      {
+        "skill": "RUS-A-08"
+      }
+    ],
+    "core": true
+  },
+  "items": [
+    {
+      "id": "05",
+      "kind": "tap",
+      "frame": "f17",
+      "target": "ch-kto-eto",
+      "options": [
+        {
+          "pic": "dog",
+          "clip": "w-sobaka"
+        },
+        {
+          "pic": "ball",
+          "clip": "w-mjach"
+        },
+        {
+          "pic": "car",
+          "clip": "w-mashina"
+        }
+      ],
+      "wrong": {
+        "ball": "kto",
+        "car": "kto"
+      },
+      "variant": "kto-sobaka"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "frame": "f17",
+      "target": "ch-kto-eto",
+      "options": [
+        {
+          "pic": "fam-grandmother",
+          "clip": "w-babushka"
+        },
+        {
+          "pic": "bread",
+          "clip": "w-hleb"
+        },
+        {
+          "pic": "hat-warm",
+          "clip": "w-shapka"
+        }
+      ],
+      "wrong": {
+        "bread": "kto",
+        "hat-warm": "kto"
+      },
+      "variant": "kto-babushka",
+      "after": "ch-eto-babushka"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "frame": "f17",
+      "target": "ch-chto-eto",
+      "options": [
+        {
+          "pic": "car",
+          "clip": "w-mashina"
+        },
+        {
+          "pic": "cat",
+          "clip": "w-koshka"
+        },
+        {
+          "pic": "boy",
+          "clip": "w-malchik"
+        }
+      ],
+      "wrong": {
+        "cat": "kto",
+        "boy": "kto"
+      },
+      "purpose": "check",
+      "variant": "chto-mashina",
+      "after": "ch-eto-mashina"
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "frame": "f17",
+      "target": "ch-chto-eto",
+      "options": [
+        {
+          "pic": "apple",
+          "clip": "w-yabloko"
+        },
+        {
+          "pic": "hedgehog",
+          "clip": "w-yozh"
+        },
+        {
+          "pic": "girl",
+          "clip": "w-devochka"
+        }
+      ],
+      "wrong": {
+        "hedgehog": "kto",
+        "girl": "kto"
+      },
+      "purpose": "check",
+      "variant": "chto-jabloko",
+      "after": "ch-eto-jabloko"
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f17",
+      "target": "ch-kto-eto",
+      "options": [
+        {
+          "pic": "cat",
+          "clip": "w-koshka"
+        },
+        {
+          "pic": "car",
+          "clip": "w-mashina"
+        },
+        {
+          "pic": "book",
+          "clip": "w-kniga"
+        }
+      ],
+      "wrong": {
+        "car": "kto",
+        "book": "kto"
+      },
+      "purpose": "probe",
+      "variant": "kto-koshka"
+    },
+    {
+      "id": "p02",
+      "kind": "tap",
+      "frame": "f17",
+      "target": "ch-chto-eto",
+      "options": [
+        {
+          "pic": "ball",
+          "clip": "w-mjach"
+        },
+        {
+          "pic": "dog",
+          "clip": "w-sobaka"
+        },
+        {
+          "pic": "girl",
+          "clip": "w-devochka"
+        }
+      ],
+      "wrong": {
+        "dog": "kto",
+        "girl": "kto"
+      },
+      "purpose": "probe",
+      "variant": "chto-mjach"
+    },
+    {
+      "id": "01",
+      "kind": "puppet",
+      "mode": "bubble",
+      "frame": "f07",
+      "picture": "ball",
+      "prompt": [
+        "ch-chto-eto"
+      ],
+      "options": [
+        {
+          "clip": "ch-eto-mjach"
+        },
+        {
+          "clip": "ch-eto-kukla"
+        },
+        {
+          "clip": "sen-2"
+        }
+      ],
+      "wrong": {
+        "ch-eto-kukla": "sem",
+        "sen-2": "sem"
+      },
+      "ladder": "HL-GLOSS",
+      "rep": "story"
+    },
+    {
+      "id": "02",
+      "kind": "puppet",
+      "mode": "bubble",
+      "frame": "f07",
+      "picture": "cat",
+      "prompt": [
+        "ch-kto-eto"
+      ],
+      "options": [
+        {
+          "clip": "ch-eto-koshka"
+        },
+        {
+          "clip": "ch-eto-sobaka"
+        },
+        {
+          "clip": "ch-eto-mjach"
+        }
+      ],
+      "wrong": {
+        "ch-eto-sobaka": "sem",
+        "ch-eto-mjach": "sem"
+      },
+      "ladder": "HL-GLOSS",
+      "rep": "story"
+    },
+    {
+      "id": "03",
+      "kind": "puppet",
+      "mode": "bubble",
+      "frame": "f07",
+      "picture": "apple",
+      "prompt": [
+        "ch-chto-eto"
+      ],
+      "options": [
+        {
+          "clip": "ch-eto-jabloko"
+        },
+        {
+          "clip": "ch-eto-banan"
+        },
+        {
+          "clip": "ch-eto-moloko"
+        }
+      ],
+      "wrong": {
+        "ch-eto-banan": "sem",
+        "ch-eto-moloko": "sound"
+      },
+      "ladder": "HL-GLOSS",
+      "rep": "story"
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "frame": "f17",
+      "purpose": "check",
+      "options": [
+        {
+          "clip": "ch-eto-mama"
+        },
+        {
+          "clip": "ch-eto-papa"
+        },
+        {
+          "clip": "ch-eto-babushka"
+        }
+      ],
+      "wrong": {
+        "ch-eto-papa": "sound",
+        "ch-eto-babushka": "sem"
+      },
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "stage": "fam-mother",
+      "target": "ch-kto-eto",
+      "check": "reverse",
+      "hintWord": "ch-eto-mama",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sound": "he-fb-check",
+          "sem": "he-fb-check"
+        },
+        "unsure": "f17"
+      }
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "f18",
+      "stage": "dog",
+      "target": "ch-eto-kot-q",
+      "options": [
+        "mika-no",
+        "mika-yes"
+      ],
+      "wrong": {
+        "mika-yes": "yesno"
+      },
+      "pole": "no",
+      "ladder": "HL-1",
+      "rep": "pictorial",
+      "after": [
+        "w-net",
+        "ch-eto-sobaka"
+      ]
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "frame": "f18",
+      "stage": "ball",
+      "target": "ch-eto-mjach-q",
+      "options": [
+        "mika-yes",
+        "mika-no"
+      ],
+      "wrong": {
+        "mika-no": "yesno"
+      },
+      "pole": "yes",
+      "ladder": "HL-1",
+      "rep": "pictorial",
+      "after": [
+        "w-da",
+        "ch-eto-mjach"
+      ]
+    },
+    {
+      "id": "11",
+      "kind": "tap",
+      "frame": "f18",
+      "stage": "bird",
+      "target": "ch-eto-ryba-q",
+      "options": [
+        "mika-no",
+        "mika-yes"
+      ],
+      "wrong": {
+        "mika-yes": "yesno"
+      },
+      "pole": "no",
+      "ladder": "HL-1",
+      "rep": "pictorial",
+      "after": [
+        "w-net"
+      ]
+    },
+    {
+      "id": "12",
+      "kind": "tap",
+      "frame": "f18",
+      "stage": "doll",
+      "target": "ch-eto-kukla-q",
+      "options": [
+        "mika-yes",
+        "mika-no"
+      ],
+      "wrong": {
+        "mika-no": "yesno"
+      },
+      "pole": "yes",
+      "ladder": "HL-1",
+      "rep": "pictorial",
+      "after": [
+        "w-da",
+        "ch-eto-kukla"
+      ]
+    }
+  ],
+  "lessons": [
+    {
+      "id": "what-who-1",
+      "title": "מִי זֶה? מַה זֶּה?",
+      "items": [
+        "05",
+        "06"
+      ]
+    },
+    {
+      "id": "what-who-more1",
+      "title": "מִי זֶה? מַה זֶּה?",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "09",
+        "10",
+        "11"
+      ]
+    },
+    {
+      "id": "what-who-more2",
+      "title": "מִי זֶה? מַה זֶּה?",
+      "items": [
+        "12"
+      ]
+    }
+  ],
+  "routes": {
+    "new": {
+      "note": "all items; кто / что first with the animals and people of A-02 and A-05"
+    },
+    "heritage": {
+      "teach": false,
+      "weight": [
+        "05",
+        "06",
+        "07",
+        "08"
+      ]
+    },
+    "reader": {
+      "as": "oral",
+      "note": "as heritage or new"
+    }
+  }
+}

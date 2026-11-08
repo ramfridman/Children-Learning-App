@@ -1,0 +1,171 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a02.03",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.3",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "heb-a-w-keara",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "listen and choose",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "שָׁלוֹשׁ תְּמוּנוֹת"
+  },
+  "prompt": {
+    "vo": "vo:heb.i_find",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נִמְצָא:"
+      }
+    ],
+    "target": "vo:heb.heb_a_w_keara",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁמַעְתֶּם טוֹב!"
+        }
+      ],
+      "target": "vo:heb.heb_a_w_keara"
+    },
+    "incorrect": [
+      {
+        "when": "misconception:heb.ol.sem",
+        "vo": "vo:heb.fb_sem",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה דּוֹמֶה. בּוֹאוּ נִשְׁמַע שׁוּב."
+          }
+        ],
+        "target": "vo:heb.heb_a_w_keara"
+      },
+      {
+        "when": "misconception:heb.ol.soundalike",
+        "vo": "vo:heb.fb_soundalike",
+        "caption": [
+          {
+            "t": "he",
+            "v": "שִׁמְעוּ עַד הַסּוֹף."
+          }
+        ],
+        "target": "vo:heb.heb_a_w_keara"
+      },
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_keara"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_keara"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:heb.m_keara",
+      "caption": [
+        {
+          "t": "he",
+          "v": "קְעָרָה הִיא כְּלִי עָגֹל וְעָמֹק."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:heb.show",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַעֲשֶׂה אֶת זֶה יַחַד."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_keara"
+    }
+  ],
+  "scene": {},
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:bowl",
+        "label": "תְּמוּנָה"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:plate",
+        "label": "תְּמוּנָה",
+        "misconception": "heb.ol.sem"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:cave",
+        "label": "תְּמוּנָה",
+        "misconception": "heb.ol.soundalike"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

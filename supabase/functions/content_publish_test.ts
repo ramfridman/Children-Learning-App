@@ -54,6 +54,38 @@ Deno.test("content-publish: the right secret publishes a pack's item index", asy
   assert.equal(r.headers.get("access-control-allow-origin"), null);
 });
 
+// SEC-BA-5: the language packs ship inside the app and are never published; the gateway's caps stay as they are (60 misconception skills
+// in a pack schema is not 10 in an index: a language pack cannot be published "as it is", by design).
+Deno.test("content-publish: a language course's pack is refused for that reason, and the starter's own body is accepted", async () => {
+  const { store, publish } = setup();
+  const lines: string[] = [];
+  const realLog = console.log;
+  console.log = (line: unknown) => void lines.push(String(line));
+  try {
+    for (const lang of ["lang-eng", "lang-heb", "lang-rus"]) {
+      const r = await publish(goodBody({ pack_id: lang }));
+      assert.equal(r.status, 400, lang);
+    }
+    for (const skill of ["ENG-A-01", "HEB-A-11", "RUS-A-01"]) {
+      const r = await publish(goodBody({ items: [{ ...goodItem(), skill_ids: [skill] }] }));
+      assert.equal(r.status, 400, skill);
+    }
+  } finally {
+    console.log = realLog;
+  }
+  const reasons = lines.map((l) => JSON.parse(l).reason);
+  assert.deepEqual(reasons, [
+    "language_pack",
+    "language_pack",
+    "language_pack",
+    "language_skill",
+    "language_skill",
+    "language_skill",
+  ], "each is refused for its own reason, not for some other shape");
+  assert.equal(store.packs.size, 0, "nothing published");
+  assert.equal((await publish(goodBody())).status, 200, "the same body under the starter's id passes");
+});
+
 Deno.test("content-publish: no secret, a wrong secret and a missing configuration are refused and change nothing", async () => {
   const { store, publish, svc } = setup();
   assert.equal((await publish(goodBody(), null)).status, 401);

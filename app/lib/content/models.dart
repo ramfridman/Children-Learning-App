@@ -31,7 +31,7 @@ String _caption(Object? o) => _map((o! as List<Object?>).single)['v']! as String
 /// clip, the target-language clip that follows the Hebrew frame clip ([target]), and a target word to show in a chip under the
 /// caption ([show]); never inside it.
 class Spoken {
-  const Spoken({required this.vo, required this.caption, this.target, this.show});
+  const Spoken({required this.vo, required this.caption, this.target, this.target2, this.show});
 
   factory Spoken.fromJson(Object? json) {
     final Map<String, Object?> m = _map(json);
@@ -39,13 +39,17 @@ class Spoken {
       vo: m['vo']! as String,
       caption: _caption(m['caption']),
       target: m['target'] as String?,
+      target2: m['target2'] as String?,
       show: m['show'] as String?,
     );
   }
 
   final String vo;
   final String caption;
+
+  /// A language course: the clip that follows [vo], and a second one after it (a question and its answer, two sounds to compare).
   final String? target;
+  final String? target2;
   final String? show;
 }
 
@@ -190,6 +194,16 @@ sealed class Activity {
   /// and model text in a target language cannot be checked (docs/languages/frame.md section 1.6).
   bool get llmAllowed => course == Course.core && _map(json['tutor'])['llmAllowed'] == true;
 
+  /// The item's text is set in the display face (Secular One) and not in the course's usual one: a transfer check of the same letters in
+  /// another face (docs/languages/hebrew/band-a-content.md, A-10.6 and A-11.4). Hebrew only.
+  bool get displayFont => json['font'] == 'display';
+
+  /// The activity that forms a balanced pair with this one (a yes and a no: `answer.pairWith`), or null.
+  String? get pairWith => _map(json['answer'])['pairWith'] as String?;
+
+  /// A teach screen: shown before a lesson to a route that needs the words, never an item of the engine's catalogue.
+  bool get teachScreen => false;
+
   /// A step that is never scored (a story only heard, a chant, the embodied "done", a personal turn): it writes no attempt of any
   /// kind, not even an "unsure", and the child is offered no help in it (docs/languages/frame.md section 3.3.8 and 5.2).
   bool get unscored => false;
@@ -201,6 +215,9 @@ sealed class Activity {
     if (_map(json['answer'])['misconception'] is String) _map(json['answer'])['misconception']! as String,
     for (final Map<String, Object?> c in _maps(_map(json['answer'])['classifiers']))
       if (c['misconception'] is String) c['misconception']! as String,
+    // The look-alike pairs of the own-name answer: the tag a touch on the look-alike of the child's first letter carries.
+    for (final Map<String, Object?> p in _maps(_map(json['answer'])['pairs']))
+      if (p['misconception'] is String) p['misconception']! as String,
   }.toList();
 
   /// What the learning engine needs to know about the activity.
@@ -283,6 +300,7 @@ class ChoiceOption {
     this.text,
     this.clip,
     this.reveal,
+    this.zone,
     this.ats = const <Rect>[],
     this.picture,
   });
@@ -313,6 +331,9 @@ class ChoiceOption {
   final String? clip;
   final String? reveal;
 
+  /// Where a touch is this option on a page that shows its text (`picture`, `line1-start`, `word`, `other` ...); null for any other option.
+  final String? zone;
+
   /// Where the option is in the picture of the scene, as shares of its width and height (a part of a body, a thing in a room, a
   /// place to put something): LS11. Several for a part that has more than one place (both ears). Empty for an option that is a tile.
   final List<Rect> ats;
@@ -341,6 +362,7 @@ List<ChoiceOption> _options(Object? answer) => <ChoiceOption>[
       text: o['text'] as String?,
       clip: o['clip'] as String?,
       reveal: o['reveal'] as String?,
+      zone: o['zone'] as String?,
       ats: _rects(o['at']),
     ),
 ];
@@ -478,6 +500,10 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
   /// A cloze (LS01 e): a sentence with one gap (`_`), and an optional picture beside it; null when the item has none.
   final ({String text, String? picture})? cloze;
 
+  /// The own-name answer of Hebrew Band A (`answer.type` `name`): the options are not in the pack, they are made on the device from the
+  /// child's first name when the lesson opens (`play/name_options.dart`). Until then the item has no face to draw.
+  bool get ownName => _map(this.json['answer'])['type'] == 'name';
+
   /// The LS01 mode this item plays in, or null for the plain tap of L1 (pictures, texts or sounds on tiles).
   Ls01TapMode? get ls01Mode => all
       ? Ls01TapMode.tapAll
@@ -507,9 +533,14 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
   final int? stageNumeral;
 
   /// Numerals and sets are answered on tiles below the stage (it is too small for them); pictures stay on the stage. A number answer
-  /// is typed on a keypad where the tiles would be.
+  /// is typed on a keypad where the tiles would be. In a language course a picture the question stands on (a group: the dog of "is it a
+  /// cat?", the family, the box) has the whole stage and the pictures that answer are tiles under it (QA-BA-6): sharing the phone's
+  /// 128-point stage made both a thumbnail.
   bool get optionsInTiles =>
-      _tilesFlag || numberAnswer != null || options.any((ChoiceOption o) => o.sprite == null);
+      _tilesFlag ||
+      numberAnswer != null ||
+      options.any((ChoiceOption o) => o.sprite == null) ||
+      (group != null && Course.isLanguage(course));
 
   /// The kind of the stage picture, when it is one that a session draws ([drawnStagePictureKinds]); null for none, and for a kind that
   /// no session draws yet.
@@ -537,18 +568,30 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
       if (o.misconception != null) o.misconception!,
     ...?numberAnswer?.expected.values,
     ...?numberAnswer?.rules.values,
+    for (final Map<String, Object?> p in _maps(_map(this.json['answer'])['pairs']))
+      if (p['misconception'] is String) p['misconception']! as String,
   };
 }
 
 /// One page of a story: its picture, the clips of its narration, what a screen reader says, and the things in it that say their word
 /// when touched.
 class StoryPage {
-  const StoryPage({required this.picture, required this.clips, required this.alt, required this.words});
+  const StoryPage({
+    required this.picture,
+    required this.clips,
+    required this.alt,
+    required this.words,
+    this.lines = const <List<({String text, String? clip})>>[],
+  });
 
   final String picture;
   final List<String> clips;
   final String alt;
   final List<({Rect at, String clip})> words;
+
+  /// The text of the page, shown, line by line and word by word, each word with the clip of the voice saying it alone when the story is a
+  /// `follow`. Empty for a page that shows only its picture.
+  final List<List<({String text, String? clip})>> lines;
 }
 
 /// The story template (LS08, docs/languages/frame.md section 2.3): a picture book. In `listen` mode it is heard to its end and is
@@ -566,8 +609,16 @@ class StoryActivity extends Activity implements ChoiceActivity {
               for (final Map<String, Object?> w in _maps(p['words']))
                 (at: _rect(w['at'])!, clip: w['clip']! as String),
             ],
+            lines: <List<({String text, String? clip})>>[
+              for (final Object? line in (p['lines'] as List<Object?>? ?? const <Object?>[]))
+                <({String text, String? clip})>[
+                  for (final Map<String, Object?> w in _maps(line))
+                    (text: w['text']! as String, clip: w['clip'] as String?),
+                ],
+            ],
           ),
       ],
+      mode = _map(json['answer'])['mode'] as String,
       pauseAfter = _map(json['answer'])['pauseAfter'] as int?,
       question = _map(json['answer'])['question'] == null
           ? null
@@ -588,10 +639,17 @@ class StoryActivity extends Activity implements ChoiceActivity {
   @override
   final String correctId;
 
+  /// `listen`, `dialogic`, or one of the two print-direction modes: `zones` (where does reading start?) and `follow` (touch each word as the
+  /// voice reads it), which show the page's text.
+  final String mode;
+
   bool get dialogic => question != null;
 
+  /// A page that shows its text and asks where to touch it (Hebrew Band A, HEB-A-12).
+  bool get reads => mode == 'zones' || mode == 'follow';
+
   @override
-  bool get unscored => !dialogic;
+  bool get unscored => mode == 'listen';
 
   @override
   int get optionCount => options.length;
@@ -1841,7 +1899,36 @@ class SayItActivity extends Activity {
       heard = Spoken.fromJson(_map(json['say'])['heard']),
       together = Spoken.fromJson(_map(json['say'])['together']),
       scored = _map(json['answer'])['scored'] == true,
+      teach = _map(json['answer'])['teach'] == true,
+      hear = _map(json['answer'])['hear'] == true,
+      order = <String, String>{
+        for (final MapEntry<String, Object?> e in _maybe(_map(json['say'])['order']).entries)
+          e.key: e.value! as String,
+      },
+      pictureFirstLine = _map(json['say'])['pictureFirst'] == null
+          ? null
+          : Spoken.fromJson(_map(json['say'])['pictureFirst']),
       super._();
+
+  /// A teach screen (`answer.teach`): the word is shown and said twice, the child may say it with the voice. It is never scored, writes no
+  /// attempt, has no microphone and no help (nothing can be got wrong), and the engine does not see it.
+  final bool teach;
+
+  /// A hearing screen (`answer.hear`, always a teach screen too): the line and the word once, no microphone, no "I said it", the word again
+  /// whenever the child touches the replay button; the picture shows once the word has been said. It writes nothing either.
+  final bool hear;
+
+  /// The order the step is played in on each route (`echo`: the model first, then the child; `picture`: the question first, the model after
+  /// a pause), by route name; empty for a step that has no routes (a course that has none, a teach or hearing screen).
+  final Map<String, String> order;
+
+  /// The line that asks the child to say the word before it is heard (no clip after it), or null.
+  final Spoken? pictureFirstLine;
+
+  /// Whether the child is asked for the word before it is heard on [route] (a route not set counts as a new learner). [echoOnly] is the
+  /// visit's quiet fallback (too many unsure turns): the rest of the visit is echo, silently. A teach or hearing screen is always echo.
+  bool picturesFirst(String? route, {bool echoOnly = false}) =>
+      !teach && !echoOnly && pictureFirstLine != null && order[route ?? 'new'] == 'picture';
 
   /// The picture (an `asset:` reference).
   final String picture;
@@ -1860,6 +1947,12 @@ class SayItActivity extends Activity {
 
   /// The tap on the picture is a scored listening answer.
   final bool scored;
+
+  @override
+  bool get unscored => teach;
+
+  @override
+  bool get teachScreen => teach;
 
   @override
   int get optionCount => 0;
@@ -1972,6 +2065,14 @@ class Lesson {
       itemIds = <String>[for (final Object? i in json['items']! as List<Object?>) i! as String],
       skillIds = <String>[for (final Object? s in json['skills']! as List<Object?>) s! as String],
       sequence = (json['sequence'] as int?) ?? 1000,
+      teach = <TeachSet>[
+        for (final Map<String, Object?> t in _maps(json['teach']))
+          TeachSet(
+            itemIds: <String>[for (final Object? i in t['items']! as List<Object?>) i! as String],
+            routes: <String>{for (final Object? r in t['routes']! as List<Object?>) r! as String},
+            hear: t['mode'] == 'hear',
+          ),
+      ],
       stopAfterStruggles = 0,
       celebration = Spoken.fromJson(json['celebration']),
       demo = json['demo'] == null ? null : Spoken.fromJson(json['demo']);
@@ -1986,6 +2087,7 @@ class Lesson {
   }) : revision = 1,
        sequence = 1000,
        demo = null,
+       teach = const <TeachSet>[],
        course = skillIds.isEmpty ? Course.core : Course.ofSkillId(skillIds.first),
        title = '';
 
@@ -1999,6 +2101,9 @@ class Lesson {
   /// Where the lesson sits on the path of its land (smaller comes first); 1000 for a lesson that has no place.
   final int sequence;
 
+  /// The teach screens that come before the lesson's items, each set for the routes that are shown it (see [PackContent.itemsFor]).
+  final List<TeachSet> teach;
+
   /// A lesson that ends gently, with its celebration, once the child has needed the full help on this many activities in a
   /// row (the placement warm-up: it must never become a string of failures). 0 means it never stops early.
   final int stopAfterStruggles;
@@ -2007,6 +2112,19 @@ class Lesson {
   /// The line said at the end of the demonstration this lesson opens with (ten loose cubes snapping into a rod, see `block_demo.dart`), or
   /// null for a lesson that has none (every revisit mission).
   final Spoken? demo;
+}
+
+/// A set of screens to be shown before a lesson asks its words, in order, and the routes of a language course that are shown them: the
+/// teach screens of new words (LS09, echo) for a new learner, or, when [hear], the hearing screens of words a heritage speaker is to hear
+/// once before they are asked. A heritage speaker already knows the words and is never shown a teach screen.
+class TeachSet {
+  const TeachSet({required this.itemIds, required this.routes, this.hear = false});
+
+  final List<String> itemIds;
+  final Set<String> routes;
+
+  /// A set of hearing screens (`mode` `hear`), not of teach screens.
+  final bool hear;
 }
 
 /// A skill of the pack, for the learning engine.
@@ -2039,6 +2157,7 @@ class SkillDoc {
         _ => null,
       },
       strand = json['strand'] as String?,
+      readerAs = (json['readerAs'] as String?) ?? 'oral',
       masteryRequires = (json['masteryRequires'] as Map<String, Object?>?) ?? const <String, Object?>{},
       initialStabilityDays = (_map(json['retention'])['initialStabilityDays']! as num).toDouble(),
       targetRetention = (_map(json['retention'])['targetRetention']! as num).toDouble();
@@ -2072,6 +2191,10 @@ class SkillDoc {
 
   /// The strand of the course (`lis`, `ph`, `rea` ...) the progress view groups the skill under; null in the lands.
   final String? strand;
+
+  /// How a child whose route is `reader` is served in this skill: `oral` (the default: as strand 1 of the placement says) or `heritage`
+  /// (see `servedRoute`). Only the Russian course says anything else.
+  final String readerAs;
   final Map<String, Object?> masteryRequires;
   final double initialStabilityDays;
   final double targetRetention;
@@ -2310,8 +2433,27 @@ class PackContent {
   /// The placement game of the course (LS13), or null: the lands have none, and a language pack may not have one yet.
   final PlacementDoc? placement;
 
-  /// The activities of a lesson, in order. An item that is hidden (see [PackContent.fromPack]) is left out.
+  /// The activities of a lesson, in order. An item that is hidden (see [PackContent.fromPack]) is left out, and so is a teach screen: the
+  /// validator refuses one among the items, and a teach screen is only ever played from a `teach` set, which [itemsFor] filters by route.
   List<Activity> itemsOf(Lesson lesson) => <Activity>[
-    for (final String id in lesson.itemIds) ?activities[id],
+    for (final String id in lesson.itemIds)
+      if (activities[id] case final Activity a when !a.teachScreen) a,
   ];
+
+  /// What a child served on [route] (`new` or `heritage`: [servedRoute] has resolved a reader) plays in [lesson]: the screens of the sets
+  /// that route is shown, then the lesson's items, the same for every route. A route that is not set yet counts as a new learner. A
+  /// heritage speaker is never shown a teach screen (a `teach` set may not name that route) and is shown a hearing screen only from a
+  /// `hear` set, a new learner never; a pack that says otherwise is refused here as well, by the set's label and by each screen's own kind
+  /// (a set shows only the teach or hearing screens it is for, whatever it lists). Any other route (a reader nobody resolved) is
+  /// served as a new learner, the side that shows more. A route never removes, adds or reorders a lesson's items.
+  List<Activity> itemsFor(Lesson lesson, {String? route}) {
+    final bool heritage = route == 'heritage';
+    return <Activity>[
+      for (final TeachSet set in lesson.teach)
+        if (set.routes.contains(heritage ? 'heritage' : 'new') && set.hear == heritage)
+          for (final String id in set.itemIds)
+            if (activities[id] case final SayItActivity a when a.teach && a.hear == heritage) a,
+      ...itemsOf(lesson),
+    ];
+  }
 }

@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.order-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "סַדְּרוּ אֶת הַסִּפּוּר"
+    }
+  ],
+  "skills": [
+    "HEB-A-13"
+  ],
+  "items": [
+    "heb.a13.01",
+    "heb.a13.02"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 26
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pa.blend_first",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "SEGMENT",
+  "skills": [
+    "HEB-A-09"
+  ],
+  "parentText": "הילד שומע את החלק הראשון של המילה ומנחש את השאר.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "שחקו \"איזו מילה?\": אמרו שם של דבר בבית בחלקים, לאט ואחר כך מהר יותר, עד שהילד מגלה את המילה ומביא את הדבר."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

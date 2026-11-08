@@ -17,7 +17,12 @@ List<String> undrawnUses(String where, Object? doc) {
   if (doc is! Map<String, Object?>) return const <String>[];
   final List<String> found = <String>[];
   final Object? scene = doc['scene'];
-  if (scene is Map<String, Object?> && scene.containsKey('picture')) {
+  // The stage picture (X1) is a field of `tap_answer`; the language templates (listen and do, puppet talk, the drum, say it) have a
+  // `scene.picture` of their own, an asset that they draw.
+  final Object? template = doc['template'];
+  if ((template == null || template == 'tap_answer') &&
+      scene is Map<String, Object?> &&
+      scene.containsKey('picture')) {
     final Object? picture = scene['picture'];
     final Object? kind = picture is Map<String, Object?> ? picture['kind'] : null;
     if (!_drawn.contains(kind)) {
@@ -66,6 +71,14 @@ void main() {
       isEmpty,
     );
     expect(undrawnUses('d', <Object?>[1, 2]), isEmpty);
+    expect(
+      undrawnUses('f', <String, Object?>{
+        'template': 'listen_do',
+        'scene': <String, Object?>{'picture': 'asset:mika_body'},
+      }),
+      isEmpty,
+      reason: 'the language templates draw their own scene picture',
+    );
     expect(
       undrawnUses('e', <String, Object?>{
         'scene': <String, Object?>{'picture': 1},

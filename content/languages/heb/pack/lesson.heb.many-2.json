@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.many-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד אֶחָד וְהַרְבֵּה"
+    }
+  ],
+  "skills": [
+    "HEB-A-05"
+  ],
+  "items": [
+    "heb.a05.04",
+    "heb.a05.05",
+    "heb.a05.06",
+    "heb.a05.07"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 30
+}

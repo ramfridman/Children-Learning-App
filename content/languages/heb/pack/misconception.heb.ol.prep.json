@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.prep",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "GRAMMAR",
+  "skills": [
+    "HEB-A-04"
+  ],
+  "parentText": "הילד עוד מתבלבל בין המילים על, מתחת, בתוך וליד.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "החביאו צעצוע בבית ואמרו איפה הוא: על הכיסא, מתחת לשולחן, בתוך הקופסה, ליד הדלת. אחר כך מתחלפים: הילד מחביא ואומר."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "embodied",
+    "pictorial"
+  ]
+}

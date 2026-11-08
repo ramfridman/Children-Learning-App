@@ -52,6 +52,11 @@ abstract class TemplateSession extends ChangeNotifier {
   /// sessions the voice director's; a session that has none (a test) makes no sound.
   ClipPlayer? playClips;
 
+  /// Completes when the voice has said every line it was asked for (see `VoiceDirector.untilQuiet`): a step that waits for the end of the
+  /// question (a say step asked picture first gives the child its pause after it, a hearing screen shows its picture after the word) calls
+  /// it. Null in a session that has no voice (a test): there is nothing to wait for.
+  Future<void> Function()? untilQuiet;
+
   /// Runs [action] after [delay] unless the session has been disposed.
   void later(Duration delay, VoidCallback action) {
     _timers.add(

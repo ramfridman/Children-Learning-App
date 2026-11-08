@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.story_world",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "HEB-A-01"
+  ],
+  "parentText": "הילד עונה לפעמים ממה שקורה בדרך כלל, ולא ממה שקרה בסיפור.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "אחרי סיפור, שאלו \"ומה קרה בסיפור שלנו?\", ודפדפו יחד לעמוד כדי לבדוק."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story",
+    "pictorial"
+  ]
+}

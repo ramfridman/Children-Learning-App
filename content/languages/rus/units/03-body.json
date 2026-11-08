@@ -1,0 +1,423 @@
+{
+  "skill": {
+    "id": "RUS-A-03",
+    "strand": "voc",
+    "title": "הַגּוּף",
+    "prerequisites": [
+      {
+        "skill": "RUS-A-01"
+      }
+    ],
+    "setCoverage": true
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-nos",
+      "options": [
+        "nose",
+        "mouth",
+        "eyes"
+      ],
+      "right": "nose",
+      "wrong": {
+        "mouth": "sound",
+        "eyes": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "02",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-rot",
+      "options": [
+        "mouth",
+        "nose",
+        "ears"
+      ],
+      "right": "mouth",
+      "wrong": {
+        "nose": "sound",
+        "ears": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "03",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-glaza",
+      "options": [
+        "eyes",
+        "ears",
+        "nose"
+      ],
+      "right": "eyes",
+      "wrong": {
+        "ears": "sem",
+        "nose": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "04",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-ushi",
+      "options": [
+        "ears",
+        "eyes",
+        "arms"
+      ],
+      "right": "ears",
+      "wrong": {
+        "eyes": "sem",
+        "arms": "sound"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "05",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-ruki",
+      "options": [
+        "arms",
+        "legs",
+        "ears"
+      ],
+      "right": "arms",
+      "wrong": {
+        "legs": "sem",
+        "ears": "sound"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "06",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-nogi",
+      "options": [
+        "legs",
+        "arms",
+        "nose"
+      ],
+      "right": "legs",
+      "wrong": {
+        "arms": "sem",
+        "nose": "sound"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "07",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-zhivot",
+      "options": [
+        "tummy",
+        "head",
+        "legs"
+      ],
+      "right": "tummy",
+      "wrong": {
+        "head": "sem",
+        "legs": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "08",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-paltsy",
+      "options": [
+        "fingers",
+        "nose",
+        "hair"
+      ],
+      "right": "fingers",
+      "wrong": {
+        "nose": "sem",
+        "hair": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "09",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-zuby",
+      "options": [
+        "teeth",
+        "eyes",
+        "ears"
+      ],
+      "right": "teeth",
+      "wrong": {
+        "eyes": "sem",
+        "ears": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "10",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-volosy",
+      "options": [
+        "hair",
+        "tummy",
+        "arms"
+      ],
+      "right": "hair",
+      "wrong": {
+        "tummy": "sem",
+        "arms": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "11",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "picture": "mika-body",
+      "frame": "f08",
+      "target": "ch-pokazhi-golovu",
+      "options": [
+        "head",
+        "legs",
+        "tummy"
+      ],
+      "right": "head",
+      "wrong": {
+        "legs": "sem",
+        "tummy": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f08",
+      "target": "ch-pokazhi-ushi",
+      "options": [
+        {
+          "pic": "body-ears",
+          "clip": "w-ushi"
+        },
+        {
+          "pic": "body-eyes",
+          "clip": "w-glaza"
+        },
+        {
+          "pic": "body-arms",
+          "clip": "w-ruki"
+        }
+      ],
+      "wrong": {
+        "body-eyes": "sem",
+        "body-arms": "sound"
+      },
+      "purpose": "probe"
+    },
+    {
+      "id": "12",
+      "kind": "listen_do",
+      "frame": "f08",
+      "mode": "hotspots",
+      "picture": "doll-body",
+      "target": "ch-pokazhi-nos",
+      "options": [
+        "nose",
+        "mouth",
+        "eyes"
+      ],
+      "right": "nose",
+      "wrong": {
+        "mouth": "sound",
+        "eyes": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "13",
+      "kind": "listen_do",
+      "frame": "f08",
+      "mode": "hotspots",
+      "picture": "doll-body",
+      "target": "ch-pokazhi-ushi",
+      "options": [
+        "ears",
+        "eyes",
+        "arms"
+      ],
+      "right": "ears",
+      "wrong": {
+        "eyes": "sem",
+        "arms": "sound"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "14",
+      "kind": "listen_do",
+      "frame": "f08",
+      "purpose": "check",
+      "mode": "hotspots",
+      "picture": "doll-body",
+      "target": "ch-pokazhi-nogi",
+      "options": [
+        "legs",
+        "arms",
+        "nose"
+      ],
+      "right": "legs",
+      "wrong": {
+        "arms": "sem",
+        "nose": "sound"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "15",
+      "kind": "listen_do",
+      "frame": "f08",
+      "purpose": "check",
+      "mode": "hotspots",
+      "picture": "doll-body",
+      "target": "ch-pokazhi-zhivot",
+      "options": [
+        "belly",
+        "head",
+        "legs"
+      ],
+      "right": "belly",
+      "wrong": {
+        "head": "sem",
+        "legs": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "e01",
+      "kind": "listen_do",
+      "frame": "f10",
+      "mode": "embodied",
+      "picture": "mika-happy",
+      "purpose": "practice"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "body-1",
+      "title": "הַגּוּף",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "id": "body-2",
+      "title": "הַגּוּף",
+      "items": [
+        "05",
+        "06",
+        "07",
+        "11"
+      ]
+    },
+    {
+      "id": "body-3",
+      "title": "הַגּוּף",
+      "items": [
+        "08",
+        "09",
+        "10"
+      ]
+    },
+    {
+      "id": "body-more",
+      "title": "הַגּוּף",
+      "items": [
+        "12",
+        "13",
+        "e01"
+      ]
+    }
+  ],
+  "teach": [
+    [
+      "w-nos",
+      "w-rot",
+      "w-glaza",
+      "w-ushi"
+    ],
+    [
+      "w-ruki",
+      "w-nogi",
+      "w-zhivot",
+      "w-golova"
+    ],
+    [
+      "w-paltsy",
+      "w-zuby",
+      "w-volosy"
+    ]
+  ],
+  "routes": {
+    "new": {
+      "note": "teach in three sets; items 01 to 15"
+    },
+    "heritage": {
+      "teach": false,
+      "order": "mixed",
+      "embodied": "after each right tap"
+    },
+    "reader": {
+      "as": "oral",
+      "note": "as heritage or new"
+    }
+  }
+}

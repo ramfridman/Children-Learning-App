@@ -1,0 +1,33 @@
+{
+  "schema": "skill/v1",
+  "id": "RUS-A-18",
+  "review": "needs-editor",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "הֲבָרוֹת"
+    }
+  ],
+  "strand": "pho",
+  "prerequisites": [
+    {
+      "skill": "RUS-A-17",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "rus.pho.syll"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  },
+  "readerAs": "heritage"
+}

@@ -1,0 +1,48 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.food-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "אֹכֶל וּשְׁתִיָּה"
+    }
+  ],
+  "skills": [
+    "RUS-A-07"
+  ],
+  "items": [
+    "rus.a07.01",
+    "rus.a07.02",
+    "rus.a07.03",
+    "rus.a07.04"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 24,
+  "teach": [
+    {
+      "items": [
+        "rus.a07.tc01",
+        "rus.a07.tc02",
+        "rus.a07.tc03",
+        "rus.a07.tc04"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach"
+    }
+  ]
+}

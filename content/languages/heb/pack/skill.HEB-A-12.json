@@ -1,0 +1,32 @@
+{
+  "schema": "skill/v1",
+  "id": "HEB-A-12",
+  "review": "needs-editor",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "יודע שכתוב קוראים מימין לשמאל, ושבו נמצאות המילים"
+    }
+  ],
+  "strand": "pk",
+  "prerequisites": [
+    {
+      "skill": "HEB-A-10",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "symbolic"
+  ],
+  "misconceptions": [
+    "heb.pk.order",
+    "heb.pk.print_picture"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "skill/v1",
+  "id": "RUS-A-19",
+  "review": "needs-editor",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַצְּלִיל הָרִאשׁוֹן"
+    }
+  ],
+  "strand": "pho",
+  "prerequisites": [
+    {
+      "skill": "RUS-A-18",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "rus.pho.notfirst",
+    "rus.voc.sound",
+    "rus.grm.yesno"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  },
+  "readerAs": "heritage"
+}

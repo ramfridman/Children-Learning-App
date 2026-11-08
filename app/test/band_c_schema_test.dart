@@ -58,11 +58,11 @@ void _numberItem(Map<String, Object?> doc) {
 
 void main() {
   group('the versions', () {
-    test('the app plays tap_answer 1.4 and spot_error 1.1', () {
-      expect(supportedTemplates['tap_answer'], '1.4');
+    test('the app plays tap_answer 1.5 (1.4 and the own-name answer) and spot_error 1.1', () {
+      expect(supportedTemplates['tap_answer'], '1.5');
       expect(supportedTemplates['spot_error'], '1.1');
-      expect(compareTemplateVersion('1.4', supportedTemplates['tap_answer']!), 0);
-      expect(compareTemplateVersion('1.5', supportedTemplates['tap_answer']!), greaterThan(0));
+      expect(compareTemplateVersion('1.5', supportedTemplates['tap_answer']!), 0);
+      expect(compareTemplateVersion('1.6', supportedTemplates['tap_answer']!), greaterThan(0));
     });
 
     test('a pack that asks for tap_answer 1.4 is hidden by an app that has 1.3', () {

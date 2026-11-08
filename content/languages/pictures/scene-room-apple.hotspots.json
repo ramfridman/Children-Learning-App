@@ -1,0 +1,49 @@
+{
+ "picture": "scene-room-apple",
+ "version": 2,
+ "note": "Touch areas of the things drawn into the room (RUS-A-13 05, LS11 scene search: Где ...? and a touch on the thing), as shares of the picture's width and height (x, y, w, h from the top left), version 2 like doll-body.hotspots.json. A part is named by the option's picture id. Every area is at least 72 of the 256 units (65.5 pt on the phone SE's 233 pt scene square); the three never overlap, so the item is shown on the scene (show: body).",
+ "size": [
+  256,
+  256
+ ],
+ "minShare": [
+  0.2812,
+  0.2812
+ ],
+ "parts": {
+  "milk": [
+   [
+    0.0312,
+    0.0156,
+    0.4219,
+    0.4531
+   ]
+  ],
+  "apple": [
+   [
+    0.5469,
+    0.0312,
+    0.4375,
+    0.4375
+   ]
+  ],
+  "pear": [
+   [
+    0.2188,
+    0.5312,
+    0.5312,
+    0.4375
+   ]
+  ]
+ },
+ "items": {
+  "rus.a13.05": {
+   "parts": [
+    "milk",
+    "apple",
+    "pear"
+   ],
+   "show": "body"
+  }
+ }
+}

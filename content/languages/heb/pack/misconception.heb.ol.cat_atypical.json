@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.cat_atypical",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "HEB-A-03"
+  ],
+  "parentText": "הילד עוד לא מצרף לקבוצה חבר לא שגרתי (גם פרפר הוא בעל חיים).",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "בטיול או בספר, חפשו יחד בעלי חיים, גם קטנים ומפתיעים (נמלה, פרפר, דג), ודברו על מה שכולם עושים: זזים, אוכלים, ישנים."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

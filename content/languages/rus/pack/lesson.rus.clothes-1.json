@@ -1,0 +1,50 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.clothes-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "בְּגָדִים"
+    }
+  ],
+  "skills": [
+    "RUS-A-09"
+  ],
+  "items": [
+    "rus.a09.01",
+    "rus.a09.02",
+    "rus.a09.03",
+    "rus.a09.04",
+    "rus.a09.05"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 34,
+  "teach": [
+    {
+      "items": [
+        "rus.a09.tc01",
+        "rus.a09.tc02",
+        "rus.a09.tc03",
+        "rus.a09.tc04",
+        "rus.a09.tc05"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach"
+    }
+  ]
+}

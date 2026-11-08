@@ -1,0 +1,50 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.numbers-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִסְפָּרִים עַד עֶשֶׂר"
+    }
+  ],
+  "skills": [
+    "RUS-A-11"
+  ],
+  "items": [
+    "rus.a11.06",
+    "rus.a11.07",
+    "rus.a11.08",
+    "rus.a11.09",
+    "rus.a11.11"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 39,
+  "teach": [
+    {
+      "items": [
+        "rus.a11.tc01",
+        "rus.a11.tc02",
+        "rus.a11.tc03",
+        "rus.a11.tc04",
+        "rus.a11.tc05"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach"
+    }
+  ]
+}

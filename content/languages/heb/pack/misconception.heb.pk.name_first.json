@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pk.name_first",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "GUESS",
+  "skills": [
+    "HEB-A-11"
+  ],
+  "parentText": "הילד מזהה את השם שלו לפי האות הראשונה. זה שלב רגיל.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "כתבו את השם של הילד על דף, והסתכלו יחד על כל האותיות, אחת אחת. אחר כך חפשו את אותן אותיות על קופסאות בבית."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "symbolic"
+  ]
+}

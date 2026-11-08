@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.greetings-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "בְּרָכוֹת"
+    }
+  ],
+  "skills": [
+    "RUS-A-01"
+  ],
+  "items": [
+    "rus.a01.04",
+    "rus.a01.04s",
+    "rus.a01.05",
+    "rus.a01.05s",
+    "rus.a01.06",
+    "rus.a01.07",
+    "rus.a01.08"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 2
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "skill/v1",
+  "id": "HEB-A-10",
+  "review": "needs-editor",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מבחין בין אותיות לספרות, לצורות ולציורים"
+    }
+  ],
+  "strand": "pk",
+  "prerequisites": [],
+  "representations": [
+    "concrete",
+    "pictorial",
+    "symbolic"
+  ],
+  "misconceptions": [
+    "heb.pk.print_num",
+    "heb.pk.print_shape"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

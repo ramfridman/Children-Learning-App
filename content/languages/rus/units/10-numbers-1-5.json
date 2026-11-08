@@ -1,0 +1,382 @@
+{
+  "skill": {
+    "id": "RUS-A-10",
+    "strand": "num",
+    "title": "מִסְפָּרִים עַד חָמֵשׁ",
+    "setCoverage": true
+  },
+  "items": [
+    {
+      "id": "06",
+      "kind": "tap",
+      "frame": "f16",
+      "target": "n-1",
+      "options": [
+        {
+          "pic": "set-balls-1",
+          "clip": "n-1"
+        },
+        {
+          "pic": "set-balls-2",
+          "clip": "n-2"
+        },
+        {
+          "pic": "set-balls-3",
+          "clip": "n-3"
+        }
+      ],
+      "wrong": {
+        "set-balls-2": "numword",
+        "set-balls-3": "numword"
+      },
+      "ladder": "HL-NUM"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "frame": "f16",
+      "target": "n-2",
+      "options": [
+        {
+          "pic": "set-ducks-2",
+          "clip": "n-2"
+        },
+        {
+          "pic": "set-ducks-1",
+          "clip": "n-1"
+        },
+        {
+          "pic": "set-ducks-3",
+          "clip": "n-3"
+        }
+      ],
+      "wrong": {
+        "set-ducks-1": "numword",
+        "set-ducks-3": "numword"
+      },
+      "ladder": "HL-NUM"
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "frame": "f16",
+      "target": "n-3",
+      "options": [
+        {
+          "pic": "set-balls-3",
+          "clip": "n-3"
+        },
+        {
+          "pic": "set-balls-2",
+          "clip": "n-2"
+        },
+        {
+          "pic": "set-balls-4",
+          "clip": "n-4"
+        }
+      ],
+      "wrong": {
+        "set-balls-2": "numword",
+        "set-balls-4": "numword"
+      },
+      "ladder": "HL-NUM"
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "f16",
+      "target": "n-4",
+      "options": [
+        {
+          "pic": "set-ducks-4",
+          "clip": "n-4"
+        },
+        {
+          "pic": "set-ducks-3",
+          "clip": "n-3"
+        },
+        {
+          "pic": "set-ducks-5",
+          "clip": "n-5"
+        }
+      ],
+      "wrong": {
+        "set-ducks-3": "numword",
+        "set-ducks-5": "numword"
+      },
+      "ladder": "HL-NUM"
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "frame": "f16",
+      "target": "n-5",
+      "options": [
+        {
+          "pic": "set-balls-5",
+          "clip": "n-5"
+        },
+        {
+          "pic": "set-balls-4",
+          "clip": "n-4"
+        },
+        {
+          "pic": "set-balls-3",
+          "clip": "n-3"
+        }
+      ],
+      "wrong": {
+        "set-balls-4": "numword",
+        "set-balls-3": "numword"
+      },
+      "purpose": "check",
+      "ladder": "HL-NUM"
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f16",
+      "target": "n-4",
+      "options": [
+        {
+          "pic": "set-ducks-4",
+          "clip": "n-4"
+        },
+        {
+          "pic": "set-ducks-3",
+          "clip": "n-3"
+        },
+        {
+          "pic": "set-ducks-5",
+          "clip": "n-5"
+        }
+      ],
+      "wrong": {
+        "set-ducks-3": "numword",
+        "set-ducks-5": "numword"
+      },
+      "purpose": "probe",
+      "ladder": "HL-NUM"
+    },
+    {
+      "id": "01",
+      "kind": "count",
+      "objects": "apple",
+      "count": 2,
+      "clips": [
+        "n-1",
+        "n-2"
+      ],
+      "answerPrompt": "f40",
+      "answerTarget": "ch-skolko",
+      "options": [
+        {
+          "clip": "n-2",
+          "value": 2
+        },
+        {
+          "clip": "n-1",
+          "value": 1
+        },
+        {
+          "clip": "n-3",
+          "value": 3
+        }
+      ],
+      "wrong": {
+        "n-1": "numword",
+        "n-3": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "concrete",
+      "frame": "f15"
+    },
+    {
+      "id": "02",
+      "kind": "count",
+      "objects": "ball",
+      "count": 3,
+      "clips": [
+        "n-1",
+        "n-2",
+        "n-3"
+      ],
+      "answerPrompt": "f40",
+      "answerTarget": "ch-skolko",
+      "options": [
+        {
+          "clip": "n-3",
+          "value": 3
+        },
+        {
+          "clip": "n-2",
+          "value": 2
+        },
+        {
+          "clip": "n-4",
+          "value": 4
+        }
+      ],
+      "wrong": {
+        "n-2": "numword",
+        "n-4": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "concrete",
+      "frame": "f15"
+    },
+    {
+      "id": "03",
+      "kind": "count",
+      "objects": "duck",
+      "count": 4,
+      "clips": [
+        "n-1",
+        "n-2",
+        "n-3",
+        "n-4"
+      ],
+      "answerPrompt": "f40",
+      "answerTarget": "ch-skolko",
+      "options": [
+        {
+          "clip": "n-4",
+          "value": 4
+        },
+        {
+          "clip": "n-3",
+          "value": 3
+        },
+        {
+          "clip": "n-5",
+          "value": 5
+        }
+      ],
+      "wrong": {
+        "n-3": "numword",
+        "n-5": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "concrete",
+      "frame": "f15"
+    },
+    {
+      "id": "04",
+      "kind": "count",
+      "objects": "apple",
+      "count": 5,
+      "clips": [
+        "n-1",
+        "n-2",
+        "n-3",
+        "n-4",
+        "n-5"
+      ],
+      "answerPrompt": "f40",
+      "answerTarget": "ch-skolko",
+      "options": [
+        {
+          "clip": "n-5",
+          "value": 5
+        },
+        {
+          "clip": "n-4",
+          "value": 4
+        },
+        {
+          "clip": "n-3",
+          "value": 3
+        }
+      ],
+      "wrong": {
+        "n-4": "numword",
+        "n-3": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "concrete",
+      "frame": "f15"
+    },
+    {
+      "id": "05",
+      "kind": "count",
+      "purpose": "check",
+      "objects": "car",
+      "count": 3,
+      "clips": [
+        "n-1",
+        "n-2",
+        "n-3"
+      ],
+      "answerPrompt": "f40",
+      "answerTarget": "ch-skolko",
+      "options": [
+        {
+          "clip": "n-3",
+          "value": 3
+        },
+        {
+          "clip": "n-4",
+          "value": 4
+        },
+        {
+          "clip": "n-2",
+          "value": 2
+        }
+      ],
+      "wrong": {
+        "n-4": "numword",
+        "n-2": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "concrete",
+      "frame": "f15"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "numbers-1",
+      "title": "מִסְפָּרִים עַד חָמֵשׁ",
+      "items": [
+        "06",
+        "07",
+        "08",
+        "09"
+      ]
+    },
+    {
+      "id": "numbers-1-5-more",
+      "title": "מִסְפָּרִים עַד חָמֵשׁ",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    }
+  ],
+  "teach": [
+    [
+      "n-1",
+      "n-2",
+      "n-3",
+      "n-4",
+      "n-5"
+    ]
+  ],
+  "routes": {
+    "new": {
+      "note": "teach by counting along (f15); items 01 to 10"
+    },
+    "heritage": {
+      "teach": false,
+      "order": [
+        "06-10",
+        "01-05"
+      ]
+    },
+    "reader": {
+      "as": "oral",
+      "note": "as heritage or new"
+    }
+  }
+}

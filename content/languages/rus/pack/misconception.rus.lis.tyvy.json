@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "rus.lis.tyvy",
+  "review": "needs-editor",
+  "course": "rus",
+  "kind": "diagnostic",
+  "family": "GRAMMAR",
+  "skills": [
+    "RUS-A-01"
+  ],
+  "parentText": "למבוגר שאינו מהמשפחה אומרים ברוסית здравствуйте ו־до свидания, ולחבר привет ו־пока. זו הצורה המנומסת; במשפחה ובין חברים מדברים כרגיל.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "כשפוגשים מבוגר שמדבר רוסית, אמרו יחד \"здравствуйте\"."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story"
+  ]
+}

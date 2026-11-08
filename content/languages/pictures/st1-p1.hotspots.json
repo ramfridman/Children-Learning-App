@@ -1,0 +1,31 @@
+{
+ "picture": "st1-p1",
+ "version": 2,
+ "note": "Touch areas of the page's words (scene.pages[].words[].at of the LS08 story) as shares of the page's width and height (x, y, w, h from the top left). Every area is at least 96 of the 384 x 216 units, 64.5 pt on the phone SE where the tall stage shows the page 258 x 145 pt; no two overlap. RUS-A-16 01 and 04 use the parts its words list names.",
+ "size": [
+  384,
+  216
+ ],
+ "minShare": [
+  0.25,
+  0.4444
+ ],
+ "parts": {
+  "sobaka": [
+   [
+    0.2292,
+    0.4722,
+    0.3125,
+    0.5093
+   ]
+  ],
+  "mjach": [
+   [
+    0.5781,
+    0.5556,
+    0.25,
+    0.4444
+   ]
+  ]
+ }
+}

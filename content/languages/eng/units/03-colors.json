@@ -1,0 +1,22 @@
+{
+  "skill": {"id": "ENG-A-03", "strand": "lis", "title": "צְבָעִים", "prerequisites": [{"skill": "ENG-A-01"}], "setCoverage": true},
+  "items": [
+    {"id": "i01", "kind": "tap", "target": "en-red", "options": ["balloon-red", "balloon-blue", "balloon-yellow"], "wrong": {"balloon-blue": "sem", "balloon-yellow": "sem"}},
+    {"id": "i02", "kind": "tap", "target": "en-blue", "options": ["balloon-blue", "balloon-green", "balloon-red"], "wrong": {"balloon-green": "sem", "balloon-red": "sem"}},
+    {"id": "i03", "kind": "tap", "target": "en-yellow", "options": ["balloon-yellow", "balloon-red", "balloon-blue"], "wrong": {"balloon-red": "sem", "balloon-blue": "sem"}},
+    {"id": "i04", "kind": "tap", "target": "en-green", "options": ["balloon-green", "balloon-yellow", "balloon-blue"], "wrong": {"balloon-yellow": "sem", "balloon-blue": "sem"}},
+    {"id": "i05", "kind": "tap", "target": "en-red", "options": ["boat-red", "boat-yellow", "boat-blue"], "wrong": {"boat-yellow": "sem", "boat-blue": "sem"}},
+    {"id": "i06", "kind": "tap", "target": "en-blue", "options": ["boat-blue", "boat-red", "boat-green"], "wrong": {"boat-red": "sem", "boat-green": "sem"}},
+    {"id": "i07", "kind": "tap", "purpose": "check", "target": "en-yellow", "options": ["boat-yellow", "boat-blue", "boat-red"], "wrong": {"boat-blue": "sem", "boat-red": "sem"}},
+    {"id": "i08", "kind": "tap", "purpose": "check", "target": "en-green", "options": ["boat-green", "boat-blue", "boat-yellow"], "wrong": {"boat-blue": "sem", "boat-yellow": "sem"}},
+    {"id": "pr1", "kind": "tap", "purpose": "probe", "target": "en-red", "options": ["balloon-red", "balloon-blue", "balloon-yellow"], "wrong": {"balloon-blue": "sem", "balloon-yellow": "sem"}},
+    {"id": "i09", "kind": "listen_do", "frame": "he-ins-give-it", "rep": "embodied", "ladder": "HL-PIC", "mode": "drag", "picture": "pip-basket", "target": "en-red", "options": ["balloon-red", "balloon-blue", "balloon-yellow"], "wrong": {"balloon-blue": "sem", "balloon-yellow": "sem"}},
+    {"id": "i10", "kind": "listen_do", "frame": "he-ins-give-it", "rep": "embodied", "ladder": "HL-PIC", "mode": "drag", "picture": "pip-basket", "target": "en-blue", "options": ["balloon-blue", "balloon-yellow", "balloon-green"], "wrong": {"balloon-yellow": "sem", "balloon-green": "sem"}},
+    {"id": "i11", "kind": "tap", "purpose": "check", "check": "reverse", "frame": "he-ins-which-word", "ladder": "HL-REV", "stage": "balloon-yellow", "options": [{"clip": "en-yellow"}, {"clip": "en-blue"}, {"clip": "en-red"}], "wrong": {"en-blue": "sem", "en-red": "sem"}, "hintWord": "en-yellow", "feedback": {"wrong": "he-fb-check", "byTag": {"sem": "he-fb-check"}, "unsure": "he-hint-again"}},
+    {"id": "i12", "kind": "tap", "purpose": "check", "check": "reverse", "frame": "he-ins-which-word", "ladder": "HL-REV", "stage": "boat-green", "options": [{"clip": "en-green"}, {"clip": "en-blue"}, {"clip": "en-yellow"}], "wrong": {"en-blue": "sem", "en-yellow": "sem"}, "hintWord": "en-green", "feedback": {"wrong": "he-fb-check", "byTag": {"sem": "he-fb-check"}, "unsure": "he-hint-again"}}
+  ],
+  "lessons": [
+    {"id": "col-1", "title": "צִבְעֵי הַבָּלוֹנִים", "items": ["i01", "i02", "i03", "i04"]},
+    {"id": "col-2", "title": "צִבְעֵי הַסִּירוֹת", "items": ["i05", "i06", "i09", "i10"]}
+  ]
+}

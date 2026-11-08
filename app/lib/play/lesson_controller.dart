@@ -9,6 +9,7 @@ import '../core/clock.dart';
 import '../core/log.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
+import 'name_options.dart';
 import 'number_rules.dart';
 import 'response_code.dart';
 
@@ -88,6 +89,18 @@ class AttemptRecord {
 
 typedef AttemptSink = Future<void> Function(AttemptRecord record);
 
+Activity _ownNameWithoutAName(Activity a) => OwnName().apply(a);
+
+/// [made] without the own-name items that could not be made (they have no faces to draw; the validator makes sure of the house name, so
+/// this is a safety net). A lesson with nothing else keeps them rather than open empty.
+List<Activity> _playable(List<Activity> made) {
+  final List<Activity> ok = <Activity>[
+    for (final Activity a in made)
+      if (!OwnName.stillToMake(a)) a,
+  ];
+  return ok.isEmpty ? made : ok;
+}
+
 /// Chooses the activities of an adaptive visit one after another (the placement game, LS13): which comes next depends on how the
 /// last one went. The lesson's own item list holds only the first.
 abstract interface class ItemFlow {
@@ -142,8 +155,19 @@ class LessonController extends ChangeNotifier {
     this.tutorContext,
     this.timeIsUp,
     this.flow,
+    this.route,
+    this.routeOfSkill,
+    this.echoOnly,
+    Activity Function(Activity)? personalise,
     Clock clock = const SystemClock(),
-  }) : items = flow == null ? content.itemsOf(lesson) : <Activity>[content.activities[flow.first()]!],
+  }) : _personalise = personalise ?? _ownNameWithoutAName,
+       items = _playable(<Activity>[
+         for (final Activity a
+             in flow == null
+                 ? content.itemsFor(lesson, route: route)
+                 : <Activity>[content.activities[flow.first()]!])
+           (personalise ?? _ownNameWithoutAName)(a),
+       ]),
        _record = record,
        _clock = clock {
     _begin();
@@ -151,6 +175,24 @@ class LessonController extends ChangeNotifier {
 
   /// An adaptive visit: the next activity is chosen by this after each one (see [ItemFlow]); null for every ordinary lesson.
   final ItemFlow? flow;
+
+  /// Makes the options of the items that are made on the device (the own-name items of Hebrew Band A): the child's first name goes on a tile
+  /// here and nowhere else. A controller built with no personaliser makes them from no name, so the item still has a face to draw.
+  final Activity Function(Activity) _personalise;
+
+  /// How the child is served in the lesson's skill in a language course, `new` or `heritage` ([servedRoute] has resolved a reader), or null
+  /// for a land: it decides which screens come before the items ([PackContent.itemsFor]). A heritage speaker is never shown a teach screen.
+  final String? route;
+
+  /// How the child is served in another skill (a say step's own skill); null: every skill is served as [route].
+  final String? Function(String skillId)? routeOfSkill;
+
+  /// Asked when a say step begins: is the visit's quiet fallback on (too many unsure turns)? Then the step is echo whatever its route says.
+  final bool Function()? echoOnly;
+
+  /// The say step on screen asks for the word before the voice says it (picture first, R4 of docs/languages/band-a-build.md 2.6.1): decided
+  /// when the step begins, from its order on the route the child is served on and the quiet fallback, and kept until the next step.
+  bool pictureFirst = false;
 
   /// How long the progress trail is: the lesson's items, or at most what the flow can give.
   int get trailLength => flow?.length ?? items.length;
@@ -226,6 +268,9 @@ class LessonController extends ChangeNotifier {
   /// A language course: the clip that follows [voice] (the second clip of the line), and the target word to show in a chip under
   /// the bubble's line. Null for every line of the lands.
   String? voiceTarget;
+
+  /// The second target clip of the line, after [voiceTarget] (a question and its answer, two sounds to compare); null for most lines.
+  String? voiceTarget2;
   String? bubbleShow;
 
   /// The line asked after the first one (the question of a story's pause, "how many?" after the counting): the replay button says
@@ -252,6 +297,7 @@ class LessonController extends ChangeNotifier {
     bubbleMath = solved || finished ? null : current.promptMath;
     voice = line.vo;
     voiceTarget = line.target;
+    voiceTarget2 = line.target2;
     bubbleShow = line.show;
     voiceNonce++;
   }
@@ -390,10 +436,19 @@ class LessonController extends ChangeNotifier {
     hintShown = 0;
     _recent.clear();
     askedLine = null;
-    _say(a.promptLine);
+    _say(_promptOf(a));
     _markMs = _clock.nowMs();
     resetNonce++;
     _prefetchTutor(a);
+  }
+
+  /// The line a step opens with: the question alone when a say step is played picture first (the word follows after a pause, from the
+  /// session), otherwise the activity's own prompt. Sets [pictureFirst].
+  Spoken _promptOf(Activity a) {
+    pictureFirst =
+        a is SayItActivity &&
+        a.picturesFirst(routeOfSkill?.call(a.skillId) ?? route, echoOnly: echoOnly?.call() ?? false);
+    return pictureFirst ? (a as SayItActivity).pictureFirstLine! : a.promptLine;
   }
 
   /// The replay button: the question again, without any help.
@@ -401,7 +456,7 @@ class LessonController extends ChangeNotifier {
     if (finished) return;
     actionNonce++;
     if (!replayQuiet) {
-      _say(askedLine ?? current.promptLine);
+      _say(askedLine ?? _promptOf(current));
       voiceReplaces = true;
     }
     feedback = FeedbackKind.none;
@@ -465,11 +520,13 @@ class LessonController extends ChangeNotifier {
       final String keep = bubble;
       final String? keepVoice = voice;
       final String? keepTarget = voiceTarget;
+      final String? keepTarget2 = voiceTarget2;
       final String? keepShow = bubbleShow;
       _applyHint(math.min(hintLevel + 1, current.hints.length));
       bubble = keep;
       voice = keepVoice;
       voiceTarget = keepTarget;
+      voiceTarget2 = keepTarget2;
       bubbleShow = keepShow;
     }
     notifyListeners();
@@ -559,6 +616,24 @@ class LessonController extends ChangeNotifier {
     if (finished || solved) return;
     actionNonce++;
     _say(a.together);
+    notifyListeners();
+  }
+
+  /// A say step asked picture first has now said the word (the pause is over): the word shows in its chip under the line, as in an echo
+  /// step. Nothing is said or written.
+  void showWord() {
+    final Activity a = current;
+    if (finished || a is! SayItActivity || bubbleShow == a.promptLine.show) return;
+    bubbleShow = a.promptLine.show;
+    notifyListeners();
+  }
+
+  /// The tap on the picture of a hearing screen: the step is over. Nothing is written, and nothing more is said (the word was heard once,
+  /// and again if the child asked for it).
+  void hearDone() {
+    if (finished || solved) return;
+    actionNonce++;
+    solved = true;
     notifyListeners();
   }
 
@@ -709,7 +784,7 @@ class LessonController extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    if (following != null) items.add(content.activities[following]!);
+    if (following != null) items.add(_personalise(content.activities[following]!));
     if (timeIsUp?.call() ?? false) {
       endedForRest = true;
       finished = true;

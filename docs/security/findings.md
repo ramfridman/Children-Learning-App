@@ -75,6 +75,14 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-B29-2 | iOS local data: no backup-excluded data folder yet, and secure-storage items are not `ThisDeviceOnly` (not reachable: no iOS build can open the database today) | low | Dart part fixed (`b29-profile`: every item is `first_unlock_this_device`, not synchronizable; proof `secure_store_test.dart`); the Swift part (exclude the iOS database folder from backup) gates any iOS build and waits for the iOS platform channel | 2026-11-06 |
 | SEC-B29-3 | The birth-month source rule scans 7 of the `lib/` folders and misses some names (`childAgeProvider`, `ageInMonths`, `assumedMonths`) | low | fixed (`b29-profile`: an allowlist over all of `lib/`, and only `show SchoolStage` imports of `engine/age.dart` outside it; proof `profile_sync_test.dart`) | 2026-11-06 |
 | SEC-B29-4 | Rolling back `settings-put` or `child-put` while the B-29 app is in use stops its settings sync and the save of a child with a stage | info | open (a deploy note: roll back the app first) | 2026-11-06 |
+| SEC-BA-1 | Language pack generator: a unit file's gate id was used as a file name unchecked, so `x/../../<path>` (either separator) wrote a JSON file of the author's choosing outside the pack folder, for example over `.claude/settings.json` or a test vector | medium (an authoring file on a public repo writes anywhere the person who runs the generator can write; not high: someone must run `tools/lang_pack.py`, and the output is always `*.json`) | closed (`33eccbdc`: `_raw` holds a gate id to the gate schema's id and the course's prefix with `fullmatch`; `outputs` refuses any file name that is not a plain name; `refuse_outside` refuses, before any folder or file is made, a path whose real folder is not `content/languages/<course>/pack` (the voice plan the one other file); the other id checks of the generator moved from `match` with `$` to `fullmatch`; proof `tools/test_sec_lang_pack.py`, run again 2026-11-07 on `41ab2f61`) | 2026-11-07 |
+| SEC-BA-2 | Teach screens: the validator refuses a teach screen only among the items of the lesson that names it, not among another lesson's items | low | closed (`33eccbdc`: the validator refuses a teach screen among any lesson's items, and `itemsOf` drops one whatever a pack says; proof `sec_band_a_test.dart`, run again 2026-11-07 on `41ab2f61`) | 2026-11-07 |
+| SEC-BA-3 | Own-name items: the validator does not prove the house character's name always gives a face, so a pack can make a lesson throw when it opens | low | closed (`33eccbdc`: the rules live in `own_name_docs.dart`, the validator runs them with no name and refuses an item that gives no options from the house name; `OwnName.apply` never throws, and the controller passes over an item still to make; proof `own_name_test.dart` "an item that cannot be made", run again 2026-11-07 on `41ab2f61`) | 2026-11-07 |
+| SEC-BA-4 | Bundled language packs: an error other than `PackRejected` while installing or reading one course takes every language course out | low | closed (`33eccbdc`: `_proven` and `_installBundled` catch any error per course and log only the course and the error's type; proof `bundled_language_packs_test.dart` (two SEC-BA-4 tests), run again 2026-11-07 on `41ab2f61`) | 2026-11-07 |
+| SEC-BA-5 | Misconception skills: the pack schema takes 60, `content-publish` takes 10, so the English and Russian packs (15) cannot be published as they are | low | closed (by design: language packs ship in the app and are never published; `content-publish` refuses a language pack id and a language skill, and the caps stay; proof `content_publish_test.ts`, green in CI's gateway job on `41ab2f61`, not run locally: no Deno here) | 2026-11-07 |
+| SEC-BA-6 | Own-name source test is a short deny list; the row test checks some of the record's fields | info | closed (`33eccbdc`: a closed list of the imports and exports of both own-name files and of their importers, and every field of the attempt row and of what the tutor is told checked for Hebrew letters; proof `own_name_test.dart`, run again 2026-11-07 on `41ab2f61`) | 2026-11-07 |
+| SEC-BA-7 | A look-alike tag on an own-name answer narrows the first letter of the child's name to two letters in the synced row (the server already holds the name) | info | open (accept; no action) | 2026-11-07 |
+| SEC-BA-8 | Hearing sets: `itemsFor` gives a heritage speaker every screen of a `hear` set without checking that each is a hearing screen, so only the validator keeps a teach screen from a heritage speaker | info | open | 2026-11-07 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
@@ -437,6 +445,72 @@ this check, a format mismatch between a deployed gateway and an installed app, i
     feature declare that version.
   - New findings: SEC-M10-1 to -3 (low) and SEC-M10-4 and -5 (info), in the table above. Their detail and proofs go to the
     orchestrator and stay out of the public file until they are fixed.
+- **Languages Band A QA fixes, `languages-band-a` (`41ab2f61..7c72dc56`, and `43997579`, which changes only
+  `band-a-build.md`; 2026-11-08): no new finding; SEC-BA-8 stays open (the fix has not landed, and its proof still fails).** In
+  scope: the check visit (`engine/check_visit.dart`, `CheckTrail`, `world/check_visits.dart`, the course home and Today's
+  Adventure), the catalogue that leaves out steps that are never scored, `ItemMeta.speech` and `pairWith`, the validator
+  changes in `language_checks.dart` (the two-choice half) and `ls02_checks.dart` (T04 strokes), the generator rules
+  (`_no_chips`, `check_reverse`, `check_bin_sign`, `inLesson`) and the layout changes. Not in scope: the pictures and the
+  goldens.
+  - `CheckTrail` lives in `SkillState`, which is never written down: the engine rebuilds it from the attempt rows each time
+    (replay), and `world_state` and `engine_adapter` only read it. Nothing new is stored, synced, logged or sent to the tutor.
+    A visit is the attempt's existing `sessionId`. `Visit.check` is read from the lesson id of the rows.
+  - The wire: a check visit is a mission lesson with the id `mission-<skill>-check`. The longest skill id the schema allows
+    (14 characters) gives 28 characters, inside `sync-push`'s `^[a-z0-9._-]{0,40}$`, and `wireLessonId` drops anything
+    else. No new answer, response code, row field, host, package, lock file or workflow.
+  - Bounds: a check visit holds at most 5, 8 or 12 items by band, and a balanced pair is taken whole or not at all.
+    `pairHalves` holds only catalogue items. An item that is not in the catalogue is ignored by `Engine.apply`, so an old row of
+    a step that is now left out changes nothing.
+  - A heritage speaker: the check visit takes only catalogue items, so it never gives a teach or hearing screen; a mission has
+    no `teach` set. Own-name items are still made on the phone. Say steps still open the microphone only on a tap. The layout
+    changes add no input path and no log line.
+  - The validator changes lower no security bound: probes leave both sides of the two-choice count, and the T04 strokes are
+    held to the practice-only rules of the trace items. The generator's new rules only refuse; `inLesson` is read by the
+    generator only and is not written to a pack document. `FILE_NAME` and `refuse_outside` still hold
+    (`test_sec_lang_pack.py`).
+  - CI: the `secrets` job still fails on the `2df98c60` false positive; there is no `.gitleaksignore` entry yet.
+- **Languages Band A re-check, `languages-band-a` (`33eccbdc` and `41ab2f61`; 2026-11-07): SEC-BA-1 to -6 closed (proofs run
+  again; SEC-BA-5's in CI), one new info finding (SEC-BA-8).** In scope: the fixes, and the third step: `readerAs`, the teach
+  set `mode`, `answer.hear`, `say.order` and `say.pictureFirst` in schema and validator, `served_route.dart`, how the lesson
+  screen resolves the route, the hearing and picture-first paths of `SayItSession` and the controller, and the generator's route
+  code. Not in scope: the pictures and the Russian texts as teaching.
+  - The route is resolved on the phone from what it already had: the parent's route (`languagesProvider`) and, for a reader
+    only, the skills the placement assumed (`languageCoursesProvider`, from the local attempts). No new field is stored, synced,
+    logged or sent; the served route is not in an attempt row.
+  - A heritage speaker: a `teach` set may name only `new`, a `hear` set only `heritage`, and each set holds only screens of its
+    kind (validator, which the phone runs on every pack it installs); `itemsFor` shows a heritage speaker only `hear` sets;
+    `itemsOf`, the engine adapter and the placement (tap and drum probes only) never give a teach or hearing screen. SEC-BA-8 is
+    the one gap in the second layer.
+  - A hearing screen is a teach screen, so it gets no say step and no microphone; `hearDone` and `showWord` write nothing. A
+    picture-first step only changes the opening line and when the word is played: the microphone still opens only on a tap
+    (`SayStepController.tap`), and the quiet fallback turns it back to echo. No new input path, log line, host, package or
+    response code; the generator's new ids are built from checked ids and still pass `FILE_NAME` and `refuse_outside`.
+  - Not a finding, for the app-developer: `say.pictureFirst.vo` is not passed to `checkVo`, so a missing clip would only be
+    silent.
+  - CI: the `secrets` job fails on every run of this branch on one `generic-api-key` hit in `tools/hebrew_voice_review.py`
+    line 984 of commit `2df98c60` (branch `logic-sweep`). Checked: the line is a pack file name and a JSON path, not a secret;
+    no rotation. It needs a `.gitleaksignore` entry (infrastructure-engineer).
+- **Languages Band A, `languages-band-a` (`ff6d7578` against `origin/main`; 2026-11-07): one medium finding (SEC-BA-1, in the
+  generator tools, held privately), four low and two info, in the table above. Nothing in the app reaches a vendor.** In scope:
+  the bundled language packs (`bundled_packs.dart`, `ContentRepository.languagePacks`, `languagePacksProvider`,
+  `pack_builder build-language`), HEB-A-11 own name (`name_options.dart` and its wiring, `answer.type: name`), the schema
+  changes (misconception skills cap, `target2`, `font`, story 1.1 `zones` and `follow`, `cutClips`, `answer.teach` and lesson
+  `teach`), the response codes, and `tools/lang_pack.py` with `lang_recipes*.py` and `lang_routes.py`. Not in scope: the
+  pictures, the unit texts as teaching, and the generated pack files one by one (checked through the validator and tests).
+  - Bundled packs: installed only through the verifying installer; the asset name picks only course and version (the regex
+    takes `eng`, `heb` or `rus` and a three-part version), and the read-back checks the pack's own course; the installer refuses
+    a downgrade, so a damaged newer copy is never replaced by the older bundle; nothing is installed for a family with no
+    language on. No language pack is bundled yet (the owner signs them).
+  - Own name: the options are made on the device; a row holds only the option id (`o1` to `o3`) and a pack tag; release builds
+    log nothing and no log line prints an option; the tutor gets ids only, and every language item has `llmAllowed: false`
+    (validator); the validator refuses `voiceAnswer` on the item; there is no TTS package; the tile's label is read only by the
+    phone's own screen reader.
+  - Teach screens: the route filter and the schema both keep a heritage speaker from a teach set; the engine never sees a
+    teach screen; a teach screen opens no microphone and writes nothing. SEC-BA-2 is the gap.
+  - Response codes: every new answer is an option id inside `sync-push`'s pattern (schema `o[0-9]{1,2}`).
+  - Advisories: CVE-2026-27704 / GHSA-q739-79rh-vmvp (pub client path traversal; NVD, published 2026-02-25, updated
+    2026-03-12) is fixed in Flutter 3.41.0, and the local toolchain is 3.47.8. No package, lock file, workflow or host changed
+    on the branch. No secret-shaped string in the branch diff (a local grep; gitleaks is not installed locally, CI runs it).
 - **B-29 steps 3 and 4, `b29-profile` (`e27f6824` against `origin/m10-step0`; 2026-11-06): safe to deploy in the order
   migration, then `child-put`, `sync-pull` and `settings-put`, then the app. Nothing above low.** In scope: the migration, the
   three changed functions and the shared store, the device-only birth month and year, `engine/age.dart`, the sync field and

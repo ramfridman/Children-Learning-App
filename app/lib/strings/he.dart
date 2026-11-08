@@ -28,6 +28,10 @@ class Str {
 }
 
 abstract final class He {
+  /// The name of the house character as it is printed on a tile (no nikud): the last fallback of an own-name item when neither the child's name
+  /// nor the companion's can be used. It is a name of the closed list of Hebrew A-11.
+  static const String houseCharacterName = 'ניצי';
+
   // ---- child space ----
   static const Str pickerTitle = Str('עִם מִי נְשַׂחֵק הַיּוֹם?', nikud: true);
   static const Str pickerAddSemantics = Str('הוספת ילד, להורים בלבד');

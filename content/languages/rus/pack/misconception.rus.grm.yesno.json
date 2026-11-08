@@ -1,0 +1,25 @@
+{
+  "schema": "misconception/v1",
+  "id": "rus.grm.yesno",
+  "review": "needs-editor",
+  "course": "rus",
+  "kind": "diagnostic",
+  "family": "GUESS",
+  "skills": [
+    "RUS-A-12",
+    "RUS-A-13",
+    "RUS-A-19",
+    "RUS-A-20"
+  ],
+  "parentText": "אם הילד עונה כל פעם אותה תשובה בשאלות של כן ולא, או בשאלות של אותו דבר או לא, כנראה שהשאלה עדיין לא ברורה לו עד הסוף. זה נורמלי בהתחלה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "שאלו בצחוק \"Это кот?\" על דברים בבית, לפעמים נכון ולפעמים לא, וענו יחד да או нет."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial"
+  ]
+}

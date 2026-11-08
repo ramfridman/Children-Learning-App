@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "eng.act-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "eng",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹצְרִים וּמַקְשִׁיבִים"
+    }
+  ],
+  "skills": [
+    "ENG-A-02"
+  ],
+  "items": [
+    "eng.a02.i05",
+    "eng.a02.i06",
+    "eng.a02.i07",
+    "eng.a02.i08"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "sequence": 4
+}

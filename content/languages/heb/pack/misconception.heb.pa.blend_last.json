@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pa.blend_last",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "SEGMENT",
+  "skills": [
+    "HEB-A-09"
+  ],
+  "parentText": "הילד זוכר רק את החלק האחרון של המילה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "כשאומרים מילה בחלקים, חזרו יחד על כל החלקים מההתחלה, ורק אז אמרו את המילה כולה. אפשר לשים חפץ קטן לכל חלק."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

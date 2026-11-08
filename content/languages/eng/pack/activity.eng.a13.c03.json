@@ -1,0 +1,158 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a13.c03",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sing_along",
+  "templateVersion": "1.0",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-13",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a13-c03",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "say the chant together",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנוֹת שֶׁל שִׁיר"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_ins_chant",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נְדַקְלֵם יַחַד, וְנַעֲשֶׂה אֶת הַתְּנוּעוֹת!"
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_5",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בְּדִיּוּק!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scene": {
+    "pictures": [
+      {
+        "picture": "asset:act_stand",
+        "label": "Stand up!",
+        "clip": "vo:eng.en_stand_up"
+      },
+      {
+        "picture": "asset:act_clap",
+        "label": "Clap!",
+        "clip": "vo:eng.en_clap"
+      },
+      {
+        "picture": "asset:act_jump",
+        "label": "Jump!",
+        "clip": "vo:eng.en_jump"
+      },
+      {
+        "picture": "asset:act_look",
+        "label": "Look!",
+        "clip": "vo:eng.en_look"
+      },
+      {
+        "picture": "asset:act_listen",
+        "label": "Listen!",
+        "clip": "vo:eng.en_listen"
+      },
+      {
+        "picture": "asset:act_sit",
+        "label": "Sit down!",
+        "clip": "vo:eng.en_sit_down"
+      }
+    ],
+    "lines": [
+      {
+        "clips": [
+          "vo:eng.en_ch_move_1"
+        ],
+        "lights": [
+          0,
+          1
+        ]
+      },
+      {
+        "clips": [
+          "vo:eng.en_ch_move_2"
+        ],
+        "lights": [
+          2
+        ]
+      },
+      {
+        "clips": [
+          "vo:eng.en_ch_move_3"
+        ],
+        "lights": [
+          3,
+          4
+        ]
+      },
+      {
+        "clips": [
+          "vo:eng.en_ch_move_4"
+        ],
+        "lights": [
+          5
+        ]
+      }
+    ]
+  },
+  "answer": {
+    "type": "none",
+    "mode": "chant"
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a01.04",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "story",
+  "templateVersion": "1.0",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-01",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a01-04",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "answer the question the story asks",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "סִפּוּר בִּתְמוּנוֹת"
+  },
+  "prompt": {
+    "vo": "vo:heb.s2_title",
+    "caption": [
+      {
+        "t": "he",
+        "v": "נִיצִי אוֹפָה עוּגָה"
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_6",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יוֹפִי שֶׁל הַקְשָׁבָה!"
+        }
+      ],
+      "target": "vo:heb.heb_a_s2_r2"
+    },
+    "incorrect": [
+      {
+        "when": "misconception:heb.ol.story_seen",
+        "vo": "vo:heb.fb_story_seen",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מַה שָּׁאַלְנוּ?"
+          }
+        ]
+      },
+      {
+        "when": "misconception:heb.ol.story_world",
+        "vo": "vo:heb.fb_story_world",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִרְאֶה מַה קָּרָה בַּסִּפּוּר שֶׁלָּנוּ."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:heb.s2_title",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִיצִי אוֹפָה עוּגָה"
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:heb.fb_story_world",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִרְאֶה מַה קָּרָה בַּסִּפּוּר שֶׁלָּנוּ."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:heb.show",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַעֲשֶׂה אֶת זֶה יַחַד."
+        }
+      ]
+    }
+  ],
+  "scene": {
+    "pages": [
+      {
+        "picture": "asset:s2_p1",
+        "clips": [
+          "vo:heb.heb_a_s2_p1"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      },
+      {
+        "picture": "asset:s2_p2",
+        "clips": [
+          "vo:heb.heb_a_s2_p2"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      },
+      {
+        "picture": "asset:s2_p3",
+        "clips": [
+          "vo:heb.heb_a_s2_p3"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      },
+      {
+        "picture": "asset:s2_p4",
+        "clips": [
+          "vo:heb.heb_a_s2_p4"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      },
+      {
+        "picture": "asset:s2_p5",
+        "clips": [
+          "vo:heb.heb_a_s2_p5"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר"
+      }
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "dialogic",
+    "pauseAfter": 4,
+    "question": {
+      "vo": "vo:heb.s2_q2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "לְאָן נִכְנְסָה הָעוּגָה?"
+        }
+      ]
+    },
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:oven",
+        "label": "תְּמוּנָה"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:bowl",
+        "label": "תְּמוּנָה",
+        "misconception": "heb.ol.story_seen"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:fridge",
+        "label": "תְּמוּנָה",
+        "misconception": "heb.ol.story_world"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

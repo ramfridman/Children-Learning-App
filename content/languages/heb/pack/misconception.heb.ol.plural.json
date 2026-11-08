@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.plural",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "GRAMMAR",
+  "skills": [
+    "HEB-A-05"
+  ],
+  "parentText": "הילד עוד לא שומע תמיד את סוף המילה ברבים (ים, ות).",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "כשמסדרים או סופרים בבית, אמרו יחד אחד והרבה: כף, כפות; כוס, כוסות; ספר, ספרים."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial",
+    "concrete"
+  ]
+}

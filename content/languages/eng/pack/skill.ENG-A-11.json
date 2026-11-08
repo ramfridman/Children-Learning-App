@@ -1,0 +1,38 @@
+{
+  "schema": "skill/v1",
+  "id": "ENG-A-11",
+  "review": "needs-editor",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מָה זֶה?"
+    }
+  ],
+  "strand": "lis",
+  "prerequisites": [
+    {
+      "skill": "ENG-A-05",
+      "weight": 0.5
+    },
+    {
+      "skill": "ENG-A-09",
+      "weight": 0.5
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "story"
+  ],
+  "misconceptions": [
+    "eng.lis.l1_guess",
+    "eng.lis.sem"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  },
+  "setCoverage": true
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pk.shape_vzn",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "SHAPE",
+  "skills": [
+    "HEB-A-11"
+  ],
+  "parentText": "הילד מבלבל בין האותיות ו ו-ז.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "כתבו על דף את האותיות ו ו-ז זו ליד זו, וחפשו יחד מה שונה בהן. אחר כך חפשו אותן בספר או על קופסה במטבח."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "symbolic"
+  ]
+}

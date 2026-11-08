@@ -197,7 +197,7 @@ def en_story():
     out['story-bounce-3'] = page(pond + [obj(m.duck(), 200, 200, 0.4), red_ball(80, 104)] + bounce([(330, 150), (230, 110), (80, 80)]), garden())
     out['story-bounce-4'] = page([obj(b2.frog(), 200, 204, 0.5), red_ball(200, 40)] + bounce([(330, 150), (200, 20), (70, 150)]), garden())
     dog_jump = obj(m.dog(), 200, 170, 0.5, rot=-16, air=True)
-    out['story-bounce-5'] = page([shadow_at(206, 200, 56), dog_jump, red_ball(140, 112, 0.14)] + lines(250, 130) + bounce([(340, 120), (146, 96)]),
+    out['story-bounce-5'] = page([shadow_at(206, 200, 56), dog_jump, red_ball(106, 106, 0.14)] + lines(250, 130) + bounce([(340, 120), (110, 90)]),
                                  garden(True))
     out['story-bounce-6'] = page([obj(m.dog(), 160, 200, 0.5), asset(PIP, 262, 200, 0.3, flip=True), red_ball(214, 202, 0.12, air=False)]
                                  + hearts(214, 70) + hearts(236, 52), garden(True))
@@ -392,6 +392,25 @@ def open_box(front=True, back=True):
     return out
 
 
+# The sorting bin of HEB-A-03 (QA-BA-5, 2026-11-07): an open carton that fills the square, with a big white label on its
+# front in which the app draws the picture of what the bin holds (the classroom convention: a bin is labelled with a picture
+# of its contents; references looked at 2026-11-07: Bing and web search "preschool classroom toy bins labeled with pictures of
+# contents", e.g. childhood101.com's printable toy bin labels and pre-kpages.com's real-photo center labels: one big picture
+# on the front of each bin, for children who cannot read yet). The label is BIN_LABEL, as shares of the square; app/lib/play/tap_answer_session.dart (binLabel) draws
+# the group there, so the two must change together. Nothing of the carton reaches the square's edge, so a stage that shows
+# the whole square cuts nothing off.
+BIN_LABEL = (0.2, 0.41, 0.56, 0.46)
+
+
+def sort_bin():
+    k, s, top, inside = '#D9A866', '#B8874A', '#E8C08A', '#8C6236'
+    lx, ly, lw, lh = (v * 256 for v in BIN_LABEL)
+    return [P('M 40 92 L 206 92 L 222 70 L 56 70 Z', inside),
+            P('M 40 92 L 8 56 L 54 48 L 82 84 Z', top), P('M 206 92 L 240 54 L 196 46 L 168 84 Z', top),
+            P('M 40 92 L 206 92 L 206 232 L 40 232 Z', k), P('M 206 92 L 222 70 L 222 210 L 206 232 Z', s),
+            L('M 48 99 L 198 99', s, 3), RR(lx, ly, lw, lh, 12, WHITE)]
+
+
 def place():
     out = {}
 
@@ -481,7 +500,7 @@ def context_and_pieces():
     sail = m.boat('green')
     sail.parts = [q.replace('Q 186 110 206 160', 'Q 236 96 214 160') for q in sail.parts]
     out['ctx-wind-sail'] = tile(wind + [obj(sail, 140, 236, 0.86)])
-    out['bin-box'] = tile(open_box(front=False) + open_box(back=False) + [RR(84, 134, 88, 64, 8, WHITE)])
+    out['bin-box'] = tile(sort_bin())
     out['thumb-up'] = tile(button('#36A852', '#237A3A', up=True))
     out['thumb-down'] = tile(button('#5C8DDB', '#3E6FC2', up=False))
     return out
@@ -622,8 +641,9 @@ def composites():
         gap = 92
         x0 = 192 - gap * (n - 1) / 2
         out['drum-strip-%d' % n] = composite([obj(m.drum(), x0 + k * gap, 156, 0.36) for k in range(n)], 384, 216)
-    out['dog-big'] = composite(['<ellipse cx="96" cy="150" rx="88" ry="74" fill="#FFC83D" opacity="0.25"/>',
-                                obj(m.dog(), 96, 226, 0.66), obj(m.dog(), 204, 226, 0.3)])
+    # no glow behind either dog: the picture is the scene of ENG-A-10's hotspot items, which ask for the big one and for the
+    # small one, so neither may be marked (dog-big.hotspots.json, tools/make_language_pictures_band_a.py)
+    out['dog-big'] = composite([obj(m.dog(), 96, 226, 0.66), obj(m.dog(), 204, 226, 0.3)])
     out['ball-pair'] = composite([obj(m.ball('red'), 92, 226, 0.58), obj(m.ball('red'), 204, 226, 0.26)])
     return out
 

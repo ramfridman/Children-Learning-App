@@ -1,0 +1,142 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a08.p01",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "puppet_talk",
+  "templateVersion": "1.0",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-08",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a08-p01",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the puppet asks, the child may answer or pass",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "בֻּבָּה שֶׁמְּדַבֶּרֶת"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_ins_personal",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֶפְשָׁר לַעֲנוֹת בִּתְמוּנָה, אוֹ בְּקוֹל. אֶפְשָׁר גַּם לְדַלֵּג."
+      }
+    ],
+    "target": "vo:eng.en_i_like_bananas",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_5",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בְּדִיּוּק!"
+        }
+      ],
+      "target": "vo:eng.en_yum"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scene": {
+    "picture": "asset:pip_happy"
+  },
+  "answer": {
+    "type": "none",
+    "mode": "personal",
+    "topic": "likes",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:apple",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_apple"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:banana",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_banana"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:bread",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_bread"
+      },
+      {
+        "id": "o4",
+        "sprite": "asset:egg",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_egg"
+      },
+      {
+        "id": "o5",
+        "sprite": "asset:cake",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_cake"
+      },
+      {
+        "id": "o6",
+        "sprite": "asset:juice",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_juice"
+      }
+    ],
+    "pass": {
+      "vo": "vo:eng.pass",
+      "caption": [
+        {
+          "t": "he",
+          "v": "זֶה בְּסֵדֶר!"
+        }
+      ],
+      "target": "vo:eng.en_thats_ok"
+    }
+  }
+}

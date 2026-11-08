@@ -1,0 +1,26 @@
+{
+  "skill": {"id": "ENG-A-06", "strand": "lis", "title": "הַגּוּף", "prerequisites": [{"skill": "ENG-A-02"}], "setCoverage": true},
+  "items": [
+    {"id": "i01", "kind": "listen_do", "frame": "he-ins-touch-body", "rep": "embodied", "ladder": "HL-BODY", "mode": "hotspots", "picture": "mika-body", "target": "en-touch-head", "options": ["head", "tummy", "feet"], "wrong": {"tummy": "sem", "feet": "l1_guess"}},
+    {"id": "i02", "kind": "listen_do", "frame": "he-ins-touch-body", "rep": "embodied", "ladder": "HL-BODY", "mode": "hotspots", "picture": "mika-body", "target": "en-touch-eyes", "options": ["eyes", "ears", "mouth"], "wrong": {"ears": "sem", "mouth": "l1_guess"}},
+    {"id": "i04", "kind": "tap", "target": "en-nose", "options": ["body-nose", "body-eyes", "body-mouth"], "wrong": {"body-eyes": "sem", "body-mouth": "sem"}},
+    {"id": "i05", "kind": "listen_do", "frame": "he-ins-touch-body", "rep": "embodied", "ladder": "HL-BODY", "mode": "hotspots", "picture": "mika-body", "target": "en-touch-mouth", "options": ["mouth", "nose", "head"], "wrong": {"nose": "sem", "head": "l1_guess"}},
+    {"id": "i06", "kind": "listen_do", "frame": "he-ins-touch-body", "rep": "embodied", "ladder": "HL-BODY", "mode": "hotspots", "picture": "mika-body", "target": "en-clap-your-hands", "options": ["hands", "feet", "eyes"], "wrong": {"feet": "sem", "eyes": "l1_guess"}},
+    {"id": "i07", "kind": "listen_do", "frame": "he-ins-touch-body", "rep": "embodied", "ladder": "HL-BODY", "mode": "hotspots", "picture": "mika-body", "target": "en-touch-feet", "options": ["feet", "hands", "head"], "wrong": {"hands": "sem", "head": "l1_guess"}},
+    {"id": "i08", "kind": "listen_do", "frame": "he-ins-touch-body", "rep": "embodied", "ladder": "HL-BODY", "mode": "hotspots", "picture": "mika-body", "target": "en-touch-tummy", "options": ["tummy", "head", "hands"], "wrong": {"head": "sem", "hands": "l1_guess"}},
+    {"id": "i09", "kind": "tap", "target": "en-nose", "options": ["body-nose", "body-mouth", "body-ears"], "wrong": {"body-mouth": "sem", "body-ears": "l1_guess"}},
+    {"id": "i10", "kind": "tap", "target": "en-ears", "options": ["body-ears", "body-eyes", "body-nose"], "wrong": {"body-eyes": "sem", "body-nose": "l1_guess"}},
+    {"id": "i11", "kind": "tap", "purpose": "check", "target": "en-feet", "options": ["body-feet", "body-hands", "body-head"], "wrong": {"body-hands": "sem", "body-head": "l1_guess"}},
+    {"id": "i12", "kind": "tap", "purpose": "check", "target": "en-tummy", "options": ["body-tummy", "body-head", "body-hands"], "wrong": {"body-head": "sem", "body-hands": "l1_guess"}},
+    {"id": "pr1", "kind": "tap", "purpose": "probe", "target": "en-nose", "options": ["body-nose", "body-eyes", "body-mouth"], "wrong": {"body-eyes": "sem", "body-mouth": "sem"}},
+    {"id": "i03", "kind": "listen_do", "frame": "he-ins-touch-body", "rep": "embodied", "ladder": "HL-BODY", "mode": "hotspots", "picture": "mika-body", "target": "en-touch-ears", "options": ["ears", "eyes", "nose"], "wrong": {"eyes": "sem", "nose": "l1_guess"}},
+    {"id": "e01", "kind": "listen_do", "purpose": "practice", "frame": "he-ins-do-too", "mode": "embodied", "picture": "mika-body", "clips": ["en-touch-head", "en-touch-nose", "en-touch-feet"]},
+    {"id": "i13", "kind": "tap", "target": "en-feet", "options": ["body-feet", "body-ears", "body-tummy"], "wrong": {"body-ears": "sem", "body-tummy": "sem"}},
+    {"id": "i14", "kind": "tap", "target": "en-tummy", "options": ["body-tummy", "body-feet", "body-nose"], "wrong": {"body-feet": "sem", "body-nose": "sem"}}
+  ],
+  "lessons": [
+    {"id": "body-1", "title": "הָרֹאשׁ וְהַפָּנִים", "items": ["i01", "i02", "i04", "i05", "i10"]},
+    {"id": "body-2", "title": "כׇּל הַגּוּף", "items": ["i06", "i07", "i08", "i09"]},
+    {"id": "body-more", "title": "כׇּל הַגּוּף", "items": ["i03", "i13", "i14", "e01"]}
+  ]
+}

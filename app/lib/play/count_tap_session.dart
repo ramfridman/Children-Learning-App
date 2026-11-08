@@ -6,6 +6,8 @@ import '../child/activity_shell.dart';
 import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
+import '../design/board.dart' show BoardClass;
+import '../engine/course.dart' show Course;
 import '../design/components.dart';
 import '../design/course_text.dart';
 import '../design/layout.dart';
@@ -15,7 +17,9 @@ import '../strings/he.dart';
 import 'hint_widgets.dart';
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
+import 'choice_row.dart' show withTallStage;
 import 'lesson_controller.dart';
+import 'listen_do_session.dart' show ListenDoSession;
 import 'option_faces.dart';
 import 'template_session.dart';
 
@@ -24,16 +28,64 @@ import 'template_session.dart';
 class CountLayout {
   CountLayout(Size size, CountTapActivity a) {
     final double h = size.height;
+    if (Course.isLanguage(a.course) && countsInPlace(a)) {
+      _language(size, a);
+      return;
+    }
     final double flowerH = h * 0.86;
     final double flowerW = flowerH * 0.8;
     flower = Rect.fromLTWH(size.width - flowerW - 10, (h - flowerH) / 2, flowerW, flowerH);
     objectSize = math.min(60, math.max(36, h * 0.34));
+    touch = math.max(objectSize, 48);
     final Rect region = Rect.fromLTRB(10, 8, flower.left - 8, h - 8);
     centers = a.arrangement == 'line' ? _line(region, a.count) : _scatter(region, a.count, a.seed);
   }
 
+  /// A count whose target is the blank picture: nothing is there to fly to, so the objects are counted where they stand.
+  static bool countsInPlace(CountTapActivity a) => a.targetSprite.split(':').last == 'blank';
+
+  /// A language course counts in place (nothing flies to a flower, whose sprite is blank): the objects have the stage but a strip at
+  /// its end for the counter, in one row or in two to four, whichever makes them largest, each in a cell of its own (QA-BA-6:
+  /// Band A, a child control is at least 64 points, and the phone's 128-point stage made them 48). The counter stands at the bottom
+  /// of the strip.
+  void _language(Size size, CountTapActivity a) {
+    const double strip = 56;
+    // The strip ends 10 above the stage's bottom, so the counter (40 high, 34 above the strip's bottom) stays inside the stage.
+    flower = Rect.fromLTWH(size.width - strip - 4, 0, strip, size.height - 10);
+    final Rect region = Rect.fromLTRB(8, 6, flower.left - 4, size.height - 6);
+    final int n = math.max(1, a.count);
+    int rows = 1;
+    double cell = 0;
+    for (int r = 1; r <= math.min(4, n); r++) {
+      final double c = math.min(region.width / (n / r).ceil(), region.height / r);
+      if (c > cell + 0.5) {
+        cell = c;
+        rows = r;
+      }
+    }
+    objectSize = math.min(96, cell * 0.84);
+    // The touch square is the object's cell, at most 96: two touch squares never overlap (a touch on a neighbour would start the count
+    // again). On the phone's 128-point stage a cell is 64 or more up to four objects; five to ten need the tall stage while they are
+    // counted (docs/design/languages-band-a-qa.md section 3).
+    touch = math.min(cell, 96);
+    final int cols = (n / rows).ceil();
+    final double top = region.center.dy - rows * cell / 2;
+    centers = <Offset>[
+      for (int i = 0; i < n; i++)
+        Offset(
+          // Each row is centred on its own (a last row of fewer stands in the middle), and the objects run left to right (a count
+          // is read in order, and numbers never mirror).
+          region.center.dx + ((i % cols) - (math.min(cols, n - (i ~/ cols) * cols) - 1) / 2) * cell,
+          top + (i ~/ cols + 0.5) * cell,
+        ),
+    ];
+  }
+
   late final Rect flower;
   late final double objectSize;
+
+  /// The square each object is touched in.
+  late final double touch;
   late final List<Offset> centers;
 
   Offset get flowerCentre => flower.center;
@@ -105,6 +157,16 @@ class CountTapSession extends TemplateSession {
   Size _size = Size.zero;
 
   bool get flies => activity.onTap == 'fly_to_target';
+
+  /// Five or more objects counted in place in a course: on a phone they have the tall stage while they are counted, so that each has a cell
+  /// of 58 points or more (Band A: a child control is at least 64, the SE's ten objects 58); at the question the stage is the usual one
+  /// again, to leave the room to the answers (docs/design/languages-band-a-qa.md section 3).
+  bool get _tallWhileCounting =>
+      activity.isLanguage && CountLayout.countsInPlace(activity) && activity.count >= 5;
+
+  @override
+  ActivitySpec layoutFor(ActivitySpec base) =>
+      _tallWhileCounting && !answering && !base.stageIsCard ? withTallStage(base) : base;
   int get counter => counted.length;
 
   void tapObject(int i) {
@@ -387,8 +449,9 @@ class CountTapSession extends TemplateSession {
             ),
           ),
         ),
-        // While the objects are being counted the answer area is free: hint 2 opens its card there, beside the scene.
-        if (fingers > 0 && !answering)
+        // While the objects are being counted the answer area is free: hint 2 opens its card there, beside the scene. (Under the tall stage
+        // the stage has taken it: the card stands in the close-up slot, see [buildBoardLayer].)
+        if (fingers > 0 && !answering && !(_tallWhileCounting && !spec.stageIsCard))
           AnswerAreaCard(
             spec: spec,
             child: CountingAid(n: activity.count, shown: fingers, scale: AnswerAreaCard.scaleOf(spec)),
@@ -396,6 +459,36 @@ class CountTapSession extends TemplateSession {
       ],
     ),
   );
+
+  /// Hint 2's counting card under the tall stage (a phone, five or more objects): in the slot outside the stage that a close-up card of
+  /// a listen-and-do has, so that it never covers an object.
+  @override
+  Widget? buildBoardLayer(BuildContext context, ActivitySpec spec) {
+    if (!_tallWhileCounting || spec.stageIsCard) return null;
+    final BoardClass board = AppLayout.of(context).board;
+    return Positioned.fill(
+      child: IgnorePointer(
+        child: ListenableBuilder(
+          listenable: this,
+          builder: (BuildContext c, Widget? _) {
+            if (fingers <= 0 || answering) return const SizedBox();
+            final ({double x, double y, double side}) slot = ListenDoSession.closeUpSlot(board, false);
+            return Stack(
+              children: <Widget>[
+                Positioned(
+                  left: slot.x,
+                  top: slot.y,
+                  width: slot.side,
+                  height: slot.side,
+                  child: CountingAid(n: activity.count, shown: fingers, scale: 0.8),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
 }
 
 /// A row of small dots, one for each thing, as the second way of showing a number (R2).
@@ -429,7 +522,7 @@ class _CountStage extends StatelessWidget {
   Widget build(BuildContext context) {
     final CountTapActivity a = s.activity;
     final CountLayout layout = CountLayout(size, a);
-    final double touch = math.max(layout.objectSize, 48);
+    final double touch = layout.touch;
     final Offset target = layout.flowerCentre;
     return Semantics(
       container: true,

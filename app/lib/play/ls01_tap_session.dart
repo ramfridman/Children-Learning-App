@@ -807,7 +807,11 @@ class Ls01TapSession extends ChoiceSession {
           SpeakerMark(
             key: const Key('target-sound'),
             touch: 64,
-            onTap: () => playClips?.call(<String>[?tap.promptLine.target, ?tap.stem?.clip], replace: true),
+            onTap: () => playClips?.call(<String>[
+              ?tap.promptLine.target,
+              ?tap.promptLine.target2,
+              ?tap.stem?.clip,
+            ], replace: true),
           ),
           if (targetBig)
             Container(

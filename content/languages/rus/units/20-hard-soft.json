@@ -1,0 +1,675 @@
+{
+  "skill": {
+    "id": "RUS-A-20",
+    "strand": "pho",
+    "title": "צְלִילִים דּוֹמִים",
+    "prerequisites": [
+      {
+        "skill": "RUS-A-19"
+      }
+    ],
+    "core": true
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "frame": "f35",
+      "target": "mp-luk",
+      "options": [
+        {
+          "pic": "onion",
+          "clip": "mp-luk"
+        },
+        {
+          "pic": "manhole",
+          "clip": "mp-ljuk"
+        },
+        {
+          "pic": "beetle",
+          "clip": "w-zhuk"
+        }
+      ],
+      "wrong": {
+        "manhole": "hardsoft",
+        "beetle": "sound"
+      },
+      "ladder": "HL-MOUTH"
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "frame": "f35",
+      "target": "mp-ljuk",
+      "options": [
+        {
+          "pic": "manhole",
+          "clip": "mp-ljuk"
+        },
+        {
+          "pic": "onion",
+          "clip": "mp-luk"
+        },
+        {
+          "pic": "beetle",
+          "clip": "w-zhuk"
+        }
+      ],
+      "wrong": {
+        "onion": "hardsoft",
+        "beetle": "sound"
+      },
+      "ladder": "HL-MOUTH"
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "frame": "f35",
+      "target": "w-myshka",
+      "options": [
+        {
+          "pic": "mouse",
+          "clip": "w-myshka"
+        },
+        {
+          "pic": "teddy",
+          "clip": "w-mishka"
+        },
+        {
+          "pic": "cat",
+          "clip": "w-koshka"
+        }
+      ],
+      "wrong": {
+        "teddy": "yi",
+        "cat": "sound"
+      },
+      "ladder": "HL-MOUTH"
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "frame": "f35",
+      "target": "w-mishka",
+      "options": [
+        {
+          "pic": "teddy",
+          "clip": "w-mishka"
+        },
+        {
+          "pic": "mouse",
+          "clip": "w-myshka"
+        },
+        {
+          "pic": "book",
+          "clip": "w-knizhka"
+        }
+      ],
+      "wrong": {
+        "mouse": "yi",
+        "book": "sound"
+      },
+      "ladder": "HL-MOUTH"
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "frame": "f35",
+      "target": "w-rys",
+      "options": [
+        {
+          "pic": "lynx",
+          "clip": "w-rys"
+        },
+        {
+          "pic": "rice",
+          "clip": "w-ris"
+        },
+        {
+          "pic": "fish",
+          "clip": "w-ryba"
+        }
+      ],
+      "wrong": {
+        "rice": "yi",
+        "fish": "sound"
+      },
+      "ladder": "HL-MOUTH"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "frame": "f35",
+      "target": "w-ris",
+      "options": [
+        {
+          "pic": "rice",
+          "clip": "w-ris"
+        },
+        {
+          "pic": "lynx",
+          "clip": "w-rys"
+        },
+        {
+          "pic": "whale",
+          "clip": "w-kit"
+        }
+      ],
+      "wrong": {
+        "lynx": "yi",
+        "whale": "sound"
+      },
+      "ladder": "HL-MOUTH"
+    },
+    {
+      "id": "17",
+      "kind": "tap",
+      "frame": "f35",
+      "target": "w-myshka",
+      "options": [
+        {
+          "pic": "mouse",
+          "clip": "w-myshka"
+        },
+        {
+          "pic": "teddy",
+          "clip": "w-mishka"
+        },
+        {
+          "pic": "book",
+          "clip": "w-knizhka"
+        }
+      ],
+      "wrong": {
+        "teddy": "yi",
+        "book": "sound"
+      },
+      "ladder": "HL-MOUTH",
+      "variant": "w-myshka-2"
+    },
+    {
+      "id": "18",
+      "kind": "tap",
+      "frame": "f35",
+      "target": "w-mishka",
+      "options": [
+        {
+          "pic": "teddy",
+          "clip": "w-mishka"
+        },
+        {
+          "pic": "mouse",
+          "clip": "w-myshka"
+        },
+        {
+          "pic": "cat",
+          "clip": "w-koshka"
+        }
+      ],
+      "wrong": {
+        "mouse": "yi",
+        "cat": "sound"
+      },
+      "purpose": "check",
+      "ladder": "HL-MOUTH",
+      "variant": "w-mishka-2"
+    },
+    {
+      "id": "19",
+      "kind": "tap",
+      "frame": "f35",
+      "target": "w-rys",
+      "options": [
+        {
+          "pic": "lynx",
+          "clip": "w-rys"
+        },
+        {
+          "pic": "rice",
+          "clip": "w-ris"
+        },
+        {
+          "pic": "mouse",
+          "clip": "w-mysh"
+        }
+      ],
+      "wrong": {
+        "rice": "yi",
+        "mouse": "sound"
+      },
+      "purpose": "check",
+      "ladder": "HL-MOUTH",
+      "variant": "w-rys-2"
+    },
+    {
+      "id": "20",
+      "kind": "tap",
+      "frame": "f35",
+      "target": "w-ris",
+      "options": [
+        {
+          "pic": "rice",
+          "clip": "w-ris"
+        },
+        {
+          "pic": "lynx",
+          "clip": "w-rys"
+        },
+        {
+          "pic": "fish",
+          "clip": "w-ryba"
+        }
+      ],
+      "wrong": {
+        "lynx": "yi",
+        "fish": "sound"
+      },
+      "purpose": "check",
+      "ladder": "HL-MOUTH",
+      "variant": "w-ris-2"
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f35",
+      "target": "mp-ljuk",
+      "options": [
+        {
+          "pic": "manhole",
+          "clip": "mp-ljuk"
+        },
+        {
+          "pic": "onion",
+          "clip": "mp-luk"
+        },
+        {
+          "pic": "beetle",
+          "clip": "w-zhuk"
+        }
+      ],
+      "wrong": {
+        "onion": "hardsoft",
+        "beetle": "sound"
+      },
+      "purpose": "probe",
+      "ladder": "HL-MOUTH",
+      "variant": "mp-ljuk-p"
+    },
+    {
+      "id": "p02",
+      "kind": "tap",
+      "frame": "f35",
+      "target": "w-myshka",
+      "options": [
+        {
+          "pic": "mouse",
+          "clip": "w-myshka"
+        },
+        {
+          "pic": "teddy",
+          "clip": "w-mishka"
+        },
+        {
+          "pic": "cat",
+          "clip": "w-koshka"
+        }
+      ],
+      "wrong": {
+        "teddy": "yi",
+        "cat": "sound"
+      },
+      "purpose": "probe",
+      "ladder": "HL-MOUTH",
+      "variant": "w-myshka-p"
+    },
+    {
+      "id": "21",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "onion",
+      "options": [
+        {
+          "clip": "mp-luk"
+        },
+        {
+          "clip": "mp-ljuk"
+        },
+        {
+          "clip": "w-zhuk"
+        }
+      ],
+      "wrong": {
+        "mp-ljuk": "hardsoft",
+        "w-zhuk": "sound"
+      },
+      "hintWord": "mp-luk",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "hardsoft": "he-fb-check",
+          "sound": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
+    },
+    {
+      "id": "22",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "teddy",
+      "options": [
+        {
+          "clip": "w-mishka"
+        },
+        {
+          "clip": "w-myshka"
+        },
+        {
+          "clip": "w-knizhka"
+        }
+      ],
+      "wrong": {
+        "w-myshka": "yi",
+        "w-knizhka": "sound"
+      },
+      "hintWord": "w-mishka",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sound": "he-fb-check",
+          "yi": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
+    },
+    {
+      "id": "23",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "picture": "scene-room-mouse",
+      "target": "w-mishka",
+      "options": [
+        "teddy",
+        "mouse",
+        "cat"
+      ],
+      "right": "teddy",
+      "wrong": {
+        "mouse": "yi",
+        "cat": "sound"
+      },
+      "ladder": "HL-MOUTH",
+      "rep": "embodied",
+      "variant": "w-mishka-room"
+    },
+    {
+      "id": "24",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "picture": "scene-room-mouse",
+      "target": "w-myshka",
+      "options": [
+        "mouse",
+        "teddy",
+        "cat"
+      ],
+      "right": "mouse",
+      "wrong": {
+        "teddy": "yi",
+        "cat": "sound"
+      },
+      "ladder": "HL-MOUTH",
+      "rep": "embodied",
+      "variant": "w-myshka-room"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "frame": "f34",
+      "target": "syl-my",
+      "target2": "syl-mi",
+      "options": [
+        "mika-no",
+        "mika-yes"
+      ],
+      "wrong": {
+        "mika-yes": "yi"
+      },
+      "pole": "different",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "frame": "f34",
+      "target": "mp-luk",
+      "target2": "mp-ljuk",
+      "options": [
+        "mika-no",
+        "mika-yes"
+      ],
+      "wrong": {
+        "mika-yes": "hardsoft"
+      },
+      "pole": "different",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "f34",
+      "target": "syl-ly",
+      "target2": "syl-li",
+      "options": [
+        "mika-no",
+        "mika-yes"
+      ],
+      "wrong": {
+        "mika-yes": "yi"
+      },
+      "pole": "different",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "frame": "f34",
+      "target": "syl-la",
+      "target2": "syl-lja",
+      "options": [
+        "mika-no",
+        "mika-yes"
+      ],
+      "wrong": {
+        "mika-yes": "hardsoft"
+      },
+      "pole": "different",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "11",
+      "kind": "tap",
+      "frame": "f34",
+      "target": "syl-my",
+      "target2": "syl-my",
+      "options": [
+        "mika-yes",
+        "mika-no"
+      ],
+      "wrong": {
+        "mika-no": "yesno"
+      },
+      "pole": "same",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "12",
+      "kind": "tap",
+      "frame": "f34",
+      "target": "syl-sy",
+      "target2": "syl-sy",
+      "options": [
+        "mika-yes",
+        "mika-no"
+      ],
+      "wrong": {
+        "mika-no": "yesno"
+      },
+      "pole": "same",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "13",
+      "kind": "tap",
+      "frame": "f34",
+      "target": "syl-no",
+      "target2": "syl-njo",
+      "options": [
+        "mika-no",
+        "mika-yes"
+      ],
+      "wrong": {
+        "mika-yes": "hardsoft"
+      },
+      "pole": "different",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "14",
+      "kind": "tap",
+      "frame": "f34",
+      "target": "mp-luk",
+      "target2": "mp-luk",
+      "options": [
+        "mika-yes",
+        "mika-no"
+      ],
+      "wrong": {
+        "mika-no": "yesno"
+      },
+      "pole": "same",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "15",
+      "kind": "tap",
+      "frame": "f34",
+      "target": "w-rys",
+      "target2": "w-rys",
+      "options": [
+        "mika-yes",
+        "mika-no"
+      ],
+      "wrong": {
+        "mika-no": "yesno"
+      },
+      "pole": "same",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "16",
+      "kind": "tap",
+      "frame": "f34",
+      "target": "syl-mi",
+      "target2": "syl-mi",
+      "options": [
+        "mika-yes",
+        "mika-no"
+      ],
+      "wrong": {
+        "mika-no": "yesno"
+      },
+      "pole": "same",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "pairs-1",
+      "title": "צְלִילִים דּוֹמִים",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "id": "pairs-2",
+      "title": "צְלִילִים דּוֹמִים",
+      "items": [
+        "05",
+        "06",
+        "17",
+        "23",
+        "24"
+      ]
+    },
+    {
+      "id": "hard-soft-more1",
+      "title": "צְלִילִים דּוֹמִים",
+      "items": [
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12"
+      ]
+    },
+    {
+      "id": "hard-soft-more2",
+      "title": "צְלִילִים דּוֹמִים",
+      "items": [
+        "13",
+        "14",
+        "15",
+        "16"
+      ]
+    }
+  ],
+  "teach": [
+    [
+      "mp-luk",
+      "mp-ljuk",
+      "w-myshka",
+      "w-mishka",
+      "w-rys",
+      "w-ris"
+    ]
+  ],
+  "routes": {
+    "new": {
+      "note": "teach all six words; items 01 to 06 and 17 to 20, then 07 to 16 on later visits"
+    },
+    "heritage": {
+      "hear": true,
+      "order": "mixed",
+      "note": "one hearing of each word (hearing screens th01 to th06), each before the first lesson that asks it; no teach screens for a heritage speaker"
+    },
+    "reader": {
+      "as": "heritage",
+      "note": "as heritage"
+    }
+  }
+}

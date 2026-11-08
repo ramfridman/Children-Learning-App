@@ -1,0 +1,62 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.pairs-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "צְלִילִים דּוֹמִים"
+    }
+  ],
+  "skills": [
+    "RUS-A-20"
+  ],
+  "items": [
+    "rus.a20.01",
+    "rus.a20.02",
+    "rus.a20.03",
+    "rus.a20.04"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 66,
+  "teach": [
+    {
+      "items": [
+        "rus.a20.tc01",
+        "rus.a20.tc02",
+        "rus.a20.tc03",
+        "rus.a20.tc04",
+        "rus.a20.tc05",
+        "rus.a20.tc06"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach"
+    },
+    {
+      "items": [
+        "rus.a20.th01",
+        "rus.a20.th02",
+        "rus.a20.th03",
+        "rus.a20.th04"
+      ],
+      "routes": [
+        "heritage"
+      ],
+      "mode": "hear"
+    }
+  ]
+}

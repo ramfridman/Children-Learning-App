@@ -227,6 +227,12 @@ class FamilyLanguages {
   bool anyVoice(String course) =>
       _byChild.values.any((Map<String, LanguageSwitches> m) => m[course]?.voice ?? false);
 
+  /// The languages that are on for at least one child, in the fixed order of the doors: the ones whose pack the phone needs.
+  List<String> get coursesOn => <String>[
+    for (final String c in Course.languages)
+      if (_byChild.values.any((Map<String, LanguageSwitches> m) => m[c]?.on ?? false)) c,
+  ];
+
   /// What this child's parent chose for [course] (the defaults if nothing).
   LanguageSwitches of(String childId, String course) =>
       _byChild[childId]?[course] ?? const LanguageSwitches();

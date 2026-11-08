@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.role_swap",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "GRAMMAR",
+  "skills": [
+    "HEB-A-04"
+  ],
+  "parentText": "הילד שומע את המילים, ולפעמים מחליף בין הדבר למקום (הקופסה על הכדור במקום הכדור על הקופסה).",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "שחקו עם כדור וקופסה: אמרו לאט \"הכדור על הקופסה\", ותנו לילד לסדר. אחר כך הפכו: \"הקופסה על הכדור\"."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial",
+    "embodied"
+  ]
+}

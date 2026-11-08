@@ -1,0 +1,46 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.animals-3",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "חַיּוֹת"
+    }
+  ],
+  "skills": [
+    "RUS-A-05"
+  ],
+  "items": [
+    "rus.a05.11",
+    "rus.a05.12",
+    "rus.a05.13"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 16,
+  "teach": [
+    {
+      "items": [
+        "rus.a05.tc10",
+        "rus.a05.tc11",
+        "rus.a05.tc12"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach"
+    }
+  ]
+}

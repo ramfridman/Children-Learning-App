@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "ENG-A-15",
+  "review": "needs-editor",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "סִפּוּר"
+    }
+  ],
+  "strand": "lis",
+  "prerequisites": [
+    {
+      "skill": "ENG-A-05",
+      "weight": 0.8
+    },
+    {
+      "skill": "ENG-A-03",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "story"
+  ],
+  "misconceptions": [
+    "eng.lis.l1_guess",
+    "eng.lis.sem",
+    "eng.lis.story_recall"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

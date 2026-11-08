@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "eng.body-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "eng",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "הָרֹאשׁ וְהַפָּנִים"
+    }
+  ],
+  "skills": [
+    "ENG-A-06"
+  ],
+  "items": [
+    "eng.a06.i01",
+    "eng.a06.i02",
+    "eng.a06.i04",
+    "eng.a06.i05",
+    "eng.a06.i10"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "sequence": 14
+}

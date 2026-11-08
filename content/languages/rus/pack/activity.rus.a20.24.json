@@ -1,0 +1,168 @@
+{
+  "schema": "activity/v1",
+  "id": "rus.a20.24",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "listen_do",
+  "templateVersion": "1.0",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "RUS-A-20",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "embodied",
+  "variantGroup": "w-myshka-room",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "do what is said",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנָה וְחָבֵר שֶׁעוֹשֶׂה מַה שֶּׁאוֹמְרִים"
+  },
+  "prompt": {
+    "vo": "vo:rus.f19",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַקְשִׁיבוּ, וּמִצְאוּ אֶת זֶה בַּחֶדֶר."
+      }
+    ],
+    "target": "vo:rus.w_myshka",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:rus.he_fb_right_7",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
+        }
+      ],
+      "target": "vo:rus.w_myshka"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:rus.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ],
+      "target": "vo:rus.w_myshka"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ],
+      "target": "vo:rus.w_myshka"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:rus.f36",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ עַל הַפֶּה."
+        }
+      ],
+      "target": "vo:rus.w_myshka"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:rus.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:rus.w_myshka"
+    }
+  ],
+  "scene": {
+    "picture": "asset:scene_room_mouse"
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "hotspots",
+    "options": [
+      {
+        "id": "o1",
+        "label": "mouse",
+        "at": {
+          "x": 0.5781,
+          "y": 0.6406,
+          "w": 0.4062,
+          "h": 0.3438
+        }
+      },
+      {
+        "id": "o2",
+        "label": "teddy",
+        "at": {
+          "x": 0.0312,
+          "y": 0.0156,
+          "w": 0.4219,
+          "h": 0.4531
+        },
+        "misconception": "rus.pho.yi"
+      },
+      {
+        "id": "o3",
+        "label": "cat",
+        "at": {
+          "x": 0.1406,
+          "y": 0.5312,
+          "w": 0.4141,
+          "h": 0.4375
+        },
+        "misconception": "rus.voc.sound"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

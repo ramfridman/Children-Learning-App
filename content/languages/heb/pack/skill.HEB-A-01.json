@@ -1,0 +1,29 @@
+{
+  "schema": "skill/v1",
+  "id": "HEB-A-01",
+  "review": "needs-editor",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מקשיב לסיפור קצר ועונה \"מי\" ו\"מה\""
+    }
+  ],
+  "strand": "ol",
+  "prerequisites": [],
+  "representations": [
+    "pictorial",
+    "story"
+  ],
+  "misconceptions": [
+    "heb.ol.story_role",
+    "heb.ol.story_seen",
+    "heb.ol.story_world"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "misconception/v1",
+  "id": "rus.voc.sound",
+  "review": "needs-editor",
+  "course": "rus",
+  "kind": "diagnostic",
+  "family": "GUESS",
+  "skills": [
+    "RUS-A-02",
+    "RUS-A-03",
+    "RUS-A-04",
+    "RUS-A-05",
+    "RUS-A-06",
+    "RUS-A-07",
+    "RUS-A-08",
+    "RUS-A-09",
+    "RUS-A-11",
+    "RUS-A-12",
+    "RUS-A-13",
+    "RUS-A-14",
+    "RUS-A-15",
+    "RUS-A-19",
+    "RUS-A-20"
+  ],
+  "parentText": "מילים שנשמעות דומה (сок ו־суп) עדיין מתחלפות לילד. זה שלב רגיל בלמידת שפה חדשה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "אמרו לאט שתי מילים דומות, אחת אחרי השנייה, והצביעו על התמונה של כל אחת."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial"
+  ]
+}

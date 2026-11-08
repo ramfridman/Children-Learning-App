@@ -1,0 +1,32 @@
+{
+  "schema": "skill/v1",
+  "id": "HEB-A-07",
+  "review": "needs-editor",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מזהה איזו מילה מתחרזת עם מילה"
+    }
+  ],
+  "strand": "pa",
+  "prerequisites": [
+    {
+      "skill": "HEB-A-06",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "heb.pa.allit",
+    "heb.ol.sem"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

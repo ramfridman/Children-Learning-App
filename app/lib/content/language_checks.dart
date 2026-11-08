@@ -534,11 +534,15 @@ void _twoChoiceLimits(
         if (_choices(e.value) == 2) e,
     ];
     if (two.isEmpty) return;
-    if (two.length * 2 > items.length) {
+    // A probe is no evidence of mastery (the engine counts no probe as a success), so the half is counted over the items that are.
+    bool probe(MapEntry<String, Map<String, Object?>> e) => e.value['purpose'] == 'probe';
+    final int twoEvidence = two.where((MapEntry<String, Map<String, Object?>> e) => !probe(e)).length;
+    final int evidence = items.where((MapEntry<String, Map<String, Object?>> e) => !probe(e)).length;
+    if (twoEvidence * 2 > evidence) {
       say(
         file,
         '',
-        '${two.length} of its ${items.length} scored items have two choices; at most half may (two-choice items are half of the evidence at most)',
+        '$twoEvidence of its $evidence scored items have two choices; at most half may (two-choice items are half of the evidence at most; probes are not counted)',
       );
     }
     final bool binary = skills[skill]?['binary'] == true;

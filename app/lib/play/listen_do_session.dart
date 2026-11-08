@@ -22,7 +22,7 @@ import 'ls01_metrics.dart';
 import 'template_session.dart';
 
 /// The listen-and-do template (LS11, docs/languages/frame.md section 2.3): the command is heard and the child carries it out in a
-/// scene, five ways. **hotspots**: touch one of the glowing parts of the picture (a body, a room); a part that is not an option does not
+/// scene, five ways. **hotspots**: touch one of the parts of the picture (a body, a room), drawn only when a hint or the child's choice lights it; a part that is not an option does not
 /// exist. **buttons**: touch one of the action pictures, and the friend on the stage does the one chosen. **drag**: one of the things
 /// goes to the target (a plate, a box, the friend); **place**: the one thing goes to one of the places. A thing is dragged, or touched
 /// and then the target touched (the tap path always works), and a wrong one goes back to where it was: nothing is red and nothing is
@@ -283,7 +283,8 @@ class _DoStage extends StatelessWidget {
     );
   }
 
-  /// A glowing part of the picture that a touch takes as the answer.
+  /// A part of the picture that a touch takes as the answer. At rest nothing is drawn on it (the picture shows as it was drawn, and a
+  /// friend's face is never covered by a mask); a hint's light or the child's choice draws a ring on it.
   Widget _hotspot(Rect r, ChoiceOption o, int i, int place) => Positioned.fromRect(
     rect: r,
     child: Semantics(
@@ -293,25 +294,43 @@ class _DoStage extends StatelessWidget {
         key: Key(place == 0 ? 'do-hot-${o.id}' : 'do-hot-${o.id}-$place'),
         behavior: HitTestBehavior.opaque,
         onTap: () => s.choose(o.id),
-        child: _ring(o, i),
+        child: _partRing(o, i),
       ),
     ),
   );
 
-  /// The ring around an option's place: always faintly there (a glow), lit by a hint, coloured by the child's choice, and on the right
-  /// one once the help is at its top.
+  /// The ring on a part: none at rest; a thin outline and no fill when a hint lights it, the child chose it or the help is at its top.
+  /// A fill over a picture hides it, and on a character's face it is a mask, so a part is only ever outlined.
+  Widget _partRing(ChoiceOption o, int i) {
+    final bool chosen = s.chosenId == o.id;
+    final bool lit = s.litTile == i || (s.controller.answerShown && o.id == s.correctId);
+    if (!lit && !chosen) return const SizedBox.expand(key: Key('do-part-rest'));
+    return DecoratedBox(
+      key: const Key('do-part-lit'),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(TokenRadius.xl),
+        border: Border.all(color: _ringColor(o).withValues(alpha: 0.95), width: 5),
+      ),
+    );
+  }
+
+  /// The colour of the ring of an option: the child's choice shows by its state, anything else is the hint halo.
+  Color _ringColor(ChoiceOption o) => s.chosenId == o.id
+      ? (s.chosenState == AnswerState.correct
+            ? TokenColors.correctGlow
+            : s.chosenState == AnswerState.notYet
+            ? TokenColors.notYetRing
+            : TokenColors.hintHalo)
+      : TokenColors.hintHalo;
+
+  /// The ring around an option's place of a `place` item: always faintly there (a glow), lit by a hint, coloured by the child's choice,
+  /// and on the right one once the help is at its top.
   Widget _ring(ChoiceOption o, int i) {
     final bool chosen = s.chosenId == o.id;
     final bool shown = s.controller.answerShown && o.id == s.correctId;
     final bool dimmed = s.controller.answerShown && o.id != s.correctId;
     final bool lit = s.litTile == i || shown;
-    final Color color = chosen
-        ? (s.chosenState == AnswerState.correct
-              ? TokenColors.correctGlow
-              : s.chosenState == AnswerState.notYet
-              ? TokenColors.notYetRing
-              : TokenColors.hintHalo)
-        : TokenColors.hintHalo;
+    final Color color = _ringColor(o);
     return Opacity(
       opacity: dimmed ? 0.35 : 1,
       child: DecoratedBox(
@@ -384,19 +403,28 @@ class _DoStage extends StatelessWidget {
                       if (option.text != null) _stoneText(context, option),
                     ],
                   )
-                : DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: TokenColors.skyTint.withValues(alpha: over.isEmpty ? 0.4 : 0.9),
-                      borderRadius: BorderRadius.circular(TokenRadius.xl),
-                      border: Border.all(color: TokenColors.hintHalo, width: 4),
-                    ),
-                    child: sprite == null
-                        ? null
-                        : Padding(padding: const EdgeInsets.all(6), child: PackSvg(a.assets.svg(sprite))),
-                  ),
+                : _targetFace(sprite, ready: over.isNotEmpty || s.selectedId != null),
           ),
         ),
       ),
+    );
+  }
+
+  /// The target of a drag as it is drawn (QA-BA-5): at rest nothing over the picture (the target is a thing drawn in it, a bowl or
+  /// a plate, or the friend, whose face is never covered by a box), only its own sprite if it has one; while a thing is held or
+  /// selected, a thin outline with no fill shows where it goes.
+  Widget _targetFace(String? sprite, {required bool ready}) {
+    final Widget? face = sprite == null
+        ? null
+        : Padding(padding: const EdgeInsets.all(6), child: PackSvg(s.doing.assets.svg(sprite)));
+    if (!ready) return SizedBox.expand(key: const Key('do-target-rest'), child: face);
+    return DecoratedBox(
+      key: const Key('do-target-ready'),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(TokenRadius.xl),
+        border: Border.all(color: TokenColors.hintHalo.withValues(alpha: 0.95), width: 4),
+      ),
+      child: face,
     );
   }
 

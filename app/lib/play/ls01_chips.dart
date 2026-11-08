@@ -2,6 +2,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/painting.dart';
 
+import '../content/scripts.dart' show isSingleLetter;
+import '../design/token_types.dart' show Band;
+import '../engine/presentation.dart' show contentLevelOf;
 import 'ls01_metrics.dart';
 
 // The bins of a sort and the kept chips in them (docs/design/languages-l5-ls01.md section 7.2). A card dropped in a bin stays there as a small
@@ -11,7 +14,21 @@ import 'ls01_metrics.dart';
 /// Where the bins of a stage are and how much room each gives its sign, its speaker and its chips. One source for the session that draws
 /// them and the fit check that tests them.
 class BinGeometry {
-  const BinGeometry({required this.room, required this.tablet, required this.bins});
+  const BinGeometry({required this.room, required this.tablet, required this.bins, this.bigSpeakers = false});
+
+  /// The speakers are 64 points wherever a bin is: Band A, where a child control is never less, and the cards are pictures or single letters
+  /// (see [bigSpeakersFor]).
+  final bool bigSpeakers;
+
+  /// Whether a sort's bins have 64 speakers in every bin: it is Band A's and none of its cards is a word (a Band A card is a picture or a
+  /// letter; a word is wider than the room a corner speaker leaves the chips).
+  static bool bigSpeakersFor({required bool bandA, required Iterable<String?> cardTexts}) =>
+      bandA && cardTexts.every((String? t) => t == null || isSingleLetter(t));
+
+  /// Whether a sort is Band A's for its speakers: the screen is shown in the Band A look, or the sort is Band A's own content (a child of
+  /// the older age bracket may be served it in a later band's look, and the speaker stays as big: QA-BA-11).
+  static bool isBandA({required Band presentation, required String skillId}) =>
+      presentation == Band.a || contentLevelOf(skillId) == 0;
 
   /// The room the stage gives the bins, how many bins, and whether the board is a tablet's (the stage is then a card).
   final Size room;
@@ -31,15 +48,36 @@ class BinGeometry {
   double get binHeight => room.height - 2 * padY;
 
   /// The sign is a pill this tall; a bin with a sound has a speaker at the end of the sign's row, in a box this wide (the disc is 44).
-  double get signHeight => tablet ? 84 : 58;
-  double get speakerTouch => tablet ? 56 : 52;
+  /// The speaker is a child control: 64, the Band A floor (QA-BA-6, design-spec 6.1), in every bin of Band A and wherever a bin is at least
+  /// 150 wide (the tablets, and the phone's two bins of 178), where it stands at the end of the sign's row, the phone's pill then as tall as
+  /// it so that the row keeps the pill's height. In a narrower bin (the phone SE's two of 121, or three bins) beside a 64 the sign would have
+  /// 29 points: in Band A the speaker leaves the sign's row and stands in the end corner under it, [cornerMargin] from the bin's inner
+  /// edges, and the sign has the whole row (docs/design/languages-band-a-qa.md section 4.2). Bands B and C keep 52 beside the sign there: a
+  /// text chip would not fit the room a corner speaker leaves (the cards of Band A are pictures and single letters).
+  bool get _roomy => tablet || binWidth >= 150;
+  bool get cornerSpeaker => bigSpeakers && !_roomy;
+  double get signHeight => tablet ? 84 : (_roomy ? 64 : 58);
+  double get speakerTouch => (_roomy || bigSpeakers) ? 64 : 52;
   double get speakerRoom => speakerTouch + 4;
 
-  /// The widest a sign can be: the bin's inner width less the padding of the pill, and less the speaker when the bin has one.
-  double signLimit({required bool speaker}) => binWidth - 2 * chrome - 12 - (speaker ? speakerRoom : 0);
+  /// How far a corner speaker stands from the bin's inner edges (the end and the bottom).
+  static const double cornerMargin = 6;
+
+  /// The end side of the chips' room that a corner speaker keeps free, as wide as the speaker and its margin.
+  double get cornerRoom => speakerTouch + cornerMargin;
+
+  /// The widest a sign can be: the bin's inner width less the padding of the pill, and less the speaker when the bin has one beside the
+  /// sign (a corner speaker is under it).
+  double signLimit({required bool speaker}) =>
+      binWidth - 2 * chrome - 12 - (speaker && !cornerSpeaker ? speakerRoom : 0);
 
   /// The room the chips of one bin have, under the sign, and how tall one chip is at most.
   Size get chipRoom => Size(binWidth - 2 * chrome, binHeight - 2 * chrome - signHeight - between);
+
+  /// The room the chips of a bin have when the bin [speaker]s: a corner speaker keeps the end side of the room free, so a chip never stands
+  /// under it.
+  Size chipRoomFor({required bool speaker}) =>
+      speaker && cornerSpeaker ? Size(chipRoom.width - cornerRoom, chipRoom.height) : chipRoom;
   double get chipMax => tablet ? 56 : 44;
 
   /// Where bin [slot] stands (counted from the left of the room), as a rectangle in the room's own coordinates.

@@ -1,0 +1,181 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a04.01",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "listen_do",
+  "templateVersion": "1.0",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-04",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "embodied",
+  "variantGroup": "a04-01",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "do what is said",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנָה וְחָבֵר שֶׁעוֹשֶׂה מַה שֶּׁאוֹמְרִים"
+  },
+  "prompt": {
+    "vo": "vo:heb.pl_1",
+    "caption": [
+      {
+        "t": "he",
+        "v": "שִׂימוּ אֶת הַכַּדּוּר עַל הַכִּסֵּא."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן, זֶהוּ זֶה!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:heb.ol.prep",
+        "vo": "vo:heb.fb_prep",
+        "caption": [
+          {
+            "t": "he",
+            "v": "שִׁמְעוּ אֵיפֹה:"
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:heb.fb_prep",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שִׁמְעוּ אֵיפֹה:"
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:heb.show",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַעֲשֶׂה אֶת זֶה יַחַד."
+        }
+      ]
+    }
+  ],
+  "scene": {
+    "picture": "asset:chair",
+    "thing": {
+      "sprite": "asset:ball",
+      "at": {
+        "x": 0.7,
+        "y": 0.02,
+        "w": 0.29,
+        "h": 0.29
+      }
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "place",
+    "options": [
+      {
+        "id": "o1",
+        "label": "עַל",
+        "at": {
+          "x": 0.34,
+          "y": 0.22,
+          "w": 0.34,
+          "h": 0.3
+        }
+      },
+      {
+        "id": "o2",
+        "label": "מִתַּחַת",
+        "at": {
+          "x": 0.34,
+          "y": 0.66,
+          "w": 0.34,
+          "h": 0.3
+        },
+        "misconception": "heb.ol.prep"
+      },
+      {
+        "id": "o3",
+        "label": "לְיַד",
+        "at": {
+          "x": 0.0,
+          "y": 0.36,
+          "w": 0.29,
+          "h": 0.4
+        },
+        "misconception": "heb.ol.prep"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

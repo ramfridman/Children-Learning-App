@@ -1,0 +1,779 @@
+{
+  "skill": {
+    "id": "RUS-A-07",
+    "strand": "voc",
+    "title": "אֹכֶל וּשְׁתִיָּה",
+    "setCoverage": true
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-moloko",
+      "options": [
+        {
+          "pic": "milk",
+          "clip": "w-moloko"
+        },
+        {
+          "pic": "water",
+          "clip": "w-voda"
+        },
+        {
+          "pic": "juice",
+          "clip": "w-sok"
+        }
+      ],
+      "wrong": {
+        "water": "sem",
+        "juice": "sem"
+      }
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-voda",
+      "options": [
+        {
+          "pic": "water",
+          "clip": "w-voda"
+        },
+        {
+          "pic": "milk",
+          "clip": "w-moloko"
+        },
+        {
+          "pic": "tea",
+          "clip": "w-chaj"
+        }
+      ],
+      "wrong": {
+        "milk": "sem",
+        "tea": "sem"
+      }
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-sok",
+      "options": [
+        {
+          "pic": "juice",
+          "clip": "w-sok"
+        },
+        {
+          "pic": "soup",
+          "clip": "w-sup"
+        },
+        {
+          "pic": "water",
+          "clip": "w-voda"
+        }
+      ],
+      "wrong": {
+        "soup": "sound",
+        "water": "sem"
+      }
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-chaj",
+      "options": [
+        {
+          "pic": "tea",
+          "clip": "w-chaj"
+        },
+        {
+          "pic": "milk",
+          "clip": "w-moloko"
+        },
+        {
+          "pic": "juice",
+          "clip": "w-sok"
+        }
+      ],
+      "wrong": {
+        "milk": "sem",
+        "juice": "sem"
+      }
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-hleb",
+      "options": [
+        {
+          "pic": "bread",
+          "clip": "w-hleb"
+        },
+        {
+          "pic": "cheese",
+          "clip": "w-syr"
+        },
+        {
+          "pic": "cookie",
+          "clip": "w-pechenje"
+        }
+      ],
+      "wrong": {
+        "cheese": "sem",
+        "cookie": "sem"
+      }
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-syr",
+      "options": [
+        {
+          "pic": "cheese",
+          "clip": "w-syr"
+        },
+        {
+          "pic": "soup",
+          "clip": "w-sup"
+        },
+        {
+          "pic": "bread",
+          "clip": "w-hleb"
+        }
+      ],
+      "wrong": {
+        "soup": "sound",
+        "bread": "sem"
+      }
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-sup",
+      "options": [
+        {
+          "pic": "soup",
+          "clip": "w-sup"
+        },
+        {
+          "pic": "juice",
+          "clip": "w-sok"
+        },
+        {
+          "pic": "porridge",
+          "clip": "w-kasha"
+        }
+      ],
+      "wrong": {
+        "juice": "sound",
+        "porridge": "sem"
+      }
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-kasha",
+      "options": [
+        {
+          "pic": "porridge",
+          "clip": "w-kasha"
+        },
+        {
+          "pic": "soup",
+          "clip": "w-sup"
+        },
+        {
+          "pic": "cat",
+          "clip": "w-koshka"
+        }
+      ],
+      "wrong": {
+        "soup": "sem",
+        "cat": "sound"
+      }
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-jajtso",
+      "options": [
+        {
+          "pic": "egg",
+          "clip": "w-jajtso"
+        },
+        {
+          "pic": "bread",
+          "clip": "w-hleb"
+        },
+        {
+          "pic": "apple",
+          "clip": "w-yabloko"
+        }
+      ],
+      "wrong": {
+        "bread": "sem",
+        "apple": "sound"
+      }
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-pechenje",
+      "options": [
+        {
+          "pic": "cookie",
+          "clip": "w-pechenje"
+        },
+        {
+          "pic": "bread",
+          "clip": "w-hleb"
+        },
+        {
+          "pic": "egg",
+          "clip": "w-jajtso"
+        }
+      ],
+      "wrong": {
+        "bread": "sem",
+        "egg": "sem"
+      }
+    },
+    {
+      "id": "11",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-yabloko",
+      "options": [
+        {
+          "pic": "apple",
+          "clip": "w-yabloko"
+        },
+        {
+          "pic": "pear",
+          "clip": "w-grusha"
+        },
+        {
+          "pic": "milk",
+          "clip": "w-moloko"
+        }
+      ],
+      "wrong": {
+        "pear": "sem",
+        "milk": "sound"
+      }
+    },
+    {
+      "id": "12",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-banan",
+      "options": [
+        {
+          "pic": "banana",
+          "clip": "w-banan"
+        },
+        {
+          "pic": "orange",
+          "clip": "w-apelsin"
+        },
+        {
+          "pic": "pear",
+          "clip": "w-grusha"
+        }
+      ],
+      "wrong": {
+        "orange": "sem",
+        "pear": "sem"
+      }
+    },
+    {
+      "id": "13",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-grusha",
+      "options": [
+        {
+          "pic": "pear",
+          "clip": "w-grusha"
+        },
+        {
+          "pic": "apple",
+          "clip": "w-yabloko"
+        },
+        {
+          "pic": "porridge",
+          "clip": "w-kasha"
+        }
+      ],
+      "wrong": {
+        "apple": "sem",
+        "porridge": "sound"
+      }
+    },
+    {
+      "id": "14",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-apelsin",
+      "options": [
+        {
+          "pic": "orange",
+          "clip": "w-apelsin"
+        },
+        {
+          "pic": "banana",
+          "clip": "w-banan"
+        },
+        {
+          "pic": "watermelon",
+          "clip": "w-arbuz"
+        }
+      ],
+      "wrong": {
+        "banana": "sem",
+        "watermelon": "sound"
+      }
+    },
+    {
+      "id": "15",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-klubnika",
+      "options": [
+        {
+          "pic": "strawberry",
+          "clip": "w-klubnika"
+        },
+        {
+          "pic": "grapes",
+          "clip": "w-vinograd"
+        },
+        {
+          "pic": "tomato",
+          "clip": "w-pomidor"
+        }
+      ],
+      "wrong": {
+        "grapes": "sem",
+        "tomato": "sem"
+      }
+    },
+    {
+      "id": "16",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-vinograd",
+      "options": [
+        {
+          "pic": "grapes",
+          "clip": "w-vinograd"
+        },
+        {
+          "pic": "strawberry",
+          "clip": "w-klubnika"
+        },
+        {
+          "pic": "cucumber",
+          "clip": "w-ogurets"
+        }
+      ],
+      "wrong": {
+        "strawberry": "sem",
+        "cucumber": "sem"
+      }
+    },
+    {
+      "id": "17",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-arbuz",
+      "options": [
+        {
+          "pic": "watermelon",
+          "clip": "w-arbuz"
+        },
+        {
+          "pic": "orange",
+          "clip": "w-apelsin"
+        },
+        {
+          "pic": "cucumber",
+          "clip": "w-ogurets"
+        }
+      ],
+      "wrong": {
+        "orange": "sound",
+        "cucumber": "sem"
+      }
+    },
+    {
+      "id": "18",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-morkov",
+      "options": [
+        {
+          "pic": "carrot",
+          "clip": "w-morkov"
+        },
+        {
+          "pic": "cucumber",
+          "clip": "w-ogurets"
+        },
+        {
+          "pic": "potato",
+          "clip": "w-kartoshka"
+        }
+      ],
+      "wrong": {
+        "cucumber": "sem",
+        "potato": "sem"
+      }
+    },
+    {
+      "id": "19",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-ogurets",
+      "options": [
+        {
+          "pic": "cucumber",
+          "clip": "w-ogurets"
+        },
+        {
+          "pic": "tomato",
+          "clip": "w-pomidor"
+        },
+        {
+          "pic": "carrot",
+          "clip": "w-morkov"
+        }
+      ],
+      "wrong": {
+        "tomato": "sem",
+        "carrot": "sem"
+      }
+    },
+    {
+      "id": "20",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-pomidor",
+      "options": [
+        {
+          "pic": "tomato",
+          "clip": "w-pomidor"
+        },
+        {
+          "pic": "cucumber",
+          "clip": "w-ogurets"
+        },
+        {
+          "pic": "apple",
+          "clip": "w-yabloko"
+        }
+      ],
+      "wrong": {
+        "cucumber": "sem",
+        "apple": "sem"
+      }
+    },
+    {
+      "id": "21",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-kartoshka",
+      "options": [
+        {
+          "pic": "potato",
+          "clip": "w-kartoshka"
+        },
+        {
+          "pic": "carrot",
+          "clip": "w-morkov"
+        },
+        {
+          "pic": "cat",
+          "clip": "w-koshka"
+        }
+      ],
+      "wrong": {
+        "carrot": "sem",
+        "cat": "sound"
+      }
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-yabloko",
+      "options": [
+        {
+          "pic": "apple",
+          "clip": "w-yabloko"
+        },
+        {
+          "pic": "pear",
+          "clip": "w-grusha"
+        },
+        {
+          "pic": "milk",
+          "clip": "w-moloko"
+        }
+      ],
+      "wrong": {
+        "pear": "sem",
+        "milk": "sound"
+      },
+      "purpose": "probe"
+    },
+    {
+      "id": "22",
+      "kind": "listen_do",
+      "frame": "f11",
+      "mode": "drag",
+      "picture": "scene-picnic",
+      "target": "w-sok",
+      "options": [
+        "juice",
+        "soup",
+        "water"
+      ],
+      "right": "juice",
+      "wrong": {
+        "soup": "sound",
+        "water": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "23",
+      "kind": "listen_do",
+      "frame": "f11",
+      "mode": "drag",
+      "picture": "scene-picnic",
+      "target": "w-syr",
+      "options": [
+        "cheese",
+        "soup",
+        "bread"
+      ],
+      "right": "cheese",
+      "wrong": {
+        "soup": "sound",
+        "bread": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "24",
+      "kind": "listen_do",
+      "frame": "f11",
+      "mode": "drag",
+      "picture": "scene-picnic",
+      "target": "w-yabloko",
+      "options": [
+        "apple",
+        "pear",
+        "milk"
+      ],
+      "right": "apple",
+      "wrong": {
+        "pear": "sem",
+        "milk": "sound"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "25",
+      "kind": "listen_do",
+      "frame": "f11",
+      "mode": "drag",
+      "picture": "scene-picnic",
+      "target": "w-banan",
+      "options": [
+        "banana",
+        "orange",
+        "pear"
+      ],
+      "right": "banana",
+      "wrong": {
+        "orange": "sem",
+        "pear": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "26",
+      "kind": "listen_do",
+      "frame": "f11",
+      "purpose": "check",
+      "mode": "drag",
+      "picture": "scene-picnic",
+      "target": "w-morkov",
+      "options": [
+        "carrot",
+        "cucumber",
+        "potato"
+      ],
+      "right": "carrot",
+      "wrong": {
+        "cucumber": "sem",
+        "potato": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "27",
+      "kind": "listen_do",
+      "frame": "f11",
+      "purpose": "check",
+      "mode": "drag",
+      "picture": "scene-picnic",
+      "target": "w-ogurets",
+      "options": [
+        "cucumber",
+        "tomato",
+        "carrot"
+      ],
+      "right": "cucumber",
+      "wrong": {
+        "tomato": "sem",
+        "carrot": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "food-1",
+      "title": "אֹכֶל וּשְׁתִיָּה",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "id": "food-2",
+      "title": "אֹכֶל וּשְׁתִיָּה",
+      "items": [
+        "05",
+        "06",
+        "07"
+      ]
+    },
+    {
+      "id": "food-3",
+      "title": "אֹכֶל וּשְׁתִיָּה",
+      "items": [
+        "08",
+        "09",
+        "10"
+      ]
+    },
+    {
+      "id": "food-4",
+      "title": "אֹכֶל וּשְׁתִיָּה",
+      "items": [
+        "11",
+        "12",
+        "13",
+        "14"
+      ]
+    },
+    {
+      "id": "food-5",
+      "title": "אֹכֶל וּשְׁתִיָּה",
+      "items": [
+        "15",
+        "16",
+        "17"
+      ]
+    },
+    {
+      "id": "food-6",
+      "title": "אֹכֶל וּשְׁתִיָּה",
+      "items": [
+        "18",
+        "19",
+        "20",
+        "21"
+      ]
+    },
+    {
+      "id": "food-more",
+      "title": "אֹכֶל וּשְׁתִיָּה",
+      "items": [
+        "22",
+        "23",
+        "24",
+        "25"
+      ]
+    }
+  ],
+  "teach": [
+    [
+      "w-moloko",
+      "w-voda",
+      "w-sok",
+      "w-chaj"
+    ],
+    [
+      "w-hleb",
+      "w-syr",
+      "w-sup",
+      "w-kasha",
+      "w-jajtso",
+      "w-pechenje"
+    ],
+    [
+      "w-yabloko",
+      "w-banan",
+      "w-grusha",
+      "w-apelsin"
+    ],
+    [
+      "w-klubnika",
+      "w-vinograd",
+      "w-arbuz"
+    ],
+    [
+      "w-morkov",
+      "w-ogurets",
+      "w-pomidor",
+      "w-kartoshka"
+    ]
+  ],
+  "routes": {
+    "new": {
+      "note": "teach in five sets; items of two sets at a time"
+    },
+    "heritage": {
+      "teach": false,
+      "order": [
+        "22-27",
+        "01-21 mixed"
+      ]
+    },
+    "reader": {
+      "as": "oral",
+      "note": "as heritage or new"
+    }
+  }
+}

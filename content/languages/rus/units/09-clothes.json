@@ -1,0 +1,447 @@
+{
+  "skill": {
+    "id": "RUS-A-09",
+    "strand": "voc",
+    "title": "בְּגָדִים",
+    "prerequisites": [
+      {
+        "skill": "RUS-A-08"
+      }
+    ],
+    "setCoverage": true
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-shapka",
+      "options": [
+        {
+          "pic": "hat-warm",
+          "clip": "w-shapka"
+        },
+        {
+          "pic": "scarf",
+          "clip": "w-sharf"
+        },
+        {
+          "pic": "jacket",
+          "clip": "w-kurtka"
+        }
+      ],
+      "wrong": {
+        "scarf": "sound",
+        "jacket": "sem"
+      }
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-kurtka",
+      "options": [
+        {
+          "pic": "jacket",
+          "clip": "w-kurtka"
+        },
+        {
+          "pic": "doll",
+          "clip": "w-kukla"
+        },
+        {
+          "pic": "dress",
+          "clip": "w-platje"
+        }
+      ],
+      "wrong": {
+        "doll": "sound",
+        "dress": "sem"
+      }
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-platje",
+      "options": [
+        {
+          "pic": "dress",
+          "clip": "w-platje"
+        },
+        {
+          "pic": "shirt",
+          "clip": "w-futbolka"
+        },
+        {
+          "pic": "trousers",
+          "clip": "w-shtany"
+        }
+      ],
+      "wrong": {
+        "shirt": "sem",
+        "trousers": "sem"
+      }
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-futbolka",
+      "options": [
+        {
+          "pic": "shirt",
+          "clip": "w-futbolka"
+        },
+        {
+          "pic": "jacket",
+          "clip": "w-kurtka"
+        },
+        {
+          "pic": "dress",
+          "clip": "w-platje"
+        }
+      ],
+      "wrong": {
+        "jacket": "sem",
+        "dress": "sem"
+      }
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-shtany",
+      "options": [
+        {
+          "pic": "trousers",
+          "clip": "w-shtany"
+        },
+        {
+          "pic": "socks",
+          "clip": "w-noski"
+        },
+        {
+          "pic": "shirt",
+          "clip": "w-futbolka"
+        }
+      ],
+      "wrong": {
+        "socks": "sem",
+        "shirt": "sem"
+      }
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-noski",
+      "options": [
+        {
+          "pic": "socks",
+          "clip": "w-noski"
+        },
+        {
+          "pic": "shoes",
+          "clip": "w-botinki"
+        },
+        {
+          "pic": "body-nose",
+          "clip": "w-nos"
+        }
+      ],
+      "wrong": {
+        "shoes": "sem",
+        "body-nose": "sound"
+      }
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-botinki",
+      "options": [
+        {
+          "pic": "shoes",
+          "clip": "w-botinki"
+        },
+        {
+          "pic": "boots",
+          "clip": "w-sapogi"
+        },
+        {
+          "pic": "socks",
+          "clip": "w-noski"
+        }
+      ],
+      "wrong": {
+        "boots": "sem",
+        "socks": "sem"
+      }
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-sapogi",
+      "options": [
+        {
+          "pic": "boots",
+          "clip": "w-sapogi"
+        },
+        {
+          "pic": "shoes",
+          "clip": "w-botinki"
+        },
+        {
+          "pic": "hat-warm",
+          "clip": "w-shapka"
+        }
+      ],
+      "wrong": {
+        "shoes": "sem",
+        "hat-warm": "sem"
+      }
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-sharf",
+      "options": [
+        {
+          "pic": "scarf",
+          "clip": "w-sharf"
+        },
+        {
+          "pic": "hat-warm",
+          "clip": "w-shapka"
+        },
+        {
+          "pic": "mittens",
+          "clip": "w-varezhki"
+        }
+      ],
+      "wrong": {
+        "hat-warm": "sound",
+        "mittens": "sem"
+      }
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-varezhki",
+      "options": [
+        {
+          "pic": "mittens",
+          "clip": "w-varezhki"
+        },
+        {
+          "pic": "scarf",
+          "clip": "w-sharf"
+        },
+        {
+          "pic": "socks",
+          "clip": "w-noski"
+        }
+      ],
+      "wrong": {
+        "scarf": "sem",
+        "socks": "sem"
+      }
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-sharf",
+      "options": [
+        {
+          "pic": "scarf",
+          "clip": "w-sharf"
+        },
+        {
+          "pic": "hat-warm",
+          "clip": "w-shapka"
+        },
+        {
+          "pic": "mittens",
+          "clip": "w-varezhki"
+        }
+      ],
+      "wrong": {
+        "hat-warm": "sound",
+        "mittens": "sem"
+      },
+      "purpose": "probe"
+    },
+    {
+      "id": "11",
+      "kind": "listen_do",
+      "frame": "f13",
+      "mode": "drag",
+      "picture": "mika-body",
+      "target": "w-shapka",
+      "options": [
+        "hat",
+        "scarf",
+        "jacket"
+      ],
+      "right": "hat",
+      "wrong": {
+        "scarf": "sound",
+        "jacket": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "12",
+      "kind": "listen_do",
+      "frame": "f13",
+      "mode": "drag",
+      "picture": "mika-body",
+      "target": "w-platje",
+      "options": [
+        "dress",
+        "shirt",
+        "trousers"
+      ],
+      "right": "dress",
+      "wrong": {
+        "shirt": "sem",
+        "trousers": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "13",
+      "kind": "listen_do",
+      "frame": "f13",
+      "mode": "drag",
+      "picture": "mika-body",
+      "target": "w-noski",
+      "options": [
+        "socks",
+        "shoes",
+        "body-nose"
+      ],
+      "right": "socks",
+      "wrong": {
+        "shoes": "sem",
+        "body-nose": "sound"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "14",
+      "kind": "listen_do",
+      "frame": "f13",
+      "purpose": "check",
+      "mode": "drag",
+      "picture": "mika-body",
+      "target": "w-sharf",
+      "options": [
+        "scarf",
+        "hat",
+        "mittens"
+      ],
+      "right": "scarf",
+      "wrong": {
+        "hat": "sound",
+        "mittens": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "15",
+      "kind": "listen_do",
+      "frame": "f13",
+      "purpose": "check",
+      "mode": "drag",
+      "picture": "mika-body",
+      "target": "w-varezhki",
+      "options": [
+        "mittens",
+        "scarf",
+        "socks"
+      ],
+      "right": "mittens",
+      "wrong": {
+        "scarf": "sem",
+        "socks": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "clothes-1",
+      "title": "בְּגָדִים",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05"
+      ]
+    },
+    {
+      "id": "clothes-2",
+      "title": "בְּגָדִים",
+      "items": [
+        "06",
+        "07",
+        "08",
+        "09",
+        "10"
+      ]
+    },
+    {
+      "id": "clothes-more",
+      "title": "בְּגָדִים",
+      "items": [
+        "11",
+        "12",
+        "13"
+      ]
+    }
+  ],
+  "teach": [
+    [
+      "w-shapka",
+      "w-kurtka",
+      "w-platje",
+      "w-futbolka",
+      "w-shtany"
+    ],
+    [
+      "w-noski",
+      "w-botinki",
+      "w-sapogi",
+      "w-sharf",
+      "w-varezhki"
+    ]
+  ],
+  "routes": {
+    "new": {
+      "note": "teach in two sets; items 01 to 15"
+    },
+    "heritage": {
+      "teach": false,
+      "order": [
+        "11-15",
+        "01-10"
+      ]
+    },
+    "reader": {
+      "as": "oral",
+      "note": "as heritage or new"
+    }
+  }
+}

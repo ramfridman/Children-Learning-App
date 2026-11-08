@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pa.syll",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "SEGMENT",
+  "skills": [
+    "HEB-A-08"
+  ],
+  "parentText": "הילד עוד סופר יותר מדי או פחות מדי חלקים במילה (הברות).",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "מחאו כף יחד על כל חלק בשמות של דברים בבית, לאט: כף (אחת), שולחן (שתיים), מקרר (שלוש)."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "embodied",
+    "concrete"
+  ]
+}

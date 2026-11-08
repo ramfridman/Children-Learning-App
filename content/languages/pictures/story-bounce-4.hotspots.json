@@ -1,0 +1,31 @@
+{
+ "picture": "story-bounce-4",
+ "version": 2,
+ "note": "Touch areas of the page's words (scene.pages[].words[].at of the LS08 story) as shares of the page's width and height (x, y, w, h from the top left). Every area is at least 96 of the 384 x 216 units, 64.5 pt on the phone SE where the tall stage shows the page 258 x 145 pt; no two overlap. ENG-A-15 s01 uses the parts its words list names.",
+ "size": [
+  384,
+  216
+ ],
+ "minShare": [
+  0.25,
+  0.4444
+ ],
+ "parts": {
+  "frog": [
+   [
+    0.375,
+    0.4815,
+    0.3021,
+    0.5
+   ]
+  ],
+  "ball": [
+   [
+    0.3906,
+    0.0,
+    0.2604,
+    0.463
+   ]
+  ]
+ }
+}

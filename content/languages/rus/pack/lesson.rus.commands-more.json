@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.commands-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹשִׂים מַה שֶּׁאוֹמְרִים"
+    }
+  ],
+  "skills": [
+    "RUS-A-04"
+  ],
+  "items": [
+    "rus.a04.08",
+    "rus.a04.09",
+    "rus.a04.10",
+    "rus.a04.11",
+    "rus.a04.e01"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 13
+}

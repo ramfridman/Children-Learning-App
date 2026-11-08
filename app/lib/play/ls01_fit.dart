@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui' show Size;
 
 import '../child/activity_shell.dart';
 import '../content/models.dart';
@@ -167,7 +168,15 @@ class _Fit {
   // ---- sort ----
 
   void sort(SortDragActivity a) {
-    final BinGeometry g = BinGeometry(room: zones.stage.size, tablet: false, bins: a.bins.length);
+    final BinGeometry g = BinGeometry(
+      room: zones.stage.size,
+      tablet: false,
+      bins: a.bins.length,
+      bigSpeakers: BinGeometry.bigSpeakersFor(
+        bandA: BinGeometry.isBandA(presentation: band, skillId: a.skillId),
+        cardTexts: <String?>[for (final SortItem i in a.items) i.text],
+      ),
+    );
     for (final SortBin b in a.bins) {
       final String? t = b.text;
       if (t == null) continue;
@@ -187,9 +196,13 @@ class _Fit {
     _row('the cards', cards, _kindOf(cards), count: 1, reserve: 56);
     for (final String c in cards) {
       final double chip = keptChipWidth(m, c, square: g.chipMax);
-      if (chip > g.chipRoom.width) {
+      // A bin with a speaker in its corner keeps the end side of its chips' room free.
+      final double room = a.bins.any((SortBin b) => b.clip != null)
+          ? g.chipRoomFor(speaker: true).width
+          : g.chipRoom.width;
+      if (chip > room) {
         _say(
-          'the kept chip "$c" is ${chip.toStringAsFixed(0)} points wide and the bin has ${g.chipRoom.width.toStringAsFixed(0)}',
+          'the kept chip "$c" is ${chip.toStringAsFixed(0)} points wide and the bin has ${room.toStringAsFixed(0)}',
         );
       }
     }
@@ -199,15 +212,16 @@ class _Fit {
         for (final SortItem i in a.items)
           if (i.bin == b.id) i,
       ];
+      final Size room = g.chipRoomFor(speaker: b.clip != null);
       final ChipPlan plan = ChipPlan.of(
         <double>[for (final SortItem i in mine) keptChipWidth(m, i.text, square: g.chipMax)],
-        width: g.chipRoom.width,
-        height: g.chipRoom.height,
+        width: room.width,
+        height: room.height,
         maxHeight: g.chipMax,
       );
       if (plan.overlaps) {
         _say(
-          'the ${mine.length} cards of ${b.id} do not fit its room for kept chips (${g.chipRoom.width.toStringAsFixed(0)} by ${g.chipRoom.height.toStringAsFixed(0)}) without covering each other',
+          'the ${mine.length} cards of ${b.id} do not fit its room for kept chips (${room.width.toStringAsFixed(0)} by ${room.height.toStringAsFixed(0)}) without covering each other',
         );
       }
     }

@@ -72,6 +72,81 @@ class SkillState {
   final Set<String> memoryGroups = <String>{};
 
   bool get started => n > 0 || practiceCount > 0;
+
+  /// What the check visit reads of this skill's checks and visits.
+  final CheckTrail trail = CheckTrail();
+}
+
+/// How a skill's checks went, for the check visit (docs/languages/band-a-build.md section 7.4): which balanced pairs are half answered,
+/// which checks were failed and in what way of showing, what the last visit held. A visit is the answers of one session (one day when
+/// the answers carry no session).
+class CheckTrail {
+  /// A balanced pair's item answered right without a hint, to the visit it was answered in (C-5).
+  final Map<String, int> pairHalves = <String, int>{};
+
+  /// The check types failed and not passed since, the items they were failed on, and the way of showing the last failed one used (C-4).
+  final Set<CheckType> failedTypes = <CheckType>{};
+  final Set<String> failedItems = <String>{};
+  Representation? failedRepresentation;
+
+  /// The visits in a row in which a check was failed, and whether the skill was taught again (a learn item answered in a visit after the
+  /// last failure): after two failed visits the course offers the skill's lesson again before the next check visit (C-4).
+  int failedVisits = 0;
+  bool taughtSinceFail = true;
+  int? _checkVisit;
+  bool _checkVisitFailed = false;
+
+  /// The visit of the skill's last answer, and the items answered in it (C-3: a word not asked in the last visit comes first).
+  int? _lastVisit;
+  Set<String> lastVisitItems = <String>{};
+
+  bool get needsReteach => failedVisits >= 2 && !taughtSinceFail;
+
+  /// Notes an answer of an item (not a probe) in [visit].
+  void answered(String itemId, int visit) {
+    if (visit != _lastVisit) {
+      _lastVisit = visit;
+      lastVisitItems = <String>{};
+    }
+    lastVisitItems.add(itemId);
+  }
+
+  /// A balanced pair's item was answered right without a hint: whether its partner was as well, in this visit, so that the pair counts.
+  bool pairComplete(ItemMeta item, int visit) {
+    final String? partner = item.pairWith;
+    if (partner == null) return true;
+    if (pairHalves[partner] == visit) {
+      pairHalves.remove(partner);
+      return true;
+    }
+    pairHalves[item.id] = visit;
+    return false;
+  }
+
+  /// A check was answered in [visit]: wrongly, or right without a hint (any other answer says nothing of the check). [credited]: its
+  /// type counted as passed (a half of a pair does not).
+  void checkAnswered(ItemMeta item, int visit, {required bool wrong, bool credited = true}) {
+    if (visit != _checkVisit) {
+      if (!_checkVisitFailed) failedVisits = 0;
+      _checkVisit = visit;
+      _checkVisitFailed = false;
+    }
+    if (wrong) {
+      failedTypes.add(item.checkType);
+      failedItems.add(item.id);
+      failedRepresentation = item.representation;
+      taughtSinceFail = false;
+      if (!_checkVisitFailed) failedVisits++;
+      _checkVisitFailed = true;
+    } else if (credited) {
+      failedTypes.remove(item.checkType);
+    }
+  }
+
+  /// A learn item, a practice or a repair item (anything but a check) was answered in [visit]: after a failed check, it taught again.
+  void taught(int visit) {
+    if (_checkVisitFailed && visit != _checkVisit) taughtSinceFail = true;
+  }
 }
 
 enum TagStatus { suspected, active, resolved }
