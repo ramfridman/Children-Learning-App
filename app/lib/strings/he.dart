@@ -803,7 +803,7 @@ abstract final class He {
   static const Str ageBirthTitle = Str('חודש ושנת לידה');
   static const Str ageBirthOptional = Str('(לא חובה)');
   static const Str ageBirthHelp = Str(
-    'המידע נשמר בחשבון המשפחה, כדי שגם מכשיר חדש יתאים את המסכים לגיל. הוא לא נמסר לאף אחד.',
+    'המידע נשמר בחשבון המשפחה, כדי שגם מכשיר חדש יתאים את המסכים לגיל. הוא לא נמסר לאף אחד. אחרי מחיקה הוא נשאר בגיבוי המוצפן עד 4 שבועות.',
   );
   static const Str ageYearLabel = Str('שנה');
   static const Str ageMonthLabel = Str('חודש');
