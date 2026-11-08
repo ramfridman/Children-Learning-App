@@ -43,6 +43,8 @@ jobs:
         run: python3 -I -X utf8 tools/test_hebrew_sources.py
       - name: Generator tests (python, standard library only)
         run: python3 -I -X utf8 tools/test_generators.py
+      - name: Backup retention filter test (bash, date and jq from the runner image)
+        run: bash tools/backup_retention_test.sh
 
   osv:
     name: osv (dependency vulnerabilities)
