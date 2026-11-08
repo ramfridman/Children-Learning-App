@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/content/bundled_packs.dart';
 import 'package:nitznutz/content/pack_verify.dart';
 
 /// The stage pictures a session draws today (`drawnStagePictureKinds` of the model).
@@ -112,7 +113,7 @@ void main() {
 
   test('the bundled starter pack (what the app really loads) uses none', () async {
     final VerifiedPack pack = await verifyPack(
-      File('assets/packs/starter-0.10.0.nnpack').readAsBytesSync(),
+      File(bundledStarterAsset).readAsBytesSync(),
       publicKey: unhex(File('assets/pack_signing_public_key.txt').readAsStringSync()),
     );
     final List<String> found = <String>[];

@@ -1,5 +1,12 @@
 import 'capabilities.dart' show compareSemver;
 
+/// The version of the starter pack that ships in the app: the one line to change at a pack bump (with `version` in
+/// `content/starter/pack.json`, which a test compares it to). The file is `assets/packs/starter-<version>.nnpack`.
+const String bundledStarterVersion = '0.11.0';
+
+/// The asset path of the bundled starter pack.
+const String bundledStarterAsset = 'assets/packs/starter-$bundledStarterVersion.nnpack';
+
 /// A language pack that ships inside the app: `assets/packs/lang-<course>-<version>.nnpack`, signed by the owner with the same key and
 /// the same tool as the starter pack (`pack_builder build-language`). The app does not trust the file name: the pack is installed
 /// through the verifying installer like any other, and its own manifest says what it is. The name only says which course it is for

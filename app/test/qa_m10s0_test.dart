@@ -5,6 +5,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/content/bundled_packs.dart';
 import 'package:nitznutz/content/engine_adapter.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/content/pack_verify.dart';
@@ -408,7 +409,7 @@ void main() {
         // Robots (cs): every skill that stands on no other Robots skill is made to stand on NUM-A-01 (Counting Hills), which a new child
         // does not have. So nothing in Robots is open at the start.
         final VerifiedPack pack = await verifyPack(
-          File('assets/packs/starter-0.10.0.nnpack').readAsBytesSync(),
+          File(bundledStarterAsset).readAsBytesSync(),
           publicKey: unhex(File('assets/pack_signing_public_key.txt').readAsStringSync()),
         );
         final Set<String> cs = <String>{
@@ -799,7 +800,7 @@ List<Attempt> _rows(String probe, String how, int already) {
       at: DateTime.utc(2026, 11, 7, 9).add(Duration(seconds: n)),
       profileId: 'kid',
       packId: 'starter',
-      packVersion: '0.10.0',
+      packVersion: bundledStarterVersion,
       lessonId: placementId,
       activityId: probe,
       activityRevision: 1,

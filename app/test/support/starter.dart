@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:nitznutz/content/bundled_packs.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/content/pack_verify.dart';
 
 /// The bundled starter pack, verified with the public key built into the app, ready to play.
 Future<PackContent> loadStarter() async {
   final VerifiedPack pack = await verifyPack(
-    File('assets/packs/starter-0.10.0.nnpack').readAsBytesSync(),
+    File(bundledStarterAsset).readAsBytesSync(),
     publicKey: unhex(File('assets/pack_signing_public_key.txt').readAsStringSync()),
   );
   return PackContent.fromPack(pack);
@@ -19,7 +20,7 @@ Future<PackContent> loadStarter() async {
 /// of how a lesson plays and looks, which open "the first lesson" of the land: not for a test of the path, which uses [loadStarter].
 Future<PackContent> loadStarterButterfliesFirst() async {
   final VerifiedPack pack = await verifyPack(
-    File('assets/packs/starter-0.10.0.nnpack').readAsBytesSync(),
+    File(bundledStarterAsset).readAsBytesSync(),
     publicKey: unhex(File('assets/pack_signing_public_key.txt').readAsStringSync()),
   );
   final Map<String, Object?> skill = pack.docs['skill.NUM-A-03.json']! as Map<String, Object?>;
@@ -30,7 +31,7 @@ Future<PackContent> loadStarterButterfliesFirst() async {
 /// The starter pack's manifest, with the docs and pictures read from the sources in content/starter.
 Future<PackContent> loadSourcePack() async {
   final VerifiedPack signed = await verifyPack(
-    File('assets/packs/starter-0.10.0.nnpack').readAsBytesSync(),
+    File(bundledStarterAsset).readAsBytesSync(),
     publicKey: unhex(File('assets/pack_signing_public_key.txt').readAsStringSync()),
   );
   final Map<String, Object?> docs = <String, Object?>{};

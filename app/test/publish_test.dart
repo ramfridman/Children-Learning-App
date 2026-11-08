@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/content/bundled_packs.dart';
 import 'package:nitznutz/content/pack_verify.dart';
 
 import '../tool/publish_lib.dart';
@@ -16,7 +17,7 @@ const String _vectors = '../testvectors/publish-starter.json';
 
 void main() {
   late Map<String, Object?> starter;
-  setUpAll(() async => starter = indexOf(await _load('assets/packs/starter-0.10.0.nnpack')));
+  setUpAll(() async => starter = indexOf(await _load(bundledStarterAsset)));
 
   test('the starter pack gives its activities and misconceptions, with the facts the prompt needs', () {
     final List<Object?> items = starter['items']! as List<Object?>;

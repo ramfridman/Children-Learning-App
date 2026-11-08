@@ -5,6 +5,7 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../content/bundled_packs.dart';
 import '../content/content_repository.dart';
 import '../content/models.dart';
 import '../content/pack_installer.dart';
@@ -129,7 +130,7 @@ final FutureProvider<PackContent> contentProvider = FutureProvider<PackContent>(
   final PackInstaller installer = await ref.watch(packInstallerProvider.future);
   return ContentRepository(
     installer: installer,
-    bundled: () async => (await rootBundle.load('assets/packs/starter-0.10.0.nnpack')).buffer.asUint8List(),
+    bundled: () async => (await rootBundle.load(bundledStarterAsset)).buffer.asUint8List(),
   ).starter();
 });
 

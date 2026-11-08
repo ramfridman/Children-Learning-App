@@ -3,6 +3,7 @@
 // stage's prior (the profile's band). One lucky answer places nobody; the old warm-up marked a lesson as known by one right first
 // answer.
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/content/bundled_packs.dart';
 import 'package:nitznutz/content/engine_adapter.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/data/app_database.dart';
@@ -29,7 +30,7 @@ List<Attempt> _answer(String activity, {required bool right, String lesson = pla
       at: DateTime.utc(2026, 11, 6, 9).add(Duration(seconds: _row)),
       profileId: 'p-1',
       packId: 'starter',
-      packVersion: '0.10.0',
+      packVersion: bundledStarterVersion,
       lessonId: lesson,
       activityId: activity,
       activityRevision: 1,

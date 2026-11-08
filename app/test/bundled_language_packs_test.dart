@@ -1,6 +1,7 @@
 // The language packs that ship inside the app: found by file name, installed through the verifying installer only for a language some
 // child has turned on, never installed over a newer copy, put right when the installed copy is damaged, and never a reason for another
 // course (or a land) to fail. The packs are the pilot sources of the three courses, signed with a throw-away key.
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -33,7 +34,7 @@ class _Bundle {
 
   Future<List<String>> list() async {
     lists++;
-    return <String>['assets/packs/starter-0.10.0.nnpack', ...files.keys, 'assets/art/x.svg'];
+    return <String>[bundledStarterAsset, ...files.keys, 'assets/art/x.svg'];
   }
 
   Future<Uint8List> read(String asset) async {
@@ -45,6 +46,12 @@ class _Bundle {
 }
 
 void main() {
+  test('the bundled starter version is the version in content/starter/pack.json', () {
+    final Map<String, Object?> src =
+        jsonDecode(File('../content/starter/pack.json').readAsStringSync()) as Map<String, Object?>;
+    expect(bundledStarterVersion, src['version']);
+  });
+
   late PackKey key;
   late Map<String, Uint8List> built;
   late Directory dir;
@@ -79,7 +86,7 @@ void main() {
   group('the file names', () {
     test('the newest pack of each course, and nothing that is not a language pack', () {
       final Map<String, BundledLanguagePack> m = BundledLanguagePack.newestOf(<String>[
-        'assets/packs/starter-0.10.0.nnpack',
+        bundledStarterAsset,
         'assets/packs/lang-eng-0.2.0.nnpack',
         'assets/packs/lang-eng-0.10.0.nnpack',
         'assets/packs/lang-eng-0.9.1.nnpack',
@@ -97,7 +104,7 @@ void main() {
     });
 
     test('nothing at all when no language pack ships', () {
-      expect(BundledLanguagePack.newestOf(const <String>['assets/packs/starter-0.10.0.nnpack']), isEmpty);
+      expect(BundledLanguagePack.newestOf(const <String>[bundledStarterAsset]), isEmpty);
     });
   });
 

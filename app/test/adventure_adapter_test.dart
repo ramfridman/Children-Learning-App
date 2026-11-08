@@ -3,6 +3,7 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/content/bundled_packs.dart';
 import 'package:nitznutz/content/engine_adapter.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/data/app_database.dart';
@@ -47,7 +48,7 @@ void main() {
       at: at ?? morning.add(Duration(minutes: step++)),
       profileId: kid,
       packId: 'starter',
-      packVersion: '0.10.0',
+      packVersion: bundledStarterVersion,
       lessonId: Value<String>(lessonId),
       activityId: activity,
       activityRevision: 1,
