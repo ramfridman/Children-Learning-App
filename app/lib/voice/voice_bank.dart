@@ -71,8 +71,17 @@ class VoiceBank {
 
   int get length => _clips.length;
 
-  /// The bytes of all the clips of this bank.
-  int get clipBytes => _clips.values.fold<int>(0, (int s, VoiceClip c) => s + c.mp3.length);
+  /// The bytes of the sounds of this bank, each sound once: lines that say the same thing share one buffer (`voice_gen`
+  /// voices a text once), and a buffer held by four lines is four lines of one sound, not four sounds. Parts never share
+  /// a buffer (a copy whose sound is in another part has its own file), so the sum over the parts is exact.
+  int get clipBytes {
+    final Set<Uint8List> seen = Set<Uint8List>.identity();
+    int bytes = 0;
+    for (final VoiceClip c in _clips.values) {
+      if (seen.add(c.mp3)) bytes += c.mp3.length;
+    }
+    return bytes;
+  }
 
   Iterable<String> get ids => _clips.keys;
 

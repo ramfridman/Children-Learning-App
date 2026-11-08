@@ -14,7 +14,7 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:nitznutz/content/pack_verify.dart';
 import 'package:nitznutz/content/zip_store.dart' show ZipLimits;
-import 'package:nitznutz/voice/voice_bank.dart' show voicePackId;
+import 'package:nitznutz/voice/voice_bank.dart' show maxVoiceBytes, voicePackId;
 
 import 'pack_builder_lib.dart';
 import 'voice_text_lib.dart';
@@ -554,6 +554,20 @@ class VoicePlan {
     return bytes;
   }
 
+  /// About how many bytes of sound the app holds for [character]: each distinct sound once, as the app counts them against
+  /// [maxVoiceBytes]. A free copy shares its holder's sound, except when the holder is in another part ([partOfLine]), where
+  /// it has a file of its own.
+  int estimatedVoiceBytes(String character, {Map<String, int>? partOfLine}) {
+    int bytes = 0;
+    for (final PlannedClip c in clips) {
+      if (c.character != character) continue;
+      final bool ownFile =
+          !c.isCopy || (partOfLine != null && partOfLine[c.line.voId] != partOfLine[c.copyOf]);
+      if (ownFile) bytes += c.request.characters * soundBytesPerCharacter;
+    }
+    return bytes;
+  }
+
   /// The cost at [pricePer1000Chars] (the price per thousand characters of the model).
   double cost(double pricePer1000Chars) => total / 1000 * pricePer1000Chars;
 
@@ -646,6 +660,18 @@ class VoicePlan {
       );
     }
     final String limit = (ZipLimits.maxTotalBytes / (1024 * 1024)).toStringAsFixed(0);
+    final Map<String, int>? partOfLine = parts == null
+        ? null
+        : <String, int>{
+            for (final MapEntry<int, Set<String>> p in parts.entries)
+              for (final String id in p.value) id: p.key,
+          };
+    if (partOfLine != null) {
+      for (final String ch in characters) {
+        final String? warning = voiceBytesWarning(ch, estimatedVoiceBytes(ch, partOfLine: partOfLine));
+        if (warning != null) b.writeln(warning);
+      }
+    }
     for (final String ch in characters) {
       final List<(String, int)> packs = parts == null
           ? <(String, int)>[('the pack of $ch', estimatedPackBytes(ch))]
@@ -1438,6 +1464,18 @@ void _removeStage(Directory stage) {
     sleep(const Duration(milliseconds: 200));
     stage.deleteSync(recursive: true);
   }
+}
+
+/// A warning when the sounds of a narrator's voice, each counted once, pass 90% of what the app holds for one voice
+/// ([maxVoiceBytes]); a part past it is left out and plays as text only. Null while there is room.
+String? voiceBytesWarning(String character, int bytes) {
+  if (bytes <= maxVoiceBytes * 0.9) return null;
+  String mib(int n) => (n / (1024 * 1024)).toStringAsFixed(1);
+  return bytes > maxVoiceBytes
+      ? 'WARNING, the audio of $character is about ${mib(bytes)} MiB and the app joins at most ${mib(maxVoiceBytes)} MiB of '
+            'one voice: the last part would play as text only.'
+      : 'WARNING, the audio of $character is about ${mib(bytes)} MiB, over 90% of the ${mib(maxVoiceBytes)} MiB the app '
+            'joins for one voice: little room is left before a part is left out.';
 }
 
 // ---- the files of a work folder ----

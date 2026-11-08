@@ -864,6 +864,110 @@ void main() {
     });
   });
 
+  group('the audio of one voice against what the app joins', () {
+    late Directory work;
+    late FakeEleven server;
+    setUp(() {
+      work = _temp('nn_voicebytes_');
+      server = FakeEleven();
+    });
+    tearDown(() => _drop(work));
+
+    test(
+      'a warning only above 90% of the bytes the app joins for one voice, worded for each side of the limit',
+      () {
+        expect(voiceBytesWarning('nitzi', (maxVoiceBytes * 0.9).floor()), isNull);
+        expect(voiceBytesWarning('nitzi', 0), isNull);
+        expect(
+          voiceBytesWarning('nitzi', (maxVoiceBytes * 0.95).floor()),
+          contains('over 90% of the 128.0 MiB'),
+        );
+        expect(
+          voiceBytesWarning('hero-son', maxVoiceBytes + 1),
+          contains('the last part would play as text only'),
+        );
+        expect(voiceBytesWarning('hero-son', maxVoiceBytes + 1), contains('hero-son'));
+      },
+    );
+
+    test('the plan counts each distinct sound once, and a copy in another part again', () {
+      final VoicePlan plan = planVoices(
+        <String, VoiceProfile>{'nitzi': _v4},
+        const <SpokenLine>[
+          SpokenLine('vo:a.one', 'שלום'),
+          SpokenLine('vo:a.two', 'שלום'),
+          SpokenLine('vo:b.one', 'שלום'),
+        ],
+      );
+      expect(
+        plan.estimatedVoiceBytes('nitzi'),
+        4 * soundBytesPerCharacter,
+        reason: 'one sound for the three lines',
+      );
+      expect(
+        plan.estimatedVoiceBytes(
+          'nitzi',
+          partOfLine: <String, int>{'vo:a.one': 1, 'vo:a.two': 1, 'vo:b.one': 2},
+        ),
+        8 * soundBytesPerCharacter,
+        reason: 'the line of part 2 has a file of its own',
+      );
+    });
+
+    test('the plan of a voice near the limit says so, and one with room says nothing', () {
+      VoicePlan plan(int characters) => planVoices(
+        <String, VoiceProfile>{'nitzi': _v4},
+        <SpokenLine>[SpokenLine('vo:a.one', 'א' * characters)],
+      );
+      final Map<int, Set<String>> parts = <int, Set<String>>{
+        1: <String>{'vo:a.one'},
+      };
+      // 0.9 of 128 MiB is about 120 MB; at 683 bytes a character that is about 176,000 characters.
+      expect(plan(100000).describe(0.08, parts: parts), isNot(contains('the audio of nitzi')));
+      expect(plan(190000).describe(0.08, parts: parts), contains('WARNING, the audio of nitzi is about'));
+      expect(
+        plan(190000).describe(0.08),
+        isNot(contains('the audio of nitzi')),
+        reason: 'only a plan with parts counts it',
+      );
+    });
+
+    test('verify counts the distinct sounds of the lines in the work folder, per part', () async {
+      const List<SpokenLine> lines = <SpokenLine>[
+        SpokenLine('vo:a.one', 'שָׁלוֹם'),
+        SpokenLine('vo:a.two', 'שָׁלוֹם'),
+        SpokenLine('vo:b.one', 'שָׁלוֹם'),
+        SpokenLine('vo:b.two', 'כֵּן'),
+      ];
+      await generateVoicePack(
+        characterId: 'nitzi',
+        lines: lines,
+        synth: ElevenLabsSynthesizer(apiKey: 'test-key-123', client: server.client),
+        profile: _v4,
+        key: key,
+        workDir: work,
+      );
+      final int whole = utf8.encode('mp3:שָׁלוֹם').length;
+      final int other = utf8.encode('mp3:כֵּן').length;
+      expect(
+        distinctClipBytes(workDir: work, profile: _v4, lines: lines),
+        whole + other,
+        reason: 'one part',
+      );
+      expect(
+        distinctClipBytes(
+          workDir: work,
+          profile: _v4,
+          lines: lines,
+          partOfLine: <String, int>{'vo:a.one': 1, 'vo:a.two': 1, 'vo:b.one': 2, 'vo:b.two': 2},
+        ),
+        2 * whole + other,
+        reason: 'the twin in part 2 has its own file',
+      );
+      expect(distinctClipBytes(workDir: _temp('nn_empty_'), profile: _v4, lines: lines), 0);
+    });
+  });
+
   group('the batch options in the source', () {
     final String cli = File('tool/voice_gen.dart').readAsStringSync();
     final String groups = File('tool/voice_groups_lib.dart').readAsStringSync();

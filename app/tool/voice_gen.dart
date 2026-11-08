@@ -616,10 +616,27 @@ void _verify(List<String> args) {
     ],
     unapproved: <String>[for (final VoicedLine l in chosen.blocked) l.voId],
   );
+  final bool partsKnown =
+      _inParts(_lineSet(args)) &&
+      File(_repo(args, 'docs/audio/voicing-groups.json')).existsSync() &&
+      File(_repo(args, 'docs/audio/voicing-parts.json')).existsSync();
+  final String? bytesWarning = voiceBytesWarning(
+    pos.single,
+    distinctClipBytes(
+      workDir: Directory(_outFolder(args, pos.single)),
+      profile: VoiceProfile.fromConfig(config, pos.single),
+      lines: <SpokenLine>[
+        for (final VoicedLine l in chosen.lines)
+          if (l.problem == null) SpokenLine(l.voId, l.text),
+      ],
+      partOfLine: partsKnown ? _partOfLine(args, _grouped(args, all)) : null,
+    ),
+  );
   stdout
     ..writeln(_repoHeading(args))
     ..writeln('Clips of ${pos.single} in ${_outFolder(args, pos.single)}:')
     ..write(report.describe());
+  if (bytesWarning != null) stdout.writeln(bytesWarning);
   if (!report.ok) exit(1);
 }
 

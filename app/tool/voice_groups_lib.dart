@@ -298,6 +298,34 @@ class VerifyReport {
   }
 }
 
+/// The bytes of the distinct sounds of [lines] in [workDir], as the app counts them against `maxVoiceBytes`: lines with
+/// the same request in the same part share one sound (one file in the pack); a line whose twin is in another part has its
+/// own. [partOfLine] gives the part of each voice id (all in part 1 when null). A line with no clip counts nothing.
+int distinctClipBytes({
+  required Directory workDir,
+  required VoiceProfile profile,
+  required List<SpokenLine> lines,
+  Map<String, int>? partOfLine,
+}) {
+  final Set<String> seen = <String>{};
+  int bytes = 0;
+  for (final SpokenLine line in lines) {
+    final String key = '${partOfLine?[line.voId] ?? 1}|${profile.requestFor(line).hash}';
+    if (!seen.add(key)) continue;
+    final File? file = _audioFile(workDir, line.fileId);
+    if (file != null) bytes += file.lengthSync();
+  }
+  return bytes;
+}
+
+File? _audioFile(Directory workDir, String id) {
+  for (final String ext in <String>['mp3', 'wav']) {
+    final File f = File('${workDir.path}${Platform.pathSeparator}vo.$id.$ext');
+    if (f.existsSync()) return f;
+  }
+  return null;
+}
+
 /// A voice clip smaller than this is not a clip (the shortest real line is far longer than 2 KB at 64 kbps).
 const int minClipBytes = 2048;
 

@@ -57,6 +57,41 @@ void main() {
         }, version: version)).bytes,
       );
 
+  /// A voice pack in which every id of [ids] shares ONE sound file of [size] bytes (what voice_gen builds for lines that
+  /// say the same thing).
+  Future<void> installShared(String packOf, List<String> ids, int size) async {
+    final Directory src = Directory.systemTemp.createTempSync('nn_voice_shared_');
+    try {
+      File('${src.path}/vo.shared.mp3').writeAsBytesSync(Uint8List(size));
+      for (final String id in ids) {
+        File('${src.path}/cue.$id.json').writeAsStringSync(
+          jsonEncode(<String, Object?>{
+            'schema': 'cue/v1',
+            'id': id,
+            'cues': <Object?>[
+              <String, Object?>{'t': 0, 'o': 1},
+            ],
+          }),
+        );
+      }
+      File('${src.path}/pack.json').writeAsStringSync(
+        jsonEncode(<String, Object?>{
+          'schema': 'pack-source/v1',
+          'id': 'voice-$packOf',
+          'version': '1.0.0',
+          'minAppVersion': '0.3.0',
+          'assets': <Object?>[],
+          'vo': <Object?>[
+            for (final String id in ids) <String, String>{'id': id, 'file': 'vo.shared.mp3'},
+          ],
+        }),
+      );
+      await installer.install((await buildPack(src, key)).bytes);
+    } finally {
+      src.deleteSync(recursive: true);
+    }
+  }
+
   String played(VoiceBank bank, String line) => utf8.decode(bank.clip('vo:$line')!.mp3);
 
   group('the pack ids of a voice', () {
@@ -285,5 +320,44 @@ void main() {
         expect(wide.clipBytes, greaterThan(40));
       },
     );
+
+    test('a sound shared by several lines is counted once against the cap (SEC-VP-4)', () async {
+      await installShared('hero-son', <String>['a.one', 'a.two', 'a.three', 'a.four'], 100);
+      await installShared('hero-son-2', <String>['b.one'], 100);
+      final VoiceBank part1 = VoiceBank.fromPack((await installer.load('voice-hero-son'))!);
+      expect(part1.length, 4);
+      expect(part1.clipBytes, 100, reason: 'one buffer for four lines');
+      // The distinct audio is 200 bytes: a cap of 300 holds both parts.
+      final InstalledCharacterSource wide = InstalledCharacterSource(
+        installer: installer,
+        bundledHouse: () async => Uint8List(0),
+        maxVoiceClipBytes: 300,
+      );
+      final VoiceBank both = await wide.voice('hero-son');
+      expect(both.ids.toSet(), <String>{'vo:a.one', 'vo:a.two', 'vo:a.three', 'vo:a.four', 'vo:b.one'});
+      expect(both.clipBytes, 200);
+      // A cap under the distinct total still leaves part 2 out, and part 1 stays.
+      final InstalledCharacterSource tight = InstalledCharacterSource(
+        installer: installer,
+        bundledHouse: () async => Uint8List(0),
+        maxVoiceClipBytes: 150,
+      );
+      expect((await tight.voice('hero-son')).ids.toSet(), <String>{
+        'vo:a.one',
+        'vo:a.two',
+        'vo:a.three',
+        'vo:a.four',
+      });
+    });
+
+    test('the same bytes in two buffers are two sounds: parts never share a buffer', () async {
+      await install('hero-son', <String>['a.one']);
+      await install('hero-son-2', <String>['a.one'.replaceAll('a', 'b')]);
+      final VoiceBank joined = await source.voice('hero-son');
+      expect(
+        joined.clipBytes,
+        utf8.encode('mp3:hero-son:a.one').length + utf8.encode('mp3:hero-son-2:b.one').length,
+      );
+    });
   });
 }
