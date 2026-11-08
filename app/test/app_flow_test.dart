@@ -134,6 +134,60 @@ void main() {
       expect(find.text(He.setupCodeSent.text), findsNothing);
     });
 
+    testWidgets('an address that is not invited gets its own message, not the connection one', (
+      WidgetTester tester,
+    ) async {
+      final AppRig rig = AppRig(butterfliesFirst: true);
+      rig.setup.sendFails = 'not_invited';
+      await rig.pump(tester);
+
+      await tester.tap(find.text(He.setupStart.text));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'parent@example.com');
+      await tester.tap(find.text(He.setupSendCode.text));
+      await tester.pumpAndSettle();
+
+      expect(find.text(He.setupNotInvited.text), findsOneWidget);
+      expect(find.text(He.setupError.text), findsNothing);
+      expect(find.text(He.setupCodeSent.text), findsNothing);
+    });
+
+    testWidgets('a setup resumed after the sign-in went stale returns to the email sign-in', (
+      WidgetTester tester,
+    ) async {
+      final AppRig rig = AppRig(butterfliesFirst: true);
+      rig.setup.signedIn = true;
+      rig.setup.enrolFails = 'unauthorized';
+      await rig.pump(tester);
+      expect(
+        find.text(He.setupEnrolBody.text),
+        findsOneWidget,
+        reason: 'a session exists: resume at enrolment',
+      );
+
+      await tester.tap(find.text(He.setupEnrolButton.text).last);
+      await tester.pumpAndSettle();
+
+      expect(rig.setup.calls, containsAllInOrder(<String>['enrol', 'sign out']));
+      expect(rig.setup.signedIn, isFalse, reason: 'the old session is dropped');
+      expect(find.text(He.setupSendCode.text), findsOneWidget, reason: 'back at the email sign-in');
+      expect(find.text(He.setupSignInAgain.text), findsOneWidget);
+      expect(find.text(He.setupError.text), findsNothing, reason: 'not the connection message');
+      expect(find.text(He.setupVerify.text), findsNothing, reason: 'the code field starts empty again');
+
+      // And a fresh code works from there.
+      rig.setup.enrolFails = null;
+      await tester.enterText(find.byType(TextField), 'parent@example.com');
+      await tester.tap(find.text(He.setupSendCode.text));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField).last, testEmailCode);
+      await tester.tap(find.text(He.setupVerify.text));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(He.setupEnrolButton.text).last);
+      await tester.pumpAndSettle();
+      expect(find.byType(PinSetupScreen), findsOneWidget);
+    });
+
     testWidgets('an interrupted setup resumes at the PIN, not at the start', (WidgetTester tester) async {
       final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.store.write('device_id', 'aaaa');

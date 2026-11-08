@@ -70,6 +70,7 @@ class _SetupFlowState extends ConsumerState<SetupFlow> {
       _error = switch (e.code) {
         'auth_failed' => onError ?? He.setupError.text,
         'rate_limited' => He.setupRateLimited.text,
+        'not_invited' => He.setupNotInvited.text,
         _ => He.setupError.text,
       };
     } on Object {
@@ -88,8 +89,22 @@ class _SetupFlowState extends ConsumerState<SetupFlow> {
     _step = SetupStep.enrol;
   }, onError: He.setupWrongCode.text);
 
+  /// The gateway wants a sign-in by emailed code in the last 10 minutes, and a token refresh does not
+  /// count. So when enrolment is refused as `unauthorized` (a setup resumed late), the session is of no
+  /// use any more: drop it and go back to the sign-in with a line that says why.
   Future<void> _enrol() => _run(() async {
-    await ref.read(setupBackendProvider).enrol();
+    final SetupBackend backend = ref.read(setupBackendProvider);
+    try {
+      await backend.enrol();
+    } on GatewayException catch (e) {
+      if (e.code != 'unauthorized') rethrow;
+      await backend.signOut();
+      _code.clear();
+      _codeSent = false;
+      _step = SetupStep.signIn;
+      _error = He.setupSignInAgain.text;
+      return;
+    }
     await ref.read(appStateProvider.notifier).reload();
     _step = SetupStep.pin;
   });

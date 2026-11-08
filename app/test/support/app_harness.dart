@@ -50,10 +50,13 @@ class FakeSetupBackend implements SetupBackend {
   /// When set, the next code request fails with this gateway code (for example `rate_limited`).
   String? sendFails;
 
+  /// When set, the next enrolment fails with this gateway code (for example `unauthorized`).
+  String? enrolFails;
+
   @override
   Future<void> sendCode(String email) async {
     final String? code = sendFails;
-    if (code != null) throw GatewayException(code, status: 429);
+    if (code != null) throw GatewayException(code, status: code == 'rate_limited' ? 429 : 403);
     calls.add('send $email');
   }
 
@@ -68,11 +71,19 @@ class FakeSetupBackend implements SetupBackend {
   Future<bool> hasSession() async => signedIn;
 
   @override
+  Future<void> signOut() async {
+    calls.add('sign out');
+    signedIn = false;
+  }
+
+  @override
   Future<bool> isEnrolled() async => (await store.read(StoreKeys.deviceId)) != null;
 
   @override
   Future<void> enrol() async {
     calls.add('enrol');
+    final String? code = enrolFails;
+    if (code != null) throw GatewayException(code, status: 401);
     await store.write(StoreKeys.deviceId, 'enrolled-test-device');
     await store.write(StoreKeys.role, 'parent');
   }

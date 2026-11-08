@@ -343,6 +343,10 @@ abstract final class He {
   static const Str setupError = Str('משהו השתבש. בדקו את החיבור לאינטרנט ונסו שוב.');
   static const Str setupWrongCode = Str('הקוד לא נכון או שפג תוקפו.');
   static const Str setupRateLimited = Str('נשלחו הרבה בקשות. חכו כמה דקות ונסו שוב.');
+  static const Str setupNotInvited = Str(
+    'הכתובת הזו עדיין לא ברשימת המוזמנים. בדקו שהקלדתם אותה נכון, או פנו למי שהזמין אתכם.',
+  );
+  static const Str setupSignInAgain = Str('עבר זמן מאז הכניסה. היכנסו שוב עם קוד חדש.');
 
   // ---- parent area (adult) ----
   static const Str areaTitle = Str('אזור הורים');

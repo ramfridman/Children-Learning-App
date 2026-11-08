@@ -284,7 +284,7 @@ max_frequency = "5s"
 # inactivity_timeout = "8h"
 
 # This hook runs before a new user is created and refuses any address that is not on the owner's list (SEC-SU-1). The
-# function and the list are in the migration 20261108120000_signup_allowlist.sql, in the schema `signup_gate`.
+# function and the list are in the migration 20261108130000_signup_allowlist.sql, in the schema `signup_gate`.
 [auth.hook.before_user_created]
 enabled = true
 uri = "pg-functions://postgres/signup_gate/before_user_created"

@@ -13,10 +13,15 @@ invite-only.
 - `app/lib/auth/auth_client.dart`: the email-code request now sends `create_user: true`. A new
   approved address gets an account and a 6-digit code; a returning parent gets a code the same way.
   An address that is not approved gets an error from Supabase (HTTP 403, "This address is not
-  invited yet.") and the app shows its usual "could not send the code" message; no email is sent.
+  invited yet."; 422 is read the same way) and the app shows its own "this address is not on the
+  invitation list yet" line (`setupNotInvited`), never the server's text and never the address; no
+  email is sent.
 - The sign-in page tells a new parent that the first sign-in creates the account, and a throttled code
   request says "wait a few minutes" instead of "check the connection" (both Hebrew strings are
-  `needs-editor`: `setupNewAccountHint`, `setupRateLimited`).
+  `needs-editor`: `setupNewAccountHint`, `setupRateLimited`, `setupNotInvited`, `setupSignInAgain`).
+- A setup resumed at the registration step more than 10 minutes after the code gets 401 from the gateway
+  for good (a refresh does not make a code sign-in). The app then drops the session, goes back to the
+  email sign-in and says "please sign in again" (`setupSignInAgain`).
 - The path: code email, verify (`/auth/v1/verify`, `type: email`, which accepts the sign-up code as
   well), PIN (local), enrolment (the family, the guardian row and the first parent device are created
   by `device-enroll` on the user's first enrolment, inside one transaction), add a child (`child-put`).
@@ -52,17 +57,39 @@ invite-only.
    powershell -ExecutionPolicy Bypass -File tools\signup-allowlist.ps1 -Count
    ```
 
-3. **Switch the hook on** in the dashboard (next section, step 1), **then** switch "Allow new users to sign
+3. **Count the accounts that are not on the list** (read-only; run it before the dashboard step, after the
+   migration). It counts the accounts in `auth.users` whose address is not in `signup_gate.approved_email`
+   (compared in the list's own form, `signup_gate.normalise_email`). The number should equal the accounts
+   you already know of (your own and any tester who signed up before the hook). A higher number means
+   someone signed up while sign-up was open: tell the orchestrator before going on. The query prints a
+   count, never an address:
+
+   ```powershell
+   $sql = "select count(*) as accounts_not_on_list from auth.users u where not exists (select 1 from signup_gate.approved_email a where a.email = signup_gate.normalise_email(u.email))"
+   npx supabase db query --linked $sql
+   ```
+
+4. **Switch the hook on** in the dashboard (next section, step 1), **then** switch "Allow new users to sign
    up" on. If sign-ups are already on, do step 1 at once and run "What to check live" 1.
-4. **Redeploy the functions** (every function bundles `_shared/`, so redeploy all of them to keep them in
+5. **Redeploy the functions** (every function bundles `_shared/`, so redeploy all of them to keep them in
    step; `enroll-challenge` and `device-enroll` are the two that changed behaviour):
 
    ```powershell
    npx supabase functions deploy --use-api --project-ref ungkvkabqxssggttajfs
    ```
 
-   (The form of `docs/setup/supabase-deploy.md` step 4.) Then "What to check live" 4 at once. If enrolment is refused for a genuine code sign-in, redeploy the
-   previous commit's functions and tell the security-engineer.
+   (The form of `docs/setup/supabase-deploy.md` step 4.) Then "What to check live" 4 at once. If enrolment is refused for a genuine code sign-in, roll back
+   (next paragraph) and tell the security-engineer.
+
+   **Rollback of the two enrolment functions**: they come from commit `2ce72261`, the last commit before
+   the recent-sign-in check. From a clean worktree at that commit, redeploy only these two:
+
+   ```powershell
+   git worktree add ..\nitznutz-rollback 2ce72261
+   cd ..\nitznutz-rollback
+   npx supabase functions deploy enroll-challenge --use-api --project-ref ungkvkabqxssggttajfs
+   npx supabase functions deploy device-enroll --use-api --project-ref ungkvkabqxssggttajfs
+   ```
 
 ## What you do in the Supabase dashboard
 
@@ -179,7 +206,7 @@ testers' codes. The live settings are changed in the dashboard (above) or with t
    minutes (the prod package also needs its `android_allowed_apps` row; the dev package already has
    one), set the PIN, add a child. Your own existing parent account must also still enrol a new phone:
    sign in by code and enrol at once. This proves the `otp` sign-in method is what Supabase puts in the
-   token for the emailed code (SEC-SU-2). If enrolment is refused after a fresh code, see deploy order 4.
+   token for the emailed code (SEC-SU-2). If enrolment is refused after a fresh code, see deploy order 5.
 5. In the dashboard, Authentication > Users shows the new user. Table `app.guardian` has a row for it
    after enrolment (see the read-only queries below).
 6. Ask for a code again for the same address: the second email is a "Magic Link" email and also has
