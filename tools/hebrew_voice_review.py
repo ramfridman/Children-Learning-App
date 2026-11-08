@@ -10,11 +10,15 @@ docs/review/hebrew-elevenlabs-review.md and .csv (only the rows that changed or 
     comment for the rows that wait for the owner (`DOUBT`) and for new rows the editor has not signed (`PENDING`).
 
     PYTHONIOENCODING=utf-8 python tools/hebrew_voice_review.py
+    python -I -X utf8 tools/hebrew_voice_review.py --approval-snapshot docs/review/owner-approval-2026-11-08.csv
+
+The second form also writes the snapshot of the rows `text-ready` or `proposed` for the owner's bulk approval (tools/owner_approval.py).
 
 Nothing is written back to the pack: the owner decides which rows to take. What the owner typed in the master table
 (the `correction (fill in)` and `comment` columns, and any status after `text-ready`) is kept. The editor's own comments
 start with "[editor]" and are rewritten on every run.
 """
+import argparse
 import csv
 import os
 import re
@@ -22,7 +26,9 @@ import sys
 import unicodedata
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+ARGV = sys.argv[1:]  # author.py reads sys.argv when it is imported
 sys.argv = sys.argv[:1] + ['-']
+import owner_approval  # noqa: E402
 from author import F, M  # noqa: E402
 from band_b import NAMES, OBJECTS  # noqa: E402
 
@@ -1494,6 +1500,12 @@ def read_batch(r):
 
 
 def main():
+    parser = argparse.ArgumentParser(description='Writes docs/review/hebrew-master.csv and the ElevenLabs review.')
+    parser.add_argument('--approval-snapshot', metavar='FILE', help='also write the snapshot of the rows text-ready or proposed for '
+                        "the owner's bulk approval (and its summary, FILE with .md); the switch is not applied in this run")
+    args = parser.parse_args(ARGV)
+    # while a snapshot is written the switch is ignored: its file is about to change, and its list is of the rows before any approval
+    approval = None if args.approval_snapshot else owner_approval.load_approval()
     rows = list(csv.DictReader(open(SRC, encoding='utf-8-sig')))
     by_source = {}
     for r in rows:
@@ -1549,7 +1561,10 @@ def main():
         fh.write('| ID | Original Text | Corrected Text (For UI) | ElevenLabs Optimized Text | Explanation |\n|---|---|---|---|---|\n')
         for x in out:
             fh.write('| %s | %s | %s | %s | %s |\n' % (esc(x['id']), esc(x['original']), esc(x['ui']), esc(x['eleven']), esc(x['explanation'])))
-    master(rows, result, rules)
+    master_rows = master(rows, result, rules, approval=approval)
+    if args.approval_snapshot:
+        sha = owner_approval.write_snapshot(master_rows, args.approval_snapshot)
+        print('approval snapshot', args.approval_snapshot, len(owner_approval.candidates(master_rows)), 'rows, sha256', sha)
     print('rows', len(out), 'grammar', sum(x['grammar'] for x in out), 'review', sum(x['review'] for x in out))
 
 
@@ -1559,17 +1574,22 @@ EDITOR = '[editor] '
 OWNER_STATUSES = ('owner-approved', 'voice-ready', 'voiced')
 
 
-def master(rows, result, rules):
+def master(rows, result, rules, path=None, approval=None):
     """The one big table: every text of the app with the corrected screen text, the voice text, what changed and where it stands.
     What the owner typed in the last version of the table (a correction, a comment that is not the editor's, a status after
-    text-ready) is kept; such a row is the owner's and the editor does not change its status."""
-    path = os.path.join(ROOT, 'docs', 'review', 'hebrew-master.csv')
+    text-ready) is kept; such a row is the owner's and the editor does not change its status.
+    `approval` (owner_approval.Approval or None): the owner's bulk approval; it makes a `text-ready` or `proposed` row `owner-approved`
+    only while the row's three texts hash as the snapshot says. Returns the rows written (each with its `base_status`, the status
+    before the approval)."""
+    path = path or os.path.join(ROOT, 'docs', 'review', 'hebrew-master.csv')
     kept = {}
     if os.path.exists(path):
-        for r in csv.DictReader(open(path, encoding='utf-8-sig')):
-            kept[(r['source'], r['id'], r['text'])] = r
+        with open(path, encoding='utf-8-sig') as fh:
+            for r in csv.DictReader(fh):
+                kept[(r['source'], r['id'], r['text'])] = r
     counts = {}
     new_rows = []
+    written = []
     with open(path, 'w', encoding='utf-8-sig', newline='') as fh:
         w = csv.writer(fh)
         w.writerow(MASTER_COLUMNS)
@@ -1636,23 +1656,32 @@ def master(rows, result, rules):
                 status, comment = 'owner-approved', EDITOR + voice_approved(r)
             old = kept.get((r['source'], r['id'], r['text']))
             correction = r['correction (fill in)']
+            owner_comment = old and old['comment'].strip() and not old['comment'].startswith(EDITOR.strip())
+            by_snapshot, status_before = False, status
+            # the owner's bulk approval (tools/owner_approval.py): not over something the owner typed in the table
+            if (approval and status in owner_approval.CANDIDATE_STATUSES and not (old and (old['correction (fill in)'].strip() or owner_comment))
+                    and owner_approval.approves(approval, r['source'], r['id'], r['text'], ui, el)):
+                status, comment, by_snapshot = 'owner-approved', (comment or r['comment'] or EDITOR.rstrip()) + owner_approval.mark(approval), True
             if old:
-                owner_comment = old['comment'].strip() and not old['comment'].startswith(EDITOR.strip())
-                if old['correction (fill in)'].strip() or owner_comment or old['status'] in OWNER_STATUSES:
-                    status = old['status'] if old['status'] in OWNER_STATUSES or old['correction (fill in)'].strip() else status
+                # a status the snapshot gave is worked out again (above), not kept: this is how an edited row falls back
+                kept_status = old['status'] in OWNER_STATUSES and not owner_approval.is_marked(old['comment'])
+                if old['correction (fill in)'].strip() or owner_comment or kept_status:
+                    status = old['status'] if kept_status or old['correction (fill in)'].strip() else status
                     correction = old['correction (fill in)']
                     comment = old['comment'] if owner_comment else comment
             counts[status] = counts.get(status, 0) + 1
-            w.writerow([
-                r['group'], r['source'], r['id'], r['kind'], 'yes' if is_spoken else 'no', r['text'], ui, el,
-                '; '.join(notes), status, correction, comment or r['comment'],
-            ])
+            row = {'group': r['group'], 'source': r['source'], 'id': r['id'], 'kind': r['kind'], 'spoken': 'yes' if is_spoken else 'no',
+                   'text': r['text'], 'ui_text': ui, 'voice_text': el, 'changes': '; '.join(notes), 'status': status,
+                   'correction (fill in)': correction, 'comment': comment or r['comment']}
+            w.writerow([row[c] for c in MASTER_COLUMNS])
+            written.append(dict(row, base_status=status_before if by_snapshot else status))
     print('master', len(rows), 'rows', counts)
     if kept and new_rows:
         # Not in the last table: the editor has not read them; a row in a REVIEWED group needs a PENDING entry or a read.
         print('new since the last table (%d):' % len(new_rows))
         for r in new_rows:
             print('  %s › %s: %s' % (r['source'], r['id'] or '-', r['text']))
+    return written
 
 
 if __name__ == '__main__':
