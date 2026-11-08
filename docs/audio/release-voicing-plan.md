@@ -129,6 +129,41 @@ they are.
   [G]; if it is one, the run needs two months of included characters or paid overage. The list-price USD figures stay the
   comparison.
 
+### 1.6 The model A/B (the owner's listening, 2026-11-08) [R: the owner's scores]
+
+`docs/audio/audition/model-ab.json`: 11 lines, nitzi and hero-son, each on Turbo and on v4 (44 clips, 1,836 characters, 0.1102 USD).
+Scores: **nitzi: v4 better on 01 (numbers), 09 (long Band C hint) and 11 (digits); the same on the other eight. hero-son: v4 better on 07
+(`שווה`); the same on the other ten. Turbo was never better.** Both models misread three words in both or one voice: `עשר` after a
+prefix in "גָּדֵל בְּעֶשֶׂר" (09, hero), `נֹאמַר` in "נֹאמַר את הסדר בקול" (10, both voices) and `עשרות` in "עם עשרות ויחידות" (11, hero).
+
+The three words, with the lines they touch [M] (distinct voice texts in the master table on 2026-11-08):
+
+| Word | Forms in the voice text | Lines | Screen text | Candidate fixes (probe `model-ab-fix.json`) |
+|---|---|---|---|---|
+| `בְּעֶשֶׂר` (ב + ten) | `בְּעֶשֶׂר` 8 tokens | **3 lines** (also in the 8 tokens: Band B/C "גדול מהמספר שלפניו בְּעֶשֶׂר", "המספר גָּדֵל בְּעֶשֶׂר"); the bare ten `עֶשֶׂר` is 338 tokens in 266 lines and was not reported | `בְּעֶשֶׂר` | **voice-only:** 09a plain `בעשר`; 09b a comma before it (`גָּדֵל, בְּעֶשֶׂר`). **Reword (editor and owner):** 09c "וכל פעם מוסיפים עֶשֶׂר" |
+| `נֹאמַר` | 40 tokens | **1 distinct line** (the chant "נֹאמַר את הסדר בקול, וְנִמְחָא כפיים עם כל אֶחָד", under 40 voice ids) | `נֹאמַר` | **voice-only:** 10a `נגיד` (the 2026-10-29 rule already turns "בואו נאמר" into "בואו נגיד"); 10b `נגיד יחד` |
+| `עשרות` | `עשרות` 267, `העשרות` 109, `בעשרות` 59, `לעשרות` 4 | **116 lines** (115 voice ids in the earlier snapshot); the misread was in the form "עם עשרות" | `עֲשָׂרוֹת` | **voice-only:** 11a `עֲשָׂרוֹת` pointed; 11b both words pointed (`עֲשָׂרוֹת וִיחִידוֹת`). **Reword:** 11c "במספר יש עשרות ויחידות, ויש רק…" |
+
+If the probe shows a voice-only variant is heard-ok, the change is one line in `tools/hebrew_voice_review.py` (a `VOICE_SUBS` entry for 10a,
+or `VOICE_SWEEP_KEEP` for 11a/11b with `עֲשָׂרוֹת`; 09a/09b need a `VOICE_SUBS` pattern for `גָּדֵל בְּעֶשֶׂר`), and the screen text does not change.
+I have **not** applied any of them before the probe: a fix I have not heard can make a line worse. Only the owner's ear can pass them.
+
+**Model options** (list price from the plan tool: 187,045 characters for each narrator on a spec of all 4,278 ids, 7.48 USD on Turbo, 14.96 USD on v4):
+
+| Option | nitzi | hero-son | Total, both narrators | The A/B says |
+|---|---|---|---|---|
+| All Turbo | Turbo 7.48 | Turbo 7.48 | **14.96 USD** | gives up v4's gain on nitzi (3 of 11 pairs) and on hero (1 of 11) |
+| **Per voice: nitzi v4, hero-son Turbo** | v4 14.96 | Turbo 7.48 | **22.44 USD** | takes the gain where it was heard most; hero-son loses one pair of eleven |
+| All v4 | v4 14.96 | v4 14.96 | **29.93 USD** | takes every gain; 7.5 USD more than the per-voice option for one hero pair |
+
+Grand total of the release (section 4) with each option: **about 16 USD** (all Turbo), **about 23.5 USD** (per voice), **about 31.5 USD** (all v4).
+The language packs and pilots stay on v4 in all three (about 1.4 USD). **My recommendation [G]: the per-voice option**, unless the probe
+(`model-ab-fix.json`) shows hero-son's v4 clearly better on the three fixed words, in which case all v4 is worth the 7.5 USD.
+**`voice_gen` cannot do this today:** the model is one value for all voices (`modelId` in `voices.json`; `VoiceProfile.fromConfig` takes a
+`model` only for an audition). A per-voice `modelId` under `voices.nitzi` is a few lines for the app-developer (request F6 below). Until
+then, run `generate nitzi` with `modelId` set to `eleven_v4`, then set it back to `eleven_v4_turbo` for hero-son (the owner edits one line of
+`content/voices.json` between the two runs; the plan tool prints the cost of the model it will use).
+
 ---
 
 ## 2. What must happen before any Hebrew batch (free)
@@ -297,7 +332,10 @@ pronunciation questions, and it picks the voices for English and Russian.
 | 1d | `… plan ../docs/languages/hebrew/pilot.json` | `… run ../docs/languages/hebrew/pilot.json` | 63 | 417 | 0.0334 (v4) | `417` |
 | 1e | `… plan ../docs/languages/hebrew/pilot-ipa.json` | `… run ../docs/languages/hebrew/pilot-ipa.json` | 6 | 24 | 0.0019 (v4) | `24` |
 
-(`…` is `dart run tool/voice_gen.dart audition-batch`.) The files land in `C:\Users\ramfr\nitznutz-voice\auditions\<name>`, with
+| 1f | `… plan ../docs/audio/audition/model-ab-fix.json` | `… run ../docs/audio/audition/model-ab-fix.json` | 32 | 1,756 | 0.1054 (both models) | `1756` |
+
+(`…` is `dart run tool/voice_gen.dart audition-batch`. Step 1f is the fix probe of section 1.6 and can be done first: it settles the model and
+the three words. With it step 1 is 5,798 characters, about 0.37 USD.) The files land in `C:\Users\ramfr\nitznutz-voice\auditions\<name>`, with
 the language in front for a non-Hebrew spec (`en-pilot`, `ru-pilot`). If a run stops, repeat the same command: a clip whose
 `.json` has the same hash is not made or paid for again.
 
@@ -414,6 +452,7 @@ paid step).
 | F2 | `voice_gen`: a subset option (`--lines own`) that voices only the 9 own lines of a friend (`core.greeting.hello`, `.start`, `core.celebrate.well`, `core.placement.done`, `core.goodbye.next`, `core.ceremony.*`) | without it each friend costs the whole set (187,000 characters, 7.48 USD) |
 | F3 | `voice_gen`: read the UI lines (30 clips, per land) from a source file, for example `content/lines/ui.he.json` with their `vo:core.adventure.*` ids and the land names in the text | they are not in `core.he.json` today |
 | F4 | `voice_gen` (or `lang_voice_gen`): read `content/languages/<course>/voice-plan.json`; `language_code` per clip (`he`, `en`, `ru`); `!` to `.`; voice the distinct texts once; make `-slow` by `ffmpeg atempo=0.80`; write the page clips with alignment so the 12 `cutClips` can be cut; refuse a placeholder; the same gate and ledger; build `voice-lang-<course>-<ver>.nnpack` | there is no path at all today |
+| F6 | `voice_gen`: read an optional `modelId` under `voices.<character>` in `content/voices.json` (a few lines in `VoiceProfile.fromConfig`), and print the model in the plan | the per-voice model option (nitzi v4, hero-son Turbo) |
 | F5 | gateway `elevenlabs.ts`: `output_format` `mp3_44100_64` (H1 of the diagnosis) | the tutor lines are 22.05 kHz / 32 kbps and dull the ש, ס and צ |
 
 The qa-engineer's test (every `vo` id of the release has a recording in every shipped voice pack) will fail for the 30 UI lines
@@ -448,9 +487,8 @@ duration), as in the diagnosis.
 
 1. **Approve the texts.** The sweep ends when the editor says so; then the owner approves the rows (4,151 now), including the
    106 `proposed`. Until then no Hebrew batch can start. (The probe and the pilots can.)
-2. **Which model for the Hebrew narrators.** `eleven_v4_turbo`, as `voices.json` says: 14.96 USD, half the price, built for speed. Or
-   `eleven_v4`: 29.93 USD, "the quality model" [R]. What did you decide in the Hebrew auditions (rounds 1, 3 and 4)? It is not written
-   in the repo. If you cannot recall, run step 1a on both models (the probe takes a `model` per clip) and listen once.
+2. **Which model for the Hebrew narrators.** Your A/B (section 1.6) says v4 is never worse and better on nitzi in 3 pairs of 11, on hero-son
+   in 1. All Turbo 14.96 USD, per voice (nitzi v4, hero Turbo) 22.44 USD, all v4 29.93 USD. I recommend the per-voice option; it needs F6.
 3. **Pay for repeated texts or have the app-developer remove them (F1).** 4 USD at Turbo. Not a quality question.
 4. **Languages: one round or two.** Round 1 only (faster, 0.27 USD) or round 1 and round 2 (0.42 USD in all, one more listening sitting). I
    recommend round 2 for English and Russian because the isolated-sound test (D2) is in it.
