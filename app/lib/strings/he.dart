@@ -307,6 +307,9 @@ abstract final class He {
   );
   static const Str setupStart = Str('מתחילים');
   static const Str setupEmail = Str('כתובת דוא"ל');
+  static const Str setupNewAccountHint = Str(
+    'בפעם הראשונה ייווצר חשבון הורים חדש בכתובת הזו. בכניסות הבאות משתמשים באותה כתובת.',
+  );
   static const Str setupSendCode = Str('שליחת קוד');
   static const Str setupCodeSent = Str('שלחנו קוד בן 6 ספרות לדוא"ל.');
   static const Str setupCode = Str('הקוד מהדוא"ל');
@@ -339,6 +342,11 @@ abstract final class He {
   static const Str setupFinish = Str('סיום');
   static const Str setupError = Str('משהו השתבש. בדקו את החיבור לאינטרנט ונסו שוב.');
   static const Str setupWrongCode = Str('הקוד לא נכון או שפג תוקפו.');
+  static const Str setupRateLimited = Str('נשלחו הרבה בקשות. חכו כמה דקות ונסו שוב.');
+  static const Str setupNotInvited = Str(
+    'הכתובת הזאת עדיין לא ברשימת המוזמנים. בדקו שהקלדתם אותה נכון, או פנו למי שהזמין אתכם.',
+  );
+  static const Str setupSignInAgain = Str('הכניסה פגה. היכנסו שוב עם קוד חדש.');
 
   // ---- parent area (adult) ----
   static const Str areaTitle = Str('אזור הורים');

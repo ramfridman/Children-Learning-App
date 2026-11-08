@@ -67,7 +67,12 @@ class _SetupFlowState extends ConsumerState<SetupFlow> {
     try {
       await action();
     } on GatewayException catch (e) {
-      _error = e.code == 'auth_failed' ? (onError ?? He.setupError.text) : He.setupError.text;
+      _error = switch (e.code) {
+        'auth_failed' => onError ?? He.setupError.text,
+        'rate_limited' => He.setupRateLimited.text,
+        'not_invited' => He.setupNotInvited.text,
+        _ => He.setupError.text,
+      };
     } on Object {
       _error = He.setupError.text;
     }
@@ -84,8 +89,22 @@ class _SetupFlowState extends ConsumerState<SetupFlow> {
     _step = SetupStep.enrol;
   }, onError: He.setupWrongCode.text);
 
+  /// The gateway wants a sign-in by emailed code in the last 10 minutes, and a token refresh does not
+  /// count. So when enrolment is refused as `unauthorized` (a setup resumed late), the session is of no
+  /// use any more: drop it and go back to the sign-in with a line that says why.
   Future<void> _enrol() => _run(() async {
-    await ref.read(setupBackendProvider).enrol();
+    final SetupBackend backend = ref.read(setupBackendProvider);
+    try {
+      await backend.enrol();
+    } on GatewayException catch (e) {
+      if (e.code != 'unauthorized') rethrow;
+      await backend.signOut();
+      _code.clear();
+      _codeSent = false;
+      _step = SetupStep.signIn;
+      _error = He.setupSignInAgain.text;
+      return;
+    }
     await ref.read(appStateProvider.notifier).reload();
     _step = SetupStep.pin;
   });
@@ -147,6 +166,8 @@ class _SetupFlowState extends ConsumerState<SetupFlow> {
             enableSuggestions: false,
             decoration: InputDecoration(labelText: He.setupEmail.text, border: const OutlineInputBorder()),
           ),
+          const SizedBox(height: 8),
+          Text(He.setupNewAccountHint.text, style: AppText.parent(TokenType.parentSmall)),
           const SizedBox(height: 12),
           ParentButton(label: He.setupSendCode.text, onPressed: _busy ? null : _sendCode),
           if (_codeSent) ...<Widget>[

@@ -21,14 +21,14 @@ http.Response session(String access, String refresh, {int expiresIn = 3600}) =>
     jsonReply(<String, Object?>{'access_token': access, 'refresh_token': refresh, 'expires_in': expiresIn});
 
 void main() {
-  test('the email code request never creates a user', () async {
+  test('the email code request lets a new parent sign up with the same code flow', () async {
     final Recorder rec = Recorder((http.Request r) => http.Response('{}', 200));
     await authFor(rec, FixedClock(0)).sendEmailCode('a@example.test');
 
     final http.Request sent = rec.requests.single;
     expect(sent.url.path, '/auth/v1/otp');
     expect(sent.headers['apikey'], testKey);
-    expect(jsonDecode(sent.body), <String, Object?>{'email': 'a@example.test', 'create_user': false});
+    expect(jsonDecode(sent.body), <String, Object?>{'email': 'a@example.test', 'create_user': true});
   });
 
   test('verifying the email code returns a session with an absolute expiry', () async {
@@ -63,6 +63,44 @@ void main() {
     await expectLater(
       authFor(slow, FixedClock(0)).sendEmailCode('a@example.test'),
       throwsA(isA<GatewayException>().having((GatewayException e) => e.code, 'code', 'rate_limited')),
+    );
+  });
+
+  test(
+    'a code request for an address that is not invited is not_invited, with no server text kept',
+    () async {
+      for (final int status in <int>[403, 422]) {
+        final Recorder refused = Recorder(
+          (http.Request r) => http.Response('{"msg":"This address is not invited yet."}', status),
+        );
+        await expectLater(
+          authFor(refused, FixedClock(0)).sendEmailCode('a@example.test'),
+          throwsA(
+            isA<GatewayException>()
+                .having((GatewayException e) => e.code, 'code', 'not_invited')
+                .having((GatewayException e) => e.status, 'status', status)
+                .having((GatewayException e) => '$e', 'text', isNot(contains('invited yet'))),
+          ),
+        );
+      }
+    },
+  );
+
+  test('other failures of the code request stay auth_failed', () async {
+    for (final int status in <int>[400, 500]) {
+      final Recorder broken = Recorder((http.Request r) => http.Response('{}', status));
+      await expectLater(
+        authFor(broken, FixedClock(0)).sendEmailCode('a@example.test'),
+        throwsA(isA<GatewayException>().having((GatewayException e) => e.code, 'code', 'auth_failed')),
+      );
+    }
+  });
+
+  test('a rejected verify code is still auth_failed, not not_invited', () async {
+    final Recorder bad = Recorder((http.Request r) => http.Response('{}', 422));
+    await expectLater(
+      authFor(bad, FixedClock(0)).verifyEmailCode('a@example.test', '000000'),
+      throwsA(isA<GatewayException>().having((GatewayException e) => e.code, 'code', 'auth_failed')),
     );
   });
 

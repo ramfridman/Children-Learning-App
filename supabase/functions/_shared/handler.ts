@@ -11,6 +11,7 @@ import type { ModelClient } from "./anthropic.ts";
 import type { VoiceClient } from "./elevenlabs.ts";
 import type { PushClient } from "./fcm.ts";
 import type { Secrets, Store } from "./store.ts";
+import type { AuthMethod, TokenClaims } from "./token.ts";
 
 /** How long each step of a tutor turn may take (milliseconds). The child never waits more than `totalMs`. */
 export interface TutorBudget {
@@ -32,7 +33,7 @@ export const DEFAULT_TUTOR_BUDGET: TutorBudget = {
 
 export interface Services {
   nowMs(): number;
-  verifyToken(bearer: string): Promise<{ userId: string; issuedAt: number | null } | null>;
+  verifyToken(bearer: string): Promise<TokenClaims | null>;
   store: Store;
   secrets: Secrets;
   randomBytes(n: number): Bytes;
@@ -68,7 +69,8 @@ export interface Context {
   auth?: Authenticated;
   /** Present for "device" and "token"; null for "public". */
   userId: string | null;
-  issuedAt: number | null;
+  /** How the session was signed in (from the verified token); empty for "public". */
+  amr: AuthMethod[];
 }
 
 export interface FunctionSpec {
@@ -102,7 +104,7 @@ export function makeHandler(spec: FunctionSpec, getServices: () => Services) {
       const raw = await readBodyBytes(req, spec.maxBodyBytes);
       let auth: Authenticated | undefined;
       let userId: string | null = null;
-      let issuedAt: number | null = null;
+      let amr: AuthMethod[] = [];
       if (spec.access.kind === "device") {
         auth = await authenticate(req, spec.name, raw, spec.access.roles, {
           nowMs: () => svc.nowMs(),
@@ -112,16 +114,16 @@ export function makeHandler(spec: FunctionSpec, getServices: () => Services) {
           recordNonce: (d, n) => svc.store.recordNonce(d, n),
         });
         userId = auth.userId;
-        issuedAt = auth.issuedAt;
+        amr = auth.amr;
       } else if (spec.access.kind === "token") {
         const claims = await svc.verifyToken(bearer(req));
         if (!claims) throw new GatewayError("unauthorized", "bad_token");
         userId = claims.userId;
-        issuedAt = claims.issuedAt;
+        amr = claims.amr;
       }
       const body = parseJsonObject(raw);
       validate(spec.shape, body);
-      const result = await spec.run({ svc, req, body, raw, requestId, auth, userId, issuedAt });
+      const result = await spec.run({ svc, req, body, raw, requestId, auth, userId, amr });
       if (auth) svc.store.touchDevice(auth.device.id).catch(() => {});
       res = jsonResponse(result ?? {});
     } catch (e) {

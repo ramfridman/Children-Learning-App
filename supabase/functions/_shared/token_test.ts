@@ -1,6 +1,6 @@
 import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT } from "npm:jose@6.2.13";
 import { assert } from "./testassert.ts";
-import { type TokenConfig, verifyAccessToken } from "./token.ts";
+import { signedInByCodeRecently, type TokenConfig, verifyAccessToken } from "./token.ts";
 
 const NOW = 1_800_000_000;
 const ISS = "https://example-ref.supabase.co/auth/v1";
@@ -38,10 +38,54 @@ function token(
   return jwt.sign(o.key ?? es.privateKey);
 }
 
-Deno.test("a valid ES256 or RS256 token yields the user id", async () => {
-  assert.deepEqual(await verifyAccessToken(await token(), cfg), { userId: USER, issuedAt: NOW - 10 });
-  const t = await token({ alg: "RS256", kid: "rs1", key: rs.privateKey });
-  assert.deepEqual(await verifyAccessToken(t, cfg), { userId: USER, issuedAt: NOW - 10 });
+Deno.test("a valid ES256 or RS256 token yields the user id and how it was signed in", async () => {
+  const amr = [{ method: "otp", timestamp: NOW - 10 }];
+  assert.deepEqual(await verifyAccessToken(await token({ claims: { amr } }), cfg), { userId: USER, amr });
+  const t = await token({ alg: "RS256", kid: "rs1", key: rs.privateKey, claims: { amr } });
+  assert.deepEqual(await verifyAccessToken(t, cfg), { userId: USER, amr });
+});
+
+Deno.test("amr: objects with a method and a time are kept; anything else yields no sign-in method", async () => {
+  const amr = (a: unknown) => token({ claims: { amr: a } }).then((t) => verifyAccessToken(t, cfg));
+  const two = [{ method: "password", timestamp: NOW - 900 }, { method: "otp", timestamp: NOW - 20 }];
+  assert.deepEqual((await amr(two))!.amr, two);
+  assert.deepEqual((await amr([{ method: "otp", timestamp: NOW - 5, extra: 1 }]))!.amr, [{
+    method: "otp",
+    timestamp: NOW - 5,
+  }]);
+  assert.deepEqual((await amr(["password", "otp"]))!.amr, [], "a plain list of names has no times");
+  assert.deepEqual((await amr([{ method: "otp" }]))!.amr, [], "no time");
+  assert.deepEqual(
+    (await amr([{ method: "otp", timestamp: "now" }]))!.amr,
+    [],
+    "a time that is not a number",
+  );
+  assert.deepEqual((await amr([{ method: 5, timestamp: NOW }, null, 7, []]))!.amr, [], "junk entries");
+  assert.deepEqual((await amr("otp"))!.amr, [], "not a list");
+  assert.deepEqual((await amr({ method: "otp", timestamp: NOW }))!.amr, [], "an object, not a list");
+  assert.deepEqual((await verifyAccessToken(await token(), cfg))!.amr, [], "no claim");
+});
+
+Deno.test("signedInByCodeRecently: only an emailed code within 10 minutes counts", () => {
+  const nowMs = NOW * 1000;
+  const otp = (ago: number) => [{ method: "otp", timestamp: NOW - ago }];
+  assert.equal(signedInByCodeRecently(otp(0), nowMs), true);
+  assert.equal(signedInByCodeRecently(otp(60), nowMs), true);
+  assert.equal(signedInByCodeRecently(otp(600), nowMs), true, "exactly 10 minutes");
+  assert.equal(signedInByCodeRecently(otp(601), nowMs), false, "just over");
+  assert.equal(signedInByCodeRecently(otp(7200), nowMs), false);
+  assert.equal(signedInByCodeRecently(otp(-5), nowMs), true, "a little clock drift");
+  assert.equal(signedInByCodeRecently(otp(-60), nowMs), false, "a time in the future");
+  assert.equal(
+    signedInByCodeRecently([{ method: "password", timestamp: NOW }], nowMs),
+    false,
+    "a password never counts",
+  );
+  assert.equal(signedInByCodeRecently([{ method: "token_refresh", timestamp: NOW }], nowMs), false);
+  assert.equal(signedInByCodeRecently([], nowMs), false, "no entries");
+  const mixed = [{ method: "password", timestamp: NOW - 5 }, { method: "otp", timestamp: NOW - 7200 }];
+  assert.equal(signedInByCodeRecently(mixed, nowMs), false, "a fresh password beside a stale code");
+  assert.equal(signedInByCodeRecently([...mixed, ...otp(30)], nowMs), true, "any one fresh code is enough");
 });
 
 Deno.test("expired, wrong issuer, wrong audience, wrong key, unknown kid: all refused", async () => {

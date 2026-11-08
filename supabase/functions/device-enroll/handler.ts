@@ -5,8 +5,7 @@ import { b64urlDecode } from "../_shared/b64.ts";
 import { enrolFields, proveDevice } from "../_shared/enrol.ts";
 import { GatewayError } from "../_shared/errors.ts";
 import type { FunctionSpec } from "../_shared/handler.ts";
-
-export const FRESH_SIGN_IN_SECONDS = 600;
+import { signedInByCodeRecently } from "../_shared/token.ts";
 
 export const spec: FunctionSpec = {
   name: "device-enroll",
@@ -26,8 +25,9 @@ export const spec: FunctionSpec = {
       svc,
     );
 
-    // 2. A fresh sign-in, so an old stolen token cannot add a device.
-    if (ctx.issuedAt === null || now - ctx.issuedAt * 1000 > FRESH_SIGN_IN_SECONDS * 1000) {
+    // 2. A sign-in by emailed code in the last 10 minutes, so neither an old stolen token, nor a refresh, nor a
+    //    password someone else set can add a device.
+    if (!signedInByCodeRecently(ctx.amr, now)) {
       throw new GatewayError("unauthorized", "stale_sign_in");
     }
 

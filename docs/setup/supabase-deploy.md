@@ -138,7 +138,9 @@ the code, for example:
 ```
 
 Without `{{ .Token }}` Supabase sends only a link, and the app has nowhere to type it. Also
-check Authentication > Sign In / Providers: **Allow new users to sign up** is off and Email is on.
+check Authentication > Sign In / Providers: Email is on. **Allow new users to sign up** was off for the owner's
+own use; since 2026-11-08 it is turned on for test families, and the **Confirm sign up** template gets the
+same `{{ .Token }}` line (`docs/setup/open-signup.md`).
 
 ## 7. Tell the server which app is yours (any time after step 2)
 
