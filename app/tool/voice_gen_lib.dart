@@ -13,6 +13,7 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:nitznutz/content/pack_verify.dart';
+import 'package:nitznutz/content/zip_store.dart' show ZipLimits;
 
 import 'pack_builder_lib.dart';
 import 'voice_text_lib.dart';
@@ -500,6 +501,11 @@ Map<String, String> madeElsewhere(Directory workDir, Set<String> lineIds, Map<St
   return out;
 }
 
+/// What a pack costs in bytes, measured on the voice pack of hero-son 2.0.0 (2026-11-08): 93,869,746 bytes of 64 kbps sound
+/// for 137,552 characters of text, and 2,440,279 bytes of mouth cues for 4,311 lines.
+const int soundBytesPerCharacter = 683;
+const int cueBytesPerLine = 566;
+
 class VoicePlan {
   const VoicePlan({required this.characters, required this.lines, required this.clips});
 
@@ -535,6 +541,17 @@ class VoicePlan {
   List<TextProblem> get problems => <TextProblem>[
     for (final PlannedClip c in _toSay) ...c.request.problems(c.line.voId),
   ];
+
+  /// About how many bytes the pack of [character] has: its sounds (a sound shared by several ids is in once) and its cues.
+  /// An estimate from [soundBytesPerCharacter] and [cueBytesPerLine], to see a pack that will not fit before paying for it.
+  int estimatedPackBytes(String character) {
+    int bytes = 0;
+    for (final PlannedClip c in clips) {
+      if (c.character != character) continue;
+      bytes += cueBytesPerLine + (c.isCopy ? 0 : c.request.characters * soundBytesPerCharacter);
+    }
+    return bytes;
+  }
 
   /// The cost at [pricePer1000Chars] (the price per thousand characters of the model).
   double cost(double pricePer1000Chars) => total / 1000 * pricePer1000Chars;
@@ -624,6 +641,18 @@ class VoicePlan {
       b.writeln(
         'Estimated cost at $pricePer1000Chars per 1,000 characters$priceSource: '
         '${cost(pricePer1000Chars).toStringAsFixed(2)}',
+      );
+    }
+    for (final String ch in characters) {
+      final int bytes = estimatedPackBytes(ch);
+      if (bytes == 0) continue;
+      final String size = (bytes / (1024 * 1024)).toStringAsFixed(0);
+      final String limit = (ZipLimits.maxTotalBytes / (1024 * 1024)).toStringAsFixed(0);
+      b.writeln(
+        bytes > ZipLimits.maxTotalBytes
+            ? 'WARNING, the pack of $ch would be about $size MB and the app reads $limit MB at most: the clips would be '
+                  'saved but the pack could not be built until the limit is decided (`pack` builds it afterwards, free).'
+            : 'Expected size of the pack of $ch: about $size MB (the app reads $limit MB at most).',
       );
     }
     return b.toString();

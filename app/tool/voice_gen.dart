@@ -3,6 +3,7 @@
 //   dart run tool/voice_gen.dart plan [--characters a,b,c] [--lines full|lessons|ui|own] [--groups a,b] [--budget N] [--each-id] [--as-if-approved] [--price <per 1,000 characters>] [--list] [--out <folder>]
 //   dart run tool/voice_gen.dart mock <character> [--key <key file>] [--out <folder>]
 //   dart run tool/voice_gen.dart groups [--characters a,b,c] [--lines full|lessons|own]
+//   dart run tool/voice_gen.dart pack <character> [--lines full|lessons|own] [--groups a,b] [--pack-version <x.y.z>] [--key <key file>] [--out <folder>]
 //   dart run tool/voice_gen.dart verify <character> [--groups a,b] [--lines full|lessons|own] [--out <folder>]
 //   dart run tool/voice_gen.dart generate <character> [--lines full|lessons|own] [--groups a,b] [--budget N] [--each-id] [--key <key file>] [--out <folder>] [--pack-version <x.y.z>]
 //   dart run tool/voice_gen.dart plan-lang <course> --voice <name> [--puppet-voice <name>] [--frame-voice <name>] [--model <id>] [--ffmpeg <path>] [--each-id] [--price <per 1,000 characters>] [--list] [--out <folder>]
@@ -29,6 +30,10 @@
 // shares its text with a clip already made is copied for free, in whatever group that clip is. Resume skips what is
 // made. `groups` lists each group with its lines and characters; `verify` (free) checks that every clip of the groups is
 // there, matches its text and is not under 2 KB, and exits 1 if not.
+//
+// `pack` (free) builds the voice pack of a character again from the clips saved in its work folder, with no voice and no
+// ElevenLabs key (the key file is the pack-signing key): the lines with a clip go into the pack, the others are named and
+// left out. It is what finishes a run whose pack could not be built, and it pays for nothing.
 //
 // `plan-lang` and `generate-lang` voice a language course from content/languages/<course>/voice-plan.json (course: eng,
 // rus or heb): the Hebrew lines with `--frame-voice` (a voice of content/voices.json, `nitzi` by default), the clips in the
@@ -61,7 +66,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:nitznutz/content/pack_verify.dart' show sha256Hex;
+import 'package:nitznutz/content/pack_verify.dart' show PackRejected, sha256Hex;
 
 import 'audio_tool_lib.dart';
 import 'audition_lib.dart';
@@ -102,6 +107,8 @@ Future<void> main(List<String> args) async {
         _plan(rest);
       case 'mock':
         await _mock(rest);
+      case 'pack':
+        await _pack(rest);
       case 'groups':
         _groups(rest);
       case 'verify':
@@ -128,6 +135,18 @@ Future<void> main(List<String> args) async {
   } on BuildFailed catch (e) {
     stderr.writeln('FAILED: $e');
     exit(1);
+  } on PackRejected catch (e) {
+    // The reason strings are ours (a stage, a limit, a file name): no key and no text of an answer is in them. The clips
+    // are saved; `pack` builds the pack again from them with no voice.
+    stderr
+      ..writeln('FAILED: the pack was rejected by the app\'s own check (${e.stage}): ${e.reason}')
+      ..writeln(
+        'Every clip is kept in the work folder. Nothing more is paid for: `pack <character>` builds the pack again from them.',
+      );
+    for (final Object p in e.problems) {
+      stderr.writeln('  $p');
+    }
+    exit(1);
   } on Object catch (e) {
     // Only the kind of error: its message could quote anything, the key included.
     stderr.writeln('FAILED: unexpected ${e.runtimeType}');
@@ -137,7 +156,7 @@ Future<void> main(List<String> args) async {
 
 void _usage() {
   stderr.writeln(
-    'usage: dart run tool/voice_gen.dart plan|groups|verify|plan-lang|verify-lang|mock|generate|generate-lang|audition-batch|audition ... (see the top of this file)',
+    'usage: dart run tool/voice_gen.dart plan|groups|verify|pack|plan-lang|verify-lang|mock|generate|generate-lang|audition-batch|audition ... (see the top of this file)',
   );
 }
 
@@ -455,6 +474,49 @@ Future<void> _generate(List<String> args) async {
     version: _option(args, '--pack-version') ?? '1.0.0',
     shareSameText: !args.contains('--each-id'),
     scope: batch?.scope,
+  );
+  _writePack(work, built);
+}
+
+/// Free: builds the pack of [character] from the clips saved in its work folder. Nothing is voiced (the voice is the one that
+/// refuses to say a word) and no ElevenLabs key is read: the key file is the one that signs packs. A line with no clip yet
+/// is left out and counted.
+Future<void> _pack(List<String> args) async {
+  final List<String> pos = _positional(args);
+  if (pos.length != 1) throw const VoiceGenFailed('pack needs one character id');
+  final String character = pos.single;
+  final LineSet set = _lineSet(args);
+  if (!set.makesAPack) {
+    throw const VoiceGenFailed(
+      'a voice pack holds all the lines of a character: use --lines full, lessons or own',
+    );
+  }
+  final VoiceTexts all = _voiceTexts(args).only(set);
+  final String? named = _option(args, '--groups');
+  final VoiceTexts texts = named == null
+      ? all
+      : _grouped(args, all).inGroups(_manifest(args).pick(named).toSet());
+  final VoiceProfile profile = VoiceProfile.fromConfig(_config(args), character);
+  final Directory work = Directory(_outFolder(args, character));
+  final List<SpokenLine> lines = texts.ready;
+  final VoicePlan plan = _planner(args, <String, VoiceProfile>{character: profile}, lines)(<String>{});
+  stdout
+    ..writeln(_repoHeading(args))
+    ..writeln('Pack of $character from the clips in ${work.path}')
+    ..writeln(
+      'Lines with a clip: ${plan.clips.length} of ${lines.length}; the other ${lines.length - plan.clips.length} '
+      'have no clip yet (or one made from another text) and are left out',
+    );
+  final BuiltPack built = await generateVoicePack(
+    characterId: character,
+    lines: lines,
+    synth: const SilentVoice(),
+    profile: profile,
+    workDir: work,
+    key: readKeyFile(_option(args, '--key') ?? defaultKeyPath()),
+    version: _option(args, '--pack-version') ?? '1.0.0',
+    shareSameText: !args.contains('--each-id'),
+    scope: <String>{},
   );
   _writePack(work, built);
 }

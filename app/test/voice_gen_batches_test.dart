@@ -3,6 +3,7 @@
 // `verify`. A pretend ElevenLabs (a mock HTTP client): nothing leaves the test, and no key is read.
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/pack_verify.dart';
@@ -45,6 +46,16 @@ Map<String, Object?> _group(String name, List<String> ids) => <String, Object?>{
   'ids': ids,
   'chars': 0,
 };
+
+/// A voice that answers every line with a large sound, to see a pack that is over the limit.
+class _BigVoice implements Synthesizer {
+  @override
+  Future<Synthesis> say(ClipRequest request) async => Synthesis(
+    Uint8List(15 * 1024 * 1024),
+    'mp3',
+    const Alignment(<String>['א'], <double>[0], <double>[0.1]),
+  );
+}
 
 void main() {
   late PackKey key;
@@ -472,6 +483,122 @@ void main() {
     });
   });
 
+  group('a pack that does not fit, and building the pack again from the saved clips', () {
+    late Directory work;
+    setUp(() => work = _temp('nn_repack_'));
+    tearDown(() => _drop(work));
+
+    const List<SpokenLine> two = <SpokenLine>[
+      SpokenLine('vo:a.one', 'שָׁלוֹם'),
+      SpokenLine('vo:a.two', 'כֵּן'),
+    ];
+    const List<SpokenLine> five = <SpokenLine>[
+      SpokenLine('vo:a.one', 'שָׁלוֹם'),
+      SpokenLine('vo:a.two', 'כֵּן'),
+      SpokenLine('vo:a.three', 'לֹא'),
+      SpokenLine('vo:a.four', 'אוּלַי'),
+      SpokenLine('vo:a.five', 'תּוֹדָה'),
+    ];
+
+    test('too many bytes is said in plain words before anything is signed, and every clip is kept', () async {
+      await expectLater(
+        generateVoicePack(
+          characterId: 'nitzi',
+          lines: five,
+          synth: _BigVoice(),
+          profile: _v4,
+          key: key,
+          workDir: work,
+        ),
+        throwsA(
+          isA<BuildFailed>()
+              .having((BuildFailed e) => e.reason, 'message', contains('add up to 75.0 MB'))
+              .having((BuildFailed e) => e.reason, 'message', contains('at most 64.0 MB'))
+              .having((BuildFailed e) => e.reason, 'message', contains('Nothing was signed'))
+              .having((BuildFailed e) => e.reason, 'message', contains('clips in the work folder are kept')),
+        ),
+      );
+      expect(ClipLedger(work).hashes().keys, containsAll(<String>['a.one', 'a.five']));
+      expect(File('${work.path}${Platform.pathSeparator}vo.a.five.mp3').existsSync(), isTrue);
+      expect(Directory('${normalisedFolder(work)}.pack-stage').existsSync(), isFalse);
+    });
+
+    test(
+      'the pack of what fits is then built from the saved clips with a voice that refuses to say anything',
+      () async {
+        await expectLater(
+          generateVoicePack(
+            characterId: 'nitzi',
+            lines: five,
+            synth: _BigVoice(),
+            profile: _v4,
+            key: key,
+            workDir: work,
+          ),
+          throwsA(isA<BuildFailed>()),
+        );
+        final BuiltPack built = await generateVoicePack(
+          characterId: 'nitzi',
+          lines: five.sublist(0, 3),
+          synth: const SilentVoice(),
+          profile: _v4,
+          key: key,
+          workDir: work,
+          scope: <String>{},
+        );
+        final VoiceBank bank = VoiceBank.fromPack(await verifyPack(built.bytes, publicKey: key.publicKey));
+        expect(bank.ids.toSet(), <String>{'vo:a.one', 'vo:a.two', 'vo:a.three'});
+      },
+    );
+
+    test('rebuilding the pack from the clips gives the same bytes and sends nothing; a line with no clip is left out', () async {
+      final FakeEleven server = FakeEleven();
+      final BuiltPack first = await generateVoicePack(
+        characterId: 'hero-son',
+        lines: two,
+        synth: ElevenLabsSynthesizer(apiKey: 'test-key-123', client: server.client),
+        profile: _v4,
+        key: key,
+        workDir: work,
+        version: '2.0.0',
+      );
+      expect(server.requests.length, 2);
+      final BuiltPack again = await generateVoicePack(
+        characterId: 'hero-son',
+        lines: <SpokenLine>[...two, const SpokenLine('vo:a.three', 'לֹא')],
+        synth: const SilentVoice(),
+        profile: _v4,
+        key: key,
+        workDir: work,
+        version: '2.0.0',
+        scope: <String>{},
+      );
+      expect(server.requests.length, 2, reason: 'the voice was never asked');
+      expect(again.bytes, first.bytes);
+      final VoiceBank bank = VoiceBank.fromPack(await verifyPack(again.bytes, publicKey: key.publicKey));
+      expect(bank.ids.toSet(), <String>{'vo:a.one', 'vo:a.two'});
+    });
+
+    test('the plan expects the size of the pack, and warns before the owner pays for a pack that cannot be built', () {
+      final VoicePlan small = planVoices(
+        <String, VoiceProfile>{'nitzi': _v4},
+        const <SpokenLine>[SpokenLine('vo:a.one', 'שלום'), SpokenLine('vo:a.two', 'שלום')],
+      );
+      expect(small.estimatedPackBytes('nitzi'), 2 * cueBytesPerLine + 4 * soundBytesPerCharacter);
+      expect(small.describe(0.08), contains('Expected size of the pack of nitzi: about 0 MB'));
+      final VoicePlan huge = planVoices(
+        <String, VoiceProfile>{'nitzi': _v4},
+        <SpokenLine>[SpokenLine('vo:a.one', 'א' * 100000)],
+      );
+      final String text = huge.describe(0.08);
+      expect(
+        text,
+        contains('WARNING, the pack of nitzi would be about 65 MB and the app reads 64 MB at most'),
+      );
+      expect(text, contains('`pack` builds it afterwards, free'));
+    });
+  });
+
   group('the batch options in the source', () {
     final String cli = File('tool/voice_gen.dart').readAsStringSync();
     final String groups = File('tool/voice_groups_lib.dart').readAsStringSync();
@@ -492,6 +619,18 @@ void main() {
         expect(groups, isNot(contains('Platform.environment')));
       },
     );
+
+    test('a rejected pack is reported with its stage and reason, and the saved clips are pointed to', () {
+      expect(cli, contains('on PackRejected catch (e)'));
+      expect(cli, contains('the pack was rejected by the app'));
+      expect(cli, contains("case 'pack':"));
+      final int start = cli.indexOf('Future<void> _pack(');
+      final String pack = cli.substring(start, cli.indexOf('/// Free: every group of the manifest', start));
+      expect(pack, contains('const SilentVoice()'));
+      expect(pack, contains('scope: <String>{}'));
+      expect(pack, isNot(contains('_eleven')));
+      expect(pack, isNot(contains('requireTyped')));
+    });
 
     test('verify and groups are free: they never read a key or ask for a voice', () {
       for (final String name in <String>['void _groups(', 'void _verify(', 'void _verifyLang(']) {

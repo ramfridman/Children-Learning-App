@@ -55,6 +55,8 @@ ALLOWED = [
     "dart run tool/voice_gen.dart plan --characters nitzi,hero-son --lines own --each-id --as-if-approved",
     "dart run tool/voice_gen.dart plan --characters nitzi --groups core,celebrate --budget 30000",
     "dart run tool/voice_gen.dart groups --characters nitzi,hero-son",
+    "dart run tool/voice_gen.dart pack hero-son --pack-version 2.0.0",
+    "dart run tool/voice_gen.dart pack nitzi --groups core,celebrate --pack-version 2.0.1",
     "dart run tool/voice_gen.dart verify nitzi --groups core,celebrate",
     "dart run tool/voice_gen.dart verify-lang eng --voice lang-en-sarah",
     "dart run tool/voice_gen.dart plan-lang eng --voice lang-en-sarah --frame-voice nitzi --ffmpeg C:\\f\\ffmpeg.exe --list",

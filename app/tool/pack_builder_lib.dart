@@ -196,6 +196,27 @@ Directory languageSource(String course, String languagesFolder) {
   return dir;
 }
 
+String _megabytes(int bytes) => (bytes / (1024 * 1024)).toStringAsFixed(1);
+
+/// Says in plain words, before anything is signed, that the files of a pack are more than the app's zip reader accepts
+/// ([ZipLimits], a security cap: docs/PLAN.md, Pack limits), so the reason is never hidden behind a rejection of the
+/// finished file.
+void _checkPackSize(Map<String, Uint8List> files) {
+  final int total = files.values.fold<int>(0, (int s, Uint8List f) => s + f.length);
+  if (files.length + 1 > ZipLimits.maxEntries) {
+    throw BuildFailed(
+      'the pack would have ${files.length + 1} files; the limit is ${ZipLimits.maxEntries} (PackLimits.files)',
+    );
+  }
+  if (total > ZipLimits.maxTotalBytes) {
+    throw BuildFailed(
+      'the files of the pack add up to ${_megabytes(total)} MB in ${files.length} files; the app reads a pack of at most '
+      '${_megabytes(ZipLimits.maxTotalBytes)} MB (ZipLimits.maxTotalBytes). Nothing was signed. The clips in the work '
+      'folder are kept; the limit or the split of the pack is for the owner to decide',
+    );
+  }
+}
+
 /// Builds the pack in [source] and signs it with [key]. The same sources and key always give the same bytes
 /// (Ed25519 signatures are deterministic).
 Future<BuiltPack> buildPack(Directory source, PackKey key) async {
@@ -232,6 +253,7 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
   if (problems.isNotEmpty) {
     throw BuildFailed('the source folder has files that cannot go into a pack', problems);
   }
+  _checkPackSize(files);
 
   final Map<String, Object?> docs = <String, Object?>{};
   for (final MapEntry<String, Uint8List> f in files.entries) {
