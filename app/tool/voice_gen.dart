@@ -700,6 +700,19 @@ _LangJob _langJob(List<String> args) {
   );
 }
 
+/// A note when the clips in a course's folder were made with another model than this run would use. Every clip's hash holds its
+/// model, so without `--model <the one they were made with>` all of them read as "made from another setting" and a paid run
+/// would voice and charge them again. Null when the model is the same, or nothing was made yet.
+String? _modelNote(_LangJob job) {
+  final Set<String> made = ClipLedger(job.work).models();
+  if (made.isEmpty || (made.length == 1 && made.single == job.target.modelId)) return null;
+  return made.length == 1
+      ? 'NOTE: the clips in ${job.work.path} were made with ${made.single}, and this run uses ${job.target.modelId} '
+            '(content/voices.json). Pass --model ${made.single}, or every clip counts as made from another setting.'
+      : 'NOTE: the clips in ${job.work.path} were made with ${made.join(' and ')}, and this run uses '
+            '${job.target.modelId}. Pass --model with the one you mean; a clip made with another model counts as changed.';
+}
+
 AudioTool _audioTool(List<String> args) => FfmpegTool(_option(args, '--ffmpeg') ?? 'ffmpeg');
 
 /// Free: the plan of a language course, with the figure the paid command will ask for.
@@ -718,6 +731,8 @@ Future<void> _planLang(List<String> args) async {
   );
   stdout.writeln(_repoHeading(args));
   stdout.writeln('Clips go to ${job.work.path}');
+  final String? note = _modelNote(job);
+  if (note != null) stdout.writeln(note);
   stdout.write(
     plan.describe(
       _prices(args, config),
@@ -743,7 +758,19 @@ Future<void> _planLang(List<String> args) async {
 /// Free: checks that every clip of a language course is in the work folder and was made from what the plan says now.
 /// Exit code 1 when one is not.
 void _verifyLang(List<String> args) {
-  final _LangJob job = _langJob(args);
+  _LangJob job = _langJob(args);
+  // A check of what was made: when the clips were all made with one model and none is given, they are checked against that one
+  // (and the line below says so), so a complete course is not reported as changed because the default model differs.
+  String? modelLine;
+  if (_option(args, '--model') == null) {
+    final Set<String> made = ClipLedger(job.work).models();
+    if (made.length == 1 && made.single != job.target.modelId) {
+      job = _langJob(<String>[...args, '--model', made.single]);
+      modelLine = 'Model ${made.single}, read from what was made (pass --model to check against another).';
+    } else {
+      modelLine = _modelNote(job);
+    }
+  }
   final LangPlan plan = planLang(
     job.source,
     frameCharacter: job.frameName,
@@ -762,12 +789,13 @@ void _verifyLang(List<String> args) {
   ];
   stdout
     ..writeln(_repoHeading(args))
-    ..writeln('Course ${job.source.course} in ${job.work.path}:')
-    ..writeln(
-      faulty.isEmpty
-          ? 'All ${plan.voiceIds.length} clips are there and match their text.'
-          : '${faulty.length} of ${plan.voiceIds.length} clips are missing or were made from another text or setting.',
-    );
+    ..writeln('Course ${job.source.course} in ${job.work.path}:');
+  if (modelLine != null) stdout.writeln(modelLine);
+  stdout.writeln(
+    faulty.isEmpty
+        ? 'All ${plan.voiceIds.length} clips are there and match their text.'
+        : '${faulty.length} of ${plan.voiceIds.length} clips are missing or were made from another text or setting.',
+  );
   for (final String id in faulty.take(40)) {
     stdout.writeln('    $id');
   }
@@ -795,7 +823,7 @@ Future<void> _generateLang(List<String> args) async {
     write: stdout.writeln,
     priceOf: _prices(args, config),
     priceSource: _option(args, '--price') != null ? '' : ' (list price in content/voices.json)',
-    heading: _repoHeading(args),
+    heading: '${_repoHeading(args)}${_modelNote(job) == null ? '' : '\n${_modelNote(job)}'}',
     version: _option(args, '--pack-version') ?? '1.0.0',
     shareSameText: !args.contains('--each-id'),
   );

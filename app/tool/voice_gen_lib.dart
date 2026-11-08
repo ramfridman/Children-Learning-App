@@ -296,6 +296,22 @@ class ClipLedger {
 
   final File file;
 
+  /// The models the clips of this folder were made with (`model_id` of each record). A clip made from another clip (a slow copy,
+  /// a cut word) names none. A run with another model than these voices every clip again, so the commands compare.
+  Set<String> models() {
+    final Set<String> out = <String>{};
+    if (!file.existsSync()) return out;
+    for (final String line in file.readAsLinesSync()) {
+      try {
+        final Object? j = jsonDecode(line);
+        if (j is Map<String, Object?> && j['model_id'] is String) out.add(j['model_id']! as String);
+      } on FormatException {
+        continue;
+      }
+    }
+    return out;
+  }
+
   /// The hash each clip was last made from. A line cut short by a crash is skipped (its clip is made again).
   Map<String, String> hashes() {
     final Map<String, String> out = <String, String>{};
