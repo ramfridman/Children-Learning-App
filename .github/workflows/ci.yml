@@ -158,7 +158,8 @@ jobs:
   app-tests:
     name: "app part: test files, shard ${{ matrix.shard }} of ${{ strategy.job-total }}"
     runs-on: ubuntu-24.04
-    # Estimated about 4 to 5 min each with setup (the 83 files took 296 to 406 s on one 4-core runner, now on two).
+    # The suite grew with Band C and B-29 (about 28 min on one 6-worker PC, 2026-11-08): two shards took 19 min and
+    # over 20, so it is three shards now.
     timeout-minutes: 20
     strategy:
       # A failing shard does not stop the others: every push gets the full list of failures.
@@ -166,7 +167,7 @@ jobs:
       matrix:
         # Only names the jobs. The split uses strategy.job-index and strategy.job-total, so it always matches the
         # jobs that really exist; to add a shard, add a number here and nothing else.
-        shard: [1, 2]
+        shard: [1, 2, 3]
     env:
       # Runs in its own jobs (app-pack-bytes). The shards leave out the test with exactly this full name (escaped and
       # anchored by exact-name-regex.py, which also fails unless the prefix and the name occur once in app/test), and
