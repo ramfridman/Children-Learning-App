@@ -154,7 +154,7 @@ class MatchPairsSession extends TemplateSession {
         if (disposed) return;
         ring = AnswerState.correct;
         notify();
-        later(TemplateSession.praisePause, controller.next);
+        later(praise, controller.next);
       } else {
         _busy = false;
       }

@@ -120,7 +120,7 @@ class ClockSetSession extends TemplateSession {
     if (right) {
       ring = AnswerState.correct;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
       return;
     }
     ring = AnswerState.notYet;

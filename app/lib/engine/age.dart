@@ -2,8 +2,10 @@
 //
 //  - the SCHOOL STAGE (gan 3 to grade 3), which a parent confirms. It sets the band (A, B or C), and it is the only age value that
 //    syncs. It is never worked out from a birthday.
-//  - the MONTH AND YEAR OF BIRTH (never the day), kept on this device only (`ProfileBirths`). From it come the age in months and the
-//    presentation stage P1 to P4, in memory, at the moment they are asked for. They are never stored, synced, logged, sent or exported.
+//  - the MONTH AND YEAR OF BIRTH (never the day), kept in the encrypted database (`ProfileBirths`) and, since the owner's decision of
+//    2026-11-08, on the family's own server (`child-put` and `sync-pull` carry it, and nothing else does), so a new phone gets it back.
+//    From it come the age in months and the presentation stage P1 to P4, in memory, at the moment they are asked for; those are never
+//    stored, synced, logged, sent or exported. The birth itself is in no log, no tutor request, no vendor payload and no export.
 //  - the BAND of a profile that has no school stage yet (a child made before B-29): the middle of the band stands in for both.
 //
 // Presentation (how things look) follows the age; content (which lessons) follows mastery. Nothing here is an input of mastery, of
@@ -137,4 +139,75 @@ ChildAge childAge({required int band, SchoolStage? stage, BirthMonth? birth, req
     months: months,
     presentation: PresentationStage.forAgeInMonths(months ?? assumedMonthsOfBand[s.band]),
   );
+}
+
+// ---- the rules of the parent's age settings and of the look (B-29 steps 5b, 6 and 7) ----
+
+/// The year the school year [now] belongs to starts in: a school year starts on 1 September, so August 2026 is still 2025's.
+int schoolYearOf(DateTime now) => now.month >= 9 ? now.year : now.year - 1;
+
+/// The school stage a year of birth suggests (the Israeli cohort is the calendar year of birth: a child born in 2021 is in gan hova in
+/// the school year that starts in 2026). The parent confirms it or chooses another; it is only a suggestion. Clamped to gan 3 and
+/// grade 3.
+SchoolStage suggestedStage(int year, DateTime now) =>
+    SchoolStage.values[(schoolYearOf(now) - year - 3).clamp(0, SchoolStage.values.length - 1)];
+
+/// The look a child sees (docs/design/b29-steps5-6.md section 3.3): from the age, unless the parent chose a look letter for the child, or
+/// the parent chose a band for this course (which wins inside that course). A letter clamps the stage into its band (A is P1 or P2, B is
+/// P3, C is P4), so "ages 3 to 4" never makes a child of 3;2 look older, and the lessons themselves are not touched.
+PresentationStage effectiveStage(ChildAge age, {int? lookBand, int? courseBand}) {
+  final int? band = courseBand ?? lookBand;
+  if (band == null) return age.presentation;
+  return switch (band.clamp(0, 2)) {
+    0 => age.presentation == PresentationStage.p1 ? PresentationStage.p1 : PresentationStage.p2,
+    1 => PresentationStage.p3,
+    _ => PresentationStage.p4,
+  };
+}
+
+/// What the parent chose for the question captions on this device: by the school stage, always, or never.
+enum CaptionSetting {
+  auto('auto'),
+  on('on'),
+  off('off');
+
+  const CaptionSetting(this.word);
+
+  final String word;
+
+  /// The setting for a stored word; anything else is "by stage".
+  static CaptionSetting fromWord(String? word) {
+    for (final CaptionSetting s in values) {
+      if (s.word == word) return s;
+    }
+    return auto;
+  }
+}
+
+/// Whether the Hebrew words of the question are drawn: gan 3 and gan 4 do not read yet, so by default they hear the question and see a
+/// speaker; gan hova to grade 3 see the words. Nikud stays full whenever they show.
+bool captionsShownFor(SchoolStage stage, CaptionSetting setting) => switch (setting) {
+  CaptionSetting.on => true,
+  CaptionSetting.off => false,
+  CaptionSetting.auto => stage.index >= SchoolStage.gan5.index,
+};
+
+/// Whether the September card asks about [stage] on [now]: a confirmed stage below grade 3 whose last confirmation was for an earlier
+/// school year than this one. [confirmedYear] is the school year of that confirmation; with none recorded the card does not ask.
+bool septemberCardDue({required SchoolStage? stage, required int? confirmedYear, required DateTime now}) =>
+    stage != null &&
+    stage != SchoolStage.grade3 &&
+    confirmedYear != null &&
+    confirmedYear < schoolYearOf(now);
+
+/// Whether the card that invites the parent to add the age shows: a child with no confirmed stage, unless the parent said "not now"
+/// in this school year ([hiddenYear]; the card comes back on the next 1 September).
+bool addAgeCardDue({required SchoolStage? stage, required int? hiddenYear, required DateTime now}) =>
+    stage == null && (hiddenYear == null || hiddenYear < schoolYearOf(now));
+
+/// Whether the child is [minYears] years old: from the age in months when a month and year were given (a gate "not before 5" opens at
+/// 5;0), else from the age of the band, as before (3, 5 or 7).
+bool oldEnough(ChildAge age, {required int minYears}) {
+  final int? months = age.months;
+  return months != null ? months >= minYears * 12 : const <int>[3, 5, 7][age.band] >= minYears;
 }

@@ -15,7 +15,10 @@ import 'package:nitznutz/app/providers.dart';
 import 'package:nitznutz/app/state.dart';
 import 'package:nitznutz/app/world_providers.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/app/look_providers.dart';
 import 'package:nitznutz/data/app_database.dart';
+import 'package:nitznutz/parent/age_settings.dart';
+import 'package:nitznutz/parent/look_settings.dart';
 import 'package:nitznutz/engine/age.dart';
 import 'package:nitznutz/world/land_placement.dart';
 import 'package:nitznutz/world/next_lesson.dart';
@@ -169,6 +172,40 @@ void main() {
       <PresentationStage?>[PresentationStage.p4, PresentationStage.p2, PresentationStage.p3],
       reason: 'the look did follow the month and year',
     );
+  });
+
+  test(
+    'a stage-boundary month, a look letter and the captions setting change the look and nothing else',
+    () async {
+      final _Reading plain = await read(DateTime(2026, 11, 6));
+      // The month a child turns 5;0, and the month before: the look moves from P2 to P3 and the lessons do not move.
+      await db.setBirth(kid, const BirthMonth(2021, 11));
+      final _Reading turnsFive = await read(DateTime(2026, 11, 6));
+      await db.setBirth(kid, const BirthMonth(2021, 12));
+      final _Reading nearlyFive = await read(DateTime(2026, 11, 6));
+      expect(turnsFive.age.presentation, PresentationStage.p3);
+      expect(nearlyFive.age.presentation, PresentationStage.p2);
+      expect(turnsFive.state, plain.state);
+      expect(nearlyFive.state, plain.state);
+      // A look letter for the child, and the captions setting: the look follows them, the lessons and the mastery do not.
+      await db.putSetting(looksSettingKey, const FamilyLooks().withBand(kid, 2)!.encode());
+      await db.setCaptionSetting(kid, CaptionSetting.off);
+      final _Reading letter = await read(DateTime(2026, 11, 6));
+      expect(letter.state, plain.state);
+      final LookNow look = await lookFor(db, kid, DateTime(2026, 11, 6));
+      expect(look.stage, PresentationStage.p4, reason: 'the letter C: the look of the oldest');
+      expect(look.captionsShown, isFalse);
+    },
+  );
+
+  test('once a land has been played the path does not depend on the school stage: the same answers read as gan 3 and as grade 2 give the same lessons', () async {
+    await db.setSchoolStage(kid, SchoolStage.gan3);
+    final _Reading young = await read(DateTime(2026, 11, 6));
+    await db.setSchoolStage(kid, SchoolStage.grade2);
+    final _Reading old = await read(DateTime(2026, 11, 6));
+    expect(young.age.band, 0);
+    expect(old.age.band, 2);
+    expect(old.state, young.state);
   });
 
   test('the mastery and the path cannot even name the age (source rule)', () {

@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../engine/age.dart';
+import '../parent/age_settings.dart' show ageSettingKeys;
 import '../parent/language_settings.dart';
 import '../parent/look_settings.dart';
 import '../rewards/ribbons.dart';
@@ -10,6 +11,10 @@ part 'app_database.g.dart';
 
 /// The setting that counts the block demonstrations a child has seen; [AppDatabase.deleteChildData] removes it with the child.
 String blockDemoKey(String profileId) => 'blocks.demo.$profileId';
+
+/// The setting that holds what was last saved on the family's server for a child (its name, stage and birth, as one string): the sync engine
+/// writes it, and [AppDatabase.deleteChildData] removes it with the child.
+String profilePushedKey(String profileId) => 'profile_pushed_$profileId';
 
 @DriftDatabase(
   tables: <Type>[
@@ -127,6 +132,7 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> removeProfile(String id) => transaction(() async {
     await (delete(profileBirths)..where(($ProfileBirthsTable t) => t.profileId.equals(id))).go();
+    await (delete(appSettings)..where((AppSettings t) => t.key.equals(profilePushedKey(id)))).go();
     await (delete(profiles)..where((Profiles t) => t.id.equals(id))).go();
   });
 
@@ -555,6 +561,12 @@ class AppDatabase extends _$AppDatabase {
     }
     // The count of block demonstrations this child has seen (SEC-M10-9).
     await (delete(appSettings)..where((AppSettings t) => t.key.equals(blockDemoKey(profileId)))).go();
+    // What the last `child-put` was for this child: the fingerprint holds the name, the stage and the birth (QA-B29-2).
+    await (delete(appSettings)..where((AppSettings t) => t.key.equals(profilePushedKey(profileId)))).go();
+    // The age settings kept on this device: the school year of the stage, the captions setting, the put-away card.
+    for (final String key in ageSettingKeys(profileId)) {
+      await (delete(appSettings)..where((AppSettings t) => t.key.equals(key))).go();
+    }
     // And the look the parent chose.
     final String? looks = await setting(looksSettingKey);
     if (looks != null) {

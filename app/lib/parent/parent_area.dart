@@ -24,6 +24,7 @@ import '../design/tokens.g.dart';
 import '../security/parent_session.dart';
 import '../strings/he.dart';
 import '../ui/dev/dev_home_page.dart';
+import 'age_cards.dart';
 import 'alerts_screen.dart';
 import 'backends.dart';
 import 'child_form.dart';
@@ -213,6 +214,7 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              AgeCardsColumn(profiles: app?.profiles ?? const <Profile>[]),
               _card(He.alertsTitle.text, <Widget>[
                 ParentButton(
                   key: const Key('open-alerts'),
@@ -289,13 +291,17 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                               style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
                             )
                           : null,
-                      // The languages of this child: its own row under the name, so the two buttons beside the name keep
-                      // the room they have (a long name still stacks them under it).
+                      // The settings of this child (age, screens, languages, time): its own row under the name, so the two buttons beside
+                      // the name keep the room they have (a long name still stacks them under it).
                       extra: Align(
                         alignment: AlignmentDirectional.centerStart,
                         child: ParentButton(
                           key: Key('languages-${p.id}'),
-                          label: He.areaLanguages.text,
+                          label: He.areaChildSettings.text,
+                          // A screen reader hears whose settings these are, with the title the page itself has.
+                          semanticLabel: He.childSettingsTitle.fill(<String, String>{
+                            'child': displayChildName(p.name),
+                          }),
                           quiet: true,
                           onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute<void>(

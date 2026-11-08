@@ -64,7 +64,7 @@ class SingAlongSession extends ChoiceSession {
     lit = <int>{};
     notify();
     controller.completePractice();
-    later(TemplateSession.praisePause, controller.next);
+    later(praise, controller.next);
   }
 
   /// The verse whole, then up to the gap, and then the question.
@@ -101,7 +101,7 @@ class SingAlongSession extends ChoiceSession {
   @override
   void onRight() {
     // The recast is said; then the whole verse, and the lesson goes on.
-    later(TemplateSession.praisePause, () async {
+    later(praise, () async {
       await sayAndWait(song.verse.full);
       if (!disposed) controller.next();
     });

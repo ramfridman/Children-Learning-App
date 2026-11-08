@@ -10,6 +10,7 @@ import 'package:uuid/uuid.dart';
 
 import '../app/companion.dart';
 import '../app/language_providers.dart';
+import '../app/look_providers.dart';
 import '../app/math_providers.dart';
 import '../app/providers.dart';
 import '../app/reward_providers.dart';
@@ -23,13 +24,16 @@ import '../child/companion_views.dart';
 import '../app/rules_providers.dart';
 import '../content/models.dart';
 import '../content/served_route.dart';
+import '../engine/age.dart' show PresentationStage, SchoolStage;
 import '../engine/course.dart';
+import '../engine/presentation.dart' show maxChoicesByStage;
 import '../data/app_database.dart';
 import '../design/app_text.dart';
 import '../design/board.dart';
 import '../design/components.dart';
 import '../design/course_text.dart' show DisplayFontScope;
 import '../design/layout.dart';
+import '../design/stage_spec.dart';
 import '../design/token_types.dart' show Band;
 import '../design/tokens.g.dart';
 import '../parent/alert_scan.dart';
@@ -46,6 +50,8 @@ import '../voice/voice_director.dart';
 import 'activity_frame.dart';
 import 'block_demo.dart';
 import 'block_layout.dart';
+import 'choice_cap.dart';
+import 'idle_ladder.dart';
 import 'count_tap_session.dart';
 import 'flash_session.dart';
 import 'build_pattern_session.dart';
@@ -157,10 +163,21 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   int _minutesBefore = 0;
   late final DateTime _startedAt;
 
+  /// How this child's screens look and read in this visit (B-29): read once, when the visit starts, so that nothing changes under the child
+  /// mid-activity. A new look (a birthday month, a confirmed stage, a look letter) shows at the next visit.
+  LookNow? _look;
+  StageSpec? _stageSpec;
+  IdleLadder? _ladder;
+  IdleStep? _idleStep;
+  bool _ring = false;
+  Timer? _ringTimer;
+  bool _ladderBusy = false;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    unawaited(_loadLook());
     _director = ref.read(voiceDirectorProvider);
     _recorder = ref.read(sessionRecorderProvider);
     _sync = ref.read(syncRunnerProvider);
@@ -174,7 +191,41 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         )
         .then((int id) => _visitId = id);
     unawaited(_loadTime());
-    unawaited(_loadDemoCount());
+  }
+
+  Future<void> _loadLook() async {
+    // The count of opening demonstrations is read first: the first session is made as soon as the look is known.
+    await _loadDemoCount();
+    try {
+      final (AppDatabase db, FamilyLanguages? languages) = await (
+        ref.read(databaseProvider.future),
+        widget.course == Course.core ? Future<FamilyLanguages?>.value() : ref.read(languagesProvider.future),
+      ).wait;
+      final int? courseBand = languages?.of(widget.profileId, widget.course).band;
+      final LookNow look = await lookFor(
+        db,
+        widget.profileId,
+        DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs()),
+        courseBand: courseBand,
+      );
+      if (!mounted) return;
+      setState(() {
+        _look = look;
+        _stageSpec = StageSpec.of(look.stage);
+      });
+    } on Object {
+      // Without a look the visit plays with the middle one: a failure here must never stop a child.
+      if (!mounted) return;
+      final LookNow middle = LookNow(
+        stage: PresentationStage.p3,
+        captionsShown: true,
+        schoolStage: SchoolStage.gan5,
+      );
+      setState(() {
+        _look = middle;
+        _stageSpec = StageSpec.of(middle.stage);
+      });
+    }
   }
 
   Future<void> _loadTime() async {
@@ -342,6 +393,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     if (!(_controller?.finished ?? false)) {
       unawaited(_director.stopFor(this));
     }
+    _ladder?.stop();
+    _ringTimer?.cancel();
+    _director.removeListener(_idleHold);
     _voice?.dispose();
     _session?.dispose();
     _sayStep?.removeListener(_sayChanged);
@@ -350,6 +404,73 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     _controller?.removeListener(_speak);
     _controller?.dispose();
     super.dispose();
+  }
+
+  // ---- the idle ladder (B-29 D5) ----
+
+  /// Starts the ladder of this visit: the look's own stillness. A touch, an answer or a new activity starts it over; a line that plays holds it.
+  void _startIdle(LessonController c) {
+    final StageSpec? stage = _stageSpec;
+    if (stage == null) return;
+    _ladder?.stop();
+    _ladder = IdleLadder(
+      stage: stage,
+      onStep: (IdleStep step) => _onIdle(c, step),
+      onReset: () => _onIdleReset(c),
+    )..start();
+    c.addListener(_idleWatch);
+    _director.addListener(_idleHold);
+  }
+
+  /// The child did something (an answer, a hint, a new activity) that was not the ladder's own doing: the stillness starts over.
+  void _idleWatch() {
+    if (!_ladderBusy) _ladder?.touch();
+  }
+
+  void _idleHold() {
+    if (_director.speaking) {
+      _ladder?.hold();
+    } else {
+      _ladder?.release();
+    }
+  }
+
+  void _onIdle(LessonController c, IdleStep step) {
+    final StageSpec? stage = _stageSpec;
+    if (!mounted || stage == null || c.finished || c.noHelp) return;
+    _ladderBusy = true;
+    try {
+      switch (step) {
+        case IdleStep.firstPrompt || IdleStep.secondPrompt:
+          // Nitzi says the question again (the item's own line, no new voice line), the place it comes from rings once, a hand points.
+          c.replayPrompt();
+          _ringTimer?.cancel();
+          if (!MediaQuery.disableAnimationsOf(context)) {
+            _ring = true;
+            _ringTimer = Timer(const Duration(milliseconds: 1200), () {
+              if (mounted) setState(() => _ring = false);
+            });
+          }
+        case IdleStep.offer:
+          c.showCaption(He.idleOffer.text);
+        case IdleStep.softPause:
+          break;
+      }
+    } finally {
+      _ladderBusy = false;
+    }
+    setState(() => _idleStep = step);
+  }
+
+  void _onIdleReset(LessonController c) {
+    _ringTimer?.cancel();
+    if (_idleStep == IdleStep.offer) c.restoreQuestion(He.idleOffer.text);
+    if (mounted) {
+      setState(() {
+        _idleStep = null;
+        _ring = false;
+      });
+    }
   }
 
   /// Back to the map. The map hears whether the lesson was finished.
@@ -393,8 +514,16 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     // How the child is served in a skill of a language course: the parent's route, with a reader resolved by the skill and by what
     // strand 1 of its placement found (a land has no routes). What is not read yet counts as a new learner.
     final String? Function(String?) served = _servedRoutes(content);
+    final LookNow look = _look!;
+    final int maxChoices = maxChoicesByStage[look.stage.index];
+    final OwnName ownName = OwnName(
+      childName: ref.read(activeProfileProvider)?.name,
+      companionName: guide.character.nameHe,
+    );
     final LessonController made = _controller = LessonController(
       content: content,
+      captionsShown: look.captionsShown,
+      fastHints: look.stage == PresentationStage.p1,
       lesson: widget.mission ?? content.lessons[widget.lessonId]!,
       profileId: widget.profileId,
       sessionId: _visitId,
@@ -409,12 +538,11 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       // The visit's quiet fallback turns a say step that is picture first back into echo, silently.
       echoOnly: () => _quiet.echoOnly,
       // The child's first name goes on the tiles of an own-name item on this phone and nowhere else (decision 25).
-      personalise: OwnName(
-        childName: ref.read(activeProfileProvider)?.name,
-        companionName: guide.character.nameHe,
-      ).apply,
+      // The look's cap on answer options comes after it (B-29): at most 3, 3, 4 or 5 are shown, the right one always among them.
+      personalise: (Activity a) => capChoices(ownName.apply(a), maxChoices),
     );
     made.addListener(_speak);
+    _startIdle(made);
     // The first question is spoken as soon as the lesson opens.
     SchedulerBinding.instance.addPostFrameCallback((_) => _speak());
     return made;
@@ -654,6 +782,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
 
   @override
   Widget build(BuildContext context) {
+    // The look is read before anything is drawn, so that the first picture is the look's own and nothing is laid out twice.
+    if (_look == null) return const ColoredBox(color: TokenColors.cream);
     final AsyncValue<PackContent> content = _contentOfCourse();
     // A course's voice switch is read before the lesson opens, so that the microphone is decided on what the parent chose for it.
     if (widget.course != Course.core) ref.watch(languagesProvider);
@@ -778,13 +908,44 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   Widget _lesson(BuildContext context, PackContent c, Guide guide, bool voiceOn) {
     final LessonController controller = _controllerFor(c, guide);
     if (voiceOn && _voice == null && _voiceAllowedIn(c)) _voice = _makeVoice(controller);
-    final ActivitySpec board = ActivitySpec.of(AppLayout.of(context).board);
+    final StageSpec stageSpec = _stageSpec!;
+    final SizeClass sizeClass = AppLayout.of(context).sizeClass;
+    final ActivitySpec board = stageSpec.applyTo(ActivitySpec.of(AppLayout.of(context).board), sizeClass);
+    return StageScope(
+      stage: stageSpec,
+      captionsShown: _look!.captionsShown,
+      child: _lessonBody(c, guide, controller, board, stageSpec),
+    );
+  }
+
+  Widget _lessonBody(
+    PackContent c,
+    Guide guide,
+    LessonController controller,
+    ActivitySpec board,
+    StageSpec stageSpec,
+  ) {
     return ListenableBuilder(
       listenable: Listenable.merge(<Listenable?>[controller, _voice?.answer, _sayTick]),
       builder: (BuildContext ctx, Widget? _) {
         final TemplateSession session = _sessionFor(controller);
         session.bubbleScaler = ActivityFrame.bubbleScaler(ctx);
-        final ActivitySpec spec = session.layoutFor(board);
+        session.praise = stageSpec.praise;
+        // An item of blocks has its own two layouts (docs/design/c1-blocks.md section 5): they keep the board's own sizes, as every template with
+        // its own rows does for now (B-29 D3).
+        final Activity now = controller.current;
+        final bool blocks = now is TapAnswerActivity && BlockLayout.hasBlocks(now);
+        ActivitySpec spec = session.layoutFor(blocks ? ActivitySpec.of(AppLayout.of(ctx).board) : board);
+        // A layout whose bubble tail must meet the guide's mouth wherever it stands (the blocks') keeps the board's own caption size: the tail
+        // reaches the mouth only through the bubble's height at that size.
+        if (spec.tailAtMouth) {
+          spec = spec.withLook(
+            captionFont: ActivitySpec.of(AppLayout.of(ctx).board).bubbleFont,
+            numeralFont: spec.tileFont,
+            tile: spec.tileSize,
+            slop: spec.tileSlop,
+          );
+        }
         if (controller.finished) _endVisit(_endReason());
         final bool helpOffered =
             !controller.finished &&
@@ -803,6 +964,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             ? CharacterState.celebrate
             : controller.feedback == FeedbackKind.notYet
             ? CharacterState.encourage
+            : _idleStep == IdleStep.softPause
+            ? CharacterState.sleepy
+            : _idleStep == IdleStep.secondPrompt
+            ? CharacterState.talk
             : CharacterState.idle;
         // The font of the item's text (Secular One for a transfer check of letters in another face). Over it, a touch anywhere on the
         // screen is seen by the session first (it ends a demonstration to watch); it is no answer and goes on to what was touched.
@@ -810,7 +975,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           display: controller.current.displayFont,
           child: Listener(
             behavior: HitTestBehavior.translucent,
-            onPointerDown: (_) => session.onScreenTouch(),
+            onPointerDown: (_) {
+              session.onScreenTouch();
+              _ladder?.touch();
+            },
             child: ActivityFrame(
               spec: spec,
               guide: SpeakingCharacter(
@@ -836,7 +1004,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
               onHint: controller.finished || controller.noHelp
                   ? null
                   : (session is SayItSession ? session.onReplay : controller.showHint),
-              hintGlow: helpOffered,
+              hintGlow: helpOffered || _idleStep == IdleStep.offer,
+              promptRing: _ring,
+              idleHand: _idleStep != null && idleHandShows(stageSpec, _idleStep!) ? idleHand : null,
               onShowMe: controller.finished || controller.noHelp
                   ? null
                   : (controller.current is SayItActivity

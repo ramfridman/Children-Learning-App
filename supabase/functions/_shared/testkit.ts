@@ -362,7 +362,9 @@ export class FakeStore implements Store {
     // As the table: a save without a school stage keeps the stored one only while its band is the saved band (SEC-B29-1).
     const kept = m.get(c.id)?.schoolStage ?? null;
     const keptBand = kept === null ? null : STAGE_BAND[kept];
-    m.set(c.id, { ...c, schoolStage: c.schoolStage ?? (keptBand === c.ageBand ? kept : null) });
+    // A birth that is not sent is kept; null clears it; a value replaces it.
+    const birth = c.birth === undefined ? (m.get(c.id)?.birth ?? null) : c.birth;
+    m.set(c.id, { ...c, schoolStage: c.schoolStage ?? (keptBand === c.ageBand ? kept : null), birth });
     this.children.set(familyId, m);
     return Promise.resolve("saved" as const);
   }

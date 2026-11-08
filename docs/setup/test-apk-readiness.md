@@ -134,6 +134,41 @@ apksigner verify --print-certs build\app\outputs\flutter-apk\app-prod-release.ap
 - Updates are by sending a new APK signed with the same key and a higher build number (`+5` in `pubspec.yaml` goes up). Android installs it over the old one and keeps the data.
 - Before each share: the six CI jobs are green on the commit the APK was built from, `gitleaks` is clean, the server's `android_allowed_apps` row has the fingerprint of this APK, and the weekly backup workflow has run.
 
+## Status 2026-11-08: signing wired, server row prepared (not applied)
+
+- **Blocker 2 (signing): done in code.** The owner made the keystore ("keystore done"); its public SHA-256 is
+  `FB:F6:48:DA:24:61:D4:48:8F:94:E4:55:62:C2:1C:A9:8B:1C:DF:28:D5:53:1B:11:B7:BA:77:82:53:C7:CC:6F`.
+  `app/android/app/build.gradle.kts` reads the file named by the Gradle property `nitznutz.releaseSigning`
+  (`storeFile`, `keyAlias`, `storePassword`, `keyPassword`; values are never printed). A prod release build without the
+  property fails with "No release signing key"; the `dev` flavour stays on the debug key on purpose (never shared; the dev
+  tools expect it) and the `prod` debug build keeps the debug key too. Checked with `gradlew :app:signingReport`: `prodRelease`
+  shows the fingerprint above, every other variant the debug key; `assembleProdRelease --dry-run` with the property blank fails
+  with the message, `assembleDevRelease` does not.
+- **Blocker 3 (server row): prepared, not applied.** Migration `supabase/migrations/20261108120000_android_prod_app.sql` adds
+  `app.nitznutz.nitznutz` with that fingerprint (lower case, no colons) to `android_allowed_apps`, keeps the dev entry, can run
+  twice, and creates the row if missing. Test: `supabase/tests/database/12_android_prod_app.test.sql` (runs in CI's `database`
+  job; no Docker on this PC, so not run locally). Deploy after the owner's OK, from the repo root:
+
+```powershell
+npx supabase link --project-ref ungkvkabqxssggttajfs
+npx supabase db push --dry-run
+npx supabase db push
+```
+
+  Then check the row in the SQL Editor (`select value from app.config where key = 'android_allowed_apps';`): two entries.
+- **Blocker 4 (prod config): the Firebase file is in place** (copied from `D:\Children-Learning-App`, git-ignored). The owner
+  still creates `app/config/prod.local.json` (git-ignored by `app/.gitignore` `/config/*.local.json`) in the release worktree:
+
+```json
+{
+  "SUPABASE_URL": "https://ungkvkabqxssggttajfs.supabase.co",
+  "SUPABASE_PUBLISHABLE_KEY": "paste the sb_publishable_... key from Supabase > Settings > API Keys",
+  "FLAVOR": "prod"
+}
+```
+
+  Only the `sb_publishable_...` key, never a `sb_secret_...` key (the app refuses to start with one).
+
 ## Suggested order of work
 
 1. Owner: decides option A or B (section 2), the tutor on/off and the caps (section 3), and makes the release keystore (section 1). Owner also confirms the Anthropic and ElevenLabs limits.

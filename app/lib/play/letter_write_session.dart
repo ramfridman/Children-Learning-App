@@ -275,7 +275,7 @@ class LetterWriteSession extends TemplateSession {
       ring = AnswerState.correct;
       controller.completePractice();
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
       return;
     }
     await controller.submitPlacement(right: true, response: ResponseCode.written);
@@ -284,10 +284,7 @@ class LetterWriteSession extends TemplateSession {
     notify();
     // After a success the model replays once, in its order: it is not a hint, it comes after the answer.
     final int ms = _replayModel();
-    later(
-      Duration(milliseconds: math.max(TemplateSession.praisePause.inMilliseconds, ms + 700)),
-      controller.next,
-    );
+    later(Duration(milliseconds: math.max(praise.inMilliseconds, ms + 700)), controller.next);
   }
 
   /// The tag of the error [v] names, or null when it names none that counts: a miss with no tag in the item, and a look-alike the course
@@ -366,7 +363,7 @@ class LetterWriteSession extends TemplateSession {
         if (_silentMisses >= 2) {
           _busy = true;
           controller.completePractice();
-          later(TemplateSession.praisePause, controller.next);
+          later(praise, controller.next);
         }
       });
       notify();

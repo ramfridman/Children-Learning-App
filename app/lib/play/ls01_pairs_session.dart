@@ -122,7 +122,7 @@ class Ls01PairsSession extends Ls01Session {
     if (disposed) return;
     done = true;
     notify();
-    later(TemplateSession.praisePause, controller.next);
+    later(praise, controller.next);
   }
 
   // ---- hints ----

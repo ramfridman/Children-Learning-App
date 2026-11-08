@@ -1,6 +1,7 @@
 // QA-C1d-1: the speech bubble never covers an answer tile, whatever the line, the board and the text size. The frame shrinks the line to
 // the room between the progress trail and the tiles; when it is still too tall at the smallest size (14 points as drawn) the bubble
-// widens to the left (a phone leaves its stage 150 points), and only a line longer than that goes below 14, to 11 at the least.
+// widens to the left, and only a line longer than that goes below 14, to 11 at the least. On a phone (B-29) it widens only to the
+// stage's edge, its text goes down to 14 first, and only a line that still does not fit reaches into the stage.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
@@ -83,6 +84,92 @@ void main() {
         expect(none.width, s.bubbleMaxWidth, reason: 'no room to widen was given');
       },
     );
+  });
+
+  group('fitBubble on a phone, with a spill (B-29, docs/design/b29-caption-overlap.md)', () {
+    // The order: the stage's font at the board width, the bubble's own column (widest) at that font, smaller text in the column down to 14
+    // drawn, only then into the stage (spill) at 14, and last of all below 14 there.
+    final ActivitySpec s = ActivitySpec.phoneSE;
+    const double widest = 190;
+    const double spill = 310;
+
+    test('the text goes smaller in the column of its own before the bubble reaches into the stage', () {
+      const double room = 136;
+      final ({double font, double height, double width}) fit = ActivityFrame.fitBubble(
+        _hint,
+        s,
+        maxHeight: room,
+        widest: widest,
+        spill: spill,
+        min: 20,
+      );
+      expect(fit.width, lessThanOrEqualTo(widest), reason: 'the scene is not covered');
+      expect(fit.font, lessThan(20));
+      expect(fit.font, greaterThanOrEqualTo(14));
+      expect(fit.height, lessThanOrEqualTo(room));
+      expect(
+        ActivityFrame.bubbleHeight(_hint, fit.font + 1, fit.width),
+        greaterThan(room),
+        reason: 'a larger font would not have fitted',
+      );
+    });
+
+    test(
+      'a line that does not fit the column at 14 widens into the stage at 14, by the least that makes it fit',
+      () {
+        const double room = 120;
+        const String longer = _hintLong;
+        expect(ActivityFrame.bubbleHeight(longer, 14, widest), greaterThan(room), reason: 'the defect');
+        final ({double font, double height, double width}) fit = ActivityFrame.fitBubble(
+          longer,
+          s,
+          maxHeight: room,
+          widest: widest,
+          spill: 400,
+          min: 20,
+        );
+        expect(fit.font, 14);
+        expect(fit.width, greaterThan(widest));
+        expect(fit.height, lessThanOrEqualTo(room));
+        expect(ActivityFrame.bubbleHeight(longer, 14, fit.width - 4), greaterThan(room));
+      },
+    );
+
+    test('a line that does not fit even there goes below 14 at the spill width, never below 11', () {
+      final String huge = List<String>.filled(8, _hint).join(' ');
+      final ({double font, double height, double width}) fit = ActivityFrame.fitBubble(
+        huge,
+        s,
+        maxHeight: 136,
+        widest: widest,
+        spill: spill,
+        min: 20,
+      );
+      expect(fit.width, spill);
+      expect(fit.font, lessThan(14));
+      expect(fit.font, greaterThanOrEqualTo(ActivityFrame.hardMinFont));
+    });
+
+    test('at text size 1.3 the 14 is the drawn size, and a short line never leaves the column', () {
+      const TextScaler scaler = TextScaler.linear(1.3);
+      final ({double font, double height, double width}) fit = ActivityFrame.fitBubble(
+        _hint,
+        s,
+        maxHeight: 136,
+        widest: widest,
+        spill: 400,
+        min: 20,
+        scaler: scaler,
+      );
+      expect(fit.font * 1.3, greaterThanOrEqualTo(14 - 0.001));
+      final ({double font, double height, double width}) short = ActivityFrame.fitBubble(
+        'כַּמָּה זֶה?',
+        s,
+        widest: widest,
+        spill: spill,
+      );
+      expect(short.width, s.bubbleMaxWidth);
+    });
   });
 
   for (final (String name, ActivitySpec spec, Size size) in _boards) {

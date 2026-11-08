@@ -58,7 +58,7 @@ abstract class ChoiceSession extends TemplateSession {
       // pause.
       chosenState = AnswerState.selected;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
     } else if (out.correct) {
       chosenState = AnswerState.correct;
       notify();
@@ -80,7 +80,7 @@ abstract class ChoiceSession extends TemplateSession {
   void onChosen(ChoiceOption o) {}
 
   /// The right answer was accepted: the lesson goes on after the praise. A story goes on to its last page first.
-  void onRight() => later(TemplateSession.praisePause, controller.next);
+  void onRight() => later(praise, controller.next);
 
   /// A "not yet" is showing.
   void onWrong() {}

@@ -667,6 +667,16 @@ Deno.test({
       null,
       "a stage of another band is dropped",
     );
+    // 2026-11-08: the month and year of birth are kept, a save without them keeps them, null clears both, a value replaces both.
+    const birthOf = async () => (await store.listChildren(family))[0].birth;
+    assert.equal(await birthOf(), null, "a child nobody gave a birth has none");
+    await store.upsertChild(family, { ...profile, nickname: "נועה כהן", birth: { year: 2021, month: 5 } });
+    await store.upsertChild(family, { ...profile, nickname: "נועה כהן" });
+    assert.deepEqual(await birthOf(), { year: 2021, month: 5 }, "saving without one keeps it");
+    await store.upsertChild(family, { ...profile, nickname: "נועה כהן", birth: { year: 2020, month: 12 } });
+    assert.deepEqual(await birthOf(), { year: 2020, month: 12 }, "a new one replaces it");
+    await store.upsertChild(family, { ...profile, nickname: "נועה כהן", birth: null });
+    assert.equal(await birthOf(), null, "null clears it");
 
     const [a, b, c] = [crypto.randomUUID(), crypto.randomUUID(), crypto.randomUUID()];
     const first = await store.insertEvents(family, device, [
