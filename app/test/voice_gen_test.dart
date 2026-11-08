@@ -535,7 +535,7 @@ void main() {
 
     final int total = _lines.fold<int>(0, (int s, SpokenLine l) => s + l.text.runes.length);
 
-    Future<BuiltPack> run(Keyboard kb) => generateGated(
+    Future<List<BuiltPack>> run(Keyboard kb) => generateGated(
       characterId: 'nitzi',
       lines: _lines,
       profile: _v4,
@@ -576,10 +576,10 @@ void main() {
     });
 
     test('goes ahead with the right number, and a second run with nothing new asks for nothing', () async {
-      final BuiltPack built = await run(FakeKeyboard(typed: <String>['$total']));
+      final List<BuiltPack> built = await run(FakeKeyboard(typed: <String>['$total']));
       expect(server.requests.length, 3);
       expect(synths, 1);
-      await verifyPack(built.bytes, publicKey: key.publicKey);
+      await verifyPack(built.single.bytes, publicKey: key.publicKey);
       final FakeKeyboard again = FakeKeyboard();
       await run(again);
       expect(again.reads, 0, reason: 'nothing to pay for, nothing to type');

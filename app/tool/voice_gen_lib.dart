@@ -14,6 +14,7 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:nitznutz/content/pack_verify.dart';
 import 'package:nitznutz/content/zip_store.dart' show ZipLimits;
+import 'package:nitznutz/voice/voice_bank.dart' show voicePackId;
 
 import 'pack_builder_lib.dart';
 import 'voice_text_lib.dart';
@@ -544,10 +545,10 @@ class VoicePlan {
 
   /// About how many bytes the pack of [character] has: its sounds (a sound shared by several ids is in once) and its cues.
   /// An estimate from [soundBytesPerCharacter] and [cueBytesPerLine], to see a pack that will not fit before paying for it.
-  int estimatedPackBytes(String character) {
+  int estimatedPackBytes(String character, {Set<String>? voIds}) {
     int bytes = 0;
     for (final PlannedClip c in clips) {
-      if (c.character != character) continue;
+      if (c.character != character || (voIds != null && !voIds.contains(c.line.voId))) continue;
       bytes += cueBytesPerLine + (c.isCopy ? 0 : c.request.characters * soundBytesPerCharacter);
     }
     return bytes;
@@ -613,6 +614,7 @@ class VoicePlan {
     double pricePer1000Chars, {
     String priceSource = '',
     double Function(String model)? priceOf,
+    Map<int, Set<String>>? parts,
   }) {
     final StringBuffer b = StringBuffer()
       ..writeln(
@@ -643,17 +645,27 @@ class VoicePlan {
         '${cost(pricePer1000Chars).toStringAsFixed(2)}',
       );
     }
+    final String limit = (ZipLimits.maxTotalBytes / (1024 * 1024)).toStringAsFixed(0);
     for (final String ch in characters) {
-      final int bytes = estimatedPackBytes(ch);
-      if (bytes == 0) continue;
-      final String size = (bytes / (1024 * 1024)).toStringAsFixed(0);
-      final String limit = (ZipLimits.maxTotalBytes / (1024 * 1024)).toStringAsFixed(0);
-      b.writeln(
-        bytes > ZipLimits.maxTotalBytes
-            ? 'WARNING, the pack of $ch would be about $size MB and the app reads $limit MB at most: the clips would be '
-                  'saved but the pack could not be built until the limit is decided (`pack` builds it afterwards, free).'
-            : 'Expected size of the pack of $ch: about $size MB (the app reads $limit MB at most).',
-      );
+      final List<(String, int)> packs = parts == null
+          ? <(String, int)>[('the pack of $ch', estimatedPackBytes(ch))]
+          : <(String, int)>[
+              for (final MapEntry<int, Set<String>> p
+                  in parts.entries.toList()..sort((a, b) => a.key.compareTo(b.key)))
+                ('part ${p.key} of $ch', estimatedPackBytes(ch, voIds: p.value)),
+            ];
+      for (final (String what, int bytes) in packs) {
+        if (bytes == 0) continue;
+        final String size = (bytes / (1024 * 1024)).toStringAsFixed(0);
+        b.writeln(
+          bytes > ZipLimits.maxTotalBytes
+              ? 'WARNING, $what would be about $size MB and the app reads $limit MB at most: the clips would be saved but '
+                    'the pack could not be built (`pack` builds it afterwards, free).'
+              : bytes > ZipLimits.maxTotalBytes * 0.9
+              ? 'Expected size of $what: about $size MB, over 90% of the $limit MB the app reads: move a group to the next part.'
+              : 'Expected size of $what: about $size MB (the app reads $limit MB at most).',
+        );
+      }
     }
     return b.toString();
   }
@@ -668,6 +680,7 @@ class VoicePlan {
     String priceSource = '',
     bool inRun = false,
     double Function(String model)? priceOf,
+    Map<int, Set<String>>? parts,
   }) {
     final StringBuffer b = StringBuffer()
       ..writeln('Voices: ${characters.join(', ')}')
@@ -680,7 +693,7 @@ class VoicePlan {
     }
     b
       ..writeln()
-      ..write(describeTotals(pricePer1000Chars, priceSource: priceSource, priceOf: priceOf));
+      ..write(describeTotals(pricePer1000Chars, priceSource: priceSource, priceOf: priceOf, parts: parts));
     final List<TextProblem> refused = problems;
     if (refused.isNotEmpty) {
       b
@@ -831,7 +844,7 @@ class SilentVoice implements Synthesizer {
 /// then asks for the voice ([synth], which reads the key) and makes the pack. [heading] (where the texts come from) is
 /// printed above the plan, after the terminal check. When every clip is up to date it builds
 /// the pack without asking for the voice or the count.
-Future<BuiltPack> generateGated({
+Future<List<BuiltPack>> generateGated({
   required String characterId,
   required List<SpokenLine> lines,
   required VoiceProfile profile,
@@ -846,6 +859,7 @@ Future<BuiltPack> generateGated({
   String version = '1.0.0',
   bool shareSameText = true,
   Set<String>? scope,
+  Map<String, int>? partOfLine,
 }) async {
   requireTerminal(keyboard, 'generate');
   if (heading.isNotEmpty) write(heading);
@@ -863,7 +877,14 @@ Future<BuiltPack> generateGated({
           }
         : const <String, Map<String, String>>{},
   );
-  write(plan.describe(pricePer1000Chars, priceSource: priceSource, inRun: true));
+  write(
+    plan.describe(
+      pricePer1000Chars,
+      priceSource: priceSource,
+      inRun: true,
+      parts: partOfLine == null ? null : partsOfVoiceIds(partOfLine),
+    ),
+  );
   final List<TextProblem> refused = plan.problems;
   if (refused.isNotEmpty) {
     throw VoiceGenFailed(
@@ -877,18 +898,44 @@ Future<BuiltPack> generateGated({
     requireTyped(keyboard, plan.total, 'voicing $characterId', write);
     voice = synth();
   }
-  return generateVoicePack(
-    characterId: characterId,
-    lines: lines,
-    synth: voice,
-    profile: profile,
-    key: key,
-    workDir: workDir,
-    version: version,
-    progress: write,
-    shareSameText: shareSameText,
-    scope: scope,
-  );
+  if (partOfLine != null) {
+    return generateVoiceParts(
+      characterId: characterId,
+      lines: lines,
+      synth: voice,
+      profile: profile,
+      key: key,
+      workDir: workDir,
+      partOfLine: partOfLine,
+      version: version,
+      progress: write,
+      shareSameText: shareSameText,
+      scope: scope,
+    );
+  }
+  return <BuiltPack>[
+    await generateVoicePack(
+      characterId: characterId,
+      lines: lines,
+      synth: voice,
+      profile: profile,
+      key: key,
+      workDir: workDir,
+      version: version,
+      progress: write,
+      shareSameText: shareSameText,
+      scope: scope,
+    ),
+  ];
+}
+
+/// The voice ids of each part, from the part of each voice id.
+Map<int, Set<String>> partsOfVoiceIds(Map<String, int> partOfLine) {
+  final Map<int, Set<String>> out = <int, Set<String>>{};
+  for (final MapEntry<String, int> e in partOfLine.entries) {
+    (out[e.value] ??= <String>{}).add(e.key);
+  }
+  return out;
 }
 
 // ---- mouth cues ----
@@ -1188,6 +1235,83 @@ Future<BuiltPack> generateVoicePack({
   bool shareSameText = true,
   Set<String>? scope,
 }) async {
+  final List<_RunLine> run = await _voiceRun(
+    lines: lines,
+    synth: synth,
+    profile: profile,
+    workDir: workDir,
+    progress: progress,
+    shareSameText: shareSameText,
+    scope: scope,
+  );
+  return _buildPart(workDir, voicePackId(characterId, 1), version, <Map<String, String>>[
+    for (final _RunLine r in run)
+      <String, String>{'id': r.line.fileId, 'file': audioNameOf(workDir, r.copyFrom ?? r.line.fileId)},
+  ], key);
+}
+
+/// The same run, but the voice of a character is more than one pack may hold ([ZipLimits]): one pack per part, `voice-<id>`
+/// for part 1 and `voice-<id>-N` for the others. [partOfLine] gives the part of every voice id of the run (one part for
+/// each line, so a line is in exactly one pack); a line of the run with no part stops the run before anything is sent. A
+/// part with no line in the run is not built. A free copy stays in its part: when the sound it copies is in another part, its
+/// own file goes into the pack, so no pack points at a sound that is in another. Returns the packs by part number.
+Future<List<BuiltPack>> generateVoiceParts({
+  required String characterId,
+  required List<SpokenLine> lines,
+  required Synthesizer synth,
+  required VoiceProfile profile,
+  required PackKey key,
+  required Directory workDir,
+  required Map<String, int> partOfLine,
+  String version = '1.0.0',
+  void Function(String)? progress,
+  bool shareSameText = true,
+  Set<String>? scope,
+}) async {
+  final List<_RunLine> run = await _voiceRun(
+    lines: lines,
+    synth: synth,
+    profile: profile,
+    workDir: workDir,
+    progress: progress,
+    shareSameText: shareSameText,
+    scope: scope,
+    partOfLine: partOfLine,
+  );
+  final List<int> parts = <int>{for (final _RunLine r in run) partOfLine[r.line.voId]!}.toList()..sort();
+  final List<BuiltPack> built = <BuiltPack>[];
+  for (final int part in parts) {
+    final List<Map<String, String>> vo = <Map<String, String>>[
+      for (final _RunLine r in run)
+        if (partOfLine[r.line.voId] == part)
+          <String, String>{
+            'id': r.line.fileId,
+            'file': audioNameOf(
+              workDir,
+              r.copyFrom != null && partOfLine['vo:${r.copyFrom}'] == part ? r.copyFrom! : r.line.fileId,
+            ),
+          },
+    ];
+    built.add(await _buildPart(workDir, voicePackId(characterId, part), version, vo, key));
+  }
+  return built;
+}
+
+/// A line of a run, and the clip whose sound it copies (null: it has its own).
+typedef _RunLine = ({SpokenLine line, String? copyFrom});
+
+/// Voices what the run needs and makes the free copies; returns the lines of the run. With [partOfLine], a line of the run
+/// that has no part stops the run before anything is sent.
+Future<List<_RunLine>> _voiceRun({
+  required List<SpokenLine> lines,
+  required Synthesizer synth,
+  required VoiceProfile profile,
+  required Directory workDir,
+  required bool shareSameText,
+  void Function(String)? progress,
+  Set<String>? scope,
+  Map<String, int>? partOfLine,
+}) async {
   checkWorkFolder(workDir);
   final ClipLedger ledger = ClipLedger(workDir);
   if (isInsideFolder(ledger.file, workDir)) {
@@ -1213,6 +1337,18 @@ Future<BuiltPack> generateVoicePack({
     for (int i = 0; i < lines.length; i++)
       if (allWork[i].active) i,
   ];
+  if (partOfLine != null) {
+    final List<String> loose = <String>[
+      for (final int i in run)
+        if (!partOfLine.containsKey(lines[i].voId)) lines[i].voId,
+    ];
+    if (loose.isNotEmpty) {
+      throw VoiceGenFailed(
+        '${loose.length} lines are in no part of the voice (docs/audio/voicing-parts.json), for example ${loose.first}. '
+        'Nothing was sent.',
+      );
+    }
+  }
   final List<TextProblem> problems = <TextProblem>[
     for (final int i in run) ...all[i].problems(lines[i].voId),
   ];
@@ -1241,17 +1377,21 @@ Future<BuiltPack> generateVoicePack({
       }
     }
   }
-  final List<Map<String, String>> vo = <Map<String, String>>[
-    for (final int i in run)
-      <String, String>{
-        'id': lines[i].fileId,
-        'file': audioNameOf(workDir, allWork[i].copyFrom ?? lines[i].fileId),
-      },
-  ];
+  return <_RunLine>[for (final int i in run) (line: lines[i], copyFrom: allWork[i].copyFrom)];
+}
+
+/// Writes pack.json for [packId] and builds the pack of the lines in [vo] from a stage folder.
+Future<BuiltPack> _buildPart(
+  Directory workDir,
+  String packId,
+  String version,
+  List<Map<String, String>> vo,
+  PackKey key,
+) {
   File(_inFolder(workDir, 'pack.json')).writeAsStringSync(
     jsonEncode(<String, Object?>{
       'schema': 'pack-source/v1',
-      'id': 'voice-$characterId',
+      'id': packId,
       'version': version,
       'minAppVersion': '0.3.0',
       'assets': <Object?>[],

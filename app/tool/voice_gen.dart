@@ -286,6 +286,16 @@ GroupManifest _manifest(List<String> args) =>
 /// [texts] with the group of each line, from the manifest.
 VoiceTexts _grouped(List<String> args, VoiceTexts texts) => texts.withGroups(_manifest(args).groupOf);
 
+/// The part of each line of [texts] (which has its groups), from docs/audio/voicing-parts.json.
+Map<String, int> _partOfLine(List<String> args, VoiceTexts texts) => VoiceParts.read(
+  File(_repo(args, 'docs/audio/voicing-parts.json')),
+  _manifest(args),
+).partOfLines(texts.lines);
+
+/// Whether the voice of this run is in parts: a narrator's pack is (the lessons and the shell lines, [LineSet.full] or
+/// [LineSet.lessons]); the nine lines of a friend are one small pack.
+bool _inParts(LineSet set) => set != LineSet.own;
+
 /// The voice ids of the lines of [texts] in [groups].
 Set<String> _idsOf(VoiceTexts texts, Iterable<String> groups) => <String>{
   for (final VoicedLine l in texts.inGroups(groups.toSet()).lines) l.voId,
@@ -334,7 +344,9 @@ void _plan(List<String> args) {
   final Map<String, Object?> config = _config(args);
   final LineSet set = _lineSet(args);
   final VoiceTexts all = _voiceTexts(args).only(set);
-  final VoiceTexts texts = _batching(args) ? _grouped(args, all) : all;
+  final bool partsFile = _inParts(set) && File(_repo(args, 'docs/audio/voicing-parts.json')).existsSync();
+  final VoiceTexts texts = _batching(args) || partsFile ? _grouped(args, all) : all;
+  final Map<String, int>? partOfLine = partsFile ? _partOfLine(args, texts) : null;
   final bool asIfApproved = args.contains('--as-if-approved');
   final List<String> characters = _characters(args, config);
   final VoicePlan Function(Set<String>? scope) planFor = _planner(args, <String, VoiceProfile>{
@@ -367,6 +379,7 @@ void _plan(List<String> args) {
       list: args.contains('--list'),
       priceSource: _option(args, '--price') != null ? '' : ' (list price in content/voices.json)',
       priceOf: priceOf,
+      parts: partOfLine == null ? null : partsOfVoiceIds(partOfLine),
     ),
   );
   final VoiceTexts waiting = batch == null ? texts : texts.inGroups(batch.choice.chosen.toSet());
@@ -444,7 +457,8 @@ Future<void> _generate(List<String> args) async {
     );
   }
   final VoiceTexts all = _voiceTexts(args).only(set);
-  final VoiceTexts texts = _batching(args) ? _grouped(args, all) : all;
+  final VoiceTexts texts = _batching(args) || _inParts(set) ? _grouped(args, all) : all;
+  final Map<String, int>? partOfLine = _inParts(set) ? _partOfLine(args, texts) : null;
   final VoiceProfile profile = VoiceProfile.fromConfig(config, character);
   final Directory work = Directory(_outFolder(args, character));
   // In batches only the lines of the chosen groups need their rows approved; a whole run needs them all.
@@ -458,7 +472,7 @@ Future<void> _generate(List<String> args) async {
       : null;
   final VoiceTexts toVoice = batch == null ? texts : texts.inGroups(batch.choice.chosen.toSet());
   if (toVoice.blocked.isNotEmpty) throw VoiceGenFailed('Nothing was sent. ${toVoice.describeBlocked()}');
-  final BuiltPack built = await generateGated(
+  final List<BuiltPack> built = await generateGated(
     characterId: character,
     lines: texts.ready,
     profile: profile,
@@ -474,8 +488,11 @@ Future<void> _generate(List<String> args) async {
     version: _option(args, '--pack-version') ?? '1.0.0',
     shareSameText: !args.contains('--each-id'),
     scope: batch?.scope,
+    partOfLine: partOfLine,
   );
-  _writePack(work, built);
+  for (final BuiltPack b in built) {
+    _writePack(work, b);
+  }
 }
 
 /// Free: builds the pack of [character] from the clips saved in its work folder. Nothing is voiced (the voice is the one that
@@ -493,9 +510,9 @@ Future<void> _pack(List<String> args) async {
   }
   final VoiceTexts all = _voiceTexts(args).only(set);
   final String? named = _option(args, '--groups');
-  final VoiceTexts texts = named == null
-      ? all
-      : _grouped(args, all).inGroups(_manifest(args).pick(named).toSet());
+  final VoiceTexts grouped = named != null || _inParts(set) ? _grouped(args, all) : all;
+  final VoiceTexts texts = named == null ? grouped : grouped.inGroups(_manifest(args).pick(named).toSet());
+  final Map<String, int>? partOfLine = _inParts(set) ? _partOfLine(args, grouped) : null;
   final VoiceProfile profile = VoiceProfile.fromConfig(_config(args), character);
   final Directory work = Directory(_outFolder(args, character));
   final List<SpokenLine> lines = texts.ready;
@@ -507,18 +524,44 @@ Future<void> _pack(List<String> args) async {
       'Lines with a clip: ${plan.clips.length} of ${lines.length}; the other ${lines.length - plan.clips.length} '
       'have no clip yet (or one made from another text) and are left out',
     );
-  final BuiltPack built = await generateVoicePack(
-    characterId: character,
-    lines: lines,
-    synth: const SilentVoice(),
-    profile: profile,
-    workDir: work,
-    key: readKeyFile(_option(args, '--key') ?? defaultKeyPath()),
-    version: _option(args, '--pack-version') ?? '1.0.0',
-    shareSameText: !args.contains('--each-id'),
-    scope: <String>{},
-  );
-  _writePack(work, built);
+  final PackKey key = readKeyFile(_option(args, '--key') ?? defaultKeyPath());
+  final String version = _option(args, '--pack-version') ?? '1.0.0';
+  final List<BuiltPack> built = partOfLine == null
+      ? <BuiltPack>[
+          await generateVoicePack(
+            characterId: character,
+            lines: lines,
+            synth: const SilentVoice(),
+            profile: profile,
+            workDir: work,
+            key: key,
+            version: version,
+            shareSameText: !args.contains('--each-id'),
+            scope: <String>{},
+          ),
+        ]
+      : await generateVoiceParts(
+          characterId: character,
+          lines: lines,
+          synth: const SilentVoice(),
+          profile: profile,
+          workDir: work,
+          key: key,
+          partOfLine: partOfLine,
+          version: version,
+          shareSameText: !args.contains('--each-id'),
+          scope: <String>{},
+        );
+  for (final BuiltPack b in built) {
+    _writePack(work, b);
+  }
+  if (partOfLine != null) {
+    final int parts = VoiceParts.read(
+      File(_repo(args, 'docs/audio/voicing-parts.json')),
+      _manifest(args),
+    ).length;
+    stdout.writeln('${built.length} of $parts parts built (a part with no clip yet is not built).');
+  }
 }
 
 /// Free: every group of the manifest with its lines, the lines waiting for approval and the characters a run of that group

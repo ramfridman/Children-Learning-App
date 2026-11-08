@@ -6,6 +6,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:nitznutz/voice/voice_bank.dart' show lastVoicePart;
+
 import 'voice_gen_lib.dart';
 
 /// The voice director's groups: their names in the order of a run, and the group of each voice id.
@@ -122,6 +124,68 @@ class BatchChoice {
     }
     return b.toString();
   }
+}
+
+/// Which part of a character's voice pack each group is in (`docs/audio/voicing-parts.json`). One pack may hold at most
+/// [ZipLimits] bytes, and a narrator's whole voice is about 92 MiB, so the voice is several packs: `voice-<id>` for part 1,
+/// `voice-<id>-N` for the others. The assignment is written down, whole groups in the order of the manifest, so that a rebuild
+/// never moves a group because a clip changed its size.
+class VoiceParts {
+  const VoiceParts(this.groupsOfPart);
+
+  /// Reads the file (schema `voicing-parts/v1`) and checks it against [manifest]: parts numbered 1, 2, 3 ... (at most
+  /// [lastVoicePart]), every group of the manifest and the shell lines in exactly one part, no group that does not exist.
+  factory VoiceParts.read(File file, GroupManifest manifest) {
+    final Object? doc = file.existsSync() ? jsonDecode(file.readAsStringSync()) : null;
+    if (doc is! Map<String, Object?> ||
+        doc['schema'] != 'voicing-parts/v1' ||
+        doc['parts'] is! List<Object?>) {
+      throw VoiceGenFailed('${file.path} is missing or is not a voicing-parts/v1 file');
+    }
+    final List<Object?> parts = doc['parts']! as List<Object?>;
+    if (parts.isEmpty || parts.length > lastVoicePart) {
+      throw VoiceGenFailed('the voice is 1 to $lastVoicePart parts, not ${parts.length}');
+    }
+    final List<List<String>> groupsOfPart = <List<String>>[];
+    final Set<String> seen = <String>{};
+    for (final (int i, Object? p) in parts.indexed) {
+      final Map<String, Object?> part = p! as Map<String, Object?>;
+      if (part['part'] != i + 1) {
+        throw VoiceGenFailed('the parts are numbered 1, 2, 3 ... in order; found ${part['part']}');
+      }
+      final List<String> groups = <String>[
+        for (final Object? g in part['groups']! as List<Object?>) g! as String,
+      ];
+      for (final String g in groups) {
+        if (!manifest.order.contains(g)) {
+          throw VoiceGenFailed('part ${i + 1} names "$g", which is not a group');
+        }
+        if (!seen.add(g)) throw VoiceGenFailed('the group "$g" is in two parts');
+      }
+      groupsOfPart.add(groups);
+    }
+    final List<String> loose = <String>[
+      for (final String g in manifest.order)
+        if (!seen.contains(g)) g,
+    ];
+    if (loose.isNotEmpty) throw VoiceGenFailed('the groups ${loose.join(', ')} are in no part');
+    return VoiceParts(groupsOfPart);
+  }
+
+  /// The groups of part 1, part 2 ...
+  final List<List<String>> groupsOfPart;
+
+  int get length => groupsOfPart.length;
+
+  /// The part (1 to n) of [group].
+  int partOfGroup(String group) => groupsOfPart.indexWhere((List<String> g) => g.contains(group)) + 1;
+
+  /// The part of each voice id in [lines] that has a group (a line with none is left out of the map; a run that needs it
+  /// stops before anything is sent).
+  Map<String, int> partOfLines(Iterable<VoicedLine> lines) => <String, int>{
+    for (final VoicedLine l in lines)
+      if (l.group.isNotEmpty) l.voId: partOfGroup(l.group),
+  };
 }
 
 /// Chooses whole groups for a run. [candidates] are the groups wanted, in run order; [waiting] those of them that have an

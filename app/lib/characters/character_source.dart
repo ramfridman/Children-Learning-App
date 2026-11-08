@@ -56,14 +56,37 @@ class InstalledCharacterSource implements CharacterSource {
     return CharacterResolver(available: found, house: house.first);
   }
 
+  /// The voice of a character: `voice-<id>` and any `voice-<id>-N` (N from 2 to 9) that are installed, each proven again on
+  /// its own as any pack is, and joined into one bank. A part that is not installed, is hidden, fails its checks, or has a
+  /// line that is in an earlier part is left out: those lines are text only, never an error. The parts are read one after
+  /// the other and each one's files are let go as soon as its clips are in the bank, so no two parts are held whole at once.
   @override
   Future<VoiceBank> voice(String characterId) async {
+    VoiceBank bank = VoiceBank.empty(characterId);
+    for (int part = 1; part <= lastVoicePart; part++) {
+      if (part > 1 && await _isAnotherVoice(characterId, part)) continue;
+      final VoiceBank? loaded = await _loadVoicePart(voicePackId(characterId, part));
+      if (loaded == null) continue;
+      try {
+        bank = bank.withPart(loaded);
+      } on PackRejected {
+        continue;
+      }
+    }
+    return bank;
+  }
+
+  /// `voice-<id>-N` is the voice of the character `<id>-N` when there is one: it is not a part of `<id>`.
+  Future<bool> _isAnotherVoice(String characterId, int part) async =>
+      await installer.registry.find('char-$characterId-$part') != null;
+
+  Future<VoiceBank?> _loadVoicePart(String packId) async {
     try {
-      final VerifiedPack? pack = await installer.load('voice-$characterId');
-      if (pack == null || pack.hidden) return VoiceBank.empty(characterId);
+      final VerifiedPack? pack = await installer.load(packId);
+      if (pack == null || pack.hidden) return null;
       return VoiceBank.fromPack(pack);
     } on PackRejected {
-      return VoiceBank.empty(characterId);
+      return null;
     }
   }
 }

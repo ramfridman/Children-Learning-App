@@ -599,6 +599,271 @@ void main() {
     });
   });
 
+  group('the voice in parts', () {
+    late Directory tmp;
+    late FakeEleven server;
+    late Directory work;
+    setUp(() {
+      tmp = _temp('nn_parts_cfg_');
+      server = FakeEleven();
+      work = _temp('nn_parts_');
+    });
+    tearDown(() {
+      tmp.deleteSync(recursive: true);
+      _drop(work);
+    });
+
+    GroupManifest manifest() => GroupManifest.read(
+      _manifestFile(tmp, <String, Object?>{
+        'schema': 'voicing-groups/v1',
+        'groups': <Object?>[
+          _group('core', <String>[]),
+          _group('numbers-A', <String>[]),
+          _group('numbers-B', <String>[]),
+        ],
+      }),
+    );
+
+    File partsFile(Object? parts, {String schema = 'voicing-parts/v1'}) =>
+        File('${tmp.path}${Platform.pathSeparator}voicing-parts.json')
+          ..writeAsStringSync(jsonEncode(<String, Object?>{'schema': schema, 'parts': parts}));
+
+    Map<String, Object?> part(int n, List<String> groups) => <String, Object?>{'part': n, 'groups': groups};
+
+    test('the assignment of groups to parts is read, and every group is in exactly one part', () {
+      final VoiceParts p = VoiceParts.read(
+        partsFile(<Object?>[
+          part(1, <String>['core', 'numbers-A']),
+          part(2, <String>['numbers-B', 'ui']),
+        ]),
+        manifest(),
+      );
+      expect(p.length, 2);
+      expect(p.partOfGroup('numbers-A'), 1);
+      expect(p.partOfGroup('ui'), 2);
+      const VoiceTexts texts = VoiceTexts(<VoicedLine>[
+        VoicedLine(voId: 'vo:a', text: 'x', rows: <String>[], group: 'core'),
+        VoicedLine(voId: 'vo:b', text: 'x', rows: <String>[], group: 'numbers-B'),
+        VoicedLine(voId: 'vo:c', text: 'x', rows: <String>[]),
+      ]);
+      expect(p.partOfLines(texts.lines), <String, int>{
+        'vo:a': 1,
+        'vo:b': 2,
+      }, reason: 'a line with no group has no part');
+    });
+
+    test(
+      'a group in two parts, a group in none, an unknown group, wrong numbers and too many parts are refused',
+      () {
+        void refused(Object? parts, {String schema = 'voicing-parts/v1'}) => expect(
+          () => VoiceParts.read(partsFile(parts, schema: schema), manifest()),
+          throwsA(isA<VoiceGenFailed>()),
+        );
+        refused(<Object?>[
+          part(1, <String>['core', 'numbers-A', 'ui']),
+          part(2, <String>['numbers-A', 'numbers-B']),
+        ]);
+        refused(<Object?>[
+          part(1, <String>['core', 'numbers-A']),
+        ]);
+        refused(<Object?>[
+          part(1, <String>['core', 'numbers-A', 'numbers-B', 'ui', 'nope']),
+        ]);
+        refused(<Object?>[
+          part(2, <String>['core', 'numbers-A', 'numbers-B', 'ui']),
+        ]);
+        refused(<Object?>[]);
+        refused(<Object?>[
+          for (int i = 1; i <= 10; i++)
+            part(i, i == 1 ? <String>['core', 'numbers-A', 'numbers-B', 'ui'] : <String>[]),
+        ]);
+        refused(<Object?>[
+          part(1, <String>['core', 'numbers-A', 'numbers-B', 'ui']),
+        ], schema: 'other');
+        expect(
+          () => VoiceParts.read(File('${tmp.path}/none.json'), manifest()),
+          throwsA(isA<VoiceGenFailed>()),
+        );
+      },
+    );
+
+    test('the real assignment covers every group of the real manifest and the shell lines once, in order, in at most nine parts', () {
+      final GroupManifest m = GroupManifest.read(File('../docs/audio/voicing-groups.json'));
+      final VoiceParts p = VoiceParts.read(File('../docs/audio/voicing-parts.json'), m);
+      expect(p.length, inInclusiveRange(1, 9));
+      expect(
+        <String>[for (final List<String> g in p.groupsOfPart) ...g],
+        m.order,
+        reason: 'whole groups in manifest order',
+      );
+      expect(p.partOfGroup('core'), 1);
+      expect(p.partOfGroup('ui'), p.length);
+    });
+
+    // Part 1: a.one, a.two. Part 2: b.one, b.two (the text of a.one: a copy across parts), b.three (the text of b.one).
+    const List<SpokenLine> lines = <SpokenLine>[
+      SpokenLine('vo:a.one', 'שָׁלוֹם'),
+      SpokenLine('vo:a.two', 'כֵּן'),
+      SpokenLine('vo:b.one', 'לֹא'),
+      SpokenLine('vo:b.two', 'שָׁלוֹם'),
+      SpokenLine('vo:b.three', 'לֹא'),
+    ];
+    const Map<String, int> partOf = <String, int>{
+      'vo:a.one': 1,
+      'vo:a.two': 1,
+      'vo:b.one': 2,
+      'vo:b.two': 2,
+      'vo:b.three': 2,
+    };
+
+    Future<List<BuiltPack>> make({Map<String, int> parts = partOf, Set<String>? scope}) => generateVoiceParts(
+      characterId: 'nitzi',
+      lines: lines,
+      synth: ElevenLabsSynthesizer(apiKey: 'test-key-123', client: server.client),
+      profile: _v4,
+      key: key,
+      workDir: work,
+      partOfLine: parts,
+      scope: scope,
+    );
+
+    test(
+      'a pack for each part, voice-<id> and voice-<id>-2, each proven on its own, a line in exactly one',
+      () async {
+        final List<BuiltPack> built = await make();
+        expect(server.requests.length, 3, reason: 'three distinct texts, said once each');
+        expect(built.map((BuiltPack b) => b.fileName), <String>[
+          'voice-nitzi-1.0.0.nnpack',
+          'voice-nitzi-2-1.0.0.nnpack',
+        ]);
+        final VerifiedPack one = await verifyPack(built[0].bytes, publicKey: key.publicKey);
+        final VerifiedPack two = await verifyPack(built[1].bytes, publicKey: key.publicKey);
+        expect(one.id, 'voice-nitzi');
+        expect(two.id, 'voice-nitzi-2');
+        final VoiceBank bankOne = VoiceBank.fromPack(one);
+        final VoiceBank bankTwo = VoiceBank.fromPack(two);
+        expect(bankOne.ids.toSet(), <String>{'vo:a.one', 'vo:a.two'});
+        expect(bankTwo.ids.toSet(), <String>{'vo:b.one', 'vo:b.two', 'vo:b.three'});
+        expect(bankOne.ids.toSet().intersection(bankTwo.ids.toSet()), isEmpty);
+        // The joined bank is what the app builds.
+        expect(bankOne.withPart(bankTwo).length, 5);
+      },
+    );
+
+    test('a copy stays in its part: its own file when the sound it copies is in another part, the shared file when not', () async {
+      final List<BuiltPack> built = await make();
+      final VerifiedPack two = await verifyPack(built[1].bytes, publicKey: key.publicKey);
+      final Map<String, String> files = <String, String>{
+        for (final Object? v in two.manifest['vo']! as List<Object?>)
+          (v! as Map<String, Object?>)['id']! as String: (v as Map<String, Object?>)['file']! as String,
+      };
+      expect(files, <String, String>{
+        'b.one': 'vo.b.one.mp3',
+        'b.two': 'vo.b.two.mp3',
+        'b.three': 'vo.b.one.mp3',
+      });
+      expect(two.files.keys.where((String f) => f.startsWith('vo.')).toSet(), <String>{
+        'vo.b.one.mp3',
+        'vo.b.two.mp3',
+      });
+      expect(utf8.decode(VoiceBank.fromPack(two).clip('vo:b.two')!.mp3), 'mp3:שָׁלוֹם');
+    });
+
+    test('a line of the run with no part stops the run before anything is sent', () async {
+      await expectLater(
+        make(parts: <String, int>{'vo:a.one': 1, 'vo:a.two': 1, 'vo:b.one': 2}),
+        throwsA(
+          isA<VoiceGenFailed>().having(
+            (VoiceGenFailed e) => e.message,
+            'message',
+            contains('no part of the voice'),
+          ),
+        ),
+      );
+      expect(server.requests, isEmpty);
+      expect(work.existsSync() ? work.listSync() : <FileSystemEntity>[], isEmpty);
+    });
+
+    test(
+      'a part with nothing made and nothing in the run is not built, and a second run sends nothing',
+      () async {
+        final List<BuiltPack> only2 = await make(scope: <String>{'vo:b.one', 'vo:b.three'});
+        expect(only2.map((BuiltPack b) => b.fileName), <String>['voice-nitzi-2-1.0.0.nnpack']);
+        expect(server.requests.length, 1);
+        final List<BuiltPack> all = await make();
+        expect(all.length, 2, reason: 'part 1 is voiced now');
+        expect(server.requests.length, 3);
+        await make();
+        expect(server.requests.length, 3);
+      },
+    );
+
+    test('the plan shows the expected size of each part, and the gated run builds every part', () async {
+      final List<String> printed = <String>[];
+      final int total = <String>{for (final SpokenLine l in lines) l.text}
+          .fold<int>(0, (int s, String t) => s + t.runes.length);
+      final List<BuiltPack> built = await generateGated(
+        characterId: 'nitzi',
+        lines: lines,
+        profile: _v4,
+        workDir: work,
+        key: key,
+        keyboard: FakeKeyboard(typed: <String>['$total']),
+        synth: () => ElevenLabsSynthesizer(apiKey: 'k', client: server.client),
+        write: printed.add,
+        pricePer1000Chars: 0.08,
+        partOfLine: partOf,
+      );
+      expect(built.length, 2);
+      expect(printed.first, contains('Expected size of part 1 of nitzi'));
+      expect(printed.first, contains('Expected size of part 2 of nitzi'));
+      expect(printed.first, isNot(contains('Expected size of the pack of nitzi')));
+    });
+
+    test('a part over the limit is refused before it is signed, its clips are kept, and a smaller part finishes the run', () async {
+      final List<SpokenLine> big = <SpokenLine>[
+        for (final (String, String) n in <(String, String)>[
+          ('one', 'אחד'),
+          ('two', 'שנים'),
+          ('three', 'שלושה'),
+          ('four', 'ארבעה'),
+          ('five', 'חמישה'),
+        ])
+          SpokenLine('vo:a.${n.$1}', n.$2),
+      ];
+      await expectLater(
+        generateVoiceParts(
+          characterId: 'nitzi',
+          lines: big,
+          synth: _BigVoice(),
+          profile: _v4,
+          key: key,
+          workDir: work,
+          partOfLine: <String, int>{for (final SpokenLine l in big) l.voId: 1},
+        ),
+        throwsA(
+          isA<BuildFailed>().having((BuildFailed e) => e.reason, 'reason', contains('at most 64.0 MB')),
+        ),
+      );
+      final List<BuiltPack> built = await generateVoiceParts(
+        characterId: 'nitzi',
+        lines: big,
+        synth: const SilentVoice(),
+        profile: _v4,
+        key: key,
+        workDir: work,
+        partOfLine: <String, int>{
+          for (final SpokenLine l in big) l.voId: l.voId == 'vo:a.five' || l.voId == 'vo:a.four' ? 2 : 1,
+        },
+        scope: <String>{},
+      );
+      expect(built.map((BuiltPack b) => b.fileName), <String>[
+        'voice-nitzi-1.0.0.nnpack',
+        'voice-nitzi-2-1.0.0.nnpack',
+      ]);
+    });
+  });
+
   group('the batch options in the source', () {
     final String cli = File('tool/voice_gen.dart').readAsStringSync();
     final String groups = File('tool/voice_groups_lib.dart').readAsStringSync();
@@ -619,6 +884,12 @@ void main() {
         expect(groups, isNot(contains('Platform.environment')));
       },
     );
+
+    test('the parts are built from the written assignment, and a paid run builds them all', () {
+      expect(cli, contains('voicing-parts.json'));
+      expect(cli, contains('partOfLine: partOfLine'));
+      expect(cli, contains('generateVoiceParts('));
+    });
 
     test('a rejected pack is reported with its stage and reason, and the saved clips are pointed to', () {
       expect(cli, contains('on PackRejected catch (e)'));
