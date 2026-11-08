@@ -6,8 +6,7 @@ A backup is one file, `nitznutz-backup-YYYY-MM-DD.dump.age`: a PostgreSQL dump o
 2. **Check the file is the one the job made.** In GitHub, **Actions**, **backup**, the run of that date, open the step *Upload it to the private bucket* and read the `sha256 after upload` line (logs are kept for 90 days; for older files use the *Encrypt it* step's line). Compare it with the file you downloaded:
 
    ```powershell
-   Get-FileHash -Algorithm SHA256 .
-itznutz-backup-2026-11-01.dump.age
+   Get-FileHash -Algorithm SHA256 .\nitznutz-backup-2026-11-01.dump.age
    ```
 
    If they differ, do not open the file, and tell me: anyone who can write to the bucket could plant a file (the age public key is public, and `age` does not say who sent a file).
