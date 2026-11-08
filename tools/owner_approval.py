@@ -28,8 +28,8 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 # owner approved in chat, 2026-11-08, relayed by the orchestrator
 CONFIG = {
     'file': 'docs/review/owner-approval-2026-11-08.csv',
-    'sha256': '',
-    'date': '',
+    'sha256': 'f19724a7337cc62d82d0fb8cdcbf74d612207137a622c6c82847e2e26f29640a',  # owner approved in chat, 2026-11-08, relayed by the orchestrator
+    'date': '2026-11-08',
 }
 
 # The words that end the comment of a row this module approved. The master table keeps the status of a row the owner approved, so

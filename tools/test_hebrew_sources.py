@@ -151,7 +151,8 @@ class HebrewMasterTableTest(unittest.TestCase):
         # 1221 after the owner's option A for the two three-coin shop hints (x.mathb17.6, .7; 2026-11-08): their text is now what the source says, so the
         # table no longer counts them as changed (the review CSV was exported again with the new text)
         # 1215 after the owner's answers of 2026-11-08: six rows whose old text needed a correction are now written right by their source (the x.shpb09 "נְדַמְיֵן" line was reworded)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1221 if approved_all else 1215)
+        # the same 1215 with the owner's bulk approval on (2026-11-08): its 6 extra rows were b.numb11.1-.6, now written right by their generator
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1215)
         # 18 after the editor sweep of 2026-11-08: the 11 Q2 drafts (the NUM-A-11 pairing line, the NUM-A-07 counting line) are now
         # written in the generators, each with an id of its own (vo:fb.size.pairs, vo:fb.size.count), so the pack says what the table says
         # 6 after the owner approved D12 (2026-11-08): the 12 balance rows (b.mathb13.7-.10) are in the sources
