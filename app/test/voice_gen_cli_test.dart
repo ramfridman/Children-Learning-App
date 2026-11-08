@@ -61,6 +61,8 @@ void main() {
         'listPricePer1000Chars': <String, Object?>{'eleven_v4': 0.08, 'eleven_v4_turbo': 0.04},
         'voices': <String, Object?>{
           'nitzi': <String, Object?>{'voiceId': 'FixtureVoice0001'},
+          'hero-son': <String, Object?>{'voiceId': 'FixtureVoice0002', 'modelId': 'eleven_v4'},
+          'lang-en-fixture': <String, Object?>{'candidate': true, 'voiceId': 'FixtureEnglish01'},
           'lang-ru-fixture': <String, Object?>{'candidate': true, 'voiceId': '', 'idStatus': 'OWNER-TO-FILL'},
         },
       }),
@@ -97,6 +99,59 @@ void main() {
     );
     _put(
       repo,
+      'content/lines/ui.he.json',
+      jsonEncode(<String, Object?>{
+        'schema': 'ui-lines/v1',
+        'masterSource': 'app/lib/strings/he.dart',
+        'lands': <String, Object?>{'counting': 'גבעות', 'market': 'כפר'},
+        'lines': <Object?>[
+          <String, Object?>{'id': 'core.adventure.welcome', 'string': 'adventureWelcome', 'perLand': true},
+          <String, Object?>{'id': 'core.home.bubble_empty', 'string': 'homeBubbleNoName'},
+        ],
+      }),
+    );
+    _put(
+      repo,
+      'docs/audio/voicing-groups.json',
+      jsonEncode(<String, Object?>{
+        'schema': 'voicing-groups/v1',
+        'groups': <Object?>[
+          <String, Object?>{
+            'name': 'first',
+            'ids': <Object?>['vo:f.1.prompt', 'vo:f.1.correct'],
+            'chars': 8,
+          },
+          <String, Object?>{
+            'name': 'greet',
+            'ids': <Object?>['vo:core.greeting.hello'],
+            'chars': 16,
+          },
+          <String, Object?>{
+            'name': 'wait',
+            'ids': <Object?>['vo:core.wait.fixture'],
+            'chars': 4,
+          },
+        ],
+      }),
+    );
+    _put(
+      repo,
+      'content/languages/eng/voice-plan.json',
+      jsonEncode(<String, Object?>{
+        'course': 'eng',
+        'pack': 'lang-eng',
+        'frameLines': <Object?>[
+          <String, Object?>{'id': 'he-a', 'vo': 'vo:eng.he_a', 'voice': 'הקשיבו.', 'review': 'text-ready'},
+          <String, Object?>{'id': 'he-b', 'vo': 'vo:eng.he_b', 'voice': null, 'review': 'text-ready'},
+        ],
+        'targetClips': <Object?>[
+          <String, Object?>{'id': 'en-hi', 'vo': 'vo:eng.en_hi', 'shown': 'Hi!', 'say': 'Hi!'},
+          <String, Object?>{'id': 'en-hi-slow', 'vo': 'vo:eng.en_hi_slow', 'shown': 'Hi!', 'say': 'Hi!'},
+        ],
+      }),
+    );
+    _put(
+      repo,
       'docs/review/hebrew-master.csv',
       _csv(<List<String>>[
         <String>['group', 'source', 'id', 'kind', 'spoken', 'text', 'ui_text', 'voice_text', 'status'],
@@ -110,6 +165,14 @@ void main() {
           'voiced',
         ),
         _row('content/lines/core.he.json', 'core.wait.fixture', 'רֶגַע.', 'רגע.', 'text-ready'),
+        _row(
+          'app/lib/strings/he.dart',
+          'adventureWelcome',
+          'בואו נצא אל {land}.',
+          'בואו נצא אל {land}.',
+          'owner-approved',
+        ),
+        _row('app/lib/strings/he.dart', 'homeBubbleNoName', 'מה בבקבוק?', 'מה בבקבוק?', 'text-ready'),
       ]),
     );
     home = Directory('${tmp.path}${Platform.pathSeparator}home')..createSync();
@@ -147,14 +210,20 @@ void main() {
       expect(r.exitCode, 0, reason: '${r.stderr}');
       final String text = r.stdout as String;
       expect(text.toLowerCase(), startsWith('repository: ${repo.path.toLowerCase()}'));
-      // 'שלום.' 5 + 'כן.' 3 + 'שלום, בואו נשחק.' 16.
+      // 'שלום.' 5 + 'כן.' 3 + 'שלום, בואו נשחק.' 16 + 'בואו נצא אל גבעות.' 18 + 'בואו נצא אל כפר.' 16.
       expect(
         text,
         contains(
-          'nitzi (eleven_v4_turbo, mp3_44100_64): new 3, changed 0, unchanged 0; '
-          'characters to send for this voice 24',
+          'nitzi (eleven_v4_turbo, mp3_44100_64): new 5, changed 0, unchanged 0; '
+          'characters to send for this voice 58',
         ),
       );
+      expect(text, contains('vo:core.adventure.welcome.counting'));
+      expect(
+        text,
+        contains('vo:core.home.bubble_empty: app/lib/strings/he.dart › homeBubbleNoName is text-ready'),
+      );
+      expect(text, contains('--lines lessons leaves the shell'));
       expect(text, contains('[new] nitzi vo:f.1.prompt (5)'));
       expect(text, contains('vo:core.wait.fixture'));
       expect(text, contains('is text-ready'));
@@ -241,6 +310,10 @@ void main() {
       <String>['audition-batch', 'run', 'tool/audition_example.json', '--confirm-chars', '57', '--out', out],
       <String>['generate', 'nitzi', '--out', out],
       <String>['generate', 'nitzi', '--confirm-chars', '24', '--out', out],
+      <String>['generate', 'nitzi', '--lines', 'own', '--out', out],
+      <String>['generate', 'nitzi', '--groups', 'first', '--budget', '10', '--out', out],
+      <String>['generate-lang', 'eng', '--voice', 'lang-en-fixture', '--out', out],
+      <String>['generate-lang', 'eng', '--voice', 'lang-en-fixture', '--confirm-chars', '9', '--out', out],
     ]) {
       // The default repository: a paid command takes no other.
       final ProcessResult r = await run(args, fixture: false);
@@ -266,6 +339,7 @@ void main() {
       <String>['generate', 'nitzi', '--out', out],
       <String>['audition-batch', 'run', 'tool/audition_example.json', '--out', out],
       <String>['audition', 'nitzi', 'שלום.', '--out', out],
+      <String>['generate-lang', 'eng', '--voice', 'lang-en-fixture', '--out', out],
     ]) {
       final ProcessResult r = await run(args);
       expect(r.exitCode, 1, reason: '$args');
@@ -278,6 +352,202 @@ void main() {
       expect(own.stdout, isEmpty, reason: '$args');
     }
     expect(Directory(out).existsSync(), isFalse);
+  });
+
+  test(
+    'plan --lines picks a set: own lines of a friend, the shell lines, or the lessons without them',
+    () async {
+      String line(String text, String voice) => const LineSplitter()
+          .convert(text)
+          .firstWhere((String l) => l.startsWith('  $voice (eleven_v4_turbo'));
+      final ProcessResult own = await run(<String>['plan', '--characters', 'nitzi', '--lines', 'own']);
+      expect(own.exitCode, 0, reason: '${own.stderr}');
+      expect(
+        line(own.stdout as String, 'nitzi'),
+        contains('new 1, changed 0, unchanged 0; characters to send for this voice 16'),
+      );
+      final ProcessResult ui = await run(<String>['plan', '--characters', 'nitzi', '--lines', 'ui']);
+      expect(
+        line(ui.stdout as String, 'nitzi'),
+        contains('new 2, changed 0, unchanged 0; characters to send for this voice 34'),
+      );
+      final ProcessResult lessons = await run(<String>[
+        'plan',
+        '--characters',
+        'nitzi',
+        '--lines',
+        'lessons',
+      ]);
+      expect(
+        line(lessons.stdout as String, 'nitzi'),
+        contains('new 3, changed 0, unchanged 0; characters to send for this voice 24'),
+      );
+      expect(lessons.stdout, isNot(contains('--lines lessons leaves the shell')));
+      final ProcessResult bad = await run(<String>['plan', '--lines', 'everything']);
+      expect(bad.exitCode, 1);
+      expect(bad.stderr, contains('is not a set of lines'));
+    },
+  );
+
+  test('plan --as-if-approved counts the lines that wait, says so, and generate refuses the flag', () async {
+    final ProcessResult r = await run(<String>['plan', '--characters', 'nitzi', '--as-if-approved']);
+    expect(r.exitCode, 0, reason: '${r.stderr}');
+    final String text = r.stdout as String;
+    expect(text, contains('AS IF every row were approved'));
+    expect(text, contains('nitzi (eleven_v4_turbo, mp3_44100_64): new 7, changed 0, unchanged 0'));
+    expect(text, isNot(contains('lines cannot be voiced yet')));
+  });
+
+  test(
+    'a voice with its own model shows its model, and the plan shows the characters and price of each model',
+    () async {
+      final ProcessResult r = await run(<String>['plan', '--characters', 'nitzi,hero-son', '--lines', 'own']);
+      expect(r.exitCode, 0, reason: '${r.stderr}');
+      final String text = r.stdout as String;
+      expect(text, contains('nitzi (eleven_v4_turbo, mp3_44100_64): new 1'));
+      expect(text, contains('hero-son (eleven_v4, mp3_44100_64): new 1'));
+      expect(text, contains('eleven_v4_turbo: 16 characters at 0.04 per 1,000 characters'));
+      expect(text, contains('eleven_v4: 16 characters at 0.08 per 1,000 characters'));
+      expect(text, contains('Estimated cost, all models: 0.00'));
+    },
+  );
+
+  test('plan-lang is free: the course, the voices, "!" sent as ".", the slow copy that is not voiced, and ffmpeg missing', () async {
+    final String out = '${tmp.path}${Platform.pathSeparator}lang-out';
+    final ProcessResult r = await run(<String>[
+      'plan-lang',
+      'eng',
+      '--voice',
+      'lang-en-fixture',
+      '--ffmpeg',
+      '${tmp.path}${Platform.pathSeparator}no-such-ffmpeg',
+      '--out',
+      out,
+      '--list',
+    ]);
+    expect(r.exitCode, 0, reason: '${r.stderr}');
+    final String text = r.stdout as String;
+    expect(text.toLowerCase(), startsWith('repository: ${repo.path.toLowerCase()}'));
+    expect(text, contains('Hebrew frame lines are voiced by nitzi, the clips in en by lang-en-fixture'));
+    expect(text, contains('Frame lines with no voice text, not voiced: 1'));
+    expect(text, contains('Target clips sent with "." for their "!": 2'));
+    expect(text, contains('slow copies at 0.8 times the speed 1'));
+    expect(text, contains('[new] lang-en-fixture vo:eng.en_hi (3)'));
+    expect(text, isNot(contains('vo:eng.en_hi_slow (')));
+    expect(text, contains('Characters of text in total: 10'));
+    expect(text, contains('BLOCKED: ffmpeg is not installed'));
+    expect(Directory(out).existsSync(), isFalse);
+    expect(File('$out.voiced.jsonl').existsSync(), isFalse);
+    expect(home.listSync(), isEmpty);
+  });
+
+  test('plan-lang needs a course and a voice', () async {
+    final ProcessResult noVoice = await run(<String>['plan-lang', 'eng']);
+    expect(noVoice.exitCode, 1);
+    expect(noVoice.stderr, contains('--voice <name> is needed'));
+    final ProcessResult noCourse = await run(<String>['plan-lang', 'fra', '--voice', 'lang-en-fixture']);
+    expect(noCourse.exitCode, 1);
+    expect(noCourse.stderr, contains('needs one course'));
+  });
+
+  test('plan --groups plans only those groups, and a line outside them does not block the run', () async {
+    final ProcessResult r = await run(<String>['plan', '--characters', 'nitzi', '--groups', 'first']);
+    expect(r.exitCode, 0, reason: '${r.stderr}');
+    final String text = r.stdout as String;
+    expect(text, contains('Groups in this run (1): first; 8 characters'));
+    expect(
+      text,
+      contains(
+        'nitzi (eleven_v4_turbo, mp3_44100_64): new 2, changed 0, unchanged 0; characters to send for this voice 8',
+      ),
+    );
+    expect(
+      text,
+      isNot(contains('lines cannot be voiced yet')),
+      reason: 'core.wait.fixture is outside the groups',
+    );
+    expect(text, isNot(contains('--confirm-chars')));
+  });
+
+  test('plan --budget takes the groups in order and stops before the first that does not fit, and says what waits', () async {
+    final ProcessResult r = await run(<String>['plan', '--characters', 'nitzi', '--budget', '10']);
+    expect(r.exitCode, 0, reason: '${r.stderr}');
+    final String text = r.stdout as String;
+    expect(text, contains('Groups in this run (1): first; 8 characters (limit 10)'));
+    expect(
+      text,
+      contains('Left for next time (1 groups, 16 characters; whole groups, none is split): greet 16'),
+    );
+    expect(text, contains('Waiting for the owner to approve their rows (not counted above): wait, ui'));
+    final ProcessResult alias = await run(<String>[
+      'plan',
+      '--characters',
+      'nitzi',
+      '--max-characters',
+      '10',
+    ]);
+    expect(alias.stdout, contains('(limit 10)'));
+    final ProcessResult wide = await run(<String>['plan', '--characters', 'nitzi', '--budget', '30']);
+    expect(wide.stdout, contains('Groups in this run (2): first, greet; 24 characters'));
+  });
+
+  test('a group that is not in the manifest and a budget that is not a number are refused', () async {
+    final ProcessResult bad = await run(<String>['plan', '--groups', 'nope']);
+    expect(bad.exitCode, 1);
+    expect(bad.stderr, contains('not a group: nope'));
+    expect(bad.stderr, contains('first, greet, wait, ui'));
+    final ProcessResult number = await run(<String>['plan', '--budget', 'many']);
+    expect(number.exitCode, 1);
+    expect(number.stderr, contains('--budget is a number'));
+  });
+
+  test('groups lists each group with its lines and the characters a run of it alone would send', () async {
+    final ProcessResult r = await run(<String>['groups', '--characters', 'nitzi']);
+    expect(r.exitCode, 0, reason: '${r.stderr}');
+    final String text = r.stdout as String;
+    expect(text, contains('first'));
+    expect(
+      RegExp(r'first\s+2 lines, 0 waiting for approval, 8 characters to send').hasMatch(text),
+      isTrue,
+      reason: text,
+    );
+    expect(
+      RegExp(r'wait\s+1 lines, 1 waiting for approval, 0 characters to send').hasMatch(text),
+      isTrue,
+      reason: text,
+    );
+    expect(
+      RegExp(r'ui\s+3 lines, 1 waiting for approval, 34 characters to send').hasMatch(text),
+      isTrue,
+      reason: text,
+    );
+    expect(home.listSync(), isEmpty);
+  });
+
+  test('verify is free, finds clips that are not there, and exits with 1', () async {
+    final String out = '${tmp.path}${Platform.pathSeparator}verify-out';
+    final ProcessResult r = await run(<String>['verify', 'nitzi', '--groups', 'first,greet', '--out', out]);
+    expect(r.exitCode, 1);
+    final String text = r.stdout as String;
+    expect(text, contains('first: 0 of 2 clips are as the text says; 2 are not'));
+    expect(text, contains('vo:f.1.prompt: missing'));
+    expect(text, contains('3 clips need attention.'));
+    expect(Directory(out).existsSync(), isFalse);
+    expect(home.listSync(), isEmpty);
+  });
+
+  test('verify-lang is free and says what is missing', () async {
+    final ProcessResult r = await run(<String>[
+      'verify-lang',
+      'eng',
+      '--voice',
+      'lang-en-fixture',
+      '--out',
+      '${tmp.path}${Platform.pathSeparator}vl',
+    ]);
+    expect(r.exitCode, 1);
+    expect(r.stdout, contains('clips are missing or were made from another text or setting'));
+    expect(r.stdout, contains('vo:eng.en_hi'));
   });
 
   test('mock refuses a folder that holds ElevenLabs clips, whatever the case of .mp3', () async {

@@ -6,6 +6,8 @@ Inputs: `docs/languages/README.md` (decision 6), `decisions-2026-11-03.md` (deci
 
 Legend for claims: **[M]** measured here (the free plan command, a character count); **[R]** read on a public page (cited in section 10); **[G]** a guess or a hypothesis the pilot must test.
 
+> **Update 2026-11-08 (read section 11 first).** The owner chose the English and Russian voices himself, so sections 2 and 5 (the shortlists, the voice-picking rounds) are history. What remains of the pilot is the isolated-sound test (D2) and the teachers' listening check, for his two voices in each language.
+
 ---
 
 ## 1. The question the pilot answers
@@ -251,3 +253,51 @@ Nothing else in the app changes. Later (not now): `voice_gen generate` and the p
 - WaveSpeed, list of ElevenLabs default voice ids (Sarah, Jessica, Matilda, Brian; third-party, ids unverified against the owner's account): https://wavespeed.ai/docs/docs-api/elevenlabs/elevenlabs-voice-id
 - ElevenLabs, Default voices (descriptions of Jessica, Sarah, Matilda, Alice; the page itself returned 403 to a fetch, so the descriptions came from search snippets): https://elevenlabs.io/docs/voices/default-voices
 - This repo: `docs/audio/voice-direction.md` §8 (list prices, Creator plan), `docs/audio/voice-quality-diagnosis.md` (v4 facts, P7 accent), `app/tool/audition_lib.dart`, `app/tool/voice_text_lib.dart`.
+
+---
+
+## 11. The owner's voices (2026-11-08): who says which line, and what is left of the pilot
+
+**The voices** (ElevenLabs voice ids, public; in `content/voices.json`, still marked `candidate` until the pilot passes the isolated-sound test):
+
+| Name in `voices.json` | Voice id | Role |
+|---|---|---|
+| `lang-en-female` | `qSeXEcewz7tA0Q0qk9fH` | the English course's main target voice |
+| `lang-en-male` | `Aa6nEBJJMKJwJkCx8VU2` | the puppet Pip (a "him" in the Band A build notes) |
+| `lang-ru-female` | `ymDCYd8puC7gYjxIamPt` | the Russian course's main target voice |
+| `lang-ru-male` | `XuEV9VY3VUASYgJVNBh0` | the puppet Саша (the name is neutral; the lines never reveal a gender, syllabus section 6) |
+
+**Who says what** (my decision; the owner can change it; [G] where it is a taste):
+
+1. **Every Hebrew frame line** (the instructions, feedback and hints, all gender-neutral) is said by **nitzi**, in all three courses. One
+   Hebrew voice, one tested voice, and no native English or Russian voice has to carry Hebrew. This is option B of section 1, with the target
+   voice as the friend. Step 5 of the pilot (a Hebrew instruction by the native voice) stays, in case a chosen voice says Hebrew so well that the
+   owner prefers option A (one voice for both); then the frame voice changes by one option (`--frame-voice`).
+2. **The female voice** says every target clip except the puppet's lines: words, phrases, chants and songs, the teacher's questions, the stories.
+3. **The male voice** says only the **puppet's own lines**: the `prompt.target` clips of the `puppet_talk` activities (English **9 clips**, 187 characters: `Hello! I'm Pip.`,
+   `What's this?`, `What's your name?`, `How are you?`, `I like bananas! What do you like?`, `I'm five! How old are you?`, `This is my family: Mom, Dad and my sister.`,
+   `Who is in your family?`, `Goodbye!`; Russian **11 clips**, 150 characters: `Что это?`, `Как тебя зовут?`, `Кто это?`, `Кто у тебя в семье?`, `Меня зовут {puppet}.`, `У меня есть мама и бабушка.`,
+   `Привет!`, `Здравствуй!`, `До свидания!`, `Пока!`, `На!`). The child's answers in a bubble (the `options` clips) are the teacher's, not the puppet's. A clip is
+   one file and has one voice, so a clip that is both a puppet line and a bubble answer (`Goodbye!`) is the puppet's.
+4. **Nothing else is spoken by the male voice.** A second voice that has to match the first in loudness and pace (within 1.5 LU) is the price; the
+   pilot's step 5 and the loudness check settle it.
+
+`generate-lang` today takes **one** target voice (`--voice`) and one frame voice (`--frame-voice`). A puppet voice is request F7 for the app-developer
+(`--puppet-voice`, with the clip list taken from the `puppet_talk` prompts). Until it exists, the 20 puppet clips are said by the female voice (337 characters,
+nothing is lost, the plan does not change).
+
+**The pilot now.** One pilot per language, no voice-picking round:
+
+| Spec | Voices | Clips | Characters | USD (v4 list) |
+|---|---|---|---|---|
+| `english/pilot.json` | `lang-en-female`, `lang-en-male` | 142 | 970 | 0.0776 |
+| `russian/pilot.json` | `lang-ru-female`, `lang-ru-male` | 134 | 900 | 0.0720 |
+| `hebrew/pilot.json` (unchanged: nitzi, hero-son, climber-tzuri) | | 63 | 417 | 0.0334 |
+| `hebrew/pilot-ipa.json` | | 6 | 24 | 0.0019 |
+| **Total** | | **345** | **2,311** | **0.1849** |
+
+The English and Russian pilots carry the **full** content that round 2 used to have (every isolated sound in IPA, stretched and robust, the CV units, the minimal pairs,
+the stress words, the chunks, the Hebrew frame set), for the two voices only, on v4, with no control voice and no Turbo comparison clips (the packs are voiced on v4,
+section 3). `pilot-round2.json` for English and Russian are deleted. `make_pilot_specs.py` makes these files (`round2` now means only a second Hebrew round).
+The listening workflow of section 7 is unchanged: the owner or a native-level listener marks `heard-ok` or `heard-wrong`, the teacher's `check` column is the expectation, and the
+fatal failures of section 7 stand. The result fills the `say` column of the pronunciation tables (decision 2, section 6).

@@ -1,11 +1,40 @@
 // The voice generator. Run from the app/ folder:
 //
-//   dart run tool/voice_gen.dart plan [--characters a,b,c] [--price <per 1,000 characters>] [--list] [--out <folder>]
+//   dart run tool/voice_gen.dart plan [--characters a,b,c] [--lines full|lessons|ui|own] [--groups a,b] [--budget N] [--each-id] [--as-if-approved] [--price <per 1,000 characters>] [--list] [--out <folder>]
 //   dart run tool/voice_gen.dart mock <character> [--key <key file>] [--out <folder>]
-//   dart run tool/voice_gen.dart generate <character> [--key <key file>] [--out <folder>] [--pack-version <x.y.z>]
+//   dart run tool/voice_gen.dart groups [--characters a,b,c] [--lines full|lessons|own]
+//   dart run tool/voice_gen.dart verify <character> [--groups a,b] [--lines full|lessons|own] [--out <folder>]
+//   dart run tool/voice_gen.dart generate <character> [--lines full|lessons|own] [--groups a,b] [--budget N] [--each-id] [--key <key file>] [--out <folder>] [--pack-version <x.y.z>]
+//   dart run tool/voice_gen.dart plan-lang <course> --voice <name> [--frame-voice <name>] [--model <id>] [--ffmpeg <path>] [--each-id] [--price <per 1,000 characters>] [--list] [--out <folder>]
+//   dart run tool/voice_gen.dart verify-lang <course> --voice <name> [--frame-voice <name>] [--out <folder>]
+//   dart run tool/voice_gen.dart generate-lang <course> --voice <name> [--frame-voice <name>] [--model <id>] [--ffmpeg <path>] [--each-id] [--key <key file>] [--out <folder>] [--pack-version <x.y.z>]
 //   dart run tool/voice_gen.dart audition-batch plan <spec.json> [--out <folder>] [--price <per 1,000 characters>]
 //   dart run tool/voice_gen.dart audition-batch run <spec.json> [--out <folder>]
 //   dart run tool/voice_gen.dart audition <character> "<text>" [--model <id>] [--settings stability=0.25,similarity=0.8,boost=true] [--format <mp3_44100_...>] [--allow exclamation,ipa] [--language he|en|ru] [--out <folder>]
+//
+// Which lines: `--lines full` (the default) is a narrator's whole pack, the lessons, the core lines and the shell's lines
+// (content/lines/ui.he.json: the bottle's lines for each land, the language stops, the doors, the empty bottle);
+// `lessons` leaves the shell's lines out; `own` is the nine lines a friend says in its own voice (the narrator's
+// recording plays for all others); `ui` is the shell's lines alone, to see their share in a `plan`. Lines that send exactly
+// the same request (same text, voice, model, settings) are voiced once and copied for free; `--each-id` voices every id.
+// `plan --as-if-approved` counts every line that has a voice_text as if its row were approved: a figure to expect, never
+// a run (`generate` refuses the flag). Each voice may have its own `modelId` in content/voices.json; the plan shows each model's characters and price.
+//
+// Batches: the whole release is more characters than a month's allowance, so a run may voice whole groups. The groups are
+// the voice director's, in `docs/audio/voicing-groups.json` (made by `python tools/voicing_groups.py`): core, celebrate, then
+// each land and band; the shell's lines are one more group, `ui`. `--groups a,b` plans, approval-checks and voices only
+// those groups (a line outside them does not block the run); `--budget N` (also `--max-characters N`) takes the groups in
+// manifest order and stops before the first one that would not fit whole, prints what is left for next time, and the
+// gate still asks for the exact count of the run. The pack holds every line already voiced plus the run's; a line that
+// shares its text with a clip already made is copied for free, in whatever group that clip is. Resume skips what is
+// made. `groups` lists each group with its lines and characters; `verify` (free) checks that every clip of the groups is
+// there, matches its text and is not under 2 KB, and exits 1 if not.
+//
+// `plan-lang` and `generate-lang` voice a language course from content/languages/<course>/voice-plan.json (course: eng,
+// rus or heb): the Hebrew lines with `--frame-voice` (a voice of content/voices.json, `nitzi` by default), the clips in the
+// language taught with `--voice` (an audition candidate may be named here). A "!" is sent as "."; a `-slow` clip is made from
+// the normal clip and a cut word from its page's clip, with ffmpeg (free; the plan says if it is missing); a text with a
+// placeholder is refused.
 //
 // `audition-batch` writes to ~/nitznutz-voice/auditions/<spec name>, with the language in front for a spec that is not
 // Hebrew (en-pilot, ru-pilot), unless --out says otherwise.
@@ -19,9 +48,9 @@
 // v4 model) and asks for 44.1 kHz audio. Each clip's hash (text, voice, model, settings, format) is recorded next to the
 // work folder, so a changed line is said again and an unchanged one is reused.
 //
-// `plan`, `audition-batch plan` and `mock` are free and need no terminal: `plan` counts new, changed and unchanged lines
+// `plan`, `plan-lang`, `audition-batch plan` and `mock` are free and need no terminal: `plan` counts new, changed and unchanged lines
 // for each voice, the characters and the cost (--list prints every line still to say with its exact text); `mock` makes
-// a voice pack of test tones (no network). The paid commands, `generate`, `audition-batch run` and `audition`, work only
+// a voice pack of test tones (no network). The paid commands, `generate`, `generate-lang`, `audition-batch run` and `audition`, work only
 // in an interactive terminal: in the same process they plan exactly what they will send, print that plan, and go ahead
 // only when the owner types its total on the keyboard. No flag can pass that gate.
 //
@@ -32,15 +61,18 @@ import 'dart:io';
 
 import 'package:nitznutz/content/pack_verify.dart' show sha256Hex;
 
+import 'audio_tool_lib.dart';
 import 'audition_lib.dart';
+import 'lang_voice_lib.dart';
 import 'pack_builder_lib.dart';
 import 'voice_gen_lib.dart';
+import 'voice_groups_lib.dart';
 
 const String _keyVariable = 'ELEVENLABS_API_KEY';
 const Keyboard _keyboard = TerminalKeyboard();
 
 /// The commands that spend money.
-const Set<String> _paid = <String>{'generate', 'audition'};
+const Set<String> _paid = <String>{'generate', 'generate-lang', 'audition'};
 
 Future<void> main(List<String> args) async {
   if (args.isEmpty) {
@@ -53,7 +85,7 @@ Future<void> main(List<String> args) async {
         _paid.contains(args.first) || (args.first == 'audition-batch' && rest.firstOrNull == 'run');
     if (paid && !_isDefaultRepo(args)) {
       throw const VoiceGenFailed(
-        '--repo is accepted only by the free commands (plan, audition-batch plan, mock): a paid run voices the texts '
+        '--repo is accepted only by the free commands (plan, plan-lang, audition-batch plan, mock): a paid run voices the texts '
         'of this repository only. Nothing was sent.',
       );
     }
@@ -68,8 +100,18 @@ Future<void> main(List<String> args) async {
         _plan(rest);
       case 'mock':
         await _mock(rest);
+      case 'groups':
+        _groups(rest);
+      case 'verify':
+        _verify(rest);
+      case 'plan-lang':
+        await _planLang(rest);
+      case 'verify-lang':
+        _verifyLang(rest);
       case 'generate':
         await _generate(rest);
+      case 'generate-lang':
+        await _generateLang(rest);
       case 'audition-batch':
         await _auditionBatch(rest);
       case 'audition':
@@ -93,7 +135,7 @@ Future<void> main(List<String> args) async {
 
 void _usage() {
   stderr.writeln(
-    'usage: dart run tool/voice_gen.dart plan|mock|generate|audition-batch|audition ... (see the top of this file)',
+    'usage: dart run tool/voice_gen.dart plan|groups|verify|plan-lang|verify-lang|mock|generate|generate-lang|audition-batch|audition ... (see the top of this file)',
   );
 }
 
@@ -103,7 +145,7 @@ String? _option(List<String> args, String name) {
 }
 
 /// The options that take no value.
-const Set<String> _flags = <String>{'--list'};
+const Set<String> _flags = <String>{'--list', '--each-id', '--as-if-approved'};
 
 List<String> _positional(List<String> args) {
   final List<String> out = <String>[];
@@ -154,14 +196,112 @@ double Function(String model) _prices(List<String> args, Map<String, Object?> co
   return (String model) => given ?? ((list[model] as num?)?.toDouble() ?? 0);
 }
 
+/// Every line the narrators say: the lessons, the core lines and the shell's lines. [VoiceTexts.only] picks a pack's part.
 VoiceTexts _voiceTexts(List<String> args) {
-  final File master = File(_repo(args, 'docs/review/hebrew-master.csv'));
-  if (!master.existsSync()) throw const VoiceGenFailed('docs/review/hebrew-master.csv is missing');
-  return voiceTextsOf(
+  final File masterFile = File(_repo(args, 'docs/review/hebrew-master.csv'));
+  if (!masterFile.existsSync()) throw const VoiceGenFailed('docs/review/hebrew-master.csv is missing');
+  final File ui = File(_repo(args, 'content/lines/ui.he.json'));
+  if (!ui.existsSync()) throw const VoiceGenFailed('content/lines/ui.he.json is missing');
+  final Map<String, MasterRow> master = readMaster(masterFile.readAsStringSync());
+  final VoiceTexts lessons = voiceTextsOf(
     content: Directory(_repo(args, 'content/starter')),
     core: File(_repo(args, 'content/lines/core.he.json')),
-    master: readMaster(master.readAsStringSync()),
+    master: master,
   );
+  return VoiceTexts(<VoicedLine>[...lessons.lines, ...uiLines(file: ui, master: master)]);
+}
+
+/// The set of lines asked for with --lines (all of them unless it says otherwise).
+LineSet _lineSet(List<String> args) => LineSet.parse(_option(args, '--lines') ?? LineSet.full.name);
+
+/// The plan for [lines] said by [profiles], as a function of the lines to voice now (null: all): clips are looked at once,
+/// whatever the number of plans a choice of groups needs.
+VoicePlan Function(Set<String>? scope) _planner(
+  List<String> args,
+  Map<String, VoiceProfile> profiles,
+  List<SpokenLine> lines,
+) {
+  final bool share = !args.contains('--each-id');
+  final Map<String, Directory> dirs = <String, Directory>{
+    for (final String c in profiles.keys) c: Directory(_outFolder(args, c)),
+  };
+  final Map<String, Map<String, String>> made = <String, Map<String, String>>{
+    for (final String c in profiles.keys) c: ClipLedger(dirs[c]!).hashes(),
+  };
+  final Set<String> ids = <String>{for (final SpokenLine l in lines) l.fileId};
+  final Map<String, Map<String, String>> elsewhere = share
+      ? <String, Map<String, String>>{
+          for (final String c in profiles.keys) c: madeElsewhere(dirs[c]!, ids, made[c]!),
+        }
+      : const <String, Map<String, String>>{};
+  final Map<String, ClipState> seen = <String, ClipState>{};
+  return (Set<String>? scope) => planVoices(
+    profiles,
+    lines,
+    stateOf: (String c, SpokenLine l, ClipRequest r) =>
+        seen.putIfAbsent('$c|${l.fileId}|${r.hash}', () => clipState(dirs[c]!, l.fileId, r, made[c]!)),
+    shareSameText: share,
+    scope: scope,
+    madeElsewhere: elsewhere,
+  );
+}
+
+/// The `--budget` (or `--max-characters`) in characters, or null.
+int? _budget(List<String> args) {
+  final String? given = _option(args, '--budget') ?? _option(args, '--max-characters');
+  if (given == null) return null;
+  final int? n = int.tryParse(given);
+  if (n == null || n < 0) throw VoiceGenFailed('--budget is a number of characters, not "$given"');
+  return n;
+}
+
+/// Whether the run is in batches: `--groups` or `--budget` was given.
+bool _batching(List<String> args) => _option(args, '--groups') != null || _budget(args) != null;
+
+/// The voice director's groups (docs/audio/voicing-groups.json) of the repository.
+GroupManifest _manifest(List<String> args) =>
+    GroupManifest.read(File(_repo(args, 'docs/audio/voicing-groups.json')));
+
+/// [texts] with the group of each line, from the manifest.
+VoiceTexts _grouped(List<String> args, VoiceTexts texts) => texts.withGroups(_manifest(args).groupOf);
+
+/// The voice ids of the lines of [texts] in [groups].
+Set<String> _idsOf(VoiceTexts texts, Iterable<String> groups) => <String>{
+  for (final VoicedLine l in texts.inGroups(groups.toSet()).lines) l.voId,
+};
+
+/// The choice of groups of a run in batches, and the voice ids it voices. [texts] has its groups. [refuseWaiting] (a paid
+/// run): a group named with --groups that has a line not approved stops the run, listing the lines; without --groups,
+/// such groups are only passed over. [asIfApproved]: no line waits.
+({BatchChoice choice, Set<String> scope}) _batch(
+  List<String> args,
+  VoiceTexts texts,
+  VoicePlan Function(Set<String>? scope) planFor, {
+  required bool refuseWaiting,
+  bool asIfApproved = false,
+}) {
+  final GroupManifest manifest = _manifest(args);
+  final String? named = _option(args, '--groups');
+  final List<String> candidates = named == null ? manifest.order : manifest.pick(named);
+  final Set<String> waiting = asIfApproved
+      ? <String>{}
+      : <String>{
+          for (final VoicedLine l in texts.blocked)
+            if (candidates.contains(l.group)) l.group,
+        };
+  if (refuseWaiting && named != null && waiting.isNotEmpty) {
+    throw VoiceGenFailed(
+      'Nothing was sent. ${texts.inGroups(waiting).describeBlocked()}'
+      'The groups ${waiting.join(', ')} have lines the owner has not approved.',
+    );
+  }
+  final BatchChoice choice = chooseBatch(
+    candidates: candidates,
+    waiting: waiting,
+    costOf: (Set<String> groups) => planFor(_idsOf(texts, groups)).total,
+    maxCharacters: _budget(args),
+  );
+  return (choice: choice, scope: _idsOf(texts, choice.chosen));
 }
 
 String _home() => '${Platform.environment['USERPROFILE'] ?? '.'}${Platform.pathSeparator}nitznutz-voice';
@@ -171,22 +311,31 @@ String _outFolder(List<String> args, String character) =>
 
 void _plan(List<String> args) {
   final Map<String, Object?> config = _config(args);
-  final VoiceTexts texts = _voiceTexts(args);
+  final LineSet set = _lineSet(args);
+  final VoiceTexts all = _voiceTexts(args).only(set);
+  final VoiceTexts texts = _batching(args) ? _grouped(args, all) : all;
+  final bool asIfApproved = args.contains('--as-if-approved');
   final List<String> characters = _characters(args, config);
-  final Map<String, Map<String, String>> made = <String, Map<String, String>>{
-    for (final String c in characters) c: ClipLedger(Directory(_outFolder(args, c))).hashes(),
-  };
-  final VoicePlan plan = planVoices(
-    <String, VoiceProfile>{for (final String c in characters) c: VoiceProfile.fromConfig(config, c)},
-    texts.ready,
-    stateOf: (String c, SpokenLine l, ClipRequest r) =>
-        clipState(Directory(_outFolder(args, c)), l.fileId, r, made[c]!),
-  );
+  final VoicePlan Function(Set<String>? scope) planFor = _planner(args, <String, VoiceProfile>{
+    for (final String c in characters) c: VoiceProfile.fromConfig(config, c),
+  }, asIfApproved ? texts.forTestVoices : texts.ready);
+  final ({BatchChoice choice, Set<String> scope})? batch = _batching(args)
+      ? _batch(args, texts, planFor, refuseWaiting: false, asIfApproved: asIfApproved)
+      : null;
+  final VoicePlan plan = planFor(batch?.scope);
+  final double Function(String model) priceOf = _prices(args, config);
   final String model = plan.clips.isEmpty
       ? (config['modelId'] ?? '') as String
       : plan.clips.first.request.modelId;
-  final double price = _prices(args, config)(model);
+  final double price = priceOf(model);
   stdout.writeln(_repoHeading(args));
+  stdout.writeln('Lines: ${set.name}');
+  if (batch != null) stdout.write(batch.choice.describe(maxCharacters: _budget(args)));
+  if (asIfApproved) {
+    stdout.writeln(
+      'AS IF every row were approved (a count to expect: generate voices approved rows only, and refuses this flag).',
+    );
+  }
   stdout.writeln(
     'Words from the voice_text column of docs/review/hebrew-master.csv; only lines the owner approved '
     '(${voiceableStatuses.join(', ')}) are voiced.',
@@ -195,17 +344,24 @@ void _plan(List<String> args) {
     plan.describe(
       price,
       list: args.contains('--list'),
-      priceSource: _option(args, '--price') != null ? '' : ' ($model list price in content/voices.json)',
+      priceSource: _option(args, '--price') != null ? '' : ' (list price in content/voices.json)',
+      priceOf: priceOf,
     ),
   );
-  if (texts.blocked.isNotEmpty) {
+  final VoiceTexts waiting = batch == null ? texts : texts.inGroups(batch.choice.chosen.toSet());
+  if (waiting.blocked.isNotEmpty && !asIfApproved) {
     stdout
       ..writeln()
-      ..write(texts.describeBlocked())
+      ..write(waiting.describeBlocked())
       ..writeln(
         'Nothing is voiced until the owner marks these rows owner-approved; generate refuses until every line '
         'above is approved.',
       );
+    if (set == LineSet.full && texts.blocked.any((VoicedLine l) => l.ui)) {
+      stdout.writeln(
+        "(--lines lessons leaves the shell's lines out of the run until their rows are approved.)",
+      );
+    }
   }
   if (price == 0) {
     stdout.writeln(
@@ -253,11 +409,34 @@ Future<void> _generate(List<String> args) async {
   if (pos.length != 1) throw const VoiceGenFailed('generate needs one character id');
   final String character = pos.single;
   requireTerminal(_keyboard, 'generate');
+  if (args.contains('--as-if-approved')) {
+    throw const VoiceGenFailed(
+      '--as-if-approved is for plan only: generate voices approved rows only. Nothing was sent.',
+    );
+  }
   final Map<String, Object?> config = _config(args);
-  final VoiceTexts texts = _voiceTexts(args);
-  if (texts.blocked.isNotEmpty) throw VoiceGenFailed('Nothing was sent. ${texts.describeBlocked()}');
+  final LineSet set = _lineSet(args);
+  if (!set.makesAPack) {
+    throw const VoiceGenFailed(
+      'a voice pack holds all the lines of a character, so --lines ui alone would replace the lessons: use --lines '
+      'full (the shell\'s lines are the only new ones, and the only ones paid for), lessons or own. Nothing was sent.',
+    );
+  }
+  final VoiceTexts all = _voiceTexts(args).only(set);
+  final VoiceTexts texts = _batching(args) ? _grouped(args, all) : all;
   final VoiceProfile profile = VoiceProfile.fromConfig(config, character);
   final Directory work = Directory(_outFolder(args, character));
+  // In batches only the lines of the chosen groups need their rows approved; a whole run needs them all.
+  final ({BatchChoice choice, Set<String> scope})? batch = _batching(args)
+      ? _batch(
+          args,
+          texts,
+          _planner(args, <String, VoiceProfile>{character: profile}, texts.ready),
+          refuseWaiting: true,
+        )
+      : null;
+  final VoiceTexts toVoice = batch == null ? texts : texts.inGroups(batch.choice.chosen.toSet());
+  if (toVoice.blocked.isNotEmpty) throw VoiceGenFailed('Nothing was sent. ${toVoice.describeBlocked()}');
   final BuiltPack built = await generateGated(
     characterId: character,
     lines: texts.ready,
@@ -268,10 +447,212 @@ Future<void> _generate(List<String> args) async {
     synth: _eleven,
     write: stdout.writeln,
     pricePer1000Chars: _prices(args, config)(profile.modelId),
-    heading: _repoHeading(args),
+    heading:
+        '${_repoHeading(args)}\nLines: ${set.name}'
+        '${batch == null ? '' : '\n${batch.choice.describe(maxCharacters: _budget(args))}'}',
     version: _option(args, '--pack-version') ?? '1.0.0',
+    shareSameText: !args.contains('--each-id'),
+    scope: batch?.scope,
   );
   _writePack(work, built);
+}
+
+/// Free: every group of the manifest with its lines, the lines waiting for approval and the characters a run of that group
+/// alone would send for the characters given. Groups that share sounds do not add up exactly: a sound is sent once.
+void _groups(List<String> args) {
+  final Map<String, Object?> config = _config(args);
+  final VoiceTexts texts = _grouped(args, _voiceTexts(args).only(_lineSet(args)));
+  final GroupManifest manifest = _manifest(args);
+  final List<String> characters = _characters(args, config);
+  final VoicePlan Function(Set<String>? scope) planFor = _planner(args, <String, VoiceProfile>{
+    for (final String c in characters) c: VoiceProfile.fromConfig(config, c),
+  }, texts.ready);
+  stdout
+    ..writeln(_repoHeading(args))
+    ..writeln(
+      'Groups of ${characters.join(', ')} (docs/audio/voicing-groups.json, then the shell lines), in run order:',
+    );
+  for (final String g in manifest.order) {
+    final VoiceTexts in_ = texts.inGroups(<String>{g});
+    if (in_.lines.isEmpty) continue;
+    stdout.writeln(
+      '  ${g.padRight(12)} ${in_.lines.length.toString().padLeft(5)} lines, ${in_.blocked.length} waiting for approval, '
+      '${planFor(_idsOf(texts, <String>[g])).total} characters to send',
+    );
+  }
+  final int loose = texts.lines.where((VoicedLine l) => l.group.isEmpty).length;
+  if (loose > 0) {
+    stdout.writeln(
+      '  $loose lines are in no group of the manifest (run python tools/voicing_groups.py); a run by groups leaves them out.',
+    );
+  }
+}
+
+/// Free: checks that the clip of every approved line of the groups is in the work folder of [character], with its mouth
+/// cues, is not under 2 KB, and was made from the text and settings the line has now. Exit code 1 when one is not.
+void _verify(List<String> args) {
+  final List<String> pos = _positional(args);
+  if (pos.length != 1) throw const VoiceGenFailed('verify needs one character id');
+  final Map<String, Object?> config = _config(args);
+  final VoiceTexts all = _voiceTexts(args).only(_lineSet(args));
+  final String? named = _option(args, '--groups');
+  final VoiceTexts texts = named == null && !File(_repo(args, 'docs/audio/voicing-groups.json')).existsSync()
+      ? all
+      : _grouped(args, all);
+  final VoiceTexts chosen = named == null ? texts : texts.inGroups(_manifest(args).pick(named).toSet());
+  final VerifyReport report = verifyClips(
+    workDir: Directory(_outFolder(args, pos.single)),
+    profile: VoiceProfile.fromConfig(config, pos.single),
+    lines: <(SpokenLine, String)>[
+      for (final VoicedLine l in chosen.lines)
+        if (l.problem == null) (SpokenLine(l.voId, l.text), l.group.isEmpty ? 'all' : l.group),
+    ],
+    unapproved: <String>[for (final VoicedLine l in chosen.blocked) l.voId],
+  );
+  stdout
+    ..writeln(_repoHeading(args))
+    ..writeln('Clips of ${pos.single} in ${_outFolder(args, pos.single)}:')
+    ..write(report.describe());
+  if (!report.ok) exit(1);
+}
+
+/// What `plan-lang` and `generate-lang` both need: the course's voice plan, the two voices and where the clips go.
+class _LangJob {
+  const _LangJob(this.source, this.frameName, this.frame, this.targetName, this.target, this.work);
+
+  final LangSource source;
+  final String frameName;
+  final VoiceProfile frame;
+  final String targetName;
+  final VoiceProfile target;
+  final Directory work;
+}
+
+_LangJob _langJob(List<String> args) {
+  final List<String> pos = _positional(args);
+  if (pos.length != 1 || !courseLanguage.containsKey(pos.single)) {
+    throw VoiceGenFailed('this command needs one course: ${courseLanguage.keys.join(', ')}');
+  }
+  final String course = pos.single;
+  final String? voice = _option(args, '--voice');
+  if (voice == null) {
+    throw const VoiceGenFailed(
+      '--voice <name> is needed: the voice of content/voices.json that says the target clips',
+    );
+  }
+  final File planFile = File(_repo(args, 'content/languages/$course/voice-plan.json'));
+  if (!planFile.existsSync()) throw VoiceGenFailed('${planFile.path} is missing');
+  final Map<String, Object?> config = _config(args);
+  final String model = _option(args, '--model') ?? '';
+  VoiceProfile profile(String name) =>
+      VoiceProfile.fromConfig(config, name, model: model.isEmpty ? null : model, audition: true);
+  final String frameName = _option(args, '--frame-voice') ?? (course == 'heb' ? voice : 'nitzi');
+  return _LangJob(
+    LangSource.fromJson(jsonDecode(planFile.readAsStringSync())),
+    frameName,
+    profile(frameName),
+    voice,
+    profile(voice),
+    Directory(_option(args, '--out') ?? '${_home()}${Platform.pathSeparator}lang-$course'),
+  );
+}
+
+AudioTool _audioTool(List<String> args) => FfmpegTool(_option(args, '--ffmpeg') ?? 'ffmpeg');
+
+/// Free: the plan of a language course, with the figure the paid command will ask for.
+Future<void> _planLang(List<String> args) async {
+  final _LangJob job = _langJob(args);
+  final Map<String, Object?> config = _config(args);
+  final LangPlan plan = planLang(
+    job.source,
+    frameCharacter: job.frameName,
+    frameProfile: job.frame,
+    targetCharacter: job.targetName,
+    targetProfile: job.target,
+    workDir: job.work,
+    shareSameText: !args.contains('--each-id'),
+  );
+  stdout.writeln(_repoHeading(args));
+  stdout.writeln('Clips go to ${job.work.path}');
+  stdout.write(
+    plan.describe(
+      _prices(args, config),
+      list: args.contains('--list'),
+      priceSource: _option(args, '--price') != null ? '' : ' (list price in content/voices.json)',
+      audioProblem: plan.needsAudioTool ? await _audioTool(args).unavailableReason() : null,
+    ),
+  );
+  for (final (String name, VoiceProfile profile) in <(String, VoiceProfile)>[
+    (job.frameName, job.frame),
+    (job.targetName, job.target),
+  ]) {
+    if (profile.voiceId.isEmpty) {
+      stdout.writeln(
+        'VOICE ID MISSING for $name: generate-lang sends nothing until the owner has filled it in '
+        '(content/voices.json, voices, $name, voiceId).',
+      );
+    }
+  }
+}
+
+/// Free: checks that every clip of a language course is in the work folder and was made from what the plan says now.
+/// Exit code 1 when one is not.
+void _verifyLang(List<String> args) {
+  final _LangJob job = _langJob(args);
+  final LangPlan plan = planLang(
+    job.source,
+    frameCharacter: job.frameName,
+    frameProfile: job.frame,
+    targetCharacter: job.targetName,
+    targetProfile: job.target,
+    workDir: job.work,
+    shareSameText: false,
+  );
+  final List<String> faulty = <String>[
+    for (final PlannedClip c in plan.voices.clips)
+      if (c.state != ClipState.unchanged) c.line.voId,
+    for (final DerivedClip d in plan.derived)
+      if (d.toMake) d.voId,
+  ];
+  stdout
+    ..writeln(_repoHeading(args))
+    ..writeln('Course ${job.source.course} in ${job.work.path}:')
+    ..writeln(
+      faulty.isEmpty
+          ? 'All ${plan.voiceIds.length} clips are there and match their text.'
+          : '${faulty.length} of ${plan.voiceIds.length} clips are missing or were made from another text or setting.',
+    );
+  for (final String id in faulty.take(40)) {
+    stdout.writeln('    $id');
+  }
+  if (faulty.length > 40) stdout.writeln('    ... and ${faulty.length - 40} more');
+  if (faulty.isNotEmpty) exit(1);
+}
+
+/// Paid: a language course, through the same gate as `generate`.
+Future<void> _generateLang(List<String> args) async {
+  requireTerminal(_keyboard, 'generate-lang');
+  final _LangJob job = _langJob(args);
+  final Map<String, Object?> config = _config(args);
+  final BuiltPack built = await generateLangGated(
+    source: job.source,
+    frameCharacter: job.frameName,
+    frameProfile: job.frame,
+    targetCharacter: job.targetName,
+    targetProfile: job.target,
+    workDir: job.work,
+    key: readKeyFile(_option(args, '--key') ?? defaultKeyPath()),
+    keyboard: _keyboard,
+    synth: _eleven,
+    audio: _audioTool(args),
+    write: stdout.writeln,
+    priceOf: _prices(args, config),
+    priceSource: _option(args, '--price') != null ? '' : ' (list price in content/voices.json)',
+    heading: _repoHeading(args),
+    version: _option(args, '--pack-version') ?? '1.0.0',
+    shareSameText: !args.contains('--each-id'),
+  );
+  _writePack(job.work, built);
 }
 
 /// The ElevenLabs voice, made only after the gate: the key is read from the environment here and nowhere else, and

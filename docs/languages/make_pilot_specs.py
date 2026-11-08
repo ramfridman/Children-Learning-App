@@ -5,7 +5,7 @@ Plan only. This script makes no network call and needs no key. It only writes JS
 (Unicode code points, as app/tool/voice_gen counts them). The paid step is `audition-batch run`, typed by the owner.
 
   python docs/languages/make_pilot_specs.py                 # round 1 of all three languages (the files in git)
-  python docs/languages/make_pilot_specs.py round2 --en lang-en-jessica,lang-en-sarah --ru lang-ru-marina,lang-ru-maxim --he nitzi,hero-son
+  python docs/languages/make_pilot_specs.py round2 --he nitzi,hero-son      # only a second Hebrew round (optional)
   python docs/languages/make_pilot_specs.py --count         # counts only, writes nothing
 
 All Hebrew in the clips is a DRAFT for listening ("review": "needs-editor"); none of it is shipped text.
@@ -19,8 +19,11 @@ GATE = {"stability": 0.5, "similarity_boost": 0.75, "use_speaker_boost": True}
 ROBUST = {"stability": 1.0}  # "Robust" end of the stability range: tested on a few sounds only
 
 # ---------------------------------------------------------------- candidates (see voices.md section 2)
-EN = ["lang-en-jessica", "lang-en-sarah", "lang-en-matilda", "lang-en-brian"]
-RU = ["lang-ru-marina", "lang-ru-ekaterina", "lang-ru-maxim", "lang-ru-ivan"]
+# The owner chose the English and Russian course voices himself on 2026-11-08 (content/voices.json), so there is no voice-picking
+# round for them any more: ONE pilot per language, with the full content (every sound, the pairs, the stress words, the chunks, the
+# Hebrew frame set), for his two voices. The Hebrew course keeps its reduced round 1 with the three known voices.
+EN = ["lang-en-female", "lang-en-male"]
+RU = ["lang-ru-female", "lang-ru-male"]
 HE = ["nitzi", "hero-son", "climber-tzuri"]
 CONTROL = "nitzi"  # the Hebrew house voice, as a control for "does a Hebrew voice speak the target language"
 
@@ -302,13 +305,13 @@ def arg(name, default):
 
 
 def main():
-    rnd = 2 if "round2" in sys.argv else 1
-    en_v = arg("--en", EN if rnd == 1 else EN[:2]) + ([CONTROL] if rnd == 1 else [])
-    ru_v = arg("--ru", RU if rnd == 1 else RU[:2]) + ([CONTROL] if rnd == 1 else [])
+    rnd = 2 if "round2" in sys.argv else 1  # round2 now only means a second Hebrew round
+    en_v = arg("--en", EN)
+    ru_v = arg("--ru", RU)
     he_v = arg("--he", HE if rnd == 1 else HE[:2])
-    mc = {"english": en_v[0], "russian": ru_v[0], "hebrew": he_v[0]}
-    sets = {"english": english(en_v, rnd, mc["english"]), "russian": russian(ru_v, rnd, mc["russian"]),
-            "hebrew": hebrew(he_v, rnd, mc["hebrew"])}
+    # English and Russian: always the full content (the old round 2), no Turbo comparison clips (the language packs are voiced on v4), no control.
+    sets = {"english": english(en_v, 2, None), "russian": russian(ru_v, 2, None),
+            "hebrew": hebrew(he_v, rnd, he_v[0])}
     total = 0
     for lang, clips in sets.items():
         ids = [c["id"] for c in clips]
@@ -320,13 +323,15 @@ def main():
         print(f"{lang:8} round {rnd}: {len(clips):4} clips, v4 {v4:5} chars, turbo {tu:4} chars, "
               f"list cost {v4 * 0.08 / 1000 + tu * 0.04 / 1000:.4f} USD")
         if "--count" not in sys.argv:
-            name = "pilot.json" if rnd == 1 else "pilot-round2.json"
+            name = "pilot.json" if (rnd == 1 or lang != "hebrew") else "pilot-round2.json"
             groups = [(name, clips)]
             if lang == "hebrew":  # IPA-only clips need hand-off H1; the rest runs on today's tool
                 groups = [(name, [c for c in clips if "allow" not in c]),
                           (name.replace(".json", "-ipa.json").replace("pilot-ipa", "pilot-ipa"),
                            [c for c in clips if "allow" in c])]
                 groups[1] = ("pilot-ipa.json" if rnd == 1 else "pilot-round2-ipa.json", groups[1][1])
+            if lang != "hebrew" and rnd == 2:
+                continue  # a second Hebrew round must not overwrite the English and Russian pilots
             for fname, group in groups:
                 write(os.path.join(HERE, lang, fname), spec(lang, group, rnd))
     print(f"all three: {total} chars")

@@ -203,9 +203,26 @@ List<List<String>> parseCsv(String text) {
 /// A line as the generator voices it: the voice_text of its rows in the master table, and why it cannot be voiced yet
 /// ([problem] is null when it can).
 class VoicedLine {
-  const VoicedLine({required this.voId, required this.text, required this.rows, this.problem});
+  const VoicedLine({
+    required this.voId,
+    required this.text,
+    required this.rows,
+    this.problem,
+    this.ui = false,
+    this.group = '',
+  });
+
+  VoicedLine inGroup(String name) =>
+      VoicedLine(voId: voId, text: text, rows: rows, problem: problem, ui: ui, group: name);
 
   final String voId;
+
+  /// The batch this line belongs to (the voice director's manifest, [VoiceTexts.withGroups]); a run may voice whole groups
+  /// and leave the others for later.
+  final String group;
+
+  /// A line of the shell (the bottle, the doors), from `content/lines/ui.he.json`, not of the lessons or the core lines.
+  final bool ui;
 
   /// The voice_text ('' when the table has none).
   final String text;
@@ -220,6 +237,13 @@ class VoiceTexts {
   const VoiceTexts(this.lines);
 
   final List<VoicedLine> lines;
+
+  /// The lines of [set] only (what a pack of that kind holds). The lines that wait are chosen the same way, so a run
+  /// is blocked only by the rows of the lines it voices.
+  VoiceTexts only(LineSet set) => VoiceTexts(<VoicedLine>[
+    for (final VoicedLine l in lines)
+      if (set.includes(l)) l,
+  ]);
 
   /// The lines that may be voiced.
   List<SpokenLine> get ready => <SpokenLine>[
@@ -238,6 +262,17 @@ class VoiceTexts {
     for (final VoicedLine l in lines)
       if (l.text.isNotEmpty) SpokenLine(l.voId, l.text),
   ];
+
+  /// The same lines with the group of each one that [groupOf] knows (by voice id); the shell's lines keep [uiGroup]. A
+  /// line it does not know has no group.
+  VoiceTexts withGroups(Map<String, String> groupOf) =>
+      VoiceTexts(<VoicedLine>[for (final VoicedLine l in lines) l.ui ? l : l.inGroup(groupOf[l.voId] ?? '')]);
+
+  /// The lines of the groups in [names] only.
+  VoiceTexts inGroups(Set<String> names) => VoiceTexts(<VoicedLine>[
+    for (final VoicedLine l in lines)
+      if (names.contains(l.group)) l,
+  ]);
 
   /// The voice_text of every line by its voice id, approved or not (for an audition that compares forms).
   Map<String, String> get textById => <String, String>{for (final VoicedLine l in lines) l.voId: l.text};
@@ -324,6 +359,145 @@ VoiceTexts voiceTextsOf({
     );
   }
   return VoiceTexts(out);
+}
+
+// ---- groups: the batches of a run ----
+
+/// The group of the shell's lines (they are not in the voice director's manifest, `docs/audio/voicing-groups.json`).
+const String uiGroup = 'ui';
+
+/// The distinct groups of [lines], in the order of [order] (the manifest's) and then by name; a line with no group is
+/// left out.
+List<String> groupNames(Iterable<VoicedLine> lines, List<String> order) {
+  final Set<String> found = <String>{
+    for (final VoicedLine l in lines)
+      if (l.group.isNotEmpty) l.group,
+  };
+  int rank(String g) => order.contains(g) ? order.indexOf(g) : order.length;
+  return found.toList()..sort((String a, String b) {
+    final int c = rank(a).compareTo(rank(b));
+    return c != 0 ? c : a.compareTo(b);
+  });
+}
+
+// ---- which set of lines a pack holds ----
+
+/// The lines a voice pack holds. A narrator has them all ([full]); a friend that has no recording of a line plays the
+/// narrator's (`VoiceBank.withFallback`), so a friend needs only its [own] lines.
+enum LineSet {
+  /// The lessons, the core lines and the shell's lines: a narrator's whole pack.
+  full,
+
+  /// The lessons and the core lines, without the shell's lines.
+  lessons,
+
+  /// The shell's lines only: the bottle's lines for each land, the language stops, the doors, the empty bottle.
+  ui,
+
+  /// A friend's own lines only: [friendOwnLineIds].
+  own;
+
+  /// Whether a pack of this kind holds [line].
+  bool includes(VoicedLine line) => switch (this) {
+    LineSet.full => true,
+    LineSet.lessons => !line.ui,
+    LineSet.ui => line.ui,
+    LineSet.own => friendOwnLineIds.contains(line.voId),
+  };
+
+  /// A pack holds all of a character's lines, so one that is the shell's lines alone would replace the lessons: that
+  /// set is for `plan`, to see its share. `generate` makes [full], [lessons] or [own].
+  bool get makesAPack => this != LineSet.ui;
+
+  static LineSet parse(String name) => LineSet.values.firstWhere(
+    (LineSet s) => s.name == name,
+    orElse: () => throw VoiceGenFailed(
+      '"$name" is not a set of lines; use ${LineSet.values.map((LineSet s) => s.name).join(', ')}',
+    ),
+  );
+}
+
+/// The lines a friend says in its own voice: the greeting, the start, the cheer, the end of the placement, the goodbye
+/// and the four ceremony lines (docs/audio/release-voicing-plan.md, F2). Nine lines.
+const Set<String> friendOwnLineIds = <String>{
+  'vo:core.greeting.hello',
+  'vo:core.greeting.start',
+  'vo:core.celebrate.well',
+  'vo:core.placement.done',
+  'vo:core.goodbye.next',
+  'vo:core.ceremony.bronze',
+  'vo:core.ceremony.silver',
+  'vo:core.ceremony.gold',
+  'vo:core.ceremony.medal',
+};
+
+// ---- the shell's lines (content/lines/ui.he.json) ----
+
+/// The lines of the app's shell that are voiced, from the file `content/lines/ui.he.json`. Their words are the voice_text
+/// of the strings they name in the master table (so the editor has one place to change them and one status to set); a
+/// line that names `{land}` is voiced once for each land, with the land's voice name in its place, as
+/// `<id>.<land key>`. The ids are the ones the app asks for (`app/lib/child/adventure_line.dart`).
+List<VoicedLine> uiLines({required File file, required Map<String, MasterRow> master}) {
+  final Object? doc = jsonDecode(file.readAsStringSync());
+  if (doc is! Map<String, Object?> || doc['schema'] != 'ui-lines/v1') {
+    throw VoiceGenFailed('${file.path} is not a ui-lines/v1 file');
+  }
+  final String source = (doc['masterSource'] ?? '') as String;
+  final Map<String, String> lands = <String, String>{
+    for (final MapEntry<String, Object?> e
+        in ((doc['lands'] ?? <String, Object?>{}) as Map<String, Object?>).entries)
+      e.key: e.value! as String,
+  };
+  final List<VoicedLine> out = <VoicedLine>[];
+  for (final Object? raw in (doc['lines'] ?? <Object?>[]) as List<Object?>) {
+    final Map<String, Object?> line = raw! as Map<String, Object?>;
+    final String id = line['id']! as String;
+    final String string = line['string']! as String;
+    final bool perLand = line['perLand'] == true;
+    final String at = masterKey(source, string);
+    final MasterRow? row = master[at];
+    final String? rowProblem = row == null ? 'no row in the master table for $at' : _rowProblem(at, row);
+    final String where = row == null ? at : '$at (${row.status.isEmpty ? 'no status' : row.status})';
+    final List<(String, String?)> voices = perLand
+        ? <(String, String?)>[
+            for (final MapEntry<String, String> land in lands.entries) ('$id.${land.key}', land.value),
+          ]
+        : <(String, String?)>[(id, null)];
+    for (final (String voiceId, String? land) in voices) {
+      final String vo = 'vo:$voiceId';
+      final List<String> problems = <String>[?rowProblem];
+      if (!_voIdPattern.hasMatch(vo) || vo.contains('..')) problems.add('the voice id is not a plain name');
+      String text = row?.voiceText.trim() ?? '';
+      if (land != null) {
+        if (text.isNotEmpty && !text.contains('{land}')) problems.add('$at has no {land} to fill');
+        text = text.replaceAll('{land}', land);
+      }
+      out.add(
+        VoicedLine(
+          voId: vo,
+          text: text,
+          rows: <String>[where],
+          problem: problems.isEmpty ? null : problems.join('; '),
+          ui: true,
+          group: uiGroup,
+        ),
+      );
+    }
+  }
+  return out;
+}
+
+/// Why the row [at] may not be voiced yet, or null: it appears twice, the owner has not approved it, or it has no
+/// voice_text (the same rules as a lesson line).
+String? _rowProblem(String at, MasterRow row) {
+  if (row.status == duplicateStatus) {
+    return '$at appears twice in the master table with a different voice_text or status';
+  }
+  if (!voiceableStatuses.contains(row.status)) {
+    return '$at is ${row.status.isEmpty ? 'without a status' : row.status} '
+        '(voiced only once the owner approved it: ${voiceableStatuses.join(', ')})';
+  }
+  return row.voiceText.trim().isEmpty ? '$at has no voice_text' : null;
 }
 
 // ---- the pre-flight check ----
@@ -500,7 +674,8 @@ String? _refusal(int r, Set<Allowance> allow, String language) {
   if (_number.hasMatch(c)) return 'a digit or number sign is never sent: a number is written as a word';
   if (r == 0x7B || r == 0x7D || r == 0xFF5B || r == 0xFF5D) {
     return 'a placeholder is never sent: a {child} line is voiced per child with the parent-reviewed first name, '
-        'and its voice_text leaves the name out';
+        'and its voice_text leaves the name out; any other {name} (a land, a puppet) is filled in before the text '
+        'is sent, one clip for each value';
   }
   if (r == 0x3C || r == 0x3E || r == 0xFF1C || r == 0xFF1E) return 'markup is never sent: v4 reads no SSML';
   if (_letter.hasMatch(c)) {

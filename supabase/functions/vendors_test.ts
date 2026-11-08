@@ -1,6 +1,6 @@
 import { assert } from "./_shared/testassert.ts";
 import { anthropicClient, ModelFailed } from "./_shared/anthropic.ts";
-import { elevenLabsClient, VoiceFailed } from "./_shared/elevenlabs.ts";
+import { elevenLabsClient, OUTPUT_FORMAT, VoiceFailed } from "./_shared/elevenlabs.ts";
 
 const json = (status: number, body: unknown) =>
   (() => Promise.resolve(new Response(JSON.stringify(body), { status }))) as unknown as typeof fetch;
@@ -47,6 +47,25 @@ Deno.test("voice errors keep the HTTP status and the provider's status word", as
   );
   assert.equal(e.reason, "status");
   assert.equal(e.detail, "HTTP 404 voice_not_found");
+});
+
+Deno.test("the voice request asks for MP3 at 44.1 kHz and 64 kbps, with the key in a header", async () => {
+  let seen: { url: string; headers: Headers; body: Record<string, unknown> } | null = null;
+  const fetchFn = ((url: string, init: RequestInit) => {
+    seen = { url, headers: new Headers(init.headers), body: JSON.parse(String(init.body)) };
+    return Promise.resolve(new Response(new Uint8Array(200), { headers: { "request-id": "r1" } }));
+  }) as unknown as typeof fetch;
+  const answer = await elevenLabsClient("the-key", fetchFn).speak({
+    voiceId: "abc",
+    modelId: "m",
+    text: "t",
+    timeoutMs: 1000,
+  });
+  assert.equal(OUTPUT_FORMAT, "mp3_44100_64");
+  assert.equal(seen!.url.endsWith("/v1/text-to-speech/abc?output_format=mp3_44100_64"), true);
+  assert.equal(seen!.headers.get("xi-api-key"), "the-key");
+  assert.equal(JSON.stringify(seen!.body).includes("the-key"), false);
+  assert.equal(answer.audio.length, 200);
 });
 
 Deno.test("the model request turns thinking off and keeps the key in a header, not in the body", async () => {

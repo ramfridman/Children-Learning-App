@@ -31,9 +31,10 @@ Files of this step:
 | | |
 |---|---|
 | **Lines to voice, Hebrew** [M] | 4,278 voice ids (starter 0.11.0 and the 27 core lines), about **187,000 characters for each narrator** (nitzi, hero-son): **374,000 characters, 14.96 USD** at the Turbo list price in `content/voices.json` (29.93 USD on `eleven_v4`) |
-| **Lines in the three language packs** [M] | Hebrew frame lines 274 (5,259 characters), target clips 574 (5,959 characters; 5,577 if the 63 English "slow" copies are made by ffmpeg and the duplicates are voiced once). About **10,800 characters, 0.43 USD** (0.87 on v4) |
-| **Pilots** [M] | The L2 voice pilots were **never run** (no `en-pilot`, `ru-pilot` or `he-pilot` folder under `~\nitznutz-voice\auditions`; the `voice-plan` is dated 2026-11-03). Round 1 of the three languages and the Hebrew probe: **4,042 characters, 0.27 USD**. Round 2 of English and Russian: about 1,974 characters, 0.15 USD |
-| **Total, everything** | about **394,000 characters**, about **16 USD at Turbo, 31.5 USD on v4**, in five owner sittings (section 4) |
+| **Lines in the three language packs** [M] | `plan-lang` with the owner's voices: English 3,446 characters, Russian 3,741, Hebrew 3,973: **11,160 characters, 0.90 USD on v4** (63 English "slow" copies are made by ffmpeg for free; `!` is sent as `.`; the puppets' 20 lines wait for a second-voice option) |
+| **Voices of the courses** | The owner chose them on 2026-11-08: English female `qSeXEcewz7tA0Q0qk9fH` and male `Aa6nEBJJMKJwJkCx8VU2`, Russian female `ymDCYd8puC7gYjxIamPt` and male `XuEV9VY3VUASYgJVNBh0` (`content/voices.json`). Female: the main target voice; male: the puppet's own lines; the Hebrew instructions: nitzi (`voices.md` section 11) |
+| **Pilots** [M] | The L2 pilots were **never run** (no `en-pilot`, `ru-pilot` folder). With the owner's voices there is **one round**: English 970 characters, Russian 900, Hebrew course 417 + 24, plus the Hebrew probes 1,421 + 1,756: **5,488 characters, 0.35 USD**. The voice-picking round 2 is dropped |
+| **Total, everything** | about **396,000 characters**, about **24 USD** with nitzi on v4 and hero-son on Turbo (section 1.6); in five owner sittings (section 4) |
 | **Already voiced** | 318 clips each for nitzi and hero-son, 54 for each of the seven friends, and 66 tutor lines. None can be reused (section 1.4): they were made from the old fully pointed captions, with the old settings, and no ledger records them |
 | **Blocked today** [M] | `voice_gen generate` refuses the whole run while any line is not approved: **4,151 of 4,278 ids are not** (4,045 `text-ready`, 106 `proposed`; only 127 are `owner-approved`). Two ids carry two or three different texts (`vo:fb.num_rev`, `vo:fb.size`). Section 2 |
 | **Tool gaps** [R] | The generator voices every line for every character, has no subset for the friends, no per-land lines, no language-pack path, and does not voice a repeated text once. Five requests for the app-developer, section 5 |
@@ -319,57 +320,42 @@ dart run tool/voice_gen.dart plan --characters nitzi,hero-son
 
 The second command must end without a "cannot be voiced yet" list before step 3 (section 2).
 
-### Step 1, the sweep probe and the round-1 pilots (one sitting, 4,042 characters, 0.27 USD)
+### Step 1, the probes and the pilots (one sitting, 5,488 characters, 0.35 USD)
 
-Do this first, in this order. It can start today, before the sweep ends: it needs no approved row. It answers the four open
-pronunciation questions, and it picks the voices for English and Russian.
+Do this first, in this order. It can start today, before the sweep ends: it needs no approved row. The English and Russian voices are the owner's own
+(`lang-en-female`, `lang-en-male`, `lang-ru-female`, `lang-ru-male` in `content/voices.json`, chosen 2026-11-08), so there is **no voice-picking round**: one
+pilot per language, with the full content, for his two voices (`docs/languages/voices.md` section 11). The pilot is the isolated-sound test (D2) and the teachers'
+listening check.
 
 | # | Plan (free) | Run (paid) | Clips | Characters | USD (list) | You type |
 |---|---|---|---|---|---|---|
 | 1a | `dart run tool/voice_gen.dart audition-batch plan ../docs/audio/audition/round5-sweep-probe.json` | `dart run tool/voice_gen.dart audition-batch run ../docs/audio/audition/round5-sweep-probe.json` | 37 | 1,421 | 0.0568 (Turbo) | `1421` |
-| 1b | `… plan ../docs/languages/english/pilot.json` | `… run ../docs/languages/english/pilot.json` | 140 | 1,165 | 0.0932 (v4) | `1165` |
-| 1c | `… plan ../docs/languages/russian/pilot.json` | `… run ../docs/languages/russian/pilot.json` | 160 | 1,015 | 0.0812 (v4) | `1015` |
-| 1d | `… plan ../docs/languages/hebrew/pilot.json` | `… run ../docs/languages/hebrew/pilot.json` | 63 | 417 | 0.0334 (v4) | `417` |
-| 1e | `… plan ../docs/languages/hebrew/pilot-ipa.json` | `… run ../docs/languages/hebrew/pilot-ipa.json` | 6 | 24 | 0.0019 (v4) | `24` |
+| 1b | `… plan ../docs/audio/audition/model-ab-fix.json` | `… run ../docs/audio/audition/model-ab-fix.json` | 32 | 1,756 | 0.1054 (both models) | `1756` |
+| 1c | `… plan ../docs/languages/english/pilot.json` | `… run ../docs/languages/english/pilot.json` | 142 | 970 | 0.0776 (v4) | `970` |
+| 1d | `… plan ../docs/languages/russian/pilot.json` | `… run ../docs/languages/russian/pilot.json` | 134 | 900 | 0.0720 (v4) | `900` |
+| 1e | `… plan ../docs/languages/hebrew/pilot.json` | `… run ../docs/languages/hebrew/pilot.json` | 63 | 417 | 0.0334 (v4) | `417` |
+| 1f | `… plan ../docs/languages/hebrew/pilot-ipa.json` | `… run ../docs/languages/hebrew/pilot-ipa.json` | 6 | 24 | 0.0019 (v4) | `24` |
+| | **Total** | | **414** | **5,488** | **0.3471** | |
 
-| 1f | `… plan ../docs/audio/audition/model-ab-fix.json` | `… run ../docs/audio/audition/model-ab-fix.json` | 32 | 1,756 | 0.1054 (both models) | `1756` |
+(`…` is `dart run tool/voice_gen.dart audition-batch`. 1a and 1b settle the Hebrew words and are the same two probes as before; if 1b was already run, leave it out:
+the pilots alone are 2,311 characters, 0.1849 USD.) The files land in `C:\Users\ramfr\nitznutz-voice\auditions\<name>`, with the language in front for a non-Hebrew spec
+(`en-pilot`, `ru-pilot`). If a run stops, repeat the same command: a clip whose `.json` has the same hash is not made or paid for again. The free plans
+of 1c and 1d name no missing voice: the four ids are in `voices.json`.
 
-(`…` is `dart run tool/voice_gen.dart audition-batch`. Step 1f is the fix probe of section 1.6 and can be done first: it settles the model and
-the three words. With it step 1 is 5,798 characters, about 0.37 USD.) The files land in `C:\Users\ramfr\nitznutz-voice\auditions\<name>`, with
-the language in front for a non-Hebrew spec (`en-pilot`, `ru-pilot`). If a run stops, repeat the same command: a clip whose
-`.json` has the same hash is not made or paid for again.
+**What the English and Russian pilots hold** (142 and 134 clips, two voices each): every isolated sound (English 12, as IPA, stretched, written long, and the
+four most important at stability 1.0), the CV units, robot talk, the minimal pairs (wet/vet, three/tree, ship/sheep, man/men, hat/hot/hut, sing/sin;
+Russian лук/люк and the hard/soft pairs), the stress words (banana, elephant; Russian молоко́, with and without U+0301, and one in IPA), the chunks, and the Hebrew
+frame clips said by the native voice (to judge whether it could carry the Hebrew too).
 
-**Before 1b and 1c, the owner fills voice ids** (free): `content/voices.json` › `voices` › `lang-ru-marina`, `lang-ru-ekaterina`,
-`lang-ru-maxim`, `lang-ru-ivan` have an empty `voiceId` (copy the id from the Voice Library after adding the voice to My
-Voices), and the four English candidates have ids that come from a third-party list and are **not checked against his account**
-(`idStatus: from-third-party-list-unverified`). `audition-batch plan` names every voice that is still missing and `run` sends
-nothing until it is filled. If a library voice is gone, replace it by a search (American, female, calm and warm, narration;
-Russian, Moscow norm), not by guessing an id.
+**Then listen** (I write the listening sheet for each language when the files exist): the owner for Hebrew, a native-level listener for English and Russian, the
+teachers' `check` column as the expectation (`docs/languages/voices.md` section 7). Outputs: the probes' heard-ok / heard-wrong per clip, the form of each isolated
+sound (D2), whether the native voice also says Hebrew well enough (option A) or nitzi keeps the frame (option B, the default), and pointed or plain for the Hebrew
+course. The editor then applies the `open` rows.
 
-**Then listen** (I write the listening sheet for each language when the files exist): the owner for Hebrew, a native-level
-listener for English and Russian, the teachers' `check` column as the expectation (`docs/languages/voices.md` §7). Outputs: the
-probe's heard-ok / heard-wrong per clip, one English and one Russian finalist pair (or one voice), the form of each isolated
-sound (D2), and pointed or plain for the Hebrew course. The editor then applies the `open` rows.
+### Step 2, dropped
 
-### Step 2, round 2 for English and Russian (finalists, about 1,974 characters, 0.15 USD; Hebrew optional)
-
-After step 1, I regenerate the round-2 specs for the finalists:
-
-```powershell
-cd <REPO>
-python docs\languages\make_pilot_specs.py round2 --en lang-en-sarah,lang-en-matilda --ru lang-ru-marina,lang-ru-maxim --he nitzi,hero-son
-cd app
-dart run tool/voice_gen.dart audition-batch plan ../docs/languages/english/pilot-round2.json
-dart run tool/voice_gen.dart audition-batch run  ../docs/languages/english/pilot-round2.json
-dart run tool/voice_gen.dart audition-batch plan ../docs/languages/russian/pilot-round2.json
-dart run tool/voice_gen.dart audition-batch run  ../docs/languages/russian/pilot-round2.json
-```
-
-(the finalist names above are the placeholders in the files today; they change after step 1). With the placeholders the plan
-says English 1,029 characters (0.0800 USD) and Russian 945 (0.0738 USD). The Hebrew round 2 (730 + 24 characters, 0.0580 USD) is
-optional: the Hebrew voices are known, only the isolated sounds are new. **To shorten the road to the children's trial, the owner may skip step 2 and
-voice the language packs with the round-1 finalists**; I would still run it for the 12 isolated sounds of English (decision 2 of
-the Languages frame). That choice is **decision 4** below.
+The voice-picking round 2 for English and Russian is no longer needed (the owner chose the voices). The files `english/pilot-round2.json` and
+`russian/pilot-round2.json` are deleted. An optional second Hebrew round (`python docs\languages\make_pilot_specs.py round2 --he nitzi,hero-son`; 730 + 24 characters, 0.06 USD) remains for the Hebrew course.
 
 ### Step 3, the Hebrew narrators (the big step: about 187,000 characters each)
 
@@ -414,17 +400,30 @@ dart run tool/voice_gen.dart plan --characters alien-jili,climber-tzuri,compass-
 
 (the `--lines` option does not exist today; the names are a proposal for the app-developer; the owner types what the plan prints).
 
-### Step 5, the language packs (after F4, about 10,800 characters, 0.43 USD at Turbo, 0.87 on v4)
+### Step 5, the language packs (11,160 characters, 0.90 USD on v4)
 
-| Pack | Hebrew frame | Target | Total (as listed) | After dedupe and `slow` by ffmpeg |
+Free plans with the owner's voices (`plan-lang`; the Hebrew frame lines are said by nitzi; `!` is sent as `.`; the 63 English `-slow` clips are made from the normal
+clips by ffmpeg, free; the cut words of the Hebrew pack are cut from their page clip):
+
+| Course | Command | Characters | USD (v4 list) | Needs |
 |---|---|---|---|---|
-| English | 1,605 | 2,082 | 3,687 | 3,305 |
-| Russian | 1,165 | 2,460 | 3,625 | 3,625 |
-| Hebrew | 2,489 | 1,417 | 3,906 | 3,906 |
-| **Total** | 5,259 | 5,959 | **11,218** | **10,836** |
+| English | `dart run tool/voice_gen.dart plan-lang eng --voice lang-en-female --frame-voice nitzi --model eleven_v4` | 3,446 (3,405 sent: 2 clips share a text) | 0.28 | ffmpeg |
+| Russian | `dart run tool/voice_gen.dart plan-lang rus --voice lang-ru-female --frame-voice nitzi --model eleven_v4` | 3,741 | 0.30 | ffmpeg not needed; **blocked by one text:** `vo:rus.ch_menja_zovut` has `{puppet}` |
+| Hebrew | `dart run tool/voice_gen.dart plan-lang heb --voice nitzi --model eleven_v4` | 3,973 | 0.32 | ffmpeg (12 cut words) |
+| **Total** | | **11,160** | **0.90** | |
 
-One command for each course and each voice, with the same gate (`generate-lang`, a proposal for F4). The two-voice case (a Hebrew
-teaching voice and a native voice) is two runs of the same lines split by language. The count and cost do not depend on it.
+The paid command for each is the same with `generate-lang` and `--pack-version 1.0.0` (the tool prints its plan and asks for the number):
+
+```powershell
+dart run tool/voice_gen.dart generate-lang eng --voice lang-en-female --frame-voice nitzi --model eleven_v4 --pack-version 1.0.0
+dart run tool/voice_gen.dart generate-lang rus --voice lang-ru-female --frame-voice nitzi --model eleven_v4 --pack-version 1.0.0
+dart run tool/voice_gen.dart generate-lang heb --voice nitzi --model eleven_v4 --pack-version 1.0.0
+```
+
+Before the paid runs: (1) the pilot has passed and the `say` forms are final; (2) `winget install Gyan.FFmpeg`, then a new PowerShell window; (3) the Russian
+puppet line has its own text for Саша (`Меня́ зову́т Са́ша.`, the Russian teacher and the editor); (4) the 5, 15 and 25 frame lines still `needs-editor` in the three courses
+are approved. **The puppets (request F7):** `generate-lang` has one `--voice`; the 20 puppet lines (English 9, Russian 11, 337 characters) are said by the female voice
+until a `--puppet-voice` exists. The count and the cost do not change.
 
 ### Step 6, later and optional
 
@@ -433,14 +432,14 @@ paid step).
 
 ### Order at a glance
 
-| Step | What | Characters | USD (Turbo / v4) | Needs |
+| Step | What | Characters | USD (list) | Needs |
 |---|---|---|---|---|
-| 1 | probe + 3 round-1 pilots | 4,042 | 0.27 | nothing (can start today) |
-| 2 | round 2 en + ru | about 1,974 | 0.15 | step 1 listened |
-| 3 | nitzi, hero-son | about 374,000 | 14.96 / 29.93 | approvals, fixes, probe |
-| 4 | UI lines + friends | 3,376 | 0.14 | F2, F3 |
-| 5 | language packs | about 10,800 | 0.43 / 0.87 | steps 1 to 2, F4 |
-| | **total** | **about 394,000** | **about 16 / 31.5** | |
+| 1 | probes and the three pilots | 5,488 | 0.35 | nothing (can start today) |
+| 2 | (dropped) | | | |
+| 3 | nitzi (v4), hero-son (Turbo) | about 376,000 | 22.4 (section 1.6) | approvals, fixes, probes |
+| 4 | UI lines + friends | 3,376 | 0.14 | `--lines` options |
+| 5 | language packs | 11,160 | 0.90 | step 1 listened, ffmpeg |
+| | **total** | **about 396,000** | **about 24** | |
 
 ---
 
@@ -473,8 +472,7 @@ editor is still changing texts, so re-run the script (and `plan`) before typing 
 | `numbers-C`, `math-C` | 528 | 36,623 | 3 |
 | **All, one narrator** | **4281** | **188,471** | |
 
-Outside the narrators' manifest (separate counts, section 1): the pilots and probes (7,772 characters: the fix probe 1,756, round 1 4,042, round 2
-about 1,974), the three language packs (eng 3,305, rus 3,625, heb 3,906 = 10,836), the 30 UI lines (1,009 per narrator) and the friends' own nine
+Outside the narrators' manifest (separate counts, section 1): the pilots and probes (5,488 characters: the sweep probe 1,421, the fix probe 1,756, the English pilot 970, the Russian 900, the Hebrew-course 417 and its IPA 24), the three language packs (eng 3,446, rus 3,741, heb 3,973 = 11,160 as `plan-lang` counts them), the 30 UI lines (1,009 per narrator) and the friends' own nine
 lines (194 each, 1,358 for seven). The model-ab clips (1,836 characters) are already spent. The counts come from my script and follow the paid
 tool's rule (code points of `voice_text`); the tool's own `plan --groups` figure is the one to type.
 
@@ -523,54 +521,54 @@ Month 1 budget 343,814 credits (361,814 left now, 18,000 reserve). Pack versions
 
 | Batch | Voice | Groups | Characters | Credits (case A) | Running total in its month | Month |
 |---|---|---|---|---|---|---|
-| 0 |  | pilots, probes, round 2 | 7,772 | 7,772 | 7,772 | 1 |
-| 1 | N | core,celebrate | 6,387 | 6,387 | 14,159 | 1 |
-| 2 | H | core,celebrate | 6,387 | 6,387 | 20,546 | 1 |
-| 3 | N | numbers-A | 27,644 | 27,644 | 48,190 | 1 |
-| 4 | N | colors-A,shapes-A,logic-A,cs-A,math-A | 32,156 | 32,156 | 80,346 | 1 |
-| 5 | H | numbers-A | 27,644 | 27,644 | 107,990 | 1 |
-| 6 | H | colors-A,shapes-A,logic-A,cs-A,math-A | 32,156 | 32,156 | 140,146 | 1 |
-| 7 |  | languages eng, rus, heb (F4) | 10,836 | 10,836 | 150,982 | 1 |
-| 8 | N and H | UI lines (F3) | 2,018 | 2,018 | 153,000 | 1 |
-| 9 | N | numbers-B | 36,814 | 36,814 | 189,814 | 1 |
-| 10 | N | colors-B,shapes-B,logic-B,cs-B | 17,696 | 17,696 | 207,510 | 1 |
-| 11 | N | math-B | 31,151 | 31,151 | 238,661 | 1 |
-| 12 | H | colors-B,shapes-B,logic-B,cs-B | 17,696 | 17,696 | 256,357 | 1 |
-| 13 | H | numbers-B | 36,814 | 36,814 | 293,171 | 1 |
-| 14 | H | math-B | 31,151 | 31,151 | 324,322 | 1 |
+| 0 |  | probes and pilots (step 1) | 5,488 | 5,488 | 5,488 | 1 |
+| 1 | N | core,celebrate | 6,387 | 6,387 | 11,875 | 1 |
+| 2 | H | core,celebrate | 6,387 | 6,387 | 18,262 | 1 |
+| 3 | N | numbers-A | 27,644 | 27,644 | 45,906 | 1 |
+| 4 | N | colors-A,shapes-A,logic-A,cs-A,math-A | 32,156 | 32,156 | 78,062 | 1 |
+| 5 | H | numbers-A | 27,644 | 27,644 | 105,706 | 1 |
+| 6 | H | colors-A,shapes-A,logic-A,cs-A,math-A | 32,156 | 32,156 | 137,862 | 1 |
+| 7 |  | languages eng, rus, heb (`generate-lang`) | 11,160 | 11,160 | 149,022 | 1 |
+| 8 | N and H | UI lines (`--lines ui`) | 2,018 | 2,018 | 151,040 | 1 |
+| 9 | N | numbers-B | 36,814 | 36,814 | 187,854 | 1 |
+| 10 | N | colors-B,shapes-B,logic-B,cs-B | 17,696 | 17,696 | 205,550 | 1 |
+| 11 | N | math-B | 31,151 | 31,151 | 236,701 | 1 |
+| 12 | H | colors-B,shapes-B,logic-B,cs-B | 17,696 | 17,696 | 254,397 | 1 |
+| 13 | H | numbers-B | 36,814 | 36,814 | 291,211 | 1 |
+| 14 | H | math-B | 31,151 | 31,151 | 322,362 | 1 |
 | 15 | N | numbers-C,math-C | 36,623 | 36,623 | 36,623 | 2 |
 | 16 | H | numbers-C,math-C | 36,623 | 36,623 | 73,246 | 2 |
 | 17 |  | friends: their own 9 lines (F2) | 1,358 | 1,358 | 74,604 | 2 |
 
-**Case A: month 1 uses 324,322 credits** (the batches marked 1), **month 2 (from 5 December) uses 74,604**. Month 1 ends after the last batch above marked 1; the next
-batch would not fit whole, so it waits for the reset. The whole release is 398,926 characters, more than the 361,814 left, so in case A
+**Case A: month 1 uses 322,362 credits** (the batches marked 1), **month 2 (from 5 December) uses 74,604**. Month 1 ends after the last batch above marked 1; the next
+batch would not fit whole, so it waits for the reset. The whole release is 396,966 characters, more than the 361,814 left, so in case A
 **it does not fit in month 1**.
 
 ### 4a.5 The batches, case B (Turbo 0.5 credit, v4 1)
 
 | Batch | Voice | Groups | Characters | Credits (case B) | Running total in its month | Month |
 |---|---|---|---|---|---|---|
-| 0 |  | pilots, probes, round 2 | 7,772 | 7,772 | 7,772 | 1 |
-| 1 | N | core,celebrate | 6,387 | 6,387 | 14,159 | 1 |
-| 2 | H | core,celebrate | 6,387 | 3,194 | 17,352 | 1 |
-| 3 | N | numbers-A | 27,644 | 27,644 | 44,996 | 1 |
-| 4 | N | colors-A,shapes-A,logic-A,cs-A,math-A | 32,156 | 32,156 | 77,152 | 1 |
-| 5 | H | numbers-A | 27,644 | 13,822 | 90,974 | 1 |
-| 6 | H | colors-A,shapes-A,logic-A,cs-A,math-A | 32,156 | 16,078 | 107,052 | 1 |
-| 7 |  | languages eng, rus, heb (F4) | 10,836 | 10,836 | 117,888 | 1 |
-| 8 | N and H | UI lines (F3) | 2,018 | 1,514 | 119,402 | 1 |
-| 9 | N | numbers-B | 36,814 | 36,814 | 156,216 | 1 |
-| 10 | N | colors-B,shapes-B,logic-B,cs-B | 17,696 | 17,696 | 173,912 | 1 |
-| 11 | N | math-B | 31,151 | 31,151 | 205,063 | 1 |
-| 12 | H | colors-B,shapes-B,logic-B,cs-B | 17,696 | 8,848 | 213,911 | 1 |
-| 13 | H | numbers-B | 36,814 | 18,407 | 232,318 | 1 |
-| 14 | H | math-B | 31,151 | 15,576 | 247,894 | 1 |
-| 15 | N | numbers-C,math-C | 36,623 | 36,623 | 284,516 | 1 |
-| 16 | H | numbers-C,math-C | 36,623 | 18,312 | 302,828 | 1 |
-| 17 |  | friends: their own 9 lines (F2) | 1,358 | 1,358 | 304,186 | 1 |
+| 0 |  | probes and pilots (step 1) | 5,488 | 5,488 | 5,488 | 1 |
+| 1 | N | core,celebrate | 6,387 | 6,387 | 11,875 | 1 |
+| 2 | H | core,celebrate | 6,387 | 3,194 | 15,068 | 1 |
+| 3 | N | numbers-A | 27,644 | 27,644 | 42,712 | 1 |
+| 4 | N | colors-A,shapes-A,logic-A,cs-A,math-A | 32,156 | 32,156 | 74,868 | 1 |
+| 5 | H | numbers-A | 27,644 | 13,822 | 88,690 | 1 |
+| 6 | H | colors-A,shapes-A,logic-A,cs-A,math-A | 32,156 | 16,078 | 104,768 | 1 |
+| 7 |  | languages eng, rus, heb (`generate-lang`) | 11,160 | 11,160 | 115,928 | 1 |
+| 8 | N and H | UI lines (`--lines ui`) | 2,018 | 1,514 | 117,442 | 1 |
+| 9 | N | numbers-B | 36,814 | 36,814 | 154,256 | 1 |
+| 10 | N | colors-B,shapes-B,logic-B,cs-B | 17,696 | 17,696 | 171,952 | 1 |
+| 11 | N | math-B | 31,151 | 31,151 | 203,103 | 1 |
+| 12 | H | colors-B,shapes-B,logic-B,cs-B | 17,696 | 8,848 | 211,951 | 1 |
+| 13 | H | numbers-B | 36,814 | 18,407 | 230,358 | 1 |
+| 14 | H | math-B | 31,151 | 15,576 | 245,934 | 1 |
+| 15 | N | numbers-C,math-C | 36,623 | 36,623 | 282,556 | 1 |
+| 16 | H | numbers-C,math-C | 36,623 | 18,312 | 300,868 | 1 |
+| 17 |  | friends: their own 9 lines (F2) | 1,358 | 1,358 | 302,226 | 1 |
 
-**Case B: month 1 uses 304,186 credits** of the 343,814 budget (plus the 18,000 reserve it is 322,186 of the 361,814 left). **The whole release fits in month 1 under case B**,
-with 39,628 credits to spare after the 18,000 reserve.
+**Case B: month 1 uses 302,226 credits** of the 343,814 budget (plus the 18,000 reserve it is 320,226 of the 361,814 left). **The whole release fits in month 1 under case B**,
+with 41,588 credits to spare after the 18,000 reserve.
 
 Under the reading that the 1,186 suggests (v4 about 0.8, Turbo 0.5) nitzi's 188,000 characters cost about 150,000 instead of 188,000, so the whole release
 fits in month 1 with even more room, and the order of the batches does not change.
@@ -690,8 +688,7 @@ duration), as in the diagnosis.
 2. **Which model for the Hebrew narrators. DECIDED (2026-11-08): nitzi on `eleven_v4`, hero-son on Turbo** (22.44 USD for the two; needs F6).
    Allowance known: 361,814 left until 2026-12-05 (section 4a.3). Still open: the credit rate of v4 and Turbo, which the first batch will show.
 3. **Pay for repeated texts or have the app-developer remove them (F1).** 4 USD at Turbo. Not a quality question.
-4. **Languages: one round or two.** Round 1 only (faster, 0.27 USD) or round 1 and round 2 (0.42 USD in all, one more listening sitting). I
-   recommend round 2 for English and Russian because the isolated-sound test (D2) is in it.
+4. **Languages: DECIDED by the owner's choice of voices (2026-11-08):** one pilot round per language for his two voices (step 1), no voice-picking round 2.
 5. **Friends: after the trial?** The children hear the narrator for every friend's lessons today; the friends' own nine lines can wait
    (0.05 USD). The voice for each friend is still the shared one (five characters share Nitzi's voice id, Keshet shares Tamir's);
    the questions 1 to 3 of `voice-direction.md` §12 are still open.
