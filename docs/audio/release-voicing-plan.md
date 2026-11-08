@@ -172,7 +172,7 @@ then, run `generate nitzi` with `modelId` set to `eleven_v4`, then set it back t
    `voice-ready` or `voiced`. Today: 4,045 `text-ready`, 106 `proposed`. The orchestrator needs one command that sets the
    rows the owner approved to `owner-approved` (the owner's act, not mine, and not the editor's). I do not touch the status
    column.
-2. **Two ids with several texts** must be fixed: `vo:fb.num_rev` (2 texts) and `vo:fb.size` (3 texts). Each text needs its own
+2. **Two ids with several texts** (fixed by the editor in the table of 2026-11-08: `tools/voicing_inventory.py` now says "blocked until fixed: none"; keep checking). They were: `vo:fb.num_rev` (2 texts) and `vo:fb.size` (3 texts). Each text needs its own
    id (the content author) or the texts become one. Until then the tool says "its rows have N different voice texts" and
    stops the run.
 3. **Apply `docs/audio/release-pronunciation-fixes.csv`** (section 3) and run `PYTHONIOENCODING=utf-8 python tools/hebrew_voice_review.py`
@@ -444,6 +444,172 @@ paid step).
 
 ---
 
+## 4a. The batched schedule (owner's decisions of 2026-11-08: nitzi on `eleven_v4`, hero-son on Turbo; whole groups, so a stop is coherent)
+
+**Why batches.** The monthly character allowance is smaller than the whole run (275,000 [R, PLAN.md line 1202] against 374,000 for the two
+narrators and about 395,000 with everything). So the run is cut into **groups**, each a whole unit that a child meets together, and the
+groups are voiced in the order of the children's first tests. If the allowance ends, every group that was started is finished; the rest waits
+for the reset. A group is never split.
+
+### 4a.1 The groups [M]
+
+`python tools/voicing_groups.py` writes `docs/audio/voicing-groups.json` (the manifest: group name, voice ids, characters) and prints the
+table. A group is the core lines, the end-of-lesson celebrations, or **one land and one band** (the six lands are the skill domains:
+numbers, colors, shapes, logic, cs, math). A line that several groups use sits in the **earliest** group, so it is already voiced when a later
+group needs it. Characters are for **one narrator** (the same set is said by nitzi and by hero-son).
+
+| Group | Ids | Characters | Tier |
+|---|---|---|---|
+| `core` (greeting, encouragement, listening, goodbye, ceremony) | 27 | 709 | 1 |
+| `celebrate` (the end of every lesson, cheer style) | 200 | 5,636 | 1 |
+| `numbers-A` | 661 | 27,640 | 1 |
+| `colors-A` | 198 | 5,125 | 1 |
+| `shapes-A` | 242 | 5,947 | 1 |
+| `logic-A` | 272 | 8,587 | 1 |
+| `cs-A` | 98 | 3,905 | 1 |
+| `math-A` | 192 | 8,586 | 1 |
+| **Tier 1, one narrator** | **1,890** | **66,135** | |
+| `numbers-B` | 762 | 36,744 | 2 |
+| `colors-B`, `shapes-B`, `logic-B`, `cs-B` | 128 + 155 + 160 + 49 | 3,883 + 5,714 + 5,740 + 2,351 = 17,688 | 2 |
+| `math-B` | 609 | 31,143 | 2 |
+| **Tier 2, one narrator** | **1,863** | **85,575** | |
+| `numbers-C` | 345 | 23,737 | 3 |
+| `math-C` | 183 | 12,238 | 3 |
+| **Tier 3, one narrator** | **528** | **35,975** | |
+| **All, one narrator** | **4,281** | **187,685** | |
+
+Outside the narrators' manifest (separate counts, section 1): the pilots and probes (steps 1 and 2: 7,772 characters: the fix probe 1,756, round 1
+4,042, round 2 about 1,974), the three language packs (eng 3,305, rus 3,625, heb 3,906 = 10,836), the 30 UI lines (1,009 per narrator),
+and the friends' own nine lines (194 each, 1,358 for seven). The model-ab clips (1,836 characters) are already spent.
+The counts come from my script and match the paid tool's rule (code points of `voice_text`); the tool's own `plan --groups` figure is the one to type.
+
+### 4a.2 What a child hears while only some groups are voiced [R]
+
+- A line with no recording is **silence**: `VoiceDirector.say` says "a null id or a line with no recording is silence"
+  (`app/lib/voice/voice_director.dart:99`), and the lesson screen shows the caption text, which stands alone (a rule of M10 and B-40: the
+  hint ladder is also drawn). The mouth stays closed and nothing breaks.
+- A friend's lines fall back to **the narrator of the same voice gender** (`VoiceBank.withFallback`, `companion.dart:77`): nitzi for
+  a girl-voiced friend, hero-son for a boy-voiced one. A narrator **never** falls back to the other narrator.
+- The bottle's lines are "only written" until their clips exist (`adventure_line.dart`).
+- So a test with partly voiced groups is **acceptable** for the children's first tests: a lesson of a voiced land and band is fully voiced
+  (its prompt, hints, feedback and celebration are in the same or an earlier group); a lesson of an unvoiced group is silent but complete on
+  screen. It is not a good test of a lesson's *feel* for an unvoiced group, and the owner should tell the children's helper which lands are voiced.
+- One more thing to expect: each batch makes a new voice pack of **everything made so far** (`voice_gen` puts every file of the work folder
+  into the pack), so each batch needs a **higher `--pack-version`**; an installed pack of the same version is not replaced.
+
+### 4a.3 Credits: does v4 cost more per character than Turbo?
+
+**Unknown for v4.** Nothing in the repo says. `PLAN.md` says "Creator: 275,000 **v4** characters a month" and lists the API prices (v4 0.08, Turbo 0.04
+USD per 1,000). A web check (2026-11-08) found only that ElevenLabs' help says Eleven v3 is 1 credit a character on the website, that third-party
+write-ups say Flash/Turbo are 0.5 credit a character, and that **no source states a credit rate for v4 or v4 Turbo**
+([ElevenLabs help: cost of Eleven v3](https://help.elevenlabs.io/hc/en-us/articles/35869113958801-How-much-does-it-cost-to-generate-using-Eleven-v3),
+[ElevenLabs API pricing](https://elevenlabs.io/pricing/api), [activepieces: pricing 2026](https://www.activepieces.com/blog/elevenlabs-pricing-2026-plans-credits-and-costs)).
+The 2:1 price ratio makes "v4 = 1 credit, Turbo = 0.5" the likely reading [G].
+
+**So the schedule below is built for the worst case: every character counts as 1 credit, for both models.** If Turbo is really 0.5, hero-son's
+batches use half, and more of month 2 moves into month 1 (section 4a.5). **Please confirm the allowance** (still 275,000?) **and the day it resets**
+on the ElevenLabs usage page, and after the first batch compare the page's number with the batch's characters: that is the test of the rule.
+
+### 4a.4 Month 1 and month 2 [M, worst case 1 credit a character]
+
+The batches in the order of the first tests (both narrators for each tier: the default companion is nitzi, a child who picks a boy-voiced friend
+hears hero-son). `N` is nitzi (v4), `H` is hero-son (Turbo). Pack versions: one counter for each narrator, starting at 2.0.1.
+
+| Batch | Voice | Groups | Characters | Total so far | Pack |
+|---|---|---|---|---|---|
+| **Month 1** | | | | | |
+| 0 | pilots, probes, round 2 | (specs, section 4 steps 1 and 2) | 7,772 | 7,772 | |
+| 1 | N | `core,celebrate` | 6,345 | 14,117 | 2.0.1 |
+| 2 | H | `core,celebrate` | 6,345 | 20,462 | 2.0.1 |
+| 3 | N | `numbers-A` | 27,640 | 48,102 | 2.0.2 |
+| 4 | N | `colors-A,shapes-A,logic-A,cs-A,math-A` | 32,150 | 80,252 | 2.0.3 |
+| 5 | H | `numbers-A` | 27,640 | 107,892 | 2.0.2 |
+| 6 | H | `colors-A,shapes-A,logic-A,cs-A,math-A` | 32,150 | 140,042 | 2.0.3 |
+| 7 | languages | eng, rus, heb (needs F4) | 10,836 | 150,878 | lang packs |
+| 8 | N and H | UI lines (needs F3) | 2,018 | 152,896 | 2.0.4 |
+| 9 | N | `numbers-B` | 36,744 | 189,640 | 2.0.5 |
+| 10 | N | `colors-B,shapes-B,logic-B,cs-B` | 17,688 | 207,328 | 2.0.6 |
+| 11 | N | `math-B` | 31,143 | 238,471 | 2.0.7 |
+| 12 | H | `colors-B,shapes-B,logic-B,cs-B` | 17,688 | 256,159 | 2.0.4 |
+| | reserve for lines that must be voiced again after listening | | 18,841 | 275,000 | |
+| **Month 2 (after the reset)** | | | | | |
+| 13 | H | `numbers-B` | 36,744 | 36,744 | 2.0.5 |
+| 14 | H | `math-B` | 31,143 | 67,887 | 2.0.6 |
+| 15 | N | `numbers-C,math-C` | 35,975 | 103,862 | 2.0.8 |
+| 16 | H | `numbers-C,math-C` | 35,975 | 139,837 | 2.0.7 |
+| 17 | friends | their own 9 lines (needs F2) | 1,358 | 141,195 | |
+
+Month 2 uses about half of the allowance (141,195 of 275,000) and leaves about 134,000 for redoing lines, the Band B and C items that arrive later, and the live tutor.
+The first batch that breaks the allowance is the one to stop **before**: look at the remaining credits on the usage page, and if the next
+batch's printed "characters to send" is more, wait for the reset. Because every batch is whole groups, nothing is left half done.
+
+### 4a.5 If Turbo counts half a credit
+
+hero-son's characters count 0.5. Month 1 then holds batches 0 to 12, and also 13 and 14 (hero's `numbers-B` and `math-B`: +18,372 +15,572),
+about 248,000 credits, leaving batches 15 and 16 (Band C, both narrators) and 17 for month 2. The order does not change; only the stopping point does.
+
+### 4a.6 The owner's commands for a batch
+
+These use options that **do not exist yet** (`--groups`, see the requests in section 5: G1 to G3); until the app-developer adds them
+the tool voices all lines in one run (section 4, step 3). The first two lines are the window setup of section 4.
+
+```powershell
+cd <REPO>\app
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+# the key, once per window: the hidden prompt of section 4
+
+# batch 1, as the model: nitzi on eleven_v4 (per-voice model, F6)
+dart run tool/voice_gen.dart plan --characters nitzi --groups core,celebrate
+dart run tool/voice_gen.dart generate nitzi --groups core,celebrate --pack-version 2.0.1
+```
+
+`plan` is free; `generate` prints the same plan and asks for the number: type **the "characters to send for this voice" that it prints**
+(6345 if nothing changed; the tool's number wins). For the other batches change the character, the `--groups` list and the pack version
+as in the table, for example:
+
+```powershell
+dart run tool/voice_gen.dart plan --characters hero-son --groups numbers-A
+dart run tool/voice_gen.dart generate hero-son --groups numbers-A --pack-version 2.0.2
+```
+
+If the owner prefers one command for several batches and the allowance as a cap, request G2 gives `--budget <characters>`; it takes the
+groups in the manifest order and stops **before** the first group that would not fit whole.
+
+### 4a.7 How to check that a batch is complete, and what happens if a run stops
+
+- **A stop loses nothing.** Each clip is written (sound and mouth cues) and then recorded in the ledger
+  `C:\Users\ramfr\nitznutz-voice\<character>.voiced.jsonl`. Run the **same command again**: the clips already made are `unchanged`, are not
+  sent and **not paid**, and the plan shows only the rest as "characters to send" (the number to type is then smaller) [R, `voice_gen_lib.dart`:
+  `clipState`, `ClipLedger`]. A clip that was half sent is not recorded and is made again.
+- **Free check 1, the tool says so.** After the batch, `dart run tool/voice_gen.dart plan --characters nitzi --groups <the batch's groups>`
+  must show `new 0, changed 0` and "Lines still to say: 0". Anything else is a clip that is missing.
+- **Free check 2, the files** (counts of the narrator's folder after the batches so far; the old folders were renamed in step 3):
+
+  ```powershell
+  $d = 'C:\Users\ramfr\nitznutz-voice\nitzi'
+  (Get-ChildItem $d -Filter 'vo.*.mp3').Count
+  (Get-ChildItem $d -Filter 'cue.*.json').Count
+  Get-ChildItem $d -Filter 'vo.*.mp3' | Where-Object Length -lt 2000
+  ```
+
+  The two counts must be equal, and equal to the ids so far for that narrator: **227** after batch 1, **1,890** after batch 6 (tier 1),
+  **3,753** after tier 2, **4,281** at the end. The last command lists clips under 2 KB (empty or cut): there must be none.
+- **Free check 3, loudness and length, once ffmpeg is installed** (`winget install Gyan.FFmpeg`) [G, not yet run here]:
+
+  ```powershell
+  Get-ChildItem $d -Filter 'vo.*.mp3' | ForEach-Object {
+    $i = & ffmpeg -hide_banner -nostats -i $_.FullName -af ebur128=peak=true -f null - 2>&1 | Select-String '^\s+I:' | Select-Object -Last 1
+    "$($_.Name),$($i.ToString().Trim())"
+  } | Out-File "$d\loudness.csv" -Encoding utf8
+  ```
+
+  Voices should sit near -16 LUFS within about 2 LU, and no clip should be much louder than the rest. I read the CSV and flag outliers.
+- **Listening:** the sample of section 6, in each batch's first groups: 20 lines per tier-1 batch; the first batch of each narrator is
+  listened to in full for the core and celebration lines before the next batch starts, so a wrong voice or tone is found at 6,345 characters, not at 187,000.
+- **Install only the newest pack** of each narrator on the phone; it holds everything made so far.
+
+---
+
 ## 5. Requests for the app-developer (code I do not change)
 
 | # | Request | Why |
@@ -452,6 +618,9 @@ paid step).
 | F2 | `voice_gen`: a subset option (`--lines own`) that voices only the 9 own lines of a friend (`core.greeting.hello`, `.start`, `core.celebrate.well`, `core.placement.done`, `core.goodbye.next`, `core.ceremony.*`) | without it each friend costs the whole set (187,000 characters, 7.48 USD) |
 | F3 | `voice_gen`: read the UI lines (30 clips, per land) from a source file, for example `content/lines/ui.he.json` with their `vo:core.adventure.*` ids and the land names in the text | they are not in `core.he.json` today |
 | F4 | `voice_gen` (or `lang_voice_gen`): read `content/languages/<course>/voice-plan.json`; `language_code` per clip (`he`, `en`, `ru`); `!` to `.`; voice the distinct texts once; make `-slow` by `ffmpeg atempo=0.80`; write the page clips with alignment so the 12 `cutClips` can be cut; refuse a placeholder; the same gate and ledger; build `voice-lang-<course>-<ver>.nnpack` | there is no path at all today |
+| G1 | `voice_gen plan` and `generate`: `--groups a,b` (names from `docs/audio/voicing-groups.json`, made by `tools/voicing_groups.py`; `--check` for CI). Only the groups' ids are planned, sent and checked for approval (a line outside the groups does not block the run). The pack holds every clip of the work folder. | batches of whole groups |
+| G2 | `--budget <characters>` (optional): take the listed groups in manifest order and stop **before** the first group whose characters to send would exceed the budget; print what is included and what waits; never split a group | the owner stops at the monthly allowance without splitting a group |
+| G3 | a free `verify --characters nitzi --groups …`: every id has a sound, a cue and a ledger hash; none is under 2 KB; exit 1 if not (the PowerShell counts of section 4a.7 are the stop-gap) | proof that a batch is complete |
 | F6 | `voice_gen`: read an optional `modelId` under `voices.<character>` in `content/voices.json` (a few lines in `VoiceProfile.fromConfig`), and print the model in the plan | the per-voice model option (nitzi v4, hero-son Turbo) |
 | F5 | gateway `elevenlabs.ts`: `output_format` `mp3_44100_64` (H1 of the diagnosis) | the tutor lines are 22.05 kHz / 32 kbps and dull the ש, ס and צ |
 
@@ -487,8 +656,8 @@ duration), as in the diagnosis.
 
 1. **Approve the texts.** The sweep ends when the editor says so; then the owner approves the rows (4,151 now), including the
    106 `proposed`. Until then no Hebrew batch can start. (The probe and the pilots can.)
-2. **Which model for the Hebrew narrators.** Your A/B (section 1.6) says v4 is never worse and better on nitzi in 3 pairs of 11, on hero-son
-   in 1. All Turbo 14.96 USD, per voice (nitzi v4, hero Turbo) 22.44 USD, all v4 29.93 USD. I recommend the per-voice option; it needs F6.
+2. **Which model for the Hebrew narrators. DECIDED (2026-11-08): nitzi on `eleven_v4`, hero-son on Turbo** (22.44 USD for the two; needs F6).
+   Still open: confirm the monthly allowance (275,000?) and its reset day (section 4a.3).
 3. **Pay for repeated texts or have the app-developer remove them (F1).** 4 USD at Turbo. Not a quality question.
 4. **Languages: one round or two.** Round 1 only (faster, 0.27 USD) or round 1 and round 2 (0.42 USD in all, one more listening sitting). I
    recommend round 2 for English and Russian because the isolated-sound test (D2) is in it.
