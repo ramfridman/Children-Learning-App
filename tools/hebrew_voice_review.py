@@ -917,6 +917,17 @@ READ = [
      r'he\.dart$', SWEEP),
     ('3', r'', r'^(activity\.(b15\.matha02\.1|b15\.shpa08\.2|shp\.where\.under|c\.mathc02\.(6|7|8|9|10)|c\.numc03\.20|c\.numc09\.(9|10)|same\.(apples\.4v5|bugs\.3v3|fish\.2v2)|x\.numa07\.[1-7])|lesson\.(give-up-to-20|giving|more-giving|many-things|many-things-more|more-queues-and-zero)|misconception\.M-CNT-DECADE|skill\.(NUM-A-06|NUM-B-04))\.json$',
      SWEEP),
+    # Generator fix of 2026-11-08 (tools/band_b.py): hint 3 of c.numb11.1-.6 now writes כׇּל (qamatz qatan) in the generator itself, so the pack has the
+    # text the sweep meant; only the pointing of one word changed, the editor read the line again.
+    ('3', r'^hints\.2\.caption', r'^activity\.b\.numb11\.[1-6]\.json$', 'Editor sweep 2026-11-08: the generator (tools/band_b.py) now writes כׇּל with a qamatz '
+     'qatan, as the rest of the pack; the editor read the line again (agreement, plural address, the teaching move are as before); waits for the owner.',
+     r'^הַמִּסְפָּרִים גְּדֵלִים בְּאֶחָד כׇּל פַּעַם\.'),
+    # Hint 3 of c.mathc03.15 and c.numc03.25 shortened for the phone (B-29 bubble audit: on the small phone at text size 1.3 they spilled over the
+    # stage); the generator (tools/band_c.py, HINT_LETTERS) now picks the shorter option of its own list.
+    ('3', r'^hints\.2\.caption', r'^activity\.c\.(mathc03\.15|numc03\.25)\.json$', 'Editor 2026-11-08 (B-29 bubble audit, phone SE at text size 1.3): hint 3 shortened so it keeps '
+     'clear of the stage; the editor read it (mathc03.15 drops "אֶת כׇּל הַמּוֹטוֹת" and keeps the count by tens; numc03.25 drops the closing "לִלְחֹץ עַל …" and keeps '
+     '"שְׁלוֹשָׁה מוֹטוֹת וְאַרְבַּע קֻבִּיּוֹת" and "עַכְשָׁו תּוֹרְכֶם."; number agreement, plural address and the teaching move are as before); waits for the owner.',
+     r'^(סוֹפְרִים בַּעֲשָׂרוֹת: עֶשֶׂר, עֶשְׂרִים, שְׁלוֹשִׁים, אַרְבָּעִים, חֲמִשִּׁים, שִׁשִּׁים, שִׁבְעִים\. עַכְשָׁו תּוֹרְכֶם\.|שְׁלוֹשִׁים וְאַרְבַּע: שְׁלוֹשָׁה מוֹטוֹת וְאַרְבַּע קֻבִּיּוֹת\. עַכְשָׁו תּוֹרְכֶם\.)$'),
     # Hint 3 of 37 Band A and B items, shortened to 14 words or fewer (QA, the hint bubble covered the answer tiles on the phone SE;
     # hebrew-notes.md section 11.13): the count says its first three numbers, an ellipsis and the last; a count-on says "עַד" the total.
     ('3', r'^hints\.2\.caption', r'^activity\.(b|b15|count)\.', 'Hint 3 shortened to 14 words or fewer (QA, 2026-11-07; hebrew-notes.md section 11.13): '

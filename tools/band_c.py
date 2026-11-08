@@ -122,10 +122,23 @@ TURN = 'עַכְשָׁו תּוֹרְכֶם.'
 HINT_WORDS = 14  # QA-C1-3 (2026-11-07): a hint longer than this covers the answer tiles on a phone
 
 
-def fit(*options):
-    """The first option of at most HINT_WORDS words (a dash is no word); the last must fit."""
+HINT_LETTERS = 56  # B-29 bubble audit (phone SE, text size 1.3): a hint 3 of 56 Hebrew letters fits over the blocks, one of 57 spills
+
+
+def _words(o):
+    return len(o.replace('—', ' ').split())
+
+
+def fit(*options, letters=None):
+    """The first option of at most HINT_WORDS words (a dash is no word); the last must fit. With `letters` (the blocks items,
+    where the bubble stands close over the stage) the first option that also has at most that many Hebrew letters; when none has,
+    the first of at most HINT_WORDS words, as before."""
+    if letters is not None:
+        for o in options:
+            if _words(o) <= HINT_WORDS and sum('א' <= c <= 'ת' for c in o) <= letters:
+                return o
     for o in options:
-        if len(o.replace('—', ' ').split()) <= HINT_WORDS:
+        if _words(o) <= HINT_WORDS:
             return o
     raise AssertionError('no hint of %d words or fewer: %r' % (HINT_WORDS, options[-1]))
 
@@ -761,7 +774,7 @@ def numbers_c1_waiting(u):
                 tags={'b%d' % (10 * a + b): tag for (a, b), tag in wrong}, tag_lines=BLOCK_TILES,
                 **({'check': check, 'difficulty': 0.6} if check else {}),
                 h2='כׇּל מוֹט הוּא עֶשֶׂר, וְכׇל קֻבִּיָּה הִיא אַחַת. סוֹפְרִים קֹדֶם אֶת הַמּוֹטוֹת בַּעֲשָׂרוֹת.',
-                h3=fit('%s: %s. %s' % (F[n], said, NOW % F[n]), '%s: %s. %s' % (F[n], said, TURN)),
+                h3=fit('%s: %s. %s' % (F[n], said, NOW % F[n]), '%s: %s. %s' % (F[n], said, TURN), letters=HINT_LETTERS),
                 correct_text='כֵּן! זֶה %s.' % F[n]))
         # Concrete (the third representation of the core skill): pay with ten-shekel and one-shekel coins. The purse cannot pay the price
         # with fewer tens, so the tens and ones of the price are the only way; counting the coins as one each is M-MONEY-COUNT.
@@ -1083,7 +1096,7 @@ def math_c1_waiting(u):
                     'נִשְׁאֲרוּ %s: %s. %s') % ((count, NOW % F[ans]) if op == '+' else (rods(ans // 10), count, NOW % F[ans])),
                    ('סוֹפְרִים אֶת כׇּל הַמּוֹטוֹת בַּעֲשָׂרוֹת: %s. %s' if op == '+' else
                     'נִשְׁאֲרוּ %s: %s. %s') % ((count, TURN) if op == '+' else (rods(ans // 10), count, TURN)),
-                   'סוֹפְרִים בַּעֲשָׂרוֹת: %s. %s' % (count, TURN)),
+                   'סוֹפְרִים בַּעֲשָׂרוֹת: %s. %s' % (count, TURN), letters=HINT_LETTERS),
             ok='%s! %s %s %s שָׁוֶה %s.' % (F[ans], F[a], word(op), F[b], F[ans])))
     drawn_tens = [x['id'] for x in u.d['activities'] if x['skill'] == 'MATH-C-03' and x['kind'] != 'number' and x['id'] not in pictured]
     u.lesson('whole-tens-more', 'עֲשָׂרוֹת בְּמוֹטוֹת', ['MATH-C-03'], drawn_tens[8:] + pictured,

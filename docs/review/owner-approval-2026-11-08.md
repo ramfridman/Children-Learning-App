@@ -2,7 +2,7 @@
 
 Made by `python -I -X utf8 tools/hebrew_voice_review.py --approval-snapshot docs/review/owner-approval-2026-11-08.csv`. It lists every row of `hebrew-master.csv` that is `text-ready` or `proposed`. If the owner says yes, the orchestrator puts the sha256 below and the date in `CONFIG` of `tools/owner_approval.py`; from then on each listed row is `owner-approved` while its text, screen text and voice text are exactly what they are now. A row that is edited falls back and needs a new approval.
 
-sha256 of the snapshot file: `2fe9ff579b036ebd4d744f1b4e415271647a95cbee5ff3f32602ea5c1913b852`
+sha256 of the snapshot file: `f19724a7337cc62d82d0fb8cdcbf74d612207137a622c6c82847e2e26f29640a`
 
 ## Counts
 
@@ -19,21 +19,10 @@ sha256 of the snapshot file: `2fe9ff579b036ebd4d744f1b4e415271647a95cbee5ff3f326
 
 ## Why the 109 `proposed` rows were still waiting
 
-- 84: V1 (pronunciation audit 2026-10-29): the voice text changed so a voice cannot misread it (a kept nik
-- 13: V1 (pronunciation audit 2026-10-29): the voice text keeps a nikud or a beat so a voice cannot misrea
+- 78: V1 (pronunciation audit 2026-10-29): the voice text changed so a voice cannot misread it (a kept nik
+- 19: V1 (pronunciation audit 2026-10-29): the voice text keeps a nikud or a beat so a voice cannot misrea
 - 9: Owner 2026-11-06 (chat): yes. Was "הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ…" (table: "הוּא לֹא כַּמָּ
 - 3: Logic sweep, read 2026-11-07. Was "שָׂמִים יַחַד אֶת אוֹתוֹ הַדָּבָר: …" and "מְמַיְּנִים לְשָׁלוֹשׁ
-
-## Proposed rows whose screen text is not in the pack yet (6)
-
-The voice text is approved with the rest, but the pack still has the old screen text until the generator is changed.
-
-- `activity.b.numb11.1.json` `hints.2.caption.0.v`
-- `activity.b.numb11.2.json` `hints.2.caption.0.v`
-- `activity.b.numb11.3.json` `hints.2.caption.0.v`
-- `activity.b.numb11.4.json` `hints.2.caption.0.v`
-- `activity.b.numb11.5.json` `hints.2.caption.0.v`
-- `activity.b.numb11.6.json` `hints.2.caption.0.v`
 
 ## A sample of 20 voiced lines
 

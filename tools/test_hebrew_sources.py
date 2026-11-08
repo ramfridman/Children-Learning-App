@@ -141,7 +141,7 @@ class HebrewMasterTableTest(unittest.TestCase):
         # 15823 since the logic sweep was merged (2026-11-08): its reshaped items and wording (one option fewer in LOG-B-06 .5 and .6, no unnamed
         # "friend", the new LOG-A-07 and LOG-B-02 titles, the +2 towers) replace some of C1's rows with other texts
         self.assertEqual(len(self.rows), 15823)
-        # the owner's bulk approval (the switch in tools/owner_approval.py) makes the 6 proposed rows with a changed text `owner-approved` too
+        # the owner's bulk approval (the switch in tools/owner_approval.py) moves the rows with a changed text to `owner-approved` (none is `proposed` and changed now)
         approved_all = owner_approval.load_approval() is not None
         # 1308 before C1: 19 corrections (מֵאֶפֶס, מֵאַחַת …) are now in the sources; 1296 after the 7 of the deferred items (מַה שֶּׁ, מַה מִּסְתַּתֵּר)
         # 1289 after the hint 3 of 37 Band A and B items was shortened to 14 words (2026-11-07): the 7 rows of b.numb14.1-.4, .7, .8 and b.mathb18.3
@@ -155,7 +155,7 @@ class HebrewMasterTableTest(unittest.TestCase):
         # 18 after the editor sweep of 2026-11-08: the 11 Q2 drafts (the NUM-A-11 pairing line, the NUM-A-07 counting line) are now
         # written in the generators, each with an id of its own (vo:fb.size.pairs, vo:fb.size.count), so the pack says what the table says
         # 6 after the owner approved D12 (2026-11-08): the 12 balance rows (b.mathb13.7-.10) are in the sources
-        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 0 if approved_all else 6)  # 88 before the owner's V1 for M-NL-DIR (2026-11-06): its 44 rows now have the source's final nikud
+        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 0)  # 0 after the generator fix of 2026-11-08 (hint 3 of b.numb11.1-.6 writes כׇּל itself, so the pack has the text of the table; they were the 6 proposed rows with a changed text); 88 before the owner's V1 for M-NL-DIR (2026-11-06): its 44 rows now have the source's final nikud
 
     def test_done_rows_have_ui_text(self):
         want = lambda r: HELD[(r['source'], r['id'])][0] if (r['source'], r['id']) in HELD else r['ui_text']
