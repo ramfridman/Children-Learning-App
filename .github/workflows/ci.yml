@@ -217,13 +217,14 @@ jobs:
     name: "app part: every byte of the starter pack, part ${{ matrix.part }} of ${{ strategy.job-total }}"
     runs-on: ubuntu-24.04
     # The whole test was measured at 2,471 to 3,072 s (4 worker isolates on 4 cores). With the test's NN_FLIP_SHARD
-    # switch (docs/setup/ci-faster.md, stage 2) the 6 parts split the bytes, each a sixth: estimated 8 to 9.5 min each.
+    # switch (docs/setup/ci-faster.md, stage 2) the parts split the bytes. The signed starter 0.11.0 (2026-11-08) is larger: 6 parts took
+    # 20 to 25 min each and one hit the timeout, so it is 9 parts now, about 14 to 17 min each.
     timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
-        # Stage 2: part k (job-index k - 1) changes the offsets i with i % 6 == k - 1; together every byte once.
-        part: [1, 2, 3, 4, 5, 6]
+        # Stage 2: part k (job-index k - 1) changes the offsets i with i % 9 == k - 1; together every byte once.
+        part: [1, 2, 3, 4, 5, 6, 7, 8, 9]
     env:
       # The same value as EVERY_BYTE_TEST in app-tests (a drift makes the shards run this test and fail).
       EVERY_BYTE_TEST: "every single byte of the real starter pack, changed in turn, is refused (all bytes with NN_EXHAUSTIVE=1 or in CI)"
