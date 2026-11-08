@@ -803,7 +803,7 @@ abstract final class He {
   static const Str ageBirthTitle = Str('חודש ושנת לידה');
   static const Str ageBirthOptional = Str('(לא חובה)');
   static const Str ageBirthHelp = Str(
-    'נשמר בחשבון המשפחה כדי שמכשיר חדש יכיר אותו, ולא נמסר לאף אחד. בעזרתו המסכים מתאימים לגיל.',
+    'המידע נשמר בחשבון המשפחה, כדי שגם מכשיר חדש יתאים את המסכים לגיל. הוא לא נמסר לאף אחד.',
   );
   static const Str ageYearLabel = Str('שנה');
   static const Str ageMonthLabel = Str('חודש');
@@ -823,9 +823,9 @@ abstract final class He {
   ];
   static const Str ageBirthClear = Str('ניקוי');
   static const Str ageBirthBoth = Str('כדי לשמור חודש ושנה צריך לבחור את שניהם');
-  static const Str ageBirthNone = Str('לא הוזנו');
+  static const Str ageBirthNone = Str('לא נבחרו');
   static const Str ageStageTitle = Str('שלב הלימודים השנה');
-  static const Str ageStageHelp = Str('קובע מאיפה מתחילים בכל אי. משם הילד מתקדם לפי מה שהוא יודע.');
+  static const Str ageStageHelp = Str('המשחק מתחיל בכל אי לפי השלב הזה, ומשם ממשיך לפי מה שכבר נלמד.');
   static const List<Str> stageNames = <Str>[
     Str('גן טרום־טרום חובה'),
     Str('גן טרום חובה'),
@@ -853,13 +853,13 @@ abstract final class He {
     Str('בכיתה ג׳ ומעלה'),
   ];
   static const Str ageStageSuggested = Str(
-    'לפי שנת הלידה הצענו {stage}. אפשר לשנות, למשל אם הילד נשאר שנה נוספת בגן חובה.',
+    'לפי שנת הלידה, השלב המתאים הוא {stage}. אפשר לשנות, למשל אם נשארים שנה נוספת בגן חובה.',
   );
-  static const Str ageStageDiffers = Str('לפי שנת הלידה: {suggested}. כרגע: {current}.');
+  static const Str ageStageDiffers = Str('לפי שנת הלידה: {suggested}. השלב שנבחר: {current}.');
   static const Str ageStageNeeded = Str('כדי לשמור צריך לבחור את שלב הלימודים');
   static const Str ageStageYounger = Str('המסכים יותאמו לגיל צעיר יותר. השיעורים וההתקדמות לא משתנים.');
   static const Str ageChangeNote = Str(
-    'השינוי יחול מהפעם הבאה שהילד ישחק. השיעורים שכבר נלמדו וההתקדמות נשארים.',
+    'השינוי יתחיל בפעם הבאה שמשחקים. השיעורים שכבר נלמדו וההתקדמות נשארים.',
   );
   static const Str agePageTitle = Str('גיל ושלב לימודים: {child}');
   static const Str ageCardTitle = Str('גיל ושלב לימודים');
@@ -871,11 +871,13 @@ abstract final class He {
     'ברירת המחדל לפי הגיל. אפשר לבחור מראה של קבוצת גיל אחרת: כמה תשובות יש על המסך, גודל הכתב ואורך החגיגות. השיעורים עצמם לא משתנים.',
   );
   static const Str lookAuto = Str('לפי הגיל');
-  static const Str lookNow = Str('עכשיו: מראה של {range}');
-  static const Str lookTablet = Str('לילד בן 3 מתאים יותר טאבלט: המסך גדול יותר והלחיצות קלות יותר.');
+  static const Str lookNow = Str('עכשיו: מראה ל{range}');
+  static const Str lookTablet = Str(
+    'בגיל הצעיר הזה נוח יותר עם טאבלט: המסך גדול יותר וקל יותר ללחוץ. אפשר גם בטלפון.',
+  );
   static const Str captionsTitle = Str('כתוביות לשאלות');
   static const Str captionsHelp = Str(
-    'ניצי תמיד מקריאה את השאלה. מספרים ושם הילד מופיעים תמיד. ההגדרה הזאת נשמרת רק במכשיר הזה.',
+    'השאלה תמיד מוקראת בקול. גם כשהכתוביות מוסתרות, מספרים ושם הילד מופיעים על המסך. ההגדרה הזאת נשמרת רק במכשיר הזה.',
   );
   static const Str captionsAuto = Str('לפי שלב הלימודים');
   static const Str captionsOn = Str('להציג');
@@ -884,9 +886,9 @@ abstract final class He {
   static const Str captionsNowOff = Str('עכשיו: מוסתרות ({stage})');
   static const Str septTitle = Str('שנת לימודים חדשה');
   static const Str septQuestion = Str('{child} עולה {next}?');
-  static const Str septHelp = Str('השיעורים שכבר נלמדו נשארים. השינוי יחול מהפעם הבאה שהילד ישחק.');
+  static const Str septHelp = Str('השיעורים שכבר נלמדו נשארים. השינוי יתחיל בפעם הבאה שמשחקים.');
   static const Str septYes = Str('כן, {next}');
-  static const Str septKeep = Str('להשאיר {current}');
+  static const Str septKeep = Str('להישאר {current}');
   static const Str septOther = Str('שלב אחר');
   static const Str addAgeTitle = Str('התאמה לגיל: {child}');
   static const Str addAgeBody = Str(
@@ -896,8 +898,9 @@ abstract final class He {
   static const Str addAgeLater = Str('לא עכשיו');
   static const Str areaChildSettings = Str('הגדרות');
 
-  /// The idle ladder's offer (B-29 D5), a line on screen only until the editor and the voice director give it a voice.
-  static const Str idleOffer = Str('רוצים רמז, או לחשוב עוד קצת?');
+  /// The idle ladder's offer (B-29 D5): a child's line, so it is pointed. On screen only until the voice director gives it a voice
+  /// (voice text: "רוצים רמז, או לחשוב עוד קצת?").
+  static const Str idleOffer = Str('רוֹצִים רֶמֶז, אוֹ לַחְשֹׁב עוֹד קְצָת?', nikud: true);
   static const Str ageBirthYearSemantics = Str('שנת לידה {year}');
   static const Str ageStageSemantics = Str('שלב הלימודים: {stage}');
 }
