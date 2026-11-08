@@ -82,11 +82,11 @@ void main() {
   });
 
   group('the levels of a land', () {
-    test('Counting Hills of the starter pack: four units of Band A, then four of Band B, named A1 to B4', () {
+    test('Counting Hills of the starter pack: four units of each band, A, B and C (M10), named A1 to C4', () {
       final List<PlacementLevel> levels = placementLevels(starter, 'numbers');
       expect(
         <String>[for (final PlacementLevel l in levels) l.label],
-        <String>['A1', 'A2', 'A3', 'A4', 'B1', 'B2', 'B3', 'B4'],
+        <String>['A1', 'A2', 'A3', 'A4', 'B1', 'B2', 'B3', 'B4', 'C1', 'C2', 'C3', 'C4'],
       );
     });
 
@@ -180,8 +180,11 @@ void main() {
     );
 
     test('a band the pack does not have yet starts in the highest band it has', () {
-      final List<PlacementLevel> levels = placementLevels(starter, 'numbers');
-      expect(levels[startLevelFor(levels, SchoolStage.grade2)].label, 'B2');
+      // The Shapes land of the starter pack has no Band C yet (A1 to A4, B1 to B3).
+      final List<PlacementLevel> levels = placementLevels(starter, 'shapes');
+      expect(levels.any((PlacementLevel l) => l.label.startsWith('C')), isFalse);
+      // Band B has three units here, so the middle one minus one is B1.
+      expect(levels[startLevelFor(levels, SchoolStage.grade2)].label, 'B1');
       expect(levels[startLevelFor(levels, SchoolStage.gan4)].label, 'A2');
     });
 
@@ -273,6 +276,24 @@ void main() {
         rows.where((Attempt a) => a.result == 'correct' && a.attemptNo == 1 && a.hintLevel == 0).length,
         1,
       );
+    });
+
+    test('seven misses down a long ladder and one right answer at its end place nobody', () {
+      // Counting Hills has twelve units, so a child of grade 2 (it starts at C2) can miss seven and still be asked an eighth at A3.
+      int asked = 0;
+      final List<Attempt> rows = _play(
+        starter,
+        'numbers',
+        (String probe, int level) => ++asked == 8,
+        stage: SchoolStage.grade2,
+      );
+      final LandPlacement p = landPlacementOf(starter, 'numbers', rows, stage: SchoolStage.grade2)!;
+      expect(asked, 8);
+      expect(p.stopped, isTrue);
+      expect(p.best, 2, reason: 'the one right answer qualified its unit (A3), as the staircase counts');
+      expect(p.rights, 1);
+      expect(p.placedLessons, isEmpty);
+      expect(p.assumedSkills(starter), isEmpty);
     });
 
     test('a right answer that needed a hint or a second try is not a right answer here', () {

@@ -37,6 +37,7 @@ void main() {
   List<TapAnswerActivity> bandA() => <TapAnswerActivity>[
     for (final TapAnswerActivity a in content.activities.values.whereType<TapAnswerActivity>())
       if (!a.skillId.contains('-B-') &&
+          !a.skillId.contains('-C-') &&
           tapFamilyOf(a.skillId, numeralOnStage: a.stageNumeral != null) != null)
         a,
   ];

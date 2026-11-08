@@ -180,7 +180,7 @@ void main() {
       expect(short, <String>['pick.red.flower (1)']);
     });
 
-    test('every tap_answer activity has a plan with steps at each level on all four boards (626)', () {
+    test('every tap_answer activity has a plan with steps at each level on all four boards (815)', () {
       int n = 0;
       for (final ActivitySpec board in boards) {
         for (final TapAnswerActivity a in all<TapAnswerActivity>()) {
@@ -193,7 +193,7 @@ void main() {
           n++;
         }
       }
-      expect(n, 626 * 4);
+      expect(n, 815 * 4);
     });
 
     test('no tap_answer activity falls back to the generic picture (a question mark card at level 2)', () {
@@ -222,7 +222,8 @@ void main() {
           final TapGeometry g = TapGeometry(a, stageOf(board), board);
           final HintPlan p = tapHintPlan(a, g, 3)!;
           expect(p.endsDemo, isTrue, reason: a.id);
-          final Offset tip = g.optionTip(g.correctIndex);
+          // A number typed on the keypad ends on its check key.
+          final Offset tip = a.numberAnswer != null ? g.keyTip('done') : g.optionTip(g.correctIndex);
           final List<HandMark> before = <HandMark>[
             for (final HintFrame f in p.frames.take(p.frames.length - 1)) ...f.marks.whereType<HandMark>(),
           ];
@@ -264,7 +265,7 @@ void main() {
         for (final TapAnswerActivity a in all<TapAnswerActivity>())
           if (a.group2 != null) a,
       ];
-      expect(two, hasLength(34));
+      expect(two, hasLength(49));
       final List<String> wrong = <String>[];
       for (final TapAnswerActivity a in two) {
         final LessonController c = controllerFor(a);

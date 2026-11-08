@@ -67,6 +67,15 @@ List<Map<String, Object?>> _options(Activity a) => <Map<String, Object?>>[
     o! as Map<String, Object?>,
 ];
 
+/// The activities of the M10 batches (their ids start `c.`): text only for now (owner, 2026-11-06; docs/milestones/M10.md, "Voice"). Their
+/// `voiceAnswer` is false where the generator's kind of item is new (sums, place value, the hundred chart, the flash of NUM-B-09), and the
+/// voice director and the recogniser data decide later which become spoken. They may be false where the rule would speak; they are never
+/// true where it would not.
+bool _isM10(Activity a) => a.id.startsWith('c.');
+
+/// The flag of [a] agrees with the rule, or it is an M10 item left unspoken for now.
+bool _flagAgrees(Activity a) => a.voiceAnswer == _shouldSpeak(a) || (_isM10(a) && !a.voiceAnswer);
+
 /// The rule, from the activity itself: should the child be able to say this answer?
 bool _shouldSpeak(Activity a) {
   if (a.template == 'count_tap' || a.template == 'flash') return true;
@@ -75,6 +84,8 @@ bool _shouldSpeak(Activity a) {
   final String prompt = normalizeHebrew(_caption(a.json['prompt']));
   if (_notSaid.any(prompt.contains)) return false;
   final List<Map<String, Object?>> options = _options(a);
+  // A number typed on the keypad has no option to say.
+  if (options.isEmpty) return false;
   if (options.every((Map<String, Object?> o) => o['numeral'] != null)) {
     // Amendment QA-21: an answer that is a part of the number word the question asks about is an echo, not an answer.
     // "שְׁלֹשׁ עֶשְׂרֵה is ten and how many?" names the teen whose first word is the answer (the teen is answer + 10).
@@ -157,25 +168,29 @@ void main() {
     return e;
   }
 
-  test('all 967 activities: the flag agrees with the rule worked out from the activity itself', () {
-    expect(pack.activities.length, 967);
+  test('all 1,206 activities: the flag agrees with the rule worked out from the activity itself', () {
+    expect(pack.activities.length, 1206);
     final List<String> wrong = <String>[
       for (final Activity a in pack.activities.values)
-        if (a.voiceAnswer != _shouldSpeak(a)) '${a.id} (${a.template}, ${a.skillId}): flag ${a.voiceAnswer}',
+        if (!_flagAgrees(a)) '${a.id} (${a.template}, ${a.skillId}): flag ${a.voiceAnswer}',
     ];
     expect(wrong, isEmpty, reason: wrong.join('\n'));
     final int spoken = pack.activities.values.where((Activity a) => a.voiceAnswer).length;
     // 267 and 500 before the QA-21 amendment turned the nine NUM-B-16 activities off; 310 and 657 before QA-1 of the
     // B-15 check voiced the two "missing number in a row" items of NUM-B-08 (b.numb08.13 and .14), as NUM-B-11's are.
-    expect(spoken, 312);
-    expect(pack.activities.length - spoken, 655);
+    // 319 and 887 with pack 0.11.0: the 7 spoken items of M10 (c.numb06.15 to .17, c.numb10.1 to .4) follow the rule; the other 129 of
+    // its tap_answer items and the 8 flash items of NUM-B-09 are unspoken for now.
+    expect(spoken, 319);
+    expect(pack.activities.length - spoken, 887);
   });
 
   test('the flag is a real boolean in every activity file, and true only on a template with a choice', () {
     for (final Activity a in pack.activities.values) {
       expect(a.json['voiceAnswer'], isA<bool>(), reason: a.id);
       if (a.voiceAnswer) expect(_choiceTemplates, contains(a.template), reason: a.id);
-      if (a.template == 'count_tap' || a.template == 'flash') expect(a.voiceAnswer, isTrue, reason: a.id);
+      if ((a.template == 'count_tap' || a.template == 'flash') && !_isM10(a)) {
+        expect(a.voiceAnswer, isTrue, reason: a.id);
+      }
     }
   });
 

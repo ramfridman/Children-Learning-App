@@ -515,7 +515,7 @@ void main() {
     );
 
     testWidgets(
-      'all 71 rows: level 2 draws a picture of its family where the row has one, else the light with the sky bar; no cell is marked',
+      'all 73 rows: level 2 draws a picture of its family where the row has one, else the light with the sky bar; no cell is marked',
       (WidgetTester t) async {
         await t.runAsync(warmHintHands);
         final List<String> withoutPicture = <String>[];
@@ -538,7 +538,15 @@ void main() {
         }
         expect(
           withoutPicture,
-          unorderedEquals(<String>['b.shpb03.7', 'b.shpb04.9', 'b15.csa05.1', 'b15.csa05.2']),
+          unorderedEquals(<String>[
+            'b.shpb03.7',
+            'b.shpb04.9',
+            'b15.csa05.1',
+            'b15.csa05.2',
+            // Band C (M10): the +10 rows of the hundred chart have no family picture yet, so they keep the sky bar.
+            'c.numc09.9',
+            'c.numc09.10',
+          ]),
           reason: 'the rows that keep the sky bar',
         );
       },
