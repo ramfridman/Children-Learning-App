@@ -336,6 +336,7 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     },
   };
   problems.addAll(validatePack(manifest: manifest, docs: docs, files: names.toSet()));
+  problems.addAll(checkPackPictures(files));
   if (problems.isEmpty) problems.addAll(checkCharacterFiles(manifest, docs, files));
   if (problems.isNotEmpty) {
     throw BuildFailed('the pack does not follow the content rules; nothing was signed', problems);

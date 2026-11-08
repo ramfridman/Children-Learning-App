@@ -37,6 +37,23 @@ String _hebrewCaption(Object? caption) {
   throw const PublishFailed('an activity has no Hebrew caption');
 }
 
+/// The id of an answer that is a typed number (the server takes `[a-z][a-z0-9-]{0,15}`).
+String _numberId(int n) => 'n$n';
+
+/// Adds a wrong answer for each class (`when` and `misconception`) of "give N" classifiers or keypad rules. The id is the
+/// `when` without underscores, at most 16 letters; a class whose id is already taken adds nothing.
+void _addClasses(List<Map<String, Object?>> answers, Object? classes) {
+  final Set<String> taken = <String>{for (final Map<String, Object?> a in answers) a['id']! as String};
+  for (final Map<String, Object?> c in _maps(classes)) {
+    final Object? when = c['when'];
+    if (when is! String || c['misconception'] is! String) continue;
+    String id = when.replaceAll('_', '').toLowerCase();
+    if (id.length > 16) id = id.substring(0, 16);
+    if (!taken.add(id)) continue;
+    answers.add(<String, Object?>{'id': id, 'misconception': c['misconception'], 'correct': false});
+  }
+}
+
 /// The index entry of one activity document.
 Map<String, Object?> itemOf(Map<String, Object?> a) {
   final Map<String, Object?> answer = (a['answer'] as Map<String, Object?>?) ?? <String, Object?>{};
@@ -78,21 +95,35 @@ Map<String, Object?> itemOf(Map<String, Object?> a) {
     final int n = answer['n']! as int;
     numbers.add(n);
     answers.add(<String, Object?>{'id': 'give-n', 'value': n, 'correct': true});
-    for (final Map<String, Object?> c in _maps(answer['classifiers'])) {
-      answers.add(<String, Object?>{
-        'id': (c['when']! as String).replaceAll('_', '').toLowerCase(),
-        'misconception': c['misconception'],
-        'correct': false,
-      });
-    }
+    _addClasses(answers, answer['classifiers']);
     final Map<String, Object?>? src = scene['source'] as Map<String, Object?>?;
     final Object? count = src?['count'];
     if (count is int) {
       numbers.add(count);
       objects.addAll(<String>[for (int i = 0; i < count; i++) 'obj-$i']);
     }
+  } else if (answer['type'] == 'number') {
+    // The keypad: the right answer is the number; each expected wrong number is an answer with its misconception, and
+    // each rule is a class of going wrong (the same as the classifiers of "give N").
+    final Object? value = answer['value'];
+    if (value is! int) throw const PublishFailed('a number activity has no whole number to type');
+    numbers.add(value);
+    answers.add(<String, Object?>{'id': _numberId(value), 'value': value, 'correct': true});
+    for (final Map<String, Object?> w in _maps(answer['expected'])) {
+      final Object? wrong = w['value'];
+      if (wrong is! int || numbers.contains(wrong)) continue;
+      numbers.add(wrong);
+      answers.add(<String, Object?>{
+        'id': _numberId(wrong),
+        'value': wrong,
+        if (w['misconception'] is String) 'misconception': w['misconception'],
+        'correct': false,
+      });
+    }
+    _addClasses(answers, answer['rules']);
   } else {
-    final String correct = answer['correct']! as String;
+    final Object? correct = answer['correct'];
+    if (correct is! String) throw const PublishFailed('a choice activity has no right option');
     for (final Map<String, Object?> o in _maps(answer['options'])) {
       final String id = o['id']! as String;
       // The number an option shows: a count (`value`), a numeral on a tile, or the size of a set (tap_answer 1.1).
