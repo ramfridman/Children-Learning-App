@@ -727,21 +727,34 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         if (companion != null && onFriends != null)
-          Positioned(
-            left: s.plusLeft,
-            top: s.plusTop,
-            // The "+" pebble: 64 for the youngest, 56 for the older ones (B-29 D4), 48 where no look is set.
-            child: Builder(
-              builder: (BuildContext c) => PebbleButton(
-                key: const Key('home-friends'),
-                semanticLabel: He.friendsSemantics.text,
-                size: StageScope.maybeOf(c)?.stage.plusPebble ?? 48,
-                fill: TokenColors.spark,
-                lip: TokenColors.sparkDeep,
-                onPressed: onFriends,
-                child: const BoardSvg('assets/art/ui/plus.svg', width: 24, height: 24),
-              ),
-            ),
+          Builder(
+            builder: (BuildContext c) {
+              // The "+" pebble: 64 for the youngest, 56 for the older ones (B-29 D4), 48 where no look is set. Where the world's edge is too
+              // near for 64 (the small phone) it is 56 (QA-B29-5), and where the drawn pebble would still be cut it stands further left in
+              // its touch box (the box, and its clearance from the home sign, stay where the board puts them).
+              final double wanted = StageScope.maybeOf(c)?.stage.plusPebble ?? 48;
+              const double slop = 12; // the touch margin round the drawn pebble
+              const double edge = 2; // the drawn pebble keeps this far inside the world's edge
+              final double size = s.plusLeft + slop + wanted + edge > s.worldWidth
+                  ? math.min(wanted, 56)
+                  : wanted;
+              final double over = math.max(0, s.plusLeft + slop + size + edge - s.worldWidth);
+              return Positioned(
+                left: s.plusLeft - math.max(0, over - slop),
+                top: s.plusTop,
+                child: PebbleButton(
+                  key: const Key('home-friends'),
+                  semanticLabel: He.friendsSemantics.text,
+                  size: size,
+                  slop: slop,
+                  slopLeft: math.max(0, slop - over),
+                  fill: TokenColors.spark,
+                  lip: TokenColors.sparkDeep,
+                  onPressed: onFriends,
+                  child: const BoardSvg('assets/art/ui/plus.svg', width: 24, height: 24),
+                ),
+              );
+            },
           ),
         // The bubble only speaks: a touch on it goes on to the land under it (on a tablet it reaches over Counting Hills).
         _bubble(

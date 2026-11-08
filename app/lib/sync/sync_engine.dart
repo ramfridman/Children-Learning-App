@@ -314,7 +314,7 @@ class SyncEngine {
     for (final Profile p in await db.allProfiles()) {
       if (gone.contains(p.id)) continue;
       final BirthMonth? birth = await db.birthOf(p.id);
-      final String? pushed = await db.setting('profile_pushed_${p.id}');
+      final String? pushed = await db.setting(profilePushedKey(p.id));
       String fingerprintWith(String birthPart) => _profileFingerprint(
         p.name,
         p.avatar,
@@ -375,7 +375,7 @@ class SyncEngine {
         continue;
       }
       // A birth left out: the fingerprint keeps what the server holds, so the birth here keeps waiting and goes again later.
-      await db.putSetting('profile_pushed_${p.id}', withBirth && !birthSent ? heldFingerprint : fingerprint);
+      await db.putSetting(profilePushedKey(p.id), withBirth && !birthSent ? heldFingerprint : fingerprint);
     }
   }
 
@@ -426,7 +426,7 @@ class SyncEngine {
     final Set<String> gone = await _tombstoned();
     return <String>{
       for (final Profile p in await db.allProfiles())
-        if (!gone.contains(p.id) && await db.setting('profile_pushed_${p.id}') == null) p.id,
+        if (!gone.contains(p.id) && await db.setting(profilePushedKey(p.id)) == null) p.id,
     };
   }
 
@@ -1028,7 +1028,7 @@ class SyncEngine {
         // The month and year of birth: the server's, when it is a real one and nothing here waits to be sent; the server saying "none"
         // (another phone cleared it) clears it here once this phone had sent that same one; a server that says nothing (older), or
         // something that is not a birth, leaves the one here alone.
-        final String? pushedBefore = await db.setting('profile_pushed_$id');
+        final String? pushedBefore = await db.setting(profilePushedKey(id));
         final BirthMonth? localBirth = here == null ? null : await db.birthOf(id);
         final bool birthWaits =
             isParent && here != null && (_birthOf(pushedBefore) ?? '') != _birthText(localBirth);
@@ -1063,7 +1063,7 @@ class SyncEngine {
         if (stageFits && stage.wire != here?.schoolStage) await db.markStageConfirmed(id, _now);
         // What the server has is now what this device has: no need to push it back.
         await db.putSetting(
-          'profile_pushed_$id',
+          profilePushedKey(id),
           _profileFingerprint(
             name,
             m['avatar_id']! as String,

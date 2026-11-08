@@ -100,6 +100,21 @@ void main() {
       );
     });
 
+    testWidgets('the clear button is as wide as its word, at the start of the row (QA-B29-4)', (
+      WidgetTester tester,
+    ) async {
+      tester.view.physicalSize = const Size(900, 2400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      value = const AgeValue(year: 2021, month: 3);
+      await pump(tester);
+      final Rect button = tester.getRect(find.byKey(const Key('age-clear')));
+      final Rect grid = tester.getRect(find.byKey(const Key('age-months')));
+      expect(button.height, 36);
+      expect(button.width, lessThan(grid.width / 2), reason: 'a small button, not a bar');
+      expect(button.right, closeTo(grid.right, 1), reason: 'at the start of the row, which is the right');
+    });
+
     testWidgets('a year suggests the stage until the parent taps one; then the year no longer moves it', (
       WidgetTester tester,
     ) async {

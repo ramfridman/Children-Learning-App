@@ -150,6 +150,19 @@ void main() {
         testWidgets('${look.name} on $board', (WidgetTester tester) async {
           await _rig(tester, look, size);
           await tester.pumpAndSettle();
+          // The "+" pebble is whole on the screen on every board and look (QA-B29-5: the small phone's was cut by the edge).
+          final Rect plus = tester.getRect(
+            find.descendant(
+              of: find.byKey(const Key('home-friends')),
+              matching: find.byKey(const Key('pebble-disc')),
+            ),
+          );
+          expect(
+            plus.right,
+            lessThanOrEqualTo(size.width),
+            reason: 'the pebble $plus is cut by the screen $size',
+          );
+          expect(plus.left, greaterThanOrEqualTo(0));
           await _shot(tester, 'stage_${look.name}_home_$board');
         });
       }

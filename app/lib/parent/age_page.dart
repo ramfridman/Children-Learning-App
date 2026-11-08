@@ -51,11 +51,16 @@ class AgeSummaryCard extends ConsumerWidget {
           Text(He.ageCardTitle.text, style: AppText.parent(TokenType.parentH2)),
           const SizedBox(height: 8),
           _Row(title: He.ageStageRow.text, value: profile.confirmedStage == null ? '—' : stageName(stage)),
-          const Divider(height: 24, color: TokenColors.hairline),
-          _Row(
-            title: He.ageBirthTitle.text,
-            value: birth == null ? He.ageBirthNone.text : '${He.months[birth.month - 1].text} ${birth.year}',
-          ),
+          // Only a parent's phone shows a birth (SEC-B29-6, QA-B29-1): on a child's tablet the server's copy stays out of sight.
+          if (ref.watch(isParentDeviceProvider).value ?? true) ...<Widget>[
+            const Divider(height: 24, color: TokenColors.hairline),
+            _Row(
+              title: He.ageBirthTitle.text,
+              value: birth == null
+                  ? He.ageBirthNone.text
+                  : '${He.months[birth.month - 1].text} ${birth.year}',
+            ),
+          ],
           const SizedBox(height: 12),
           ParentButton(
             key: const Key('age-change'),

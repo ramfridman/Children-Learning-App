@@ -249,18 +249,21 @@ class _QuietButton extends StatelessWidget {
     child: GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: Container(
-        height: 36,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: TokenColors.paper,
-          borderRadius: BorderRadius.circular(TokenRadius.sm),
-          border: Border.all(color: TokenColors.night, width: TokenBorder.thin),
-        ),
-        child: Text(
-          label,
-          style: AppText.parent(TokenType.parentButton, color: TokenColors.night).copyWith(fontSize: 14),
+      // As wide as its word, not the whole row (QA-B29-4): a container with an alignment would fill the width it is given.
+      child: IntrinsicWidth(
+        child: Container(
+          height: 36,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: TokenColors.paper,
+            borderRadius: BorderRadius.circular(TokenRadius.sm),
+            border: Border.all(color: TokenColors.night, width: TokenBorder.thin),
+          ),
+          child: Text(
+            label,
+            style: AppText.parent(TokenType.parentButton, color: TokenColors.night).copyWith(fontSize: 14),
+          ),
         ),
       ),
     ),

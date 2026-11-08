@@ -43,6 +43,7 @@ class PebbleButton extends StatefulWidget {
     this.fill = TokenColors.paper,
     this.lip = TokenColors.cardLip,
     this.slop = 12,
+    this.slopLeft,
   });
 
   final Widget child;
@@ -52,6 +53,11 @@ class PebbleButton extends StatefulWidget {
   final Color fill;
   final Color lip;
   final double slop;
+
+  /// The touch margin on the physical left of the pebble, when it is not [slop] (the box keeps its width, so the margin on the right takes
+  /// what the left gives up): a pebble at the edge of a screen stands a little to the left of the middle of its touch box, and the box
+  /// itself does not move.
+  final double? slopLeft;
 
   @override
   State<PebbleButton> createState() => _PebbleButtonState();
@@ -76,7 +82,12 @@ class _PebbleButtonState extends State<PebbleButton> {
         onTapCancel: live ? () => setState(() => _down = false) : null,
         onTap: widget.onPressed,
         child: Padding(
-          padding: EdgeInsets.all(widget.slop),
+          padding: EdgeInsets.fromLTRB(
+            widget.slopLeft ?? widget.slop,
+            widget.slop,
+            widget.slop * 2 - (widget.slopLeft ?? widget.slop),
+            widget.slop,
+          ),
           child: Transform.translate(
             offset: Offset(0, TokenComponent.clayLip - lip),
             child: Container(
