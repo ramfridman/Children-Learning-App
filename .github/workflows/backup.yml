@@ -1,7 +1,10 @@
 # Weekly encrypted backup of the family data (the `app` schema). The dump is encrypted with a PUBLIC key before it is
 # stored, so this job holds nothing that can open it; the private key is only in the owner's password manager.
 # The job logs in as the read-only database role `backup_reader` (see the migration 20261028120000_backup_role.sql).
-# The last four weeks are kept: artifacts expire after 28 days.
+# The encrypted file goes to a PRIVATE Supabase Storage bucket (`nitznutz-backups`, project ungkvkabqxssggttajfs,
+# Frankfurt) over the S3 protocol, never to a GitHub artifact: the repository is public, so artifacts are downloadable
+# by any signed-in GitHub user (finding SEC-B29-8). Copies older than 27 days are deleted on every run, so a deleted
+# child is gone from the backups within 28 days, and the last four weeks are kept. See docs/setup/push-and-backups.md.
 name: backup
 
 on:
@@ -22,12 +25,29 @@ jobs:
     timeout-minutes: 20
     env:
       AGE_PUBLIC_KEY: age1c8ktydg7kdasj88khdwpnf83mr0jcvxw073m8av3h28l4uz9agwqvzj8tu
-      BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+      # The three secrets are set per step below, only on the steps that need them (not on the package install).
+      # Not secret: the project's S3 endpoint, its region and the private bucket.
+      AWS_DEFAULT_REGION: eu-central-1
+      S3_ENDPOINT: https://ungkvkabqxssggttajfs.storage.supabase.co/storage/v1/s3
+      PUBLIC_BASE: https://ungkvkabqxssggttajfs.supabase.co/storage/v1/object/public
+      BACKUP_BUCKET: nitznutz-backups
+      # Supabase's S3 layer does not take the newer default checksum trailers of the AWS CLI.
+      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+      AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
     steps:
       - name: Check the secret is set
+        env:
+          BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+          # Storage-only S3 access key pair (docs/setup/push-and-backups.md, step 3). Neither can open a backup.
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
         run: |
           if [ -z "$BACKUP_DATABASE_URL" ]; then
             echo "::error::The GitHub secret BACKUP_DATABASE_URL is not set (see docs/setup/push-and-backups.md, step 2)."
+            exit 1
+          fi
+          if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+            echo "::error::The GitHub secrets BACKUP_S3_ACCESS_KEY_ID and BACKUP_S3_SECRET_ACCESS_KEY are not both set (see docs/setup/push-and-backups.md, step 3)."
             exit 1
           fi
 
@@ -35,10 +55,15 @@ jobs:
         run: |
           sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
           sudo apt-get install -y -qq postgresql-client-17 age
+          aws --version
+          jq --version
+          aws configure set default.s3.addressing_style path
           /usr/lib/postgresql/17/bin/pg_dump --version
           age --version
 
       - name: Dump the app schema
+        env:
+          BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
         run: |
           set -euo pipefail
           /usr/lib/postgresql/17/bin/pg_dump "$BACKUP_DATABASE_URL" \
@@ -60,11 +85,57 @@ jobs:
           ls -l "$out"
           sha256sum "$out"
 
-      - name: Keep it for four weeks
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: nitznutz-backup
-          path: nitznutz-backup-*.dump.age
-          retention-days: 28
-          compression-level: 0
-          if-no-files-found: error
+      - name: Upload it to the private bucket, and check that it is not public
+        env:
+          # Storage-only S3 access key pair (docs/setup/push-and-backups.md, step 3). Neither can open a backup.
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
+        run: |
+          set -euo pipefail
+          file=$(ls nitznutz-backup-*.dump.age)
+          size=$(stat -c %s "$file")
+          aws s3api put-object --endpoint-url "$S3_ENDPOINT" --bucket "$BACKUP_BUCKET" \
+            --key "$file" --body "$file" --content-type application/octet-stream > /dev/null
+          stored=$(aws s3api head-object --endpoint-url "$S3_ENDPOINT" --bucket "$BACKUP_BUCKET" \
+            --key "$file" --query ContentLength --output text)
+          if [ "$stored" != "$size" ]; then
+            echo "::error::The stored copy has $stored bytes, the local file $size."
+            exit 1
+          fi
+          echo "uploaded $file ($size bytes) to the private bucket"
+          echo "sha256 after upload (compare before a restore): $(sha256sum "$file")"
+          # The bucket must be private. Asking for the file with no login at all must be refused (400 or 404).
+          # Anything else (200, or no answer) means it cannot be shown to be private: delete the copy and fail.
+          code=$(curl -s --retry 3 --retry-all-errors -o /dev/null -m 30 -w '%{http_code}' "$PUBLIC_BASE/$BACKUP_BUCKET/$file" || true)
+          if [ "$code" != "400" ] && [ "$code" != "404" ]; then
+            aws s3api delete-object --endpoint-url "$S3_ENDPOINT" --bucket "$BACKUP_BUCKET" --key "$file" > /dev/null || true
+            echo "::error::The public address of the backup answered http $code instead of 400 or 404. The copy was deleted. Make the bucket private (docs/setup/push-and-backups.md, step 3)."
+            exit 1
+          fi
+          echo "public address refused with http $code: the bucket is private"
+
+      - name: Delete copies older than 27 days (keeps the last four weekly copies)
+        # Runs even when the dump failed, so deletions still age out of the backups within 28 days.
+        # The newest copy is never deleted, whatever its age.
+        if: ${{ !cancelled() }}
+        env:
+          # Storage-only S3 access key pair (docs/setup/push-and-backups.md, step 3). Neither can open a backup.
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
+        run: |
+          set -euo pipefail
+          cutoffday=$(date -u -d '27 days ago' +%Y-%m-%d)
+          aws s3api list-objects-v2 --endpoint-url "$S3_ENDPOINT" --bucket "$BACKUP_BUCKET" --output json > listing.json
+          # Compare the date in the key (written by this job with `date -u`), not LastModified: the AWS CLI prints
+          # "+00:00", which jq's fromdateiso8601 refuses (SEC-BK-1). Test: tools/backup_retention_test.sh
+          jq -r --arg cutoffday "$cutoffday" '
+            [(.Contents // [])[] | .Key
+              | select(test("^nitznutz-backup-[0-9]{4}-[0-9]{2}-[0-9]{2}\\.dump\\.age$"))]
+            | sort | .[:-1][]
+            | select(.[16:26] < $cutoffday)' listing.json > old.txt
+          while IFS= read -r key; do
+            [ -n "$key" ] || continue
+            aws s3api delete-object --endpoint-url "$S3_ENDPOINT" --bucket "$BACKUP_BUCKET" --key "$key" > /dev/null
+            echo "deleted $key"
+          done < old.txt
+          echo "$(jq '[(.Contents // [])[]] | length' listing.json) objects listed before, $(wc -l < old.txt) deleted"

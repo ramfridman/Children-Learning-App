@@ -298,7 +298,7 @@ What Claude does next (a later wave, briefed by the orchestrator):
 | actions/checkout | v7.0.1 | v7.0.1 (2026-07-20) | no (the SHA matches the tag) |
 | actions/setup-java | v6.1.0 | v6.1.0 (2026-10-14) | no |
 | actions/setup-node | v7.1.0 | v7.1.0 (2026-10-08) | no |
-| actions/upload-artifact (backup) | v7.0.2 | v7.0.2 (2026-10-07) | no |
+| actions/upload-artifact (backup) | v7.0.2 | v7.0.2 (2026-10-07) | no longer used: the backup moved to a private bucket on 2026-11-08 |
 | subosito/flutter-action | v2.23.0 | v2.23.0 (2026-03-25) | no |
 | denoland/setup-deno | v2.0.5 | v2.0.5 (2026-07-03) | no |
 | gitleaks (`tools/ci/tool-versions.env`, CI and the pre-commit hook) | 8.28.0 | 8.30.1 (2026-03-21) | **yes**: new version and both checksums (Linux for CI, Windows for the hook) from the release's checksum file; the security-engineer reviews |

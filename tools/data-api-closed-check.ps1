@@ -9,6 +9,8 @@
 # check. The code is read without echo, and the session token stays inside this process: it is never
 # printed, logged or written to disk.
 
+param([string]$BackupKey = '')  # a real backup name, e.g. nitznutz-backup-2026-11-08.dump.age (from a run's 'uploaded' line)
+
 $ErrorActionPreference = 'Stop'
 $cfgPath = Join-Path $PSScriptRoot '..\app\config\dev.local.json'
 if (-not (Test-Path $cfgPath)) { throw "Missing $cfgPath (see docs/setup/android-device-checks.md, section 1)." }
@@ -75,6 +77,18 @@ $resp = Invoke-Api POST '/storage/v1/bucket' $auth '{"name":"probe","public":tru
 Check 'Storage bucket creation is refused' $resp { param($x) $x.Status -ge 400 }
 $resp = Invoke-Api POST '/storage/v1/object/probe/probe.txt' $auth 'x'
 Check 'Storage upload is refused' $resp { param($x) $x.Status -ge 400 }
+# 5. The backup bucket (made by hand, docs/setup/push-and-backups.md step 3) is private: no list, no public address.
+$resp = Invoke-Api POST '/storage/v1/object/list/nitznutz-backups' $auth '{"prefix":"","limit":10}'
+Check 'Backup bucket: an object list is refused or empty' $resp { param($x) $x.Status -ge 400 -or $x.Text.Trim() -eq '[]' }
+if ($BackupKey -match '^nitznutz-backup-\d{4}-\d{2}-\d{2}\.dump\.age$') {
+  # With a real file, a public bucket would answer 200 here; a private one answers 400 (bucket not found) or 404.
+  $resp = Invoke-Api GET "/storage/v1/object/public/nitznutz-backups/$BackupKey" @{}
+  Check 'Backup bucket: the public address of a real backup answers 400 or 404' $resp { param($x) $x.Status -eq 400 -or $x.Status -eq 404 }
+  $resp = Invoke-Api GET "/storage/v1/object/authenticated/nitznutz-backups/$BackupKey" $auth
+  Check 'Backup bucket: a signed-in user cannot read a real backup' $resp { param($x) $x.Status -ge 400 }
+} else {
+  Write-Host 'SKIP  Backup bucket: public and signed-in reads of a real backup (give -BackupKey nitznutz-backup-YYYY-MM-DD.dump.age to run them)' -ForegroundColor Yellow
+}
 
 $token = $null
 $failed = ($results | Where-Object { -not $_ }).Count
