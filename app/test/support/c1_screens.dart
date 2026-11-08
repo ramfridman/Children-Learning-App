@@ -75,7 +75,9 @@ Future<void> closeOne(WidgetTester t) async {
 /// Pumps the app on [board] with the child of the rig chosen, ready for [openOne].
 Future<AppRig> startOn(WidgetTester t, PackContent content, Size board) async {
   final AppRig rig = AppRig(content: content);
-  await rig.seedFinishedSetup(name: 'נֹעָה');
+  // The child is of the oldest look (Band C, grade 2): the lessons of Band C show up to five choices, which the look of a younger child would
+  // cap (B-29).
+  await rig.seedFinishedSetup(name: 'נֹעָה', ageBand: 2);
   await rig.pump(t, size: board);
   await t.tap(find.text('נֹעָה'));
   await t.pumpAndSettle();

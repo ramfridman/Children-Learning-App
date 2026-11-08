@@ -118,6 +118,8 @@ void main() {
             .toSet();
         // `lang` and `route` and `default` are the parent texts of the Languages pages (docs/languages/island-texts.md): the name of
         // a language and of a route, filled on the device from fixed strings and never from the child, the pack or a server.
+        // `stage`, `suggested`, `current`, `next`, `range` and `year` are the parent texts of the age settings (B-29): a school stage's
+        // name from `He.stageNames*`, the range of a look from `He.langBand*`, and a year as a number, filled on the device.
         expect(names, <String?>{
           'child',
           's',
@@ -133,6 +135,12 @@ void main() {
           'lang',
           'route',
           'default',
+          'stage',
+          'suggested',
+          'current',
+          'next',
+          'range',
+          'year',
         });
       },
     );

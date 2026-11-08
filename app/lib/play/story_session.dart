@@ -95,14 +95,14 @@ class StorySession extends ChoiceSession {
       controller.next();
     } else {
       controller.completePractice();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
     }
   }
 
   @override
   void onRight() {
     // The recast plays, and then the story goes on to its last page, which the child turns to.
-    later(TemplateSession.praisePause, () {
+    later(praise, () {
       asking = false;
       resumed = true;
       showRow = false;

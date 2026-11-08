@@ -537,6 +537,8 @@ void main() {
           everyElement(
             anyOf(
               startsWith('../rewards/award'),
+              // The school stage chooses the row (B-29 step 8): the stage enum is all it takes from the age file.
+              equals('../engine/age.dart'),
               equals('lesson_path.dart'),
               equals('adventure_land.dart'),
               equals('../engine/course.dart'),

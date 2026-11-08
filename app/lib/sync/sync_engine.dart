@@ -9,8 +9,9 @@ import '../core/errors.dart';
 import '../core/log.dart';
 import '../data/app_database.dart';
 import '../data/child_name.dart';
-import '../engine/age.dart' show SchoolStage;
+import '../engine/age.dart' show BirthMonth, SchoolStage;
 import '../engine/course.dart';
+import '../parent/age_settings.dart' show AgeSettings;
 import '../parent/language_settings.dart';
 import '../parent/look_settings.dart';
 import '../parent/parent_rules.dart';
@@ -299,6 +300,7 @@ class SyncEngine {
     final Set<String> gone = await _tombstoned();
     for (final Profile p in await db.allProfiles()) {
       if (gone.contains(p.id)) continue;
+      final BirthMonth? birth = await db.birthOf(p.id);
       final String fingerprint = _profileFingerprint(
         p.name,
         p.avatar,
@@ -307,8 +309,10 @@ class SyncEngine {
         p.companionId,
         p.outfitId,
         SchoolStage.fromWire(p.schoolStage),
+        birth,
       );
-      if (await db.setting('profile_pushed_${p.id}') == fingerprint) continue;
+      final String? pushed = await db.setting('profile_pushed_${p.id}');
+      if (pushed == fingerprint) continue;
       // A name saved before B-28 could be longer than the server takes, or hold a character it refuses: it goes cut to
       // fit. One with nothing left would only be refused, so it is not sent (its answers are then refused like those of
       // any child the server does not have).
@@ -323,9 +327,14 @@ class SyncEngine {
           'outfit_id': ?p.outfitId,
           'address_form': p.addressForm,
           'age_band': p.ageBand,
-          // The school stage a parent confirmed, as its word. Nothing else about the child's age is ever sent: the month and
-          // year of birth stay on this device (B-29).
+          // The school stage a parent confirmed, as its word. The age in months and the look stage are never sent (B-29).
           if (SchoolStage.fromWire(p.schoolStage) case final SchoolStage stage) 'school_stage': stage.wire,
+          // The month and year of birth, never the day (owner, 2026-11-08): sent here and nowhere else, so a new phone gets them
+          // back. Absent keeps the server's; null clears it, and is sent only when this phone last saved one that is now gone.
+          if (birth != null)
+            'birth': <String, Object?>{'year': birth.year, 'month': birth.month}
+          else if (_birthOf(pushed) != null)
+            'birth': null,
         });
       } on Object {
         // One child that cannot be saved (a deleted one, a bad value) must not stop the others or the answers.
@@ -335,8 +344,8 @@ class SyncEngine {
     }
   }
 
-  /// What was last saved on the server for a child, as one string. The school stage is in it, so confirming one sends the child
-  /// again; the month and year of birth are not, because they are not sent.
+  /// What was last saved on the server for a child, as one string. The school stage and the month and year of birth are in it, so
+  /// confirming a stage or changing a birth sends the child again, once. It lives in the encrypted database and goes nowhere.
   static String _profileFingerprint(
     String name,
     String avatar,
@@ -345,7 +354,31 @@ class SyncEngine {
     String? companionId,
     String? outfitId,
     SchoolStage? stage,
-  ) => '$name|$avatar|$addressForm|$ageBand|${companionId ?? ''}|${outfitId ?? ''}|${stage?.wire ?? ''}';
+    BirthMonth? birth,
+  ) =>
+      '$name|$avatar|$addressForm|$ageBand|${companionId ?? ''}|${outfitId ?? ''}|${stage?.wire ?? ''}|${_birthText(birth)}';
+
+  /// A birth as the last part of a fingerprint: `2021-05`, or nothing.
+  static String _birthText(BirthMonth? birth) =>
+      birth == null ? '' : '${birth.year}-${birth.month.toString().padLeft(2, '0')}';
+
+  /// The birth a fingerprint says the server was given: the text after its last bar, when it is a month and year (a fingerprint from
+  /// before the birth was synced ends with the stage, which never looks like one), else null.
+  static String? _birthOf(String? fingerprint) {
+    if (fingerprint == null) return null;
+    final String tail = fingerprint.substring(fingerprint.lastIndexOf('|') + 1);
+    return RegExp(r'^\d{4}-\d{2}$').hasMatch(tail) ? tail : null;
+  }
+
+  /// A month and year as the server's copy gives them: exactly `{year, month}` of whole numbers that make a real birth for a child of
+  /// the right age, else null. The server's copy is untrusted like any input.
+  BirthMonth? _birthFromServer(Object? wire) {
+    if (wire is! Map<String, Object?> || wire.length != 2) return null;
+    final Object? year = wire['year'];
+    final Object? month = wire['month'];
+    if (year is! int || month is! int) return null;
+    return BirthMonth.tryCreate(year, month, now: _now);
+  }
 
   /// The children whose rows wait (B-32): on a parent device, the ones this device has not yet saved on the server (no
   /// `profile_pushed_<id>` key; a failed `child-put` leaves none). The server refuses the rows of a child it does not
@@ -957,6 +990,16 @@ class SyncEngine {
         final SchoolStage? local = SchoolStage.fromWire(here?.schoolStage);
         final bool localFits = local != null && local.band == m['age_band'];
         final bool clearLocal = !stageFits && local != null && !localFits;
+        // The month and year of birth: the server's, when it is a real one and nothing here waits to be sent; the server saying "none"
+        // (another phone cleared it) clears it here once this phone had sent that same one; a server that says nothing (older), or
+        // something that is not a birth, leaves the one here alone.
+        final String? pushedBefore = await db.setting('profile_pushed_$id');
+        final BirthMonth? localBirth = here == null ? null : await db.birthOf(id);
+        final bool birthWaits = here != null && (_birthOf(pushedBefore) ?? '') != _birthText(localBirth);
+        final BirthMonth? serverBirth = _birthFromServer(m['birth']);
+        final BirthMonth? birthAfter = birthWaits
+            ? localBirth
+            : serverBirth ?? (m.containsKey('birth') && m['birth'] == null ? null : localBirth);
         final ProfilesCompanion row = ProfilesCompanion(
           id: Value<String>(id),
           name: Value<String>(name),
@@ -978,6 +1021,10 @@ class SyncEngine {
         final bool known = here != null;
         if (!known) added++;
         await db.upsertProfileFromFamily(row, isNew: !known);
+        if (birthAfter != localBirth) await db.setBirth(id, birthAfter);
+        // Someone confirmed a different stage on another phone: this phone counts it as confirmed this school year, so the September
+        // card does not ask again for the same year.
+        if (stageFits && stage.wire != here?.schoolStage) await db.markStageConfirmed(id, _now);
         // What the server has is now what this device has: no need to push it back.
         await db.putSetting(
           'profile_pushed_$id',
@@ -990,6 +1037,8 @@ class SyncEngine {
             m['outfit_id'] as String?,
             // What this phone holds after the pull: the server's stage when it fits, else the one already here if it fits.
             stageFits ? stage : (localFits ? local : null),
+            // What the server holds: when a change here waits to be sent, the server's own, so the next round sends it.
+            birthWaits ? serverBirth : birthAfter,
           ),
         );
       }

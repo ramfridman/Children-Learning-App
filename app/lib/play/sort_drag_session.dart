@@ -220,7 +220,7 @@ class SortDragSession extends TemplateSession {
     if (disposed) return;
     ring = AnswerState.correct;
     notify();
-    later(TemplateSession.praisePause, controller.next);
+    later(praise, controller.next);
   }
 
   Future<void> _checkShare() async {

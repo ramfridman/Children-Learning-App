@@ -42,6 +42,10 @@ abstract class TemplateSession extends ChangeNotifier {
   /// How long the praise stays before the next activity.
   static const Duration praisePause = Duration(milliseconds: 1600);
 
+  /// How long the praise of this session stays before the next activity: [praisePause], shortened by the look for the older children (B-29: the
+  /// tier-1 celebration is 800 ms for P1 and P2, 700 for P3 and 500 for P4, and the rest of the pause is the 800 ms that stays).
+  Duration praise = praisePause;
+
   /// The pause between the steps of a demonstration (a butterfly flying, a finger rising).
   static const Duration demoStep = Duration(milliseconds: 800);
 

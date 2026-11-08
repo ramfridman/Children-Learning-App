@@ -161,11 +161,11 @@ class Ls01TapSession extends ChoiceSession {
     if (out.settled) {
       chosenState = AnswerState.selected;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
     } else if (out.correct) {
       chosenState = AnswerState.correct;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
     } else {
       notYetPicks
         ..clear()

@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../engine/age.dart';
+import '../parent/age_settings.dart' show ageSettingKeys;
 import '../parent/language_settings.dart';
 import '../parent/look_settings.dart';
 import '../rewards/ribbons.dart';
@@ -555,6 +556,10 @@ class AppDatabase extends _$AppDatabase {
     }
     // The count of block demonstrations this child has seen (SEC-M10-9).
     await (delete(appSettings)..where((AppSettings t) => t.key.equals(blockDemoKey(profileId)))).go();
+    // The age settings kept on this device: the school year of the stage, the captions setting, the put-away card.
+    for (final String key in ageSettingKeys(profileId)) {
+      await (delete(appSettings)..where((AppSettings t) => t.key.equals(key))).go();
+    }
     // And the look the parent chose.
     final String? looks = await setting(looksSettingKey);
     if (looks != null) {

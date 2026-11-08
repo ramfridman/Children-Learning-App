@@ -92,7 +92,7 @@ class ListenDoSession extends ChoiceSession {
   /// The "done" of an embodied step: nothing is written.
   void finish() {
     controller.completePractice();
-    later(TemplateSession.praisePause, controller.next);
+    later(praise, controller.next);
   }
 
   @override

@@ -6,6 +6,7 @@ import '../design/app_text.dart';
 import '../design/board.dart';
 import '../design/components.dart';
 import '../design/layout.dart';
+import '../design/stage_spec.dart';
 import '../design/tokens.g.dart';
 import '../strings/he.dart';
 import 'art.dart';
@@ -729,14 +730,17 @@ class HomeScreen extends StatelessWidget {
           Positioned(
             left: s.plusLeft,
             top: s.plusTop,
-            child: PebbleButton(
-              key: const Key('home-friends'),
-              semanticLabel: He.friendsSemantics.text,
-              size: 48,
-              fill: TokenColors.spark,
-              lip: TokenColors.sparkDeep,
-              onPressed: onFriends,
-              child: const BoardSvg('assets/art/ui/plus.svg', width: 24, height: 24),
+            // The "+" pebble: 64 for the youngest, 56 for the older ones (B-29 D4), 48 where no look is set.
+            child: Builder(
+              builder: (BuildContext c) => PebbleButton(
+                key: const Key('home-friends'),
+                semanticLabel: He.friendsSemantics.text,
+                size: StageScope.maybeOf(c)?.stage.plusPebble ?? 48,
+                fill: TokenColors.spark,
+                lip: TokenColors.sparkDeep,
+                onPressed: onFriends,
+                child: const BoardSvg('assets/art/ui/plus.svg', width: 24, height: 24),
+              ),
             ),
           ),
         // The bubble only speaks: a touch on it goes on to the land under it (on a tablet it reaches over Counting Hills).
@@ -985,7 +989,13 @@ class _HomeSign extends StatelessWidget {
   Widget build(BuildContext context) {
     final double box = spec.homeSignRight - spec.homeSignLeft;
     final double maxText = box - _LandSign.frame;
-    final HomeSignFit fit = fitHomeSign(island, maxText, MediaQuery.textScalerOf(context));
+    final StageScope? look = StageScope.maybeOf(context);
+    final HomeSignFit fit = fitHomeSign(
+      island,
+      maxText,
+      MediaQuery.textScalerOf(context),
+      sizes: look == null ? homeSignSizes : signSizesOf(look.stage, AppLayout.of(context).sizeClass),
+    );
     final double width = math.min(fit.width, maxText) + _LandSign.frame;
     final double left = (sign.left - width / 2).clamp(spec.homeSignLeft, spec.homeSignRight - width);
     final Widget label = _LandSign(
@@ -1041,10 +1051,18 @@ const Color _waitingGlow = Color(0xAAFFD45C);
 /// The home sign's line, its size in points (before the text scale) and its measured width.
 typedef HomeSignFit = ({String text, double size, double width});
 
-/// The sizes the home sign tries, largest first; it never goes below 15 (decision 5 of B-26).
+/// The sizes the home sign tries, largest first; it never goes below 15 (decision 5 of B-26). The look sets its own range (B-29 D4): 18 to
+/// 15 for the youngest, 20 to 17 on a phone and 22 to 19 on a tablet for the older ones ([signSizesOf]).
 const List<double> homeSignSizes = <double>[18, 17, 16, 15];
 
-TextStyle _homeSignStyle(double size) => AppText.fixed(size: size, weight: 700);
+/// The sizes a sign tries in the look [stage] on [sizeClass], largest first, a point at a time.
+List<double> signSizesOf(StageSpec stage, SizeClass sizeClass) {
+  final ({double size, double least}) r = stage.sign(sizeClass);
+  return <double>[for (double s = r.size; s >= r.least; s--) s];
+}
+
+/// A sign's text is Heebo 500 at every stage (pointed text below 24 points is at most 500: docs/design/b29-steps5-6.md section 9.4).
+TextStyle _homeSignStyle(double size) => AppText.fixed(size: size, weight: 500);
 
 /// The home sign for [island] in a line at most [maxWidth] wide, measured with the screen's [scaler]:
 /// 1. the whole line at the largest of [homeSignSizes] that fits;
@@ -1052,7 +1070,12 @@ TextStyle _homeSignStyle(double size) => AppText.fixed(size: size, weight: 700);
 /// 3. otherwise the shortest form at 15, which the sign scales down into its box.
 /// With no [island] the line is Nitzi's island, as before B-26.
 @visibleForTesting
-HomeSignFit fitHomeSign(HomeIslandName? island, double maxWidth, TextScaler scaler) {
+HomeSignFit fitHomeSign(
+  HomeIslandName? island,
+  double maxWidth,
+  TextScaler scaler, {
+  List<double> sizes = homeSignSizes,
+}) {
   final TextPainter painter = TextPainter(textDirection: TextDirection.rtl, textScaler: scaler, maxLines: 1);
   double widthAt(String text, double size) {
     painter.text = TextSpan(text: text, style: _homeSignStyle(size));
@@ -1061,7 +1084,7 @@ HomeSignFit fitHomeSign(HomeIslandName? island, double maxWidth, TextScaler scal
   }
 
   HomeSignFit? largest(String text) {
-    for (final double size in homeSignSizes) {
+    for (final double size in sizes) {
       final double w = widthAt(text, size);
       if (w <= maxWidth) return (text: text, size: size, width: w);
     }
@@ -1074,7 +1097,7 @@ HomeSignFit fitHomeSign(HomeIslandName? island, double maxWidth, TextScaler scal
     if (fits != null) return fits;
     String shortest = whole;
     if (island != null && island.isNamed) {
-      final double smallest = homeSignSizes.last;
+      final double smallest = sizes.last;
       String tried = whole;
       for (int max = island.name.characters.length - 1; max >= 3; max--) {
         final String text = island.signShortened(max);
@@ -1083,7 +1106,7 @@ HomeSignFit fitHomeSign(HomeIslandName? island, double maxWidth, TextScaler scal
         if (widthAt(text, smallest) <= maxWidth) return largest(text)!;
       }
     }
-    return (text: shortest, size: homeSignSizes.last, width: widthAt(shortest, homeSignSizes.last));
+    return (text: shortest, size: sizes.last, width: widthAt(shortest, sizes.last));
   } finally {
     painter.dispose();
   }

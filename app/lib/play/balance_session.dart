@@ -104,7 +104,7 @@ class BalanceSession extends TemplateSession {
       ring = AnswerState.correct;
       revealed = true;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
       return;
     }
     ring = AnswerState.notYet;
@@ -134,7 +134,7 @@ class BalanceSession extends TemplateSession {
       if (disposed) return;
       ring = AnswerState.correct;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
     }
   }
 

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import '../app/language_providers.dart';
+import '../app/providers.dart' show clockProvider;
 import '../app/state.dart';
 import '../child/art.dart';
 import '../data/app_database.dart';
@@ -12,7 +13,10 @@ import '../data/child_name.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import '../engine/age.dart';
 import '../engine/course.dart';
+import 'age_fields.dart';
+import 'age_settings.dart';
 import 'language_settings.dart';
 import '../strings/he.dart';
 
@@ -30,7 +34,7 @@ class ChildFormScreen extends ConsumerStatefulWidget {
 
 class _ChildFormScreenState extends ConsumerState<ChildFormScreen> {
   final TextEditingController _name = TextEditingController();
-  int _age = 5;
+  AgeValue _age = const AgeValue();
   String _avatar = avatarIds.first;
   String _address = 'n';
   bool _saving = false;
@@ -58,6 +62,11 @@ class _ChildFormScreenState extends ConsumerState<ChildFormScreen> {
 
   bool get _valid => _problem == ChildNameProblem.ok;
 
+  DateTime get _now => DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs());
+
+  /// A name that can be saved, a school stage chosen (or suggested by the year), and no month without a year or the reverse.
+  bool get _canSave => _valid && _age.stage != null && !_age.birthHalf;
+
   /// What is said under the field: nothing while it is empty; why the name cannot be saved (an error); the limit, as a
   /// plain note, once a name that can be saved reaches it (the formatter takes no more, so the parent learns why here).
   ({Str text, bool error})? get _note => switch (_problem) {
@@ -81,20 +90,26 @@ class _ChildFormScreenState extends ConsumerState<ChildFormScreen> {
   );
 
   Future<void> _save() async {
-    if (!_valid || _saving) return;
+    final SchoolStage? stage = _age.stage;
+    if (!_canSave || stage == null || _saving) return;
     setState(() => _saving = true);
     final AppDatabase db = await ref.read(databaseProvider.future);
     final String id = const Uuid().v4();
+    // The band comes from the school stage, never from the age in months (B-29).
     await db.addProfile(
       ProfilesCompanion(
         id: Value<String>(id),
         name: Value<String>(_name.text.trim()),
         avatar: Value<String>(_avatar),
         addressForm: Value<String>(_address),
-        ageBand: Value<int>(bandForAge(_age).index),
+        ageBand: Value<int>(stage.band),
+        schoolStage: Value<String?>(stage.wire),
         createdAt: Value<DateTime>(DateTime.now().toUtc()),
       ),
     );
+    await db.markStageConfirmed(id, _now);
+    final BirthMonth? birth = _age.birthAt(_now);
+    if (birth != null) await db.setBirth(id, birth);
     for (final String course in _languages) {
       await ref.read(languagesProvider.notifier).setSwitches(id, course, const LanguageSwitches(on: true));
     }
@@ -114,14 +129,33 @@ class _ChildFormScreenState extends ConsumerState<ChildFormScreen> {
     bottomNavigationBar: SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            if (widget.onCancel != null) ...<Widget>[
-              ParentButton(label: He.setupBack.text, quiet: true, onPressed: widget.onCancel),
-              const SizedBox(width: 12),
-            ],
-            ParentButton(label: He.setupSave.text, onPressed: _valid && !_saving ? _save : null),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                if (widget.onCancel != null) ...<Widget>[
+                  ParentButton(label: He.setupBack.text, quiet: true, onPressed: widget.onCancel),
+                  const SizedBox(width: 12),
+                ],
+                ParentButton(
+                  key: const Key('form-save'),
+                  label: He.setupSave.text,
+                  onPressed: _canSave && !_saving ? _save : null,
+                ),
+              ],
+            ),
+            // Why Save waits, in words: a name, then the school stage.
+            if (_valid && _age.stage == null)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(
+                  He.ageStageNeeded.text,
+                  key: const Key('form-stage-needed'),
+                  style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+                ),
+              ),
           ],
         ),
       ),
@@ -159,18 +193,7 @@ class _ChildFormScreenState extends ConsumerState<ChildFormScreen> {
                       ),
                     ),
                   ),
-                _label(He.setupAge.text),
-                Wrap(
-                  spacing: 8,
-                  children: <Widget>[
-                    for (final int a in <int>[3, 4, 5, 6, 7, 8])
-                      ChoiceChip(
-                        label: Text('$a'),
-                        selected: _age == a,
-                        onSelected: (_) => setState(() => _age = a),
-                      ),
-                  ],
-                ),
+                AgeFields(value: _age, now: _now, onChanged: (AgeValue v) => setState(() => _age = v)),
                 _label(He.setupAvatar.text),
                 Wrap(
                   spacing: 12,

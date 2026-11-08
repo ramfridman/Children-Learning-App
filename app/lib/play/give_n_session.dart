@@ -193,7 +193,7 @@ class GiveNSession extends TemplateSession {
     if (o.correct) {
       ringState = AnswerState.correct;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
     } else {
       ringState = AnswerState.notYet;
       notify();

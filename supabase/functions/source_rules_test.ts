@@ -75,3 +75,21 @@ Deno.test("npm packages are imported only by exact version, one version per pack
   assert.deepEqual([...seen.keys()].sort(), approved);
   for (const [name, versions] of seen) assert.equal(versions.size, 1, `${name} has more than one version`);
 });
+
+Deno.test("a child's month and year of birth are named only by child-put, sync-pull and the child store (owner, 2026-11-08)", async () => {
+  // Nothing else - not tutor-turn, not a vendor module, not the log - may even mention a birth or an age in months.
+  const allowed = new Set([
+    "child-put/handler.ts",
+    "sync-pull/handler.ts",
+    "_shared/store.ts",
+    "_shared/db.ts",
+    "_shared/testkit.ts",
+  ]);
+  const aboutBirth = /birth|born|\bdob\b|age_?months|ageMonths/i;
+  for (const u of await sourceFiles()) {
+    if (isTest(u) && !/testkit/.test(u.pathname)) continue;
+    if (allowed.has(rel(u))) continue;
+    const text = await Deno.readTextFile(u);
+    assert.ok(!aboutBirth.test(text), `${rel(u)} mentions a birth or an age in months`);
+  }
+});

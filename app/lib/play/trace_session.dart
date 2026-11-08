@@ -70,7 +70,7 @@ class TraceSession extends TemplateSession {
         if (disposed) return;
         ring = AnswerState.correct;
         notify();
-        later(TemplateSession.praisePause, controller.next);
+        later(praise, controller.next);
       } else {
         notify();
       }

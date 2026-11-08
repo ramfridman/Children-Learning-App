@@ -98,7 +98,7 @@ class FlashSession extends TemplateSession {
       chosenState = AnswerState.correct;
       visible = true;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
     } else {
       chosenState = AnswerState.notYet;
       notify();

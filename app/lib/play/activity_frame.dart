@@ -8,6 +8,7 @@ import '../design/board.dart';
 import '../design/components.dart';
 import '../design/course_text.dart';
 import '../design/layout.dart';
+import '../design/stage_spec.dart';
 import '../design/tokens.g.dart';
 import '../rewards/sticker_design.dart';
 import '../strings/he.dart';
@@ -43,7 +44,14 @@ class ActivityFrame extends StatelessWidget {
     this.bubbleAboveTiles = false,
     this.showHelp = true,
     this.boardLayer,
+    this.promptRing = false,
+    this.idleHand,
   });
+
+  /// The idle prompt's first step rings the place the question is said from (the speaker bubble, or the caption bubble) once, in the sky
+  /// colour, and (B-29 D5) the hand of the idle prompt points into the stage: a layer over the stage that takes no touch, or null.
+  final bool promptRing;
+  final Widget Function(Size room)? idleHand;
 
   /// Something a template draws in the board's own points, outside its stage (the close-up card of a command): a `Positioned` for the
   /// board's stack. Drawn after the stage and the answer tiles, under the guide's hand and the controls.
@@ -191,6 +199,11 @@ class ActivityFrame extends StatelessWidget {
   Widget build(BuildContext context) {
     final BoardClass board = AppLayout.of(context).board;
     final ActivitySpec s = spec ?? ActivitySpec.of(board);
+    final StageScope? look = StageScope.maybeOf(context);
+    final SizeClass sizeClass = AppLayout.of(context).sizeClass;
+    // With captions hidden (B-29 D2) the Hebrew words of the question are not drawn: a speaker stands in their place. A number sentence or a
+    // target word of the question, and every numeral on a tile, still show.
+    final bool wordless = look != null && !look.captionsShown && overlay == null && bubbleText.isNotEmpty;
     // The chip's word is a tenth larger than the Hebrew beside it (fonts.md section 6); its room is taken off the line's.
     final double chipSize = s.bubbleFont * 1.1;
     final TextScaler scaler = bubbleScaler(context);
@@ -209,7 +222,9 @@ class ActivityFrame extends StatelessWidget {
     final double rightEdge = s.bubbleLeft != null
         ? s.bubbleLeft! + s.bubbleMaxWidth
         : board.size.width - (s.bubbleRight ?? 0);
-    final double? widest = clear ? rightEdge - s.stage.left - (s.stageIsCard ? 0 : minStageRoom) : null;
+    // A tall stage (the wheel, a close-up) holds its picture across its whole width, so a bubble never widens into it; a short one keeps 150.
+    final double keep = !s.tailAtMouth && s.stage.height > 180 ? s.stage.width : minStageRoom;
+    final double? widest = clear ? rightEdge - s.stage.left - (s.stageIsCard ? 0 : keep) : null;
     final ({double font, double height, double width}) fit = fitBubble(
       bubbleText,
       s,
@@ -218,6 +233,9 @@ class ActivityFrame extends StatelessWidget {
       room: ceiling - floorTop,
       widest: widest,
       scaler: scaler,
+      // The caption keeps its stage's size down to two points under it, drawn; only then does the bubble widen (B-29 D1).
+      // (A layout whose tail must meet the guide's mouth wherever the bubble stands, the blocks', keeps the old floor of 14.)
+      min: look == null || s.tailAtMouth ? 14 : look.stage.captionFloor(sizeClass),
     );
     final double font = fit.font;
     final double bubbleTop = clear
@@ -235,7 +253,51 @@ class ActivityFrame extends StatelessWidget {
           // The bubble and the guide are drawn after the stage, so a hint's hand that reaches over the stage's edge goes under
           // them (the bubble first, so that the guide stands in front of its tail).
           // The celebration says its own line; the bubble stays quiet behind it.
-          if (overlay == null && bubbleText.isNotEmpty)
+          if (wordless)
+            Positioned(
+              right: s.bubbleLeft == null
+                  ? s.bubbleRight
+                  : board.size.width - (s.bubbleLeft! + s.bubbleMaxWidth),
+              top: s.bubbleTop,
+              child: Semantics(
+                button: true,
+                label: He.replaySemantics.text,
+                child: GestureDetector(
+                  key: const Key('lesson-speaker-bubble'),
+                  behavior: HitTestBehavior.opaque,
+                  onTap: onReplay,
+                  child: SpeakerBubble(
+                    size: look.stage.speaker(sizeClass),
+                    ring: promptRing,
+                    chip: target == null
+                        ? null
+                        : TargetChip(target.text, course: target.course, size: chipSize),
+                    math: run == null
+                        ? null
+                        : MathRun(run, size: scaler.scale(s.bubbleFont), division: MathSigns.of(context)),
+                    pointerAt: s.tailAtMouth ? (s.mouthY - s.bubbleTop).clamp(24.0, 200.0) : null,
+                  ),
+                ),
+              ),
+            )
+          else if (overlay == null && bubbleText.isNotEmpty) ...<Widget>[
+            if (promptRing)
+              Positioned(
+                left: s.bubbleLeft == null ? null : s.bubbleLeft! - (fit.width - s.bubbleMaxWidth) - 6,
+                right: s.bubbleLeft == null ? (s.bubbleRight ?? 0) - 6 : null,
+                top: bubbleTop - 6,
+                width: fit.width + 12,
+                height: fit.height + 12,
+                child: IgnorePointer(
+                  child: DecoratedBox(
+                    key: const Key('bubble-ring'),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(TokenRadius.lg + 6),
+                      border: Border.all(color: TokenColors.sky, width: 4),
+                    ),
+                  ),
+                ),
+              ),
             Positioned(
               // A bubble held by its left edge keeps its right edge (the guide's side) when it widens.
               left: s.bubbleLeft == null ? null : s.bubbleLeft! - (fit.width - s.bubbleMaxWidth),
@@ -258,6 +320,7 @@ class ActivityFrame extends StatelessWidget {
                     : null,
               ),
             ),
+          ],
           Positioned(
             left: s.nitziLeft,
             top: s.nitziTop,
@@ -275,8 +338,10 @@ class ActivityFrame extends StatelessWidget {
             ),
           ),
           if (tiles != null)
-            Positioned(left: s.tilesLeft, top: s.tilesTop - 12, width: s.tilesWidth, child: tiles!),
+            // The row starts the tile's slop above where the tiles are drawn.
+            Positioned(left: s.tilesLeft, top: s.tilesTop - s.tileSlop, width: s.tilesWidth, child: tiles!),
           ?boardLayer,
+          if (idleHand != null) _idleHandLayer(s, room),
           // The hand is drawn after the answer tiles (and the stage, the bubble and the guide), so it is never behind what it points at.
           if (hands != null) _handLayer(s, room),
           Positioned(
@@ -371,6 +436,18 @@ class ActivityFrame extends StatelessWidget {
       width: room.width,
       height: room.height,
       child: IgnorePointer(child: hands!(room)),
+    );
+  }
+
+  /// The idle prompt's hand: over the stage, above everything the hint's hand is above. It takes no touch and never points at a tile.
+  Widget _idleHandLayer(ActivitySpec s, Size room) {
+    final double inset = s.stageIsCard ? 16 : 0;
+    return Positioned(
+      left: s.stage.left + inset,
+      top: s.stage.top + inset,
+      width: room.width,
+      height: room.height,
+      child: IgnorePointer(child: idleHand!(room)),
     );
   }
 

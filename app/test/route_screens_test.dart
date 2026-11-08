@@ -144,6 +144,10 @@ void main() {
             ),
           ),
         );
+    // The visit reads the child's look before it draws (B-29): a few frames, no time.
+    for (int i = 0; i < 4; i++) {
+      await t.pump();
+    }
     await t.pump(const Duration(milliseconds: 100));
     await waitFor(t, settle);
     expect(t.takeException(), isNull);

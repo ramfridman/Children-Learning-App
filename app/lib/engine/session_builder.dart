@@ -30,9 +30,13 @@ class SessionContext {
     this.chosenDomain,
     this.course = Course.core,
     this.held = const <String>{},
+    this.stage,
   });
 
   final int sessionId;
+
+  /// The look stage 0 to 3 for P1 to P4 (B-29), read once when the session starts: it sets the length of the visit. Null paces by [band].
+  final int? stage;
 
   /// The presentation band: 0, 1 or 2 for Bands A, B and C. It sets the pace of a visit and what may be shown; the skills
   /// served come from what the child has mastered, not from this (docs/languages/frame.md section 3.1).
@@ -89,14 +93,15 @@ class SessionBuilder {
   Catalog get catalog => engine.catalog;
 
   /// How many items a session of this band holds. A course may set a shorter visit than the app's default.
-  int totalItems(int band, {String course = Course.core}) => math.max(
-    4,
-    (presentationSpec(band, course: course, params: params).sessionMinutes * 60 / params.secondsPerItem[band])
-        .round(),
-  );
+  int totalItems(int band, {String course = Course.core, int? stage}) {
+    final PresentationSpec spec = stage == null
+        ? presentationSpec(band, course: course, params: params)
+        : presentationSpecForStage(stage, course: course, band: band);
+    return math.max(4, (spec.sessionMinutes * 60 / params.secondsPerItem[band.clamp(0, 2)]).round());
+  }
 
   Pick next(SessionContext c) {
-    final int total = totalItems(c.band, course: c.course);
+    final int total = totalItems(c.band, course: c.course, stage: c.stage);
     final _Scope scope = _Scope(c, catalog);
     final Served? last = c.served.isEmpty ? null : c.served.last;
 
@@ -286,7 +291,10 @@ class SessionBuilder {
         catalog.unitOf(id),
     };
     // A skill gets a few items and then the next takes over, so that about two are in focus in a session.
-    final int perSkill = math.max(params.focusItemsPerSkill, (totalItems(c.band) * 0.275).ceil());
+    final int perSkill = math.max(
+      params.focusItemsPerSkill,
+      (totalItems(c.band, stage: c.stage) * 0.275).ceil(),
+    );
     final Map<String, int> doneToday = <String, int>{};
     for (final Served s in c.served) {
       if (s.phase == Phase.focus) doneToday[s.item.primarySkill] = (doneToday[s.item.primarySkill] ?? 0) + 1;

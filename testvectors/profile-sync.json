@@ -1,5 +1,5 @@
 {
-  "note": "B-29 step 3: what the gateway takes and gives about a child's school stage and the look letter, mirrored by supabase/functions/child-put and settings-put and read by supabase/functions/sync_test.ts and, in the app, by test/age_fit_test.dart, test/look_settings_test.dart and test/support/fake_family_server.dart. The month and year of birth are NOT here: they never leave the device.",
+  "note": "B-29 step 3: what the gateway takes and gives about a child's school stage and the look letter, mirrored by supabase/functions/child-put and settings-put and read by supabase/functions/sync_test.ts and, in the app, by test/age_fit_test.dart, test/look_settings_test.dart and test/support/fake_family_server.dart. Owner 2026-11-08: the month and year of birth are synced to the family's own server in `birth` of child-put (absent keeps, null clears, else {year, month}) and come back in sync-pull; see birth_examples and birth_refused. They are in no other request or response, no log, no vendor payload and no export.",
   "school_stages": ["gan3", "gan4", "gan5", "grade1", "grade2", "grade3"],
   "band_of_stage": { "gan3": 0, "gan4": 0, "gan5": 1, "grade1": 1, "grade2": 2, "grade3": 2 },
   "look_letters": ["A", "B", "C"],
@@ -20,5 +20,31 @@
     { "short": "A" },
     { "child-aaaa-0001": "A", "child-aaaa-0002": "A", "child-aaaa-0003": "A", "child-aaaa-0004": "A", "child-aaaa-0005": "A", "child-aaaa-0006": "A", "child-aaaa-0007": "A" }
   ],
-  "refused_keys_of_child_put": ["birth_year", "birth_month", "birth", "born", "age_months", "presentation_stage", "stage", "look"]
+  "birth_examples": [
+    { "year": 2010, "month": 1 },
+    { "year": 2021, "month": 5 },
+    { "year": 2023, "month": 12 },
+    { "year": 2100, "month": 12 }
+  ],
+  "birth_refused": [
+    [],
+    "2021-05",
+    2021,
+    {},
+    { "year": 2021 },
+    { "month": 5 },
+    { "year": 2021, "month": 0 },
+    { "year": 2021, "month": 13 },
+    { "year": 2021, "month": -1 },
+    { "year": 2021, "month": 5.5 },
+    { "year": 2021, "month": "5" },
+    { "year": "2021", "month": 5 },
+    { "year": 2009, "month": 5 },
+    { "year": 2101, "month": 5 },
+    { "year": 2021, "month": 5, "day": 17 },
+    { "year": 2021, "month": 5, "age_months": 66 },
+    { "year": null, "month": 5 },
+    { "year": 2021, "month": null }
+  ],
+  "refused_keys_of_child_put": ["birth_year", "birth_month", "born", "age_months", "presentation_stage", "stage", "look", "day", "birth_day"]
 }

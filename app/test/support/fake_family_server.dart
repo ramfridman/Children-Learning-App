@@ -77,8 +77,18 @@ final ({Map<String, int> bandOfStage, List<String> lookLetters, int maxLookChild
   );
 }();
 
-/// The keys `child-put` knows, each with the check of the real shape. The real one refuses a key it does not name, so a birth month
-/// (or anything else the app should not send) fails here as it would there.
+/// The `birth` of `child-put` (owner, 2026-11-08): null clears it, else exactly `{year, month}` as whole numbers, the month 1 to 12 and
+/// the year 2010 to 2100, as the real shape takes it.
+bool _birthFits(Object? v) {
+  if (v == null) return true;
+  if (v is! Map<String, Object?> || v.length != 2) return false;
+  final Object? y = v['year'];
+  final Object? m = v['month'];
+  return y is int && m is int && y >= 2010 && y <= 2100 && m >= 1 && m <= 12;
+}
+
+/// The keys `child-put` knows, each with the check of the real shape. The real one refuses a key it does not name, so a birth day,
+/// an age in months or any other key about a child's age (anything the app should not send) fails here as it would there.
 final Map<String, _Check> _childPutShape = <String, _Check>{
   'avatar_id': (Object? v) => v is String && RegExp(r'^[a-z0-9_-]{2,40}$').hasMatch(v),
   'companion_id': (Object? v) => v is String && RegExp(r'^[a-z0-9-]{2,40}$').hasMatch(v),
@@ -86,6 +96,7 @@ final Map<String, _Check> _childPutShape = <String, _Check>{
   'address_form': (Object? v) => v == 'f' || v == 'm' || v == 'n',
   'age_band': (Object? v) => v is int && v >= 0 && v <= 2,
   'school_stage': (Object? v) => v is String && _profile.bandOfStage.containsKey(v),
+  'birth': _birthFits,
 };
 
 /// The top-level keys of the family's rules that `settings-put` names. Any other key is refused.
@@ -187,6 +198,8 @@ class FakeFamilyServer {
           'address_form': body['address_form'],
           'age_band': body['age_band'],
           'school_stage': body['school_stage'] ?? keptIfFits,
+          // As the table: absent keeps the stored month and year, null clears them, a value replaces them.
+          'birth': body.containsKey('birth') ? body['birth'] : children[id]?['birth'],
         };
         return <String, Object?>{'ok': true};
       case 'child-delete':
@@ -280,7 +293,7 @@ class FakeFamilyServer {
   }
 
   /// The shape check of the real `child-put`: only the keys it names, each with a value it takes, the nickname in its pattern, and a
-  /// school stage that agrees with the band. A key it does not name (a birth month, an age in months) is refused.
+  /// school stage that agrees with the band. A key it does not name (a birth day, an age in months) is refused.
   void _checkChildPut(Map<String, Object?> body) {
     bool fits() {
       for (final MapEntry<String, Object?> e in body.entries) {

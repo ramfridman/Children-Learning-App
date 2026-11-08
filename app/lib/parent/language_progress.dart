@@ -147,6 +147,7 @@ LanguageProgress buildLanguageProgress({
   required DateTime now,
   required LanguageSwitches switches,
   required int ageBand,
+  int? ageMonths,
   PlacementStatus? placement,
 }) {
   // The skills that carry evidence: a roll-up has none of its own, its groups are the skills.
@@ -202,6 +203,7 @@ LanguageProgress buildLanguageProgress({
   final GateInput input = GateInput(
     mastery: masteryLevels(engine),
     ageBand: ageBand,
+    ageMonths: ageMonths,
     presentationBand: switches.presentationBand(ageBand),
     switchesOn: switches.gateSwitchesOn,
     route: switches.route,

@@ -147,7 +147,7 @@ class Ls01SortSession extends Ls01Session {
       if (disposed) return;
       done = true;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
       return;
     }
     final String tag =
