@@ -75,6 +75,11 @@ $resp = Invoke-Api POST '/storage/v1/bucket' $auth '{"name":"probe","public":tru
 Check 'Storage bucket creation is refused' $resp { param($x) $x.Status -ge 400 }
 $resp = Invoke-Api POST '/storage/v1/object/probe/probe.txt' $auth 'x'
 Check 'Storage upload is refused' $resp { param($x) $x.Status -ge 400 }
+# 5. The backup bucket (made by hand, docs/setup/push-and-backups.md step 3) is private: no list, no public address.
+$resp = Invoke-Api POST '/storage/v1/object/list/nitznutz-backups' $auth '{"prefix":"","limit":10}'
+Check 'Backup bucket: an object list is refused or empty' $resp { param($x) $x.Status -ge 400 -or $x.Text.Trim() -eq '[]' }
+$resp = Invoke-Api GET '/storage/v1/object/public/nitznutz-backups/nitznutz-backup-probe.dump.age' @{}
+Check 'Backup bucket: the public address answers 400 or 404' $resp { param($x) $x.Status -eq 400 -or $x.Status -eq 404 }
 
 $token = $null
 $failed = ($results | Where-Object { -not $_ }).Count

@@ -1,11 +1,12 @@
 # Push to the parent's phone, and the weekly backups (M7b): what only you can do
 
-Nothing here is needed to use the parent area, sync or alerts: alerts already wait in the app and arrive when a phone syncs. These two things add (1) a push on the parent's other phone, and (2) a weekly encrypted backup. The build is done; what is left is below.
+Nothing here is needed to use the parent area, sync or alerts: alerts already wait in the app and arrive when a phone syncs. These two things add (1) a push on the parent's other phone, and (2) a weekly encrypted backup, kept in a private bucket. The build is done; what is left is below.
 
 ## Done already
 
 - The Firebase project, its two Android apps (`app.nitznutz.nitznutz.dev` and `app.nitznutz.nitznutz`) and the sending key on the server (`FCM_SERVICE_ACCOUNT`).
 - The `age` key pair for backups. The public half is in the backup workflow; the private half is `C:\Users\ramfr\nitznutz-secrets\backup-age-key.txt`.
+- The private bucket and the Storage access key (step 3), once you have done them.
 - The read-only database login `backup_reader` and its address, saved in `C:\Users\ramfr\nitznutz-secrets\backup-database-url.txt`.
 
 ## 1. Clean up the secrets on this PC (once)
@@ -26,7 +27,37 @@ Get-Content -Raw C:\Users\ramfr\nitznutz-secrets\backup-database-url.txt | gh se
 
 Then tell me "backup secret is set", and I start the first run and check that it produced an encrypted file.
 
-## 3. Prove push on your phone
+## 3. Move the backups to a private bucket (2026-11-08)
+
+Until now the weekly backup was a GitHub artifact. The repository is public, so any signed-in GitHub user could download it. From now on it goes to a private bucket on your own Supabase project, and the workflow stops making artifacts. The backup stays encrypted either way; this keeps it out of strangers' hands too. Do these in order; none of them shows or needs a value in this chat.
+
+1. **Make the bucket.** Supabase dashboard, project `ungkvkabqxssggttajfs`, **Storage**, **New bucket**:
+   - Name: `nitznutz-backups` (exactly).
+   - **Public bucket: off.** (If you can set them: file size limit `100 MB`; allowed MIME types `application/octet-stream`.)
+   - Open the bucket, then **Storage**, **Policies**: there must be **no policy** for this bucket. Do not add one.
+2. **Make an S3 access key.** Dashboard, **Storage**, **S3 Configuration** (or **Settings**, Storage), **New access key**, name it `github-backup`. The page shows an access key ID and a secret **once**. Keep that page open, and do not copy them into any chat, file or note. (Supabase has no key that is limited to one bucket; this key reaches only Storage, nothing else, and this project has no other bucket. It is not the `service_role` key.)
+3. **Give them to GitHub.** Set both secrets from the page without printing them. In PowerShell, from the repository root, `gh` asks for each value and hides what you type (paste it, press Enter):
+
+   ```powershell
+   gh secret set BACKUP_S3_ACCESS_KEY_ID --repo ramfridman/Children-Learning-App
+   gh secret set BACKUP_S3_SECRET_ACCESS_KEY --repo ramfridman/Children-Learning-App
+   gh secret list --repo ramfridman/Children-Learning-App
+   ```
+
+   The last command should list `BACKUP_DATABASE_URL`, `BACKUP_S3_ACCESS_KEY_ID` and `BACKUP_S3_SECRET_ACCESS_KEY` (names and dates only). Then close the Supabase page.
+4. **Merge** the change that moves the workflow (I tell you when it is ready), then tell me "bucket and secrets are set". I start the workflow by hand and check three lines in its log: `uploaded nitznutz-backup-... to the private bucket`, `public address refused with http 400` (or 404), and the list of deleted old copies (none on the first run).
+5. **Check it yourself once** (read-only), in the dashboard SQL editor:
+
+   ```sql
+   select id, public from storage.buckets;
+   select policyname, roles, cmd from pg_policies where schemaname = 'storage' and tablename = 'objects';
+   ```
+
+   You should see one bucket, `nitznutz-backups`, with `public = false`, and no policy rows that mention it.
+6. **Old artifacts.** Three older `nitznutz-backup` artifacts (2026-10-27, 2026-11-01, 2026-11-08) are still downloadable from the Actions page until they expire (28 days after each). Whether to delete them now (Actions, the run, **Artifacts**, the bin icon) or let them expire is your call; nothing is deleted for you. They are encrypted with your public key, and hold the children's nicknames; the school stage and birth month will be in later ones.
+7. **If a key is ever exposed**, delete it in the dashboard (S3 Configuration), make a new one and repeat step 3. Storage contents are unchanged.
+
+## 4. Prove push on your phone
 
 1. Install the newest dev build (I do this for you when the phone is connected by USB).
 2. Open the parent area, find the card **התראות בטלפון הזה**, turn it on, and press **Allow** when Android asks to show notifications.
