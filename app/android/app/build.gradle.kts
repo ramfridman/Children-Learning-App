@@ -1,8 +1,23 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
+
+// Release signing. The keystore and its passwords stay outside the repo: the Gradle property `nitznutz.releaseSigning`
+// (in ~/.gradle/gradle.properties, or -P on the command line) names a properties file with storeFile, keyAlias,
+// storePassword and keyPassword. Nothing from that file is ever printed.
+val releaseSigningPath: String? = providers.gradleProperty("nitznutz.releaseSigning").orNull?.takeIf { it.isNotBlank() }
+val releaseSigningProps: Properties? = releaseSigningPath?.let { path ->
+    val f = file(path)
+    if (!f.isFile) throw GradleException("nitznutz.releaseSigning points to a file that does not exist.")
+    Properties().apply { f.inputStream().use { load(it) } }
+}
+fun releaseProp(name: String): String =
+    releaseSigningProps?.getProperty(name)?.takeIf { it.isNotBlank() }
+        ?: throw GradleException("The release signing file has no value for '$name'.")
 
 android {
     namespace = "app.nitznutz.nitznutz"
@@ -43,11 +58,45 @@ android {
         }
     }
 
+    signingConfigs {
+        if (releaseSigningProps != null) {
+            create("release") {
+                storeFile = file(releaseProp("storeFile"))
+                keyAlias = releaseProp("keyAlias")
+                storePassword = releaseProp("storePassword")
+                keyPassword = releaseProp("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            // The prod flavour is signed only with the release key. Without it, the build fails (see the check below)
+            // instead of quietly using the debug key. The dev flavour keeps the debug key (it is never shared and the
+            // dev allowlist and tools expect it); the choice is made per flavour below.
+            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
+        }
+    }
+
+    androidComponents {
+        onVariants(selector().withFlavor("env" to "dev")) { variant ->
+            // dev release builds stay on the debug key even when the release key is configured.
+            if (variant.buildType == "release") {
+                variant.signingConfig.setConfig(android.signingConfigs.getByName("debug"))
+            }
+        }
+    }
+}
+
+// A prod release build without the release key must fail loudly, never fall back to the debug key.
+if (releaseSigningProps == null) {
+    gradle.taskGraph.whenReady {
+        val prodRelease = allTasks.any { it.project == project && it.name.contains("ProdRelease", ignoreCase = true) &&
+            (it.name.startsWith("assemble") || it.name.startsWith("bundle") || it.name.startsWith("package") || it.name.startsWith("sign")) }
+        if (prodRelease) {
+            throw GradleException(
+                "No release signing key: set the Gradle property nitznutz.releaseSigning to the signing properties file " +
+                    "(docs/setup/ci-m9.md section 6). A prod release build is never signed with the debug key.")
         }
     }
 }
