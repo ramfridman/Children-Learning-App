@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "fact-families",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִשְׁפָּחוֹת שֶׁל תַּרְגִּילִים"
+    }
+  ],
+  "skills": [
+    "MATH-C-02"
+  ],
+  "items": [
+    "c.mathc02.1",
+    "c.mathc02.2",
+    "c.mathc02.3",
+    "c.mathc02.4",
+    "c.mathc02.5",
+    "c.mathc02.6",
+    "c.mathc02.7",
+    "c.mathc02.8"
+  ],
+  "estimatedMinutes": 8,
+  "sequence": 104,
+  "celebration": {
+    "vo": "vo:celebrate.fact_families",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! חִבּוּר וְחִסּוּר הֵם מִשְׁפָּחָה."
+      }
+    ]
+  }
+}

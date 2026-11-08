@@ -1,0 +1,160 @@
+{
+  "skill": {
+    "id": "HEB-A-12",
+    "strand": "pk",
+    "title": "יודע שכתוב קוראים מימין לשמאל, ושבו נמצאות המילים",
+    "prerequisites": [
+      {
+        "skill": "HEB-A-10"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "page-zones",
+      "page": "s1-p1",
+      "clip": "heb-a-s1-p1",
+      "frame": "i-start",
+      "zones": [
+        "line1-start",
+        "line1-end",
+        "picture"
+      ],
+      "wrong": {
+        "line1-end": "order",
+        "picture": "print_picture"
+      },
+      "feedback": {
+        "right": "ok-4"
+      },
+      "ladder": "HL-PRINT-DIR"
+    },
+    {
+      "id": "02",
+      "kind": "page-zones",
+      "page": "s1-p2",
+      "clip": "heb-a-s1-p2",
+      "frame": "i-start",
+      "zones": [
+        "line1-start",
+        "line2-end",
+        "picture"
+      ],
+      "wrong": {
+        "line2-end": "order",
+        "picture": "print_picture"
+      },
+      "feedback": {
+        "right": "ok-6"
+      },
+      "ladder": "HL-PRINT-DIR"
+    },
+    {
+      "id": "03",
+      "kind": "page-zones",
+      "page": "s2-p1",
+      "clip": "heb-a-s2-p1",
+      "frame": "i-start",
+      "zones": [
+        "line1-start",
+        "line1-end",
+        "picture"
+      ],
+      "wrong": {
+        "line1-end": "order",
+        "picture": "print_picture"
+      },
+      "feedback": {
+        "right": "ok-7"
+      },
+      "ladder": "HL-PRINT-DIR"
+    },
+    {
+      "id": "04",
+      "kind": "follow",
+      "page": "s1-p5",
+      "clip": "heb-a-s1-p5",
+      "frame": "i-follow",
+      "wrong": {
+        "other": "order",
+        "picture": "print_picture"
+      },
+      "feedback": {
+        "right": "ok-5"
+      },
+      "ladder": "HL-PRINT-DIR"
+    },
+    {
+      "id": "05",
+      "kind": "follow",
+      "page": "s2-p4",
+      "clip": "heb-a-s2-p4",
+      "frame": "i-follow",
+      "wrong": {
+        "other": "order",
+        "picture": "print_picture"
+      },
+      "feedback": {
+        "right": "ok-3"
+      },
+      "ladder": "HL-PRINT-DIR"
+    },
+    {
+      "id": "06",
+      "kind": "page-zones",
+      "page": "s3-p3",
+      "clip": "heb-a-s3-p3",
+      "frame": "i-start",
+      "purpose": "check",
+      "zones": [
+        "line1-start",
+        "line1-end",
+        "picture"
+      ],
+      "wrong": {
+        "line1-end": "order",
+        "picture": "print_picture"
+      },
+      "feedback": {
+        "right": "ok-2"
+      },
+      "ladder": "HL-PRINT-DIR"
+    },
+    {
+      "id": "07",
+      "kind": "follow",
+      "page": "s3-p5",
+      "clip": "heb-a-s3-p5",
+      "frame": "i-follow",
+      "purpose": "check",
+      "wrong": {
+        "other": "order",
+        "picture": "print_picture"
+      },
+      "feedback": {
+        "right": "ok-8"
+      },
+      "ladder": "HL-PRINT-DIR"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "print-1",
+      "title": "אֵיפֹה מַתְחִילִים?",
+      "items": [
+        "01",
+        "02",
+        "03"
+      ]
+    },
+    {
+      "id": "print-2",
+      "title": "מִלָּה אַחֲרֵי מִלָּה",
+      "items": [
+        "04",
+        "05"
+      ]
+    }
+  ]
+}

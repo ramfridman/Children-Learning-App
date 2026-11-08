@@ -1,0 +1,1260 @@
+{
+  "skill": {
+    "id": "RUS-A-15",
+    "strand": "spk",
+    "title": "אוֹמְרִים מִלָּה",
+    "prerequisites": [
+      {
+        "skill": "RUS-A-12"
+      }
+    ],
+    "core": true
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "fam-mother",
+      "clip": "w-mama",
+      "forms": [
+        "мама",
+        "ма́мочка"
+      ],
+      "foils": [
+        "па́па",
+        "ба́бушка"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "fam-mother",
+            "clip": "w-mama"
+          },
+          {
+            "pic": "fam-father",
+            "clip": "w-papa"
+          },
+          {
+            "pic": "fam-grandmother",
+            "clip": "w-babushka"
+          }
+        ],
+        "wrong": {
+          "fam-father": "sound",
+          "fam-grandmother": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-mama"
+      }
+    },
+    {
+      "id": "02",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "fam-father",
+      "clip": "w-papa",
+      "forms": [
+        "папа",
+        "па́почка"
+      ],
+      "foils": [
+        "ма́ма",
+        "де́душка"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "fam-father",
+            "clip": "w-papa"
+          },
+          {
+            "pic": "fam-mother",
+            "clip": "w-mama"
+          },
+          {
+            "pic": "fam-grandfather",
+            "clip": "w-dedushka"
+          }
+        ],
+        "wrong": {
+          "fam-mother": "sound",
+          "fam-grandfather": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-papa"
+      }
+    },
+    {
+      "id": "03",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "fam-grandmother",
+      "clip": "w-babushka",
+      "forms": [
+        "бабушка",
+        "ба́ба"
+      ],
+      "foils": [
+        "де́душка",
+        "ма́ма"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "fam-grandmother",
+            "clip": "w-babushka"
+          },
+          {
+            "pic": "fam-grandfather",
+            "clip": "w-dedushka"
+          },
+          {
+            "pic": "fam-mother",
+            "clip": "w-mama"
+          }
+        ],
+        "wrong": {
+          "fam-grandfather": "sound",
+          "fam-mother": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-babushka"
+      }
+    },
+    {
+      "id": "04",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "cat-tomcat",
+      "clip": "w-kot",
+      "forms": [
+        "кот",
+        "ко́тик"
+      ],
+      "foils": [
+        "кит",
+        "рот"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "cat-tomcat",
+            "clip": "w-kot"
+          },
+          {
+            "pic": "dog",
+            "clip": "w-sobaka"
+          },
+          {
+            "pic": "whale",
+            "clip": "w-kit"
+          }
+        ],
+        "wrong": {
+          "dog": "sem",
+          "whale": "sound"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-kot"
+      }
+    },
+    {
+      "id": "05",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "cat",
+      "clip": "w-koshka",
+      "forms": [
+        "кошка",
+        "ко́шечка",
+        "ки́ска"
+      ],
+      "foils": [
+        "ка́ша",
+        "ку́кла"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "cat",
+            "clip": "w-koshka"
+          },
+          {
+            "pic": "dog",
+            "clip": "w-sobaka"
+          },
+          {
+            "pic": "mouse",
+            "clip": "w-mysh"
+          }
+        ],
+        "wrong": {
+          "dog": "sem",
+          "mouse": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-koshka"
+      }
+    },
+    {
+      "id": "06",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "dog",
+      "clip": "w-sobaka",
+      "forms": [
+        "собака",
+        "соба́чка"
+      ],
+      "foils": [
+        "ко́шка"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "dog",
+            "clip": "w-sobaka"
+          },
+          {
+            "pic": "cat",
+            "clip": "w-koshka"
+          },
+          {
+            "pic": "cow",
+            "clip": "w-korova"
+          }
+        ],
+        "wrong": {
+          "cat": "sem",
+          "cow": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-sobaka"
+      }
+    },
+    {
+      "id": "07",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "mouse",
+      "clip": "w-mysh",
+      "forms": [
+        "мышь",
+        "мы́шка"
+      ],
+      "foils": [
+        "ми́шка"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "mouse",
+            "clip": "w-mysh"
+          },
+          {
+            "pic": "cat",
+            "clip": "w-koshka"
+          },
+          {
+            "pic": "teddy",
+            "clip": "w-mishka"
+          }
+        ],
+        "wrong": {
+          "cat": "sem",
+          "teddy": "sound"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-mysh"
+      }
+    },
+    {
+      "id": "08",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "fish",
+      "clip": "w-ryba",
+      "forms": [
+        "рыба",
+        "ры́бка"
+      ],
+      "foils": [
+        "ру́ки"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "fish",
+            "clip": "w-ryba"
+          },
+          {
+            "pic": "bird",
+            "clip": "w-ptitsa"
+          },
+          {
+            "pic": "whale",
+            "clip": "w-kit"
+          }
+        ],
+        "wrong": {
+          "bird": "sem",
+          "whale": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-ryba"
+      }
+    },
+    {
+      "id": "09",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "ball",
+      "clip": "w-mjach",
+      "forms": [
+        "мяч",
+        "мя́чик"
+      ],
+      "foils": [
+        "мышь",
+        "меч"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "ball",
+            "clip": "w-mjach"
+          },
+          {
+            "pic": "balloon",
+            "clip": "w-sharik"
+          },
+          {
+            "pic": "blocks",
+            "clip": "w-kubiki"
+          }
+        ],
+        "wrong": {
+          "balloon": "sem",
+          "blocks": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-mjach"
+      }
+    },
+    {
+      "id": "10",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "doll",
+      "clip": "w-kukla",
+      "forms": [
+        "кукла",
+        "ку́колка"
+      ],
+      "foils": [
+        "ку́бики",
+        "ку́ртка"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "doll",
+            "clip": "w-kukla"
+          },
+          {
+            "pic": "blocks",
+            "clip": "w-kubiki"
+          },
+          {
+            "pic": "teddy",
+            "clip": "w-mishka"
+          }
+        ],
+        "wrong": {
+          "blocks": "sound",
+          "teddy": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-kukla"
+      }
+    },
+    {
+      "id": "11",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "car",
+      "clip": "w-mashina",
+      "forms": [
+        "машина",
+        "маши́нка"
+      ],
+      "foils": [
+        "мали́на"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "car",
+            "clip": "w-mashina"
+          },
+          {
+            "pic": "ball",
+            "clip": "w-mjach"
+          },
+          {
+            "pic": "top",
+            "clip": "w-jula"
+          }
+        ],
+        "wrong": {
+          "ball": "sem",
+          "top": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-mashina"
+      }
+    },
+    {
+      "id": "12",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "teddy",
+      "clip": "w-mishka",
+      "forms": [
+        "мишка",
+        "медве́дь"
+      ],
+      "foils": [
+        "мы́шка",
+        "мышь"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "teddy",
+            "clip": "w-mishka"
+          },
+          {
+            "pic": "mouse",
+            "clip": "w-mysh"
+          },
+          {
+            "pic": "doll",
+            "clip": "w-kukla"
+          }
+        ],
+        "wrong": {
+          "mouse": "sound",
+          "doll": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-mishka"
+      }
+    },
+    {
+      "id": "13",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "body-nose",
+      "clip": "w-nos",
+      "forms": [
+        "нос",
+        "но́сик"
+      ],
+      "foils": [
+        "рот",
+        "сок"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f08",
+        "options": [
+          {
+            "pic": "body-nose",
+            "clip": "w-nos"
+          },
+          {
+            "pic": "body-mouth",
+            "clip": "w-rot"
+          },
+          {
+            "pic": "body-eyes",
+            "clip": "w-glaza"
+          }
+        ],
+        "wrong": {
+          "body-mouth": "sound",
+          "body-eyes": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "ch-pokazhi-nos"
+      }
+    },
+    {
+      "id": "14",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "body-mouth",
+      "clip": "w-rot",
+      "forms": [
+        "рот",
+        "ро́тик"
+      ],
+      "foils": [
+        "кот",
+        "нос"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f08",
+        "options": [
+          {
+            "pic": "body-mouth",
+            "clip": "w-rot"
+          },
+          {
+            "pic": "body-nose",
+            "clip": "w-nos"
+          },
+          {
+            "pic": "body-ears",
+            "clip": "w-ushi"
+          }
+        ],
+        "wrong": {
+          "body-nose": "sound",
+          "body-ears": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "ch-pokazhi-rot"
+      }
+    },
+    {
+      "id": "15",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "body-arms",
+      "clip": "w-ruki",
+      "forms": [
+        "руки",
+        "рука́",
+        "ру́чки"
+      ],
+      "foils": [
+        "но́ги"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f08",
+        "options": [
+          {
+            "pic": "body-arms",
+            "clip": "w-ruki"
+          },
+          {
+            "pic": "body-legs",
+            "clip": "w-nogi"
+          },
+          {
+            "pic": "body-ears",
+            "clip": "w-ushi"
+          }
+        ],
+        "wrong": {
+          "body-legs": "sem",
+          "body-ears": "sound"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "ch-pokazhi-ruki"
+      }
+    },
+    {
+      "id": "16",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "juice",
+      "clip": "w-sok",
+      "forms": [
+        "сок",
+        "со́чок"
+      ],
+      "foils": [
+        "суп",
+        "сыр"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "juice",
+            "clip": "w-sok"
+          },
+          {
+            "pic": "soup",
+            "clip": "w-sup"
+          },
+          {
+            "pic": "water",
+            "clip": "w-voda"
+          }
+        ],
+        "wrong": {
+          "soup": "sound",
+          "water": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-sok"
+      }
+    },
+    {
+      "id": "17",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "bread",
+      "clip": "w-hleb",
+      "forms": [
+        "хлеб",
+        "хле́бушек"
+      ],
+      "foils": [
+        "сыр"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "bread",
+            "clip": "w-hleb"
+          },
+          {
+            "pic": "cheese",
+            "clip": "w-syr"
+          },
+          {
+            "pic": "cookie",
+            "clip": "w-pechenje"
+          }
+        ],
+        "wrong": {
+          "cheese": "sem",
+          "cookie": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-hleb"
+      }
+    },
+    {
+      "id": "18",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "milk",
+      "clip": "w-moloko",
+      "forms": [
+        "молоко"
+      ],
+      "foils": [
+        "я́блоко"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "milk",
+            "clip": "w-moloko"
+          },
+          {
+            "pic": "water",
+            "clip": "w-voda"
+          },
+          {
+            "pic": "juice",
+            "clip": "w-sok"
+          }
+        ],
+        "wrong": {
+          "water": "sem",
+          "juice": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-moloko"
+      }
+    },
+    {
+      "id": "19",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "apple",
+      "clip": "w-yabloko",
+      "forms": [
+        "яблоко",
+        "я́блочко"
+      ],
+      "foils": [
+        "молоко́"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "apple",
+            "clip": "w-yabloko"
+          },
+          {
+            "pic": "pear",
+            "clip": "w-grusha"
+          },
+          {
+            "pic": "milk",
+            "clip": "w-moloko"
+          }
+        ],
+        "wrong": {
+          "pear": "sem",
+          "milk": "sound"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-yabloko"
+      }
+    },
+    {
+      "id": "20",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "banana",
+      "clip": "w-banan",
+      "forms": [
+        "банан"
+      ],
+      "foils": [
+        "бара́н"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "banana",
+            "clip": "w-banan"
+          },
+          {
+            "pic": "orange",
+            "clip": "w-apelsin"
+          },
+          {
+            "pic": "pear",
+            "clip": "w-grusha"
+          }
+        ],
+        "wrong": {
+          "orange": "sem",
+          "pear": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-banan"
+      }
+    },
+    {
+      "id": "21",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "hat-warm",
+      "clip": "w-shapka",
+      "forms": [
+        "шапка",
+        "ша́почка"
+      ],
+      "foils": [
+        "шарф",
+        "па́пка"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f01",
+        "options": [
+          {
+            "pic": "hat-warm",
+            "clip": "w-shapka"
+          },
+          {
+            "pic": "scarf",
+            "clip": "w-sharf"
+          },
+          {
+            "pic": "jacket",
+            "clip": "w-kurtka"
+          }
+        ],
+        "wrong": {
+          "scarf": "sound",
+          "jacket": "sem"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "w-shapka"
+      }
+    },
+    {
+      "id": "22",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "set-balls-1",
+      "clip": "n-1",
+      "forms": [
+        "один"
+      ],
+      "foils": [
+        "два"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f16",
+        "options": [
+          {
+            "pic": "set-balls-1",
+            "clip": "n-1"
+          },
+          {
+            "pic": "set-balls-2",
+            "clip": "n-2"
+          },
+          {
+            "pic": "set-balls-3",
+            "clip": "n-3"
+          }
+        ],
+        "wrong": {
+          "set-balls-2": "numword",
+          "set-balls-3": "numword"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "n-1"
+      }
+    },
+    {
+      "id": "23",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "set-balls-3",
+      "clip": "n-3",
+      "forms": [
+        "три"
+      ],
+      "foils": [
+        "два"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f16",
+        "options": [
+          {
+            "pic": "set-balls-3",
+            "clip": "n-3"
+          },
+          {
+            "pic": "set-balls-2",
+            "clip": "n-2"
+          },
+          {
+            "pic": "set-balls-4",
+            "clip": "n-4"
+          }
+        ],
+        "wrong": {
+          "set-balls-2": "numword",
+          "set-balls-4": "numword"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "n-3"
+      }
+    },
+    {
+      "id": "24",
+      "kind": "say",
+      "frame": "f06",
+      "purpose": "practice",
+      "picture": "set-balls-5",
+      "clip": "n-5",
+      "forms": [
+        "пять"
+      ],
+      "foils": [
+        "шесть"
+      ],
+      "heard": "f04",
+      "together": "f03",
+      "rep": "embodied",
+      "then": {
+        "kind": "tap",
+        "purpose": "learn",
+        "frame": "f16",
+        "options": [
+          {
+            "pic": "set-balls-5",
+            "clip": "n-5"
+          },
+          {
+            "pic": "set-balls-4",
+            "clip": "n-4"
+          },
+          {
+            "pic": "set-balls-3",
+            "clip": "n-3"
+          }
+        ],
+        "wrong": {
+          "set-balls-4": "numword",
+          "set-balls-3": "numword"
+        },
+        "ladder": "HL-1",
+        "rep": "pictorial",
+        "target": "n-5"
+      }
+    },
+    {
+      "id": "25",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "purpose": "check",
+      "picture": "scene-room-ball",
+      "target": "w-mjach",
+      "options": [
+        "ball",
+        "balloon",
+        "doll"
+      ],
+      "right": "ball",
+      "wrong": {
+        "balloon": "sem",
+        "doll": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "26",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "purpose": "check",
+      "picture": "scene-room-cat",
+      "target": "w-koshka",
+      "options": [
+        "cat",
+        "dog",
+        "porridge"
+      ],
+      "right": "cat",
+      "wrong": {
+        "dog": "sem",
+        "porridge": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "27",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "teddy",
+      "options": [
+        {
+          "clip": "w-mishka"
+        },
+        {
+          "clip": "w-mysh"
+        },
+        {
+          "clip": "w-kukla"
+        }
+      ],
+      "wrong": {
+        "w-mysh": "sound",
+        "w-kukla": "sem"
+      },
+      "hintWord": "w-mishka",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sem": "he-fb-check",
+          "sound": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
+    },
+    {
+      "id": "28",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "hat-warm",
+      "options": [
+        {
+          "clip": "w-shapka"
+        },
+        {
+          "clip": "w-sharf"
+        },
+        {
+          "clip": "w-kurtka"
+        }
+      ],
+      "wrong": {
+        "w-sharf": "sound",
+        "w-kurtka": "sem"
+      },
+      "hintWord": "w-shapka",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sem": "he-fb-check",
+          "sound": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
+    }
+  ],
+  "lessons": [
+    {
+      "id": "say-it-more1",
+      "title": "אוֹמְרִים מִלָּה",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05"
+      ]
+    },
+    {
+      "id": "say-it-more2",
+      "title": "אוֹמְרִים מִלָּה",
+      "items": [
+        "06",
+        "07",
+        "08",
+        "09",
+        "10"
+      ]
+    },
+    {
+      "id": "say-it-more3",
+      "title": "אוֹמְרִים מִלָּה",
+      "items": [
+        "11",
+        "12",
+        "13",
+        "14",
+        "15"
+      ]
+    },
+    {
+      "id": "say-it-more4",
+      "title": "אוֹמְרִים מִלָּה",
+      "items": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20"
+      ]
+    },
+    {
+      "id": "say-it-more5",
+      "title": "אוֹמְרִים מִלָּה",
+      "items": [
+        "21",
+        "22",
+        "23",
+        "24"
+      ]
+    }
+  ],
+  "routes": {
+    "new": {
+      "note": "picture first for every child (a retrieval try, then the model after the pause); by the third encounter of every word it is the same for a new learner as for a heritage speaker",
+      "say": "picture"
+    },
+    "heritage": {
+      "note": "picture first from the start, then the model; extended to every word of A-02 to A-09",
+      "say": "picture"
+    },
+    "reader": {
+      "as": "oral",
+      "note": "as heritage or new, by strand 1"
+    }
+  }
+}

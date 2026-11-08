@@ -35,6 +35,21 @@ TargetLanguage? targetLanguageOf(String course) => switch (course) {
 String isolateLtr(String run) =>
     '${String.fromCharCode(0x2066)}${stripDirectionControls(run)}${String.fromCharCode(0x2069)}';
 
+/// Says that the Hebrew course text below is set in the display face (Secular One), for the one activity whose `font` asks for it. It is
+/// a scope and not a parameter so that every face of the activity (tiles, signs, cards, stones) follows it with no change of its own.
+class DisplayFontScope extends InheritedWidget {
+  const DisplayFontScope({super.key, required this.display, required super.child});
+
+  final bool display;
+
+  /// Whether the course text under [context] is set in the display face.
+  static bool of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<DisplayFontScope>()?.display ?? false;
+
+  @override
+  bool updateShouldNotify(DisplayFontScope old) => display != old.display;
+}
+
 /// A word, a letter or a phrase of a course's own language: English and Russian through [TargetText] (the teaching font, a
 /// language tag, left to right), Hebrew in Heebo at the nikud line height, right to left.
 class CourseText extends StatelessWidget {
@@ -77,6 +92,8 @@ class CourseText extends StatelessWidget {
         lineHeight: lineHeight ?? 1.3,
       );
     }
+    // Secular One has one weight (400): a bold request would only be a smeared copy of it.
+    final bool display = DisplayFontScope.of(context);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Text(
@@ -87,7 +104,8 @@ class CourseText extends StatelessWidget {
         maxLines: maxLines,
         style: AppText.fixed(
           size: size,
-          weight: bold ? 700 : 500,
+          weight: display ? 400 : (bold ? 700 : 500),
+          display: display,
           color: color,
           lineHeight: lineHeight ?? 1.7,
         ),

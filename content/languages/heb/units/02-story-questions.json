@@ -1,0 +1,395 @@
+{
+  "skill": {
+    "id": "HEB-A-01",
+    "strand": "ol",
+    "title": "מקשיב לסיפור קצר ועונה \"מי\" ו\"מה\""
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "story",
+      "mode": "dialogic",
+      "frame": "s1-title",
+      "rep": "story",
+      "pages": [
+        {
+          "picture": "s1-p1",
+          "clips": [
+            "heb-a-s1-p1"
+          ]
+        },
+        {
+          "picture": "s1-p2",
+          "clips": [
+            "heb-a-s1-p2"
+          ]
+        },
+        {
+          "picture": "s1-p3",
+          "clips": [
+            "heb-a-s1-p3"
+          ]
+        },
+        {
+          "picture": "s1-p4",
+          "clips": [
+            "heb-a-s1-p4"
+          ]
+        },
+        {
+          "picture": "s1-p5",
+          "clips": [
+            "heb-a-s1-p5"
+          ]
+        }
+      ],
+      "pauseAfter": 4,
+      "question": "s1-q2",
+      "recast": "heb-a-s1-r2",
+      "options": [
+        "cat",
+        "rabbit",
+        "dog"
+      ],
+      "wrong": {
+        "rabbit": "story_role",
+        "dog": "story_world"
+      },
+      "ladder": "HL-STORY"
+    },
+    {
+      "id": "02",
+      "kind": "story",
+      "mode": "dialogic",
+      "frame": "s1-title",
+      "rep": "story",
+      "pages": [
+        {
+          "picture": "s1-p1",
+          "clips": [
+            "heb-a-s1-p1"
+          ]
+        },
+        {
+          "picture": "s1-p2",
+          "clips": [
+            "heb-a-s1-p2"
+          ]
+        },
+        {
+          "picture": "s1-p3",
+          "clips": [
+            "heb-a-s1-p3"
+          ]
+        },
+        {
+          "picture": "s1-p4",
+          "clips": [
+            "heb-a-s1-p4"
+          ]
+        },
+        {
+          "picture": "s1-p5",
+          "clips": [
+            "heb-a-s1-p5"
+          ]
+        }
+      ],
+      "pauseAfter": 3,
+      "question": "s1-q1",
+      "recast": "heb-a-s1-r1",
+      "options": [
+        "bush",
+        "tree",
+        "window"
+      ],
+      "wrong": {
+        "tree": "story_seen",
+        "window": "story_world"
+      },
+      "ladder": "HL-STORY"
+    },
+    {
+      "id": "03",
+      "kind": "story",
+      "mode": "dialogic",
+      "frame": "s2-title",
+      "rep": "story",
+      "pages": [
+        {
+          "picture": "s2-p1",
+          "clips": [
+            "heb-a-s2-p1"
+          ]
+        },
+        {
+          "picture": "s2-p2",
+          "clips": [
+            "heb-a-s2-p2"
+          ]
+        },
+        {
+          "picture": "s2-p3",
+          "clips": [
+            "heb-a-s2-p3"
+          ]
+        },
+        {
+          "picture": "s2-p4",
+          "clips": [
+            "heb-a-s2-p4"
+          ]
+        },
+        {
+          "picture": "s2-p5",
+          "clips": [
+            "heb-a-s2-p5"
+          ]
+        }
+      ],
+      "pauseAfter": 2,
+      "question": "s2-q1",
+      "recast": "heb-a-s2-r1",
+      "options": [
+        "egg",
+        "spoon",
+        "apple"
+      ],
+      "wrong": {
+        "spoon": "story_seen",
+        "apple": "story_world"
+      },
+      "ladder": "HL-STORY"
+    },
+    {
+      "id": "04",
+      "kind": "story",
+      "mode": "dialogic",
+      "frame": "s2-title",
+      "rep": "story",
+      "pages": [
+        {
+          "picture": "s2-p1",
+          "clips": [
+            "heb-a-s2-p1"
+          ]
+        },
+        {
+          "picture": "s2-p2",
+          "clips": [
+            "heb-a-s2-p2"
+          ]
+        },
+        {
+          "picture": "s2-p3",
+          "clips": [
+            "heb-a-s2-p3"
+          ]
+        },
+        {
+          "picture": "s2-p4",
+          "clips": [
+            "heb-a-s2-p4"
+          ]
+        },
+        {
+          "picture": "s2-p5",
+          "clips": [
+            "heb-a-s2-p5"
+          ]
+        }
+      ],
+      "pauseAfter": 4,
+      "question": "s2-q2",
+      "recast": "heb-a-s2-r2",
+      "options": [
+        "oven",
+        "bowl",
+        "fridge"
+      ],
+      "wrong": {
+        "bowl": "story_seen",
+        "fridge": "story_world"
+      },
+      "ladder": "HL-STORY"
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "target": "heb-a-s1-p4",
+      "options": [
+        {
+          "pic": "cat",
+          "clip": "heb-a-w-chatula"
+        },
+        {
+          "pic": "rabbit",
+          "clip": "heb-a-w-arnav"
+        },
+        {
+          "pic": "dog",
+          "clip": "heb-a-w-kelev"
+        }
+      ],
+      "wrong": {
+        "rabbit": "story_role",
+        "dog": "story_world"
+      },
+      "frame": "s1-q2",
+      "ladder": "HL-STORY",
+      "rep": "pictorial"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "target": "heb-a-s2-p2",
+      "options": [
+        {
+          "pic": "egg",
+          "clip": "heb-a-w-beitsa"
+        },
+        {
+          "pic": "spoon",
+          "clip": "heb-a-w-kaf"
+        },
+        {
+          "pic": "apple",
+          "clip": "heb-a-w-tapuach"
+        }
+      ],
+      "wrong": {
+        "spoon": "story_seen",
+        "apple": "story_world"
+      },
+      "frame": "s2-q1",
+      "ladder": "HL-STORY",
+      "rep": "pictorial"
+    },
+    {
+      "id": "07",
+      "kind": "story",
+      "mode": "dialogic",
+      "frame": "s3-title",
+      "rep": "story",
+      "pages": [
+        {
+          "picture": "s3-p1",
+          "clips": [
+            "heb-a-s3-p1"
+          ]
+        },
+        {
+          "picture": "s3-p2",
+          "clips": [
+            "heb-a-s3-p2"
+          ]
+        },
+        {
+          "picture": "s3-p3",
+          "clips": [
+            "heb-a-s3-p3"
+          ]
+        },
+        {
+          "picture": "s3-p4",
+          "clips": [
+            "heb-a-s3-p4"
+          ]
+        },
+        {
+          "picture": "s3-p5",
+          "clips": [
+            "heb-a-s3-p5"
+          ]
+        }
+      ],
+      "pauseAfter": 4,
+      "question": "s3-q2",
+      "recast": "heb-a-s3-r2",
+      "options": [
+        "fish",
+        "tortoise",
+        "bird"
+      ],
+      "wrong": {
+        "tortoise": "story_role",
+        "bird": "story_world"
+      },
+      "ladder": "HL-STORY",
+      "purpose": "check"
+    },
+    {
+      "id": "08",
+      "kind": "story",
+      "mode": "dialogic",
+      "frame": "s3-title",
+      "rep": "story",
+      "pages": [
+        {
+          "picture": "s3-p1",
+          "clips": [
+            "heb-a-s3-p1"
+          ]
+        },
+        {
+          "picture": "s3-p2",
+          "clips": [
+            "heb-a-s3-p2"
+          ]
+        },
+        {
+          "picture": "s3-p3",
+          "clips": [
+            "heb-a-s3-p3"
+          ]
+        },
+        {
+          "picture": "s3-p4",
+          "clips": [
+            "heb-a-s3-p4"
+          ]
+        },
+        {
+          "picture": "s3-p5",
+          "clips": [
+            "heb-a-s3-p5"
+          ]
+        }
+      ],
+      "pauseAfter": 2,
+      "question": "s3-q1",
+      "recast": "heb-a-s3-r1",
+      "options": [
+        "hat",
+        "boat",
+        "kite"
+      ],
+      "wrong": {
+        "boat": "story_seen",
+        "kite": "story_world"
+      },
+      "ladder": "HL-STORY",
+      "purpose": "check"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "story-1",
+      "title": "הַכַּדּוּר שֶׁל הָאַרְנָב",
+      "items": [
+        "02",
+        "01",
+        "05"
+      ]
+    },
+    {
+      "id": "story-2",
+      "title": "נִיצִי אוֹפָה עוּגָה",
+      "items": [
+        "03",
+        "04",
+        "06"
+      ]
+    }
+  ]
+}

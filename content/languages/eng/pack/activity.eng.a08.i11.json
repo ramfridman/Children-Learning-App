@@ -1,0 +1,179 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a08.i11",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "listen_do",
+  "templateVersion": "1.0",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-08",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "transfer",
+  "representation": "embodied",
+  "variantGroup": "en-give-bread",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "do what is said",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנָה וְחָבֵר שֶׁעוֹשֶׂה מַה שֶּׁאוֹמְרִים"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_ins_give",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַקְשִׁיבוּ, וְגִרְרוּ אֶת הָאֹכֶל לְפִיפּ."
+      }
+    ],
+    "target": "vo:eng.en_give_bread",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_8",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כׇּל הַכָּבוֹד!"
+        }
+      ],
+      "target": "vo:eng.en_give_bread"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ],
+      "target": "vo:eng.en_give_bread"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:eng.he_hint_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
+        }
+      ],
+      "target": "vo:eng.en_give_bread"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:eng.he_gl_bread",
+      "caption": [
+        {
+          "t": "he",
+          "v": "לֶחֶם"
+        }
+      ],
+      "target": "vo:eng.en_give_bread"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:eng.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:eng.en_give_bread"
+    }
+  ],
+  "scene": {
+    "picture": "asset:pip_feed",
+    "target": {
+      "at": {
+        "x": 0.3125,
+        "y": 0.4688,
+        "w": 0.3906,
+        "h": 0.4922
+      }
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "drag",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:bread",
+        "label": "תְּמוּנָה",
+        "at": {
+          "x": 0.02,
+          "y": 0.05,
+          "w": 0.29,
+          "h": 0.29
+        }
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:cake",
+        "label": "תְּמוּנָה",
+        "misconception": "eng.lis.sem",
+        "at": {
+          "x": 0.02,
+          "y": 0.355,
+          "w": 0.29,
+          "h": 0.29
+        }
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:juice",
+        "label": "תְּמוּנָה",
+        "misconception": "eng.lis.l1_guess",
+        "at": {
+          "x": 0.02,
+          "y": 0.66,
+          "w": 0.29,
+          "h": 0.29
+        }
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

@@ -52,8 +52,14 @@ String _expectedRepresentation(Map<String, Object?> a) {
     case 'spot_error':
       return _l(scene['cells']).any((Object? c) => '$c'.startsWith('asset:')) ? 'pictorial' : 'symbolic';
     case 'tap_answer':
-      if (scene['group'] != null || scene['group2'] != null || scene['chart'] != null) return 'pictorial';
-      if (_l(answer['options']).any((Object? o) => _m(o)['sprite'] != null || _m(o)['set'] != null)) {
+      if (scene['group'] != null ||
+          scene['group2'] != null ||
+          scene['chart'] != null ||
+          scene['picture'] != null) {
+        return 'pictorial';
+      }
+      if (_l(answer['options'])
+          .any((Object? o) => _m(o)['sprite'] != null || _m(o)['set'] != null || _m(o)['picture'] != null)) {
         return 'pictorial';
       }
       if (_l(scene['row']).any((Object? c) => '$c'.startsWith('asset:'))) return 'pictorial';
@@ -117,9 +123,9 @@ void main() {
   final Map<String, Map<String, Object?>> acts = _load('activity.');
   final Map<String, Map<String, Object?>> skills = _load('skill.');
 
-  test('the sources are the 967 activities and 100 skills of pack 0.10.0', () {
-    expect(acts.length, 967);
-    expect(skills.length, 100);
+  test('the sources are the 967 activities and 100 skills of pack 0.11.0, and the 239 and 12 of M10 batch C1 (170 of the first sessions, 58 for the block, chart, keypad and tolerance modes, 5 for the line by estimate and the true-or-false card, 4 lucky-right items, and 2 hidden-basket count-on items)', () {
+    expect(acts.length, 967 + 239);
+    expect(skills.length, 100 + 12);
   });
 
   test('the representation label of every activity follows the rule of spec section 2', () {
@@ -185,11 +191,20 @@ void main() {
       expect(_knownNewGaps.length, 21);
     });
 
-    test('no other new item falls short: the old gaps are pinned at 310', () {
+    // 320 since the maths check fixes of 2026-11-06 (docs/knowledge/maths/check-2026-11-06-fixes.md): +14 where a second
+    // tag was false and came off (b.mathb14.1 to .11, b.numb08.10, b15.shpa01.1, shp.any.big.circle; the catalogue has no
+    // honest tag for them yet, a proposal to the curriculum-expert), -4 where LOG-B-06 now offers two options (b.logb06.1
+    // to .4)
+    // 326 since the logic sweep of 2026-11-06 (docs/knowledge/logic/sweep-2026-11-06.md): +4 where picking the
+    // wrong end was tagged M-SER-ENDS (b15.loga10.1, .2, log.size.apples.last, log.size.fish.first; a direction
+    // tag, M-SER-DIR, is proposed to the curriculum-expert), +2 where the false M-PAT-UNIT lure became an untagged
+    // same-size lure (b15.loga06.1, .2), +2 for the "+1" tower of b.logb04.7 and .8 (growth by two; no honest
+    // tag yet), -2 where LOG-B-06 .5 and .6 now offer two options
+    test('no other new item falls short: the old gaps are pinned at 326', () {
       final List<String> older = gaps.where((String id) => !_knownNewGaps.containsKey(id)).toList();
       expect(
         older.length,
-        310,
+        326,
         reason: 'a new gap, or an old one fixed: update the pin with the curriculum-expert',
       );
     });

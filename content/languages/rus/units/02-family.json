@@ -1,0 +1,501 @@
+{
+  "skill": {
+    "id": "RUS-A-02",
+    "strand": "voc",
+    "title": "מִשְׁפָּחָה",
+    "setCoverage": true
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-mama",
+      "options": [
+        {
+          "pic": "fam-mother",
+          "clip": "w-mama"
+        },
+        {
+          "pic": "fam-father",
+          "clip": "w-papa"
+        },
+        {
+          "pic": "fam-grandmother",
+          "clip": "w-babushka"
+        }
+      ],
+      "wrong": {
+        "fam-father": "sound",
+        "fam-grandmother": "sem"
+      }
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-papa",
+      "options": [
+        {
+          "pic": "fam-father",
+          "clip": "w-papa"
+        },
+        {
+          "pic": "fam-mother",
+          "clip": "w-mama"
+        },
+        {
+          "pic": "fam-grandfather",
+          "clip": "w-dedushka"
+        }
+      ],
+      "wrong": {
+        "fam-mother": "sound",
+        "fam-grandfather": "sem"
+      }
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-babushka",
+      "options": [
+        {
+          "pic": "fam-grandmother",
+          "clip": "w-babushka"
+        },
+        {
+          "pic": "fam-grandfather",
+          "clip": "w-dedushka"
+        },
+        {
+          "pic": "fam-mother",
+          "clip": "w-mama"
+        }
+      ],
+      "wrong": {
+        "fam-grandfather": "sound",
+        "fam-mother": "sem"
+      }
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-dedushka",
+      "options": [
+        {
+          "pic": "fam-grandfather",
+          "clip": "w-dedushka"
+        },
+        {
+          "pic": "fam-grandmother",
+          "clip": "w-babushka"
+        },
+        {
+          "pic": "fam-father",
+          "clip": "w-papa"
+        }
+      ],
+      "wrong": {
+        "fam-grandmother": "sound",
+        "fam-father": "sem"
+      }
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-brat",
+      "options": [
+        {
+          "pic": "fam-brother",
+          "clip": "w-brat"
+        },
+        {
+          "pic": "fam-sister",
+          "clip": "w-sestra"
+        },
+        {
+          "pic": "fam-father",
+          "clip": "w-papa"
+        }
+      ],
+      "wrong": {
+        "fam-sister": "sem",
+        "fam-father": "sem"
+      }
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-sestra",
+      "options": [
+        {
+          "pic": "fam-sister",
+          "clip": "w-sestra"
+        },
+        {
+          "pic": "fam-brother",
+          "clip": "w-brat"
+        },
+        {
+          "pic": "fam-grandmother",
+          "clip": "w-babushka"
+        }
+      ],
+      "wrong": {
+        "fam-brother": "sem",
+        "fam-grandmother": "sem"
+      }
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-malysh",
+      "options": [
+        {
+          "pic": "fam-baby",
+          "clip": "w-malysh"
+        },
+        {
+          "pic": "fam-grandfather",
+          "clip": "w-dedushka"
+        },
+        {
+          "pic": "fam-grandmother",
+          "clip": "w-babushka"
+        }
+      ],
+      "wrong": {
+        "fam-grandfather": "sem",
+        "fam-grandmother": "sem"
+      }
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-malchik",
+      "options": [
+        {
+          "pic": "boy",
+          "clip": "w-malchik"
+        },
+        {
+          "pic": "girl",
+          "clip": "w-devochka"
+        },
+        {
+          "pic": "fam-grandfather",
+          "clip": "w-dedushka"
+        }
+      ],
+      "wrong": {
+        "girl": "sem",
+        "fam-grandfather": "sem"
+      }
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-devochka",
+      "options": [
+        {
+          "pic": "girl",
+          "clip": "w-devochka"
+        },
+        {
+          "pic": "boy",
+          "clip": "w-malchik"
+        },
+        {
+          "pic": "fam-grandmother",
+          "clip": "w-babushka"
+        }
+      ],
+      "wrong": {
+        "boy": "sem",
+        "fam-grandmother": "sem"
+      },
+      "purpose": "check"
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-semja",
+      "options": [
+        {
+          "pic": "fam-all",
+          "clip": "w-semja"
+        },
+        {
+          "pic": "fam-mother",
+          "clip": "w-mama"
+        },
+        {
+          "pic": "fam-baby",
+          "clip": "w-malysh"
+        }
+      ],
+      "wrong": {
+        "fam-mother": "sem",
+        "fam-baby": "sem"
+      },
+      "purpose": "check"
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-babushka",
+      "options": [
+        {
+          "pic": "fam-grandmother",
+          "clip": "w-babushka"
+        },
+        {
+          "pic": "fam-grandfather",
+          "clip": "w-dedushka"
+        },
+        {
+          "pic": "fam-mother",
+          "clip": "w-mama"
+        }
+      ],
+      "wrong": {
+        "fam-grandfather": "sound",
+        "fam-mother": "sem"
+      },
+      "purpose": "probe"
+    },
+    {
+      "id": "11",
+      "kind": "tap",
+      "frame": "f38",
+      "options": [
+        {
+          "clip": "w-babushka"
+        },
+        {
+          "clip": "w-dedushka"
+        }
+      ],
+      "wrong": {
+        "w-dedushka": "sound"
+      },
+      "ladder": "HL-1",
+      "rep": "pictorial",
+      "stage": "fam-grandmother"
+    },
+    {
+      "id": "12",
+      "kind": "tap",
+      "frame": "f38",
+      "options": [
+        {
+          "clip": "w-papa"
+        },
+        {
+          "clip": "w-mama"
+        }
+      ],
+      "wrong": {
+        "w-mama": "sound"
+      },
+      "ladder": "HL-1",
+      "rep": "pictorial",
+      "stage": "fam-father"
+    },
+    {
+      "id": "13",
+      "kind": "tap",
+      "frame": "f38",
+      "options": [
+        {
+          "clip": "w-sestra"
+        },
+        {
+          "clip": "w-brat"
+        }
+      ],
+      "wrong": {
+        "w-brat": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "pictorial",
+      "stage": "fam-sister"
+    },
+    {
+      "id": "14",
+      "kind": "tap",
+      "frame": "f38",
+      "options": [
+        {
+          "clip": "w-malchik"
+        },
+        {
+          "clip": "w-devochka"
+        }
+      ],
+      "wrong": {
+        "w-devochka": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "pictorial",
+      "stage": "boy"
+    },
+    {
+      "id": "15",
+      "kind": "puppet",
+      "mode": "personal",
+      "topic": "family",
+      "picture": "mika-happy",
+      "prompt": [
+        "ch-u-menja-est",
+        "ch-kto-u-tebja-v-seme"
+      ],
+      "reply": "ch-zdorovo",
+      "rep": "story",
+      "frame": "personal",
+      "pass": "ch-horosho",
+      "cards": [
+        "fam-mother",
+        "fam-father",
+        "fam-grandmother",
+        "fam-grandfather",
+        "fam-brother",
+        "fam-sister",
+        "fam-baby",
+        "fam-someone"
+      ],
+      "purpose": "practice"
+    },
+    {
+      "id": "16",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-devochka",
+      "options": [
+        {
+          "pic": "girl",
+          "clip": "w-devochka"
+        },
+        {
+          "pic": "boy",
+          "clip": "w-malchik"
+        },
+        {
+          "pic": "fam-baby",
+          "clip": "w-malysh"
+        }
+      ],
+      "wrong": {
+        "boy": "sem",
+        "fam-baby": "sem"
+      },
+      "variant": "devochka-learn"
+    },
+    {
+      "id": "17",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-semja",
+      "options": [
+        {
+          "pic": "fam-all",
+          "clip": "w-semja"
+        },
+        {
+          "pic": "fam-father",
+          "clip": "w-papa"
+        },
+        {
+          "pic": "fam-brother",
+          "clip": "w-brat"
+        }
+      ],
+      "wrong": {
+        "fam-father": "sem",
+        "fam-brother": "sem"
+      },
+      "variant": "semja-learn"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "family-1",
+      "title": "מִשְׁפָּחָה",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "id": "family-2",
+      "title": "מִשְׁפָּחָה",
+      "items": [
+        "05",
+        "06",
+        "07",
+        "17"
+      ]
+    },
+    {
+      "id": "family-3",
+      "title": "מִשְׁפָּחָה",
+      "items": [
+        "08",
+        "16",
+        "14"
+      ]
+    },
+    {
+      "id": "family-more",
+      "title": "מִשְׁפָּחָה",
+      "items": [
+        "11",
+        "12",
+        "13",
+        "15"
+      ]
+    }
+  ],
+  "teach": [
+    [
+      "w-mama",
+      "w-papa",
+      "w-babushka",
+      "w-dedushka"
+    ],
+    [
+      "w-brat",
+      "w-sestra",
+      "w-malysh",
+      "w-semja"
+    ],
+    [
+      "w-malchik",
+      "w-devochka"
+    ]
+  ],
+  "routes": {
+    "new": {
+      "note": "teach in three sets; items 01 to 14, two sets at a time"
+    },
+    "heritage": {
+      "teach": false,
+      "from": "05"
+    },
+    "reader": {
+      "as": "oral",
+      "note": "as heritage or new; the word under the picture after the answer (Band B or C presentation)"
+    }
+  }
+}

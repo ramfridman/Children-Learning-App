@@ -45,17 +45,13 @@
       {
         "id": "o1",
         "sprite": "asset:rule_shape",
-        "label": "הַצּוּרָה"
+        "label": "הַצּוּרָה",
+        "misconception": "M-COL-ONEATTR"
       },
       {
         "id": "o2",
         "sprite": "asset:rule_colour",
         "label": "הַצֶּבַע"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:rule_size",
-        "label": "הַגֹּדֶל"
       }
     ],
     "correct": "o2",
@@ -75,12 +71,22 @@
     },
     "incorrect": [
       {
+        "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.oneattr.rule_shape",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כָּאן הַצּוּרוֹת שׁוֹנוֹת, אֲבָל מַה דּוֹמֶה אֵצֶל כֻּלָּם?"
+          }
+        ]
+      },
+      {
         "when": "default",
         "vo": "vo:fb.almost",
         "caption": [
           {
             "t": "he",
-            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
           }
         ]
       }

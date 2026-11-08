@@ -1,0 +1,241 @@
+{
+  "skill": {
+    "id": "HEB-A-05",
+    "strand": "ol",
+    "title": "מבין אחד והרבה (חתול, חתולים)",
+    "prerequisites": [
+      {
+        "skill": "HEB-A-02"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "frame": "i-find",
+      "purpose": "learn",
+      "target": "heb-a-w-chatulim",
+      "options": [
+        "set-cats",
+        "cat",
+        "set-dogs"
+      ],
+      "wrong": {
+        "cat": "plural",
+        "set-dogs": "sem"
+      },
+      "ladder": "HL-PLURAL"
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "frame": "i-find",
+      "purpose": "learn",
+      "target": "heb-a-w-kadurim",
+      "options": [
+        "set-balls-4",
+        "ball",
+        "set-dolls"
+      ],
+      "wrong": {
+        "ball": "plural",
+        "set-dolls": "sem"
+      },
+      "ladder": "HL-PLURAL"
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "frame": "i-find",
+      "purpose": "learn",
+      "target": "heb-a-w-bubot",
+      "options": [
+        "set-dolls",
+        "doll",
+        "set-teddies"
+      ],
+      "wrong": {
+        "doll": "plural",
+        "set-teddies": "sem"
+      },
+      "ladder": "HL-PLURAL"
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "frame": "i-find",
+      "purpose": "learn",
+      "target": "heb-a-w-ugot",
+      "options": [
+        "set-cakes",
+        "cake",
+        "set-pizzas"
+      ],
+      "wrong": {
+        "cake": "plural",
+        "set-pizzas": "sem"
+      },
+      "ladder": "HL-PLURAL"
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "frame": "i-find",
+      "purpose": "learn",
+      "target": "heb-a-w-susim",
+      "options": [
+        "set-horses",
+        "horse",
+        "set-donkeys"
+      ],
+      "wrong": {
+        "horse": "plural",
+        "set-donkeys": "sem"
+      },
+      "ladder": "HL-PLURAL"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "frame": "i-find",
+      "purpose": "learn",
+      "target": "heb-a-w-sirot",
+      "options": [
+        "set-boats",
+        "boat",
+        "set-planes"
+      ],
+      "wrong": {
+        "boat": "plural",
+        "set-planes": "sem"
+      },
+      "ladder": "HL-PLURAL"
+    },
+    {
+      "id": "07",
+      "kind": "sort",
+      "frame": "i-sort-cat",
+      "rep": "concrete",
+      "bins": [
+        {
+          "id": "one",
+          "label": "heb-a-bin-one",
+          "picture": "sign-one"
+        },
+        {
+          "id": "many",
+          "label": "heb-a-bin-many",
+          "picture": "sign-many"
+        }
+      ],
+      "cards": [
+        {
+          "clip": "heb-a-w-dag",
+          "bin": "one"
+        },
+        {
+          "clip": "heb-a-w-dagim",
+          "bin": "many"
+        },
+        {
+          "clip": "heb-a-w-buba",
+          "bin": "one"
+        },
+        {
+          "clip": "heb-a-w-bubot",
+          "bin": "many"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-dag": "plural",
+        "heb-a-w-dagim": "plural",
+        "heb-a-w-buba": "plural",
+        "heb-a-w-bubot": "plural"
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "frame": "i-find",
+      "purpose": "check",
+      "target": "heb-a-w-beitsim",
+      "options": [
+        "set-eggs",
+        "egg",
+        "set-apples"
+      ],
+      "wrong": {
+        "egg": "plural",
+        "set-apples": "sem"
+      },
+      "ladder": "HL-PLURAL"
+    },
+    {
+      "id": "09",
+      "kind": "sort",
+      "frame": "i-sort-cat",
+      "purpose": "check",
+      "rep": "concrete",
+      "bins": [
+        {
+          "id": "one",
+          "label": "heb-a-bin-one",
+          "picture": "sign-one"
+        },
+        {
+          "id": "many",
+          "label": "heb-a-bin-many",
+          "picture": "sign-many"
+        }
+      ],
+      "cards": [
+        {
+          "clip": "heb-a-w-kelev",
+          "bin": "one"
+        },
+        {
+          "clip": "heb-a-w-klavim",
+          "bin": "many"
+        },
+        {
+          "clip": "heb-a-w-uga",
+          "bin": "one"
+        },
+        {
+          "clip": "heb-a-w-ugot",
+          "bin": "many"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-kelev": "plural",
+        "heb-a-w-klavim": "plural",
+        "heb-a-w-uga": "plural",
+        "heb-a-w-ugot": "plural"
+      },
+      "ladder": "HL-WORD"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "many-1",
+      "title": "אֶחָד וְהַרְבֵּה",
+      "items": [
+        "01",
+        "02",
+        "03"
+      ]
+    },
+    {
+      "id": "many-2",
+      "title": "עוֹד אֶחָד וְהַרְבֵּה",
+      "items": [
+        "04",
+        "05",
+        "06",
+        "07"
+      ]
+    }
+  ]
+}

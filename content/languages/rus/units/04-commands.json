@@ -1,0 +1,462 @@
+{
+  "skill": {
+    "id": "RUS-A-04",
+    "strand": "lis",
+    "title": "עוֹשִׂים מַה שֶּׁאוֹמְרִים",
+    "prerequisites": [
+      {
+        "skill": "RUS-A-03"
+      }
+    ],
+    "core": true,
+    "setCoverage": true
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-idi",
+      "options": [
+        {
+          "pic": "act-walk",
+          "clip": "w-idi"
+        },
+        {
+          "pic": "act-run",
+          "clip": "w-begi"
+        },
+        {
+          "pic": "act-sit",
+          "clip": "w-sjad"
+        }
+      ],
+      "wrong": {
+        "act-run": "sem",
+        "act-sit": "sem"
+      }
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-begi",
+      "options": [
+        {
+          "pic": "act-run",
+          "clip": "w-begi"
+        },
+        {
+          "pic": "act-walk",
+          "clip": "w-idi"
+        },
+        {
+          "pic": "act-jump",
+          "clip": "w-prygaj"
+        }
+      ],
+      "wrong": {
+        "act-walk": "sem",
+        "act-jump": "sem"
+      }
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-prygaj",
+      "options": [
+        {
+          "pic": "act-jump",
+          "clip": "w-prygaj"
+        },
+        {
+          "pic": "act-clap",
+          "clip": "w-hlopaj"
+        },
+        {
+          "pic": "act-run",
+          "clip": "w-begi"
+        }
+      ],
+      "wrong": {
+        "act-clap": "sound",
+        "act-run": "sem"
+      }
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-hlopaj",
+      "options": [
+        {
+          "pic": "act-clap",
+          "clip": "w-hlopaj"
+        },
+        {
+          "pic": "act-jump",
+          "clip": "w-prygaj"
+        },
+        {
+          "pic": "act-stand",
+          "clip": "w-vstan"
+        }
+      ],
+      "wrong": {
+        "act-jump": "sound",
+        "act-stand": "sem"
+      }
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-sjad",
+      "options": [
+        {
+          "pic": "act-sit",
+          "clip": "w-sjad"
+        },
+        {
+          "pic": "act-stand",
+          "clip": "w-vstan"
+        },
+        {
+          "pic": "act-walk",
+          "clip": "w-idi"
+        }
+      ],
+      "wrong": {
+        "act-stand": "sem",
+        "act-walk": "sem"
+      }
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-vstan",
+      "options": [
+        {
+          "pic": "act-stand",
+          "clip": "w-vstan"
+        },
+        {
+          "pic": "act-sit",
+          "clip": "w-sjad"
+        },
+        {
+          "pic": "act-clap",
+          "clip": "w-hlopaj"
+        }
+      ],
+      "wrong": {
+        "act-sit": "sem",
+        "act-clap": "sem"
+      }
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "ch-vozmi-mjach",
+      "options": [
+        {
+          "pic": "act-take",
+          "clip": "ch-vozmi-mjach"
+        },
+        {
+          "pic": "act-sit",
+          "clip": "w-sjad"
+        },
+        {
+          "pic": "act-clap",
+          "clip": "w-hlopaj"
+        }
+      ],
+      "wrong": {
+        "act-sit": "sem",
+        "act-clap": "sem"
+      },
+      "variant": "vozmi-mjach"
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-prygaj",
+      "options": [
+        {
+          "pic": "act-jump",
+          "clip": "w-prygaj"
+        },
+        {
+          "pic": "act-clap",
+          "clip": "w-hlopaj"
+        },
+        {
+          "pic": "act-run",
+          "clip": "w-begi"
+        }
+      ],
+      "wrong": {
+        "act-clap": "sound",
+        "act-run": "sem"
+      },
+      "purpose": "probe"
+    },
+    {
+      "id": "08",
+      "kind": "listen_do",
+      "frame": "f09",
+      "mode": "buttons",
+      "picture": "mika-happy",
+      "target": "w-idi",
+      "options": [
+        "act-walk",
+        "act-run",
+        "act-sit"
+      ],
+      "wrong": {
+        "act-run": "sem",
+        "act-sit": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "09",
+      "kind": "listen_do",
+      "frame": "f09",
+      "mode": "buttons",
+      "picture": "mika-happy",
+      "target": "w-begi",
+      "options": [
+        "act-run",
+        "act-walk",
+        "act-jump"
+      ],
+      "wrong": {
+        "act-walk": "sem",
+        "act-jump": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "10",
+      "kind": "listen_do",
+      "frame": "f09",
+      "mode": "buttons",
+      "picture": "mika-happy",
+      "target": "w-prygaj",
+      "options": [
+        "act-jump",
+        "act-clap",
+        "act-run"
+      ],
+      "wrong": {
+        "act-clap": "sound",
+        "act-run": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "11",
+      "kind": "listen_do",
+      "frame": "f09",
+      "mode": "buttons",
+      "picture": "mika-happy",
+      "target": "w-hlopaj",
+      "options": [
+        "act-clap",
+        "act-jump",
+        "act-stand"
+      ],
+      "wrong": {
+        "act-jump": "sound",
+        "act-stand": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "12",
+      "kind": "listen_do",
+      "frame": "f09",
+      "purpose": "check",
+      "mode": "buttons",
+      "picture": "mika-happy",
+      "target": "w-sjad",
+      "options": [
+        "act-sit",
+        "act-stand",
+        "act-walk"
+      ],
+      "wrong": {
+        "act-stand": "sem",
+        "act-walk": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "13",
+      "kind": "listen_do",
+      "frame": "f09",
+      "purpose": "check",
+      "mode": "buttons",
+      "picture": "mika-happy",
+      "target": "w-vstan",
+      "options": [
+        "act-stand",
+        "act-sit",
+        "act-clap"
+      ],
+      "wrong": {
+        "act-sit": "sem",
+        "act-clap": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "14",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "act-jump",
+      "options": [
+        {
+          "clip": "w-prygaj"
+        },
+        {
+          "clip": "w-hlopaj"
+        },
+        {
+          "clip": "w-begi"
+        }
+      ],
+      "wrong": {
+        "w-hlopaj": "sound",
+        "w-begi": "sem"
+      },
+      "hintWord": "w-prygaj",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sem": "he-fb-check",
+          "sound": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
+    },
+    {
+      "id": "15",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "act-sit",
+      "options": [
+        {
+          "clip": "w-sjad"
+        },
+        {
+          "clip": "w-vstan"
+        },
+        {
+          "clip": "w-idi"
+        }
+      ],
+      "wrong": {
+        "w-vstan": "sem",
+        "w-idi": "sem"
+      },
+      "hintWord": "w-sjad",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sem": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
+    },
+    {
+      "id": "e01",
+      "kind": "listen_do",
+      "frame": "f10",
+      "mode": "embodied",
+      "picture": "mika-happy",
+      "purpose": "practice"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "actions-1",
+      "title": "עוֹשִׂים מַה שֶּׁאוֹמְרִים",
+      "items": [
+        "01",
+        "02",
+        "03"
+      ]
+    },
+    {
+      "id": "actions-2",
+      "title": "עוֹשִׂים מַה שֶּׁאוֹמְרִים",
+      "items": [
+        "04",
+        "05",
+        "06",
+        "07"
+      ]
+    },
+    {
+      "id": "commands-more",
+      "title": "עוֹשִׂים מַה שֶּׁאוֹמְרִים",
+      "items": [
+        "08",
+        "09",
+        "10",
+        "11",
+        "e01"
+      ]
+    }
+  ],
+  "teach": [
+    [
+      "w-idi",
+      "w-begi",
+      "w-prygaj"
+    ],
+    [
+      "w-sjad",
+      "w-vstan",
+      "w-hlopaj",
+      "ch-vozmi-mjach"
+    ]
+  ],
+  "routes": {
+    "new": {
+      "note": "teach in two sets; items 01 to 13; the embodied step after each LS11 item"
+    },
+    "heritage": {
+      "teach": false,
+      "order": [
+        "08-13",
+        "01-07"
+      ]
+    },
+    "reader": {
+      "as": "oral",
+      "note": "as heritage or new"
+    }
+  }
+}

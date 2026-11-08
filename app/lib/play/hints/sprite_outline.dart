@@ -77,27 +77,121 @@ SpriteOutline? _readOutline(String svg) {
       Offset(x, y + h),
     ], closed: true);
   }
-  // The one curved shape of the pack: a quadratic curve from one corner to another and a straight side back (M x y Q cx cy x y Z).
-  for (final (String _, String at) in svgTags(svg, 'path')) {
-    final RegExpMatch? curve = RegExp(
-      r'\bd="M\s*(-?[\d.]+)[\s,]+(-?[\d.]+)\s*Q\s*(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+(-?[\d.]+)',
-    ).firstMatch(at);
-    if (curve == null) continue;
-    final List<double?> read = <double?>[for (int i = 1; i <= 6; i++) double.tryParse(curve[i]!)];
-    if (read.contains(null)) return null;
-    final List<double> c = <double>[for (final double? v in read) v! / 100];
-    const int steps = 10;
-    return SpriteOutline(<Offset>[
-      for (int i = 0; i <= steps; i++)
-        () {
-          final double t = i / steps;
-          final double u = 1 - t;
-          return Offset(
-            u * u * c[0] + 2 * u * t * c[2] + t * t * c[4],
-            u * u * c[1] + 2 * u * t * c[3] + t * t * c[5],
+  // The pictures of the pack draw each shape as a path: the first `<path>` is the outline (the clip, the fill and the stroke repeat it).
+  final (String, String)? first = svgTags(svg, 'path').firstOrNull;
+  final String? d = first == null ? null : RegExp(r'\bd="([^"]*)"').firstMatch(first.$2)?[1];
+  if (d == null) return null;
+  return _readCurve(d) ?? _readStraightPath(d);
+}
+
+/// The one curved shape of the pack: a quadratic curve from one corner to another and a straight side back (M x y Q cx cy x y Z).
+SpriteOutline? _readCurve(String d) {
+  final RegExpMatch? curve = RegExp(
+    r'^M\s*(-?[\d.]+)[\s,]+(-?[\d.]+)\s*Q\s*(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+(-?[\d.]+)',
+  ).firstMatch(d);
+  if (curve == null) return null;
+  final List<double?> read = <double?>[for (int i = 1; i <= 6; i++) double.tryParse(curve[i]!)];
+  if (read.contains(null)) return null;
+  final List<double> c = <double>[for (final double? v in read) v! / 100];
+  const int steps = 10;
+  return SpriteOutline(<Offset>[
+    for (int i = 0; i <= steps; i++)
+      () {
+        final double t = i / steps;
+        final double u = 1 - t;
+        return Offset(
+          u * u * c[0] + 2 * u * t * c[2] + t * t * c[4],
+          u * u * c[1] + 2 * u * t * c[3] + t * t * c[5],
+        );
+      }(),
+  ], closed: true);
+}
+
+/// A path of straight sides and rounded corners (absolute `M L H V C Z`, one subpath) as its corners; a rounded corner is where
+/// the two straight sides it joins would meet. Any other command (an arc, a relative move, two curves in a row) gives null.
+SpriteOutline? _readStraightPath(String d) {
+  final List<Offset> corners = <Offset>[];
+  Offset at = Offset.zero;
+  bool closed = false;
+  bool afterCurve = false;
+  String? command;
+  final List<double> args = <double>[];
+
+  // Takes [need] numbers off [args] for each use of the command; false when the path is not of this kind.
+  bool run() {
+    final String? c = command;
+    if (c == null) return true;
+    final int need = switch (c) {
+      'M' || 'L' => 2,
+      'H' || 'V' => 1,
+      'C' => 6,
+      'Z' => 0,
+      _ => -1,
+    };
+    if (need < 0 || (need == 0 ? args.isNotEmpty : args.isEmpty || args.length % need != 0)) return false;
+    if (closed || (c == 'M' && corners.isNotEmpty) || (c != 'M' && corners.isEmpty)) return false;
+    if (c == 'Z') {
+      closed = true;
+      return true;
+    }
+    for (int i = 0; i < args.length; i += need) {
+      final Offset from = at;
+      switch (c) {
+        case 'M' || 'L':
+          at = Offset(args[i], args[i + 1]);
+          corners.add(at);
+          afterCurve = false;
+        case 'H':
+          at = Offset(args[i], from.dy);
+          corners.add(at);
+          afterCurve = false;
+        case 'V':
+          at = Offset(from.dx, args[i]);
+          corners.add(at);
+          afterCurve = false;
+        case 'C':
+          // The curve starts at the last corner; that corner moves to where the sides before and after the curve meet.
+          if (afterCurve) return false;
+          final Offset end = Offset(args[i + 4], args[i + 5]);
+          final Offset? meet = _meet(
+            from,
+            Offset(args[i], args[i + 1]),
+            end,
+            Offset(args[i + 2], args[i + 3]),
           );
-        }(),
-    ], closed: true);
+          if (meet == null) return false;
+          corners[corners.length - 1] = meet;
+          at = end;
+          afterCurve = true;
+      }
+    }
+    args.clear();
+    return true;
   }
-  return null;
+
+  for (final RegExpMatch m in RegExp(r'([A-Za-z])|(-?(?:\d+\.?\d*|\.\d+))').allMatches(d)) {
+    if (m[1] != null) {
+      if (!run()) return null;
+      command = m[1]!;
+    } else {
+      final double? v = double.tryParse(m[2]!);
+      if (v == null) return null;
+      args.add(v);
+    }
+  }
+  if (!run()) return null;
+  if (closed && corners.length > 1 && corners.last == corners.first) corners.removeLast();
+  if (corners.length < (closed ? 3 : 2)) return null;
+  return SpriteOutline(<Offset>[for (final Offset p in corners) p / 100], closed: closed);
+}
+
+/// Where the line from [p] through [p1] meets the line from [q] through [q1]; null when they run side by side.
+Offset? _meet(Offset p, Offset p1, Offset q, Offset q1) {
+  final Offset a = p1 - p;
+  final Offset b = q1 - q;
+  final double cross = a.dx * b.dy - a.dy * b.dx;
+  if (cross.abs() < 1e-9) return null;
+  final Offset pq = q - p;
+  final double t = (pq.dx * b.dy - pq.dy * b.dx) / cross;
+  return p + a * t;
 }

@@ -67,7 +67,7 @@
         "pattern": "^(?:[A-Z]{2,5}-[ABC]-\\d{2}(?:\\.[A-Z][0-9]{1,2})?)$"
       },
       "minItems": 1,
-      "maxItems": 10
+      "maxItems": 60
     },
     "parentText": {
       "type": "string",

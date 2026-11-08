@@ -1,0 +1,47 @@
+{
+ "picture": "dog-big",
+ "version": 2,
+ "note": "Touch areas as shares of the picture's width and height (x, y, w, h from the top left), version 2 like mika-body.hotspots.json; at least 72 of the 256 units (65.5 pt on the phone SE's 233 pt scene square); the two never overlap. ENG-A-10 i01 to i04 (LS11 listen_do hotspots: the big one and the small one).",
+ "size": [
+  256,
+  256
+ ],
+ "minShare": [
+  0.2812,
+  0.2812
+ ],
+ "parts": {
+  "big": [
+   [
+    0.0156,
+    0.3281,
+    0.625,
+    0.6094
+   ]
+  ],
+  "small": [
+   [
+    0.6406,
+    0.5859,
+    0.3438,
+    0.3438
+   ]
+  ]
+ },
+ "items": {
+  "ENG-A-10 i01": {
+   "parts": [
+    "big",
+    "small"
+   ],
+   "show": "body"
+  },
+  "ENG-A-10 i02": {
+   "parts": [
+    "big",
+    "small"
+   ],
+   "show": "body"
+  }
+ }
+}

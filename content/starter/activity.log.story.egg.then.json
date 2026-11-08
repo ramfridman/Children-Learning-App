@@ -32,7 +32,12 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "optionsOnTiles": true,
+    "row": [
+      "asset:egg",
+      "asset:egg_crack",
+      "?"
+    ]
   },
   "answer": {
     "type": "choice",
@@ -86,7 +91,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
           }
         ]
       }

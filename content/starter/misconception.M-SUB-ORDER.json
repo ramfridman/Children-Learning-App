@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SUB-ORDER",
+  "review": "needs-editor",
+  "skills": [
+    "MATH-C-02"
+  ],
+  "parentText": "הילד חושב שבחיסור אפשר להחליף את הסדר כמו בחיבור: 6 פחות 15 שווה 9 נראה לו נכון, כי 15 פחות 6 שווה 9.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לתת לילד 6 כפיות ולבקש ממנו לתת לכם 15. אי אפשר לתת יותר ממה שיש: בחיסור הסדר חשוב, ובחיבור לא."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "symbolic"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "skill": {"id": "ENG-A-14", "strand": "pa", "title": "מְתוֹפְפִים מִלִּים", "prerequisites": [{"skill": "ENG-A-05"}, {"skill": "ENG-A-08"}]},
+  "items": [
+    {"id": "i09", "kind": "tap", "frame": "he-ins-strip", "target": "en-dog", "options": ["drum-strip-1", "drum-strip-2", "drum-strip-3"], "wrong": {"drum-strip-2": "syll", "drum-strip-3": "syll"}, "ladder": "HL-DRUM"},
+    {"id": "i10", "kind": "tap", "frame": "he-ins-strip", "target": "en-tummy", "options": ["drum-strip-1", "drum-strip-2", "drum-strip-3"], "right": "drum-strip-2", "wrong": {"drum-strip-1": "weak_syll", "drum-strip-3": "syll"}, "ladder": "HL-DRUM"},
+    {"id": "i11", "kind": "tap", "purpose": "check", "frame": "he-ins-strip", "target": "en-banana", "options": ["drum-strip-2", "drum-strip-3", "drum-strip-4"], "right": "drum-strip-3", "wrong": {"drum-strip-2": "weak_syll", "drum-strip-4": "syll"}, "ladder": "HL-DRUM"},
+    {"id": "i12", "kind": "tap", "purpose": "check", "frame": "he-ins-strip", "target": "en-yellow", "options": ["drum-strip-1", "drum-strip-2", "drum-strip-3"], "right": "drum-strip-2", "wrong": {"drum-strip-1": "weak_syll", "drum-strip-3": "syll"}, "ladder": "HL-DRUM"},
+    {"id": "i01", "kind": "drum", "frame": "he-ins-drum", "rep": "concrete", "ladder": "HL-DRUM", "word": ["en-cat"], "slow": ["en-cat-slow"], "picture": "cat", "beats": 1, "classifiers": [{"when": "one_more", "misconception": "syll"}]},
+    {"id": "i02", "kind": "drum", "frame": "he-ins-drum", "rep": "concrete", "ladder": "HL-DRUM", "word": ["en-duck"], "slow": ["en-duck-slow"], "picture": "duck", "beats": 1, "classifiers": [{"when": "one_more", "misconception": "syll"}]},
+    {"id": "i03", "kind": "drum", "frame": "he-ins-drum", "rep": "concrete", "ladder": "HL-DRUM", "word": ["en-milk"], "slow": ["en-milk-slow"], "picture": "milk", "beats": 1, "classifiers": [{"when": "one_more", "misconception": "syll"}]},
+    {"id": "i04", "kind": "drum", "frame": "he-ins-drum", "rep": "concrete", "ladder": "HL-DRUM", "word": ["en-apple"], "slow": ["en-apple-slow"], "picture": "apple", "beats": 2, "classifiers": [{"when": "one_more", "misconception": "syll"}, {"when": "one_fewer", "misconception": "weak_syll"}]},
+    {"id": "i05", "kind": "drum", "frame": "he-ins-drum", "rep": "concrete", "ladder": "HL-DRUM", "word": ["en-teddy"], "slow": ["en-teddy-slow"], "picture": "teddy", "beats": 2, "classifiers": [{"when": "one_more", "misconception": "syll"}, {"when": "one_fewer", "misconception": "weak_syll"}]},
+    {"id": "i06", "kind": "drum", "frame": "he-ins-drum", "rep": "concrete", "ladder": "HL-DRUM", "word": ["en-water"], "slow": ["en-water-slow"], "picture": "water", "beats": 2, "classifiers": [{"when": "one_more", "misconception": "syll"}, {"when": "one_fewer", "misconception": "weak_syll"}]},
+    {"id": "i07", "kind": "drum", "frame": "he-ins-drum", "rep": "concrete", "ladder": "HL-DRUM", "word": ["en-banana"], "slow": ["en-banana-slow"], "picture": "banana", "beats": 3, "classifiers": [{"when": "one_more", "misconception": "syll"}, {"when": "one_fewer", "misconception": "weak_syll"}]},
+    {"id": "i08", "kind": "drum", "frame": "he-ins-drum", "rep": "concrete", "ladder": "HL-DRUM", "word": ["en-elephant"], "slow": ["en-elephant-slow"], "picture": "elephant", "beats": 3, "classifiers": [{"when": "one_more", "misconception": "syll"}, {"when": "one_fewer", "misconception": "weak_syll"}]}
+  ],
+  "lessons": [
+    {"id": "beat-1", "title": "מְתוֹפְפִים מִלִּים", "items": ["i09", "i10"]},
+    {"id": "beat-more", "title": "מְתוֹפְפִים מִלִּים", "items": ["i01", "i02", "i03", "i04", "i05", "i06", "i07", "i08"]}
+  ]
+}

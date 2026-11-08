@@ -1,0 +1,41 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-04",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "ממשיכים לספור מהמספר הגדול"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַמְשִׁיכִים מֵהַמִּסְפָּר הַגָּדוֹל"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-B-01",
+      "weight": 1
+    },
+    {
+      "skill": "NUM-B-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-ADD-RECOUNT"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

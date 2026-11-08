@@ -1,0 +1,140 @@
+{
+ "picture": "doll-body",
+ "version": 2,
+ "note": "Touch areas of doll-body.svg (the doll of doll.svg sitting on a rug: RUS-A-03 items 12 to 15, the second representation after Mika) as shares of the picture's side (x, y, w, h from the top left), as mika-body.hotspots.json. Ears, arms and legs have two areas, either of which is the part. Every area is at least 72 of the 256 units (65.5 pt on the phone SE). The three areas of an item shown on the doll never overlap; item 12 (nose, mouth, eyes) cannot be 64 pt apart on a face and is shown as the three close-up cards doll-nose, doll-mouth, doll-eyes. hot.belly is 'belly'.",
+ "minShare": 0.2812,
+ "sceneSide": {
+  "phoneSE": 233,
+  "phone": 241,
+  "tabletLandscape": 534,
+  "tabletPortrait": 752
+ },
+ "parts": {
+  "head": [
+   [
+    0.2812,
+    0.1094,
+    0.4375,
+    0.3281
+   ]
+  ],
+  "ears": [
+   [
+    0.0781,
+    0.1562,
+    0.2812,
+    0.2812
+   ],
+   [
+    0.6406,
+    0.1562,
+    0.2812,
+    0.2812
+   ]
+  ],
+  "eyes": [
+   [
+    0.3594,
+    0.1562,
+    0.2812,
+    0.2812
+   ]
+  ],
+  "nose": [
+   [
+    0.3594,
+    0.25,
+    0.2812,
+    0.2812
+   ]
+  ],
+  "mouth": [
+   [
+    0.3594,
+    0.2969,
+    0.2812,
+    0.2812
+   ]
+  ],
+  "arms": [
+   [
+    0.0,
+    0.4375,
+    0.3594,
+    0.2812
+   ],
+   [
+    0.6406,
+    0.4375,
+    0.3594,
+    0.2812
+   ]
+  ],
+  "belly": [
+   [
+    0.3594,
+    0.5312,
+    0.2812,
+    0.2812
+   ]
+  ],
+  "legs": [
+   [
+    0.0469,
+    0.7188,
+    0.3125,
+    0.2812
+   ],
+   [
+    0.6406,
+    0.7188,
+    0.3125,
+    0.2812
+   ]
+  ]
+ },
+ "cards": {
+  "eyes": "doll-eyes",
+  "nose": "doll-nose",
+  "mouth": "doll-mouth"
+ },
+ "items": {
+  "rus.a03.12": {
+   "parts": [
+    "nose",
+    "mouth",
+    "eyes"
+   ],
+   "show": "cards",
+   "cards": [
+    "doll-nose",
+    "doll-mouth",
+    "doll-eyes"
+   ]
+  },
+  "rus.a03.13": {
+   "parts": [
+    "ears",
+    "eyes",
+    "arms"
+   ],
+   "show": "body"
+  },
+  "rus.a03.14": {
+   "parts": [
+    "legs",
+    "arms",
+    "nose"
+   ],
+   "show": "body"
+  },
+  "rus.a03.15": {
+   "parts": [
+    "belly",
+    "head",
+    "legs"
+   ],
+   "show": "body"
+  }
+ }
+}

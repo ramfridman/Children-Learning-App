@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pk.shape_sm",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "SHAPE",
+  "skills": [
+    "HEB-A-11"
+  ],
+  "parentText": "הילד מבלבל בין האותיות ס ו-ם.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "כתבו על דף את האותיות ס ו-ם זו ליד זו, וחפשו יחד מה שונה בהן. אחר כך חפשו אותן בספר או על קופסה במטבח."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "symbolic"
+  ]
+}

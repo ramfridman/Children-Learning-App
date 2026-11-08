@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "compare-to-100",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "מַשְׁוִים מִסְפָּרִים"
+    }
+  ],
+  "skills": [
+    "NUM-C-04"
+  ],
+  "items": [
+    "c.numc04.1",
+    "c.numc04.2",
+    "c.numc04.3",
+    "c.numc04.4",
+    "c.numc04.5",
+    "c.numc04.6",
+    "c.numc04.7",
+    "c.numc04.8"
+  ],
+  "estimatedMinutes": 8,
+  "sequence": 109,
+  "celebration": {
+    "vo": "vo:celebrate.compare_to_100",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! הַסִּימָן פּוֹנֶה לַגָּדוֹל."
+      }
+    ]
+  }
+}

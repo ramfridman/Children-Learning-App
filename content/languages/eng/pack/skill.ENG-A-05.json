@@ -1,0 +1,33 @@
+{
+  "schema": "skill/v1",
+  "id": "ENG-A-05",
+  "review": "needs-editor",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "חַיּוֹת"
+    }
+  ],
+  "strand": "lis",
+  "prerequisites": [
+    {
+      "skill": "ENG-A-01",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "embodied"
+  ],
+  "misconceptions": [
+    "eng.lis.sem"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  },
+  "setCoverage": true
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "lesson/v1",
+  "id": "facts-to-18",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "חִבּוּר עַד שְׁמוֹנֶה עֶשְׂרֵה"
+    }
+  ],
+  "skills": [
+    "MATH-C-01"
+  ],
+  "items": [
+    "c.mathc01.1",
+    "c.mathc01.2",
+    "c.mathc01.3",
+    "c.mathc01.4",
+    "c.mathc01.5",
+    "c.mathc01.6",
+    "c.mathc01.7",
+    "c.mathc01.8",
+    "c.mathc01.9"
+  ],
+  "estimatedMinutes": 7,
+  "sequence": 101,
+  "celebration": {
+    "vo": "vo:celebrate.facts_to_18",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הִשְׁלַמְתֶּם לְעֶשֶׂר."
+      }
+    ]
+  }
+}

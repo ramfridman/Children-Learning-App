@@ -1,0 +1,173 @@
+{
+  "schema": "activity/v1",
+  "id": "c.numc03.24",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.4",
+  "domain": "numbers",
+  "band": "C",
+  "skills": [
+    {
+      "id": "NUM-C-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.9
+  },
+  "prompt": {
+    "vo": "vo:c.numc03.24.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה שָׁוֶה הַמּוֹט שֶׁזּוֹהֵר?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "picture": {
+      "kind": "base_ten",
+      "tens": 2,
+      "ones": 7,
+      "litRods": 1
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 1,
+        "label": "אַחַת",
+        "misconception": "M-PV-FACE"
+      },
+      {
+        "id": "o2",
+        "numeral": 10,
+        "label": "עֶשֶׂר"
+      },
+      {
+        "id": "o3",
+        "numeral": 100,
+        "label": "מֵאָה",
+        "misconception": "M-PV-ZERO"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.numc03.24.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! מוֹט אֶחָד הוּא עֶשֶׂר קֻבִּיּוֹת."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-PV-FACE",
+        "vo": "vo:fb.pv_face_rods",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כׇּל מוֹט הוּא עֶשֶׂר קֻבִּיּוֹת, לֹא אַחַת. בּוֹאוּ נִסְפֹּר אֶת הַמּוֹטוֹת בַּעֲשָׂרוֹת."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PV-ZERO",
+        "vo": "vo:fb.rod_is_ten",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מוֹט אֶחָד הוּא עֶשֶׂר קֻבִּיּוֹת, לֹא יוֹתֵר. בּוֹאוּ נִסְפֹּר אוֹתָן."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.numc03.24.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כׇּל מוֹט בָּנוּי מִקֻּבִּיּוֹת קְטַנּוֹת. בּוֹאוּ נִסְפֹּר אֶת הַקֻּבִּיּוֹת בַּמּוֹט."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.numc03.24.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בַּמּוֹט יֵשׁ עֶשֶׂר קֻבִּיּוֹת, אָז הוּא שָׁוֶה עֶשֶׂר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל עֶשֶׂר."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כַּמָּה שָׁוֶה הַמּוֹט שֶׁזּוֹהֵר?"
+  }
+}

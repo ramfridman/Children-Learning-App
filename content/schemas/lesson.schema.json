@@ -130,6 +130,12 @@
           "maxLength": 83,
           "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
         },
+        "target2": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 83,
+          "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+        },
         "show": {
           "type": "string",
           "minLength": 1,
@@ -142,10 +148,101 @@
       ],
       "additionalProperties": false
     },
+    "demo": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "ten_is_rod"
+          ]
+        },
+        "vo": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 83,
+          "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+        },
+        "caption": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "t": {
+                "const": "he"
+              },
+              "v": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 240
+              }
+            },
+            "required": [
+              "t",
+              "v"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 1
+        }
+      },
+      "required": [
+        "kind",
+        "vo",
+        "caption"
+      ],
+      "additionalProperties": false
+    },
     "sequence": {
       "type": "integer",
       "minimum": 1,
       "maximum": 500
+    },
+    "teach": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 81,
+              "pattern": "^(?:[a-z0-9][a-z0-9._-]{2,80})$"
+            },
+            "minItems": 1,
+            "maxItems": 8
+          },
+          "routes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "new",
+                "heritage"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 2
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "teach",
+              "hear"
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "routes"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 6
     }
   },
   "required": [

@@ -1,0 +1,40 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-C-02",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "חיבור וחיסור הם משפחה"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מִשְׁפָּחוֹת שֶׁל תַּרְגִּילִים"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-C-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic",
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-OP-SWAP",
+    "M-EQ-OPER",
+    "M-SUB-ORDER"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

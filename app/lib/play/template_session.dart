@@ -52,6 +52,11 @@ abstract class TemplateSession extends ChangeNotifier {
   /// sessions the voice director's; a session that has none (a test) makes no sound.
   ClipPlayer? playClips;
 
+  /// Completes when the voice has said every line it was asked for (see `VoiceDirector.untilQuiet`): a step that waits for the end of the
+  /// question (a say step asked picture first gives the child its pause after it, a hearing screen shows its picture after the word) calls
+  /// it. Null in a session that has no voice (a test): there is nothing to wait for.
+  Future<void> Function()? untilQuiet;
+
   /// Runs [action] after [delay] unless the session has been disposed.
   void later(Duration delay, VoidCallback action) {
     _timers.add(
@@ -118,6 +123,14 @@ abstract class TemplateSession extends ChangeNotifier {
   /// The question is asked again: a gentle show of the objects, no help.
   void onReplay();
 
+  /// The child pressed the eye ("show me"), just before the answer is recorded as unsure: a template may show something of its own (the
+  /// blocks' demonstration that a rod is ten cubes). Nothing by default.
+  void onShowMe() {}
+
+  /// The child touched the screen anywhere (a pointer went down on it): a template with something to watch that a touch ends (the blocks'
+  /// opening demonstration) ends it here. Nothing by default; it is not an answer and takes no part in any.
+  void onScreenTouch() {}
+
   // ---- voice ----
 
   /// The card the voice has understood or half heard: lit like a hint, until the voice lets go of it.
@@ -149,6 +162,10 @@ abstract class TemplateSession extends ChangeNotifier {
     }
     later(Duration(milliseconds: 450 * options.length), () => setVoiceLit(null));
   }
+
+  /// The text scaler the lesson's bubble is drawn with (the system's text size, up to 1.3: `ActivityFrame.bubbleScaler`), set by the lesson
+  /// screen before it asks for [layoutFor]: a layout that makes room for the bubble measures the line the way it is drawn.
+  TextScaler bubbleScaler = TextScaler.noScaling;
 
   /// The board numbers this template lays its activity out on: [base] (the board's own, see `ActivitySpec.of`) unless the template
   /// needs a different stage or tile box. Every `build...` below is given what this returns.

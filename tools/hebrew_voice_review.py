@@ -78,7 +78,7 @@ FEM_PL = {'חִפּוּשִׁיּוֹת', 'צִפֳּרִים', 'צִפּוֹר�
           'אֲבָנִים', 'נוֹצוֹת', 'מַדְבֵּקוֹת', 'תְּמוּנוֹת', 'דְּרָכִים', 'אֲגוֹרוֹת', 'קְבוּצוֹת', 'נְקֻדּוֹת', 'שָׁעוֹת'}
 MASC_PL = {'תַּפּוּחִים', 'דָּגִים', 'כּוֹכָבִים', 'בַּרְוָזִים', 'צְעָדִים', 'מִגְדָּלִים', 'מִסְפָּרִים', 'מַטְבְּעוֹת', 'מַקְלוֹת',
            'כַּדּוּרִים', 'בָּלוֹנִים', 'פְּרָחִים', 'דְּבָרִים', 'פַּרְפָּרִים', 'צְדָדִים', 'שְׁקָלִים', 'גַּרְבַּיִם', 'עִגּוּלִים',
-           'רִבּוּעִים', 'מְשֻׁלָּשִׁים', 'חֲלָקִים', 'חֲתוּלִים', 'כְּלָבִים'}
+           'רִבּוּעִים', 'מְשֻׁלָּשִׁים', 'חֲלָקִים', 'חֲתוּלִים', 'כְּלָבִים', 'מוֹטוֹת'}
 FEM_SG, MASC_SG = set(), set()
 for _o in OBJECTS.values():
     (FEM_PL if _o['g'] == 'f' else MASC_PL).add(_o['many'])
@@ -350,6 +350,8 @@ def grammar(text, groups=()):
     # 3. שְׁתַּיִם / שְׁנַיִם directly before a noun: the construct form (שְׁתֵּי / שְׁנֵי)
     for m in list(re.finditer(r'(שְׁתַּיִם|שְׁנַיִם)\s+([֐-׿]+)', t)):
         nxt = m.group(2)
+        if t[max(0, m.start(1) - 2):m.start(1)] == 'וּ':  # the end of a compound number keeps its form: חמישים ושניים שקלים (M10 C1)
+            continue
         if nxt in FEM_PL | MASC_PL or unprefixed(nxt) in FEM_PL | MASC_PL:
             new = 'שְׁתֵּי' if m.group(1) == 'שְׁתַּיִם' else 'שְׁנֵי'
             t = t[:m.start(1)] + new + t[m.end(1):]
@@ -442,6 +444,7 @@ Q8_NOUN = 'number (owner Q8, 2026-10-29): never a masculine number without its n
 
 
 ONE_MORE = {'עוֹד', 'קְחוּ'}
+TEN_AS_NOUN_NEXT = {canon(x) for x in ('חֲדָשָׁה', 'מַגִּיעָה', 'מַתְחִילָה')}
 FEM_NUM = {w for _i in range(2, 21) for w in F[_i].split()} - {'עֶשְׂרֵה'}
 
 
@@ -470,6 +473,8 @@ def numbers_alone(t):
         # "עוֹד אֶחָד", "קְחוּ אֶחָד", "אֶחָד פָּחוֹת" in a sentence of numbers ("שְׁתֵּים עֶשְׂרֵה! עוֹד אֶחָד.") is a number;
         # alone ("אֶחָד יוֹתֵר, אֶחָד פָּחוֹת", "עוֹד אֶחָד הָלַךְ") it stays (owner Q12, 2026-10-29)
         one_num = w == 'אֶחָד' and (pw in ONE_MORE or nw in ('פָּחוֹת', 'יוֹתֵר')) and numeric(t, m)
+        if w == 'עֲשָׂרָה' and (canon(nw or '') in TEN_AS_NOUN_NEXT or pw == 'כׇּל'):
+            continue  # "a ten" (a group of ten, feminine): כׇּל עֲשָׂרָה, עֲשָׂרָה חֲדָשָׁה (M10 C1; "one ten" in tens-and-ones is אֶחָד עֲשָׂרוֹת, owner 2026-11-06)
         if nw and nw not in NOT_A_NOUN and not one_num:
             if nw in MASC_PL or nw == 'עָשָׂר' or w == 'אֶחָד':
                 continue  # before its noun, or "אֶחָד" before anything that is not a sum word
@@ -495,6 +500,7 @@ KTIV = {  # the plain form that the rules give -> the full spelling (only what t
     'עכשו': 'עכשיו', 'ששה': 'שישה', 'ששי': 'שישי', 'חמשה': 'חמישה', 'חמשים': 'חמישים', 'שלשים': 'שלושים',
     'תבה': 'תיבה', 'שתים': 'שתיים', 'שנים': 'שניים', 'ידים': 'ידיים', 'המאזנים': 'המאזניים', 'צהרים': 'צהריים',
     'ואו': 'וואו', 'הממ': 'המממ', 'קוביה': 'קובייה', 'האזניים': 'האוזניים', 'אזניים': 'אוזניים',
+    'נדמין': 'נדמיין', 'מישם': 'משם',
     'התכנית': 'התוכנית', 'תכנית': 'תוכנית', 'כסא': 'כיסא', 'צוהריים': 'צהריים', 'צהוריים': 'צהריים',
     'מחווג': 'מחוג', 'מחווגים': 'מחוגים', 'חייה': 'חיה', 'חייות': 'חיות',
     'מיבשים': 'מייבשים', 'שבקשו': 'שביקשו', 'כפים': 'כפיים',
@@ -505,16 +511,22 @@ KTIV_NO_PREFIX = {'ואו', 'הממ', 'שנים', 'שתים'}  # never looked up
 NO_YOD = set()
 YES_YOD_M = {'מילה', 'מילים', 'מידה', 'מיטה', 'מילון'}
 WATER_SKY = {p + w for p in ('', 'ב', 'ה', 'ל', 'ו', 'מ', 'וה', 'מה', 'וב') for w in ('מים', 'שמים')}
-NUMBER_PREFIX = ('וּבִ', 'וּבְ', 'וּלְ', 'וּמִ', 'וְ', 'וּ', 'וַ', 'לְ', 'לַ', 'לִ', 'בְּ', 'בַּ', 'בִּ', 'מִ', 'מֵ', 'שֶׁ', 'כְּ', 'כִּ', 'הַ')
+NUMBER_PREFIX = ('וּבִ', 'וּבַ', 'וּבְ', 'וּלְ', 'וּמִ', 'וּמֵ', 'וְ', 'וּ', 'וַ', 'לְ', 'לַ', 'לִ', 'בְּ', 'בַּ', 'בִּ', 'מִ', 'מֵ', 'שֶׁ', 'כְּ', 'כִּ', 'הַ', 'הָ')
+
+
+_ND = lambda w: w.replace(DAGESH, '')  # a dagesh never tells one number word from another (וְתֵשַׁע, מִשָּׁלוֹשׁ, בְּתִשְׁעִים)
+NUM_WORDS_ND = {_ND(w) for w in NUM_WORDS}
+NUMBER_PREFIX_ND = tuple(_ND(p) for p in NUMBER_PREFIX)
 
 
 def is_number_token(tok):
     if tok in NUM_WORDS:
         return True
-    for p in NUMBER_PREFIX:
-        if tok.startswith(p) and tok[len(p):] in NUM_WORDS:
+    nd = _ND(tok)
+    for p in NUMBER_PREFIX_ND:
+        if nd.startswith(p) and nd[len(p):] in NUM_WORDS_ND:
             return True
-    return False
+    return nd in NUM_WORDS_ND
 
 
 def hiriq_yod(cl, i):
@@ -552,6 +564,7 @@ def ktiv_token(tok):
         elif L == 'י' and i > 0 and DAGESH in mk and HIRIQ not in mk and not (
                 nxt and nxt[0] == 'ו' and (set(nxt[1]) & {HOLAM, DAGESH})) and not (
                 i == 1 and cl[0][0] in 'הבלכ' and set(cl[0][1]) & {'ַ', 'ָ'}) and not (
+                i == 2 and cl[0][0] == 'ו' and cl[1][0] in 'הבלכ' and set(cl[1][1]) & {'ַ', 'ָ'}) and not (
                 i == 1 and cl[0][0] == 'ש' and 'ֶ' in cl[0][1]) and not (set(cl[i - 1][1]) & {QUBUTS, HOLAM}):
             out.append('יי')  # a doubled consonant yod: שַׁיָּךְ → שייך, מְצַיְּרִים → מציירים, קֻבִּיָּה → קובייה
         else:
@@ -788,32 +801,75 @@ B26 = 'B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by 
 B39 = 'B-39 (docs/curriculum/todays-adventure-rule.md section 8, docs/agents/hebrew-notes.md): new, worded by the editor, not yet read by the owner. '
 B15 = 'B-15 part 2 (docs/knowledge/b15-hebrew.md): new, not yet read by the owner. '
 PENDING = [
-    ('1', r'^homeIsland(Mine)?$', r'he\.dart$', B26 + 'The island is named after the child (owner, 2026-10-29); the name '
-     'is shown as typed and is never voiced or sent to a vendor; no name: "my island" (b26-hebrew.md section 5, Q3, not answered yet).'),
-    ('1', r'^homeIsland(Mine)?Semantics$', r'he\.dart$', B26 + 'Screen-reader text, plain; the whole name, never shortened.'),
-    ('1', r'^nitziHomeTreasures$', r'he\.dart$', B26 + 'True once the Hall and the stickers live in the home (decision 1); '
-     'mixed group, so masculine plural "גָּרִים".'),
-    ('1', r'^nitziHomeBottle$', r'he\.dart$', B26 + 'The bottle holds a revisit or the next lesson (decision 3), so not '
-     '"new"; was "הַבַּקְבּוּק הֵבִיא הַרְפַּתְקָה חֲדָשָׁה.".'),
-    ('1', r'^adventure(Welcome|CallForHelp|SameLand|OtherLand|PlayAgain)$', r'he\.dart$', B39 + 'The bottle line for one reason '
-     '(todays-adventure-rule.md section 8). "we" and "let us" only: no child name, no friend name, no gender, no time word. {land} follows '
-     'only a separate word (אֶל, אֶת, שֶׁל), so the construct and the pointing of the land name never change.'),
-    ('1', r'^adventure(Welcome|CallForHelp|SameLand|OtherLand|PlayAgain)Semantics$', r'he\.dart$', B39 + 'Screen-reader label of the '
-     'bottle for that reason, plain text; {land} is the plain land name (land*Semantics).'),
-    ('1', r'^land(Counting|Colors|Shapes|Logic|Robots|Market)Semantics$', r'he\.dart$', B39 + 'The plain land name for the '
-     'bottle screen-reader label (the pointed names are land*).'),
-    # B-15 part 2 (docs/knowledge/b15-hebrew.md): the editor's own strings are text-ready there. These are the lines the generator
-    # made from a pattern that the tables do not give, so the editor reads them; the last element is a regex on the text.
-    ('3', r'feedback\.correct', r'^activity\.b15\.matha04\.', B15 + 'The correct line of the fish and star size items (editor read it, 2026-10-30: correct, '
-     '"זֶה" agrees with "דָּג" and "כּוֹכָב"). The owner approved only the two hints (2026-10-30); this line waits.',
-     r'כֵּן! זֶה הַדָּג הַגָּדוֹל|כֵּן! זֶה הַכּוֹכָב הַקָּטָן'),
-    ('3', r'hints\.2', r'^activity\.b15\.cola05\.', B15 + 'The hint of a tick answer: "לִלְחֹץ עַל הַוִּי" (H7a, the editor) in the pattern of the other hints.',
-     r'לִלְחֹץ עַל הַוִּי'),
-    # 2026-10-30: the owner approved P3-P5, the 15 spill lessons, NUM-B-08, NUM-B-18, the size and odd-one hints and the COL-A-05
-    # correct lines (OWNER_APPROVED below), so they are no longer pending.
-    # Decided by the owner on 2026-10-29 and so no longer here (hebrew-notes.md D14): nitziHomeWelcome(NoName),
-    # nitziHomeBottleDone, homeBubble, homeBubbleNoName (ROW_RULES, text-ready) and nitziHomeHi (OWNER_APPROVED).
+    # 2026-11-06: the editor read the B-26, B-39 and B-15 part 2 rows that were here (the island, the bottle and land lines, the
+    # screen-reader labels, the fish and star correct line, the tick hint): all `text-ready`, waiting for the owner's approval.
+    # The 20 he.dart strings that arrived with the Languages screens (L1 to L4) were read in the same pass.
 ]
+# A row that is NOT in the last table has not been read by the editor, whatever its group says: it stays `proposed` with the comment
+# below until a READ entry covers it (this is the guard the M10 C1 review added: before it, REVIEWED made every new row of a
+# reviewed group `text-ready` on the first run, unread). A READ entry is written only after the editor has read the texts it names:
+# (group digit, regex on the id, regex on the source, the comment, optional regex on the text).
+UNREAD = 'NOT READ: new since the last table; the editor has not read it yet (no READ entry in tools/hebrew_voice_review.py covers it).'
+C1 = ('M10 batch C1 (docs/agents/hebrew-notes.md section 10): read by the editor on 2026-11-06, every distinct text (grammar, nikud, '
+      'number and gender agreement, plural address, = as שָׁוֶה, < and > as גָּדוֹל מִ / קָטָן מִ, age 6 to 8). Draft of the math-teacher; waits for the owner.')
+C11 = ('M10 batch C1 (docs/agents/hebrew-notes.md section 10): read by the editor on 2026-11-07 (%s), every distinct text (grammar, nikud, number and '
+       'gender agreement, plural address, = as שָׁוֶה, age 6 to 8). Draft of the math-teacher; waits for the owner.')
+_C1_UNITS = ('blocks-tens-and-ones|compare-to-100|count-and-compare-again|count-on-big|count-to-100|fact-families|facts-to-18-again|'
+             'facts-to-18-more|facts-to-18|hundred-chart|line-to-100|read-numerals-more|read-numerals|read-to-100|ten-frame-glance|'
+             'ten-frame-more|ten-more-ten-less|tens-and-ones-more|tens-and-ones|type-the-answer|whole-tens-more|whole-tens|write-numbers|compare-to-100-more|line-to-100-more|fact-families-more')
+_C1_SKILLS = 'MATH-B-04|MATH-C-01|MATH-C-02|MATH-C-03|NUM-B-06|NUM-B-09|NUM-C-01|NUM-C-02|NUM-C-03|NUM-C-04|NUM-C-06|NUM-C-09'
+_C1_TAGS = 'M-HC-ROW|M-OP-SWAP|M-PV-FACE|M-PV-ZERO|M-SIGN-DIR|M-SUB-SMALLBIG|M-SUB-ORDER'
+# A row that is new in a table run (its text is not in the last table) and is covered by a READ entry gets READ_NEW in place of the day of
+# the first reading, because the editor read it in the pass that made the row: change this when a new pass is done (notes 11.8).
+READ_OLD_DAY = '2026-11-06'
+READ_NEW = "2026-11-07 (the 35 C1 items of commit 98f57707, blocks, keypad, pay and the middle of two marks; hebrew-notes.md section 11.9)"
+READ = [
+    # Hint 3 of 37 Band A and B items, shortened to 14 words or fewer (QA, the hint bubble covered the answer tiles on the phone SE;
+    # hebrew-notes.md section 11.13): the count says its first three numbers, an ellipsis and the last; a count-on says "עַד" the total.
+    ('3', r'^hints\.2\.caption', r'^activity\.(b|b15|count)\.', 'Hint 3 shortened to 14 words or fewer (QA, 2026-11-07; hebrew-notes.md section 11.13): '
+     'the editor read it (the count keeps its first three numbers, an ellipsis and the last; number agreement, plural address and the '
+     'teaching move are as before); waits for the owner.',
+     r'^(אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… |מֵאַחַת עַד \S+ עֶשְׂרֵה\. עֶשֶׂר, וְעוֹד אַחַת, שְׁתַּיִם… |\S+… וּמַמְשִׁיכִים עַד )'),
+    # The second pass (hebrew-notes.md section 11.14): 85 more hints of Band A and B over 14 words; only a row that is new in the run takes it.
+    ('3', r'^hints\.2\.caption', r'^activity\.(b\.(mathb0[1-3679]|numb0[1-4]|numb14|numb16|shpb02)\.|b15\.loga0[467]\.|count\.butterflies\.|log\.next\.|math\.add\.|next\.(after|before)\.)',
+     'Hint 3 shortened to 14 words or fewer, second pass (QA, 2026-11-07; hebrew-notes.md section 11.14): the editor read it (a count keeps its first '
+     'three numbers, an ellipsis and the last, or ends at the number the hint already says with "עַכְשָׁו תּוֹרְכֶם."; the zero line keeps its move; '
+     'the scale line computes both sides in a colon form; the two-ball patterns show two turns; agreement and plural address as before); waits for the owner.'),
+    ('1', r'^keypad(Delete|Done)Semantics$', r'he\.dart$', 'M10 C1 keypad (read by the editor on 2026-11-07): the screen-reader labels of the number keypad, plain adult text '
+     '(an infinitive for the key that deletes a digit, "זה המספר" for the key that sends the number); correct as written.'),
+    # The pass of 2026-11-07 (hebrew-notes.md 11.12). The first 60 characters of each comment are the same as C1's, so a row that was
+    # already in the table with the C1 comment takes the new one (the guard in master()).
+    ('3', r'', r'^activity\.c\.(mathc03\.(15|16|17|18)|numc04\.16)\.json$', C11 % (
+        "the math-teacher's changed items: the sentence over the blocks (mathc03.15-.18) and 53 against 49 (numc04.16); hebrew-notes.md section 11.12")),
+    ('3', r'', r'^activity\.c\.mathb04\.(11|12)\.json$', C11 % (
+        "the hidden-basket items (14-word prompt, the gentler recount line); hebrew-notes.md sections 11.11 and 11.12")),
+    ('3', r'', r'^activity\.c\.', C11 % (
+        "the sum-card line vo:fb.sum_card (a wrong answer that is one addend of a sum); hebrew-notes.md sections 11.11 and 11.12"),
+     r'^זֶה רַק אֶחָד מֵהַמִּסְפָּרִים\.'),
+    ('3', r'', r'^activity\.c\.', C1),
+    ('3', r'', r'^(lesson\.(%s)|skill\.(%s)|misconception\.(%s))\.json$' % (_C1_UNITS, _C1_SKILLS, _C1_TAGS), C1),
+    # Band B rows whose text changed because a shared helper or a shared tag line was corrected for C1 (from_: מֵ before a guttural and
+    # the dagesh after מִ; "a new ten"; "the hops are the same length")
+    ('3', r'^(hints\.2|feedback\.incorrect)', r'^activity\.b\.', C1 + ' This Band B row changed with the shared helper `from_` or the shared tag line.',
+     r'^(מַתְחִילִים (מִ|מֵ)\S+ וְקוֹפְצִים|כׇּל הַקְּפִיצוֹת בְּאוֹתוֹ אֹרֶךְ\.|אַחֲרֵי הַתֵּשַׁע מַתְחִילָה עֲשָׂרָה חֲדָשָׁה\.)'),
+]
+# The maths check of 2026-11-06 (docs/knowledge/maths/check-2026-11-06-fixes.md, section 8.8): the rows whose text the Maths and CS
+# teachers' fixes made new or moved (other numbers in a template, the "this rectangle" lines of W3, the own line of b.shpb03.7, the
+# MATH-B-09 caption of MATH-B-03). DONE 2026-11-06: the editor read all 59 rows (plus the two rows re-worded and the LOG-A-01
+# lines added, docs/agents/hebrew-notes.md section 12), so the list is empty and they are `text-ready`, waiting for the owner.
+# A new row of this kind goes here as (source file, row id) until it has been read.
+MATHS_CHECK = ('Maths check fixes of 2026-11-06 (docs/knowledge/maths/check-2026-11-06-fixes.md): new text from the Maths and '
+               'CS teachers, needs-editor. ')
+MATHS_CHECK_ROWS = []
+PENDING += [('3', '^%s$' % re.escape(rid), '^%s$' % re.escape(src), MATHS_CHECK) for src, rid in MATHS_CHECK_ROWS]
+# The logic land sweep of 2026-11-06 (docs/knowledge/logic/sweep-2026-11-06.md): the rows whose text the Maths Teacher's fixes made
+# new or moved (the story strips, the family hints of D41, the seriation, sort and +2 tower lines, the basket bins, the LOG-B-06
+# cards). They waited for the editor's read; DONE 2026-11-07 (docs/agents/hebrew-notes.md section 13), so the list is empty and the rows
+# are `text-ready`, waiting for the owner. A new row of this kind goes here as (source file, row id) until it has been read.
+LOGIC_SWEEP = ('Logic sweep fixes of 2026-11-06 (docs/knowledge/logic/sweep-2026-11-06.md): new text from the Maths Teacher, '
+               'needs-editor. ')
+LOGIC_SWEEP_ROWS = []  # DONE 2026-11-07: the editor read all 207 rows and the rest of the logic land (hebrew-notes section 13)
+PENDING += [('3', '^%s$' % re.escape(rid), '^%s$' % re.escape(src), LOGIC_SWEEP) for src, rid in LOGIC_SWEEP_ROWS]
 # Texts the editor is not sure of, or drafts the owner must pick: (regex on the original text, the comment). The row stays
 # proposed for the owner. (Q2-Q8, Q11, Q12 were decided by the owner on 2026-10-29: ROW_RULES, SUBS, MANUAL, OWNER_APPROVED.)
 DOUBT = [
@@ -843,6 +899,10 @@ OWNER_APPROVED = [
     (r'^activity\.', r'^זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַגֹּדֶל\. בּוֹאוּ נִבְדֹּק\.$',
      'B-15 P5 (size rule): the owner approved it (owner-approved 2026-10-30). vo:fb.sort_shift.size.'),
     # (2) b15-hebrew.md section 7: the 15 spill lessons, NUM-B-08, NUM-B-18, the size and odd-one hints, COL-A-05 tick lines.
+    (r'^lesson\.same-and-different-again-1-b15\.json$', r'^זֵהֶה אוֹ שׁוֹנֶה\?$', 'owner, in chat, 2026-11-06: the title is "זֵהֶה אוֹ שׁוֹנֶה?" '
+     '(tsere; was "זֶהֶה", approved 2026-10-30). owner-approved 2026-11-06.', r'^title'),
+    (r'^(lesson\.square-or-rectangle|skill\.SHP-B-03)\.json$', r'רִבּוּעַ הוּא מַלְבֵּן מְיֻחָד', 'owner, in chat, 2026-11-06: a square is a '
+     'special rectangle; the SHP-B-03 title, child line and celebration say so (owner-approved 2026-11-06).'),
     (r'^lesson\.[a-z0-9-]+-b15\.json$', r'', 'B-15 (b15-hebrew.md 7.1): the owner approved the title and the celebration line of the 15 '
      'spill lessons (owner-approved 2026-10-30).', r'^(title\.0\.v|celebration\.caption\.0\.v)$'),
     (r'^activity\.b\.numb08\.', r'^אֵיזֶה מִסְפָּר חָסֵר\?$', 'B-15 (b15-hebrew.md 7.2): the owner approved the prompt and its alt text '
@@ -874,6 +934,59 @@ OWNER_APPROVED = [
     (r'he\.dart$', r'^בּוֹאוּ נְשַׂחֵק בְּמִלִּים\.$',
      'L0 (island-texts.md section 6, question 2): the owner approved "with words" for the Hebrew stop (owner-approved 2026-11-03).',
      r'^adventureLangHebrew$'),
+    # The owner's decisions of 2026-11-06 (in chat) for M10 batch C1; docs/agents/hebrew-notes.md section 11.5.
+    # (1) V1 for the M-NL-DIR line: yes. The source now has `שְּׂמָאלִי` (the rule below is no longer needed for it).
+    (r'', r'הַמִּסְפָּרִים הַקְּטַנִּים בַּצַּד הַשְּׂמָאלִי, וְהֵם גְּדֵלִים',
+     'M10 C1 (notes 11.5, question 2): the owner confirmed V1, "הַשְּׂמָאלִי" (owner-approved 2026-11-06).'),
+    # (2) "first digit from the left", so a child who counts from the right on a right-to-left screen knows which digit.
+    (r'', r'הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת',
+     'M10 C1 (notes 11.5, question 3): the owner approved adding "מִשְּׂמֹאל" to the first-digit line (owner-approved 2026-11-06).'),
+    # (3) tens and ones in the school pattern: the digit, then always the plural; "one ten" is "אֶחָד עֲשָׂרוֹת" (the owner's word).
+    #     Only the tens are covered here: one unit is "יְחִידָה אַחַת" (agrees; rule 4, owner 2026-11-07).
+    (r'', r'(^|[ ,.:])וְ?אֶחָד עֲשָׂרוֹת',
+     'M10 C1 (notes 11.5, question 4): the owner chose the school pattern for tens and ones, "אֶחָד עֲשָׂרוֹת וְחָמֵשׁ יְחִידוֹת" (tens only; one unit is יְחִידָה אַחַת) '
+     '(owner-approved 2026-11-06).'),
+    # (4) one unit: "וִיחִידָה אַחַת" (81), agreeing in gender and number (hebrew-notes.md 11.7).
+    (r'', r'וִיחִידָה אַחַת',
+     'M10 C1 (notes 11.7): the owner approved "שְׁמוֹנֶה עֲשָׂרוֹת וִיחִידָה אַחַת" for one unit (owner-approved 2026-11-07).'),
+    # The owner's answers of 2026-11-07 (in chat; hebrew-notes.md 11.8). (1) the dagesh after מִ on a letter with a shva (`from_`).
+    (r'^activity\.', r'(^|[^֐-׿])מִשְּׁ',
+     'M10 C1 (notes 11.8): the owner confirmed the dagesh after מִ on a letter with a shva, "מִשְּׁלוֹשִׁים" (owner-approved 2026-11-07).'),
+    # (2) NUM-C-04 hint 3 says both tens in full, with no "עַכְשָׁו תּוֹרְכֶם" (14 words).
+    (r'^activity\.c\.numc04\.(7|8|9|10|11|12)\.json$', r'עֲשָׂרוֹת\. הַצַּד הַפָּתוּחַ פּוֹנֶה לַגָּדוֹל\.$',
+     'M10 C1 (notes 11.8): the owner chose the tens in full, "וּבְאַרְבָּעִים וְשָׁלוֹשׁ … אַרְבַּע עֲשָׂרוֹת" (owner-approved 2026-11-07).', r'^hints\.2'),    # The owner's answers of 2026-11-07 for the C1 blocks (in chat; hebrew-notes.md 11.12). (1) the opening demonstration line, as written.
+    (r'^lesson\.(blocks-tens-and-ones|compare-to-100-more|whole-tens-more)\.json$', r'^עֶשֶׂר קֻבִּיּוֹת הֵן מוֹט אֶחָד\.$',
+     'M10 C1 blocks (notes 11.12): the owner approved the demonstration line as written (owner-approved 2026-11-07). One clip, vo:demo.ten_is_rod.',
+     r'^demo\.caption'),
+    # (2) the full Layout T prompts ("אֵיפֹה הַמִּסְפָּר …?"), kept in place of the shorter form of notes 11.11.
+    (r'^activity\.c\.(numc02\.(18|19|20)|numc03\.25)\.json$', r'^אֵיפֹה הַמִּסְפָּר ',
+     'M10 C1 blocks (notes 11.12): the owner decided to keep the full prompt "אֵיפֹה הַמִּסְפָּר …?" of Layout T, not the shorter form (owner-approved 2026-11-07).',
+     r'^(prompt\.caption\.0\.v|a11y\.altText)$'),
+    # The owner's answers of 2026-11-07 to the riddles-island (logic land) sweep, hebrew-notes.md section 13 ("For the owner" 1 to 3).
+    (r'^skill\.LOG-A-07\.json$', r'^(מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ\?|מה לא במקום שלו\?)$',
+     'Logic sweep, owner Q1 (2026-11-07): the owner chose "מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?" for the LOG-A-07 title and child line, '
+     'in place of "מְתַקְּנִים סֵדֶר שֶׁנִּשְׁבַּר" (owner-approved 2026-11-07). Dagesh in the ל after מַה; the same phrase as the LOG-B-02 prompts.'),
+    (r'^activity\.b\.logb08\.', r'הַדֶּשֶׁא',
+     'Logic sweep, owner Q2 (2026-11-07): the second bin is "הַדֶּשֶׁא" (was "הָעֵשֶׂב"); the prompt, hint 3, the bin label and the alt text '
+     'say it (owner-approved 2026-11-07).'),
+    (r'^activity\.(b15\.(cola0[236]|shpa0[23])|b\.shpb0[1348])\.', r'^אוֹסְפִים רַק',
+     'Logic sweep, owner Q3 (2026-11-07): "חָבֵר אוֹסֵף רַק …" becomes "אוֹסְפִים רַק …" in the colours and shapes lands as in the logic land, '
+     'with the owner-approved question; where the old line named only a colour, the thing is named (כַּדּוּרִים, פְּרָחִים, דְּבָרִים) '
+     '(owner-approved 2026-11-07).'),
+    # The owner's second answers of 2026-11-07 (logic sweep follow-up): LOG-B-02 says "מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?" as LOG-A-07 does, and no
+    # unnamed "friend" does anything in any land.
+    (r'^(skill\.LOG-B-02|lesson\.broken-pattern)\.json$', r'^(מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ\?|מה לא במקום שלו\?)$',
+     'Logic sweep follow-up, owner (2026-11-07): the LOG-B-02 skill title and child line and the lesson "broken-pattern" title say '
+     '"מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?", in place of "מוֹצְאִים מַה נִּשְׁבַּר בַּסֵּדֶר" and "מַה נִּשְׁבַּר" (owner-approved 2026-11-07).', r'^(title|childLine)'),
+    (r'^activity\.(b15\.numa0[1238]|b\.numb(03|11)|b\.mathb(03|09)|b\.colb0[46])\.',
+     r'^(סוֹפְרִים מִסְפָּרִים|כָּתוּבִים כָּאן מִסְפָּרִים|כָּתוּב כָּאן תַּרְגִּיל|הַצּוּרוֹת כֻּלָּן|בַּקֶּשֶׁת יֵשׁ טָעוּת)',
+     'Logic sweep follow-up, owner (2026-11-07): no unnamed "friend" (חָבֵר סָפַר / כָּתַב / מִיֵּן / בָּנָה) in any land; the line says what is on '
+     'the screen (an impersonal present or a participle, or what the shapes have in common), with the same question, "אֵיפֹה הַטָּעוּת?" '
+     '(owner-approved 2026-11-07).'),
+    # The owner's answer of 2026-11-08 (option A, hebrew-notes.md 11.14 "For the owner" 1): the two three-coin shop hints name the values only.
+    (r'^activity\.x\.mathb17\.(6|7)\.json$', r'^(חֲמִשָּׁה שְׁקָלִים, שְׁנֵי שְׁקָלִים (וְעוֹד שְׁנֵי שְׁקָלִים|וְשֶׁקֶל אֶחָד) — בְּיַחַד)',
+     'Shop hint 3, owner (2026-11-08, option A): the three-coin hints drop "מַטְבֵּעַ שֶׁל" and name the values, so each fits 14 words; '
+     'the other shop hints keep the Q11 form (owner-approved 2026-11-08).', r'^hints\.2\.caption'),
 ]
 
 
@@ -887,6 +1000,8 @@ def owner_approved(r):
 
 # Comments the editor leaves on a row that is ready (information for the owner or the voice director): (regex, comment)
 NOTE = [
+    (r'^בלי הסימנים < או > ובלי תווים בלתי נראים', 'B-32 (child-name safety, read by the editor on 2026-11-07): plain adult text for the parent, no nikud, '
+     'correct as written. (Its row had been written by hand with the status in the wrong columns; repaired.)'),
     (r'^שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד\.$', 'said when the child taps "not sure" or "show me": it praises asking, as the brave-asker medal does.'),
     (r'הַתֵּבָה|תֵּבָה', 'Q7 (owner 2026-10-29): "תֵּבָה" is the Band B word, bridged to "קֻפְסָה שֶׁל נַעֲלַיִם" in the '
      'feedback and the worked example; a spoken "קֻפְסָה" is accepted as right (app-developer). Band A says "קֻפְסָה".'),
@@ -939,8 +1054,10 @@ def missing_addend_count_on(r, ctx):
         return None
     x, total = WORD2N[words[0]], WORD2N[words[1]]
     k = total - x
-    return '%s… וּמַמְשִׁיכִים: %s. הֵרַמְנוּ %s אֶצְבָּעוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
-        F[x], ', '.join(F[i] for i in range(x + 1, total + 1)), fem_before_noun(k), F[k])
+    text = '%s… וּמַמְשִׁיכִים%%s. הֵרַמְנוּ %s אֶצְבָּעוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], fem_before_noun(k), F[k])
+    full = text % (': ' + ', '.join(F[i] for i in range(x + 1, total + 1)))
+    # a hint of more than 14 words covers the answer tiles on a phone (QA, 2026-11-07): the same short form as band_b.py
+    return full if len(full.replace('—', ' ').split()) <= 14 else text % (' עַד ' + F[total])
 
 
 COIN_PLAIN = [('שקל אחד', 1), ('שני שקלים', 2), ('חמשה שקלים', 5), ('עשרה שקלים', 10)]  # plain() of pointed text is ktiv chaser
@@ -964,7 +1081,16 @@ def shop_coins(r, ctx):
         name = ('עוֹד ' + COIN_NAME[v]) if v == coins[i - 1] else COIN_NAME[v]
         parts.append(name)
     said = ', '.join(parts[:-1]) + (' וְ' if parts[-1].startswith('עוֹד') else ' וּ') + parts[-1]
-    return '%s — בְּיַחַד %s שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם.' % (said, masc_before_noun(sum(coins)))
+    text = '%s — בְּיַחַד %s שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם.' % (said, masc_before_noun(sum(coins)))
+    if len(text.replace('—', ' ').split()) > 14:
+        # owner, 2026-11-08 (option A, the two three-coin hints x.mathb17.6 and .7): the values alone, as band_b3.py coins_said() does
+        vals = ['שֶׁקֶל אֶחָד' if v == 1 else '%s שְׁקָלִים' % masc_before_noun(v) for v in coins]
+        parts = [vals[0]] + [('עוֹד ' if coins[i] == coins[i - 1] else '') + vals[i] for i in range(1, len(vals))]
+        vav = 'וַ' if parts[-1].startswith('חֲ') else ('וּ' if parts[-1].startswith('שְׁ') else 'וְ')
+        total = sum(coins)
+        text = '%s %s%s — בְּיַחַד %s. עַכְשָׁו תּוֹרְכֶם.' % (', '.join(parts[:-1]), vav, parts[-1],
+                                                            'שֶׁקֶל אֶחָד' if total == 1 else '%s שְׁקָלִים' % masc_before_noun(total))
+    return text
 
 
 ROBOT_WORDS = {canon(k): v for k, v in {'יָמִינָה': 'h', 'שְׂמֹאלָה': 'h', 'לְמַעְלָה': 'לְמַעְלָה', 'לְמַטָּה': 'לְמַטָּה'}.items()}
@@ -1030,6 +1156,11 @@ ROW_RULES = [
      'teaching (owner Q3, 2026-10-29): hint 3 counts on from the first number, one finger per count, then names the answer '
      '(the old hint counted from one to the total)', TR,
      'Q3 (owner 2026-10-29). The fingers must be drawn (audit F12); the distractor 10 (M-PPW) is a content change (hebrew-notes.md D4).'),
+    # Owner 2026-11-08 (option A): the two three-coin shop hints name the values only ("חֲמִשָּׁה שְׁקָלִים, שְׁנֵי שְׁקָלִים וְעוֹד שְׁנֵי שְׁקָלִים"),
+    # so each fits 14 words; shop_coins() falls back to this form whenever the Q11 form is over 14 words
+    (r'^activity\.x\.mathb17\.(6|7)\.', r'^hints\.2\.caption', r'', shop_coins,
+     'teaching (owner Q11, 2026-10-29, changed by the owner on 2026-11-08, option A): with three coins the hint names the values and drops '
+     '"מַטְבֵּעַ שֶׁל", so it fits 14 words; the total follows', TR, 'Owner 2026-11-08, option A. The other shop hints keep the Q11 form.'),
     # Q11: the shop hint names each coin by its value, then the total; hint 2 stays
     (r'^activity\.x\.mathb17\.', r'^hints\.2\.caption', r'', shop_coins,
      'teaching (owner Q11, 2026-10-29): each coin is named by its value ("מַטְבֵּעַ שֶׁל שְׁנֵי שְׁקָלִים"), then the total; '
@@ -1052,6 +1183,162 @@ ROW_RULES = [
     (r'he\.dart$', r'^homeBubble(NoName)?$', r'', None, '', TR,
      'Q6 (owner 2026-10-29): a name clip per child (parent-reviewed first name, made and cached on the device only, never a '
      'repo file or a bundled pack, SEC-5) joined before the shared clip "מה בבקבוק?"; homeBubbleNoName plays the shared clip alone.'),
+
+    # Editor's second pass, 2026-11-06 (docs/review/hebrew-review-2026-11-06.md). The sources already hold the corrected text
+    # (B-3): these entries only record why a row changed (the `changes` and `comment` columns) and keep it `text-ready`.
+    # The match is on the corrected text, so a regeneration that brings the old text back makes the row differ from the table.
+    (r'he\.dart$', r'^restGoodbye$', 'וְנִשְׂחַק', lambda r, ctx: r['text'],
+     'spelling 2026-11-06: "נִשְׂחַק" (we will play) has the sin dot; "נִשְׁחַק" with the shin dot means "we will be worn down"', TR,
+     'Review 2026-11-06: was וְנִשְׁחַק (shin dot).'),
+    (r'he\.dart$', r'^(trophy|medal)LockedSemantics$', 'זכינו', lambda r, ctx: r['text'],
+     'vocabulary 2026-11-06: "זכינו בו/בה" (we won it), not "הרווחנו" (we profited), the word for money', TR,
+     'Review 2026-11-06: was "שעוד לא הרווחנו".'),
+    (r'he\.dart$', r'^medal(Explainer|BugFixer)How$', 'לִזְכּוֹת בָּהּ', lambda r, ctx: r['text'],
+     'vocabulary 2026-11-06: "לִזְכּוֹת בָּהּ" (to win it), not "לְהַרְוִיחַ" (to profit, a calque of "earn")', TR,
+     'Review 2026-11-06: was "אֶפְשָׁר יִהְיֶה לְהַרְוִיחַ אוֹתָהּ בְּקָרוֹב".'),
+    (r'he\.dart$', r'^courseStoneDoneSemantics$', 'שכבר סיימנו', lambda r, ctx: r['text'],
+     'clarity 2026-11-06: "שיעור שהיה" (a lesson that was) is ambiguous for a screen reader; "שיעור שכבר סיימנו"', TR,
+     'Review 2026-11-06: was "שיעור שהיה".'),
+    (r'^activity\.cs\.wrong\.(wash|teeth)', r'^feedback\.correct', r'^כֵּן! ל(ִרְחִיצַת יָדַיִם|ְצִחְצוּחַ שִׁנַּיִם)', lambda r, ctx: r['text'],
+     'meaning 2026-11-06: "צָרִיךְ" means "needs", so "מִבְרֶשֶׁת לֹא צְרִיכָה לִרְחִיצַת יָדַיִם" said that the brush needs nothing; '
+     'the item is turned round like its hint: "לִרְחִיצַת יָדַיִם לֹא צְרִיכָה מִבְרֶשֶׁת" (6 items)', TR,
+     'Review 2026-11-06: the correct line had the subject and the object of "צריך" the wrong way round.'),
+    (r'^activity\.col\.world\.(sun|grass|banana\.ripe)\.json$', r'^(prompt|a11y)', r'מַה צֶּבַע', lambda r, ctx: r['text'],
+     'grammar 2026-11-06: "מַה צֶּבַע הַשֶּׁמֶשׁ?" (the dagesh follows מַה); "אֵיזֶה צֶבַע הַשֶּׁמֶשׁ?" has no verb or "יֵשׁ"', TR,
+     'Review 2026-11-06: was "אֵיזֶה צֶבַע …?".'),
+    (r'^activity\.col\.world\.banana\.json$', r'^hints\.2', r'^זוֹ בָּנָנָה', lambda r, ctx: r['text'],
+     'register 2026-11-06: "זוֹ" (spoken), as in every other line; "זֹאת" is written Hebrew', TR,
+     'Review 2026-11-06: was "זֹאת בָּנָנָה".'),
+    (r'^lesson\.same-and-different(-again)?\.json$', r'^(title|celebration)', r'זֵהֶה', lambda r, ctx: r['text'],
+     'spelling 2026-11-06: "זֵהֶה" (tsere, the Academy and Wiktionary), as "הַזֵּהֶה" already had it; "זֶהֶה" with a segol was a second pointing', TR,
+     'Review 2026-11-06: was "זֶהֶה". (The B-15 lesson title got the same fix on the owner word in chat, 2026-11-06.)'),
+    (r'^activity\.x\.mathb19\.\d+\.json$', r'^(prompt|a11y)', r'^בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ יוֹתֵר', lambda r, ctx: r['text'],
+     'register 2026-11-06: "מֵאֲשֶׁר" is written Hebrew; two short spoken sentences', TR,
+     'Review 2026-11-06: was "כַּמָּה יוֹתֵר בָּעַמּוּד הַגָּבוֹהַּ מֵאֲשֶׁר בָּעַמּוּד הַנָּמוּךְ?".'),
+    (r'^activity\.x\.mathb16\.\d+\.json$', r'^feedback\.incorrect\.0', r'^הַמַּטְבֵּעַ גָּדוֹל אוֹ קָטָן', lambda r, ctx: r['text'],
+     'register and rule 2026-11-06: "אֶלָּא" is written Hebrew, and a misconception line names what the eye caught and ends in the strategy without "לֹא" (owner Q2)', TR,
+     'Review 2026-11-06: was "לֹא הַגֹּדֶל אוֹמֵר כַּמָּה הַמַּטְבֵּעַ שָׁוֶה, אֶלָּא הַמִּסְפָּר שֶׁעָלָיו. בּוֹאוּ נִסְתַּכֵּל.".'),
+    (r'^lesson\.mix-colours-more\.json$', r'^title', r'^מָה חָסֵר', lambda r, ctx: r['text'],
+     'pointing 2026-11-06: "מָה" before ח (a guttural keeps the qamats)', TR, 'Review 2026-11-06: was "מַה חָסֵר בַּתַּעֲרוֹבֶת".'),
+
+    # The owner's answers of 2026-11-06 (in chat) to the review log's questions 2 and 4. The wording is the editor's; the owner saw
+    # the proposals by summary only, so the rows are `text-ready`.
+    (r'^activity\.x\.mathb19\.\d+\.json$', r'^feedback\.incorrect\.0', r'^הַצִּיּוּר גָּדוֹל, אֲבָל כַּמָּה יֵשׁ', lambda r, ctx: r['text'],
+     'rule 2026-11-06 (owner Q2, extended): no "לֹא"; names what the eye caught (a big picture) and ends in the strategy', TR,
+     'Owner 2026-11-06 (chat): yes. Was "יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד." (cryptic). Own clip vo:fb.size.chart; the shared vo:fb.size stays for the Q2 drafts.'),
+    (r'^activity\.', r'^feedback\.incorrect', r'^זֶה נִרְאֶה גָּדוֹל, אֲבָל מַה כָּבֵד יוֹתֵר', lambda r, ctx: r['text'],
+     'rule 2026-11-06 (owner Q2, extended): no "לֹא"; names what the eye caught (looks big) and ends in the strategy', TR,
+     'Owner 2026-11-06 (chat): yes. Was "גָּדוֹל לֹא תָּמִיד כָּבֵד. בּוֹאוּ נִשְׁקֹל וְנִרְאֶה.".'),
+    (r'^activity\.', r'^feedback\.incorrect', r'^מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, גַּם אִם הַדָּבָר שׁוֹנֶה', lambda r, ctx: r['text'],
+     'rule 2026-11-06 (owner Q2, extended): no "לֹא"', TR,
+     'Owner 2026-11-06 (chat): yes. Was "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק.".'),
+    (r'^activity\.', r'^feedback\.incorrect', r'^הַמָּקוֹם בַּתּוֹר אוֹמֵר מִי בָּא קֹדֶם', lambda r, ctx: r['text'],
+     'rule 2026-11-06 (owner Q2, extended): no "לֹא" and no "אֵינוֹ"; the place in the queue says who came first, then the strategy', TR,
+     'Owner 2026-11-06 (chat): yes. Was "הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ…" (table: "הוּא לֹא כַּמָּה יֵשׁ"). The proposal in the log kept "לֹא"; this wording drops it. Source changed although the rows were V1-held.'),
+    (r'^activity\.', r'^feedback\.incorrect\.\d', r'^בּוֹאוּ נְנַסֶּה שׁוּב\.$', lambda r, ctx: r['text'],
+     'owner 2026-11-06 (chat): no "כִּמְעַט" (the app does not know how close the answer was; it would mislead the child)', TR,
+     'Owner 2026-11-06 (chat). Was "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב." (vo:fb.almost; the id stays).'),
+    (r'core\.he\.json$', r'^core\.encourage\.almost$', r'^עוֹד לֹא — בּוֹאוּ נְנַסֶּה שׁוּב', lambda r, ctx: r['text'],
+     'owner 2026-11-06 (chat): no "כִּמְעַט"', TR, 'Owner 2026-11-06 (chat). Was "עוֹד לֹא — אֲבָל כִּמְעַט.".'),
+]
+
+
+# The editor's read of the logic land sweep, 2026-11-07 (docs/agents/hebrew-notes.md section 13): the sources already hold the corrected
+# wording (content/units/logic.json, tools/band_b2.py, tools/author.py); these entries record why each family changed (the `changes`
+# and `comment` columns) and keep the rows `text-ready`, waiting for the owner. The match is on the corrected text.
+LOGIC_READ = 'logic sweep 2026-11-07: '
+
+
+def _logic(src, rid, txt, why, was):
+    return (src, rid, txt, lambda r, ctx: r['text'], LOGIC_READ + why, TR, 'Logic sweep, read 2026-11-07. ' + was)
+
+
+ROW_RULES += [
+    _logic(r'^activity\.log\.same\.', r'^(prompt|a11y)', r'^אֵיפֹה עוֹד',
+           'D25: the question names the thing, as the B-15 items already did; "the same thing" is not how a child is asked for a match',
+           'Was "אֵיפֹה אוֹתוֹ הַדָּבָר?".'),
+    _logic(r'^activity\.(log\.odd|b15\.loga02)\.', r'^(prompt|a11y)', r'שּׁוֹנֶה מֵהָאֲחֵרִים\?$',
+           'D26: "מִי" is for an animal, "מַה" for a thing (balls, stars, balloons); "מֵהָאֲחֵרִים" is the owner-approved hint phrase',
+           'Was "מִי שׁוֹנֶה?" for every item.'),
+    _logic(r'^activity\.b15\.loga01\.[56]\.', r'^(prompt|a11y)', r'^אוֹסְפִים רַק',
+           'D27: no unnamed "friend" who is not on the screen ("חָבֵר אוֹסֵף"); the rule is said in the impersonal present, then the '
+           'owner-approved question', 'Was "חָבֵר אוֹסֵף רַק תַּפּוּחִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?".'),
+    _logic(r'^activity\.b15\.loga01\.[56]\.', r'^feedback\.incorrect\.0', r'וְהוּא בַּמָּקוֹם',
+           'D39 and the Band A rule (curriculum 8.3: no "not" question; Q2: no "לֹא" in a misconception line): says the tap was right, then asks '
+           'the owner-approved question', 'Was "זֶה תַּפּוּחַ, הוּא בַּמָּקוֹם. מָה לֹא תַּפּוּחַ?".'),
+    _logic(r'^activity\.log\.fix\.', r'^(prompt|a11y)', r'^חָסֵר אֶחָד בַּסֵּדֶר',
+           'D28: nothing is broken, one piece is missing; "מַה צָּרִיךְ לָבוֹא כָּאן?" points at the "?"; the dagesh follows מַה',
+           'Was "הַסֵּדֶר נִשְׁבַּר. מָה חָסֵר?".'),
+    _logic(r'^activity\.log\.pat\.(yes|no)\.', r'^(prompt|a11y)', r'^הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב\?$',
+           'D35: "שׁוּב וְשׁוּב" says what repeating is, for ages 3 and 4; the word סֵדֶר stays (skill and lesson titles use it)',
+           'Was "הַסֵּדֶר חוֹזֵר?".'),
+    _logic(r'^activity\.(b15\.loga01\.[12]|log\.sortdrag\.three)\.', r'^(prompt|a11y)', r'^שָׂמִים כׇּל אֶחָד עִם הַדּוֹמִים לוֹ',
+           'D34: says by what (the ones like it); "אֶת אוֹתוֹ הַדָּבָר" was vague',
+           'Was "שָׂמִים יַחַד אֶת אוֹתוֹ הַדָּבָר: …" and "מְמַיְּנִים לְשָׁלוֹשׁ קְבוּצוֹת.".'),
+    _logic(r'^activity\.(b15\.loga01\.[12]|log\.sort\.animal|log\.sortdrag\.(animals|three))\.', r'^feedback\.incorrect\.0',
+           r'^בּוֹאוּ נִסְתַּכֵּל שׁוּב: מַה זֶּה',
+           'D39 and Q2: no "לֹא" in a misconception line; no wrong move here shares a colour, so "same colour" would be false; it names the '
+           'strategy (what is it, which group)', 'Was "זֶה לֹא אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק." (the maths teacher\'s draft).'),
+    _logic(r'^activity\.log\.sort(drag)?\.(balloon|colour)\.', r'^feedback\.incorrect\.0', r'^מְחַפְּשִׂים אֶת אוֹתוֹ הַצֶּבַע\.',
+           'D40: here every thing is of one kind (balloons, balls), so "even if the thing differs" is false; own clip vo:fb.sort_shift.colour_only',
+           'Was "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, גַּם אִם הַדָּבָר שׁוֹנֶה. בּוֹאוּ נִבְדֹּק.".'),
+    _logic(r'^activity\.(b15\.loga05|log\.copy)\.', r'^(prompt|a11y)', r'^מַעֲתִיקִים אֶת הַסֵּדֶר לְמַטָּה',
+           'the model is the top row and the places are below it (phone and tablet); "לְמַטָּה" says where',
+           'Was "מַעֲתִיקִים אֶת הַסֵּדֶר.".'),
+    _logic(r'^activity\.(b15\.loga08\.[12])\.', r'^(prompt|a11y)', r'^מָה חָסֵר בֵּין',
+           'D29: "בֵּין … לְ…" says which step is missing (the egg also came "before the chick", so "לִפְנֵי" had two answers); no "מִיָּד לִפְנֵי"',
+           'Was "מָה הָיָה מִיָּד לִפְנֵי זֶה?" (the maths teacher\'s draft: "מָה חָסֵר לִפְנֵי הָאֶפְרוֹחַ?").'),
+    _logic(r'^activity\.(log\.story\.(egg|plant)\.first|log\.size\.fish\.first|b15\.loga10\.2)\.', r'^(prompt|a11y)', r'^מַה בָּא רִאשׁוֹן\?$',
+           'D29: "רִאשׁוֹן" (as the story items), not "קֹדֶם", which asks "before what?"; and מַה before ב (was מָה)',
+           'Was "מָה בָּא רִאשׁוֹן?" and "מַה בָּא קֹדֶם?".'),
+    _logic(r'^activity\.(b\.logb04|b15\.loga10)\.', r'^(answer\.options\.\d\.label|feedback\.correct|hints\.2)', r'מִגְדָּל שֶׁל',
+           'D31: a tower is named by its cubes (its height), not "מִגְדָּל מִסְפָּר שָׁלוֹשׁ", which sounds like the third tower in a line',
+           'Was "מִגְדָּל מִסְפָּר שָׁלוֹשׁ".'),
+    _logic(r'^activity\.log\.pair\.', r'^(prompt|a11y|answer\.options\.\d\.label|feedback\.correct|hints\.2)', r'שִׁנַּיִם',
+           'D32: "מִשְׁחָה" and "מִבְרֶשֶׁת" alone are an ointment and any brush; the toothpaste and the toothbrush are named',
+           'Was "מִשְׁחָה" and "מִבְרֶשֶׁת".'),
+    _logic(r'^activity\.b\.logb02\.', r'^(prompt|a11y|hints\.2)', r'אֶחָד (לֹא בַּמָּקוֹם|בַּשּׁוּרָה לֹא בַּמָּקוֹם)',
+           'D33: "אֶחָד מֵהֶם לֹא מַתְאִים" did not say fits what, and "מֵהֶם" pointed at the three pieces of the unit; "לֹא בַּמָּקוֹם"',
+           'Was "הַסֵּדֶר חוֹזֵר, אֲבָל אֶחָד מֵהֶם לֹא מַתְאִים. אֵיזֶה?" and "…אֶחָד מֵהֶם שׁוֹנֶה." in the hint.'),
+    _logic(r'^activity\.b\.logb06\.[78]\.', r'^(prompt|a11y)', r'^הַצּוּרוֹת כֻּלָּן',
+           'D27: no unnamed "friend" and no long clause; it says what the shapes share, and asks which one',
+           'Was "חָבֵר מִיֵּן לְפִי צֶבַע, וְצוּרָה אַחַת לֹא בַּמָּקוֹם שֶׁלָּהּ. אֵיפֹה הַטָּעוּת?".'),
+    _logic(r'^activity\.b\.logb06\.[1-6]\.', r'^feedback\.incorrect\.0', r'אֲבָל מַה דּוֹמֶה אֵצֶל כֻּלָּם',
+           'pointing and speech: "מַה" before ד (was "מָה כֵּן דּוֹמֶה"); "אֲבָל" as in the approved lines ("זֶה דּוֹמֶה, אֲבָל …")',
+           'Was "כָּאן הַצּוּרוֹת שׁוֹנוֹת. מָה כֵּן דּוֹמֶה אֵצֶל כֻּלָּם?".'),
+    _logic(r'^activity\.b\.logb08\.', r'^(prompt|a11y|hints\.2)', r'(בַּסַּל, וְאֶת כׇּל הַשְּׁאָר|אִם כֵּן — בַּסַּל)',
+           'D30: says where each goes (the basket, the grass), with no "אַחֶרֶת" (written register) and no "if"; the bin is the basket (D4); '
+           'hint 3 asks the same question of every shape, whatever the rule',
+           'Was "אִם הַצּוּרָה אֲדֻמָּה, שָׂמִים אוֹתָהּ בַּסַּל. אַחֶרֶת — לָעֵשֶׂב." and "זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַסַּל.".'),
+    _logic(r'^activity\.b\.logb09\.', r'^(prompt|a11y)', r'^אֵיזוֹ צוּרָה לֹא',
+           'D29: names what is asked (a shape), so "הוּא" has no one to refer to no more; צוּרָה is feminine, so the colour is too (אֲדֻמָּה)',
+           'Was "הוּא לֹא אָדֹם וְלֹא עִגּוּל. אֵיזֶה הוּא?".'),
+    _logic(r'^activity\.b\.logb09\.', r'^feedback\.correct', r'^כֵּן! זֶה .*: לֹא',
+           'D29: names the right answer (it is on a tile), then both clues; no "הוּא" with nothing to refer to',
+           'Was "כֵּן! הוּא לֹא אָדֹם וְלֹא עִגּוּל.".'),
+    _logic(r'^activity\.b\.logb09\.', r'^feedback\.incorrect\.0', r'^הַתְּשׁוּבָה צְרִיכָה לְהַתְאִים',
+           'the clues are cards on the screen now, so not "listen"; a misconception line has no "לֹא" (owner Q2); it ends in the strategy (check both)',
+           'Was "צָרִיךְ לְהַקְשִׁיב לִשְׁנֵי הָרְמָזִים יַחַד: לֹא זֶה וְגַם לֹא זֶה. בּוֹאוּ נִבְדֹּק." (shared M-LOG-NOT line).'),
+    _logic(r'^activity\.b\.logb11\.[45]\.', r'^(prompt|a11y)', r'^אֶחָד מֵהַמִּגְדָּלִים לֹא בַּמָּקוֹם שֶׁלּוֹ',
+           'D27: no unnamed "friend"; the direction (up or down) is for the child to see, as hint 3 says it',
+           'Was "חָבֵר סִדֵּר אֶת הַמִּגְדָּלִים, וְיֵשׁ טָעוּת. אֵיפֹה הַטָּעוּת?".'),
+    _logic(r'^activity\.log\.size\.(stars|middle)', r'^feedback\.incorrect\.0', r'^הָאֶמְצַע בָּא בֵּין',
+           'Q2 (no "לֹא") and D36: the middle question says where the middle is; the shared M-SER-ENDS line is kept for the colour shades of COL-B-02',
+           'Was "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל.".'),
+    _logic(r'^activity\.', r'^hints\.1\.caption', r'^נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִמְחָא כַּפַּיִם',
+           'D41: "נִמְחָא כַּף עַל כׇּל אֶחָד" was literary and the preposition was wrong; "מוֹחֲאִים כַּפַּיִם" is what a child hears at gan',
+           'Was "נֹאמַר אֶת הַסֵּדֶר בְּקוֹל וְנִמְחָא כַּף עַל כׇּל אֶחָד.".'),
+    _logic(r'^activity\.', r'^hints\.1\.caption', r'^נִסְתַּכֵּל עַל כֻּלָּם: מַה דּוֹמֶה, וּמַה שּׁוֹנֶה\?$',
+           'D41: "מָה יֵשׁ לְכֻלָּם, וְלָאֶחָד אֵין?" asks for a thing all have and one lacks, which is not true of size or kind; "דּוֹמֶה / שׁוֹנֶה" is',
+           'Was "מָה יֵשׁ לְכֻלָּם, וְלָאֶחָד אֵין?".'),
+    _logic(r'^activity\.', r'^hints\.1\.caption', r'^נִסְתַּכֵּל קֹדֶם בָּרֶמֶז הָרִאשׁוֹן',
+           'D41: a whole sentence; the cards are on the screen', 'Was "קֹדֶם הָרֶמֶז הָרִאשׁוֹן, אַחַר כָּךְ הַשֵּׁנִי.".'),
+    _logic(r'^activity\.', r'^hints\.1\.caption', r'^נַחְשֹׁב: מָה עוֹשִׂים עִם זֶה\?$',
+           'D41: "אֵיפֹה מִשְׁתַּמְּשִׁים בָּזֶה?" asked where, which is odd for rain; "what do we do with it" leads to the partner',
+           'Was "אֵיפֹה מִשְׁתַּמְּשִׁים בָּזֶה?".'),
+    _logic(r'^(skill\.LOG-A-02|lesson\.same-and-different(-again)?)\.json$', r'^(childLine|celebration)', r'הַשּׁוֹנֶה',
+           'D26: "מִי שׁוֹנֶה / מִי זֵהֶה" is "who", said of balls and stars; "אֶת הַזֵּהֶה וְאֶת הַשּׁוֹנֶה" is the B-15 lesson line',
+           'Was "מוֹצְאִים מִי שׁוֹנֶה" and "מְצָאתֶם מִי זֵהֶה וּמִי שׁוֹנֶה.".'),
 ]
 
 
@@ -1081,6 +1368,14 @@ def reviewed(r):
 def pending(r):
     for g, i, s, comment, *text in PENDING:
         if (r['group'].startswith(g) and re.search(i, r['id']) and re.search(s, r['source'])
+                and (not text or re.search(canon(text[0]), canon(r['text'])))):
+            return comment
+    return None
+
+
+def read_batch(r):
+    for g, i, s_, comment, *text in READ:
+        if (r['group'].startswith(g) and re.search(i, r['id']) and re.search(s_, r['source'])
                 and (not text or re.search(canon(text[0]), canon(r['text'])))):
             return comment
     return None
@@ -1176,8 +1471,29 @@ def master(rows, result, rules):
             if (r['source'], r['id'], r['text']) not in kept:
                 new_rows.append(r)
             wait = pending(r)
+            before = kept.get((r['source'], r['id'], r['text']))
+            unread = bool(kept) and r['group'][0] in '1234' and not read_batch(r) and (
+                before is None or before['comment'].startswith(EDITOR + 'NOT READ'))
             if wait:
                 status, comment = 'proposed', EDITOR + wait
+            elif unread:
+                status, comment = 'proposed', EDITOR + UNREAD
+            elif read_batch(r) and not rule and (before is None or before['comment'].startswith(EDITOR + 'NOT READ')
+                                                  or before['comment'].startswith(EDITOR + read_batch(r)[:60])
+                                                  or before['comment'].startswith(EDITOR + 'V1 (pronunciation audit 2026-10-29): the voice text keeps')):
+                # covered by a READ entry: the editor's reading is the reason it is text-ready (or why it still waits)
+                doubt, v1 = first_match(DOUBT, r['text']), is_spoken and any(n_.startswith(VOICE_AUDIT) for n_ in notes)
+                if any(n_.startswith('REVIEW') for n_ in notes):
+                    status, comment = 'proposed', EDITOR + 'a rule flagged this row; not yet decided'
+                elif doubt:
+                    status, comment = 'proposed', EDITOR + doubt
+                elif v1:
+                    status, comment = 'proposed', EDITOR + ('V1 (pronunciation audit 2026-10-29): the voice text keeps a nikud or a beat so a '
+                                                            'voice cannot misread it; please confirm. ') + read_batch(r)
+                else:
+                    status, comment = 'text-ready', EDITOR + read_batch(r)
+                    if before is None or before['comment'].startswith(EDITOR + 'NOT READ'):  # new in this run (or unread until now): read in the pass of READ_NEW
+                        comment = comment.replace(READ_OLD_DAY, READ_NEW, 1)
             elif reviewed(r):
                 doubt, note = first_match(DOUBT, r['text']), first_match(NOTE, r['text'])
                 v1 = is_spoken and any(n_.startswith(VOICE_AUDIT) for n_ in notes)

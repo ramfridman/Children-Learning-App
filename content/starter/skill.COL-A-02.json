@@ -22,7 +22,9 @@
     "pictorial",
     "concrete"
   ],
-  "misconceptions": [],
+  "misconceptions": [
+    "M-COL-NAME"
+  ],
   "retention": {
     "targetRetention": 0.9,
     "initialStabilityDays": 1

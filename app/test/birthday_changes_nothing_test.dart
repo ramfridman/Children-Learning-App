@@ -9,6 +9,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/content/bundled_packs.dart';
 import 'package:nitznutz/app/age_providers.dart';
 import 'package:nitznutz/app/providers.dart';
 import 'package:nitznutz/app/state.dart';
@@ -39,7 +40,7 @@ Future<void> _playLessons(AppDatabase db, PackContent content, int lessons) asyn
             at: DateTime.utc(2026, 10, 20, 9).add(Duration(minutes: minute++)),
             profileId: kid,
             packId: 'starter',
-            packVersion: '0.10.0',
+            packVersion: bundledStarterVersion,
             lessonId: Value<String>(l.id),
             activityId: a.id,
             activityRevision: a.revision,

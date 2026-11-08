@@ -83,7 +83,7 @@ The view has no streaks, no "you haven't practised", and no comparison between l
   - Values: `eng`, `heb`, `rus`. The existing lands are `core`.
   - The skill id prefix already matches the course (`ENG-`, `HEB-`, `RUS-`). The validator checks that the two agree.
 - Misconception engine ids are `<course>.<strand>.<slug>` (§4.2), so `M-ENG-DIR` becomes `eng.ph.dir`.
-- Each course is **its own signed pack** (`lang-eng`, `lang-heb`, `lang-rus`). A pack contains its skills, items, tags, Hebrew frame clips, target clips, stroke data and pictures, and validates alone. It may use only app-wide assets (fonts, the shared picture library, the UI strings of the shell). The infrastructure-engineer decides whether packs are bundled or downloaded when a language is turned on. Recogniser models are downloaded only when that language's voice is turned on (§5.1).
+- Each course is **its own signed pack** (`lang-eng`, `lang-heb`, `lang-rus`). A pack contains its skills, items, tags, Hebrew frame clips, target clips, stroke data and pictures, and validates alone. It may use only app-wide assets (fonts, the shared picture library, the UI strings of the shell). **Decided 2026-11-07 (owner's request, built in `band-a-build.md`): the packs are bundled in the app** (`assets/packs/lang-<course>-<version>.nnpack`, signed with the starter pack's key) and installed the first time a language is turned on for a child; nothing is downloaded. Recogniser models are downloaded only when that language's voice is turned on (§5.1).
 
 **Invariants.** The validator refuses a pack, and a qa-engineer test guards each rule.
 1. A prerequisite never crosses courses, nor goes between a course and `core`.
@@ -113,7 +113,7 @@ These merge the teachers' cross-cutting needs: English S1 to S8, Russian §1, an
 |---|---|---|---|
 | F1 | **Direction-aware text runs.** Text in a course is an isolated run in its course's direction. Rows of tiles, slots, tokens and sound buttons follow the course's reading direction, not the UI's. | eng, rus: left to right; heb: right to left | eng S1; rus §1.2; heb §3 "right to left everywhere" |
 | F2 | **Course fonts.** All text tiles go through `AppText`, with the nikud rules: line height 1.7 or more, no letter spacing. | eng: the Latin teaching font (single-storey a and g, clear b d p q; D8). rus: the Cyrillic font (D1). heb: Heebo if the design audit passes, else one open-licensed teaching font (D24) | eng S4; rus §1.1; heb voice-brief §6 |
-| F3 | **Two-clip lines.** A Hebrew frame clip and a target clip in sequence, from one voice id or from two (§1.3). | all | eng S3; rus §1.3 |
+| F3 | **Two-clip lines.** A Hebrew frame clip and a target clip in sequence, from one voice id or from two (§1.3). A line may carry a second target clip (`target2`, 2026-11-07: a question and its answer, the two sounds of a same-or-different item). | all | eng S3; rus §1.3 |
 | F4 | **Course id** in the engine, packs, progress and sync (§1.5). | all | eng S7; heb Q4 |
 | F5 | **Content checks in the validator**: script per course (Latin; Cyrillic, plus U+0301 only where a skill shows stress; Hebrew with nikud from the editor's tables); ё never replaced by е, and no stress mark on ё; **decodable check** (every reading word uses only taught graphemes, or is a taught tricky word, per step or group); every distractor is tagged with a tag of its own course that is in the catalogue (§4.2) and is not an accent tag; the distractor rule of §2.3 (at least two tagged distractors, and the 2-choice rule); personal-turn rules (§5.2). | all | rus §1.4; eng LT10 note; heb §3 |
 | F6 | **Letter stroke data** per script, in the trace box (100 × 100), with start, direction and order, and the guide lines of the script. | eng: 26 lowercase and 26 capitals, four lines. rus: 33 capitals and 33 small, ё and й marks as their own strokes. heb: 27 print forms (22 letters and 5 finals) and 27 script forms, with the hanging top line and the "basement" for ק ך ן ף ץ. The design-director draws all paths | eng S8; rus T04; heb H4(a) |
@@ -144,7 +144,7 @@ Every template keeps the rules of curriculum §6.1, without exception:
 - An item with **3 choices** has two tagged distractors. The two may carry the **same tag** when one misconception explains both (one beat more and one beat fewer are both `M-HEB-SYLL`).
 - An item with **2 choices** (yes / no, same / different, two names, the guided step of a 3-choice item) has **one** distractor, and it is tagged. This is allowed only when:
   1. the skill also has items with 3 choices, **or** the skill is binary by nature (yes / no, same / different), and its items are balanced (as many "yes" as "no" answers right, as many "same" as "different");
-  2. 2-choice items are **at most half of the skill's scored items** (the authoring side of the engine's 2-choice guard, curriculum §10.2, which caps them at 50% of the success evidence);
+  2. 2-choice items are **at most half of the skill's scored items** (the authoring side of the engine's 2-choice guard, curriculum §10.2, which caps them at 50% of the success evidence). **Probes are not counted** (decided in the build of 2026-11-07, band-a-build.md 7.7 D6): a probe is no evidence of mastery, and the two yes and no probes of ENG-A-16 would otherwise take its two-choice share to 8 of 14;
   3. a 2-choice item is **never a check on its own**. An understanding check or a delayed check uses a 3-choice item, or, in a binary skill, a **balanced pair** (one item of each answer) that passes only if both are right (chance 1 in 4, not 1 in 2).
 - A 2-choice item allows one retry only (curriculum §9.2), and a guided 2-choice item (the Hebrew "hidden second distractor") is a scaffold step that the engine credits as a 2-choice item.
 - **Free-response modes** (LS02 trace, LS03 drum, LS06 build) have no fixed distractors. Their classifiers map each error they can name to a tag; an error they cannot name (a beat count off by 2, leaving a trace path) is a retry with no tag and no misconception evidence.
@@ -469,6 +469,7 @@ Curriculum §10.2 applies unchanged: BKT, credit by hint level, fresh mastery (P
 - **The rule's inputs gain** the course of each land and lesson.
 - A course that is off is not a land.
 - This is a change to the rule document (app-developer, after the owner's OK).
+- **The course's check visit** (band-a-build.md section 7.4) also takes the revisit's slot: the owner's OK of 2026-11-07. It comes after every revisit of a mastered skill, at most once a day per course (`todays-adventure-rule.md` section 15).
 
 ---
 

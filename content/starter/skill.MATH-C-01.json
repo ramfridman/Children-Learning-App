@@ -1,0 +1,44 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-C-01",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "עובדות חיבור וחיסור עד 9 ועוד 9"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "חִבּוּר וְחִסּוּר עַד שְׁמוֹנֶה עֶשְׂרֵה"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-B-08",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic",
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-CNT-DOUBLE",
+    "M-CNT-CARD",
+    "M-OP-SWAP",
+    "M-SUB-SMALLBIG",
+    "M-EQ-OPER"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  },
+  "core": true,
+  "setCoverage": true
+}

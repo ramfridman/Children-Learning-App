@@ -1,0 +1,174 @@
+{
+  "schema": "activity/v1",
+  "id": "c.numc03.12",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.4",
+  "domain": "numbers",
+  "band": "C",
+  "skills": [
+    {
+      "id": "NUM-C-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "transfer",
+  "representation": "pictorial",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.6
+  },
+  "prompt": {
+    "vo": "vo:c.numc03.9.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה שְׁקָלִים יֵשׁ כָּאן?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "group": {
+      "sprite": "asset:coin_s10",
+      "count": 4,
+      "arrangement": "line",
+      "seed": 3,
+      "scale": 1
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 40,
+        "label": "אַרְבָּעִים"
+      },
+      {
+        "id": "o2",
+        "numeral": 4,
+        "label": "אַרְבַּע",
+        "misconception": "M-MONEY-COUNT"
+      },
+      {
+        "id": "o3",
+        "numeral": 400,
+        "label": "אַרְבַּע מֵאוֹת",
+        "misconception": "M-PV-ZERO"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.numc03.12.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַרְבָּעִים! יֵשׁ כָּאן אַרְבָּעִים שְׁקָלִים."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-MONEY-COUNT",
+        "vo": "vo:fb.money_count",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כׇּל מַטְבֵּעַ שָׁוֶה כַּמָּה שֶׁכָּתוּב עָלָיו. בּוֹאוּ נְחַבֵּר אֶת מַה שֶּׁכָּתוּב."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PV-ZERO",
+        "vo": "vo:fb.pv_zero",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּמִסְפָּר עִם עֲשָׂרוֹת וִיחִידוֹת יֵשׁ רַק שְׁתֵּי סְפָרוֹת. בּוֹאוּ נִבְדֹּק אֶת הַמָּקוֹם שֶׁל כׇּל סִפְרָה."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.numc03.9.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כׇּל מַטְבֵּעַ גָּדוֹל שָׁוֶה עֲשָׂרָה שְׁקָלִים, וְכׇל מַטְבֵּעַ קָטָן שֶׁקֶל אֶחָד. סוֹפְרִים קֹדֶם בַּעֲשָׂרוֹת."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.numc03.12.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עֶשֶׂר, עֶשְׂרִים, שְׁלוֹשִׁים, אַרְבָּעִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבָּעִים."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כַּמָּה שְׁקָלִים יֵשׁ כָּאן?"
+  }
+}

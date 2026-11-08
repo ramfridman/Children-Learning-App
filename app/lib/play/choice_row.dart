@@ -151,6 +151,36 @@ ActivitySpec withTallStage(ActivitySpec base) {
   );
 }
 
+/// The board of a phone whose stage is under [height] (the small phone's is 104, the phone's 128) for a template that needs the room, as
+/// the bins to sort into or the two rows of a pattern to copy: the stage grows to [height] and the tiles stand lower by what it takes,
+/// as far as the edge where no hotspot may be ([tilesBox] is the height of a tile with its tap margin). A tablet's card and a stage that
+/// tall are unchanged.
+ActivitySpec withStageAtLeast(ActivitySpec base, double height, {required double tilesBox}) {
+  if (base.stageIsCard || base.stage.height >= height) return base;
+  final double room = base.boardHeight - TokenTouch.bottomNoHotspot - (base.tilesTop - 12 + tilesBox);
+  final double by = math.min(height - base.stage.height, math.max(0, room));
+  return base.withStageAndTiles(
+    stage: Rect.fromLTWH(base.stage.left, base.stage.top, base.stage.width, base.stage.height + by),
+    tilesLeft: base.tilesLeft,
+    tilesTop: base.tilesTop + by,
+    tilesWidth: base.tilesWidth,
+  );
+}
+
+/// The board of a tablet in landscape for a template that draws a long row: the card of the stage and the box of the tiles under it
+/// reach from the board's margin (24) to where they ended, 872 (the guide stands right of that), instead of from 288, so that the
+/// cells of the row are as large as the stage is tall, not 400 points of the board unused. Any other board is unchanged.
+ActivitySpec withWideStage(ActivitySpec base) {
+  const double margin = 24;
+  if (!base.stageIsCard || base.stage.left <= margin) return base;
+  return base.withStageAndTiles(
+    stage: Rect.fromLTRB(margin, base.stage.top, base.stage.right, base.stage.bottom),
+    tilesLeft: margin,
+    tilesTop: base.tilesTop,
+    tilesWidth: base.stage.right - margin,
+  );
+}
+
 /// The row of answer tiles of one choice, in the course's direction.
 class ChoiceRow extends StatelessWidget {
   const ChoiceRow({
@@ -287,7 +317,8 @@ class ChoiceRow extends StatelessWidget {
                         : Center(
                             child: SpeakerMark(
                               key: Key('speaker-${o.id}'),
-                              touch: AppLayout.of(context).touch.minControl,
+                              // The room under a tile is 64, the Band A floor of a child control (QA-BA-6): a speaker fills it.
+                              touch: math.max(SpeakerMark.room, AppLayout.of(context).touch.minControl),
                               onTap: () => onSpeak!(o),
                             ),
                           ),

@@ -1,0 +1,40 @@
+{
+  "schema": "lesson/v1",
+  "id": "facts-to-18-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "שׁוּב חִבּוּר וְחִסּוּר"
+    }
+  ],
+  "skills": [
+    "MATH-C-01"
+  ],
+  "items": [
+    "c.mathc01.19",
+    "c.mathc01.20",
+    "c.mathc01.21",
+    "c.mathc01.22",
+    "c.mathc01.23",
+    "c.mathc01.24",
+    "c.mathc01.25",
+    "c.mathc01.26",
+    "c.mathc01.32",
+    "c.mathc01.33",
+    "c.mathc01.34"
+  ],
+  "estimatedMinutes": 7,
+  "sequence": 103,
+  "celebration": {
+    "vo": "vo:celebrate.facts_to_18_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "נִפְלָא! עֲבַרְתֶּם אֶת כׇּל הַמִּשְׁפָּחוֹת."
+      }
+    ]
+  }
+}

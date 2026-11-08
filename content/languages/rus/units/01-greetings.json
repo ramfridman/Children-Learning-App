@@ -1,0 +1,331 @@
+{
+  "skill": {
+    "id": "RUS-A-01",
+    "strand": "lis",
+    "title": "בְּרָכוֹת",
+    "setCoverage": true
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "frame": "f39",
+      "target": "w-privet",
+      "options": [
+        "mika-arrive",
+        "mika-leave",
+        "mika-gift"
+      ],
+      "wrong": {
+        "mika-leave": "sem",
+        "mika-gift": "sem"
+      }
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "frame": "f39",
+      "target": "w-poka",
+      "options": [
+        "mika-leave",
+        "mika-arrive",
+        "mika-gift"
+      ],
+      "wrong": {
+        "mika-arrive": "sem",
+        "mika-gift": "sem"
+      }
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "frame": "f39",
+      "target": "w-do-svidanija",
+      "options": [
+        "mika-leave",
+        "mika-arrive",
+        "mika-gift"
+      ],
+      "wrong": {
+        "mika-arrive": "sem",
+        "mika-gift": "sem"
+      },
+      "purpose": "check"
+    },
+    {
+      "id": "11",
+      "kind": "tap",
+      "frame": "f39",
+      "target": "w-do-svidanija",
+      "options": [
+        "neighbour-leave",
+        "neighbour-arrive",
+        "mika-gift"
+      ],
+      "wrong": {
+        "neighbour-arrive": "sem",
+        "mika-gift": "sem"
+      }
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f39",
+      "target": "w-privet",
+      "options": [
+        "mika-arrive",
+        "mika-leave",
+        "mika-gift"
+      ],
+      "wrong": {
+        "mika-leave": "sem",
+        "mika-gift": "sem"
+      },
+      "purpose": "probe"
+    },
+    {
+      "id": "04",
+      "kind": "puppet",
+      "frame": "f07",
+      "mode": "bubble",
+      "picture": "mika-arrive",
+      "prompt": [
+        "w-privet"
+      ],
+      "options": [
+        "mika-arrive",
+        "mika-leave",
+        "mika-gift"
+      ],
+      "wrong": {
+        "mika-leave": "sem",
+        "mika-gift": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "story",
+      "then": {
+        "kind": "say",
+        "purpose": "practice",
+        "picture": "mika-arrive",
+        "clip": "w-privet",
+        "frame": "f06",
+        "foils": [
+          "пока",
+          "до свидания"
+        ]
+      }
+    },
+    {
+      "id": "05",
+      "kind": "puppet",
+      "frame": "f07",
+      "mode": "bubble",
+      "picture": "mika-leave",
+      "prompt": [
+        "w-poka"
+      ],
+      "options": [
+        "mika-leave",
+        "mika-arrive",
+        {
+          "clip": "w-zdravstvujte"
+        }
+      ],
+      "wrong": {
+        "mika-arrive": "sem",
+        "w-zdravstvujte": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "story",
+      "then": {
+        "kind": "say",
+        "purpose": "practice",
+        "picture": "mika-leave",
+        "clip": "w-poka",
+        "frame": "f06",
+        "foils": [
+          "привет",
+          "здравствуйте"
+        ]
+      }
+    },
+    {
+      "id": "06",
+      "kind": "puppet",
+      "frame": "f07",
+      "mode": "bubble",
+      "picture": "neighbour-arrive",
+      "prompt": [
+        "w-zdravstvuj"
+      ],
+      "options": [
+        {
+          "clip": "w-zdravstvujte"
+        },
+        "mika-arrive",
+        "mika-leave"
+      ],
+      "wrong": {
+        "mika-arrive": "tyvy",
+        "mika-leave": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "story"
+    },
+    {
+      "id": "07",
+      "kind": "puppet",
+      "frame": "f07",
+      "mode": "bubble",
+      "picture": "neighbour-leave",
+      "prompt": [
+        "w-do-svidanija"
+      ],
+      "options": [
+        {
+          "clip": "w-do-svidanija"
+        },
+        "mika-leave",
+        "mika-arrive"
+      ],
+      "wrong": {
+        "mika-leave": "tyvy",
+        "mika-arrive": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "story"
+    },
+    {
+      "id": "08",
+      "kind": "puppet",
+      "mode": "personal",
+      "topic": "name",
+      "picture": "mika-happy",
+      "prompt": [
+        "ch-menja-zovut",
+        "ch-kak-tebja-zovut"
+      ],
+      "reply": "ch-ochen-prijatno",
+      "rep": "story",
+      "frame": "personal",
+      "pass": "ch-horosho",
+      "purpose": "practice"
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "neighbour-leave",
+      "options": [
+        {
+          "clip": "w-do-svidanija"
+        },
+        {
+          "clip": "w-privet"
+        },
+        {
+          "clip": "w-poka"
+        }
+      ],
+      "wrong": {
+        "w-privet": "sem",
+        "w-poka": "tyvy"
+      },
+      "hintWord": "w-do-svidanija",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sem": "he-fb-check",
+          "tyvy": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "mika-arrive",
+      "options": [
+        {
+          "clip": "w-privet"
+        },
+        {
+          "clip": "w-poka"
+        },
+        {
+          "clip": "w-do-svidanija"
+        }
+      ],
+      "wrong": {
+        "w-poka": "sem",
+        "w-do-svidanija": "sem"
+      },
+      "hintWord": "w-privet",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sem": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
+    }
+  ],
+  "lessons": [
+    {
+      "id": "greet-1",
+      "title": "בְּרָכוֹת",
+      "items": [
+        "01",
+        "02",
+        "11"
+      ]
+    },
+    {
+      "id": "greetings-more",
+      "title": "בְּרָכוֹת",
+      "items": [
+        "04",
+        "05",
+        "06",
+        "07",
+        "08"
+      ]
+    }
+  ],
+  "teach": [
+    [
+      "w-privet",
+      "w-poka",
+      "w-zdravstvujte",
+      "w-do-svidanija"
+    ]
+  ],
+  "routes": {
+    "new": {
+      "note": "teach set 1, then items 01 to 07 in order; the say step echo first",
+      "say": "echo"
+    },
+    "heritage": {
+      "teach": false,
+      "from": "04",
+      "weight": [
+        "06",
+        "07"
+      ],
+      "say": "picture"
+    },
+    "reader": {
+      "as": "oral",
+      "note": "as heritage or new, by placement strand 1"
+    }
+  }
+}

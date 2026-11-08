@@ -1,0 +1,41 @@
+{
+  "schema": "lesson/v1",
+  "id": "count-on-big",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מַמְשִׁיכִים מֵהַגָּדוֹל"
+    }
+  ],
+  "skills": [
+    "MATH-B-04"
+  ],
+  "items": [
+    "c.mathb04.1",
+    "c.mathb04.2",
+    "c.mathb04.3",
+    "c.mathb04.4",
+    "c.mathb04.5",
+    "c.mathb04.6",
+    "c.mathb04.7",
+    "c.mathb04.8",
+    "c.mathb04.9",
+    "c.mathb04.10",
+    "c.mathb04.11",
+    "c.mathb04.12"
+  ],
+  "estimatedMinutes": 6,
+  "sequence": 100,
+  "celebration": {
+    "vo": "vo:celebrate.count_on_big",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הִתְחַלְתֶּם מֵהַמִּסְפָּר הַגָּדוֹל."
+      }
+    ]
+  }
+}

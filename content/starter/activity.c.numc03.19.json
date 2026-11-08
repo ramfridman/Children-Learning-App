@@ -1,0 +1,172 @@
+{
+  "schema": "activity/v1",
+  "id": "c.numc03.19",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.4",
+  "domain": "numbers",
+  "band": "C",
+  "skills": [
+    {
+      "id": "NUM-C-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.9
+  },
+  "prompt": {
+    "vo": "vo:c.numc03.18.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה קֻבִּיּוֹת יֵשׁ כָּאן?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "picture": {
+      "kind": "base_ten",
+      "tens": 5,
+      "ones": 0
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 5,
+        "label": "חָמֵשׁ",
+        "misconception": "M-PV-FACE"
+      },
+      {
+        "id": "o2",
+        "numeral": 50,
+        "label": "חֲמִשִּׁים"
+      },
+      {
+        "id": "o3",
+        "numeral": 500,
+        "label": "חֲמֵשׁ מֵאוֹת",
+        "misconception": "M-PV-ZERO"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.numc03.19.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חֲמִשִּׁים! יֵשׁ כָּאן חֲמִשִּׁים קֻבִּיּוֹת."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-PV-FACE",
+        "vo": "vo:fb.pv_face_rods",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כׇּל מוֹט הוּא עֶשֶׂר קֻבִּיּוֹת, לֹא אַחַת. בּוֹאוּ נִסְפֹּר אֶת הַמּוֹטוֹת בַּעֲשָׂרוֹת."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PV-ZERO",
+        "vo": "vo:fb.pv_zero",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּמִסְפָּר עִם עֲשָׂרוֹת וִיחִידוֹת יֵשׁ רַק שְׁתֵּי סְפָרוֹת. בּוֹאוּ נִבְדֹּק אֶת הַמָּקוֹם שֶׁל כׇּל סִפְרָה."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.numc03.18.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כׇּל מוֹט הוּא עֶשֶׂר קֻבִּיּוֹת. קֹדֶם סוֹפְרִים מוֹטוֹת בַּעֲשָׂרוֹת, וְאַחַר כָּךְ קֻבִּיּוֹת בּוֹדְדוֹת."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.numc03.19.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עֶשֶׂר, עֶשְׂרִים, שְׁלוֹשִׁים, אַרְבָּעִים, חֲמִשִּׁים. אֵין קֻבִּיּוֹת בּוֹדְדוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חֲמִשִּׁים."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כַּמָּה קֻבִּיּוֹת יֵשׁ כָּאן?"
+  }
+}

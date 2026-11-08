@@ -1,0 +1,168 @@
+{
+  "schema": "activity/v1",
+  "id": "rus.a13.06",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "listen_do",
+  "templateVersion": "1.0",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "RUS-A-13",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "transfer",
+  "representation": "embodied",
+  "variantGroup": "ch-gde-mama",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "do what is said",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנָה וְחָבֵר שֶׁעוֹשֶׂה מַה שֶּׁאוֹמְרִים"
+  },
+  "prompt": {
+    "vo": "vo:rus.f01",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה."
+      }
+    ],
+    "target": "vo:rus.ch_gde_mama",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:rus.he_fb_right_1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נָכוֹן!"
+        }
+      ],
+      "target": "vo:rus.ch_vot_mama"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:rus.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ],
+      "target": "vo:rus.ch_gde_mama"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ],
+      "target": "vo:rus.ch_gde_mama"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:rus.f01",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה."
+        }
+      ],
+      "target": "vo:rus.ch_gde_mama"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:rus.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:rus.ch_gde_mama"
+    }
+  ],
+  "scene": {
+    "picture": "asset:scene_garden_family"
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "hotspots",
+    "options": [
+      {
+        "id": "o1",
+        "label": "mother",
+        "at": {
+          "x": 0.3516,
+          "y": 0.1719,
+          "w": 0.3047,
+          "h": 0.7969
+        }
+      },
+      {
+        "id": "o2",
+        "label": "father",
+        "at": {
+          "x": 0.0391,
+          "y": 0.1719,
+          "w": 0.3125,
+          "h": 0.7969
+        },
+        "misconception": "rus.voc.sound"
+      },
+      {
+        "id": "o3",
+        "label": "grandmother",
+        "at": {
+          "x": 0.6562,
+          "y": 0.2188,
+          "w": 0.3203,
+          "h": 0.75
+        },
+        "misconception": "rus.lis.sem"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

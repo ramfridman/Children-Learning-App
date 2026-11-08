@@ -1,0 +1,379 @@
+{
+  "skill": {
+    "id": "HEB-A-03",
+    "strand": "ol",
+    "title": "ממיין תמונות לקבוצות פשוטות (בעלי חיים, אוכל, בגדים)",
+    "prerequisites": [
+      {
+        "skill": "HEB-A-02"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "sort",
+      "frame": "i-sort-cat",
+      "purpose": "learn",
+      "rep": "concrete",
+      "bins": [
+        {
+          "id": "animals",
+          "label": "heb-a-bin-animals",
+          "picture": "elephant"
+        },
+        {
+          "id": "food",
+          "label": "heb-a-bin-food",
+          "picture": "banana"
+        }
+      ],
+      "cards": [
+        {
+          "pic": "rabbit",
+          "clip": "heb-a-w-arnav",
+          "bin": "animals"
+        },
+        {
+          "pic": "butterfly",
+          "clip": "heb-a-w-parpar",
+          "bin": "animals"
+        },
+        {
+          "pic": "carrot",
+          "clip": "heb-a-w-gezer",
+          "bin": "food"
+        },
+        {
+          "pic": "bread",
+          "clip": "heb-a-w-lechem",
+          "bin": "food"
+        }
+      ],
+      "traps": {
+        "carrot": {
+          "tag": "cat_theme"
+        },
+        "butterfly": {
+          "tag": "cat_atypical"
+        }
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "02",
+      "kind": "sort",
+      "frame": "i-sort-cat",
+      "purpose": "learn",
+      "rep": "concrete",
+      "bins": [
+        {
+          "id": "food",
+          "label": "heb-a-bin-food",
+          "picture": "banana"
+        },
+        {
+          "id": "clothes",
+          "label": "heb-a-bin-clothes",
+          "picture": "shirt"
+        }
+      ],
+      "cards": [
+        {
+          "pic": "cake",
+          "clip": "heb-a-w-uga",
+          "bin": "food"
+        },
+        {
+          "pic": "strawberry",
+          "clip": "heb-a-w-tut",
+          "bin": "food"
+        },
+        {
+          "pic": "shirt",
+          "clip": "heb-a-w-chultsa",
+          "bin": "clothes"
+        },
+        {
+          "pic": "apron",
+          "clip": "heb-a-w-sinar",
+          "bin": "clothes"
+        },
+        {
+          "pic": "dress-strawberries",
+          "clip": "heb-a-w-simla",
+          "bin": "clothes"
+        }
+      ],
+      "traps": {
+        "apron": {
+          "tag": "cat_theme"
+        },
+        "dress-strawberries": {
+          "tag": "cat_look"
+        }
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "03",
+      "kind": "sort",
+      "frame": "i-sort-cat",
+      "purpose": "learn",
+      "rep": "concrete",
+      "bins": [
+        {
+          "id": "animals",
+          "label": "heb-a-bin-animals",
+          "picture": "elephant"
+        },
+        {
+          "id": "clothes",
+          "label": "heb-a-bin-clothes",
+          "picture": "shirt"
+        }
+      ],
+      "cards": [
+        {
+          "pic": "cat",
+          "clip": "heb-a-w-chatul",
+          "bin": "animals"
+        },
+        {
+          "pic": "horse",
+          "clip": "heb-a-w-sus",
+          "bin": "animals"
+        },
+        {
+          "pic": "tortoise",
+          "clip": "heb-a-w-tsav",
+          "bin": "animals"
+        },
+        {
+          "pic": "sandal",
+          "clip": "heb-a-w-sandal",
+          "bin": "clothes"
+        },
+        {
+          "pic": "hat-cat-ears",
+          "clip": "heb-a-w-kova",
+          "bin": "clothes"
+        }
+      ],
+      "traps": {
+        "tortoise": {
+          "tag": "cat_atypical"
+        },
+        "hat-cat-ears": {
+          "tag": "cat_look"
+        }
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "frame": "i-odd-animals",
+      "purpose": "learn",
+      "rep": "pictorial",
+      "stage": {
+        "box": "bin-box",
+        "front": "elephant"
+      },
+      "options": [
+        "ball-yellow",
+        "dog",
+        "chick"
+      ],
+      "wrong": {
+        "dog": "cat_look",
+        "chick": "cat_theme"
+      },
+      "feedback": {
+        "right": {
+          "line": "why",
+          "target": "heb-a-bin-animals"
+        }
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "frame": "i-odd-food",
+      "purpose": "learn",
+      "rep": "pictorial",
+      "stage": {
+        "box": "bin-box",
+        "front": "banana"
+      },
+      "options": [
+        "plate",
+        "pizza",
+        "pita"
+      ],
+      "wrong": {
+        "pizza": "cat_look",
+        "pita": "cat_theme"
+      },
+      "feedback": {
+        "right": {
+          "line": "why",
+          "target": "heb-a-bin-food"
+        }
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "frame": "i-odd-clothes",
+      "purpose": "learn",
+      "rep": "pictorial",
+      "stage": {
+        "box": "bin-box",
+        "front": "shirt"
+      },
+      "options": [
+        "towel-striped",
+        "swimsuit",
+        "shirt-striped"
+      ],
+      "wrong": {
+        "swimsuit": "cat_look",
+        "shirt-striped": "cat_theme"
+      },
+      "feedback": {
+        "right": {
+          "line": "why",
+          "target": "heb-a-bin-clothes"
+        }
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "frame": "i-odd-animals",
+      "purpose": "check",
+      "rep": "pictorial",
+      "stage": {
+        "box": "bin-box",
+        "front": "elephant"
+      },
+      "options": [
+        "wool",
+        "cat",
+        "sheep"
+      ],
+      "wrong": {
+        "cat": "cat_look",
+        "sheep": "cat_theme"
+      },
+      "feedback": {
+        "right": {
+          "line": "why",
+          "target": "heb-a-bin-animals"
+        }
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "08",
+      "kind": "sort",
+      "frame": "i-sort-cat",
+      "purpose": "check",
+      "rep": "concrete",
+      "bins": [
+        {
+          "id": "animals",
+          "label": "heb-a-bin-animals",
+          "picture": "elephant"
+        },
+        {
+          "id": "food",
+          "label": "heb-a-bin-food",
+          "picture": "banana"
+        }
+      ],
+      "cards": [
+        {
+          "pic": "rooster",
+          "clip": "heb-a-w-tarnegol",
+          "bin": "animals"
+        },
+        {
+          "pic": "ant",
+          "clip": "heb-a-w-nemala",
+          "bin": "animals"
+        },
+        {
+          "pic": "cookie",
+          "clip": "heb-a-w-ugiya",
+          "bin": "food"
+        },
+        {
+          "pic": "egg",
+          "clip": "heb-a-w-beitsa",
+          "bin": "food"
+        }
+      ],
+      "traps": {
+        "egg": {
+          "tag": "cat_theme"
+        },
+        "ant": {
+          "tag": "cat_atypical"
+        }
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "i-odd-animals",
+      "purpose": "check",
+      "rep": "pictorial",
+      "stage": {
+        "box": "bin-box",
+        "front": "elephant"
+      },
+      "options": [
+        "kite-butterfly",
+        "horse",
+        "butterfly"
+      ],
+      "wrong": {
+        "horse": "cat_look",
+        "butterfly": "cat_atypical"
+      },
+      "feedback": {
+        "right": {
+          "line": "why",
+          "target": "heb-a-bin-animals"
+        }
+      },
+      "ladder": "HL-WORD"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "groups-1",
+      "title": "כׇּל דָּבָר בַּמָּקוֹם שֶׁלּוֹ",
+      "items": [
+        "01",
+        "02",
+        "03"
+      ]
+    },
+    {
+      "id": "groups-2",
+      "title": "מָה הִגִּיעַ בְּטָעוּת?",
+      "items": [
+        "04",
+        "05",
+        "06"
+      ]
+    }
+  ]
+}

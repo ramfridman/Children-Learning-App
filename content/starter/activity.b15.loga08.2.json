@@ -25,34 +25,39 @@
     "caption": [
       {
         "t": "he",
-        "v": "צָמַח פֶּרַח. מָה הָיָה מִיָּד לִפְנֵי זֶה?"
+        "v": "מָה חָסֵר בֵּין הֶעָנָן לַקֶּשֶׁת?"
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "optionsOnTiles": true,
+    "row": [
+      "asset:cloud",
+      "?",
+      "asset:rainbow"
+    ]
   },
   "answer": {
     "type": "choice",
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:plant_seed",
-        "label": "זֶרַע",
+        "sprite": "asset:cloud",
+        "label": "עָנָן",
         "misconception": "M-SEQ-CAUSE"
       },
       {
         "id": "o2",
-        "sprite": "asset:plant_flower",
-        "label": "פֶּרַח",
+        "sprite": "asset:rainbow",
+        "label": "קֶשֶׁת",
         "misconception": "M-SEQ-CAUSE"
       },
       {
         "id": "o3",
-        "sprite": "asset:plant_sprout",
-        "label": "נֵבֶט"
+        "sprite": "asset:rain",
+        "label": "גֶּשֶׁם"
       }
     ],
     "correct": "o3",
@@ -66,7 +71,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה נֵבֶט."
+          "v": "כֵּן! זֶה גֶּשֶׁם."
         }
       ]
     },
@@ -87,7 +92,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
           }
         ]
       }
@@ -132,7 +137,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "קֹדֶם זֶרַע, אַחַר כָּךְ נֵבֶט, וּבַסּוֹף פֶּרַח. עַכְשָׁו תּוֹרְכֶם."
+          "v": "קֹדֶם עָנָן, אַחַר כָּךְ גֶּשֶׁם, וּבַסּוֹף קֶשֶׁת. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -152,6 +157,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "צָמַח פֶּרַח. מָה הָיָה מִיָּד לִפְנֵי זֶה?"
+    "altText": "מָה חָסֵר בֵּין הֶעָנָן לַקֶּשֶׁת?"
   }
 }

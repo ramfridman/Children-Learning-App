@@ -1,0 +1,160 @@
+{
+  "schema": "activity/v1",
+  "id": "c.mathc02.19",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "math",
+  "band": "C",
+  "skills": [
+    {
+      "id": "MATH-C-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "error_spotting",
+  "representation": "pictorial",
+  "variantGroup": "true-or-false",
+  "difficulty": {
+    "authored": 0.6
+  },
+  "prompt": {
+    "vo": "vo:c.mathc02.16.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַתַּרְגִּיל נָכוֹן? אִם כֵּן, לוֹחֲצִים עַל הַוִּי. אִם לֹא, לוֹחֲצִים עַל הָאִיקְס."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "row": [
+      "n:8",
+      "op:+",
+      "n:6",
+      "op:=",
+      "n:6",
+      "op:+",
+      "n:8"
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:cross",
+        "label": "לֹא",
+        "misconception": "M-EQ-OPER"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:tick",
+        "label": "כֵּן"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.mathc02.19.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! בְּחִבּוּר אֶפְשָׁר לְהַחֲלִיף אֶת הַסֵּדֶר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-EQ-OPER",
+        "vo": "vo:fb.eq_oper",
+        "caption": [
+          {
+            "t": "he",
+            "v": "סִימַן הַשָּׁוֶה אוֹמֵר: בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.mathc02.17.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "סִימַן הַשָּׁוֶה אוֹמֵר: בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.mathc02.19.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁמוֹנֶה וְעוֹד שֵׁשׁ שָׁוֶה אַרְבַּע עֶשְׂרֵה, וְגַם שֵׁשׁ וְעוֹד שְׁמוֹנֶה. אָז זֶה נָכוֹן."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "הַתַּרְגִּיל נָכוֹן? אִם כֵּן, לוֹחֲצִים עַל הַוִּי. אִם לֹא, לוֹחֲצִים עַל הָאִיקְס."
+  }
+}

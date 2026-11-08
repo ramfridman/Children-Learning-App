@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "rus.pho.notfirst",
+  "review": "needs-editor",
+  "course": "rus",
+  "kind": "diagnostic",
+  "family": "SEGMENT",
+  "skills": [
+    "RUS-A-19"
+  ],
+  "parentText": "הילד שומע את הצליל במילה, אבל עוד לא ברור לו שהוא בהתחלה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "משחק \"מה מתחיל ב־ммм?\": משכו את הצליל הראשון של מילה, ומצאו עוד דבר שמתחיל כך."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial"
+  ]
+}

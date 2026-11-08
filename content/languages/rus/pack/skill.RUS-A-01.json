@@ -1,0 +1,31 @@
+{
+  "schema": "skill/v1",
+  "id": "RUS-A-01",
+  "review": "needs-editor",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "בְּרָכוֹת"
+    }
+  ],
+  "strand": "lis",
+  "prerequisites": [],
+  "representations": [
+    "pictorial",
+    "story",
+    "embodied"
+  ],
+  "misconceptions": [
+    "rus.lis.sem",
+    "rus.lis.tyvy"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  },
+  "readerAs": "oral",
+  "setCoverage": true
+}

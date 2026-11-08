@@ -1,0 +1,46 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.colours-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "צְבָעִים"
+    }
+  ],
+  "skills": [
+    "RUS-A-06"
+  ],
+  "items": [
+    "rus.a06.01",
+    "rus.a06.02",
+    "rus.a06.03"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 20,
+  "teach": [
+    {
+      "items": [
+        "rus.a06.tc01",
+        "rus.a06.tc02",
+        "rus.a06.tc03"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach"
+    }
+  ]
+}

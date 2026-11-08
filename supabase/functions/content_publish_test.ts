@@ -2,7 +2,7 @@ import { assert } from "./_shared/testassert.ts";
 import { makeHandler } from "./_shared/handler.ts";
 import { fakeServices, FakeStore, plainPost, PUBLISH_SECRET } from "./_shared/testkit.ts";
 import { PUBLISH_FAILS_PER_HOUR_PER_IP } from "./_shared/publish_secret.ts";
-import { MAX_PUBLISH_BYTES, spec } from "./content-publish/handler.ts";
+import { MAX_PUBLISH_BYTES, MAX_PUBLISH_ITEMS, spec } from "./content-publish/handler.ts";
 
 const goodItem = () => ({
   item_id: "count.butterflies.3",
@@ -52,6 +52,38 @@ Deno.test("content-publish: the right secret publishes a pack's item index", asy
   assert.equal(store.packs.get("starter")!.items[0].itemId, "count.butterflies.3");
   assert.equal(store.packs.get("starter")!.items[0].hintThreshold, 3);
   assert.equal(r.headers.get("access-control-allow-origin"), null);
+});
+
+// SEC-BA-5: the language packs ship inside the app and are never published; the gateway's caps stay as they are (60 misconception skills
+// in a pack schema is not 10 in an index: a language pack cannot be published "as it is", by design).
+Deno.test("content-publish: a language course's pack is refused for that reason, and the starter's own body is accepted", async () => {
+  const { store, publish } = setup();
+  const lines: string[] = [];
+  const realLog = console.log;
+  console.log = (line: unknown) => void lines.push(String(line));
+  try {
+    for (const lang of ["lang-eng", "lang-heb", "lang-rus"]) {
+      const r = await publish(goodBody({ pack_id: lang }));
+      assert.equal(r.status, 400, lang);
+    }
+    for (const skill of ["ENG-A-01", "HEB-A-11", "RUS-A-01"]) {
+      const r = await publish(goodBody({ items: [{ ...goodItem(), skill_ids: [skill] }] }));
+      assert.equal(r.status, 400, skill);
+    }
+  } finally {
+    console.log = realLog;
+  }
+  const reasons = lines.map((l) => JSON.parse(l).reason);
+  assert.deepEqual(reasons, [
+    "language_pack",
+    "language_pack",
+    "language_pack",
+    "language_skill",
+    "language_skill",
+    "language_skill",
+  ], "each is refused for its own reason, not for some other shape");
+  assert.equal(store.packs.size, 0, "nothing published");
+  assert.equal((await publish(goodBody())).status, 200, "the same body under the starter's id passes");
 });
 
 Deno.test("content-publish: no secret, a wrong secret and a missing configuration are refused and change nothing", async () => {
@@ -180,7 +212,24 @@ Deno.test("content-publish: the shape is strict", async () => {
   );
 });
 
-Deno.test("content-publish: the body is capped at 256 KB, and only POST is served", async () => {
+Deno.test("content-publish: the index of Band C (about 2,500 items) passes, one over the item limit does not", async () => {
+  const { store, publish } = setup();
+  const items = (n: number) =>
+    Array.from({ length: n }, (_, i) => ({ ...goodItem(), item_id: `c.item.${i}` }));
+  assert.equal(MAX_PUBLISH_ITEMS, 3000);
+  const r = await publish(goodBody({ items: items(2500) }));
+  assert.equal(r.status, 200, "2,500 items");
+  assert.equal(store.packs.get("starter")!.items.length, 2500);
+  const body = JSON.stringify(goodBody({ items: items(MAX_PUBLISH_ITEMS) }));
+  assert.equal(
+    new TextEncoder().encode(body).length < MAX_PUBLISH_BYTES,
+    true,
+    "the most items fit the byte cap",
+  );
+  assert.equal((await publish(goodBody({ items: items(MAX_PUBLISH_ITEMS + 1) }))).status, 400, "3,001 items");
+});
+
+Deno.test("content-publish: the body is capped at 4 MB, and only POST is served", async () => {
   const { publish, handler } = setup();
   const big = goodBody({
     items: Array.from({ length: 5 }, (_, i) => ({ ...goodItem(), item_id: `i${i}`, goal: "x".repeat(300) })),

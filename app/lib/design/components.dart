@@ -126,6 +126,9 @@ class BoardBubble extends StatelessWidget {
     this.maxWidth,
     this.tailTip,
     this.chip,
+    this.math,
+    this.pointerAt,
+    this.textScaler,
   });
 
   final String text;
@@ -135,6 +138,17 @@ class BoardBubble extends StatelessWidget {
   /// A target word on show (a `TargetChip`), under the line on a row of its own: a prompt never prints a word of another
   /// language inside the Hebrew.
   final Widget? chip;
+
+  /// A number sentence under the line (a `MathRun`), on a row of its own.
+  final Widget? math;
+
+  /// Where the small tail on the right edge points, from the bubble's top, so that it meets the guide's mouth however tall the bubble is
+  /// (the lessons' bubble); null keeps it 29 points up from the bottom, where the boards' own bubbles have it.
+  final double? pointerAt;
+
+  /// How the system's text size scales the line; null follows it (the home screens), [TextScaler.noScaling] keeps the board's own size (the
+  /// lessons' bubble, whose room is worked out at that size).
+  final TextScaler? textScaler;
 
   /// When set, a long line wraps inside this width (the bubble of a lesson); when null the line
   /// stays on one row, as on the design boards.
@@ -146,6 +160,7 @@ class BoardBubble extends StatelessWidget {
 
   Widget get _line => Text(
     text,
+    textScaler: textScaler,
     style: AppText.fixed(size: fontSize, weight: 500),
     softWrap: maxWidth != null,
   );
@@ -163,10 +178,12 @@ class BoardBubble extends StatelessWidget {
       else
         Positioned(
           right: -10,
-          bottom: 18,
+          top: pointerAt == null ? null : pointerAt! - 11,
+          bottom: pointerAt == null ? 18 : null,
           child: Transform.rotate(
             angle: 0.785398,
             child: Container(
+              key: const Key('bubble-pointer'),
               width: 22,
               height: 22,
               decoration: BoxDecoration(color: TokenColors.paper, borderRadius: BorderRadius.circular(4)),
@@ -182,11 +199,15 @@ class BoardBubble extends StatelessWidget {
           borderRadius: BorderRadius.circular(TokenRadius.lg),
           boxShadow: softShadow,
         ),
-        child: chip == null
+        child: chip == null && math == null
             ? _line
             : Column(
                 mainAxisSize: MainAxisSize.min,
-                children: <Widget>[_line, const SizedBox(height: 6), chip!],
+                children: <Widget>[
+                  _line,
+                  if (math != null) ...<Widget>[const SizedBox(height: 6), math!],
+                  if (chip != null) ...<Widget>[const SizedBox(height: 6), chip!],
+                ],
               ),
       ),
       // One outline around the body and the wedge together, over both, so no line crosses where they join.

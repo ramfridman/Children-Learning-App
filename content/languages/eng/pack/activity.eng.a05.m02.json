@@ -1,0 +1,186 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a05.m02",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "match_pairs",
+  "templateVersion": "1.1",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-05",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "en-duck",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "join the partners",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "זוּגוֹת לְחַבֵּר"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_ins_pairs",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מִצְאוּ שְׁתֵּי תְּמוּנוֹת שֶׁהוֹלְכוֹת יַחַד."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_6",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁמַעְתֶּם טוֹב!"
+        }
+      ],
+      "target": "vo:eng.en_duck"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ],
+      "target": "vo:eng.en_duck"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:eng.he_hint_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
+        }
+      ],
+      "target": "vo:eng.en_duck_slow"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:eng.he_gl_duck",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בַּרְוָז"
+        }
+      ],
+      "target": "vo:eng.en_duck"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:eng.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:eng.en_duck"
+    }
+  ],
+  "scene": {
+    "left": [
+      {
+        "id": "l1",
+        "sprite": "asset:duck",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_duck"
+      },
+      {
+        "id": "l2",
+        "sprite": "asset:bird",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_bird"
+      },
+      {
+        "id": "l3",
+        "sprite": "asset:frog",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_frog"
+      }
+    ],
+    "right": [
+      {
+        "id": "r3",
+        "sprite": "asset:frog_2",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_frog",
+        "misconception": "eng.lis.sem"
+      },
+      {
+        "id": "r1",
+        "sprite": "asset:duck_2",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_duck",
+        "misconception": "eng.lis.sem"
+      },
+      {
+        "id": "r2",
+        "sprite": "asset:bird_2",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_bird",
+        "misconception": "eng.lis.sem"
+      }
+    ]
+  },
+  "answer": {
+    "type": "match",
+    "pairs": [
+      {
+        "left": "l1",
+        "right": "r1"
+      },
+      {
+        "left": "l2",
+        "right": "r2"
+      },
+      {
+        "left": "l3",
+        "right": "r3"
+      }
+    ],
+    "misconception": "eng.lis.sem"
+  }
+}

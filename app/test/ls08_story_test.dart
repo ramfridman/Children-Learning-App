@@ -84,7 +84,11 @@ void main() {
     });
 
     test('the template is known, versioned, and its ladder changes the representation at level 2', () {
-      expect(supportedTemplates['story'], '1.0');
+      expect(
+        supportedTemplates['story'],
+        '1.1',
+        reason: '1.1 adds the print-direction modes zones and follow',
+      );
       expect(activitySchemaFor('story'), isNotNull);
       expect(allSchemas.containsKey('activity.story'), isTrue);
       expect(HintLadder.problemWith('story'), isNull);

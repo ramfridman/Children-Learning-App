@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pk.print_shape",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "PRINT",
+  "skills": [
+    "HEB-A-10"
+  ],
+  "parentText": "הילד עוד מתבלבל בין אות לבין צורה או ציור.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "הצביעו יחד על אותיות בספר או על קופסה במטבח, וגם על הציורים והצורות שלידן. שאלו: \"פה כתוב, או פה מצויר?\""
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "symbolic",
+    "concrete"
+  ]
+}

@@ -5,12 +5,14 @@ import 'dart:typed_data';
 
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/content/binary_checks.dart';
+import 'package:nitznutz/content/bundled_packs.dart';
 import 'package:nitznutz/content/pack_installer.dart';
 import 'package:nitznutz/content/pack_verify.dart';
 import 'package:nitznutz/content/zip_store.dart';
 import 'package:nitznutz/data/app_database.dart';
 
-const String _packPath = 'assets/packs/starter-0.10.0.nnpack';
+const String _packPath = bundledStarterAsset;
 const String _keyPath = 'assets/pack_signing_public_key.txt';
 const String _sourcePath = '../content/starter';
 
@@ -181,7 +183,7 @@ void main() {
 
   test('the bundled starter pack is genuine: it verifies against the public key built into the app', () {
     expect(pack.id, 'starter');
-    expect(pack.version, '0.10.0');
+    expect(pack.version, bundledStarterVersion);
     expect(pack.hidden, isFalse);
   });
 
@@ -409,9 +411,13 @@ void main() {
   });
 
   test('the pictures are plain drawings: no script, no outside links, no embedded data', () {
+    int svgs = 0;
+    int fragmentRefs = 0;
     for (final MapEntry<String, Uint8List> f in pack.files.entries) {
       if (!f.key.endsWith('.svg')) continue;
-      final String text = utf8.decode(f.value).toLowerCase();
+      svgs++;
+      final String text = utf8.decode(f.value);
+      final String lower = text.toLowerCase();
       for (final String bad in <String>[
         '<script',
         'href',
@@ -420,11 +426,24 @@ void main() {
         '<foreignobject',
         'onload',
         '<style',
-        'url(',
+        '<use',
+        '<!doctype',
+        '<!entity',
+        '&#',
       ]) {
-        expect(text, isNot(contains(bad)), reason: '${f.key} contains $bad');
+        expect(lower, isNot(contains(bad)), reason: '${f.key} contains $bad');
       }
+      // url( is allowed only as url(#id) of an element of the same file (a clip path or a gradient);
+      // the same rule the phone enforces at install (binary_checks.dart › svgProblems).
+      expect(svgProblems(text), isEmpty, reason: f.key);
+      final int opens = RegExp('url', caseSensitive: false).allMatches(text).length;
+      final int refs = RegExp(r'url\(#[A-Za-z_][A-Za-z0-9_.-]*\)').allMatches(text).length;
+      expect(refs, opens, reason: '${f.key}: every url is url(#id)');
+      fragmentRefs += refs;
     }
+    expect(svgs, greaterThan(0));
+    // Pins that the rule was tested against real references, not a pack that happens to have none.
+    expect(fragmentRefs, greaterThan(0));
   });
 
   test('the starter pack installs with the key built into the app', () async {
@@ -441,7 +460,7 @@ void main() {
     );
     final InstallResult r = await installer.install(File(_packPath).readAsBytesSync());
     expect(r.outcome, InstallOutcome.installed);
-    expect((await db.installedPack('starter'))!.version, '0.10.0');
+    expect((await db.installedPack('starter'))!.version, bundledStarterVersion);
     expect((await installer.load('starter'))!.docs, isNotEmpty);
     // The zip reader accepts the bundled file as a canonical zip.
     expect(readStoredZip(File(_packPath).readAsBytesSync()).length, pack.files.length + 2);

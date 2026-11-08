@@ -1,0 +1,32 @@
+{
+  "schema": "gate/v1",
+  "id": "rus.sounds",
+  "review": "needs-editor",
+  "course": "rus",
+  "requires": [
+    "RUS-A-12"
+  ],
+  "requireAtLeast": [
+    {
+      "skills": [
+        "RUS-A-02",
+        "RUS-A-05",
+        "RUS-A-06",
+        "RUS-A-07",
+        "RUS-A-08",
+        "RUS-A-09"
+      ],
+      "count": 3
+    }
+  ],
+  "holds": [
+    "RUS-A-17",
+    "RUS-A-18",
+    "RUS-A-19",
+    "RUS-A-20"
+  ],
+  "routeBypass": [
+    "heritage",
+    "reader"
+  ]
+}

@@ -5,6 +5,7 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/content/bundled_packs.dart';
 import 'package:nitznutz/app/companion.dart';
 import 'package:nitznutz/child/home_island_name.dart';
 import 'package:nitznutz/child/home_island_screen.dart';
@@ -61,7 +62,7 @@ Future<void> seedChild(AppRig rig) async {
       at: at,
       profileId: 'p-1',
       packId: 'starter',
-      packVersion: '0.10.0',
+      packVersion: bundledStarterVersion,
       lessonId: const Value<String>('butterflies'),
       activityId: 'count.butterflies.3',
       activityRevision: 1,

@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-PV-FACE",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-C-03",
+    "NUM-C-04",
+    "MATH-C-03"
+  ],
+  "parentText": "הילד קורא כל ספרה לפי הערך שלה לבד ולא לפי המקום שלה: ב-34 ה-3 הוא \"שלוש\" ולא שלושים, ו-41 נראה לו קטן מ-39 כי 1 קטן מ-9.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לשחק בחנות עם מטבעות של עשר ושל שקל: לבנות יחד 34 בשלושה מטבעות של עשר וארבעה של שקל, ולשאול כמה שווים המטבעות של העשר."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

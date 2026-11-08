@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.story-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "נִיצִי אוֹפָה עוּגָה"
+    }
+  ],
+  "skills": [
+    "HEB-A-01"
+  ],
+  "items": [
+    "heb.a01.03",
+    "heb.a01.04",
+    "heb.a01.06"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 7
+}

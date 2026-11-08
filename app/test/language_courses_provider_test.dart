@@ -271,12 +271,22 @@ void main() {
         languages: await e.courses(),
         enabledCourses: <String>{'eng'},
       );
-      // The bottle may choose the lands; if it chooses the language, it is at the same place on the path as the home's pebble.
-      if (stop.land is LanguageLand) expect(stop.lessonId, home.stones[home.nextIndex].lessonId);
+      // The bottle may choose the lands; if it chooses the language, it is the same stop as the home's pebble (the visit that verifies what
+      // placement took as known comes before the lesson the path opens at).
+      if (stop.land is LanguageLand) {
+        expect(stop, TodaysAdventure.checkVisit(const LanguageLand('eng'), 'ENG-A-01'));
+      }
       final TodaysAdventure alone = (await e.container.read(
         courseHomeProvider((childId: courseKid, course: 'eng')).future,
       ))!.stop;
-      expect(alone.lessonId, 'eng.animals_1', reason: 'the path opens at the placed level');
+      // The day after the placement the course offers the visit that verifies what placement took as known, and the path opens at the placed
+      // level after it (the home's next stone, above).
+      expect(alone, TodaysAdventure.checkVisit(const LanguageLand('eng'), 'ENG-A-01'));
+      expect(
+        home.stones[home.nextIndex].lessonId,
+        'eng.animals_1',
+        reason: 'the path opens at the placed level',
+      );
     });
 
     test('the progress and the home are null for a course whose pack is not installed', () async {

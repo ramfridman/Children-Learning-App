@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "eng.lis.yesno",
+  "review": "needs-editor",
+  "course": "eng",
+  "kind": "diagnostic",
+  "family": "GUESS",
+  "skills": [
+    "ENG-A-16"
+  ],
+  "parentText": "בשאלות כן או לא הילד עונה לפעמים אותה תשובה לכל שאלה, בלי להסתכל בתמונה. זה שלב רגיל, והאפליקציה מאזנת את השאלות.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "שחקו \"זה חתול?\" עם צעצועים בבית: לפעמים כן ולפעמים לא, עם הנהון או ניעור ראש."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial"
+  ]
+}

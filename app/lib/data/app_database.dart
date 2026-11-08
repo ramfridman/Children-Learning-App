@@ -8,6 +8,9 @@ import 'tables.dart';
 
 part 'app_database.g.dart';
 
+/// The setting that counts the block demonstrations a child has seen; [AppDatabase.deleteChildData] removes it with the child.
+String blockDemoKey(String profileId) => 'blocks.demo.$profileId';
+
 @DriftDatabase(
   tables: <Type>[
     Profiles,
@@ -550,6 +553,8 @@ class AppDatabase extends _$AppDatabase {
     if (languages != null) {
       await putSetting(languagesSettingKey, FamilyLanguages.decode(languages).without(profileId).encode());
     }
+    // The count of block demonstrations this child has seen (SEC-M10-9).
+    await (delete(appSettings)..where((AppSettings t) => t.key.equals(blockDemoKey(profileId)))).go();
     // And the look the parent chose.
     final String? looks = await setting(looksSettingKey);
     if (looks != null) {

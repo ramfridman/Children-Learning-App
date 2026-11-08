@@ -242,15 +242,15 @@ void main() {
       expect(() => readStoredZip(_rename(z, 'aaab.txt', 'AAAA.txt')), _refused());
     });
 
-    test('more than 8,002 entries are refused', () {
+    test('more than 24,002 entries are refused', () {
       final Uint8List z = writeStoredZip(<ZipEntry>[
-        for (int i = 0; i < 8003; i++) ZipEntry('f$i.bin', Uint8List(1)),
+        for (int i = 0; i < 24003; i++) ZipEntry('f$i.bin', Uint8List(1)),
       ]);
-      expect(() => readStoredZip(z), _refused('8003 entries'));
+      expect(() => readStoredZip(z), _refused('24003 entries'));
       final Uint8List ok = writeStoredZip(<ZipEntry>[
-        for (int i = 0; i < 8002; i++) ZipEntry('f$i.bin', Uint8List(1)),
+        for (int i = 0; i < 24002; i++) ZipEntry('f$i.bin', Uint8List(1)),
       ]);
-      expect(readStoredZip(ok), hasLength(8002));
+      expect(readStoredZip(ok), hasLength(24002));
     });
 
     test('more than 64 MB of content is refused', () {
@@ -305,7 +305,7 @@ void main() {
   group('the faster reader and writer give exactly the results of the code before them', () {
     // The oracle shares these constants with the reader, so it cannot notice a change of one: they are pinned here.
     test('the limits are the ones the reader was reviewed with', () {
-      expect(ZipLimits.maxEntries, 8002);
+      expect(ZipLimits.maxEntries, 24002);
       expect(ZipLimits.maxTotalBytes, 64 * 1024 * 1024);
       expect(ZipLimits.maxNameLength, 101);
       expect(ZipLimits.maxZipBytes, 64 * 1024 * 1024 + 256 * 1024);

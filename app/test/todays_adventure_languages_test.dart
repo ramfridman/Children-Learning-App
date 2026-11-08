@@ -102,6 +102,52 @@ void main() {
       expect(next.kind, AdventureKind.lesson, reason: 'a revisit is not offered twice in a row');
     });
 
+    test("a course's check visit takes the revisit's slot, after every revisit of a mastered skill (owner's OK 2026-11-07)", () {
+      final DueSkill check = DueSkill(
+        skillId: 'ENG-A-01',
+        land: eng,
+        dueAt: DateTime.utc(2026, 10, 1),
+        check: true,
+      );
+      final DueSkill revisit = DueSkill(skillId: 'RUS-A-01', land: rus, dueAt: DateTime.utc(2026, 11, 1));
+      expect(todaysAdventure(input(due: <DueSkill>[check])), TodaysAdventure.checkVisit(eng, 'ENG-A-01'));
+      expect(
+        todaysAdventure(input(due: <DueSkill>[check, revisit])),
+        TodaysAdventure.revisit(rus, 'RUS-A-01'),
+        reason: 'a revisit of a mastered skill is never behind a check visit, however much earlier it is due',
+      );
+      // It is the day's revisit: after it two lessons come first, and nothing is offered twice in a row.
+      final TodaysAdventure next = todaysAdventure(
+        input(
+          visits: <Visit>[
+            const Visit(kind: VisitKind.revisit, land: eng, id: 'ENG-A-01', day: today, check: true),
+          ],
+          due: <DueSkill>[
+            DueSkill(skillId: 'ENG-A-03', land: eng, dueAt: DateTime.utc(2026, 10, 2), check: true),
+          ],
+        ),
+      );
+      expect(next.kind, AdventureKind.lesson);
+      expect(
+        todaysAdventure(
+          input(
+            due: <DueSkill>[
+              DueSkill(
+                skillId: 'ENG-A-01',
+                land: eng,
+                dueAt: DateTime.utc(2026, 10, 1),
+                check: true,
+                reteachLessonId: 'e2',
+              ),
+            ],
+          ),
+        ),
+        TodaysAdventure.replay(eng, 'e2'),
+        reason: "two failed visits in a row: the skill's lesson again",
+      );
+      expect(adventureLine(TodaysAdventure.checkVisit(eng, 'ENG-A-01'))!.text, He.adventureLangEnglish.text);
+    });
+
     test(
       'a language stays for three lessons, then the bottle moves on to the land not played for longest',
       () {

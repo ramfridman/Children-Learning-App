@@ -1,0 +1,79 @@
+{
+  "schema": "placement/v1",
+  "id": "eng.placement",
+  "review": "needs-editor",
+  "course": "eng",
+  "thanks": {
+    "vo": "vo:eng.he_pl_thanks",
+    "caption": [
+      {
+        "t": "he",
+        "v": "תּוֹדָה! מַמְשִׁיכִים."
+      }
+    ]
+  },
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "perVisit": 8,
+  "strands": [
+    {
+      "id": "o",
+      "levels": [
+        {
+          "items": [
+            "eng.a01.pr1",
+            "eng.a03.pr1"
+          ],
+          "assumes": [
+            "ENG-A-01",
+            "ENG-A-03"
+          ]
+        },
+        {
+          "items": [
+            "eng.a05.pr1",
+            "eng.a08.pr1",
+            "eng.a09.pr1"
+          ],
+          "assumes": [
+            "ENG-A-05",
+            "ENG-A-07",
+            "ENG-A-08",
+            "ENG-A-09"
+          ]
+        },
+        {
+          "items": [
+            "eng.a02.pr1",
+            "eng.a04.pr1",
+            "eng.a06.pr1"
+          ],
+          "assumes": [
+            "ENG-A-02",
+            "ENG-A-04",
+            "ENG-A-06"
+          ]
+        },
+        {
+          "items": [
+            "eng.a11.pr1",
+            "eng.a11.pr2",
+            "eng.a16.pr1",
+            "eng.a16.pr2"
+          ],
+          "assumes": [
+            "ENG-A-11",
+            "ENG-A-16"
+          ]
+        }
+      ]
+    }
+  ]
+}

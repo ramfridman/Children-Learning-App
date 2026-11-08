@@ -245,6 +245,31 @@ void main() {
   });
 
   group('touch a part of the picture', () {
+    testWidgets(
+      'nothing is drawn on the picture at rest, a hint rings a part and never fills it (a face is never masked)',
+      (WidgetTester t) async {
+        final Rig<ListenDoSession> r = _rig(_pack('hotspots'));
+        await r.pump(t);
+        expect(
+          find.byKey(const Key('do-part-rest')),
+          findsNWidgets(3),
+          reason: 'the parts are places, not drawings',
+        );
+        expect(find.byKey(const Key('do-part-lit')), findsNothing);
+        r.controller.showHint();
+        await r.wait(t, 300);
+        expect(find.byKey(const Key('do-part-lit')), findsOneWidget, reason: 'the hint lights one part');
+        final DecoratedBox ring = t.widget<DecoratedBox>(find.byKey(const Key('do-part-lit')));
+        expect(
+          (ring.decoration as BoxDecoration).color,
+          isNull,
+          reason: 'a ring has no fill: a fill over a face is a mask',
+        );
+        expect((ring.decoration as BoxDecoration).border, isNotNull);
+        await r.done(t);
+      },
+    );
+
     testWidgets('the right part is one correct attempt, the answer is taken, and the lesson goes on', (
       WidgetTester t,
     ) async {
@@ -252,7 +277,11 @@ void main() {
       await r.pump(t);
       expect(find.byKey(const Key('do-scene-hotspots')), findsOneWidget);
       for (final String id in <String>['o1', 'o2', 'o3']) {
-        expect(find.byKey(Key('do-hot-$id')), findsOneWidget, reason: 'every part glows');
+        expect(
+          find.byKey(Key('do-hot-$id')),
+          findsOneWidget,
+          reason: 'every part of the picture can be touched',
+        );
       }
       await t.tap(find.byKey(const Key('do-hot-o1')));
       await r.wait(t, 100);

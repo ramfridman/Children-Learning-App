@@ -45,9 +45,17 @@ class Rig<S extends TemplateSession> {
     S Function(LessonController c, Activity a) make, {
     List<String>? itemIds,
     ItemFlow? flow,
+  }) : this.ofContent(p.content, '${p.course}.$id', make, itemIds: itemIds, flow: flow);
+
+  /// The rig of an activity of a pack that is already read (a real course pack), by its full id.
+  Rig.ofContent(
+    PackContent content,
+    String activityId,
+    S Function(LessonController c, Activity a) make, {
+    List<String>? itemIds,
+    ItemFlow? flow,
   }) {
-    final PackContent content = p.content;
-    activity = content.activities['${p.course}.$id']!;
+    activity = content.activities[activityId]!;
     controller = LessonController(
       content: content,
       lesson: Lesson.mission(

@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "rus.pho.rhyme_onset",
+  "review": "needs-editor",
+  "course": "rus",
+  "kind": "diagnostic",
+  "family": "RHYME",
+  "skills": [
+    "RUS-A-17"
+  ],
+  "parentText": "כשמחפשים חרוז, ילדים בוחרים לפעמים מילה שמתחילה אותו דבר (нос ו־ноги) במקום מילה שנגמרת אותו דבר.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "אמרו שתי מילים מתחרזות ברוסית (кот – рот) ושאלו: נשמע דומה בסוף?"
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial"
+  ]
+}

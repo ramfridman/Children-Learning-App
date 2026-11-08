@@ -1,0 +1,273 @@
+{
+  "skill": {
+    "id": "RUS-A-13",
+    "strand": "grm",
+    "title": "אֵיפֹה?",
+    "prerequisites": [
+      {
+        "skill": "RUS-A-12"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "picture": "scene-room-ball",
+      "target": "ch-gde-mjach",
+      "options": [
+        "ball",
+        "balloon",
+        "doll"
+      ],
+      "right": "ball",
+      "wrong": {
+        "balloon": "sem",
+        "doll": "sem"
+      },
+      "after": "ch-vot-mjach",
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "02",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "picture": "scene-room-cat",
+      "target": "ch-gde-koshka",
+      "options": [
+        "cat",
+        "dog",
+        "porridge"
+      ],
+      "right": "cat",
+      "wrong": {
+        "dog": "sem",
+        "porridge": "sound"
+      },
+      "after": "ch-vot-koshka",
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "03",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "picture": "scene-room-mouse",
+      "target": "ch-gde-mysh",
+      "options": [
+        "mouse",
+        "teddy",
+        "cat"
+      ],
+      "right": "mouse",
+      "wrong": {
+        "teddy": "sound",
+        "cat": "sem"
+      },
+      "after": "ch-vot-mysh",
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "04",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "picture": "scene-room-hat",
+      "target": "ch-gde-shapka",
+      "options": [
+        "hat-warm",
+        "scarf",
+        "jacket"
+      ],
+      "right": "hat-warm",
+      "wrong": {
+        "scarf": "sound",
+        "jacket": "sem"
+      },
+      "after": "ch-vot-shapka",
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "05",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "picture": "scene-room-apple",
+      "target": "ch-gde-jabloko",
+      "options": [
+        "apple",
+        "milk",
+        "pear"
+      ],
+      "right": "apple",
+      "wrong": {
+        "milk": "sound",
+        "pear": "sem"
+      },
+      "purpose": "check",
+      "after": "ch-vot-jabloko",
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "06",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f01",
+      "picture": "scene-garden-family",
+      "target": "ch-gde-mama",
+      "options": [
+        "mother",
+        "father",
+        "grandmother"
+      ],
+      "right": "mother",
+      "wrong": {
+        "father": "sound",
+        "grandmother": "sem"
+      },
+      "purpose": "check",
+      "after": "ch-vot-mama",
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "ch-gde-koshka",
+      "options": [
+        {
+          "pic": "cat",
+          "clip": "w-koshka"
+        },
+        {
+          "pic": "dog",
+          "clip": "w-sobaka"
+        },
+        {
+          "pic": "porridge",
+          "clip": "w-kasha"
+        }
+      ],
+      "wrong": {
+        "dog": "sem",
+        "porridge": "sound"
+      },
+      "purpose": "probe"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "frame": "f18",
+      "stage": "doll",
+      "target": "ch-vot-mjach",
+      "options": [
+        "mika-no",
+        "mika-yes"
+      ],
+      "wrong": {
+        "mika-yes": "yesno"
+      },
+      "pole": "no",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "frame": "f18",
+      "stage": "cat",
+      "target": "ch-vot-koshka",
+      "options": [
+        "mika-yes",
+        "mika-no"
+      ],
+      "wrong": {
+        "mika-no": "yesno"
+      },
+      "pole": "yes",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "f18",
+      "stage": "scarf",
+      "target": "ch-vot-shapka",
+      "options": [
+        "mika-no",
+        "mika-yes"
+      ],
+      "wrong": {
+        "mika-yes": "yesno"
+      },
+      "pole": "no",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "frame": "f18",
+      "stage": "fam-mother",
+      "target": "ch-vot-mama",
+      "options": [
+        "mika-yes",
+        "mika-no"
+      ],
+      "wrong": {
+        "mika-no": "yesno"
+      },
+      "pole": "yes",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "where-1",
+      "title": "אֵיפֹה?",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "id": "where-more",
+      "title": "אֵיפֹה?",
+      "items": [
+        "07",
+        "08",
+        "09",
+        "10"
+      ]
+    }
+  ],
+  "routes": {
+    "new": {
+      "note": "all items"
+    },
+    "heritage": {
+      "teach": false,
+      "order": [
+        "07-10",
+        "01-06"
+      ]
+    },
+    "reader": {
+      "as": "oral",
+      "note": "as heritage or new"
+    }
+  }
+}

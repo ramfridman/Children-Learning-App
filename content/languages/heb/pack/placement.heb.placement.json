@@ -1,0 +1,76 @@
+{
+  "schema": "placement/v1",
+  "id": "heb.placement",
+  "review": "needs-editor",
+  "course": "heb",
+  "thanks": {
+    "vo": "vo:heb.plc_thanks",
+    "caption": [
+      {
+        "t": "he",
+        "v": "תּוֹדָה רַבָּה!"
+      }
+    ]
+  },
+  "celebration": {
+    "vo": "vo:heb.plc_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הָיָה כֵּיף לְשַׂחֵק יַחַד!"
+      }
+    ]
+  },
+  "perVisit": 8,
+  "strands": [
+    {
+      "id": "l",
+      "levels": [
+        {
+          "items": [
+            "heb.a06.p1",
+            "heb.a08.p1",
+            "heb.a08.p2"
+          ],
+          "assumes": [
+            "HEB-A-06",
+            "HEB-A-08"
+          ]
+        },
+        {
+          "items": [
+            "heb.a06.p2",
+            "heb.a07.p1",
+            "heb.a07.p2",
+            "heb.a09.p1"
+          ],
+          "assumes": [
+            "HEB-A-07",
+            "HEB-A-09"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c",
+      "levels": [
+        {
+          "items": [
+            "heb.a10.p1",
+            "heb.a10.p2"
+          ]
+        },
+        {
+          "items": [
+            "heb.a10.p3",
+            "heb.a10.p4",
+            "heb.a10.p5"
+          ],
+          "assumes": [
+            "HEB-A-10"
+          ]
+        }
+      ]
+    }
+  ]
+}

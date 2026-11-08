@@ -1,0 +1,36 @@
+{
+  "schema": "skill/v1",
+  "id": "RUS-A-15",
+  "review": "needs-editor",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "אוֹמְרִים מִלָּה"
+    }
+  ],
+  "strand": "spk",
+  "prerequisites": [
+    {
+      "skill": "RUS-A-12",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "embodied"
+  ],
+  "misconceptions": [
+    "rus.num.numword",
+    "rus.lis.sem",
+    "rus.voc.sound"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  },
+  "readerAs": "oral",
+  "core": true
+}

@@ -1,0 +1,49 @@
+{
+ "picture": "scene-garden-family",
+ "version": 2,
+ "note": "Touch areas of the family standing in the garden (RUS-A-13 06, LS11 scene search: Где ...? and a touch on the thing), as shares of the picture's width and height (x, y, w, h from the top left), version 2 like doll-body.hotspots.json. A part is named by the option's picture id. Every area is at least 72 of the 256 units (65.5 pt on the phone SE's 233 pt scene square); the three never overlap, so the item is shown on the scene (show: body).",
+ "size": [
+  256,
+  256
+ ],
+ "minShare": [
+  0.2812,
+  0.2812
+ ],
+ "parts": {
+  "father": [
+   [
+    0.0391,
+    0.1719,
+    0.3125,
+    0.7969
+   ]
+  ],
+  "mother": [
+   [
+    0.3516,
+    0.1719,
+    0.3047,
+    0.7969
+   ]
+  ],
+  "grandmother": [
+   [
+    0.6562,
+    0.2188,
+    0.3203,
+    0.75
+   ]
+  ]
+ },
+ "items": {
+  "rus.a13.06": {
+   "parts": [
+    "mother",
+    "father",
+    "grandmother"
+   ],
+   "show": "body"
+  }
+ }
+}

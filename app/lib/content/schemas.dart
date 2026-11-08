@@ -1,4 +1,5 @@
 import '../engine/course.dart';
+import 'pack_limits.dart';
 import 'schema.dart';
 
 // The schemas of a content pack. Ids, tags and references use fixed shapes so that a file can never
@@ -55,22 +56,28 @@ abstract final class SchemaIds {
 /// Templates this app can play, and the version of each (what `templateVersion` must not exceed).
 const Map<String, String> supportedTemplates = <String, String>{
   // 1.4: the language fields of LS01 (L5-1: stem, cloze, tap-all, text faces) and, for M10 step 0.4, stage pictures, the row signs `<` `>`
-  // `(` `)`, numbers to 10,000, five choices in Band C and the number answer. One version carries both.
-  'tap_answer': '1.4',
-  'story': '1.0',
+  // `(` `)`, numbers to 10,000, five choices in Band C and the number answer, and `prompt.math`, the number sentence shown in the bubble
+  // (owner, 2026-11-07). One version carries them all: no app has had 1.4 yet. 1.5: the own-name answer of Hebrew Band A (`answer.type`
+  // `name`): the options are made on the device from the child's first name. 1.5 holds everything of 1.4 and is the one a Band A or Band C
+  // item may name.
+  'tap_answer': '1.5',
+  // 1.1: the print-direction modes of Hebrew Band A, `zones` and `follow` (a page that shows its text).
+  'story': '1.1',
   'listen_do': '1.0',
   'sing_along': '1.0',
   'puppet_talk': '1.0',
   // 1.1: the `boxes` mode of LS03 (L5-3): a counter for each unit, then the colour, stress and which-box steps.
   'sound_boxes': '1.1',
   'count_tap': '1.1',
-  'give_n': '1.0',
+  // 1.1: `scene.frame`, the target as a ten-frame (M10).
+  'give_n': '1.1',
   'flash': '1.0',
   'sort_drag': '1.1',
   'build_pattern': '1.1',
   'robot_path': '1.0',
   'shape_builder': '1.0',
-  'number_line': '1.0',
+  // 1.1: `tickStep` and a `tolerance` for a line placed by estimate (M10, X5).
+  'number_line': '1.1',
   'balance': '1.0',
   // 1.1: the language fields of L5-1 (text cells, the model picture) and, for M10, the signs `<` `>` `(` `)` and numbers to 10,000 in a cell.
   'spot_error': '1.1',
@@ -117,6 +124,10 @@ const List<String> domains = <String>['numbers', 'colors', 'shapes', 'logic', 'c
 const String languagesDomain = Course.languagesDomain;
 const List<String> bands = <String>['A', 'B', 'C'];
 
+/// The demonstrations a lesson may open with (docs/design/c1-blocks.md section 6): `ten_is_rod`, ten loose cubes counted, gliding into a column
+/// and snapping into a rod. The app draws it; the lesson only says that it opens with it and carries the line the voice says at the snap.
+const List<String> lessonDemos = <String>['ten_is_rod'];
+
 /// The parent switches a gate may name (docs/languages/frame.md section 1.4): the English "oral only" keeps its gate closed,
 /// the Russian "letters before 5" opens its gate.
 const List<String> gateSwitchNames = <String>['oralOnly', 'lettersBefore5'];
@@ -154,6 +165,25 @@ const List<String> personalTopics = <String>['name', 'age', 'likes', 'family'];
 /// The sides of a two-way skill (yes or no, same or different), and the pairs they come in.
 const List<String> poles = <String>['yes', 'no', 'same', 'different'];
 
+/// The routes of a child in a language course (the parent's setting): a new learner, a heritage speaker, a reader. A child whose route is
+/// not set yet is served as a new learner.
+const List<String> languageRoutes = <String>['new', 'heritage', 'reader'];
+
+/// The routes a lesson's `teach` set may name. The reader is served as a new learner or as a heritage speaker before the lesson is built
+/// (`servedRoute`), so it is no value here. What each route may be shown is held by the validator: a `teach` set only the new learner
+/// (a heritage speaker already knows the words and is never shown a teach screen), a `hear` set only the heritage speaker.
+const List<String> teachRoutes = <String>['new', 'heritage'];
+
+/// The two kinds of set a lesson's `teach` holds: teach screens (the new words, echo) and hearing screens (one hearing of a word, no demand).
+const List<String> teachModes = <String>['teach', 'hear'];
+
+/// How a skill serves a child whose route is `reader`: by its oral route (the placement's strand 1 decides) or as a heritage speaker.
+const List<String> readerServes = <String>['oral', 'heritage'];
+
+/// The order a say step is played in on a route: the model first and then the child (echo), or the picture and the question first, and the
+/// model after a pause (picture).
+const List<String> sayOrders = <String>['echo', 'picture'];
+
 const SString _id = SString(minLength: 3, maxLength: 81, pattern: Patterns.activityId);
 
 /// Every answer carries its lesson id, and `sync-push` takes at most 40 characters (SEC-12).
@@ -189,11 +219,22 @@ const SArray _caption = SArray(
 /// Hebrew frame clip (a two-clip line), and a target word to show in a chip under the line (never inside the Hebrew).
 const Map<String, SField> _lineExtras = <String, SField>{
   'target': SField(_vo, required: false),
+  // A second target clip, played right after the first: a question and its answer, or the two sounds of a same-or-different item. Only
+  // with a first one (the validator).
+  'target2': SField(_vo, required: false),
   'show': SField(SString(minLength: 1, maxLength: _targetTextMax), required: false),
 };
 
 /// The most characters of the text of a tile, a word on show or a revealed word.
 const int _targetTextMax = 40;
+
+/// The number sentence a `tap_answer` shows in the speech bubble under the line it says (1.4; owner, 2026-11-07): the tokens of a row
+/// (`n:40`, `op:+`, `op:=`, `?`), drawn as one left-to-right run with the signs of the app's equation rows. No picture cell.
+const SArray _mathRun = SArray(
+  SString(minLength: 1, maxLength: 10, pattern: r'\?|n:(?:0|[1-9][0-9]{0,3}|10000)|op:[+=x:<>()-]'),
+  minItems: 3,
+  maxItems: 9,
+);
 
 /// A rectangle in a picture, as shares of the picture's width and height (a hotspot, a place, a thing in a room).
 const SObject _at = SObject(<String, SField>{
@@ -218,7 +259,7 @@ const SArray _fileList = SArray(
     'size': SField(SInt(min: 0, max: 16 * 1024 * 1024)),
   }),
   minItems: 1,
-  maxItems: 8000,
+  maxItems: PackLimits.files,
   uniqueKey: 'name',
 );
 
@@ -229,7 +270,7 @@ const SArray _assetFiles = SArray(
     'id': SField(SString(minLength: 1, maxLength: 40, pattern: Patterns.assetId)),
     'file': SField(_fileRef),
   }),
-  maxItems: 2000,
+  maxItems: PackLimits.assets,
   uniqueKey: 'id',
 );
 
@@ -238,7 +279,7 @@ const SArray _voFiles = SArray(
     'id': SField(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId)),
     'file': SField(_fileRef),
   }),
-  maxItems: 4000,
+  maxItems: PackLimits.voiceLines,
   uniqueKey: 'id',
 );
 
@@ -260,17 +301,18 @@ const SObject manifestSchema = SObject(<String, SField>{
   'files': SField(_fileList),
   'assets': SField(_assetFiles),
   'vo': SField(_voFiles),
-  'voPending': SField(SArray(_vo, maxItems: 4000)),
+  // M10: Band C adds lines that wait for their voice (B-45, text only now).
+  'voPending': SField(SArray(_vo, maxItems: PackLimits.voiceLines)),
   'entries': SField(
     SObject(<String, SField>{
-      'activities': SField(SArray(_id, maxItems: 1500)),
-      'lessons': SField(SArray(_lessonId, maxItems: 400)),
-      'skills': SField(SArray(_skill, maxItems: 600)),
-      'misconceptions': SField(SArray(_tag, maxItems: 400)),
+      'activities': SField(SArray(_id, maxItems: PackLimits.activities)),
+      'lessons': SField(SArray(_lessonId, maxItems: PackLimits.lessons)),
+      'skills': SField(SArray(_skill, maxItems: PackLimits.skills)),
+      'misconceptions': SField(SArray(_tag, maxItems: PackLimits.misconceptions)),
       // Characters and mouth cues (M4); absent in packs that have none.
       'characters': SField(SArray(_characterId, maxItems: 20), required: false),
       'cues': SField(
-        SArray(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId), maxItems: 4000),
+        SArray(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId), maxItems: PackLimits.voiceLines),
         required: false,
       ),
       // The gates of a course (docs/languages/frame.md section 3.3.6); absent in packs that have none.
@@ -414,6 +456,9 @@ const SObject skillSchema = SObject(<String, SField>{
   // The strand of the course the skill is in (frame section 4.1: `lis`, `spk`, `pa`, `ph`, `rd`, `wr`; `ol`, `pk`, `dec`; `voc`,
   // `grm`, `pho`, `let`, `rea`, `wri`): the parent's progress view groups a language's skills by it.
   'strand': SField(SString(minLength: 2, maxLength: 4, pattern: r'[a-z]{2,4}'), required: false),
+  // The Russian course: how a child whose route is `reader` is served in this skill (`oral`, the default: as the placement's first strand
+  // says; or as a heritage speaker). Only the Russian course has routes.
+  'readerAs': SField(SEnum(readerServes), required: false),
   'masteryRequires': SField(
     SObject(<String, SField>{
       'successes': SField(SInt(min: 1, max: 20), required: false),
@@ -532,7 +577,9 @@ const SObject misconceptionSchema = SObject(<String, SField>{
   // The family of the tag (frame section 4.1), for the parent view and for the rules that look at a kind of mistake: only a tag of the family
   // SHAPE may stand on an option that has no sound of its own (L5-1). Optional: the lands have none.
   'family': SField(SEnum(tagFamilies), required: false),
-  'skills': SField(SArray(_skill, minItems: 1, maxItems: 10)),
+  // A language tag is used all over its course (eng.lis.sem names 12 skills of Band A alone), so the bound is the size of a course;
+  // the array stays bounded and every entry is a skill id, so nothing a hostile pack puts here can grow.
+  'skills': SField(SArray(_skill, minItems: 1, maxItems: 60)),
   'parentText': SField(SString(minLength: 1, maxLength: 240)),
   // Something a parent can do at home in about five minutes (M7, pack 0.3.0). Plain Hebrew for the parent.
   'homeActivity': SField(_caption, required: false),
@@ -552,9 +599,34 @@ const SObject lessonSchema = SObject(<String, SField>{
   'items': SField(SArray(_id, minItems: 1, maxItems: 12)),
   'estimatedMinutes': SField(SInt(min: 1, max: 30)),
   'celebration': SField(_spoken),
+  // The demonstration the lesson opens with, for a lesson whose items have base-ten blocks, and the line said at its end. Optional.
+  'demo': SField(
+    SObject(<String, SField>{
+      'kind': SField(SEnum(lessonDemos)),
+      'vo': SField(_vo),
+      'caption': SField(_caption),
+    }),
+    required: false,
+  ),
   // The place of the lesson on the path of its land (M9): the island plays the first lesson, in this order, that the
   // child has not finished yet. Lessons without one come last.
   'sequence': SField(SInt(min: 1, max: 500), required: false),
+  // The screens that come before a language lesson's items, each set with the routes that are shown it: teach screens (LS09, echo;
+  // mode `teach`, the default) for a new learner, who is shown the new words before the lesson asks them, and hearing screens (mode
+  // `hear`) for a heritage speaker, who hears a word once before it is asked. The ids are activities of the pack that are teach screens
+  // (`say_it` with `answer.teach`) and are not in `items`.
+  'teach': SField(
+    SArray(
+      SObject(<String, SField>{
+        'items': SField(SArray(_id, minItems: 1, maxItems: 8)),
+        'routes': SField(SArray(SEnum(teachRoutes), minItems: 1, maxItems: 2)),
+        'mode': SField(SEnum(teachModes), required: false),
+      }),
+      minItems: 1,
+      maxItems: 6,
+    ),
+    required: false,
+  ),
 });
 
 // ---- activities ----
@@ -651,6 +723,10 @@ const SObject _stagePicture = SObject(<String, SField>{
   'hundreds': SField(SInt(min: 0, max: 9), required: false),
   'tens': SField(SInt(min: 0, max: 9), required: false),
   'ones': SField(SInt(min: 0, max: 9), required: false),
+  // base_ten, a question about the rods themselves: how many of the tens rods, counted from the left, are lit ("how much is this rod worth?"),
+  // and how many, counted from the right, are crossed out (taken away: 70 - 40).
+  'litRods': SField(SInt(min: 0, max: 9), required: false),
+  'crossedRods': SField(SInt(min: 0, max: 9), required: false),
   // array: rows by columns of objects.
   'rows': SField(SInt(min: 1, max: 12), required: false),
   'columns': SField(SInt(min: 1, max: 12), required: false),
@@ -715,14 +791,47 @@ const Map<String, SField> _numberAnswerFields = <String, SField>{
   ),
 };
 
-/// The `answer` of a `tap_answer`: `choice` (two to five options and the right one, or the list of right ones of a tap-all) or
-/// `number` (the number itself). The validator checks that the rest fits the type.
+/// What an option of the own-name answer is made of at run time (docs/languages/hebrew/band-a-content.md, HEB-A-11): the child's name, a
+/// name of the closed list with the same first letter (NAME-FIRST) or the same number of letters (NAME-LENGTH); or, in a row of letters,
+/// the first letter of the name, its look-alike and its last letter.
+const List<String> nameSources = <String>['own', 'first', 'length', 'lookalike', 'last'];
+
+/// A letter of the Hebrew alphabet and a name made of them (print, no marks): the closed list of names holds nothing else.
+const String _hebrewName = r'[\u05D0-\u05EA]{2,8}';
+
+/// The fields of the own-name answer (`tap_answer` 1.5, HEB-A-11). A pack holds only the rules and the closed list of names, never a name:
+/// the options are made on the device from the child's profile and are never sent, logged, stored or voiced.
+const Map<String, SField> _nameAnswerFields = <String, SField>{
+  // `name`: the options are names; `letter`: a row of three letters of the name.
+  'unit': SField(SEnum(<String>['name', 'letter']), required: false),
+  // The closed list the distractor names come from (never made up at run time).
+  'names': SField(
+    SArray(SString(minLength: 2, maxLength: 8, pattern: _hebrewName), minItems: 20, maxItems: 60),
+    required: false,
+  ),
+  // The look-alike pairs of letters, and the tag a touch on the look-alike carries.
+  'pairs': SField(
+    SArray(
+      SObject(<String, SField>{
+        'a': SField(SString(minLength: 1, maxLength: 1, pattern: r'[\u05D0-\u05EA]')),
+        'b': SField(SString(minLength: 1, maxLength: 1, pattern: r'[\u05D0-\u05EA]')),
+        'misconception': SField(_tag),
+      }),
+      minItems: 1,
+      maxItems: 12,
+    ),
+    required: false,
+  ),
+};
+
+/// The `answer` of a `tap_answer`: `choice` (two to five options and the right one, or the list of right ones of a tap-all), `number` (the
+/// number itself) or `name` (options made on the device from the child's first name). The validator checks that the rest fits the type.
 SObject _tapAnswer(
   Map<String, SField> optionFields, {
   Map<String, SField> answerFields = const <String, SField>{},
   SField correct = const SField(_optionId, required: false),
 }) => SObject(<String, SField>{
-  'type': const SField(SEnum(<String>['choice', 'number'])),
+  'type': const SField(SEnum(<String>['choice', 'number', 'name'])),
   'options': SField(
     SArray(SObject(optionFields), minItems: 2, maxItems: 5, uniqueKey: 'id'),
     required: false,
@@ -760,6 +869,12 @@ const Map<String, SField> _l4Option = <String, SField>{
   // One place, or several for a part that has more than one (both ears, both hands): a touch on any of them is the option.
   'at': SField(SAnyOf(<Schema>[_at, SArray(_at, minItems: 1, maxItems: 4)]), required: false),
   'misconception': SField(_tag, required: false),
+  // Where a touch is taken as this option on a page that shows its text (`story` modes `zones` and `follow`): the picture, the start or the end of
+  // a line (`line1-start`: the end the reading starts at, the right end in Hebrew), the word that is due, or any other word.
+  'zone': SField(
+    SString(minLength: 4, maxLength: 16, pattern: r'picture|word|other|line[1-3]-(?:start|end)'),
+    required: false,
+  ),
 };
 
 /// The `answer` of a template of L4: `type` is `choice` (options and the right one) or `none` (a step that is not scored). The mode
@@ -953,6 +1068,9 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
   ),
   'representation': const SField(SEnum(representations)),
   'variantGroup': const SField(SString(minLength: 3, maxLength: 60, pattern: r'[a-z0-9._-]+')),
+  // The face the item's Hebrew text is set in when it is not the course's usual one: `display` is Secular One (a transfer check of the
+  // same letters or names in the display face). A Hebrew course only; the validator refuses it elsewhere.
+  'font': const SField(SEnum(<String>['display']), required: false),
   'difficulty': const SField(SObject(<String, SField>{'authored': SField(SNum(min: 0, max: 1))})),
   'prompt': const SField(
     SObject(<String, SField>{
@@ -1076,6 +1194,16 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
   ),
   'tap_answer' => SObject(
     _base(<String, SField>{
+      // The question; its `math` is the number sentence it says, shown in numbers in the bubble (1.4).
+      'prompt': const SField(
+        SObject(<String, SField>{
+          'vo': SField(_vo),
+          'caption': SField(_caption),
+          'replayButton': SField(SBool()),
+          'math': SField(_mathRun, required: false),
+          ..._lineExtras,
+        }),
+      ),
       'scene': const SField(
         SObject(<String, SField>{
           'background': SField(_asset, required: false),
@@ -1087,6 +1215,8 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'numeral': SField(SInt(min: 0, max: 10000), required: false),
           // A picture of a number or a measure, drawn on the stage (1.4): blocks, an array, a hundred chart, a clock, a ruler, a column sum.
           'picture': SField(_stagePicture, required: false),
+          // A second picture beside the first, as `group2` is beside `group` (two towers to compare, `40 + 30` as rods): blocks only.
+          'picture2': SField(_stagePicture, required: false),
           // Picture answers on tiles below the stage instead of on it (1.1): when the pictures are the whole point.
           'optionsOnTiles': SField(SBool(), required: false),
           // A written word, unit or letter on the stage that the child reads (1.4, LS01 d): the clip is what "read it to me" plays.
@@ -1137,6 +1267,8 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
             'sprite': const SField(_asset, required: false),
             'numeral': const SField(SInt(min: 0, max: 10000), required: false),
             'set': const SField(_spriteSet, required: false),
+            // Blocks drawn on the tile (1.4): "which one is thirty-four?" with a picture of rods and cubes for each choice. Blocks only.
+            'picture': const SField(_stagePicture, required: false),
             'text': const SField(SString(minLength: 1, maxLength: _targetTextMax), required: false),
             'clip': _optionClip,
             // The word shown under the picture once the answer is accepted (LS01 g), in the course's font.
@@ -1144,8 +1276,11 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
             'label': const SField(SString(minLength: 1, maxLength: 80)),
             'speech': _speechWords,
             'misconception': const SField(_tag, required: false),
+            // The own-name answer (`answer.type` `name`): what the option is made of at run time, from the child's first name.
+            'source': const SField(SEnum(nameSources), required: false),
           },
           answerFields: <String, SField>{
+            ..._nameAnswerFields,
             // Which side of a two-way skill this item is, and the item it is paired with in a check (frame section 2.3).
             'pole': const SField(SEnum(poles), required: false),
             'pairWith': const SField(_id, required: false),
@@ -1327,6 +1462,9 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'hops': SField(SArray(SInt(min: -20, max: 20), maxItems: 6), required: false),
           // The numbers that carry a written numeral; the other ticks are plain marks.
           'labels': SField(SArray(SInt(min: 0, max: 100), maxItems: 21)),
+          // Ticks only at every `tickStep`th number from `from` (a line of 0 to 100 with ticks of 10); the child may still touch any
+          // number between them. Missing is 1: a tick for every number.
+          'tickStep': SField(SInt(min: 1, max: 25), required: false),
         }),
       ),
       'answer': const SField(
@@ -1334,6 +1472,8 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'type': SField(SConst('line')),
           'mode': SField(SEnum(<String>['place', 'jump'])),
           'target': SField(SInt(min: 0, max: 100)),
+          // `place` only (M10, X5): a touch within this many of the target is right ("about 70", an error of 8 or less). Missing is 0.
+          'tolerance': SField(SInt(min: 0, max: 20), required: false),
           'misconception': SField(_tag, required: false),
           // The tag for a child who runs the line from right to left (the mirror of the right answer).
           'mirrorMisconception': SField(_tag, required: false),
@@ -1479,6 +1619,9 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
             SObject(<String, SField>{'sprite': SField(_asset), 'count': SField(SInt(min: 1, max: 20))}),
           ),
           'target': SField(_sprite),
+          // The target is a ten-frame (two for more than ten) instead of the picture: the objects given sit in its cells, row by row
+          // from the left (M10, NUM-B-09: fill the ten-frame). The `target` picture is then only the frame's name for the pack.
+          'frame': SField(SBool(), required: false),
         }),
       ),
       'answer': const SField(
@@ -1606,8 +1749,25 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
                   SArray(SObject(<String, SField>{'at': SField(_at), 'clip': SField(_vo)}), maxItems: 4),
                   required: false,
                 ),
+                // The text of the page, shown (modes `zones` and `follow`, Hebrew Band A, where the child reads nothing and the voice reads):
+                // up to three lines of up to eight words. In `follow` every word has the clip of the voice saying it alone.
+                'lines': SField(
+                  SArray(
+                    SArray(
+                      SObject(<String, SField>{
+                        'text': SField(SString(minLength: 1, maxLength: _targetTextMax)),
+                        'clip': SField(_vo, required: false),
+                      }),
+                      minItems: 1,
+                      maxItems: 8,
+                    ),
+                    minItems: 1,
+                    maxItems: 3,
+                  ),
+                  required: false,
+                ),
               }),
-              minItems: 2,
+              minItems: 1,
               maxItems: 10,
             ),
           ),
@@ -1615,7 +1775,7 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
       ),
       'answer': SField(
         _l4Answer(
-          const <String>['listen', 'dialogic'],
+          const <String>['listen', 'dialogic', 'zones', 'follow'],
           extra: const <String, SField>{
             // The page after which the story stops to ask (counted from 0), and what it asks.
             'pauseAfter': SField(SInt(min: 0, max: 9), required: false),
@@ -1816,6 +1976,13 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           // "I heard:" and "let's say it together" (Hebrew frame lines; the word follows as the line's own target clip).
           'heard': SField(_spoken),
           'together': SField(_spoken),
+          // The Russian course: the order the step is played in on each route, and the line that asks the child to say the word before it
+          // is heard (never with a clip after it: the word is what the child is asked for).
+          'order': SField(
+            SObject(<String, SField>{'new': SField(SEnum(sayOrders)), 'heritage': SField(SEnum(sayOrders))}),
+            required: false,
+          ),
+          'pictureFirst': SField(_spoken, required: false),
         }),
       ),
       'answer': const SField(
@@ -1823,6 +1990,12 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'type': SField(SConst('say_it')),
           // The tap on the picture is a scored listening item when the author marks it; otherwise it is practice.
           'scored': SField(SBool()),
+          // A teach screen of a lesson (`lesson.teach`): the word is shown, not asked. It is never scored, writes nothing, has no
+          // microphone, and the engine does not see it.
+          'teach': SField(SBool(), required: false),
+          // A hearing screen (`lesson.teach` mode `hear`): a teach screen that is only heard: the line and the word once, no microphone, no
+          // "I said it", the word again as often as the child touches the replay button, the picture once the word has been said.
+          'hear': SField(SBool(), required: false),
         }),
       ),
     }),

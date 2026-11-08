@@ -41,6 +41,8 @@ void main() {
 
   /// The stage, the hand's layer over it and the tiles, placed as the lesson screen places them.
   Future<void> host(WidgetTester tester, TemplateSession s, {ActivitySpec on = ActivitySpec.phone}) async {
+    // The board the lesson screen gives the session: a row of many cells on a phone has a tall stage.
+    on = s.layoutFor(on);
     await tester.pumpWidget(
       MaterialApp(
         builder: (BuildContext context, Widget? child) =>
@@ -443,8 +445,16 @@ void main() {
         // 3 + 4 = 8: 15 cubes. Red red blue, red yellow blue, red red: two whole copies of a unit of three.
         for (final (String id, Key shown, int count) in <(String, Key, int)>[
           ('b.mathb03.9', const Key('hint-block'), 3 + 4 + 8),
-          ('b.logb02.1', const Key('hint-bracket'), 2),
-          ('b.csb04.1', const Key('hint-bracket'), 3),
+          (
+            'b.logb02.1',
+            const Key('hint-bracket'),
+            3,
+          ), // the 8 cells are two lines, and the second copy runs over the end of the first
+          (
+            'b.csb04.1',
+            const Key('hint-bracket'),
+            4,
+          ), // 6 cells in two lines of 3: the second copy of 2 runs over the end of the line
         ]) {
           final SpotErrorActivity a = content.activities[id]! as SpotErrorActivity;
           final LessonController c = controllerFor(a);
@@ -505,7 +515,7 @@ void main() {
     );
 
     testWidgets(
-      'all 71 rows: level 2 draws a picture of its family where the row has one, else the light with the sky bar; no cell is marked',
+      'all 73 rows: level 2 draws a picture of its family where the row has one, else the light with the sky bar; no cell is marked',
       (WidgetTester t) async {
         await t.runAsync(warmHintHands);
         final List<String> withoutPicture = <String>[];
@@ -528,7 +538,15 @@ void main() {
         }
         expect(
           withoutPicture,
-          unorderedEquals(<String>['b.shpb03.7', 'b.shpb04.9', 'b15.csa05.1', 'b15.csa05.2']),
+          unorderedEquals(<String>[
+            'b.shpb03.7',
+            'b.shpb04.9',
+            'b15.csa05.1',
+            'b15.csa05.2',
+            // Band C (M10): the +10 rows of the hundred chart have no family picture yet, so they keep the sky bar.
+            'c.numc09.9',
+            'c.numc09.10',
+          ]),
           reason: 'the rows that keep the sky bar',
         );
       },

@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.cat_theme",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "HEB-A-03"
+  ],
+  "parentText": "הילד מקבץ דברים שהולכים יחד (כלב והכדור שלו), ולא דברים מאותו סוג. זה שלב רגיל בגיל הזה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "סדרו יחד צעצועים או כביסה לפי סוג: כל הגרביים כאן, כל הכדורים שם. שאלו: \"מה עוד מאותו סוג?\""
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

@@ -1,0 +1,284 @@
+{
+  "skill": {
+    "id": "HEB-A-06",
+    "strand": "pa",
+    "title": "משלים חרוז בשיר מוכר"
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "rabbit",
+          "clip": "heb-a-w-arnav"
+        },
+        {
+          "pic": "cup",
+          "clip": "heb-a-w-kos"
+        },
+        {
+          "pic": "cat",
+          "clip": "heb-a-w-chatul"
+        }
+      ],
+      "wrong": {
+        "cup": "allit",
+        "cat": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "story",
+      "frame": "v1-play"
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "window",
+          "clip": "heb-a-w-chalon"
+        },
+        {
+          "pic": "sun",
+          "clip": "heb-a-w-shemesh"
+        },
+        {
+          "pic": "basket",
+          "clip": "heb-a-w-sal"
+        }
+      ],
+      "wrong": {
+        "sun": "allit",
+        "basket": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "story",
+      "frame": "v2-play"
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "oven",
+          "clip": "heb-a-w-tanur"
+        },
+        {
+          "pic": "spoon",
+          "clip": "heb-a-w-kaf"
+        },
+        {
+          "pic": "bowl",
+          "clip": "heb-a-w-keara"
+        }
+      ],
+      "wrong": {
+        "spoon": "allit",
+        "bowl": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "story",
+      "frame": "v3-play"
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "elephant",
+          "clip": "heb-a-w-pil"
+        },
+        {
+          "pic": "ring",
+          "clip": "heb-a-w-tabaat"
+        },
+        {
+          "pic": "camel",
+          "clip": "heb-a-w-gamal"
+        }
+      ],
+      "wrong": {
+        "ring": "allit",
+        "camel": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "story",
+      "frame": "v4-open"
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "thread",
+          "clip": "heb-a-w-chut"
+        },
+        {
+          "pic": "apple",
+          "clip": "heb-a-w-tapuach"
+        },
+        {
+          "pic": "needle",
+          "clip": "heb-a-w-machat"
+        }
+      ],
+      "wrong": {
+        "apple": "allit",
+        "needle": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "story",
+      "frame": "v5-play"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "cup",
+          "clip": "heb-a-w-kos"
+        },
+        {
+          "pic": "umbrella",
+          "clip": "heb-a-w-mitriya"
+        },
+        {
+          "pic": "plate",
+          "clip": "heb-a-w-tsalachat"
+        }
+      ],
+      "wrong": {
+        "umbrella": "allit",
+        "plate": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "story",
+      "frame": "v6-play"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "spoon",
+          "clip": "heb-a-w-kaf"
+        },
+        {
+          "pic": "rabbit",
+          "clip": "heb-a-w-arnav"
+        },
+        {
+          "pic": "fork",
+          "clip": "heb-a-w-mazleg"
+        }
+      ],
+      "wrong": {
+        "rabbit": "allit",
+        "fork": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "story",
+      "frame": "v7-play"
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "teacher-sing",
+          "clip": "heb-a-w-mora"
+        },
+        {
+          "pic": "horse",
+          "clip": "heb-a-w-sus"
+        },
+        {
+          "pic": "girl-sing",
+          "clip": "heb-a-w-yalda"
+        }
+      ],
+      "wrong": {
+        "horse": "allit",
+        "girl-sing": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "story",
+      "frame": "v8-play",
+      "purpose": "check",
+      "difficulty": 0.4
+    },
+    {
+      "id": "p1",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "rabbit",
+          "clip": "heb-a-w-arnav"
+        },
+        {
+          "pic": "hat",
+          "clip": "heb-a-w-kova"
+        },
+        {
+          "pic": "tortoise",
+          "clip": "heb-a-w-tsav"
+        }
+      ],
+      "wrong": {
+        "hat": "allit",
+        "tortoise": "sem"
+      },
+      "frame": "v1-play",
+      "purpose": "probe",
+      "ladder": "HL-RHYME",
+      "rep": "story"
+    },
+    {
+      "id": "p2",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "spoon",
+          "clip": "heb-a-w-kaf"
+        },
+        {
+          "pic": "fam-father",
+          "clip": "heb-a-w-aba"
+        },
+        {
+          "pic": "plate",
+          "clip": "heb-a-w-tsalachat"
+        }
+      ],
+      "wrong": {
+        "fam-father": "allit",
+        "plate": "sem"
+      },
+      "frame": "v7-play",
+      "purpose": "probe",
+      "ladder": "HL-RHYME",
+      "rep": "story"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "verses-1",
+      "title": "מַשְׁלִימִים חֲרוּז",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "id": "verses-2",
+      "title": "עוֹד חֲרוּזִים",
+      "items": [
+        "05",
+        "06",
+        "07"
+      ]
+    }
+  ]
+}

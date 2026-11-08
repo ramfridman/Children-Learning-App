@@ -25,19 +25,22 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַעֲתִיקִים אֶת הַסֵּדֶר."
+        "v": "מַעֲתִיקִים אֶת הַסֵּדֶר לְמַטָּה."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "slots": 3,
+    "slots": 6,
     "palette": [
       "asset:balloon_green",
       "asset:balloon_yellow"
     ],
     "model": [
+      "asset:balloon_yellow",
+      "asset:balloon_yellow",
+      "asset:balloon_green",
       "asset:balloon_yellow",
       "asset:balloon_yellow",
       "asset:balloon_green"
@@ -46,6 +49,9 @@
   "answer": {
     "type": "build",
     "sequence": [
+      "asset:balloon_yellow",
+      "asset:balloon_yellow",
+      "asset:balloon_green",
       "asset:balloon_yellow",
       "asset:balloon_yellow",
       "asset:balloon_green"
@@ -80,7 +86,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
           }
         ]
       }
@@ -125,7 +131,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "צָהֹב, צָהֹב, יָרֹק. עַכְשָׁו תּוֹרְכֶם."
+          "v": "צָהֹב, צָהֹב, יָרֹק, צָהֹב, צָהֹב, יָרֹק. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -145,6 +151,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַעֲתִיקִים אֶת הַסֵּדֶר."
+    "altText": "מַעֲתִיקִים אֶת הַסֵּדֶר לְמַטָּה."
   }
 }

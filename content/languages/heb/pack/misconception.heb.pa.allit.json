@@ -1,0 +1,24 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pa.allit",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "RHYME",
+  "skills": [
+    "HEB-A-06",
+    "HEB-A-07"
+  ],
+  "parentText": "הילד בוחר מילה שמתחילה כמו המילה, ולא מילה שנגמרת כמוה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "שחקו בחרוזים באמבטיה או בדרך: אמרו מילה (חתול), ובקשו מילה שנגמרת כמוה (גדול, כחול). הקשיבו יחד לסוף המילה."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story",
+    "pictorial"
+  ]
+}

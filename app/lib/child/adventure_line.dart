@@ -19,7 +19,8 @@ typedef AdventureLine = ({String text, String semantics, String voice});
 AdventureLine? adventureLine(TodaysAdventure stop) {
   final (Str, Str)? pair = switch (stop.reason) {
     AdventureReason.welcome => (He.adventureWelcome, He.adventureWelcomeSemantics),
-    AdventureReason.callForHelp => (He.adventureCallForHelp, He.adventureCallForHelpSemantics),
+    AdventureReason.callForHelp ||
+    AdventureReason.checkVisit => (He.adventureCallForHelp, He.adventureCallForHelpSemantics),
     AdventureReason.sameLand => (He.adventureSameLand, He.adventureSameLandSemantics),
     AdventureReason.otherLand => (He.adventureOtherLand, He.adventureOtherLandSemantics),
     AdventureReason.playAgain => (He.adventurePlayAgain, He.adventurePlayAgainSemantics),

@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-HC-ROW",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-C-09"
+  ],
+  "parentText": "הילד חושב שעשר יותר בלוח המאה הוא המשבצת הבאה בשורה, ולכן 34 ועוד עשר נראה לו 35.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להדפיס לוח מאה ולהניח עליו מקל באורך עשר משבצות: כל פעם שמוסיפים עשר, יורדים שורה אחת באותו טור."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial",
+    "concrete"
+  ]
+}

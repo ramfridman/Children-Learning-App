@@ -99,7 +99,7 @@ class PuppetTalkSession extends ChoiceSession {
   /// The puppet's line again, and then each bubble slowly, the bubble lit while it is said.
   Future<void> _lineAndBubbles() async {
     final Spoken line = activity.promptLine;
-    await sayAndWait(<String>[line.vo, ?line.target]);
+    await sayAndWait(<String>[line.vo, ?line.target, ?line.target2]);
     for (final (int i, ChoiceOption o) in options.indexed) {
       if (disposed) return;
       litTile = i;

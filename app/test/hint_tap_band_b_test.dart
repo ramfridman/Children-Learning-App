@@ -73,10 +73,10 @@ void main() {
   };
 
   group('every Band B tap_answer activity has a plan for each level', () {
-    test('325 activities in 36 skills belong to a family, and the plain pulse is gone', () {
+    test('357 activities in 39 skills belong to a family, and the plain pulse is gone', () {
       final List<TapAnswerActivity> all = bandB();
-      expect(all, hasLength(325));
-      expect(<String>{for (final TapAnswerActivity a in all) a.skillId}, hasLength(36));
+      expect(all, hasLength(357));
+      expect(<String>{for (final TapAnswerActivity a in all) a.skillId}, hasLength(39));
       for (final TapAnswerActivity a in all) {
         expect(
           tapFamilyOf(a.skillId, numeralOnStage: a.stageNumeral != null),
@@ -364,6 +364,29 @@ void main() {
       expect(tens.step, 10);
       expect(tens.gap, 50);
       expect(tens.numberAt(2) - tens.numberAt(1), 10);
+    });
+
+    test('a closed basket: the card holds the number the question says, and the group on the stage is counted on to it', () {
+      for (final (String id, int start, int more) in <(String, int, int)>[
+        ('c.mathb04.11', 7, 2),
+        ('c.mathb04.12', 8, 3),
+      ]) {
+        final TapAnswerActivity a = act(id);
+        final HintPlan l2 = plan(a, 2);
+        expect(l2.rest.whereType<CardMark>(), hasLength(1), reason: id);
+        expect(l2.rest.whereType<SeenMark>(), hasLength(more), reason: '$id: the group is counted');
+        expect(
+          marksOf(l2).whereType<BadgeMark>(),
+          isEmpty,
+          reason: '$id: no number is written before the end of level 3',
+        );
+        final List<int> counted = <int>[
+          for (final HintFrame f in plan(a, 3).frames)
+            ...f.marks.whereType<BadgeMark>().map((BadgeMark b) => b.n),
+        ];
+        expect(counted.take(more), <int>[for (int j = 1; j <= more; j++) start + j], reason: id);
+        expect(counted.last, start + more, reason: '$id: the count ends on the answer');
+      }
     });
 
     test('a number of ten and some: the full frame and the ones, the numeral only at the end', () {

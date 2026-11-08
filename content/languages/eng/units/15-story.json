@@ -1,0 +1,14 @@
+{
+  "skill": {"id": "ENG-A-15", "strand": "lis", "title": "סִפּוּר", "prerequisites": [{"skill": "ENG-A-05"}, {"skill": "ENG-A-03"}]},
+  "items": [
+    {"id": "s01", "kind": "story", "purpose": "practice", "frame": "he-ins-story", "rep": "story", "mode": "listen", "pages": [{"picture": "story-bounce-1", "clips": ["en-st-bounce-1"]}, {"picture": "story-bounce-2", "clips": ["en-st-bounce-2"]}, {"picture": "story-bounce-3", "clips": ["en-st-bounce-3"]}, {"picture": "story-bounce-4", "clips": ["en-st-bounce-4"]}, {"picture": "story-bounce-5", "clips": ["en-st-bounce-5"]}, {"picture": "story-bounce-6", "clips": ["en-st-bounce-6"]}], "words": {"story-bounce-2": ["en-cat", "en-ball"], "story-bounce-3": ["en-duck"], "story-bounce-4": ["en-frog"], "story-bounce-5": ["en-dog", "en-ball"]}},
+    {"id": "d01", "kind": "story", "rep": "story", "ladder": "HL-STORY", "mode": "dialogic", "pages": [{"picture": "story-bounce-1", "clips": ["en-st-bounce-1"]}, {"picture": "story-bounce-2", "clips": ["en-st-bounce-2"]}, {"picture": "story-bounce-3", "clips": ["en-st-bounce-3"]}, {"picture": "story-bounce-4", "clips": ["en-st-bounce-4"]}, {"picture": "story-bounce-5", "clips": ["en-st-bounce-5"]}, {"picture": "story-bounce-6", "clips": ["en-st-bounce-6"]}], "pauseAfter": 1, "question": "he-q-who", "options": ["duck", "cat", "frog"], "wrong": {"cat": "story_recall", "frog": "sem"}, "recast": "en-st-bounce-3"},
+    {"id": "q01", "kind": "tap", "purpose": "check", "frame": "he-q-ball-end", "options": ["dog", "cat", "frog"], "wrong": {"cat": "story_recall", "frog": "story_recall"}, "ladder": "HL-STORY", "rep": "story"},
+    {"id": "q02", "kind": "tap", "purpose": "learn", "frame": "he-q-ball-which", "options": [{"pic": "ball-red", "clip": "en-red"}, {"pic": "ball-blue", "clip": "en-blue"}, {"pic": "ball-yellow", "clip": "en-yellow"}], "wrong": {"ball-blue": "sem", "ball-yellow": "l1_guess"}, "ladder": "HL-STORY", "rep": "story"},
+    {"id": "q03", "kind": "tap", "purpose": "check", "frame": "he-q-ball-first", "options": ["cat", "duck", "dog"], "wrong": {"duck": "story_recall", "dog": "story_recall"}, "ladder": "HL-STORY", "rep": "story"},
+    {"id": "q04", "kind": "tap", "purpose": "learn", "frame": "he-ins-listen-tap", "target": "en-frog", "options": ["frog", "fish", "duck"], "wrong": {"fish": "sem", "duck": "story_recall"}, "ladder": "HL-PIC", "rep": "story", "stage": "story-bounce-4"}
+  ],
+  "lessons": [
+    {"id": "story-1", "title": "הַכַּדּוּר הַקּוֹפֵץ", "items": ["s01", "d01", "q02", "q04"]}
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "lesson/v1",
+  "id": "line-to-100-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד עַל הַצִּיר"
+    }
+  ],
+  "skills": [
+    "NUM-C-06"
+  ],
+  "items": [
+    "c.numc06.9",
+    "c.numc06.10",
+    "c.numc06.11",
+    "c.numc06.12",
+    "c.numc06.13",
+    "c.numc06.14",
+    "c.numc06.15",
+    "c.numc06.16",
+    "c.numc06.17"
+  ],
+  "estimatedMinutes": 8,
+  "sequence": 112,
+  "celebration": {
+    "vo": "vo:celebrate.line_to_100_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! מְצָאתֶם אֶת הַמָּקוֹם עַל הַצִּיר."
+      }
+    ]
+  }
+}

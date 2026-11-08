@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "ENG-A-14",
+  "review": "needs-editor",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְתוֹפְפִים מִלִּים"
+    }
+  ],
+  "strand": "pa",
+  "prerequisites": [
+    {
+      "skill": "ENG-A-05",
+      "weight": 0.8
+    },
+    {
+      "skill": "ENG-A-08",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "eng.pa.syll",
+    "eng.pa.weak_syll"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

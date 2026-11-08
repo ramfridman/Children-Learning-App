@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "eng.food-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "eng",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "אֹכֶל טָעִים"
+    }
+  ],
+  "skills": [
+    "ENG-A-08"
+  ],
+  "items": [
+    "eng.a08.i09",
+    "eng.a08.i10",
+    "eng.a08.p01"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "sequence": 22
+}

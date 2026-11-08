@@ -45,7 +45,8 @@
       {
         "id": "o1",
         "sprite": "asset:ball_size_m",
-        "label": "כַּדּוּר בֵּינוֹנִי"
+        "label": "כַּדּוּר בֵּינוֹנִי",
+        "misconception": "M-PAT-NEXT"
       },
       {
         "id": "o2",
@@ -55,8 +56,7 @@
       {
         "id": "o3",
         "sprite": "asset:ball_size_s",
-        "label": "כַּדּוּר קָטָן",
-        "misconception": "M-SER-ENDS"
+        "label": "כַּדּוּר קָטָן"
       }
     ],
     "correct": "o2",
@@ -76,12 +76,12 @@
     },
     "incorrect": [
       {
-        "when": "misconception:M-SER-ENDS",
-        "vo": "vo:fb.ser_ends",
+        "when": "misconception:M-PAT-NEXT",
+        "vo": "vo:fb.ser.last_biggest",
         "caption": [
           {
             "t": "he",
-            "v": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל."
+            "v": "בַּסּוֹף בָּא הֲכִי גָּדוֹל. בּוֹאוּ נַשְׁוֶה."
           }
         ]
       },
@@ -91,7 +91,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
           }
         ]
       }
@@ -121,11 +121,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.log_seriation.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נַשְׁוֶה כׇּל אֶחָד לַשָּׁכֵן שֶׁלּוֹ."
         }
       ]
     },

@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "eng.pa.syll",
+  "review": "needs-editor",
+  "course": "eng",
+  "kind": "diagnostic",
+  "family": "SEGMENT",
+  "skills": [
+    "ENG-A-14"
+  ],
+  "parentText": "הילד מוסיף לפעמים פעימה למילה באנגלית (כמו \"סְטוֹפָּה\" במקום stop). זה טבעי לדוברי עברית, וזה עובר בתרגול.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "מחאו כפיים יחד על מילים באנגלית, לאט: cat (אחת), apple (שתיים), banana (שלוש)."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "embodied"
+  ]
+}

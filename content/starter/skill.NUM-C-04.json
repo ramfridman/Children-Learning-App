@@ -1,0 +1,42 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-C-04",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "משווים מספרים עד 100"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַשְׁוִים מִסְפָּרִים עַד מֵאָה"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-C-03",
+      "weight": 1
+    },
+    {
+      "skill": "NUM-B-10",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-PV-FACE",
+    "M-SIGN-DIR"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

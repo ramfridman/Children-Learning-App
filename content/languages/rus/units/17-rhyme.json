@@ -1,0 +1,340 @@
+{
+  "skill": {
+    "id": "RUS-A-17",
+    "strand": "pho",
+    "title": "חֲרוּזִים",
+    "prerequisites": [
+      {
+        "skill": "RUS-A-01"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "frame": "f27",
+      "target": "rh1-gap",
+      "options": [
+        {
+          "pic": "body-nose",
+          "clip": "w-nos"
+        },
+        {
+          "pic": "body-legs",
+          "clip": "w-nogi"
+        },
+        {
+          "pic": "body-mouth",
+          "clip": "w-rot"
+        }
+      ],
+      "wrong": {
+        "body-legs": "rhyme_onset",
+        "body-mouth": "sem"
+      }
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "frame": "f27",
+      "target": "rh2-gap",
+      "options": [
+        {
+          "pic": "body-mouth",
+          "clip": "w-rot"
+        },
+        {
+          "pic": "body-arms",
+          "clip": "w-ruki"
+        },
+        {
+          "pic": "body-nose",
+          "clip": "w-nos"
+        }
+      ],
+      "wrong": {
+        "body-arms": "rhyme_onset",
+        "body-nose": "sem"
+      }
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "frame": "f27",
+      "target": "rh3-gap",
+      "options": [
+        {
+          "pic": "whale",
+          "clip": "w-kit"
+        },
+        {
+          "pic": "cat-tomcat",
+          "clip": "w-kot"
+        },
+        {
+          "pic": "fish",
+          "clip": "w-ryba"
+        }
+      ],
+      "wrong": {
+        "cat-tomcat": "rhyme_onset",
+        "fish": "sem"
+      }
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "frame": "f27",
+      "target": "rh4-gap",
+      "options": [
+        {
+          "pic": "sock",
+          "clip": "w-nosok"
+        },
+        {
+          "pic": "body-nose",
+          "clip": "w-nos"
+        },
+        {
+          "pic": "hat-warm",
+          "clip": "w-shapka"
+        }
+      ],
+      "wrong": {
+        "body-nose": "rhyme_onset",
+        "hat-warm": "sem"
+      },
+      "purpose": "check"
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "frame": "f27",
+      "target": "rh5-gap",
+      "options": [
+        {
+          "pic": "book",
+          "clip": "w-knizhka"
+        },
+        {
+          "pic": "doll",
+          "clip": "w-kukla"
+        },
+        {
+          "pic": "ball",
+          "clip": "w-mjach"
+        }
+      ],
+      "wrong": {
+        "doll": "rhyme_onset",
+        "ball": "sem"
+      },
+      "purpose": "check"
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f27",
+      "target": "rh1-gap",
+      "options": [
+        {
+          "pic": "body-nose",
+          "clip": "w-nos"
+        },
+        {
+          "pic": "body-legs",
+          "clip": "w-nogi"
+        },
+        {
+          "pic": "body-eyes",
+          "clip": "w-glaza"
+        }
+      ],
+      "wrong": {
+        "body-legs": "rhyme_onset",
+        "body-eyes": "sem"
+      },
+      "purpose": "probe"
+    },
+    {
+      "id": "p02",
+      "kind": "tap",
+      "frame": "f27",
+      "target": "rh3-gap",
+      "options": [
+        {
+          "pic": "whale",
+          "clip": "w-kit"
+        },
+        {
+          "pic": "cat-tomcat",
+          "clip": "w-kot"
+        },
+        {
+          "pic": "duck",
+          "clip": "w-utka"
+        }
+      ],
+      "wrong": {
+        "cat-tomcat": "rhyme_onset",
+        "duck": "sem"
+      },
+      "purpose": "probe"
+    },
+    {
+      "id": "c01",
+      "kind": "chant",
+      "frame": "f26",
+      "lines": [
+        "rh1",
+        "rh1"
+      ],
+      "pictures": [
+        {
+          "pic": "dog-shaggy"
+        },
+        {
+          "pic": "body-nose"
+        }
+      ],
+      "ladder": null,
+      "rep": "story"
+    },
+    {
+      "id": "c02",
+      "kind": "chant",
+      "frame": "f26",
+      "lines": [
+        "rh2",
+        "rh2"
+      ],
+      "pictures": [
+        {
+          "pic": "cat-tomcat"
+        },
+        {
+          "pic": "body-mouth"
+        }
+      ],
+      "ladder": null,
+      "rep": "story"
+    },
+    {
+      "id": "c03",
+      "kind": "chant",
+      "frame": "f26",
+      "lines": [
+        "rh3",
+        "rh3"
+      ],
+      "pictures": [
+        {
+          "pic": "whale"
+        }
+      ],
+      "ladder": null,
+      "rep": "story"
+    },
+    {
+      "id": "c04",
+      "kind": "chant",
+      "frame": "f26",
+      "lines": [
+        "rh4",
+        "rh4"
+      ],
+      "pictures": [
+        {
+          "pic": "sock"
+        }
+      ],
+      "ladder": null,
+      "rep": "story"
+    },
+    {
+      "id": "c05",
+      "kind": "chant",
+      "frame": "f26",
+      "lines": [
+        "rh5",
+        "rh5"
+      ],
+      "pictures": [
+        {
+          "pic": "book"
+        }
+      ],
+      "ladder": null,
+      "rep": "story"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "rhyme-1",
+      "title": "חֲרוּזִים",
+      "items": [
+        "c01",
+        "01",
+        "c02",
+        "02",
+        "c03",
+        "03"
+      ]
+    },
+    {
+      "id": "rhyme-2",
+      "title": "חֲרוּזִים",
+      "items": [
+        "c04",
+        "c05"
+      ]
+    }
+  ],
+  "routes": {
+    "new": {
+      "note": "each chant heard whole on one visit, its gap item on the next"
+    },
+    "heritage": {
+      "note": "chant and gap item in the same visit"
+    },
+    "reader": {
+      "as": "heritage",
+      "note": "as heritage"
+    }
+  },
+  "docs": [
+    {
+      "kind": "gate",
+      "id": "rus.sounds",
+      "doc": {
+        "requires": [
+          "RUS-A-12"
+        ],
+        "requireAtLeast": [
+          {
+            "skills": [
+              "RUS-A-02",
+              "RUS-A-05",
+              "RUS-A-06",
+              "RUS-A-07",
+              "RUS-A-08",
+              "RUS-A-09"
+            ],
+            "count": 3
+          }
+        ],
+        "holds": [
+          "RUS-A-17",
+          "RUS-A-18",
+          "RUS-A-19",
+          "RUS-A-20"
+        ],
+        "routeBypass": [
+          "heritage",
+          "reader"
+        ]
+      }
+    }
+  ]
+}

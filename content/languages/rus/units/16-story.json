@@ -1,0 +1,325 @@
+{
+  "skill": {
+    "id": "RUS-A-16",
+    "strand": "lis",
+    "title": "סִפּוּר בְּשָׁלוֹשׁ תְּמוּנוֹת",
+    "prerequisites": [
+      {
+        "skill": "RUS-A-04"
+      },
+      {
+        "skill": "RUS-A-12"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "story",
+      "frame": "f21",
+      "mode": "listen",
+      "pages": [
+        {
+          "picture": "st1-p1",
+          "clips": [
+            "st1-t",
+            "st1-1"
+          ]
+        },
+        {
+          "picture": "st1-p2",
+          "clips": [
+            "st1-2"
+          ]
+        },
+        {
+          "picture": "st1-p3",
+          "clips": [
+            "st1-3"
+          ]
+        }
+      ],
+      "words": {
+        "st1-p1": [
+          "w-sobaka",
+          "w-mjach"
+        ]
+      },
+      "rep": "story"
+    },
+    {
+      "id": "02",
+      "kind": "story",
+      "frame": "f21",
+      "mode": "dialogic",
+      "question": "f22",
+      "pages": [
+        {
+          "picture": "st1-p1",
+          "clips": [
+            "st1-1"
+          ]
+        },
+        {
+          "picture": "st1-p2",
+          "clips": [
+            "st1-2"
+          ]
+        },
+        {
+          "picture": "st1-p3",
+          "clips": [
+            "st1-3"
+          ]
+        }
+      ],
+      "pauseAfter": 1,
+      "options": [
+        "st1-p3",
+        "st1-sleep",
+        "st1-cat"
+      ],
+      "wrong": {
+        "st1-sleep": "seq",
+        "st1-cat": "seq"
+      },
+      "recast": "st1-3",
+      "ladder": "HL-1",
+      "rep": "story"
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "frame": "f23",
+      "options": [
+        "dog",
+        "cat",
+        "cow"
+      ],
+      "wrong": {
+        "cat": "seq",
+        "cow": "seq"
+      },
+      "ladder": "HL-1",
+      "rep": "story"
+    },
+    {
+      "id": "04",
+      "kind": "story",
+      "frame": "f21",
+      "mode": "listen",
+      "pages": [
+        {
+          "picture": "st2-p1",
+          "clips": [
+            "st2-t",
+            "st2-1"
+          ]
+        },
+        {
+          "picture": "st2-p2",
+          "clips": [
+            "st2-2"
+          ]
+        },
+        {
+          "picture": "st2-p3",
+          "clips": [
+            "st2-3"
+          ]
+        }
+      ],
+      "words": {
+        "st2-p1": [
+          "w-jozhik"
+        ]
+      },
+      "rep": "story"
+    },
+    {
+      "id": "05",
+      "kind": "story",
+      "frame": "f21",
+      "mode": "dialogic",
+      "question": "f22",
+      "pages": [
+        {
+          "picture": "st2-p1",
+          "clips": [
+            "st2-1"
+          ]
+        },
+        {
+          "picture": "st2-p2",
+          "clips": [
+            "st2-2"
+          ]
+        },
+        {
+          "picture": "st2-p3",
+          "clips": [
+            "st2-3"
+          ]
+        }
+      ],
+      "pauseAfter": 1,
+      "options": [
+        "st2-p3",
+        "st2-sleep",
+        "st2-bear"
+      ],
+      "wrong": {
+        "st2-sleep": "seq",
+        "st2-bear": "seq"
+      },
+      "recast": "st2-3",
+      "ladder": "HL-1",
+      "rep": "story"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "frame": "f24",
+      "purpose": "check",
+      "options": [
+        "apple",
+        "banana",
+        "ball"
+      ],
+      "wrong": {
+        "banana": "seq",
+        "ball": "seq"
+      },
+      "ladder": "HL-1",
+      "rep": "story",
+      "inLesson": true
+    },
+    {
+      "id": "07",
+      "kind": "story",
+      "frame": "f21",
+      "mode": "listen",
+      "pages": [
+        {
+          "picture": "st3-p1",
+          "clips": [
+            "st3-1"
+          ]
+        },
+        {
+          "picture": "st3-p2",
+          "clips": [
+            "st3-2"
+          ]
+        },
+        {
+          "picture": "st3-p3",
+          "clips": [
+            "st3-3"
+          ]
+        }
+      ],
+      "words": {},
+      "rep": "story"
+    },
+    {
+      "id": "08",
+      "kind": "story",
+      "frame": "f21",
+      "mode": "dialogic",
+      "question": "f22",
+      "pages": [
+        {
+          "picture": "st3-p1",
+          "clips": [
+            "st3-1"
+          ]
+        },
+        {
+          "picture": "st3-p2",
+          "clips": [
+            "st3-2"
+          ]
+        },
+        {
+          "picture": "st3-p3",
+          "clips": [
+            "st3-3"
+          ]
+        }
+      ],
+      "pauseAfter": 1,
+      "options": [
+        "st3-p3",
+        "st3-beach",
+        "st3-boy"
+      ],
+      "wrong": {
+        "st3-beach": "seq",
+        "st3-boy": "seq"
+      },
+      "recast": "st3-3",
+      "ladder": "HL-1",
+      "rep": "story"
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "f25",
+      "purpose": "check",
+      "options": [
+        "hat",
+        "scarf",
+        "ball"
+      ],
+      "wrong": {
+        "scarf": "sem",
+        "ball": "seq"
+      },
+      "ladder": "HL-1",
+      "rep": "story",
+      "inLesson": true
+    }
+  ],
+  "lessons": [
+    {
+      "id": "story-1",
+      "title": "סִפּוּר בְּשָׁלוֹשׁ תְּמוּנוֹת",
+      "items": [
+        "01",
+        "02",
+        "03"
+      ]
+    },
+    {
+      "id": "story-2",
+      "title": "סִפּוּר בְּשָׁלוֹשׁ תְּמוּנוֹת",
+      "items": [
+        "04",
+        "05",
+        "06"
+      ]
+    },
+    {
+      "id": "story-3",
+      "title": "סִפּוּר בְּשָׁלוֹשׁ תְּמוּנוֹת",
+      "items": [
+        "07",
+        "08",
+        "09"
+      ]
+    }
+  ],
+  "routes": {
+    "new": {
+      "note": "listen first (01, 04, 07), then dialogic on a later visit"
+    },
+    "heritage": {
+      "note": "dialogic on the first reading (skip 01, 04, 07)"
+    },
+    "reader": {
+      "as": "heritage",
+      "note": "as heritage"
+    }
+  }
+}

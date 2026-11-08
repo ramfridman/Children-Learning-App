@@ -1,0 +1,177 @@
+{
+  "schema": "activity/v1",
+  "id": "c.numc04.15",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.4",
+  "domain": "numbers",
+  "band": "C",
+  "skills": [
+    {
+      "id": "NUM-C-04",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "compare-blocks",
+  "difficulty": {
+    "authored": 0.9
+  },
+  "prompt": {
+    "vo": "vo:c.numc04.13.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר? מִסְתַּכְּלִים עַל הַמּוֹטוֹת וְעַל הַקֻּבִּיּוֹת."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "picture": {
+      "kind": "base_ten",
+      "tens": 5,
+      "ones": 2
+    },
+    "picture2": {
+      "kind": "base_ten",
+      "tens": 4,
+      "ones": 8
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 48,
+        "label": "אַרְבָּעִים וּשְׁמוֹנֶה",
+        "misconception": "M-PV-FACE"
+      },
+      {
+        "id": "o2",
+        "numeral": 25,
+        "label": "עֶשְׂרִים וְחָמֵשׁ",
+        "misconception": "M-NUM-REV"
+      },
+      {
+        "id": "o3",
+        "numeral": 52,
+        "label": "חֲמִשִּׁים וּשְׁתַּיִם"
+      }
+    ],
+    "correct": "o3",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.numc04.15.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! חֲמִשִּׁים וּשְׁתַּיִם גָּדוֹל יוֹתֵר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-NUM-REV",
+        "vo": "vo:fb.num_rev",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PV-FACE",
+        "vo": "vo:fb.pv_face",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַסִּפְרָה הַזֹּאת עוֹמֶדֶת בַּמָּקוֹם שֶׁל הָעֲשָׂרוֹת. בּוֹאוּ נִבְדֹּק כַּמָּה עֲשָׂרוֹת יֵשׁ."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.numc04.13.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מַשְׁוִים קֹדֶם אֶת הָעֲשָׂרוֹת — הַמּוֹטוֹת. רַק אִם יֵשׁ אוֹתוֹ מִסְפָּר מוֹטוֹת, מַשְׁוִים קֻבִּיּוֹת."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.numc04.15.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בַּחֲמִשִּׁים וּשְׁתַּיִם יֵשׁ חֲמִשָּׁה מוֹטוֹת, וּבְאַרְבָּעִים וּשְׁמוֹנֶה יֵשׁ אַרְבָּעָה מוֹטוֹת. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר? מִסְתַּכְּלִים עַל הַמּוֹטוֹת וְעַל הַקֻּבִּיּוֹת."
+  }
+}

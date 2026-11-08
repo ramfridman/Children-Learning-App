@@ -1,7 +1,7 @@
 {
   "schema": "pack-source/v1",
   "id": "starter",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "minAppVersion": "0.5.0",
   "assets": [
     {
@@ -871,6 +871,66 @@
     {
       "id": "note_200",
       "file": "note_200.svg"
+    },
+    {
+      "id": "umbrella",
+      "file": "umbrella.svg"
+    },
+    {
+      "id": "bin_basket",
+      "file": "bin_basket.svg"
+    },
+    {
+      "id": "bin_grass",
+      "file": "bin_grass.svg"
+    },
+    {
+      "id": "clue_not_colour",
+      "file": "clue_not_colour.svg"
+    },
+    {
+      "id": "clue_not_shape",
+      "file": "clue_not_shape.svg"
+    },
+    {
+      "id": "clue_not_red",
+      "file": "clue_not_red.svg"
+    },
+    {
+      "id": "clue_not_blue",
+      "file": "clue_not_blue.svg"
+    },
+    {
+      "id": "clue_not_green",
+      "file": "clue_not_green.svg"
+    },
+    {
+      "id": "clue_not_yellow",
+      "file": "clue_not_yellow.svg"
+    },
+    {
+      "id": "clue_not_orange",
+      "file": "clue_not_orange.svg"
+    },
+    {
+      "id": "clue_not_circle",
+      "file": "clue_not_circle.svg"
+    },
+    {
+      "id": "clue_not_square",
+      "file": "clue_not_square.svg"
+    },
+    {
+      "id": "clue_not_triangle",
+      "file": "clue_not_triangle.svg"
+    },
+    {
+      "id": "tower_7",
+      "file": "tower_7.svg"
+    },
+    {
+      "id": "tower_8",
+      "file": "tower_8.svg"
     }
   ],
   "vo": []

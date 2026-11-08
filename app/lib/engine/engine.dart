@@ -22,6 +22,9 @@ class Engine {
 
   static int dayKey(DateTime t) => t.toUtc().millisecondsSinceEpoch ~/ 86400000;
 
+  /// Whether placement took [id] as known and nothing has been answered in it since.
+  bool isAssumed(String id) => _assumed.contains(id) && !(state.skills[id]?.started ?? false);
+
   /// Skills below the child's placement: taken as probably known (0.85) until shown otherwise.
   void assume(Iterable<String> skillIds) {
     for (final String id in skillIds) {
@@ -234,6 +237,9 @@ class Engine {
       }
     }
 
+    // A visit is a session; answers with no session (tests, the simulator) are taken as one visit a day.
+    final int visit = e.sessionId ?? -(day + 1);
+    bool credited = false;
     if (correct && eff == 0 && !probe) {
       s.successes++;
       if (e.viaSpeech) s.speechSuccesses++;
@@ -241,7 +247,11 @@ class Engine {
       s.successItems.add(item.id);
       if (item.variantGroup.isNotEmpty) s.successGroups.add(item.variantGroup);
       s.representationsPassed.add(item.representation);
-      if (item.checkType != CheckType.practice) s.checksPassed.add(item.checkType);
+      // A balanced pair counts as one check, and only when both its items are right in one visit (C-5).
+      if (item.checkType != CheckType.practice && s.trail.pairComplete(item, visit)) {
+        s.checksPassed.add(item.checkType);
+        credited = true;
+      }
       if (item.writingMode == WritingMode.memory) {
         s.memorySuccessDays.add(day);
         if (item.cue != null) s.memoryCues.add(item.cue!);
@@ -249,6 +259,12 @@ class Engine {
       }
     }
     if (!probe) {
+      s.trail.answered(item.id, visit);
+      if (item.purpose != Purpose.check) {
+        s.trail.taught(visit);
+      } else if (e.result == Result.incorrect || (correct && eff == 0)) {
+        s.trail.checkAnswered(item, visit, wrong: !correct, credited: credited);
+      }
       if (correct) {
         s.failRun = 0;
         s.unsureRun = 0;
@@ -307,7 +323,7 @@ class Engine {
     }
     // A set of words (or the letters of a group) is known when every one of them was answered right once, not when half of
     // them were answered right often (docs/languages/frame.md section 3.3.4).
-    if (node.setCoverage && !catalog.variantGroupsOf(id).every(s.successGroups.contains)) return;
+    if (node.setCoverage && !catalog.coverageGroupsOf(id).every(s.successGroups.contains)) return;
     if (memoryWriting && node.setCoverage && !catalog.memoryGroupsOf(id).every(s.memoryGroups.contains)) {
       return;
     }
@@ -596,7 +612,7 @@ class Engine {
       return catalog.memoryGroupsOf(id).difference(state.skills[id]?.memoryGroups ?? const <String>{});
     }
     final Set<String> done = state.skills[id]?.successGroups ?? const <String>{};
-    return catalog.variantGroupsOf(id).difference(done);
+    return catalog.coverageGroupsOf(id).difference(done);
   }
 
   double retrievability(String id, DateTime now) {

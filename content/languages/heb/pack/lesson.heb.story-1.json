@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.story-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַכַּדּוּר שֶׁל הָאַרְנָב"
+    }
+  ],
+  "skills": [
+    "HEB-A-01"
+  ],
+  "items": [
+    "heb.a01.02",
+    "heb.a01.01",
+    "heb.a01.05"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 6
+}

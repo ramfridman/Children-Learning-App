@@ -1,0 +1,59 @@
+{
+  "perVisit": 8,
+  "thanks": "he-pl-thanks",
+  "celebration": "he-bye",
+  "strands": [
+    {
+      "id": "o",
+      "levels": [
+        {
+          "items": [
+            "a01.pr1",
+            "a03.pr1"
+          ],
+          "assumes": [
+            "ENG-A-01",
+            "ENG-A-03"
+          ]
+        },
+        {
+          "items": [
+            "a05.pr1",
+            "a08.pr1",
+            "a09.pr1"
+          ],
+          "assumes": [
+            "ENG-A-05",
+            "ENG-A-07",
+            "ENG-A-08",
+            "ENG-A-09"
+          ]
+        },
+        {
+          "items": [
+            "a02.pr1",
+            "a04.pr1",
+            "a06.pr1"
+          ],
+          "assumes": [
+            "ENG-A-02",
+            "ENG-A-04",
+            "ENG-A-06"
+          ]
+        },
+        {
+          "items": [
+            "a11.pr1",
+            "a11.pr2",
+            "a16.pr1",
+            "a16.pr2"
+          ],
+          "assumes": [
+            "ENG-A-11",
+            "ENG-A-16"
+          ]
+        }
+      ]
+    }
+  ]
+}

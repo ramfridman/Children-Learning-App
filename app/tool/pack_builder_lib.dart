@@ -170,6 +170,32 @@ Object? _jsonOrNull(Uint8List bytes) {
   }
 }
 
+/// The language courses that have a pack of their own, in the order of the doors.
+const List<String> languageCourses = <String>['eng', 'heb', 'rus'];
+
+/// The pack source folder of a language course, under [languagesFolder] (`content/languages`): `<course>/pack`, as
+/// `tools/lang_pack.py` writes it. Refuses a course that is not one, and a folder whose `pack.json` is not `lang-<course>` of that
+/// course (the validator would refuse it later; this says why at once).
+Directory languageSource(String course, String languagesFolder) {
+  if (!languageCourses.contains(course)) {
+    throw BuildFailed('"$course" is not a language course (${languageCourses.join(', ')})');
+  }
+  final Directory dir = Directory(
+    '$languagesFolder${Platform.pathSeparator}$course${Platform.pathSeparator}pack',
+  );
+  final File descriptor = File('${dir.path}${Platform.pathSeparator}pack.json');
+  if (!descriptor.existsSync()) {
+    throw BuildFailed(
+      'no ${descriptor.path}: run `python tools/lang_pack.py $course` first (the course has no pack source yet)',
+    );
+  }
+  final Object? pack = _jsonOrNull(descriptor.readAsBytesSync());
+  if (pack is! Map<String, Object?> || pack['id'] != 'lang-$course' || pack['course'] != course) {
+    throw BuildFailed('${descriptor.path} must have "id": "lang-$course" and "course": "$course"');
+  }
+  return dir;
+}
+
 /// Builds the pack in [source] and signs it with [key]. The same sources and key always give the same bytes
 /// (Ed25519 signatures are deterministic).
 Future<BuiltPack> buildPack(Directory source, PackKey key) async {
@@ -310,6 +336,7 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     },
   };
   problems.addAll(validatePack(manifest: manifest, docs: docs, files: names.toSet()));
+  problems.addAll(checkPackPictures(files));
   if (problems.isEmpty) problems.addAll(checkCharacterFiles(manifest, docs, files));
   if (problems.isNotEmpty) {
     throw BuildFailed('the pack does not follow the content rules; nothing was signed', problems);

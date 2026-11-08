@@ -1,0 +1,41 @@
+{
+  "schema": "lesson/v1",
+  "id": "tens-and-ones-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד עֲשָׂרוֹת וִיחִידוֹת"
+    }
+  ],
+  "skills": [
+    "NUM-C-03"
+  ],
+  "items": [
+    "c.numc03.9",
+    "c.numc03.10",
+    "c.numc03.11",
+    "c.numc03.12",
+    "c.numc03.13",
+    "c.numc03.14",
+    "c.numc03.15",
+    "c.numc03.16",
+    "c.numc03.17",
+    "c.numc03.26",
+    "c.numc03.27",
+    "c.numc03.28"
+  ],
+  "estimatedMinutes": 7,
+  "sequence": 108,
+  "celebration": {
+    "vo": "vo:celebrate.tens_and_ones_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "נִפְלָא! הָעֲשָׂרוֹת וְהַיְּחִידוֹת מוּכָּרוֹת."
+      }
+    ]
+  }
+}

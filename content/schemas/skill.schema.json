@@ -234,6 +234,13 @@
       "maxLength": 4,
       "pattern": "^(?:[a-z]{2,4})$"
     },
+    "readerAs": {
+      "type": "string",
+      "enum": [
+        "oral",
+        "heritage"
+      ]
+    },
     "masteryRequires": {
       "type": "object",
       "properties": {

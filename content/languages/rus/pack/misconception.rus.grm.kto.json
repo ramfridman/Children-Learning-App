@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "rus.grm.kto",
+  "review": "needs-editor",
+  "course": "rus",
+  "kind": "diagnostic",
+  "family": "GRAMMAR",
+  "skills": [
+    "RUS-A-12"
+  ],
+  "parentText": "ברוסית שואלים кто (\"מי\") על אנשים ועל בעלי חיים, ו־что (\"מה\") על חפצים. בעברית אומרים \"מה זה?\" גם על חתול, ולכן זה מבלבל בהתחלה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "בספר תמונות: על חיה או על אדם שאלו \"Кто это?\", ועל חפץ שאלו \"Что это?\"."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story"
+  ]
+}

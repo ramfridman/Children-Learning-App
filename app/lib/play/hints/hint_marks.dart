@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import '../stage_pictures.dart' show BaseTen, ChartSpec;
+
 // What a hint draws on the stage, as plain data (B-40 part 2). A template (or a family of `tap_answer`) decides what to draw and
 // where; `HintOverlay` (hint_pictures.dart) draws it. Everything is in the stage's own points: (0, 0) is the stage's top left
 // corner, and the numbers are the same on every device (the overlay scales sizes, not places).
@@ -192,6 +194,34 @@ final class BlockMark extends HintMark {
 
   final Rect rect;
   final bool empty;
+}
+
+/// Base-ten blocks (rods and cubes, flats) drawn in [rect], at the places the whole number [full] has; [shown] is how many of each are
+/// on show now (all when null), and with [places] the rest stand there as empty places (a hint builds a number block by block, or leaves
+/// the part still to be found as outlines). A block lies where `BaseTenLayout.forBox(full, rect.size)` puts it.
+final class BlocksMark extends HintMark {
+  const BlocksMark(this.rect, this.full, {this.shown, this.places = false});
+  final Rect rect;
+  final BaseTen full;
+  final BaseTen? shown;
+  final bool places;
+}
+
+/// The cubes of a rod, or ten loose cubes, counted: the first [lit] of [cells] (in the order they are counted) are lit with a warm tint, the
+/// last of them brightest. The blocks themselves are drawn under it (the stage's, or a [BlocksMark]); this only lights them, one by one.
+final class CubeLitMark extends HintMark {
+  const CubeLitMark(this.cells, this.lit);
+
+  final List<Rect> cells;
+  final int lit;
+}
+
+/// A piece of the hundred chart drawn in [rect] (a card, or over the chart of the stage with the same box): the lit cells with their
+/// numbers and the shaded column that a ten-rod is laid down. A cell lies where `ChartLayout.forBox(spec, rect.size)` puts it.
+final class ChartMark extends HintMark {
+  const ChartMark(this.rect, this.spec);
+  final Rect rect;
+  final ChartSpec spec;
 }
 
 /// A place for a coin on the shop's counter (one shekel): a dashed circle, or, when [filled], gold: the shekel is paid.

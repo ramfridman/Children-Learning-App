@@ -342,7 +342,13 @@ void checkLs02Pack({
           'a trace node is in the "requires" of a gate: it never blocks, so no gate may wait for it',
         );
       }
-      for (final Map<String, Object?> a in items) {
+      // The pre-writing strokes (T04, Hebrew A-14: down, across, arch, circle) are the trace items of a node as well, and the same rules
+      // hold for them: practice only. Each stroke is traced with the start dot only once (the engine's `startGuide` of a T04 item).
+      final List<Map<String, Object?>> strokes = <Map<String, Object?>>[
+        for (final Map<String, Object?> a in activities.values)
+          if (a['template'] == 'trace' && !isLetterWrite(a) && _maps(a['skills']).firstOrNull?['id'] == id) a,
+      ];
+      for (final Map<String, Object?> a in <Map<String, Object?>>[...items, ...strokes]) {
         final String at = 'activity.${a['id']}.json';
         if (a['purpose'] == 'probe' || a['purpose'] == 'check') {
           say(
@@ -368,7 +374,7 @@ void checkLs02Pack({
           'the letter $f has no trace with the start dot only: the node could not be practised without it',
         );
       }
-      if (items.isEmpty) say(file, 'writing', 'a trace node has no LS02 item');
+      if (items.isEmpty && strokes.isEmpty) say(file, 'writing', 'a trace node has no trace item');
     } else {
       // A writing node (E-1): copy and memory, mastered by memory successes on two days with both cues.
       if (s['setCoverage'] != true) {

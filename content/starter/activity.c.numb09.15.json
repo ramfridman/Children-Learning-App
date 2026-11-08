@@ -1,0 +1,178 @@
+{
+  "schema": "activity/v1",
+  "id": "c.numb09.15",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "give_n",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "B",
+  "skills": [
+    {
+      "id": "NUM-B-09",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "reverse",
+  "representation": "concrete",
+  "variantGroup": "fill-frame",
+  "difficulty": {
+    "authored": 0.9
+  },
+  "prompt": {
+    "vo": "vo:c.numb09.15.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "שִׂימוּ בַּמִּסְגֶּרֶת שְׁמוֹנָה כּוֹכָבִים."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "source": {
+      "sprite": "asset:star",
+      "count": 10
+    },
+    "target": {
+      "sprite": "asset:basket_target"
+    },
+    "frame": true
+  },
+  "answer": {
+    "type": "give",
+    "n": 8,
+    "classifiers": [
+      {
+        "when": "took_all",
+        "misconception": "M-CNT-CARD"
+      },
+      {
+        "when": "took_fewer",
+        "misconception": "M-CNT-DOUBLE"
+      },
+      {
+        "when": "took_more",
+        "misconception": "M-CNT-SKIP"
+      }
+    ]
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.numb09.15.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁמוֹנֶה! שׁוּרָה מְלֵאָה שֶׁל חָמֵשׁ, וְעוֹד שָׁלוֹשׁ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לָקַחְנוּ אֶת כֻּלָּם. בּוֹאוּ נִסְפֹּר וְנַעֲצֹר בַּמִּסְפָּר שֶׁצָּרִיךְ."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-CNT-SKIP",
+        "vo": "vo:fb.skip_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:c.numb09.15.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שִׂימוּ שְׁמוֹנָה כּוֹכָבִים, אֶחָד בְּכׇל מִשְׁבֶּצֶת. סוֹפְרִים בִּזְמַן שֶׁשָּׂמִים."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "show_fingers",
+      "vo": "vo:c.numb09.15.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בְּשׁוּרָה יֵשׁ חָמֵשׁ מִשְׁבָּצוֹת. מְמַלְּאִים שׁוּרָה אַחַת, וּמוֹסִיפִים עוֹד שָׁלוֹשׁ."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.numb09.15.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חָמֵשׁ בַּשּׁוּרָה הָרִאשׁוֹנָה, וְעוֹד שָׁלוֹשׁ: שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child gives exactly the number asked for, not the whole pile",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "שִׂימוּ בַּמִּסְגֶּרֶת שְׁמוֹנָה כּוֹכָבִים."
+  },
+  "contradicts": "M-CNT-CARD"
+}

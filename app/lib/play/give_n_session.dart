@@ -19,7 +19,8 @@ class GiveLayout {
   GiveLayout(Size size, GiveNActivity a) {
     final double h = size.height;
     final double flowerH = h * 0.86;
-    final double flowerW = flowerH * 0.8;
+    // A ten-frame target is wide (five cells across), the flower is tall.
+    final double flowerW = a.frame ? math.min(size.width * 0.46, flowerH * 1.25) : flowerH * 0.8;
     flower = Rect.fromLTWH(size.width - flowerW - 10, (h - flowerH) / 2, flowerW, flowerH);
     tray = Rect.fromLTRB(10, 8, flower.left - 14, h - 8);
     objectSize = math.min(60, math.max(36, h * 0.34));
@@ -34,6 +35,23 @@ class GiveLayout {
       for (int i = 0; i < n; i++)
         Offset(tray.left + (i % cols + 0.5) * cw, tray.top + (i ~/ cols + 0.5) * ch),
     ];
+    if (a.frame) {
+      // The places are the cells of the frame (two, one above the other, for more than ten), row by row from the left.
+      final int frames = math.max(1, (n / 10).ceil());
+      cell = math.min((flower.width - 9) / 5, (flower.height - 9 * frames - 6 * (frames - 1)) / (2 * frames));
+      final double left = flower.center.dx - (5 * cell + 9) / 2;
+      final double top = flower.center.dy - (frames * (2 * cell + 9) + 6 * (frames - 1)) / 2;
+      slotSize = cell * 0.9;
+      slots = <Offset>[
+        for (int i = 0; i < n; i++)
+          Offset(
+            left + 4.5 + (i % 5 + 0.5) * cell,
+            top + (i ~/ 10) * (2 * cell + 15) + 4.5 + ((i % 10) ~/ 5 + 0.5) * cell,
+          ),
+      ];
+      frameTop = top;
+      return;
+    }
     // The places on the flower where given objects sit.
     // They sit on the petals; a little wider than the flower so that they stay big enough to count.
     final int slotCols = n > 4 ? 3 : 2;
@@ -58,6 +76,10 @@ class GiveLayout {
   late final List<Offset> pile;
   late final double slotSize;
   late final List<Offset> slots;
+
+  /// A ten-frame target: the side of a cell and the top of the first frame (unused for a picture target).
+  double cell = 0;
+  double frameTop = 0;
 }
 
 /// The give-N template (understanding check U4): "give the flower four butterflies". Drag, or touch a
@@ -421,10 +443,28 @@ class _GiveStage extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned.fromRect(
-                rect: l.flower,
-                child: PackSvg(a.assets.svg(a.targetSprite), key: const Key('give-flower')),
-              ),
+              if (a.frame)
+                Positioned.fromRect(
+                  rect: l.flower,
+                  child: Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Column(
+                      key: const Key('give-frame'),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        for (int f = 0; f < math.max(1, (a.sourceCount / 10).ceil()); f++) ...<Widget>[
+                          if (f > 0) const SizedBox(height: 6),
+                          TenFrames(total: 10, filled: 0, cell: l.cell),
+                        ],
+                      ],
+                    ),
+                  ),
+                )
+              else
+                Positioned.fromRect(
+                  rect: l.flower,
+                  child: PackSvg(a.assets.svg(a.targetSprite), key: const Key('give-flower')),
+                ),
               for (int i = 0; i < a.sourceCount; i++) _butterfly(a, l, i),
               Positioned.fill(child: s._hint.body(size)),
               Positioned(

@@ -6,8 +6,8 @@ import '../data/app_database.dart';
 import '../parent/language_settings.dart';
 import '../world/adventure_adapter.dart' show LanguageCourse;
 import '../world/course_path.dart';
+import '../world/todays_adventure.dart' show AdventureKind, AdventureReason, TodaysAdventure;
 import '../world/language_placement.dart';
-import '../world/todays_adventure.dart' show AdventureKind, TodaysAdventure;
 import 'language_providers.dart';
 import 'lesson_launch.dart';
 import 'state.dart';
@@ -54,7 +54,9 @@ Future<VisitOutcome> startCourseVisit(
   }
   final TodaysAdventure what = stop ?? model.stop;
   if (what.kind == AdventureKind.revisit) {
-    final Lesson? mission = courseMission(own, what.skillId!);
+    final Lesson? mission = what.reason == AdventureReason.checkVisit
+        ? courseCheckVisit(own, what.skillId!, band: band)
+        : courseMission(own, what.skillId!);
     return mission == null
         ? VisitOutcome.refused
         : openVisit(context, ref, profileId: childId, ageBand: band, course: course, mission: mission);

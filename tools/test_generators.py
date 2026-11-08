@@ -240,7 +240,12 @@ class StarterPackTest(unittest.TestCase):
         for a in self.acts:
             for f in a['feedback']['incorrect']:
                 if f['when'] == 'misconception:M-SORT-SHIFT' and f['vo'] != 'vo:fb.sort_shift':
-                    self.assertIn(f['vo'], ('vo:fb.sort_shift.shape', 'vo:fb.sort_shift.kind', 'vo:fb.sort_shift.size'), a['id'])
+                    # D39 of the logic sweep: the kind rule where no wrong move shares a colour, and the two "only apples / only
+                    # ducks" spot items, whose only wrong tap is on a cell of the right kind; and the colour sorts of one kind of
+                    # thing (D40 of the same sweep, read by the editor 2026-11-07)
+                    self.assertIn(f['vo'], ('vo:fb.sort_shift.shape', 'vo:fb.sort_shift.kind', 'vo:fb.sort_shift.size',
+                                            'vo:fb.sort_shift.kind_other', 'vo:fb.sort_shift.colour_only', 'vo:fb.spot.not_apple',
+                                            'vo:fb.spot.not_duck'), a['id'])
 
     def test_a_tagged_option_is_never_the_right_one(self):
         for a in self.acts:
@@ -272,6 +277,22 @@ class BandCTest(unittest.TestCase):
         for tag in ('M-SUB-SMALLBIG', 'M-REGROUP-FORGET'):
             author.TAG_FEEDBACK.setdefault(tag, ('vo:fb.' + tag[2:].lower().replace('-', '_'), 'line for ' + tag))
         return author.k_number(a, {'names': {}, 'objects': {}})
+
+    def test_the_bubble_shows_the_sentence_a_question_says_over_blocks(self):
+        """prompt.math (owner, 2026-11-07): the four items of MATH-C-03 that say a sentence over rods ('אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים') carry
+        it as the tokens of a row; the generator refuses a run beside a row (the row already shows it)."""
+        runs = {d['id']: d['prompt'].get('math') for d in load('activity.c.mathc03.1[5-8].json')}
+        self.assertEqual(runs, {
+            'c.mathc03.15': ['n:40', 'op:+', 'n:30', 'op:=', '?'], 'c.mathc03.16': ['n:30', 'op:+', 'n:50', 'op:=', '?'],
+            'c.mathc03.17': ['n:70', 'op:-', 'n:40', 'op:=', '?'], 'c.mathc03.18': ['n:60', 'op:-', 'n:20', 'op:=', '?']})
+        self.assertEqual({d['templateVersion'] for d in load('activity.c.mathc03.1[5-8].json')}, {'1.4'})
+        # no other item has one (the field is for a sentence said and not drawn in a row)
+        with_run = [d['id'] for d in load('activity.*.json') if 'math' in d['prompt']]
+        self.assertEqual(sorted(with_run), sorted(runs))
+        a = {'kind': 'pick', 'id': 'c.mathc03.99', 'skill': 'MATH-C-03', 'band': 'C', 'prompt': 'q', 'options': ['n:7', 'n:8'],
+             'correct': 'n:7', 'row': band_c.tokens(3, '+', 4, '=', '?'), 'math': band_c.tokens(3, '+', 4, '=', '?')}
+        with self.assertRaises(AssertionError):
+            author.k_pick(a, {'names': {}, 'objects': {}})
 
     def test_tokens_are_numbers_signs_and_the_gap(self):
         self.assertEqual(band_c.tokens(52, '-', 27, '=', '?'), ['n:52', 'op:-', 'n:27', 'op:=', '?'])
@@ -397,6 +418,76 @@ class BandCTest(unittest.TestCase):
             band_c.TABLES[:] = saved[0]
             band_b.UNITS = saved[1]
             band_b.MADE[:] = saved[2]
+
+    def test_a_band_c_line_takes_the_id_of_an_earlier_identical_line(self):
+        saved = (dict(author.pool), dict(author.lines))
+        try:
+            author.pool.clear()
+            author.lines.clear()
+            first = author.say('vo:c.test.1.prompt', 'כַּמָּה זֶה?')
+            second = author.say('vo:c.test.2.prompt', 'כַּמָּה זֶה?')
+            other = author.say('vo:c.test.3.prompt', 'כַּמָּה יֵשׁ?')
+            self.assertEqual((first['vo'], second['vo']), ('vo:c.test.1.prompt', 'vo:c.test.1.prompt'))
+            self.assertEqual(second['caption'], first['caption'], 'nothing changes on the screen')
+            self.assertEqual(other['vo'], 'vo:c.test.3.prompt')
+            self.assertNotIn('vo:c.test.2.prompt', author.lines)
+        finally:
+            author.pool.clear()
+            author.pool.update(saved[0])
+            author.lines.clear()
+            author.lines.update(saved[1])
+
+    def test_a_band_a_or_b_id_and_a_shared_id_are_never_renamed(self):
+        saved = (dict(author.pool), dict(author.lines))
+        try:
+            author.pool.clear()
+            author.lines.clear()
+            author.say('vo:c.test.1.prompt', 'כַּמָּה זֶה?')
+            for vo in ('vo:count.apples.7.prompt', 'vo:b.test.1.prompt', 'vo:fb.test', 'vo:hint.test.h1'):
+                self.assertEqual(author.say(vo, 'כַּמָּה זֶה?')['vo'], vo)
+        finally:
+            author.pool.clear()
+            author.pool.update(saved[0])
+            author.lines.clear()
+            author.lines.update(saved[1])
+
+    def test_a_celebration_is_another_clip_than_the_same_words_asked(self):
+        saved = (dict(author.pool), dict(author.lines))
+        try:
+            author.pool.clear()
+            author.lines.clear()
+            asked = author.say('vo:c.test.1.prompt', 'כׇּל הַכָּבוֹד!')
+            cheered = author.say('vo:celebrate.test_one', 'כׇּל הַכָּבוֹד!', pooled=True)
+            again = author.say('vo:celebrate.test_two', 'כׇּל הַכָּבוֹד!', pooled=True)
+            self.assertEqual(asked['vo'], 'vo:c.test.1.prompt')
+            self.assertEqual((cheered['vo'], again['vo']), ('vo:celebrate.test_one', 'vo:celebrate.test_one'))
+        finally:
+            author.pool.clear()
+            author.pool.update(saved[0])
+            author.lines.clear()
+            author.lines.update(saved[1])
+
+    def test_the_starter_pack_has_one_band_c_id_for_each_text(self):
+        """Band C ids of activities (`vo:c.`) never share a text with another such id, and the pool names the id that is used."""
+        texts = {}
+
+        def walk(node, doc):
+            if isinstance(node, dict):
+                if isinstance(node.get('vo'), str) and node['vo'].startswith('vo:c.') and 'caption' in node:
+                    texts.setdefault(json.dumps(node['caption'], ensure_ascii=False), set()).add(node['vo'])
+                for v in node.values():
+                    walk(v, doc)
+            elif isinstance(node, list):
+                for v in node:
+                    walk(v, doc)
+
+        for f in glob.glob(os.path.join(STARTER, 'activity.c.*.json')):
+            walk(json.load(open(f, encoding='utf-8')), f)
+        self.assertGreater(len(texts), 300)
+        self.assertEqual({t: ids for t, ids in texts.items() if len(ids) > 1}, {})
+        pool = json.load(open(os.path.join(ROOT, 'content', 'voice-pool.c.json'), encoding='utf-8'))
+        used = {next(iter(ids)) for ids in texts.values()}
+        self.assertTrue(used <= set(pool.values()), 'every Band C activity id is in the pool')
 
 
 if __name__ == '__main__':

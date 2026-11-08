@@ -1,0 +1,41 @@
+{
+  "schema": "lesson/v1",
+  "id": "ten-more-ten-less",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "עֶשֶׂר יוֹתֵר, עֶשֶׂר פָּחוֹת"
+    }
+  ],
+  "skills": [
+    "NUM-C-09"
+  ],
+  "items": [
+    "c.numc09.1",
+    "c.numc09.2",
+    "c.numc09.3",
+    "c.numc09.4",
+    "c.numc09.5",
+    "c.numc09.6",
+    "c.numc09.7",
+    "c.numc09.8",
+    "c.numc09.9",
+    "c.numc09.10",
+    "c.numc09.11",
+    "c.numc09.12"
+  ],
+  "estimatedMinutes": 8,
+  "sequence": 113,
+  "celebration": {
+    "vo": "vo:celebrate.ten_more_ten_less",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! שׁוּרָה לְמַטָּה, שׁוּרָה לְמַעְלָה."
+      }
+    ]
+  }
+}

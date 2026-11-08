@@ -1,0 +1,262 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a11.04",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.5",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-11",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "transfer",
+  "representation": "symbolic",
+  "variantGroup": "a11-04",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "choose the name or the letter that is the child's own",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "שְׁמוֹת לִבְחֹר מֵהֶן"
+  },
+  "font": "display",
+  "prompt": {
+    "vo": "vo:heb.i_name",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיפֹה הַשֵּׁם שֶׁלָּכֶם?"
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן, זֶהוּ זֶה!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:heb.pk.name_first",
+        "vo": "vo:heb.d_name_first",
+        "caption": [
+          {
+            "t": "he",
+            "v": "גַּם זֶה מַתְחִיל כָּךְ. בּוֹאוּ נִרְאֶה אֶת כׇּל הַשֵּׁם."
+          }
+        ]
+      },
+      {
+        "when": "misconception:heb.pk.name_length",
+        "vo": "vo:heb.d_name_length",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה אָרֹךְ כְּמוֹ הַשֵּׁם שֶׁלָּכֶם, אֲבָל הָאוֹתִיּוֹת אֲחֵרוֹת."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:heb.d_name_start",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַשֵּׁם שֶׁלָּכֶם מַתְחִיל בָּאוֹת הַזֹּאת."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:heb.h_look",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:heb.show",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַעֲשֶׂה אֶת זֶה יַחַד."
+        }
+      ]
+    }
+  ],
+  "scene": {},
+  "answer": {
+    "type": "name",
+    "unit": "name",
+    "options": [
+      {
+        "id": "o1",
+        "label": "שֵׁם",
+        "source": "own"
+      },
+      {
+        "id": "o2",
+        "label": "שֵׁם",
+        "source": "first",
+        "misconception": "heb.pk.name_first"
+      },
+      {
+        "id": "o3",
+        "label": "שֵׁם",
+        "source": "length",
+        "misconception": "heb.pk.name_length"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true,
+    "names": [
+      "אורי",
+      "אלה",
+      "בן",
+      "בר",
+      "גיל",
+      "גפן",
+      "דן",
+      "דנה",
+      "הדר",
+      "הילה",
+      "ורד",
+      "זיו",
+      "זוהר",
+      "חן",
+      "חיים",
+      "טל",
+      "טליה",
+      "יעל",
+      "יונתן",
+      "כרמל",
+      "כנרת",
+      "ליה",
+      "לביא",
+      "מאיה",
+      "מיכאל",
+      "נועה",
+      "ניר",
+      "סהר",
+      "סתיו",
+      "עומר",
+      "עדי",
+      "פז",
+      "פלג",
+      "צור",
+      "צליל",
+      "קרן",
+      "קשת",
+      "רון",
+      "רוני",
+      "שירה",
+      "שקד",
+      "תמר",
+      "תום",
+      "ניצי",
+      "נקודי",
+      "גוני",
+      "קובי",
+      "טימי",
+      "צעדון",
+      "פנינה",
+      "נוגה",
+      "איתן"
+    ],
+    "pairs": [
+      {
+        "a": "ב",
+        "b": "כ",
+        "misconception": "heb.pk.shape_bk"
+      },
+      {
+        "a": "ד",
+        "b": "ר",
+        "misconception": "heb.pk.shape_dr"
+      },
+      {
+        "a": "ה",
+        "b": "ח",
+        "misconception": "heb.pk.shape_hxt"
+      },
+      {
+        "a": "ו",
+        "b": "ז",
+        "misconception": "heb.pk.shape_vzn"
+      },
+      {
+        "a": "ס",
+        "b": "ם",
+        "misconception": "heb.pk.shape_sm"
+      },
+      {
+        "a": "ע",
+        "b": "צ",
+        "misconception": "heb.pk.shape_az"
+      },
+      {
+        "a": "ג",
+        "b": "נ",
+        "misconception": "heb.pk.shape_gn"
+      },
+      {
+        "a": "ט",
+        "b": "מ",
+        "misconception": "heb.pk.shape_tm"
+      }
+    ]
+  }
+}

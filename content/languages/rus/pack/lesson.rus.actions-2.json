@@ -1,0 +1,48 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.actions-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹשִׂים מַה שֶּׁאוֹמְרִים"
+    }
+  ],
+  "skills": [
+    "RUS-A-04"
+  ],
+  "items": [
+    "rus.a04.04",
+    "rus.a04.05",
+    "rus.a04.06",
+    "rus.a04.07"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 12,
+  "teach": [
+    {
+      "items": [
+        "rus.a04.tc04",
+        "rus.a04.tc05",
+        "rus.a04.tc06",
+        "rus.a04.tc07"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach"
+    }
+  ]
+}

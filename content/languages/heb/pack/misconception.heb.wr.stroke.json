@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.wr.stroke",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "STROKE",
+  "skills": [
+    "HEB-A-14"
+  ],
+  "parentText": "הילד מתחיל לפעמים קו מהקצה השני. זה תרגול בלבד.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "ציירו יחד על דף, או באצבע על השולחן: גשם שיורד, דרך, גבעה, שלולית עגולה. סמנו נקודה במקום שבו מתחילים."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "embodied"
+  ]
+}

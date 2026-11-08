@@ -1,0 +1,359 @@
+{
+  "skill": {
+    "id": "RUS-A-19",
+    "strand": "pho",
+    "title": "הַצְּלִיל הָרִאשׁוֹן",
+    "prerequisites": [
+      {
+        "skill": "RUS-A-18"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "frame": "f32",
+      "target": "sf-mama",
+      "options": [
+        {
+          "pic": "mouse",
+          "clip": "w-mysh"
+        },
+        {
+          "pic": "body-nose",
+          "clip": "w-nos"
+        },
+        {
+          "pic": "house",
+          "clip": "w-dom"
+        }
+      ],
+      "wrong": {
+        "body-nose": "sound",
+        "house": "notfirst"
+      },
+      "ladder": "HL-MOUTH"
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "frame": "f32",
+      "target": "sf-sok",
+      "options": [
+        {
+          "pic": "cheese",
+          "clip": "w-syr"
+        },
+        {
+          "pic": "balloon-big",
+          "clip": "w-shar"
+        },
+        {
+          "pic": "body-nose",
+          "clip": "w-nos"
+        }
+      ],
+      "wrong": {
+        "balloon-big": "sound",
+        "body-nose": "notfirst"
+      },
+      "ladder": "HL-MOUTH"
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "frame": "f32",
+      "target": "sf-shapka",
+      "options": [
+        {
+          "pic": "scarf",
+          "clip": "w-sharf"
+        },
+        {
+          "pic": "juice",
+          "clip": "w-sok"
+        },
+        {
+          "pic": "mouse",
+          "clip": "w-mysh"
+        }
+      ],
+      "wrong": {
+        "juice": "sound",
+        "mouse": "notfirst"
+      },
+      "ladder": "HL-MOUTH"
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "frame": "f32",
+      "target": "sf-nos",
+      "options": [
+        {
+          "pic": "body-legs",
+          "clip": "w-nogi"
+        },
+        {
+          "pic": "fam-mother",
+          "clip": "w-mama"
+        },
+        {
+          "pic": "elephant",
+          "clip": "w-slon"
+        }
+      ],
+      "wrong": {
+        "fam-mother": "sound",
+        "elephant": "notfirst"
+      },
+      "ladder": "HL-MOUTH"
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "frame": "f32",
+      "target": "sf-ryba",
+      "options": [
+        {
+          "pic": "body-mouth",
+          "clip": "w-rot"
+        },
+        {
+          "pic": "cat-tomcat",
+          "clip": "w-kot"
+        },
+        {
+          "pic": "balloon-big",
+          "clip": "w-shar"
+        }
+      ],
+      "wrong": {
+        "cat-tomcat": "sound",
+        "balloon-big": "notfirst"
+      },
+      "purpose": "check",
+      "ladder": "HL-MOUTH"
+    },
+    {
+      "id": "12",
+      "kind": "tap",
+      "frame": "f32",
+      "target": "sf-sok",
+      "options": [
+        {
+          "pic": "elephant",
+          "clip": "w-slon"
+        },
+        {
+          "pic": "balloon-big",
+          "clip": "w-shar"
+        },
+        {
+          "pic": "body-nose",
+          "clip": "w-nos"
+        }
+      ],
+      "wrong": {
+        "balloon-big": "sound",
+        "body-nose": "notfirst"
+      },
+      "purpose": "check",
+      "ladder": "HL-MOUTH",
+      "variant": "sf-sok-slon"
+    },
+    {
+      "id": "p01",
+      "kind": "tap",
+      "frame": "f32",
+      "target": "sf-sok",
+      "options": [
+        {
+          "pic": "soup",
+          "clip": "w-sup"
+        },
+        {
+          "pic": "balloon-big",
+          "clip": "w-shar"
+        },
+        {
+          "pic": "body-nose",
+          "clip": "w-nos"
+        }
+      ],
+      "wrong": {
+        "balloon-big": "sound",
+        "body-nose": "notfirst"
+      },
+      "purpose": "probe",
+      "ladder": "HL-MOUTH",
+      "variant": "sf-sok-sup"
+    },
+    {
+      "id": "p02",
+      "kind": "tap",
+      "frame": "f32",
+      "target": "sf-shapka",
+      "options": [
+        {
+          "pic": "trousers",
+          "clip": "w-shtany"
+        },
+        {
+          "pic": "cheese",
+          "clip": "w-syr"
+        },
+        {
+          "pic": "mouse",
+          "clip": "w-mysh"
+        }
+      ],
+      "wrong": {
+        "cheese": "sound",
+        "mouse": "notfirst"
+      },
+      "purpose": "probe",
+      "ladder": "HL-MOUTH",
+      "variant": "sf-shapka-shtany"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "frame": "f33",
+      "target": "w-mysh",
+      "target2": "w-mama",
+      "options": [
+        "mika-yes",
+        "mika-no"
+      ],
+      "wrong": {
+        "mika-no": "yesno"
+      },
+      "pole": "same",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "frame": "f33",
+      "target": "w-sok",
+      "target2": "w-shar",
+      "options": [
+        "mika-no",
+        "mika-yes"
+      ],
+      "wrong": {
+        "mika-yes": "sound"
+      },
+      "pole": "different",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "frame": "f33",
+      "target": "w-shapka",
+      "target2": "w-sharf",
+      "options": [
+        "mika-yes",
+        "mika-no"
+      ],
+      "wrong": {
+        "mika-no": "yesno"
+      },
+      "pole": "same",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "f33",
+      "target": "w-nos",
+      "target2": "w-rot",
+      "options": [
+        "mika-no",
+        "mika-yes"
+      ],
+      "wrong": {
+        "mika-yes": "sound"
+      },
+      "pole": "different",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "frame": "f33",
+      "target": "w-ryba",
+      "target2": "w-rot",
+      "options": [
+        "mika-yes",
+        "mika-no"
+      ],
+      "wrong": {
+        "mika-no": "yesno"
+      },
+      "pole": "same",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    },
+    {
+      "id": "11",
+      "kind": "tap",
+      "frame": "f33",
+      "target": "w-mysh",
+      "target2": "w-nos",
+      "options": [
+        "mika-no",
+        "mika-yes"
+      ],
+      "wrong": {
+        "mika-yes": "sound"
+      },
+      "pole": "different",
+      "ladder": "HL-1",
+      "rep": "pictorial"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "first-sound-1",
+      "title": "הַצְּלִיל הָרִאשׁוֹן",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "id": "first-sound-more",
+      "title": "הַצְּלִיל הָרִאשׁוֹן",
+      "items": [
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11"
+      ]
+    }
+  ],
+  "routes": {
+    "new": {
+      "note": "items 01 to 05 and 12 first; 06 to 11 on a later visit"
+    },
+    "heritage": {
+      "note": "all items mixed"
+    },
+    "reader": {
+      "as": "heritage",
+      "note": "as heritage"
+    }
+  }
+}

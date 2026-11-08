@@ -1,4 +1,4 @@
-import 'package:flutter/painting.dart' show Rect;
+import 'package:flutter/painting.dart' show Offset, Rect;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/play/hints/tap_plans.dart';
 import 'package:nitznutz/play/hints/sprite_outline.dart';
@@ -80,6 +80,63 @@ void main() {
     const String svg = '<svg viewBox="0 0 100 100"><rect x="10" y="20" width="30" height="40"/></svg>';
     expect(inkBoxOf(svg), const Rect.fromLTRB(0.1, 0.2, 0.4, 0.6));
     expect(outlineOf(svg)!.sides, 4);
+  });
+
+  group('outlineOf reads a path of straight sides', () {
+    String svg(String d) => '<svg viewBox="0 0 100 100"><path d="$d"/><path d="M5 5 Q9 9 12 3"/></svg>';
+
+    test('a triangle (M L H Z) has three corners and comes back to the first', () {
+      final SpriteOutline o = outlineOf(svg('M50 12 L90 84 H10 Z'))!;
+      expect(o.closed, isTrue);
+      expect(o.sides, 3);
+      expect(o.points, <Offset>[const Offset(0.5, 0.12), const Offset(0.9, 0.84), const Offset(0.1, 0.84)]);
+    });
+
+    test('a rounded square is read at the four corners where its straight sides would meet', () {
+      final SpriteOutline o = outlineOf(
+        svg(
+          'M14 18 C14 15.5 15.5 14 18 14 H82 C84.5 14 86 15.5 86 18 V82 C86 84.5 84.5 86 82 86 '
+          'H18 C15.5 86 14 84.5 14 82 Z',
+        ),
+      )!;
+      expect(o.sides, 4);
+      final List<Offset> want = <Offset>[
+        const Offset(0.14, 0.14),
+        const Offset(0.86, 0.14),
+        const Offset(0.86, 0.86),
+        const Offset(0.14, 0.86),
+      ];
+      for (int i = 0; i < 4; i++) {
+        expect((o.points[i] - want[i]).distance, lessThan(1e-9), reason: 'corner $i: ${o.points[i]}');
+      }
+    });
+
+    test('a path that does not close has one side fewer than corners', () {
+      final SpriteOutline o = outlineOf(svg('M12 84 L50 14 L88 84 L24 84'))!;
+      expect(o.closed, isFalse);
+      expect(o.sides, 3);
+    });
+
+    test('only the first path is the outline: a circle drawn with a highlight stroke has no corners', () {
+      expect(outlineOf(svg('M12 50 A38 38 0 1 1 88 50 A38 38 0 1 1 12 50 Z')), isNull);
+    });
+
+    test(
+      'a relative or unknown command, two curves in a row, a second subpath or a stray number give null',
+      () {
+        for (final String d in <String>[
+          'm 10 10 l 5 5 z',
+          'M10 10 L20 10 S30 30 10 20 Z',
+          'M10 10 C10 5 15 0 20 0 C25 0 30 5 30 10 Z',
+          'M10 10 L20 10 L20 20 Z M40 40 L50 40 L50 50 Z',
+          'M10 10 L20 10 30 L20 20 Z',
+          'L10 10 L20 20 Z',
+          'M10 10 Z',
+        ]) {
+          expect(outlineOf(svg(d)), isNull, reason: d);
+        }
+      },
+    );
   });
 
   test('cropToInk and the pack viewBox check survive a double dot', () {

@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.cat_look",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "HEB-A-03"
+  ],
+  "parentText": "הילד מקבץ לפי צבע או צורה, ולא לפי סוג.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "מיינו יחד חפצים מהבית שצבעם דומה והם מסוגים שונים (בננה צהובה וכדור צהוב). שאלו \"מה זה באמת?\", ושימו כל דבר עם הסוג שלו."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

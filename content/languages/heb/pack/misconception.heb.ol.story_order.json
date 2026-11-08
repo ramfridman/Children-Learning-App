@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.story_order",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "HEB-A-13"
+  ],
+  "parentText": "הילד עוד מתבלבל בסדר של מה שקרה בסיפור.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "אחרי סיפור, ספרו אותו יחד בשלושה חלקים: קודם, אחר כך, בסוף. אפשר לסדר שלושה צעצועים לפי הסדר."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story",
+    "pictorial"
+  ]
+}

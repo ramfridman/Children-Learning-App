@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.hard-soft-more2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "צְלִילִים דּוֹמִים"
+    }
+  ],
+  "skills": [
+    "RUS-A-20"
+  ],
+  "items": [
+    "rus.a20.13",
+    "rus.a20.14",
+    "rus.a20.15",
+    "rus.a20.16"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 69
+}

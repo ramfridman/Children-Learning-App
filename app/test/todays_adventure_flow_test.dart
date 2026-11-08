@@ -4,6 +4,7 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/content/bundled_packs.dart';
 import 'package:nitznutz/child/home_island_screen.dart';
 import 'package:nitznutz/content/engine_adapter.dart';
 import 'package:nitznutz/content/models.dart';
@@ -52,7 +53,7 @@ Future<void> finishLessons(AppRig rig, PackContent content, List<String> ids) as
         at: at,
         profileId: 'p-1',
         packId: 'starter',
-        packVersion: '0.10.0',
+        packVersion: bundledStarterVersion,
         lessonId: Value<String>(id),
         activityId: lesson.itemIds.first,
         activityRevision: 1,
@@ -86,7 +87,7 @@ Future<void> seedDueCheck(AppRig rig, PackContent content) async {
           at: DateTime.utc(2026, 9, 1, 9).add(Duration(days: day, minutes: n++)),
           profileId: 'p-1',
           packId: 'starter',
-          packVersion: '0.10.0',
+          packVersion: bundledStarterVersion,
           activityId: item.id,
           activityRevision: 1,
           template: 'count_tap',
@@ -219,7 +220,7 @@ void main() {
           at: DateTime.utc(2026, 10, 24, 9, n++),
           profileId: 'p-1',
           packId: 'starter',
-          packVersion: '0.10.0',
+          packVersion: bundledStarterVersion,
           lessonId: const Value<String>(placementId),
           activityId: item,
           activityRevision: 1,

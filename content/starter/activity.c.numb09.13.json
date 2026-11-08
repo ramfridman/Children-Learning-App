@@ -1,0 +1,174 @@
+{
+  "schema": "activity/v1",
+  "id": "c.numb09.13",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "B",
+  "skills": [
+    {
+      "id": "NUM-B-09",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "symbolic",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.9
+  },
+  "prompt": {
+    "vo": "vo:c.mathc01.2.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיזֶה מִסְפָּר חָסֵר?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "row": [
+      "n:4",
+      "op:+",
+      "?",
+      "op:=",
+      "n:10"
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 14,
+        "label": "אַרְבַּע עֶשְׂרֵה",
+        "misconception": "M-EQ-OPER"
+      },
+      {
+        "id": "o2",
+        "numeral": 6,
+        "label": "שֵׁשׁ"
+      },
+      {
+        "id": "o3",
+        "numeral": 7,
+        "label": "שֶׁבַע",
+        "misconception": "M-CNT-DOUBLE"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.numb09.13.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שֵׁשׁ! אַרְבַּע וְעוֹד שֵׁשׁ שָׁוֶה עֶשֶׂר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-EQ-OPER",
+        "vo": "vo:fb.eq_oper",
+        "caption": [
+          {
+            "t": "he",
+            "v": "סִימַן הַשָּׁוֶה אוֹמֵר: בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.numb09.13.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חִשְׁבוּ עַל מִסְגֶּרֶת שֶׁל עֶשֶׂר עִם אַרְבַּע בִּפְנִים. כַּמָּה מִשְׁבָּצוֹת רֵיקוֹת?"
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.numb09.13.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַרְבַּע וְעוֹד שֵׁשׁ שָׁוֶה עֶשֶׂר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שֵׁשׁ."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "אֵיזֶה מִסְפָּר חָסֵר?"
+  }
+}

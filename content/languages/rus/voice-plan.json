@@ -1,0 +1,2080 @@
+{
+  "course": "rus",
+  "pack": "lang-rus",
+  "frameLines": [
+    {
+      "id": "f01",
+      "vo": "vo:rus.f01",
+      "he": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה.",
+      "voice": "הקשיבו, וגעו בתמונה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f02",
+      "vo": "vo:rus.f02",
+      "he": "הַקְשִׁיבוּ שׁוּב.",
+      "voice": "הקשיבו שוב.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f03",
+      "vo": "vo:rus.f03",
+      "he": "בּוֹאוּ נֹאמַר יַחַד.",
+      "voice": "בואו נגיד יחד.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f04",
+      "vo": "vo:rus.f04",
+      "he": "שָׁמַעְתִּי:",
+      "voice": "שמעתי:",
+      "review": "text-ready"
+    },
+    {
+      "id": "f06",
+      "vo": "vo:rus.f06",
+      "he": "מַה זֶּה? נַסּוּ לְהַגִּיד בְּרוּסִית.",
+      "voice": "מה זה? נסו להגיד ברוסית.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f07",
+      "vo": "vo:rus.f07",
+      "he": "מָה עוֹנִים לֶחָבֵר?",
+      "voice": "מה עונים לֶחָבֵר?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f08",
+      "vo": "vo:rus.f08",
+      "he": "הַקְשִׁיבוּ, וּמִצְאוּ אֶת זֶה אֵצֶל הֶחָבֵר.",
+      "voice": "הקשיבו, ומצאו את זה אצל החבר.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f09",
+      "vo": "vo:rus.f09",
+      "he": "הַקְשִׁיבוּ, וְעִזְרוּ לֶחָבֵר לַעֲשׂוֹת אֶת זֶה.",
+      "voice": "הקשיבו, ועזרו לֶחָבֵר לַעֲשׂוֹת את זה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f10",
+      "vo": "vo:rus.f10",
+      "he": "עַכְשָׁו אַתֶּם! עֲשׂוּ אֶת זֶה, וְאָז גְּעוּ בַּכַּפְתּוֹר.",
+      "voice": "עכשיו אתם, עֲשׂוּ את זה, ואז געו בכפתור.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f11",
+      "vo": "vo:rus.f11",
+      "he": "הַקְשִׁיבוּ, וְשִׂימוּ אֶת זֶה בַּצַּלַּחַת שֶׁל הֶחָבֵר.",
+      "voice": "הקשיבו, וְשִׂימוּ את זה בצלחת של החבר.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f12",
+      "vo": "vo:rus.f12",
+      "he": "הַקְשִׁיבוּ, וְשִׂימוּ אֶת זֶה בַּקֻּפְסָה.",
+      "voice": "הקשיבו, וְשִׂימוּ את זה בקופסה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f13",
+      "vo": "vo:rus.f13",
+      "he": "הַקְשִׁיבוּ, וְהַלְבִּישׁוּ אֶת הֶחָבֵר.",
+      "voice": "הקשיבו, והלבישו את החבר.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f14",
+      "vo": "vo:rus.f14",
+      "he": "הַקְשִׁיבוּ, וּגְעוּ בַּצֶּבַע.",
+      "voice": "הקשיבו, וגעו בצבע.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f15",
+      "vo": "vo:rus.f15",
+      "he": "בּוֹאוּ נִסְפֹּר יַחַד.",
+      "voice": "בואו נספור יחד.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f16",
+      "vo": "vo:rus.f16",
+      "he": "הַקְשִׁיבוּ לַמִּסְפָּר, וּגְעוּ בַּתְּמוּנָה.",
+      "voice": "הקשיבו למספר, וגעו בתמונה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f17",
+      "vo": "vo:rus.f17",
+      "he": "הַקְשִׁיבוּ לַשְּׁאֵלָה, וּגְעוּ בַּתְּשׁוּבָה.",
+      "voice": "הקשיבו לשאלה, וגעו בתשובה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f18",
+      "vo": "vo:rus.f18",
+      "he": "זֶה נָכוֹן?",
+      "voice": "זה נכון?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f19",
+      "vo": "vo:rus.f19",
+      "he": "הַקְשִׁיבוּ, וּמִצְאוּ אֶת זֶה בַּחֶדֶר.",
+      "voice": "הקשיבו, ומצאו את זה בחדר.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f20",
+      "vo": "vo:rus.f20",
+      "he": "הַקְשִׁיבוּ לַבַּקָּשָׁה, וּתְנוּ לֶחָבֵר אֶת מַה שֶּׁמְּבַקְשִׁים.",
+      "voice": "הקשיבו לבקשה, ותנו לֶחָבֵר את מה שמבקשים.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f21",
+      "vo": "vo:rus.f21",
+      "he": "בּוֹאוּ נַקְשִׁיב לְסִפּוּר.",
+      "voice": "בואו נקשיב לסיפור.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f22",
+      "vo": "vo:rus.f22",
+      "he": "מַה יִּקְרֶה עַכְשָׁו?",
+      "voice": "מה יקרה עכשיו?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f23",
+      "vo": "vo:rus.f23",
+      "he": "מִי הָיָה בַּסִּפּוּר?",
+      "voice": "מי היה בסיפור?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f24",
+      "vo": "vo:rus.f24",
+      "he": "מַה מָּצָא הַקִּפּוֹד?",
+      "voice": "מה מצא הקיפוד?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f25",
+      "vo": "vo:rus.f25",
+      "he": "מָה חִפְּשָׂה הַיַּלְדָּה?",
+      "voice": "מה חִפְּשָׂה הילדה?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f26",
+      "vo": "vo:rus.f26",
+      "he": "הַקְשִׁיבוּ לַשִּׁיר.",
+      "voice": "הקשיבו לשיר.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f27",
+      "vo": "vo:rus.f27",
+      "he": "אֵיזוֹ מִלָּה מַתְאִימָה לַסּוֹף?",
+      "voice": "איזו מילה מתאימה לסוף?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f28",
+      "vo": "vo:rus.f28",
+      "he": "תּוֹפְפוּ עַל הַתֹּף: פַּעַם אַחַת לְכׇל חֵלֶק בַּמִּלָּה.",
+      "voice": "תופפו על התוף: פעם אַחַת לכל חלק במילה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f29",
+      "vo": "vo:rus.f29",
+      "he": "בְּאֵיזוֹ תְּמוּנָה יֵשׁ שָׁלוֹשׁ מְחִיאוֹת כַּפַּיִם?",
+      "voice": "באיזו תמונה יש שָׁלוֹשׁ מחיאות כפיים?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f30",
+      "vo": "vo:rus.f30",
+      "he": "בְּאֵיזוֹ תְּמוּנָה יֵשׁ שְׁתֵּי מְחִיאוֹת כַּפַּיִם?",
+      "voice": "באיזו תמונה יש שְׁתֵּי מחיאות כפיים?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f31",
+      "vo": "vo:rus.f31",
+      "he": "בְּאֵיזוֹ תְּמוּנָה יֵשׁ מְחִיאַת כַּפַּיִם אַחַת?",
+      "voice": "באיזו תמונה יש מחיאת כפיים אַחַת?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f32",
+      "vo": "vo:rus.f32",
+      "he": "בְּאֵיזוֹ תְּמוּנָה הַמִּלָּה מַתְחִילָה אוֹתוֹ דָּבָר?",
+      "voice": "באיזו תמונה המילה מתחילה אותו דבר?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f33",
+      "vo": "vo:rus.f33",
+      "he": "הַמִּלִּים מַתְחִילוֹת אוֹתוֹ דָּבָר?",
+      "voice": "המילים מתחילות אותו דבר?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f34",
+      "vo": "vo:rus.f34",
+      "he": "הַקְשִׁיבוּ לִשְׁתֵּי הַמִּלִּים. אוֹתוֹ דָּבָר, אוֹ לֹא?",
+      "voice": "הקשיבו לִשְׁתֵּי המילים. אותו דבר, או לא?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f35",
+      "vo": "vo:rus.f35",
+      "he": "אֵיזוֹ מִלָּה שְׁמַעְתֶּם?",
+      "voice": "איזו מילה שמעתם?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f36",
+      "vo": "vo:rus.f36",
+      "he": "הִסְתַּכְּלוּ עַל הַפֶּה.",
+      "voice": "הסתכלו על הפה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f38",
+      "vo": "vo:rus.f38",
+      "he": "אֵיזוֹ מִלָּה מַתְאִימָה לַתְּמוּנָה?",
+      "voice": "איזו מילה מתאימה לתמונה?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f39",
+      "vo": "vo:rus.f39",
+      "he": "מִישֶׁהוּ בָּא, אוֹ הוֹלֵךְ?",
+      "voice": "מישהו בא, או הולך?",
+      "review": "text-ready"
+    },
+    {
+      "id": "f40",
+      "vo": "vo:rus.f40",
+      "he": "כַּמָּה יֵשׁ? הַקְשִׁיבוּ לַכַּפְתּוֹרִים, וּגְעוּ בַּמִּסְפָּר הַנָּכוֹן.",
+      "voice": "כמה יש? הקשיבו לכפתורים, וגעו במספר הנכון.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f41",
+      "vo": "vo:rus.f41",
+      "he": "הַקְשִׁיבוּ:",
+      "voice": "הקשיבו:",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-batsal",
+      "vo": "vo:rus.gl_batsal",
+      "he": "בָּצָל.",
+      "voice": "בצל.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-dubi",
+      "vo": "vo:rus.gl_dubi",
+      "he": "דֻּבִּי.",
+      "voice": "דובי.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-kiftsu",
+      "vo": "vo:rus.gl_kiftsu",
+      "he": "קִפְצוּ.",
+      "voice": "קִפְצוּ.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-kova",
+      "vo": "vo:rus.gl_kova",
+      "he": "כּוֹבַע.",
+      "voice": "כובע.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-lehitraot",
+      "vo": "vo:rus.gl_lehitraot",
+      "he": "לְהִתְרָאוֹת.",
+      "voice": "להתראות.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-livjatan",
+      "vo": "vo:rus.gl_livjatan",
+      "he": "לִוְיָתָן.",
+      "voice": "לִוְיָתָן.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-shalom",
+      "vo": "vo:rus.gl_shalom",
+      "he": "שָׁלוֹם.",
+      "voice": "שלום.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-shvu",
+      "vo": "vo:rus.gl_shvu",
+      "he": "שְׁבוּ.",
+      "voice": "שְׁבוּ.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-ze-kadur",
+      "vo": "vo:rus.gl_ze_kadur",
+      "he": "זֶה כַּדּוּר.",
+      "voice": "זה כדור.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-ze-tapuach",
+      "vo": "vo:rus.gl_ze_tapuach",
+      "he": "זֶה תַּפּוּחַ.",
+      "voice": "זה תפוח.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-zot-chatula",
+      "vo": "vo:rus.gl_zot_chatula",
+      "he": "זֹאת חֲתוּלָה.",
+      "voice": "זאת חתולה.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-zot-ima",
+      "vo": "vo:rus.gl_zot_ima",
+      "he": "זֹאת אִמָּא.",
+      "voice": "זאת אמא.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "he-fb-check",
+      "vo": "vo:rus.he_fb_check",
+      "he": "הַמְּמ… בּוֹאוּ נִבְדֹּק.",
+      "voice": "המממ… בואו נבדוק.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-1",
+      "vo": "vo:rus.he_fb_right_1",
+      "he": "נָכוֹן!",
+      "voice": "נכון.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-2",
+      "vo": "vo:rus.he_fb_right_2",
+      "he": "כֵּן!",
+      "voice": "כן.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-3",
+      "vo": "vo:rus.he_fb_right_3",
+      "he": "יָפֶה מְאֹד!",
+      "voice": "יפה מאוד.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-4",
+      "vo": "vo:rus.he_fb_right_4",
+      "he": "מְצָאתֶם!",
+      "voice": "מצאתם.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-5",
+      "vo": "vo:rus.he_fb_right_5",
+      "he": "בְּדִיּוּק!",
+      "voice": "בדיוק.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-6",
+      "vo": "vo:rus.he_fb_right_6",
+      "he": "שְׁמַעְתֶּם טוֹב!",
+      "voice": "שמעתם טוב.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-7",
+      "vo": "vo:rus.he_fb_right_7",
+      "he": "הִקְשַׁבְתֶּם יָפֶה!",
+      "voice": "הקשבתם יפה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-8",
+      "vo": "vo:rus.he_fb_right_8",
+      "he": "כׇּל הַכָּבוֹד!",
+      "voice": "כל הכבוד.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-hint-showme",
+      "vo": "vo:rus.he_hint_showme",
+      "he": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים.",
+      "voice": "הסתכלו איך עוֹשִׂים.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-pl-thanks",
+      "vo": "vo:rus.he_pl_thanks",
+      "he": "תּוֹדָה!",
+      "voice": "תודה.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "pass",
+      "vo": "vo:rus.pass",
+      "he": "זֶה בְּסֵדֶר!",
+      "voice": "זה בסדר!",
+      "review": "needs-editor"
+    },
+    {
+      "id": "personal",
+      "vo": "vo:rus.personal",
+      "he": "אֶפְשָׁר לַעֲנוֹת בִּתְמוּנָה, אוֹ בְּקוֹל. אֶפְשָׁר גַּם לְדַלֵּג.",
+      "voice": "אפשר לענות בתמונה, או בקול. אפשר גם לדלג.",
+      "review": "text-ready"
+    }
+  ],
+  "targetClips": [
+    {
+      "id": "ch-chto-eto",
+      "vo": "vo:rus.ch_chto_eto",
+      "shown": "Что это?",
+      "say": "Что э́то?",
+      "ipa": "[ʂto ˈɛtə]"
+    },
+    {
+      "id": "ch-daj-banan",
+      "vo": "vo:rus.ch_daj_banan",
+      "shown": "Дай, пожалуйста, банан.",
+      "say": "Дай, пожа́луйста, бана́н.",
+      "ipa": "[daj pɐˈʐaɫəstə bɐˈnan]"
+    },
+    {
+      "id": "ch-daj-hleb",
+      "vo": "vo:rus.ch_daj_hleb",
+      "shown": "Дай, пожалуйста, хлеб.",
+      "say": "Дай, пожа́луйста, хлеб.",
+      "ipa": "[daj pɐˈʐaɫəstə ˈxlʲep]"
+    },
+    {
+      "id": "ch-daj-jabloko",
+      "vo": "vo:rus.ch_daj_jabloko",
+      "shown": "Дай, пожалуйста, яблоко.",
+      "say": "Дай, пожа́луйста, я́блоко.",
+      "ipa": "[daj pɐˈʐaɫəstə ˈjabləkə]"
+    },
+    {
+      "id": "ch-daj-karandash",
+      "vo": "vo:rus.ch_daj_karandash",
+      "shown": "Дай, пожалуйста, карандаш.",
+      "say": "Дай, пожа́луйста, каранда́ш.",
+      "ipa": "[daj pɐˈʐaɫəstə kərɐnˈdaʂ]"
+    },
+    {
+      "id": "ch-daj-mjach",
+      "vo": "vo:rus.ch_daj_mjach",
+      "shown": "Дай, пожалуйста, мяч.",
+      "say": "Дай, пожа́луйста, мяч.",
+      "ipa": "[daj pɐˈʐaɫəstə ˈmʲætɕ]"
+    },
+    {
+      "id": "ch-daj-sok",
+      "vo": "vo:rus.ch_daj_sok",
+      "shown": "Дай, пожалуйста, сок.",
+      "say": "Дай, пожа́луйста, сок.",
+      "ipa": "[daj pɐˈʐaɫəstə ˈsok]"
+    },
+    {
+      "id": "ch-daj-sup",
+      "vo": "vo:rus.ch_daj_sup",
+      "shown": "Дай, пожалуйста, суп.",
+      "say": "Дай, пожа́луйста, суп.",
+      "ipa": "[daj pɐˈʐaɫəstə ˈsup]"
+    },
+    {
+      "id": "ch-eto-babushka",
+      "vo": "vo:rus.ch_eto_babushka",
+      "shown": "Это бабушка.",
+      "say": "Э́то ба́бушка.",
+      "ipa": "[ˈɛtə ˈbabʊʂkə]"
+    },
+    {
+      "id": "ch-eto-banan",
+      "vo": "vo:rus.ch_eto_banan",
+      "shown": "Это банан.",
+      "say": "Э́то бана́н.",
+      "ipa": "[ˈɛtə bɐˈnan]"
+    },
+    {
+      "id": "ch-eto-jabloko",
+      "vo": "vo:rus.ch_eto_jabloko",
+      "shown": "Это яблоко.",
+      "say": "Э́то я́блоко.",
+      "ipa": "[ˈɛtə ˈjabləkə]"
+    },
+    {
+      "id": "ch-eto-koshka",
+      "vo": "vo:rus.ch_eto_koshka",
+      "shown": "Это кошка.",
+      "say": "Э́то ко́шка.",
+      "ipa": "[ˈɛtə ˈkoʂkə]"
+    },
+    {
+      "id": "ch-eto-kot-q",
+      "vo": "vo:rus.ch_eto_kot_q",
+      "shown": "Это кот?",
+      "say": "Э́то кот?",
+      "ipa": "[ˈɛtə ˈkot]"
+    },
+    {
+      "id": "ch-eto-kukla",
+      "vo": "vo:rus.ch_eto_kukla",
+      "shown": "Это кукла.",
+      "say": "Э́то ку́кла.",
+      "ipa": "[ˈɛtə ˈkukɫə]"
+    },
+    {
+      "id": "ch-eto-kukla-q",
+      "vo": "vo:rus.ch_eto_kukla_q",
+      "shown": "Это кукла?",
+      "say": "Э́то ку́кла?",
+      "ipa": "[ˈɛtə ˈkukɫə]"
+    },
+    {
+      "id": "ch-eto-mama",
+      "vo": "vo:rus.ch_eto_mama",
+      "shown": "Это мама.",
+      "say": "Э́то ма́ма.",
+      "ipa": "[ˈɛtə ˈmamə]"
+    },
+    {
+      "id": "ch-eto-mashina",
+      "vo": "vo:rus.ch_eto_mashina",
+      "shown": "Это машина.",
+      "say": "Э́то маши́на.",
+      "ipa": "[ˈɛtə mɐˈʂɨnə]"
+    },
+    {
+      "id": "ch-eto-mjach",
+      "vo": "vo:rus.ch_eto_mjach",
+      "shown": "Это мяч.",
+      "say": "Э́то мяч.",
+      "ipa": "[ˈɛtə ˈmʲætɕ]"
+    },
+    {
+      "id": "ch-eto-mjach-q",
+      "vo": "vo:rus.ch_eto_mjach_q",
+      "shown": "Это мяч?",
+      "say": "Э́то мяч?",
+      "ipa": "[ˈɛtə ˈmʲætɕ]"
+    },
+    {
+      "id": "ch-eto-moloko",
+      "vo": "vo:rus.ch_eto_moloko",
+      "shown": "Это молоко.",
+      "say": "Э́то молоко́.",
+      "ipa": "[ˈɛtə məlɐˈko]"
+    },
+    {
+      "id": "ch-eto-papa",
+      "vo": "vo:rus.ch_eto_papa",
+      "shown": "Это папа.",
+      "say": "Э́то па́па.",
+      "ipa": "[ˈɛtə ˈpapə]"
+    },
+    {
+      "id": "ch-eto-ryba-q",
+      "vo": "vo:rus.ch_eto_ryba_q",
+      "shown": "Это рыба?",
+      "say": "Э́то ры́ба?",
+      "ipa": "[ˈɛtə ˈrɨbə]"
+    },
+    {
+      "id": "ch-eto-sobaka",
+      "vo": "vo:rus.ch_eto_sobaka",
+      "shown": "Это собака.",
+      "say": "Э́то соба́ка.",
+      "ipa": "[ˈɛtə sɐˈbakə]"
+    },
+    {
+      "id": "ch-gde-jabloko",
+      "vo": "vo:rus.ch_gde_jabloko",
+      "shown": "Где яблоко?",
+      "say": "Где я́блоко?",
+      "ipa": "[ɡdʲe ˈjabləkə]"
+    },
+    {
+      "id": "ch-gde-koshka",
+      "vo": "vo:rus.ch_gde_koshka",
+      "shown": "Где кошка?",
+      "say": "Где ко́шка?",
+      "ipa": "[ɡdʲe ˈkoʂkə]"
+    },
+    {
+      "id": "ch-gde-mama",
+      "vo": "vo:rus.ch_gde_mama",
+      "shown": "Где мама?",
+      "say": "Где ма́ма?",
+      "ipa": "[ɡdʲe ˈmamə]"
+    },
+    {
+      "id": "ch-gde-mjach",
+      "vo": "vo:rus.ch_gde_mjach",
+      "shown": "Где мяч?",
+      "say": "Где мяч?",
+      "ipa": "[ɡdʲe ˈmʲætɕ]"
+    },
+    {
+      "id": "ch-gde-mysh",
+      "vo": "vo:rus.ch_gde_mysh",
+      "shown": "Где мышь?",
+      "say": "Где мышь?",
+      "ipa": "[ɡdʲe ˈmɨʂ]"
+    },
+    {
+      "id": "ch-gde-shapka",
+      "vo": "vo:rus.ch_gde_shapka",
+      "shown": "Где шапка?",
+      "say": "Где ша́пка?",
+      "ipa": "[ɡdʲe ˈʂapkə]"
+    },
+    {
+      "id": "ch-hochu-apelsin",
+      "vo": "vo:rus.ch_hochu_apelsin",
+      "shown": "Я хочу апельсин.",
+      "say": "Я хочу́ апельси́н.",
+      "ipa": "[ja xɐˈtɕu ɐpʲɪlʲˈsʲin]"
+    },
+    {
+      "id": "ch-hochu-moloko",
+      "vo": "vo:rus.ch_hochu_moloko",
+      "shown": "Я хочу молоко.",
+      "say": "Я хочу́ молоко́.",
+      "ipa": "[ja xɐˈtɕu məlɐˈko]"
+    },
+    {
+      "id": "ch-hochu-syr",
+      "vo": "vo:rus.ch_hochu_syr",
+      "shown": "Я хочу сыр.",
+      "say": "Я хочу́ сыр.",
+      "ipa": "[ja xɐˈtɕu ˈsɨr]"
+    },
+    {
+      "id": "ch-horosho",
+      "vo": "vo:rus.ch_horosho",
+      "shown": "Хорошо!",
+      "say": "Хорошо́!",
+      "ipa": "[xərɐˈʂo]"
+    },
+    {
+      "id": "ch-kak-tebja-zovut",
+      "vo": "vo:rus.ch_kak_tebja_zovut",
+      "shown": "Как тебя зовут?",
+      "say": "Как тебя́ зову́т?",
+      "ipa": "[kak tʲɪˈbʲa zɐˈvut]"
+    },
+    {
+      "id": "ch-kto-eto",
+      "vo": "vo:rus.ch_kto_eto",
+      "shown": "Кто это?",
+      "say": "Кто э́то?",
+      "ipa": "[kto ˈɛtə]"
+    },
+    {
+      "id": "ch-kto-u-tebja-v-seme",
+      "vo": "vo:rus.ch_kto_u_tebja_v_seme",
+      "shown": "Кто у тебя в семье?",
+      "say": "Кто у тебя́ в семье́?",
+      "ipa": "[kto ʊ tʲɪˈbʲa fsʲɪˈmʲje]"
+    },
+    {
+      "id": "ch-menja-zovut",
+      "vo": "vo:rus.ch_menja_zovut",
+      "shown": "Меня зовут {puppet}.",
+      "say": "Меня́ зову́т {puppet}.",
+      "ipa": "[mʲɪˈnʲa zɐˈvut …]"
+    },
+    {
+      "id": "ch-ochen-prijatno",
+      "vo": "vo:rus.ch_ochen_prijatno",
+      "shown": "Очень приятно!",
+      "say": "О́чень прия́тно!",
+      "ipa": "[ˈotɕɪnʲ prʲɪˈjatnə]"
+    },
+    {
+      "id": "ch-pokazhi-glaza",
+      "vo": "vo:rus.ch_pokazhi_glaza",
+      "shown": "Покажи глаза!",
+      "say": "Покажи́ глаза́!",
+      "ipa": "[pəkɐˈʐɨ ɡɫɐˈza]"
+    },
+    {
+      "id": "ch-pokazhi-golovu",
+      "vo": "vo:rus.ch_pokazhi_golovu",
+      "shown": "Покажи голову!",
+      "say": "Покажи́ го́лову!",
+      "ipa": "[pəkɐˈʐɨ ˈɡoɫəvʊ]"
+    },
+    {
+      "id": "ch-pokazhi-nogi",
+      "vo": "vo:rus.ch_pokazhi_nogi",
+      "shown": "Покажи ноги!",
+      "say": "Покажи́ но́ги!",
+      "ipa": "[pəkɐˈʐɨ ˈnoɡʲɪ]"
+    },
+    {
+      "id": "ch-pokazhi-nos",
+      "vo": "vo:rus.ch_pokazhi_nos",
+      "shown": "Покажи нос!",
+      "say": "Покажи́ нос!",
+      "ipa": "[pəkɐˈʐɨ ˈnos]"
+    },
+    {
+      "id": "ch-pokazhi-paltsy",
+      "vo": "vo:rus.ch_pokazhi_paltsy",
+      "shown": "Покажи пальцы!",
+      "say": "Покажи́ па́льцы!",
+      "ipa": "[pəkɐˈʐɨ ˈpalʲt͡sɨ]"
+    },
+    {
+      "id": "ch-pokazhi-rot",
+      "vo": "vo:rus.ch_pokazhi_rot",
+      "shown": "Покажи рот!",
+      "say": "Покажи́ рот!",
+      "ipa": "[pəkɐˈʐɨ ˈrot]"
+    },
+    {
+      "id": "ch-pokazhi-ruki",
+      "vo": "vo:rus.ch_pokazhi_ruki",
+      "shown": "Покажи руки!",
+      "say": "Покажи́ ру́ки!",
+      "ipa": "[pəkɐˈʐɨ ˈrukʲɪ]"
+    },
+    {
+      "id": "ch-pokazhi-ushi",
+      "vo": "vo:rus.ch_pokazhi_ushi",
+      "shown": "Покажи уши!",
+      "say": "Покажи́ у́ши!",
+      "ipa": "[pəkɐˈʐɨ ˈuʂɨ]"
+    },
+    {
+      "id": "ch-pokazhi-volosy",
+      "vo": "vo:rus.ch_pokazhi_volosy",
+      "shown": "Покажи волосы!",
+      "say": "Покажи́ во́лосы!",
+      "ipa": "[pəkɐˈʐɨ ˈvoɫəsɨ]"
+    },
+    {
+      "id": "ch-pokazhi-zhivot",
+      "vo": "vo:rus.ch_pokazhi_zhivot",
+      "shown": "Покажи живот!",
+      "say": "Покажи́ живо́т!",
+      "ipa": "[pəkɐˈʐɨ ʐɨˈvot]"
+    },
+    {
+      "id": "ch-pokazhi-zuby",
+      "vo": "vo:rus.ch_pokazhi_zuby",
+      "shown": "Покажи зубы!",
+      "say": "Покажи́ зу́бы!",
+      "ipa": "[pəkɐˈʐɨ ˈzubɨ]"
+    },
+    {
+      "id": "ch-skolko",
+      "vo": "vo:rus.ch_skolko",
+      "shown": "Сколько?",
+      "say": "Ско́лько?",
+      "ipa": "[ˈskolʲkə]"
+    },
+    {
+      "id": "ch-u-menja-est",
+      "vo": "vo:rus.ch_u_menja_est",
+      "shown": "У меня есть мама и бабушка.",
+      "say": "У меня́ есть ма́ма и ба́бушка.",
+      "ipa": "[ʊ mʲɪˈnʲa jesʲtʲ ˈmamə i ˈbabʊʂkə]"
+    },
+    {
+      "id": "ch-vot-jabloko",
+      "vo": "vo:rus.ch_vot_jabloko",
+      "shown": "Вот яблоко!",
+      "say": "Вот я́блоко!",
+      "ipa": "[vot ˈjabləkə]"
+    },
+    {
+      "id": "ch-vot-koshka",
+      "vo": "vo:rus.ch_vot_koshka",
+      "shown": "Вот кошка!",
+      "say": "Вот ко́шка!",
+      "ipa": "[vot ˈkoʂkə]"
+    },
+    {
+      "id": "ch-vot-mama",
+      "vo": "vo:rus.ch_vot_mama",
+      "shown": "Вот мама!",
+      "say": "Вот ма́ма!",
+      "ipa": "[vot ˈmamə]"
+    },
+    {
+      "id": "ch-vot-mjach",
+      "vo": "vo:rus.ch_vot_mjach",
+      "shown": "Вот мяч!",
+      "say": "Вот мяч!",
+      "ipa": "[vot ˈmʲætɕ]"
+    },
+    {
+      "id": "ch-vot-mysh",
+      "vo": "vo:rus.ch_vot_mysh",
+      "shown": "Вот мышь!",
+      "say": "Вот мышь!",
+      "ipa": "[vot ˈmɨʂ]"
+    },
+    {
+      "id": "ch-vot-shapka",
+      "vo": "vo:rus.ch_vot_shapka",
+      "shown": "Вот шапка!",
+      "say": "Вот ша́пка!",
+      "ipa": "[vot ˈʂapkə]"
+    },
+    {
+      "id": "ch-vozmi-mjach",
+      "vo": "vo:rus.ch_vozmi_mjach",
+      "shown": "Возьми мяч!",
+      "say": "Возьми́ мяч!",
+      "ipa": "[vɐzʲˈmʲi ˈmʲætɕ]"
+    },
+    {
+      "id": "ch-zdorovo",
+      "vo": "vo:rus.ch_zdorovo",
+      "shown": "Здорово!",
+      "say": "Здо́рово!",
+      "ipa": "[ˈzdorəvə]"
+    },
+    {
+      "id": "mp-ljuk",
+      "vo": "vo:rus.mp_ljuk",
+      "shown": "люк",
+      "say": "люк",
+      "ipa": "[lʲuk]"
+    },
+    {
+      "id": "mp-luk",
+      "vo": "vo:rus.mp_luk",
+      "shown": "лук",
+      "say": "лук",
+      "ipa": "[ɫuk]"
+    },
+    {
+      "id": "n-1",
+      "vo": "vo:rus.n_1",
+      "shown": "один",
+      "say": "оди́н",
+      "ipa": "[ɐˈdʲin]"
+    },
+    {
+      "id": "n-10",
+      "vo": "vo:rus.n_10",
+      "shown": "десять",
+      "say": "де́сять",
+      "ipa": "[ˈdʲesʲɪtʲ]"
+    },
+    {
+      "id": "n-2",
+      "vo": "vo:rus.n_2",
+      "shown": "два",
+      "say": "два",
+      "ipa": "[dva]"
+    },
+    {
+      "id": "n-3",
+      "vo": "vo:rus.n_3",
+      "shown": "три",
+      "say": "три",
+      "ipa": "[trʲi]"
+    },
+    {
+      "id": "n-4",
+      "vo": "vo:rus.n_4",
+      "shown": "четыре",
+      "say": "четы́ре",
+      "ipa": "[tɕɪˈtɨrʲɪ]"
+    },
+    {
+      "id": "n-5",
+      "vo": "vo:rus.n_5",
+      "shown": "пять",
+      "say": "пять",
+      "ipa": "[pʲætʲ]"
+    },
+    {
+      "id": "n-6",
+      "vo": "vo:rus.n_6",
+      "shown": "шесть",
+      "say": "шесть",
+      "ipa": "[ʂɛsʲtʲ]"
+    },
+    {
+      "id": "n-7",
+      "vo": "vo:rus.n_7",
+      "shown": "семь",
+      "say": "семь",
+      "ipa": "[sʲemʲ]"
+    },
+    {
+      "id": "n-8",
+      "vo": "vo:rus.n_8",
+      "shown": "восемь",
+      "say": "во́семь",
+      "ipa": "[ˈvosʲɪmʲ]"
+    },
+    {
+      "id": "n-9",
+      "vo": "vo:rus.n_9",
+      "shown": "девять",
+      "say": "де́вять",
+      "ipa": "[ˈdʲevʲɪtʲ]"
+    },
+    {
+      "id": "rh1",
+      "vo": "vo:rus.rh1",
+      "shown": "Вот лохматый добрый пёс, / У него холодный нос.",
+      "say": "Вот лохма́тый до́брый пёс, у него́ холо́дный нос.",
+      "ipa": "[vot ɫɐxˈmatɨj ˈdobrɨj pʲos ‖ ʊ nʲɪˈvo xɐˈɫodnɨj nos]"
+    },
+    {
+      "id": "rh1-gap",
+      "vo": "vo:rus.rh1_gap",
+      "shown": "Вот лохматый добрый пёс, / У него холодный …",
+      "say": "Вот лохма́тый до́брый пёс, у него́ холо́дный…",
+      "ipa": "[vot ɫɐxˈmatɨj ˈdobrɨj pʲos ‖ ʊ nʲɪˈvo xɐˈɫodnɨj]"
+    },
+    {
+      "id": "rh2",
+      "vo": "vo:rus.rh2",
+      "shown": "Улыбается наш кот, / Широко открыл он рот.",
+      "say": "Улыба́ется наш кот, широко́ откры́л он рот.",
+      "ipa": "[ʊɫɨˈbajɪt͡sə naʂ kot ‖ ʂɨrɐˈko ɐtˈkrɨɫ on rot]"
+    },
+    {
+      "id": "rh2-gap",
+      "vo": "vo:rus.rh2_gap",
+      "shown": "Улыбается наш кот, / Широко открыл он …",
+      "say": "Улыба́ется наш кот, широко́ откры́л он…",
+      "ipa": "[ʊɫɨˈbajɪt͡sə naʂ kot ‖ ʂɨrɐˈko ɐtˈkrɨɫ on]"
+    },
+    {
+      "id": "rh3",
+      "vo": "vo:rus.rh3",
+      "shown": "В море синем тихо спит / Самый добрый в мире кит.",
+      "say": "В мо́ре си́нем ти́хо спит са́мый до́брый в ми́ре кит.",
+      "ipa": "[ˈvmorʲɪ ˈsʲinʲɪm ˈtʲixə spʲit ‖ ˈsamɨj ˈdobrɨj ˈvmʲirʲɪ kʲit]"
+    },
+    {
+      "id": "rh3-gap",
+      "vo": "vo:rus.rh3_gap",
+      "shown": "В море синем тихо спит / Самый добрый в мире …",
+      "say": "В мо́ре си́нем ти́хо спит са́мый до́брый в ми́ре…",
+      "ipa": "[ˈvmorʲɪ ˈsʲinʲɪm ˈtʲixə spʲit ‖ ˈsamɨj ˈdobrɨj ˈvmʲirʲɪ]"
+    },
+    {
+      "id": "rh4",
+      "vo": "vo:rus.rh4",
+      "shown": "Пьёт котёнок сладкий сок, / Потерял он свой носок.",
+      "say": "Пьёт котёнок сла́дкий сок, потеря́л он свой носо́к.",
+      "ipa": "[pʲjot kɐˈtʲonək ˈsɫatkʲɪj sok ‖ pətʲɪˈrʲaɫ on svoj nɐˈsok]"
+    },
+    {
+      "id": "rh4-gap",
+      "vo": "vo:rus.rh4_gap",
+      "shown": "Пьёт котёнок сладкий сок, / Потерял он свой …",
+      "say": "Пьёт котёнок сла́дкий сок, потеря́л он свой…",
+      "ipa": "[pʲjot kɐˈtʲonək ˈsɫatkʲɪj sok ‖ pətʲɪˈrʲaɫ on svoj]"
+    },
+    {
+      "id": "rh5",
+      "vo": "vo:rus.rh5",
+      "shown": "Спит в кроватке мишка, / Под подушкой — книжка.",
+      "say": "Спит в крова́тке ми́шка, под поду́шкой — кни́жка.",
+      "ipa": "[spʲit fkrɐˈvatkʲɪ ˈmʲiʂkə ‖ pət pɐˈduʂkəj ˈknʲiʂkə]"
+    },
+    {
+      "id": "rh5-gap",
+      "vo": "vo:rus.rh5_gap",
+      "shown": "Спит в кроватке мишка, / Под подушкой — …",
+      "say": "Спит в крова́тке ми́шка, под поду́шкой…",
+      "ipa": "[spʲit fkrɐˈvatkʲɪ ˈmʲiʂkə ‖ pət pɐˈduʂkəj]"
+    },
+    {
+      "id": "sen-2",
+      "vo": "vo:rus.sen_2",
+      "shown": "Это кот.",
+      "say": "Э́то кот.",
+      "ipa": "[ˈɛtə kot]"
+    },
+    {
+      "id": "sf-mama",
+      "vo": "vo:rus.sf_mama",
+      "shown": "мама",
+      "say": "м-м-ма́ма",
+      "ipa": "[ˈmːamə]"
+    },
+    {
+      "id": "sf-nos",
+      "vo": "vo:rus.sf_nos",
+      "shown": "нос",
+      "say": "н-н-нос",
+      "ipa": "[nːos]"
+    },
+    {
+      "id": "sf-ryba",
+      "vo": "vo:rus.sf_ryba",
+      "shown": "рыба",
+      "say": "р-р-ры́ба",
+      "ipa": "[ˈrːɨbə]"
+    },
+    {
+      "id": "sf-shapka",
+      "vo": "vo:rus.sf_shapka",
+      "shown": "шапка",
+      "say": "ш-ш-ша́пка",
+      "ipa": "[ˈʂːapkə]"
+    },
+    {
+      "id": "sf-sok",
+      "vo": "vo:rus.sf_sok",
+      "shown": "сок",
+      "say": "с-с-сок",
+      "ipa": "[sːok]"
+    },
+    {
+      "id": "st1-1",
+      "vo": "vo:rus.st1_1",
+      "shown": "Вот собака. Вот мяч.",
+      "say": "Вот соба́ка. Вот мяч.",
+      "ipa": "[vot sɐˈbakə ‖ vot ˈmʲætɕ]"
+    },
+    {
+      "id": "st1-2",
+      "vo": "vo:rus.st1_2",
+      "shown": "Собака бежит. Бежит, бежит!",
+      "say": "Соба́ка бежи́т. Бежи́т, бежи́т!",
+      "ipa": "[sɐˈbakə bʲɪˈʐɨt ‖ bʲɪˈʐɨt bʲɪˈʐɨt]"
+    },
+    {
+      "id": "st1-3",
+      "vo": "vo:rus.st1_3",
+      "shown": "Вот мяч! Собака рада.",
+      "say": "Вот мяч! Соба́ка ра́да.",
+      "ipa": "[vot ˈmʲætɕ ‖ sɐˈbakə ˈradə]"
+    },
+    {
+      "id": "st1-t",
+      "vo": "vo:rus.st1_t",
+      "shown": "Собака и мяч",
+      "say": "Соба́ка и мяч.",
+      "ipa": "[sɐˈbakə i ˈmʲætɕ]"
+    },
+    {
+      "id": "st2-1",
+      "vo": "vo:rus.st2_1",
+      "shown": "Вот ёжик. Ёжик идёт.",
+      "say": "Вот ёжик. Ёжик идёт.",
+      "ipa": "[vot ˈjoʐɨk ‖ ˈjoʐɨk ɪˈdʲot]"
+    },
+    {
+      "id": "st2-2",
+      "vo": "vo:rus.st2_2",
+      "shown": "Ой! Вот яблоко. Красное яблоко!",
+      "say": "Ой! Вот я́блоко. Кра́сное я́блоко!",
+      "ipa": "[oj ‖ vot ˈjabləkə ‖ ˈkrasnəjə ˈjabləkə]"
+    },
+    {
+      "id": "st2-3",
+      "vo": "vo:rus.st2_3",
+      "shown": "Ёжик ест яблоко. Ням-ням!",
+      "say": "Ёжик ест я́блоко. Ням-ням!",
+      "ipa": "[ˈjoʐɨk jesʲt ˈjabləkə ‖ nʲamˈnʲam]"
+    },
+    {
+      "id": "st2-t",
+      "vo": "vo:rus.st2_t",
+      "shown": "Ёжик и яблоко",
+      "say": "Ёжик и я́блоко.",
+      "ipa": "[ˈjoʐɨk i ˈjabləkə]"
+    },
+    {
+      "id": "st3-1",
+      "vo": "vo:rus.st3_1",
+      "shown": "Вот девочка. Вот снег.",
+      "say": "Вот де́вочка. Вот снег.",
+      "ipa": "[vot ˈdʲevətɕkə ‖ vot ˈsʲnʲek]"
+    },
+    {
+      "id": "st3-2",
+      "vo": "vo:rus.st3_2",
+      "shown": "Холодно! Где шапка?",
+      "say": "Хо́лодно! Где ша́пка?",
+      "ipa": "[ˈxoɫədnə ‖ ɡdʲe ˈʂapkə]"
+    },
+    {
+      "id": "st3-3",
+      "vo": "vo:rus.st3_3",
+      "shown": "Вот шапка! Тепло.",
+      "say": "Вот ша́пка! Тепло́.",
+      "ipa": "[vot ˈʂapkə ‖ tʲɪˈpɫo]"
+    },
+    {
+      "id": "sy-babushka",
+      "vo": "vo:rus.sy_babushka",
+      "shown": "ба-бу-шка",
+      "say": "ба́… бу… шка",
+      "ipa": "[ˈba ‖ bu ‖ ʂka]"
+    },
+    {
+      "id": "sy-karandash",
+      "vo": "vo:rus.sy_karandash",
+      "shown": "ка-ран-даш",
+      "say": "ка… ран… да́ш",
+      "ipa": "[ka ‖ ran ‖ ˈdaʂ]"
+    },
+    {
+      "id": "sy-koshka",
+      "vo": "vo:rus.sy_koshka",
+      "shown": "ко-шка",
+      "say": "ко́… шка",
+      "ipa": "[ˈko ‖ ʂka]"
+    },
+    {
+      "id": "sy-kukla",
+      "vo": "vo:rus.sy_kukla",
+      "shown": "ку-кла",
+      "say": "ку́… кла",
+      "ipa": "[ˈku ‖ kɫa]"
+    },
+    {
+      "id": "sy-mama",
+      "vo": "vo:rus.sy_mama",
+      "shown": "ма-ма",
+      "say": "ма́… ма",
+      "ipa": "[ˈma ‖ ma]"
+    },
+    {
+      "id": "sy-mashina",
+      "vo": "vo:rus.sy_mashina",
+      "shown": "ма-ши-на",
+      "say": "ма… ши́… на",
+      "ipa": "[ma ‖ ˈʂɨ ‖ na]"
+    },
+    {
+      "id": "sy-moloko",
+      "vo": "vo:rus.sy_moloko",
+      "shown": "мо-ло-ко",
+      "say": "мо… ло… ко́",
+      "ipa": "[mo ‖ lo ‖ ˈko]"
+    },
+    {
+      "id": "sy-ryba",
+      "vo": "vo:rus.sy_ryba",
+      "shown": "ры-ба",
+      "say": "ры́… ба",
+      "ipa": "[ˈrɨ ‖ ba]"
+    },
+    {
+      "id": "sy-sobaka",
+      "vo": "vo:rus.sy_sobaka",
+      "shown": "со-ба-ка",
+      "say": "со… ба́… ка",
+      "ipa": "[so ‖ ˈba ‖ ka]"
+    },
+    {
+      "id": "sy-utka",
+      "vo": "vo:rus.sy_utka",
+      "shown": "у-тка",
+      "say": "у́… тка",
+      "ipa": "[ˈu ‖ tka]"
+    },
+    {
+      "id": "syl-la",
+      "vo": "vo:rus.syl_la",
+      "shown": "ла",
+      "say": "ла",
+      "ipa": "[ɫa]"
+    },
+    {
+      "id": "syl-li",
+      "vo": "vo:rus.syl_li",
+      "shown": "ли",
+      "say": "ли",
+      "ipa": "[lʲi]"
+    },
+    {
+      "id": "syl-lja",
+      "vo": "vo:rus.syl_lja",
+      "shown": "ля",
+      "say": "ля",
+      "ipa": "[lʲa]"
+    },
+    {
+      "id": "syl-ly",
+      "vo": "vo:rus.syl_ly",
+      "shown": "лы",
+      "say": "лы",
+      "ipa": "[ɫɨ]"
+    },
+    {
+      "id": "syl-mi",
+      "vo": "vo:rus.syl_mi",
+      "shown": "ми",
+      "say": "ми",
+      "ipa": "[mʲi]"
+    },
+    {
+      "id": "syl-my",
+      "vo": "vo:rus.syl_my",
+      "shown": "мы",
+      "say": "мы",
+      "ipa": "[mɨ]"
+    },
+    {
+      "id": "syl-njo",
+      "vo": "vo:rus.syl_njo",
+      "shown": "нё",
+      "say": "нё",
+      "ipa": "[nʲo]"
+    },
+    {
+      "id": "syl-no",
+      "vo": "vo:rus.syl_no",
+      "shown": "но",
+      "say": "но",
+      "ipa": "[no]"
+    },
+    {
+      "id": "syl-sy",
+      "vo": "vo:rus.syl_sy",
+      "shown": "сы",
+      "say": "сы",
+      "ipa": "[sɨ]"
+    },
+    {
+      "id": "w-apelsin",
+      "vo": "vo:rus.w_apelsin",
+      "shown": "апельсин",
+      "say": "апельси́н",
+      "ipa": "[ɐpʲɪlʲˈsʲin]"
+    },
+    {
+      "id": "w-arbuz",
+      "vo": "vo:rus.w_arbuz",
+      "shown": "арбуз",
+      "say": "арбу́з",
+      "ipa": "[ɐrˈbus]"
+    },
+    {
+      "id": "w-babushka",
+      "vo": "vo:rus.w_babushka",
+      "shown": "бабушка",
+      "say": "ба́бушка",
+      "ipa": "[ˈbabʊʂkə]"
+    },
+    {
+      "id": "w-banan",
+      "vo": "vo:rus.w_banan",
+      "shown": "банан",
+      "say": "бана́н",
+      "ipa": "[bɐˈnan]"
+    },
+    {
+      "id": "w-begi",
+      "vo": "vo:rus.w_begi",
+      "shown": "Беги!",
+      "say": "Беги́!",
+      "ipa": "[bʲɪˈɡʲi]"
+    },
+    {
+      "id": "w-belka",
+      "vo": "vo:rus.w_belka",
+      "shown": "белка",
+      "say": "бе́лка",
+      "ipa": "[ˈbʲeɫkə]"
+    },
+    {
+      "id": "w-belyj",
+      "vo": "vo:rus.w_belyj",
+      "shown": "белый",
+      "say": "бе́лый",
+      "ipa": "[ˈbʲeɫɨj]"
+    },
+    {
+      "id": "w-botinki",
+      "vo": "vo:rus.w_botinki",
+      "shown": "ботинки",
+      "say": "боти́нки",
+      "ipa": "[bɐˈtʲinkʲɪ]"
+    },
+    {
+      "id": "w-brat",
+      "vo": "vo:rus.w_brat",
+      "shown": "брат",
+      "say": "брат",
+      "ipa": "[brat]"
+    },
+    {
+      "id": "w-chaj",
+      "vo": "vo:rus.w_chaj",
+      "shown": "чай",
+      "say": "чай",
+      "ipa": "[tɕaj]"
+    },
+    {
+      "id": "w-chornyj",
+      "vo": "vo:rus.w_chornyj",
+      "shown": "чёрный",
+      "say": "чёрный",
+      "ipa": "[ˈtɕornɨj]"
+    },
+    {
+      "id": "w-da",
+      "vo": "vo:rus.w_da",
+      "shown": "Да.",
+      "say": "Да.",
+      "ipa": "[da]"
+    },
+    {
+      "id": "w-dedushka",
+      "vo": "vo:rus.w_dedushka",
+      "shown": "дедушка",
+      "say": "де́душка",
+      "ipa": "[ˈdʲedʊʂkə]"
+    },
+    {
+      "id": "w-devochka",
+      "vo": "vo:rus.w_devochka",
+      "shown": "девочка",
+      "say": "де́вочка",
+      "ipa": "[ˈdʲevətɕkə]"
+    },
+    {
+      "id": "w-do-svidanija",
+      "vo": "vo:rus.w_do_svidanija",
+      "shown": "До свидания!",
+      "say": "До свида́ния!",
+      "ipa": "[də svʲɪˈdanʲɪjə]"
+    },
+    {
+      "id": "w-dom",
+      "vo": "vo:rus.w_dom",
+      "shown": "дом",
+      "say": "дом",
+      "ipa": "[dom]"
+    },
+    {
+      "id": "w-futbolka",
+      "vo": "vo:rus.w_futbolka",
+      "shown": "футболка",
+      "say": "футбо́лка",
+      "ipa": "[fʊdˈboɫkə]"
+    },
+    {
+      "id": "w-glaza",
+      "vo": "vo:rus.w_glaza",
+      "shown": "глаза",
+      "say": "глаза́",
+      "ipa": "[ɡɫɐˈza]"
+    },
+    {
+      "id": "w-golova",
+      "vo": "vo:rus.w_golova",
+      "shown": "голова",
+      "say": "голова́",
+      "ipa": "[ɡəɫɐˈva]"
+    },
+    {
+      "id": "w-grusha",
+      "vo": "vo:rus.w_grusha",
+      "shown": "груша",
+      "say": "гру́ша",
+      "ipa": "[ˈɡruʂə]"
+    },
+    {
+      "id": "w-hleb",
+      "vo": "vo:rus.w_hleb",
+      "shown": "хлеб",
+      "say": "хлеб",
+      "ipa": "[xlʲep]"
+    },
+    {
+      "id": "w-hlopaj",
+      "vo": "vo:rus.w_hlopaj",
+      "shown": "Хлопай!",
+      "say": "Хло́пай!",
+      "ipa": "[ˈxɫopəj]"
+    },
+    {
+      "id": "w-idi",
+      "vo": "vo:rus.w_idi",
+      "shown": "Иди!",
+      "say": "Иди́!",
+      "ipa": "[ɪˈdʲi]"
+    },
+    {
+      "id": "w-jajtso",
+      "vo": "vo:rus.w_jajtso",
+      "shown": "яйцо",
+      "say": "яйцо́",
+      "ipa": "[jɪjˈt͡so]"
+    },
+    {
+      "id": "w-jozhik",
+      "vo": "vo:rus.w_jozhik",
+      "shown": "ёжик",
+      "say": "ёжик",
+      "ipa": "[ˈjoʐɨk]"
+    },
+    {
+      "id": "w-jula",
+      "vo": "vo:rus.w_jula",
+      "shown": "юла",
+      "say": "юла́",
+      "ipa": "[jʊˈɫa]"
+    },
+    {
+      "id": "w-karandash",
+      "vo": "vo:rus.w_karandash",
+      "shown": "карандаш",
+      "say": "каранда́ш",
+      "ipa": "[kərɐnˈdaʂ]"
+    },
+    {
+      "id": "w-kartoshka",
+      "vo": "vo:rus.w_kartoshka",
+      "shown": "картошка",
+      "say": "карто́шка",
+      "ipa": "[kɐrˈtoʂkə]"
+    },
+    {
+      "id": "w-kasha",
+      "vo": "vo:rus.w_kasha",
+      "shown": "каша",
+      "say": "ка́ша",
+      "ipa": "[ˈkaʂə]"
+    },
+    {
+      "id": "w-kit",
+      "vo": "vo:rus.w_kit",
+      "shown": "кит",
+      "say": "кит",
+      "ipa": "[kʲit]"
+    },
+    {
+      "id": "w-klubnika",
+      "vo": "vo:rus.w_klubnika",
+      "shown": "клубника",
+      "say": "клубни́ка",
+      "ipa": "[kɫʊbˈnʲikə]"
+    },
+    {
+      "id": "w-kniga",
+      "vo": "vo:rus.w_kniga",
+      "shown": "книга",
+      "say": "кни́га",
+      "ipa": "[ˈknʲiɡə]"
+    },
+    {
+      "id": "w-knizhka",
+      "vo": "vo:rus.w_knizhka",
+      "shown": "книжка",
+      "say": "кни́жка",
+      "ipa": "[ˈknʲiʂkə]"
+    },
+    {
+      "id": "w-korova",
+      "vo": "vo:rus.w_korova",
+      "shown": "корова",
+      "say": "коро́ва",
+      "ipa": "[kɐˈrovə]"
+    },
+    {
+      "id": "w-koshka",
+      "vo": "vo:rus.w_koshka",
+      "shown": "кошка",
+      "say": "ко́шка",
+      "ipa": "[ˈkoʂkə]"
+    },
+    {
+      "id": "w-kot",
+      "vo": "vo:rus.w_kot",
+      "shown": "кот",
+      "say": "кот",
+      "ipa": "[kot]"
+    },
+    {
+      "id": "w-koza",
+      "vo": "vo:rus.w_koza",
+      "shown": "коза",
+      "say": "коза́",
+      "ipa": "[kɐˈza]"
+    },
+    {
+      "id": "w-krasnyj",
+      "vo": "vo:rus.w_krasnyj",
+      "shown": "красный",
+      "say": "кра́сный",
+      "ipa": "[ˈkrasnɨj]"
+    },
+    {
+      "id": "w-kubiki",
+      "vo": "vo:rus.w_kubiki",
+      "shown": "кубики",
+      "say": "ку́бики",
+      "ipa": "[ˈkubʲɪkʲɪ]"
+    },
+    {
+      "id": "w-kukla",
+      "vo": "vo:rus.w_kukla",
+      "shown": "кукла",
+      "say": "ку́кла",
+      "ipa": "[ˈkukɫə]"
+    },
+    {
+      "id": "w-kuritsa",
+      "vo": "vo:rus.w_kuritsa",
+      "shown": "курица",
+      "say": "ку́рица",
+      "ipa": "[ˈkurʲɪt͡sə]"
+    },
+    {
+      "id": "w-kurtka",
+      "vo": "vo:rus.w_kurtka",
+      "shown": "куртка",
+      "say": "ку́ртка",
+      "ipa": "[ˈkurtkə]"
+    },
+    {
+      "id": "w-lisa",
+      "vo": "vo:rus.w_lisa",
+      "shown": "лиса",
+      "say": "лиса́",
+      "ipa": "[lʲɪˈsa]"
+    },
+    {
+      "id": "w-loshad",
+      "vo": "vo:rus.w_loshad",
+      "shown": "лошадь",
+      "say": "ло́шадь",
+      "ipa": "[ˈɫoʂətʲ]"
+    },
+    {
+      "id": "w-malchik",
+      "vo": "vo:rus.w_malchik",
+      "shown": "мальчик",
+      "say": "ма́льчик",
+      "ipa": "[ˈmalʲtɕɪk]"
+    },
+    {
+      "id": "w-malysh",
+      "vo": "vo:rus.w_malysh",
+      "shown": "малыш",
+      "say": "малы́ш",
+      "ipa": "[mɐˈɫɨʂ]"
+    },
+    {
+      "id": "w-mama",
+      "vo": "vo:rus.w_mama",
+      "shown": "мама",
+      "say": "ма́ма",
+      "ipa": "[ˈmamə]"
+    },
+    {
+      "id": "w-mashina",
+      "vo": "vo:rus.w_mashina",
+      "shown": "машина",
+      "say": "маши́на",
+      "ipa": "[mɐˈʂɨnə]"
+    },
+    {
+      "id": "w-medved",
+      "vo": "vo:rus.w_medved",
+      "shown": "медведь",
+      "say": "медве́дь",
+      "ipa": "[mʲɪdˈvʲetʲ]"
+    },
+    {
+      "id": "w-mishka",
+      "vo": "vo:rus.w_mishka",
+      "shown": "мишка",
+      "say": "ми́шка",
+      "ipa": "[ˈmʲiʂkə]"
+    },
+    {
+      "id": "w-mjach",
+      "vo": "vo:rus.w_mjach",
+      "shown": "мяч",
+      "say": "мяч",
+      "ipa": "[mʲætɕ]"
+    },
+    {
+      "id": "w-moloko",
+      "vo": "vo:rus.w_moloko",
+      "shown": "молоко",
+      "say": "молоко́",
+      "ipa": "[məlɐˈko]"
+    },
+    {
+      "id": "w-morkov",
+      "vo": "vo:rus.w_morkov",
+      "shown": "морковь",
+      "say": "морко́вь",
+      "ipa": "[mɐrˈkofʲ]"
+    },
+    {
+      "id": "w-mysh",
+      "vo": "vo:rus.w_mysh",
+      "shown": "мышь",
+      "say": "мышь",
+      "ipa": "[mɨʂ]"
+    },
+    {
+      "id": "w-myshka",
+      "vo": "vo:rus.w_myshka",
+      "shown": "мышка",
+      "say": "мы́шка",
+      "ipa": "[ˈmɨʂkə]"
+    },
+    {
+      "id": "w-na",
+      "vo": "vo:rus.w_na",
+      "shown": "На!",
+      "say": "На!",
+      "ipa": "[na]"
+    },
+    {
+      "id": "w-net",
+      "vo": "vo:rus.w_net",
+      "shown": "Нет.",
+      "say": "Нет.",
+      "ipa": "[nʲet]"
+    },
+    {
+      "id": "w-nogi",
+      "vo": "vo:rus.w_nogi",
+      "shown": "ноги",
+      "say": "но́ги",
+      "ipa": "[ˈnoɡʲɪ]"
+    },
+    {
+      "id": "w-nos",
+      "vo": "vo:rus.w_nos",
+      "shown": "нос",
+      "say": "нос",
+      "ipa": "[nos]"
+    },
+    {
+      "id": "w-noski",
+      "vo": "vo:rus.w_noski",
+      "shown": "носки",
+      "say": "носки́",
+      "ipa": "[nɐˈskʲi]"
+    },
+    {
+      "id": "w-nosok",
+      "vo": "vo:rus.w_nosok",
+      "shown": "носок",
+      "say": "носо́к",
+      "ipa": "[nɐˈsok]"
+    },
+    {
+      "id": "w-ogurets",
+      "vo": "vo:rus.w_ogurets",
+      "shown": "огурец",
+      "say": "огуре́ц",
+      "ipa": "[ɐɡʊˈrʲet͡s]"
+    },
+    {
+      "id": "w-paltsy",
+      "vo": "vo:rus.w_paltsy",
+      "shown": "пальцы",
+      "say": "па́льцы",
+      "ipa": "[ˈpalʲt͡sɨ]"
+    },
+    {
+      "id": "w-papa",
+      "vo": "vo:rus.w_papa",
+      "shown": "папа",
+      "say": "па́па",
+      "ipa": "[ˈpapə]"
+    },
+    {
+      "id": "w-pechenje",
+      "vo": "vo:rus.w_pechenje",
+      "shown": "печенье",
+      "say": "пече́нье",
+      "ipa": "[pʲɪˈtɕenʲjə]"
+    },
+    {
+      "id": "w-petuh",
+      "vo": "vo:rus.w_petuh",
+      "shown": "петух",
+      "say": "пету́х",
+      "ipa": "[pʲɪˈtux]"
+    },
+    {
+      "id": "w-piramidka",
+      "vo": "vo:rus.w_piramidka",
+      "shown": "пирамидка",
+      "say": "пирами́дка",
+      "ipa": "[pʲɪrɐˈmʲitkə]"
+    },
+    {
+      "id": "w-platje",
+      "vo": "vo:rus.w_platje",
+      "shown": "платье",
+      "say": "пла́тье",
+      "ipa": "[ˈpɫatʲjə]"
+    },
+    {
+      "id": "w-poka",
+      "vo": "vo:rus.w_poka",
+      "shown": "Пока!",
+      "say": "Пока́!",
+      "ipa": "[pɐˈka]"
+    },
+    {
+      "id": "w-pomidor",
+      "vo": "vo:rus.w_pomidor",
+      "shown": "помидор",
+      "say": "помидо́р",
+      "ipa": "[pəmʲɪˈdor]"
+    },
+    {
+      "id": "w-pozhalujsta",
+      "vo": "vo:rus.w_pozhalujsta",
+      "shown": "пожалуйста",
+      "say": "пожа́луйста",
+      "ipa": "[pɐˈʐaɫəstə]"
+    },
+    {
+      "id": "w-privet",
+      "vo": "vo:rus.w_privet",
+      "shown": "Привет!",
+      "say": "Приве́т!",
+      "ipa": "[prʲɪˈvʲet]"
+    },
+    {
+      "id": "w-prygaj",
+      "vo": "vo:rus.w_prygaj",
+      "shown": "Прыгай!",
+      "say": "Пры́гай!",
+      "ipa": "[ˈprɨɡəj]"
+    },
+    {
+      "id": "w-ptitsa",
+      "vo": "vo:rus.w_ptitsa",
+      "shown": "птица",
+      "say": "пти́ца",
+      "ipa": "[ˈptʲit͡sə]"
+    },
+    {
+      "id": "w-ris",
+      "vo": "vo:rus.w_ris",
+      "shown": "рис",
+      "say": "рис",
+      "ipa": "[rʲis]"
+    },
+    {
+      "id": "w-rot",
+      "vo": "vo:rus.w_rot",
+      "shown": "рот",
+      "say": "рот",
+      "ipa": "[rot]"
+    },
+    {
+      "id": "w-ruki",
+      "vo": "vo:rus.w_ruki",
+      "shown": "руки",
+      "say": "ру́ки",
+      "ipa": "[ˈrukʲɪ]"
+    },
+    {
+      "id": "w-ryba",
+      "vo": "vo:rus.w_ryba",
+      "shown": "рыба",
+      "say": "ры́ба",
+      "ipa": "[ˈrɨbə]"
+    },
+    {
+      "id": "w-rys",
+      "vo": "vo:rus.w_rys",
+      "shown": "рысь",
+      "say": "рысь",
+      "ipa": "[rɨsʲ]"
+    },
+    {
+      "id": "w-sapogi",
+      "vo": "vo:rus.w_sapogi",
+      "shown": "сапоги",
+      "say": "сапоги́",
+      "ipa": "[səpɐˈɡʲi]"
+    },
+    {
+      "id": "w-semja",
+      "vo": "vo:rus.w_semja",
+      "shown": "семья",
+      "say": "семья́",
+      "ipa": "[sʲɪˈmʲja]"
+    },
+    {
+      "id": "w-sestra",
+      "vo": "vo:rus.w_sestra",
+      "shown": "сестра",
+      "say": "сестра́",
+      "ipa": "[sʲɪˈstra]"
+    },
+    {
+      "id": "w-shapka",
+      "vo": "vo:rus.w_shapka",
+      "shown": "шапка",
+      "say": "ша́пка",
+      "ipa": "[ˈʂapkə]"
+    },
+    {
+      "id": "w-shar",
+      "vo": "vo:rus.w_shar",
+      "shown": "шар",
+      "say": "шар",
+      "ipa": "[ʂar]"
+    },
+    {
+      "id": "w-sharf",
+      "vo": "vo:rus.w_sharf",
+      "shown": "шарф",
+      "say": "шарф",
+      "ipa": "[ʂarf]"
+    },
+    {
+      "id": "w-sharik",
+      "vo": "vo:rus.w_sharik",
+      "shown": "шарик",
+      "say": "ша́рик",
+      "ipa": "[ˈʂarʲɪk]"
+    },
+    {
+      "id": "w-shtany",
+      "vo": "vo:rus.w_shtany",
+      "shown": "штаны",
+      "say": "штаны́",
+      "ipa": "[ʂtɐˈnɨ]"
+    },
+    {
+      "id": "w-sinij",
+      "vo": "vo:rus.w_sinij",
+      "shown": "синий",
+      "say": "си́ний",
+      "ipa": "[ˈsʲinʲɪj]"
+    },
+    {
+      "id": "w-sjad",
+      "vo": "vo:rus.w_sjad",
+      "shown": "Сядь!",
+      "say": "Сядь!",
+      "ipa": "[sʲætʲ]"
+    },
+    {
+      "id": "w-slon",
+      "vo": "vo:rus.w_slon",
+      "shown": "слон",
+      "say": "слон",
+      "ipa": "[sɫon]"
+    },
+    {
+      "id": "w-sobaka",
+      "vo": "vo:rus.w_sobaka",
+      "shown": "собака",
+      "say": "соба́ка",
+      "ipa": "[sɐˈbakə]"
+    },
+    {
+      "id": "w-sok",
+      "vo": "vo:rus.w_sok",
+      "shown": "сок",
+      "say": "сок",
+      "ipa": "[sok]"
+    },
+    {
+      "id": "w-spasibo",
+      "vo": "vo:rus.w_spasibo",
+      "shown": "спасибо",
+      "say": "спаси́бо",
+      "ipa": "[spɐˈsʲibə]"
+    },
+    {
+      "id": "w-sup",
+      "vo": "vo:rus.w_sup",
+      "shown": "суп",
+      "say": "суп",
+      "ipa": "[sup]"
+    },
+    {
+      "id": "w-svinja",
+      "vo": "vo:rus.w_svinja",
+      "shown": "свинья",
+      "say": "свинья́",
+      "ipa": "[svʲɪˈnʲja]"
+    },
+    {
+      "id": "w-syr",
+      "vo": "vo:rus.w_syr",
+      "shown": "сыр",
+      "say": "сыр",
+      "ipa": "[sɨr]"
+    },
+    {
+      "id": "w-ushi",
+      "vo": "vo:rus.w_ushi",
+      "shown": "уши",
+      "say": "у́ши",
+      "ipa": "[ˈuʂɨ]"
+    },
+    {
+      "id": "w-utka",
+      "vo": "vo:rus.w_utka",
+      "shown": "утка",
+      "say": "у́тка",
+      "ipa": "[ˈutkə]"
+    },
+    {
+      "id": "w-varezhki",
+      "vo": "vo:rus.w_varezhki",
+      "shown": "варежки",
+      "say": "ва́режки",
+      "ipa": "[ˈvarʲɪʂkʲɪ]"
+    },
+    {
+      "id": "w-vinograd",
+      "vo": "vo:rus.w_vinograd",
+      "shown": "виноград",
+      "say": "виногра́д",
+      "ipa": "[vʲɪnɐˈɡrat]"
+    },
+    {
+      "id": "w-voda",
+      "vo": "vo:rus.w_voda",
+      "shown": "вода",
+      "say": "вода́",
+      "ipa": "[vɐˈda]"
+    },
+    {
+      "id": "w-volk",
+      "vo": "vo:rus.w_volk",
+      "shown": "волк",
+      "say": "волк",
+      "ipa": "[voɫk]"
+    },
+    {
+      "id": "w-volosy",
+      "vo": "vo:rus.w_volosy",
+      "shown": "волосы",
+      "say": "во́лосы",
+      "ipa": "[ˈvoɫəsɨ]"
+    },
+    {
+      "id": "w-vstan",
+      "vo": "vo:rus.w_vstan",
+      "shown": "Встань!",
+      "say": "Встань!",
+      "ipa": "[fstanʲ]"
+    },
+    {
+      "id": "w-yabloko",
+      "vo": "vo:rus.w_yabloko",
+      "shown": "яблоко",
+      "say": "я́блоко",
+      "ipa": "[ˈjabləkə]"
+    },
+    {
+      "id": "w-yozh",
+      "vo": "vo:rus.w_yozh",
+      "shown": "ёж",
+      "say": "ёж",
+      "ipa": "[joʂ]"
+    },
+    {
+      "id": "w-zajats",
+      "vo": "vo:rus.w_zajats",
+      "shown": "заяц",
+      "say": "за́яц",
+      "ipa": "[ˈzajɪt͡s]"
+    },
+    {
+      "id": "w-zdravstvuj",
+      "vo": "vo:rus.w_zdravstvuj",
+      "shown": "Здравствуй!",
+      "say": "Здра́вствуй!",
+      "ipa": "[ˈzdrastvʊj]"
+    },
+    {
+      "id": "w-zdravstvujte",
+      "vo": "vo:rus.w_zdravstvujte",
+      "shown": "здравствуйте",
+      "say": "здра́вствуйте",
+      "ipa": "[ˈzdrastvʊjtʲe]"
+    },
+    {
+      "id": "w-zeljonyj",
+      "vo": "vo:rus.w_zeljonyj",
+      "shown": "зелёный",
+      "say": "зелёный",
+      "ipa": "[zʲɪˈlʲonɨj]"
+    },
+    {
+      "id": "w-zhiraf",
+      "vo": "vo:rus.w_zhiraf",
+      "shown": "жираф",
+      "say": "жира́ф",
+      "ipa": "[ʐɨˈraf]"
+    },
+    {
+      "id": "w-zhivot",
+      "vo": "vo:rus.w_zhivot",
+      "shown": "живот",
+      "say": "живо́т",
+      "ipa": "[ʐɨˈvot]"
+    },
+    {
+      "id": "w-zholtyj",
+      "vo": "vo:rus.w_zholtyj",
+      "shown": "жёлтый",
+      "say": "жёлтый",
+      "ipa": "[ˈʐoɫtɨj]"
+    },
+    {
+      "id": "w-zhuk",
+      "vo": "vo:rus.w_zhuk",
+      "shown": "жук",
+      "say": "жук",
+      "ipa": "[ʐuk]"
+    },
+    {
+      "id": "w-zuby",
+      "vo": "vo:rus.w_zuby",
+      "shown": "зубы",
+      "say": "зу́бы",
+      "ipa": "[ˈzubɨ]"
+    }
+  ]
+}

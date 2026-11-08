@@ -1,0 +1,176 @@
+{
+  "schema": "activity/v1",
+  "id": "c.numc09.13",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.4",
+  "domain": "numbers",
+  "band": "C",
+  "skills": [
+    {
+      "id": "NUM-C-09",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.9
+  },
+  "prompt": {
+    "vo": "vo:c.numc09.13.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "עֶשֶׂר יוֹתֵר מִשְּׁלוֹשִׁים וְאַרְבַּע. אֵיזֶה מִסְפָּר בַּמִּשְׁבֶּצֶת הָרֵיקָה?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "picture": {
+      "kind": "hundred_chart",
+      "lit": [
+        34
+      ],
+      "blank": [
+        44
+      ]
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 44,
+        "label": "אַרְבָּעִים וְאַרְבַּע"
+      },
+      {
+        "id": "o2",
+        "numeral": 35,
+        "label": "שְׁלוֹשִׁים וְחָמֵשׁ",
+        "misconception": "M-HC-ROW"
+      },
+      {
+        "id": "o3",
+        "numeral": 24,
+        "label": "עֶשְׂרִים וְאַרְבַּע",
+        "misconception": "M-OP-SWAP"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.numc09.1.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַרְבָּעִים וְאַרְבַּע! שְׁלוֹשִׁים וְאַרְבַּע וְעוֹד עֶשֶׂר שָׁוֶה אַרְבָּעִים וְאַרְבַּע."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-HC-ROW",
+        "vo": "vo:fb.hc_row",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עֶשֶׂר יוֹתֵר זוֹ שׁוּרָה לְמַטָּה, בְּאוֹתוֹ טוּר. בּוֹאוּ נִרְאֶה."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-OP-SWAP",
+        "vo": "vo:fb.op_swap",
+        "caption": [
+          {
+            "t": "he",
+            "v": "רֶגַע, מוֹסִיפִים כָּאן אוֹ מוֹרִידִים? בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַסִּימָן."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.numc09.13.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בְּלוּחַ הַמֵּאָה, עֶשֶׂר יוֹתֵר זוֹ שׁוּרָה לְמַטָּה בְּאוֹתוֹ טוּר, וְעֶשֶׂר פָּחוֹת שׁוּרָה לְמַעְלָה."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.numc09.13.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מִשְּׁלוֹשִׁים וְאַרְבַּע יוֹרְדִים שׁוּרָה לְמַטָּה, בְּאוֹתוֹ טוּר: אַרְבָּעִים וְאַרְבַּע. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "עֶשֶׂר יוֹתֵר מִשְּׁלוֹשִׁים וְאַרְבַּע. אֵיזֶה מִסְפָּר בַּמִּשְׁבֶּצֶת הָרֵיקָה?"
+  }
+}

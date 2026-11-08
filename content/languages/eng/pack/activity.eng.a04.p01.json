@@ -1,0 +1,148 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a04.p01",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "puppet_talk",
+  "templateVersion": "1.0",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-04",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a04-p01",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the puppet asks, the child may answer or pass",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "בֻּבָּה שֶׁמְּדַבֶּרֶת"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_ins_personal",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֶפְשָׁר לַעֲנוֹת בִּתְמוּנָה, אוֹ בְּקוֹל. אֶפְשָׁר גַּם לְדַלֵּג."
+      }
+    ],
+    "target": "vo:eng.en_im_five_how_old",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_4",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מְצָאתֶם!"
+        }
+      ],
+      "target": "vo:eng.en_wow"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scene": {
+    "picture": "asset:pip_happy"
+  },
+  "answer": {
+    "type": "none",
+    "mode": "personal",
+    "topic": "age",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 3,
+        "label": "3",
+        "clip": "vo:eng.en_three"
+      },
+      {
+        "id": "o2",
+        "numeral": 4,
+        "label": "4",
+        "clip": "vo:eng.en_four"
+      },
+      {
+        "id": "o3",
+        "numeral": 5,
+        "label": "5",
+        "clip": "vo:eng.en_five"
+      },
+      {
+        "id": "o4",
+        "numeral": 6,
+        "label": "6",
+        "clip": "vo:eng.en_six"
+      },
+      {
+        "id": "o5",
+        "numeral": 7,
+        "label": "7",
+        "clip": "vo:eng.en_seven"
+      },
+      {
+        "id": "o6",
+        "numeral": 8,
+        "label": "8",
+        "clip": "vo:eng.en_eight"
+      },
+      {
+        "id": "o7",
+        "numeral": 9,
+        "label": "9",
+        "clip": "vo:eng.en_nine"
+      }
+    ],
+    "pass": {
+      "vo": "vo:eng.pass",
+      "caption": [
+        {
+          "t": "he",
+          "v": "זֶה בְּסֵדֶר!"
+        }
+      ],
+      "target": "vo:eng.en_thats_ok"
+    }
+  }
+}

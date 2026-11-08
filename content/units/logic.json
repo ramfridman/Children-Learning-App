@@ -44,7 +44,8 @@
     "bird",
     "bird_lit",
     "tick",
-    "cross"
+    "cross",
+    "umbrella"
   ],
   "things": {
     "ball": [
@@ -144,14 +145,14 @@
       "def": "הַמַּנְעוּל"
     },
     "brush": {
-      "one": "מִבְרֶשֶׁת",
+      "one": "מִבְרֶשֶׁת שִׁנַּיִם",
       "g": "f",
-      "def": "הַמִּבְרֶשֶׁת"
+      "def": "מִבְרֶשֶׁת הַשִּׁנַּיִם"
     },
     "paste": {
-      "one": "מִשְׁחָה",
+      "one": "מִשְׁחַת שִׁנַּיִם",
       "g": "f",
-      "def": "הַמִּשְׁחָה"
+      "def": "מִשְׁחַת הַשִּׁנַּיִם"
     },
     "ball_size_s": {
       "one": "כַּדּוּר קָטָן",
@@ -172,7 +173,8 @@
     },
     "rain": {
       "one": "גֶּשֶׁם",
-      "g": "m"
+      "g": "m",
+      "def": "הַגֶּשֶׁם"
     },
     "rainbow": {
       "one": "קֶשֶׁת",
@@ -244,32 +246,37 @@
       "def": "הַצַּלַּחַת"
     },
     "tower_1": {
-      "one": "מִגְדָּל מִסְפָּר אַחַת",
+      "one": "מִגְדָּל שֶׁל קֻבִּיָּה אַחַת",
       "g": "m"
     },
     "tower_2": {
-      "one": "מִגְדָּל מִסְפָּר שְׁתַּיִם",
+      "one": "מִגְדָּל שֶׁל שְׁתֵּי קֻבִּיּוֹת",
       "g": "m"
     },
     "tower_3": {
-      "one": "מִגְדָּל מִסְפָּר שָׁלוֹשׁ",
+      "one": "מִגְדָּל שֶׁל שָׁלוֹשׁ קֻבִּיּוֹת",
       "g": "m"
     },
     "tower_4": {
-      "one": "מִגְדָּל מִסְפָּר אַרְבַּע",
+      "one": "מִגְדָּל שֶׁל אַרְבַּע קֻבִּיּוֹת",
       "g": "m"
     },
     "tower_5": {
-      "one": "מִגְדָּל מִסְפָּר חָמֵשׁ",
+      "one": "מִגְדָּל שֶׁל חָמֵשׁ קֻבִּיּוֹת",
       "g": "m"
     },
     "tower_6": {
-      "one": "מִגְדָּל מִסְפָּר שֵׁשׁ",
+      "one": "מִגְדָּל שֶׁל שֵׁשׁ קֻבִּיּוֹת",
       "g": "m"
+    },
+    "umbrella": {
+      "one": "מִטְרִיָּה",
+      "g": "f",
+      "def": "הַמִּטְרִיָּה"
     }
   },
   "tagFeedback": {
-    "M-SORT-SHIFT": "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק.",
+    "M-SORT-SHIFT": "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, גַּם אִם הַדָּבָר שׁוֹנֶה. בּוֹאוּ נִבְדֹּק.",
     "M-PAT-NEXT": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא.",
     "M-SEQ-CAUSE": "בּוֹאוּ נַחְשֹׁב: מַה קּוֹרֶה קֹדֶם, וּמָה אַחַר כָּךְ?",
     "M-SER-ENDS": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל.",
@@ -342,7 +349,7 @@
     {
       "id": "LOG-A-02",
       "title": "מוצאים את החריג לפי תכונה אחת",
-      "child": "מוֹצְאִים מִי שׁוֹנֶה",
+      "child": "מוֹצְאִים אֶת הַשּׁוֹנֶה",
       "world": "stall",
       "needs": [
         "LOG-A-01"
@@ -399,8 +406,8 @@
     },
     {
       "id": "LOG-A-07",
-      "title": "מתקנים סדר שנשבר",
-      "child": "מְתַקְּנִים סֵדֶר שֶׁנִּשְׁבַּר",
+      "title": "מה לא במקום שלו?",
+      "child": "מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?",
       "world": "pattern-door",
       "needs": [
         "LOG-A-06"
@@ -477,70 +484,73 @@
       "kind": "pick",
       "id": "log.same.cat",
       "skill": "LOG-A-01",
-      "prompt": "אֵיפֹה אוֹתוֹ הַדָּבָר?",
+      "prompt": "אֵיפֹה עוֹד חָתוּל?",
       "group": {
         "sprite": "cat",
         "count": 1
       },
       "options": [
         "dog",
-        "cat",
-        "duck"
+        "cat"
       ],
       "correct": "cat",
-      "difficulty": 0.05,
-      "tags": {
-        "dog": "M-COL-ONEATTR",
-        "duck": "M-COL-ONEATTR"
-      }
+      "difficulty": 0.05
     },
     {
       "kind": "pick",
       "id": "log.same.star",
       "skill": "LOG-A-01",
-      "prompt": "אֵיפֹה אוֹתוֹ הַדָּבָר?",
+      "prompt": "אֵיפֹה עוֹד כּוֹכָב?",
       "group": {
         "sprite": "star",
         "count": 1
       },
       "options": [
         "ball_yellow",
-        "balloon_yellow",
         "star"
       ],
       "correct": "star",
       "difficulty": 0.05,
       "tags": {
-        "ball_yellow": "M-COL-ONEATTR",
-        "balloon_yellow": "M-COL-ONEATTR"
+        "ball_yellow": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
       "kind": "pick",
       "id": "log.same.duck",
       "skill": "LOG-A-01",
-      "prompt": "אֵיפֹה אוֹתוֹ הַדָּבָר?",
+      "prompt": "אֵיפֹה עוֹד בַּרְוָז?",
       "group": {
         "sprite": "duck",
         "count": 1
       },
       "options": [
         "duck",
-        "bird",
         "ball_yellow"
       ],
       "correct": "duck",
       "difficulty": 0.1,
       "tags": {
-        "bird": "M-COL-ONEATTR",
         "ball_yellow": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
       "kind": "pick",
       "id": "log.odd.colour",
       "skill": "LOG-A-02",
-      "prompt": "מִי שׁוֹנֶה?",
+      "prompt": "מַה שּׁוֹנֶה מֵהָאֲחֵרִים?",
       "row": [
         "ball_red",
         "ball_red",
@@ -559,7 +569,7 @@
       "kind": "pick",
       "id": "log.odd.thing",
       "skill": "LOG-A-02",
-      "prompt": "מִי שׁוֹנֶה?",
+      "prompt": "מַה שּׁוֹנֶה מֵהָאֲחֵרִים?",
       "row": [
         "ball_green",
         "ball_green",
@@ -578,7 +588,7 @@
       "kind": "pick",
       "id": "log.odd.animal",
       "skill": "LOG-A-02",
-      "prompt": "מִי שׁוֹנֶה?",
+      "prompt": "מִי שׁוֹנֶה מֵהָאֲחֵרִים?",
       "row": [
         "cat",
         "cat",
@@ -615,7 +625,13 @@
       },
       "difficulty": 0.2,
       "h3": "הַכַּדּוּר אָדֹם, אָז הוּא הוֹלֵךְ אֶל הָאֲדֻמִּים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַקְּבוּצָה.",
-      "rule": "colour"
+      "rule": "colour",
+      "tag_lines": {
+        "M-SORT-SHIFT": [
+          "vo:fb.sort_shift.colour_only",
+          "מְחַפְּשִׂים אֶת אוֹתוֹ הַצֶּבַע. בּוֹאוּ נִבְדֹּק."
+        ]
+      }
     },
     {
       "kind": "pick",
@@ -636,7 +652,13 @@
       },
       "difficulty": 0.25,
       "h3": "הַבָּלוֹן צָהֹב, אָז הוּא הוֹלֵךְ אֶל הַצְּהֻבִּים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַקְּבוּצָה.",
-      "rule": "colour"
+      "rule": "colour",
+      "tag_lines": {
+        "M-SORT-SHIFT": [
+          "vo:fb.sort_shift.colour_only",
+          "מְחַפְּשִׂים אֶת אוֹתוֹ הַצֶּבַע. בּוֹאוּ נִבְדֹּק."
+        ]
+      }
     },
     {
       "kind": "pick",
@@ -657,13 +679,19 @@
       },
       "difficulty": 0.25,
       "h3": "הַכֶּלֶב הוֹלֵךְ אֶל הַכְּלָבִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַקְּבוּצָה.",
-      "rule": "kind"
+      "rule": "kind",
+      "tag_lines": {
+        "M-SORT-SHIFT": [
+          "vo:fb.sort_shift.kind_other",
+          "בּוֹאוּ נִסְתַּכֵּל שׁוּב: מַה זֶּה, וְעִם אֵיזוֹ קְבוּצָה הוּא הוֹלֵךְ?"
+        ]
+      }
     },
     {
       "kind": "pick",
       "id": "log.pat.yes.colours",
       "skill": "LOG-A-04",
-      "prompt": "הַסֵּדֶר חוֹזֵר?",
+      "prompt": "הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב?",
       "row": [
         "ball_red",
         "ball_blue",
@@ -685,7 +713,7 @@
       "kind": "pick",
       "id": "log.pat.no.mixed",
       "skill": "LOG-A-04",
-      "prompt": "הַסֵּדֶר חוֹזֵר?",
+      "prompt": "הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב?",
       "row": [
         "ball_red",
         "ball_blue",
@@ -707,7 +735,7 @@
       "kind": "pick",
       "id": "log.pat.yes.animals",
       "skill": "LOG-A-04",
-      "prompt": "הַסֵּדֶר חוֹזֵר?",
+      "prompt": "הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב?",
       "row": [
         "cat",
         "dog",
@@ -832,7 +860,7 @@
       "kind": "pick",
       "id": "log.fix.colours",
       "skill": "LOG-A-07",
-      "prompt": "הַסֵּדֶר נִשְׁבַּר. מָה חָסֵר?",
+      "prompt": "חָסֵר אֶחָד בַּסֵּדֶר. מַה צָּרִיךְ לָבוֹא כָּאן?",
       "row": [
         "ball_red",
         "ball_blue",
@@ -858,7 +886,7 @@
       "kind": "pick",
       "id": "log.fix.animals",
       "skill": "LOG-A-07",
-      "prompt": "הַסֵּדֶר נִשְׁבַּר. מָה חָסֵר?",
+      "prompt": "חָסֵר אֶחָד בַּסֵּדֶר. מַה צָּרִיךְ לָבוֹא כָּאן?",
       "row": [
         "fish",
         "bird",
@@ -884,13 +912,13 @@
       "kind": "pick",
       "id": "log.fix.balloons",
       "skill": "LOG-A-07",
-      "prompt": "הַסֵּדֶר נִשְׁבַּר. מָה חָסֵר?",
+      "prompt": "חָסֵר אֶחָד בַּסֵּדֶר. מַה צָּרִיךְ לָבוֹא כָּאן?",
       "row": [
+        "balloon_yellow",
+        "balloon_green",
+        "balloon_yellow",
+        "balloon_green",
         "?",
-        "balloon_green",
-        "balloon_yellow",
-        "balloon_green",
-        "balloon_yellow",
         "balloon_green"
       ],
       "options": [
@@ -904,13 +932,13 @@
       },
       "difficulty": 0.45,
       "correct_text": "כֵּן! צָהֹב, יָרֹק, צָהֹב, יָרֹק, צָהֹב, יָרֹק.",
-      "h3": "צָהֹב, יָרֹק, צָהֹב, יָרֹק — בַּהַתְחָלָה בָּא צָהֹב. עַכְשָׁו תּוֹרְכֶם."
+      "h3": "צָהֹב, יָרֹק, צָהֹב, יָרֹק — בַּמָּקוֹם הֶחָסֵר בָּא צָהֹב. עַכְשָׁו תּוֹרְכֶם."
     },
     {
       "kind": "pick",
       "id": "log.story.plant.first",
       "skill": "LOG-A-08",
-      "prompt": "מַה קּוֹרֶה קֹדֶם?",
+      "prompt": "מַה בָּא רִאשׁוֹן?",
       "options": [
         "plant_flower",
         "plant_seed",
@@ -923,13 +951,18 @@
       "difficulty": 0.25,
       "rep": "story",
       "correct_text": "כֵּן! קֹדֶם שׁוֹתְלִים זֶרַע.",
-      "h3": "קֹדֶם זֶרַע, אַחַר כָּךְ נֵבֶט, וּבַסּוֹף פֶּרַח. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַזֶּרַע."
+      "h3": "קֹדֶם זֶרַע, אַחַר כָּךְ נֵבֶט, וּבַסּוֹף פֶּרַח. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַזֶּרַע.",
+      "row": [
+        "?",
+        "plant_sprout",
+        "plant_flower"
+      ]
     },
     {
       "kind": "pick",
       "id": "log.story.plant.last",
       "skill": "LOG-A-08",
-      "prompt": "מַה קּוֹרֶה בַּסּוֹף?",
+      "prompt": "מַה בָּא בַּסּוֹף?",
       "options": [
         "plant_seed",
         "plant_flower",
@@ -942,7 +975,12 @@
       "difficulty": 0.3,
       "rep": "story",
       "correct_text": "כֵּן! בַּסּוֹף הַזֶּרַע נַעֲשָׂה פֶּרַח.",
-      "h3": "קֹדֶם זֶרַע, אַחַר כָּךְ נֵבֶט, וּבַסּוֹף פֶּרַח. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַפֶּרַח."
+      "h3": "קֹדֶם זֶרַע, אַחַר כָּךְ נֵבֶט, וּבַסּוֹף פֶּרַח. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַפֶּרַח.",
+      "row": [
+        "plant_seed",
+        "plant_sprout",
+        "?"
+      ]
     },
     {
       "kind": "pick",
@@ -961,7 +999,12 @@
       "difficulty": 0.35,
       "rep": "story",
       "correct_text": "כֵּן! אַחַר כָּךְ יוֹצֵא אֶפְרוֹחַ.",
-      "h3": "הַבֵּיצָה נִסְדְּקָה, וְאַחַר כָּךְ יוֹצֵא אֶפְרוֹחַ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הָאֶפְרוֹחַ."
+      "h3": "הַבֵּיצָה נִסְדְּקָה, וְאַחַר כָּךְ יוֹצֵא אֶפְרוֹחַ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הָאֶפְרוֹחַ.",
+      "row": [
+        "egg",
+        "egg_crack",
+        "?"
+      ]
     },
     {
       "kind": "pick",
@@ -1003,7 +1046,7 @@
       "kind": "pick",
       "id": "log.pair.brush",
       "skill": "LOG-A-09",
-      "prompt": "מָה הוֹלֵךְ עִם הַמִּבְרֶשֶׁת?",
+      "prompt": "מָה הוֹלֵךְ עִם מִבְרֶשֶׁת הַשִּׁנַּיִם?",
       "group": {
         "sprite": "brush",
         "count": 1
@@ -1015,7 +1058,7 @@
       ],
       "correct": "paste",
       "difficulty": 0.25,
-      "h3": "מִבְרֶשֶׁת וּמִשְׁחָה הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּשְׁחָה."
+      "h3": "מִבְרֶשֶׁת שִׁנַּיִם וּמִשְׁחַת שִׁנַּיִם הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּשְׁחָה."
     },
     {
       "kind": "pick",
@@ -1082,11 +1125,17 @@
       ],
       "correct": "ball_size_l",
       "tags": {
-        "ball_size_s": "M-SER-ENDS"
+        "ball_size_m": "M-PAT-NEXT"
       },
       "difficulty": 0.35,
       "correct_text": "כֵּן! קָטָן, בֵּינוֹנִי, גָּדוֹל.",
-      "h3": "קָטָן, בֵּינוֹנִי, וְאַחַר כָּךְ גָּדוֹל. עַכְשָׁו תּוֹרְכֶם."
+      "h3": "קָטָן, בֵּינוֹנִי, וְאַחַר כָּךְ גָּדוֹל. עַכְשָׁו תּוֹרְכֶם.",
+      "tag_lines": {
+        "M-PAT-NEXT": [
+          "vo:fb.ser.last_biggest",
+          "בַּסּוֹף בָּא הֲכִי גָּדוֹל. בּוֹאוּ נַשְׁוֶה."
+        ]
+      }
     },
     {
       "kind": "sort",
@@ -1123,7 +1172,13 @@
       ],
       "difficulty": 0.3,
       "h3": "הָאֲדֻמִּים אֶל הָאֲדֻמִּים, וְהַכְּחֻלִּים אֶל הַכְּחֻלִּים. עַכְשָׁו תּוֹרְכֶם.",
-      "rule": "colour"
+      "rule": "colour",
+      "tag_lines": {
+        "M-SORT-SHIFT": [
+          "vo:fb.sort_shift.colour_only",
+          "מְחַפְּשִׂים אֶת אוֹתוֹ הַצֶּבַע. בּוֹאוּ נִבְדֹּק."
+        ]
+      }
     },
     {
       "kind": "sort",
@@ -1164,13 +1219,19 @@
       ],
       "difficulty": 0.35,
       "h3": "הַחֲתוּלִים אֶל הַחֲתוּלִים, וְהַכְּלָבִים אֶל הַכְּלָבִים. עַכְשָׁו תּוֹרְכֶם.",
-      "rule": "kind"
+      "rule": "kind",
+      "tag_lines": {
+        "M-SORT-SHIFT": [
+          "vo:fb.sort_shift.kind_other",
+          "בּוֹאוּ נִסְתַּכֵּל שׁוּב: מַה זֶּה, וְעִם אֵיזוֹ קְבוּצָה הוּא הוֹלֵךְ?"
+        ]
+      }
     },
     {
       "kind": "sort",
       "id": "log.sortdrag.three",
       "skill": "LOG-A-03",
-      "prompt": "מְמַיְּנִים לְשָׁלוֹשׁ קְבוּצוֹת.",
+      "prompt": "שָׂמִים כׇּל אֶחָד עִם הַדּוֹמִים לוֹ.",
       "bins": [
         {
           "sprite": "apple",
@@ -1213,13 +1274,19 @@
       ],
       "difficulty": 0.45,
       "h3": "תַּפּוּחִים עִם תַּפּוּחִים, כּוֹכָבִים עִם כּוֹכָבִים, דָּגִים עִם דָּגִים. עַכְשָׁו תּוֹרְכֶם.",
-      "rule": "kind"
+      "rule": "kind",
+      "tag_lines": {
+        "M-SORT-SHIFT": [
+          "vo:fb.sort_shift.kind_other",
+          "בּוֹאוּ נִסְתַּכֵּל שׁוּב: מַה זֶּה, וְעִם אֵיזוֹ קְבוּצָה הוּא הוֹלֵךְ?"
+        ]
+      }
     },
     {
       "kind": "build",
       "id": "log.copy.colours",
       "skill": "LOG-A-05",
-      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר לְמַטָּה.",
       "model": [
         "ball_red",
         "ball_blue",
@@ -1237,7 +1304,7 @@
       "kind": "build",
       "id": "log.copy.animals",
       "skill": "LOG-A-05",
-      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר לְמַטָּה.",
       "model": [
         "cat",
         "dog",
@@ -1255,7 +1322,7 @@
       "kind": "build",
       "id": "log.copy.three",
       "skill": "LOG-A-05",
-      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר לְמַטָּה.",
       "model": [
         "star",
         "apple",
@@ -1276,8 +1343,11 @@
       "kind": "build",
       "id": "log.copy.balloons",
       "skill": "LOG-A-05",
-      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר לְמַטָּה.",
       "model": [
+        "balloon_yellow",
+        "balloon_yellow",
+        "balloon_green",
         "balloon_yellow",
         "balloon_yellow",
         "balloon_green"
@@ -1287,7 +1357,7 @@
         "balloon_yellow"
       ],
       "difficulty": 0.35,
-      "h3": "צָהֹב, צָהֹב, יָרֹק. עַכְשָׁו תּוֹרְכֶם."
+      "h3": "צָהֹב, צָהֹב, יָרֹק, צָהֹב, צָהֹב, יָרֹק. עַכְשָׁו תּוֹרְכֶם."
     },
     {
       "kind": "same",
@@ -1295,14 +1365,18 @@
       "skill": "LOG-A-01",
       "ref": "apple",
       "others": [
-        "ball_red",
-        "balloon_red"
+        "ball_red"
       ],
-      "pos": 2,
+      "pos": 1,
       "difficulty": 0.1,
       "tags": {
-        "ball_red": "M-COL-ONEATTR",
-        "balloon_red": "M-COL-ONEATTR"
+        "ball_red": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
@@ -1311,14 +1385,18 @@
       "skill": "LOG-A-01",
       "ref": "bird",
       "others": [
-        "duck",
         "ball_blue"
       ],
       "pos": 0,
       "difficulty": 0.15,
       "tags": {
-        "duck": "M-COL-ONEATTR",
         "ball_blue": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
@@ -1327,15 +1405,20 @@
       "skill": "LOG-A-01",
       "ref": "balloon_red",
       "others": [
-        "balloon_blue",
         "ball_red"
       ],
       "pos": 1,
       "difficulty": 0.2,
       "tags": {
-        "balloon_blue": "M-COL-ONEATTR",
         "ball_red": "M-COL-ONEATTR"
-      }
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
+      },
+      "noun": "בָּלוֹן"
     },
     {
       "kind": "odd",
@@ -1361,7 +1444,7 @@
       "kind": "odd",
       "id": "log.odd.bird",
       "skill": "LOG-A-02",
-      "a": "duck",
+      "a": "fish",
       "b": "bird",
       "at": 1,
       "difficulty": 0.3,
@@ -1561,7 +1644,7 @@
       "kind": "build",
       "id": "log.copy.pets",
       "skill": "LOG-A-05",
-      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר לְמַטָּה.",
       "model": [
         "duck",
         "cat",
@@ -1579,8 +1662,11 @@
       "kind": "build",
       "id": "log.copy.green",
       "skill": "LOG-A-05",
-      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר לְמַטָּה.",
       "model": [
+        "ball_green",
+        "ball_green",
+        "ball_yellow",
         "ball_green",
         "ball_green",
         "ball_yellow"
@@ -1590,7 +1676,7 @@
         "ball_green"
       ],
       "difficulty": 0.35,
-      "h3": "יָרֹק, יָרֹק, צָהֹב. עַכְשָׁו תּוֹרְכֶם."
+      "h3": "יָרֹק, יָרֹק, צָהֹב, יָרֹק, יָרֹק, צָהֹב. עַכְשָׁו תּוֹרְכֶם."
     },
     {
       "kind": "sort",
@@ -1598,7 +1684,7 @@
       "skill": "LOG-A-01",
       "check": "practice",
       "rule": "kind",
-      "prompt": "שָׂמִים יַחַד אֶת אוֹתוֹ הַדָּבָר: תַּפּוּחִים עִם תַּפּוּחִים, וְדָגִים עִם דָּגִים.",
+      "prompt": "שָׂמִים כׇּל אֶחָד עִם הַדּוֹמִים לוֹ: תַּפּוּחִים עִם תַּפּוּחִים, וְדָגִים עִם דָּגִים.",
       "bins": [
         {
           "sprite": "apple",
@@ -1631,7 +1717,13 @@
           1
         ]
       ],
-      "difficulty": 0.3
+      "difficulty": 0.3,
+      "tag_lines": {
+        "M-SORT-SHIFT": [
+          "vo:fb.sort_shift.kind_other",
+          "בּוֹאוּ נִסְתַּכֵּל שׁוּב: מַה זֶּה, וְעִם אֵיזוֹ קְבוּצָה הוּא הוֹלֵךְ?"
+        ]
+      }
     },
     {
       "kind": "sort",
@@ -1639,7 +1731,7 @@
       "skill": "LOG-A-01",
       "check": "practice",
       "rule": "kind",
-      "prompt": "שָׂמִים יַחַד אֶת אוֹתוֹ הַדָּבָר: חֲתוּלִים עִם חֲתוּלִים, וּבַרְוָזִים עִם בַּרְוָזִים.",
+      "prompt": "שָׂמִים כׇּל אֶחָד עִם הַדּוֹמִים לוֹ: חֲתוּלִים עִם חֲתוּלִים, וּבַרְוָזִים עִם בַּרְוָזִים.",
       "bins": [
         {
           "sprite": "cat",
@@ -1672,14 +1764,20 @@
           2
         ]
       ],
-      "difficulty": 0.3
+      "difficulty": 0.3,
+      "tag_lines": {
+        "M-SORT-SHIFT": [
+          "vo:fb.sort_shift.kind_other",
+          "בּוֹאוּ נִסְתַּכֵּל שׁוּב: מַה זֶּה, וְעִם אֵיזוֹ קְבוּצָה הוּא הוֹלֵךְ?"
+        ]
+      }
     },
     {
       "kind": "pick",
       "id": "b15.loga01.3",
       "skill": "LOG-A-01",
       "check": "transfer",
-      "prompt": "אֵיפֹה אוֹתוֹ הַדָּבָר?",
+      "prompt": "אֵיפֹה עוֹד תַּפּוּחַ?",
       "group": {
         "sprite": "apple",
         "count": 1
@@ -1692,6 +1790,12 @@
       "tags": {
         "ball_red": "M-COL-ONEATTR"
       },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
+      },
       "difficulty": 0.4
     },
     {
@@ -1699,7 +1803,7 @@
       "id": "b15.loga01.4",
       "skill": "LOG-A-01",
       "check": "transfer",
-      "prompt": "אֵיפֹה אוֹתוֹ הַדָּבָר?",
+      "prompt": "אֵיפֹה עוֹד בָּלוֹן?",
       "group": {
         "sprite": "balloon_red",
         "count": 1
@@ -1711,6 +1815,12 @@
       "correct": "balloon_blue",
       "tags": {
         "ball_red": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       },
       "difficulty": 0.4
     },
@@ -1726,10 +1836,16 @@
       ],
       "wrong": 2,
       "tag": "M-SORT-SHIFT",
-      "prompt": "חָבֵר אוֹסֵף רַק תַּפּוּחִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?",
+      "prompt": "אוֹסְפִים רַק תַּפּוּחִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?",
       "check": "error_spotting",
       "difficulty": 0.5,
-      "rule": "kind"
+      "rule": "kind",
+      "tag_lines": {
+        "M-SORT-SHIFT": [
+          "vo:fb.spot.not_apple",
+          "זֶה תַּפּוּחַ, וְהוּא בַּמָּקוֹם. מָה הִגִּיעַ לְכָאן בְּטָעוּת?"
+        ]
+      }
     },
     {
       "kind": "spot",
@@ -1739,14 +1855,20 @@
         "duck",
         "duck",
         "duck",
-        "bird"
+        "star"
       ],
       "wrong": 3,
       "tag": "M-SORT-SHIFT",
-      "prompt": "חָבֵר אוֹסֵף רַק בַּרְוָזִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?",
+      "prompt": "אוֹסְפִים רַק בַּרְוָזִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?",
       "check": "error_spotting",
       "difficulty": 0.5,
-      "rule": "kind"
+      "rule": "kind",
+      "tag_lines": {
+        "M-SORT-SHIFT": [
+          "vo:fb.spot.not_duck",
+          "זֶה בַּרְוָז, וְהוּא בַּמָּקוֹם. מָה הִגִּיעַ לְכָאן בְּטָעוּת?"
+        ]
+      }
     },
     {
       "kind": "odd",
@@ -1861,7 +1983,7 @@
         "dog",
         "cat",
         "dog",
-        "dog",
+        "duck",
         "dog"
       ],
       "wrong": 4,
@@ -1879,14 +2001,14 @@
         "ball_red",
         "ball_blue",
         "ball_red",
-        "ball_red",
+        "ball_green",
         "ball_red",
         "ball_blue"
       ],
       "wrong": 3,
       "tag": "M-PAT-UNIT",
       "prompt": "הַסֵּדֶר חוֹזֵר, אֲבָל יֵשׁ בּוֹ טָעוּת. אֵיפֹה הַטָּעוּת?",
-      "h3": "כַּדּוּר אָדֹם, כַּדּוּר כָּחֹל, כַּדּוּר אָדֹם, כַּדּוּר כָּחֹל, כַּדּוּר אָדֹם, כַּדּוּר כָּחֹל — כָּכָה הַסֵּדֶר חוֹזֵר. עַכְשָׁו תּוֹרְכֶם.",
+      "h3": "כַּדּוּר אָדֹם, כַּדּוּר כָּחֹל, כַּדּוּר אָדֹם, כַּדּוּר כָּחֹל — כָּכָה הַסֵּדֶר חוֹזֵר. עַכְשָׁו תּוֹרְכֶם.",
       "check": "error_spotting",
       "difficulty": 0.5
     },
@@ -1898,7 +2020,7 @@
         "fish",
         "bird",
         "fish",
-        "fish",
+        "star",
         "fish",
         "bird"
       ],
@@ -1918,13 +2040,13 @@
         "ball_blue",
         "ball_yellow",
         "ball_blue",
-        "ball_blue",
+        "ball_green",
         "ball_blue"
       ],
       "wrong": 4,
       "tag": "M-PAT-NEXT",
       "prompt": "הַסֵּדֶר חוֹזֵר, אֲבָל יֵשׁ בּוֹ טָעוּת. אֵיפֹה הַטָּעוּת?",
-      "h3": "כַּדּוּר צָהֹב, כַּדּוּר כָּחֹל, כַּדּוּר צָהֹב, כַּדּוּר כָּחֹל, כַּדּוּר צָהֹב, כַּדּוּר כָּחֹל — כָּכָה הַסֵּדֶר חוֹזֵר. עַכְשָׁו תּוֹרְכֶם.",
+      "h3": "כַּדּוּר צָהֹב, כַּדּוּר כָּחֹל, כַּדּוּר צָהֹב, כַּדּוּר כָּחֹל — כָּכָה הַסֵּדֶר חוֹזֵר. עַכְשָׁו תּוֹרְכֶם.",
       "check": "error_spotting",
       "difficulty": 0.5
     },
@@ -1933,7 +2055,7 @@
       "id": "b15.loga05.1",
       "skill": "LOG-A-05",
       "check": "transfer",
-      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר לְמַטָּה.",
       "model": [
         "fish",
         "star",
@@ -1953,7 +2075,7 @@
       "id": "b15.loga05.2",
       "skill": "LOG-A-05",
       "check": "transfer",
-      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר לְמַטָּה.",
       "model": [
         "ball_red",
         "ball_blue",
@@ -1976,11 +2098,8 @@
       "mode": "next",
       "a": "ball_size_l",
       "b": "ball_size_s",
-      "c": "ball_size_m",
+      "c": "star_size_s",
       "pos": 1,
-      "tags": {
-        "ball_size_m": "M-PAT-UNIT"
-      },
       "difficulty": 0.45
     },
     {
@@ -1991,11 +2110,8 @@
       "mode": "next",
       "a": "star_size_s",
       "b": "star_size_l",
-      "c": "star_size_m",
+      "c": "apple_size_l",
       "pos": 0,
-      "tags": {
-        "star_size_m": "M-PAT-UNIT"
-      },
       "difficulty": 0.45
     },
     {
@@ -2004,7 +2120,7 @@
       "skill": "LOG-A-08",
       "check": "reverse",
       "rep": "story",
-      "prompt": "יָצָא אֶפְרוֹחַ. מָה הָיָה מִיָּד לִפְנֵי זֶה?",
+      "prompt": "מָה חָסֵר בֵּין הַבֵּיצָה לָאֶפְרוֹחַ?",
       "options": [
         "egg",
         "egg_crack",
@@ -2016,7 +2132,12 @@
         "chick": "M-SEQ-CAUSE"
       },
       "h3": "קֹדֶם בֵּיצָה, אַחַר כָּךְ בֵּיצָה סְדוּקָה, וּבַסּוֹף אֶפְרוֹחַ. עַכְשָׁו תּוֹרְכֶם.",
-      "difficulty": 0.5
+      "difficulty": 0.5,
+      "row": [
+        "egg",
+        "?",
+        "chick"
+      ]
     },
     {
       "kind": "pick",
@@ -2024,19 +2145,24 @@
       "skill": "LOG-A-08",
       "check": "reverse",
       "rep": "story",
-      "prompt": "צָמַח פֶּרַח. מָה הָיָה מִיָּד לִפְנֵי זֶה?",
+      "prompt": "מָה חָסֵר בֵּין הֶעָנָן לַקֶּשֶׁת?",
       "options": [
-        "plant_seed",
-        "plant_flower",
-        "plant_sprout"
+        "cloud",
+        "rainbow",
+        "rain"
       ],
-      "correct": "plant_sprout",
+      "correct": "rain",
       "tags": {
-        "plant_seed": "M-SEQ-CAUSE",
-        "plant_flower": "M-SEQ-CAUSE"
+        "cloud": "M-SEQ-CAUSE",
+        "rainbow": "M-SEQ-CAUSE"
       },
-      "h3": "קֹדֶם זֶרַע, אַחַר כָּךְ נֵבֶט, וּבַסּוֹף פֶּרַח. עַכְשָׁו תּוֹרְכֶם.",
-      "difficulty": 0.5
+      "h3": "קֹדֶם עָנָן, אַחַר כָּךְ גֶּשֶׁם, וּבַסּוֹף קֶשֶׁת. עַכְשָׁו תּוֹרְכֶם.",
+      "difficulty": 0.5,
+      "row": [
+        "cloud",
+        "?",
+        "rainbow"
+      ]
     },
     {
       "kind": "pair",
@@ -2057,14 +2183,15 @@
       "id": "b15.loga09.2",
       "skill": "LOG-A-09",
       "check": "transfer",
-      "ref": "cloud",
-      "partner": "rain",
+      "ref": "rain",
+      "partner": "umbrella",
       "others": [
         "key",
         "sock"
       ],
       "pos": 2,
-      "difficulty": 0.4
+      "difficulty": 0.4,
+      "h3": "גֶּשֶׁם וּמִטְרִיָּה הוֹלְכִים יַחַד. עַכְשָׁו תּוֹרְכֶם."
     },
     {
       "kind": "pick",
@@ -2084,17 +2211,22 @@
       ],
       "correct": "tower_3",
       "tags": {
-        "tower_2": "M-PAT-NEXT",
-        "tower_1": "M-SER-ENDS"
+        "tower_2": "M-PAT-NEXT"
       },
-      "difficulty": 0.45
+      "difficulty": 0.45,
+      "tag_lines": {
+        "M-PAT-NEXT": [
+          "vo:fb.ser.last_tallest",
+          "בַּסּוֹף בָּא הֲכִי גָּבוֹהַּ. בּוֹאוּ נַשְׁוֶה."
+        ]
+      }
     },
     {
       "kind": "pick",
       "id": "b15.loga10.2",
       "skill": "LOG-A-10",
       "check": "transfer",
-      "prompt": "מַה בָּא קֹדֶם?",
+      "prompt": "מַה בָּא רִאשׁוֹן?",
       "row": [
         "?",
         "tower_2",
@@ -2107,17 +2239,22 @@
       ],
       "correct": "tower_1",
       "tags": {
-        "tower_2": "M-PAT-NEXT",
-        "tower_3": "M-SER-ENDS"
+        "tower_2": "M-PAT-NEXT"
       },
-      "difficulty": 0.45
+      "difficulty": 0.45,
+      "tag_lines": {
+        "M-PAT-NEXT": [
+          "vo:fb.ser.first_shortest",
+          "בַּהַתְחָלָה בָּא הֲכִי נָמוּךְ. בּוֹאוּ נַשְׁוֶה."
+        ]
+      }
     }
   ],
   "firstSequence": 1,
   "lessons": [
     {
       "id": "same-and-different",
-      "title": "זֶהֶה וְשׁוֹנֶה",
+      "title": "זֵהֶה וְשׁוֹנֶה",
       "skills": [
         "LOG-A-01",
         "LOG-A-02"
@@ -2130,7 +2267,7 @@
         "log.odd.animal",
         "log.odd.thing"
       ],
-      "done": "כׇּל הַכָּבוֹד! מְצָאתֶם מִי זֶהֶה וּמִי שׁוֹנֶה."
+      "done": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַזֵּהֶה וְאֶת הַשּׁוֹנֶה."
     },
     {
       "id": "sorting-groups",
@@ -2249,7 +2386,7 @@
     },
     {
       "id": "same-and-different-again",
-      "title": "עוֹד זֶהֶה וְשׁוֹנֶה",
+      "title": "עוֹד זֵהֶה וְשׁוֹנֶה",
       "skills": [
         "LOG-A-01",
         "LOG-A-02"
@@ -2265,7 +2402,7 @@
         "b15.loga01.2"
       ],
       "minutes": 4,
-      "done": "כׇּל הַכָּבוֹד! מְצָאתֶם מִי זֶהֶה וּמִי שׁוֹנֶה."
+      "done": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַזֵּהֶה וְאֶת הַשּׁוֹנֶה."
     },
     {
       "id": "patterns-again",
@@ -2341,7 +2478,7 @@
     },
     {
       "id": "same-and-different-again-1-b15",
-      "title": "זֶהֶה אוֹ שׁוֹנֶה?",
+      "title": "זֵהֶה אוֹ שׁוֹנֶה?",
       "skills": [
         "LOG-A-01",
         "LOG-A-02"

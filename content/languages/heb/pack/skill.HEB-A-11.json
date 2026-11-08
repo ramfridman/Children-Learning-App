@@ -1,0 +1,41 @@
+{
+  "schema": "skill/v1",
+  "id": "HEB-A-11",
+  "review": "needs-editor",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מזהה את השם הכתוב שלו (במכשיר בלבד)"
+    }
+  ],
+  "strand": "pk",
+  "prerequisites": [
+    {
+      "skill": "HEB-A-10",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "symbolic"
+  ],
+  "misconceptions": [
+    "heb.pk.name_first",
+    "heb.pk.name_length",
+    "heb.pk.order",
+    "heb.pk.shape_az",
+    "heb.pk.shape_bk",
+    "heb.pk.shape_dr",
+    "heb.pk.shape_gn",
+    "heb.pk.shape_hxt",
+    "heb.pk.shape_sm",
+    "heb.pk.shape_tm",
+    "heb.pk.shape_vzn"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

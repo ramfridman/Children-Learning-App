@@ -1,0 +1,41 @@
+{
+  "schema": "lesson/v1",
+  "id": "read-to-100",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "קוֹרְאִים מִסְפָּרִים גְּדוֹלִים"
+    }
+  ],
+  "skills": [
+    "NUM-C-02"
+  ],
+  "items": [
+    "c.numc02.1",
+    "c.numc02.2",
+    "c.numc02.3",
+    "c.numc02.4",
+    "c.numc02.5",
+    "c.numc02.6",
+    "c.numc02.7",
+    "c.numc02.8",
+    "c.numc02.9",
+    "c.numc02.10",
+    "c.numc02.11",
+    "c.numc02.12"
+  ],
+  "estimatedMinutes": 8,
+  "sequence": 106,
+  "celebration": {
+    "vo": "vo:celebrate.read_to_100",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! כׇּל סִפְרָה בִּמְקוֹמָהּ."
+      }
+    ]
+  }
+}

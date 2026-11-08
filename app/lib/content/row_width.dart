@@ -16,3 +16,7 @@ double rowEm(List<String> cells) => cells.fold<double>(0, (double sum, String c)
 /// The widest row a small phone's stage (270 points, less the room at both ends) can show with numbers of 13 points: wider rows are
 /// refused, so a number is never drawn too small to read. (Eleven cells with two numbers of five digits are about 17.)
 const double maxRowEm = 18;
+
+/// The widest number sentence a speech bubble shows under its line (`prompt.math`), in em: the bubble of the smallest phone is 144 points wide
+/// inside, and the run is drawn at about 20 points. "40 + 30 = ?" is 6.4.
+const double maxPromptMathEm = 7;

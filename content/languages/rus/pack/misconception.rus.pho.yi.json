@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "rus.pho.yi",
+  "review": "needs-editor",
+  "course": "rus",
+  "kind": "diagnostic",
+  "family": "CONTRAST",
+  "skills": [
+    "RUS-A-20"
+  ],
+  "parentText": "הצליל ы לא קיים בעברית, ולכן мышка (\"עכבר\") ו־мишка (\"דובי\") נשמעות דומה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "עשו יחד \"פרצוף מתלבט\" ואמרו ы…, ואחר כך мышка ו־мишка."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial"
+  ]
+}

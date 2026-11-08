@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "eng.lis.story_recall",
+  "review": "needs-editor",
+  "course": "eng",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "ENG-A-15"
+  ],
+  "parentText": "בשאלה על הסיפור הילד בחר משהו שהופיע בעמוד אחר. כדאי לחזור יחד לעמוד ולהצביע.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "אחרי סיפור, שאלו \"מה קרה בסוף?\" ודפדפו יחד לעמוד הנכון."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story"
+  ]
+}

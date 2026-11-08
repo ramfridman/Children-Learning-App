@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.verbs-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מָה הֵם עוֹשִׂים?"
+    }
+  ],
+  "skills": [
+    "HEB-A-02"
+  ],
+  "items": [
+    "heb.a02.09",
+    "heb.a02.10",
+    "heb.a02.11",
+    "heb.a02.12"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 3
+}

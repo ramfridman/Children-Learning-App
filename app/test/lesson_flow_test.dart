@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/content/bundled_packs.dart';
 import 'package:nitznutz/child/friends_beach.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/content/models.dart';
@@ -252,7 +253,7 @@ void main() {
       ]);
       final Attempt first = (await _attempts(rig)).first;
       expect(first.packId, 'starter');
-      expect(first.packVersion, '0.10.0');
+      expect(first.packVersion, bundledStarterVersion);
       expect(first.lessonId, 'butterflies');
       expect(first.activityRevision, 1);
       expect(first.templateVersion, '1.0');

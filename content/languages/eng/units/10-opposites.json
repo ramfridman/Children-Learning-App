@@ -1,0 +1,19 @@
+{
+  "skill": {"id": "ENG-A-10", "strand": "lis", "title": "הֲפָכִים", "prerequisites": [{"skill": "ENG-A-03"}, {"skill": "ENG-A-05"}], "setCoverage": true},
+  "items": [
+    {"id": "i05", "kind": "tap", "target": "en-hot", "options": ["tea", "cup-cold", "mika-sad"], "wrong": {"cup-cold": "sem", "mika-sad": "l1_guess"}},
+    {"id": "i06", "kind": "tap", "target": "en-cold", "options": ["mika-cold", "mika-hot", "pip-happy"], "wrong": {"mika-hot": "sem", "pip-happy": "l1_guess"}},
+    {"id": "i07", "kind": "tap", "target": "en-happy", "options": ["mika-happy", "mika-sad", "tea"], "wrong": {"mika-sad": "sem", "tea": "l1_guess"}},
+    {"id": "i08", "kind": "tap", "target": "en-sad", "options": ["pip-sad", "pip-happy", "cup-cold"], "wrong": {"pip-happy": "sem", "cup-cold": "l1_guess"}},
+    {"id": "i09", "kind": "tap", "purpose": "check", "target": "en-hot", "options": ["mika-hot", "mika-cold", "cup-cold"], "wrong": {"mika-cold": "sem", "cup-cold": "l1_guess"}},
+    {"id": "i10", "kind": "tap", "purpose": "check", "target": "en-cold", "options": ["cup-cold", "tea", "mika-happy"], "wrong": {"tea": "sem", "mika-happy": "l1_guess"}},
+    {"id": "i01", "kind": "listen_do", "rep": "pictorial", "ladder": "HL-PIC", "mode": "hotspots", "picture": "dog-big", "target": "en-big", "options": ["big", "small"], "wrong": {"small": "sem"}},
+    {"id": "i02", "kind": "listen_do", "rep": "pictorial", "ladder": "HL-PIC", "mode": "hotspots", "picture": "dog-big", "target": "en-small", "options": ["small", "big"], "wrong": {"big": "sem"}},
+    {"id": "i03", "kind": "listen_do", "rep": "pictorial", "ladder": "HL-PIC", "mode": "hotspots", "picture": "ball-pair", "target": "en-big", "options": ["big", "small"], "wrong": {"small": "sem"}},
+    {"id": "i04", "kind": "listen_do", "rep": "pictorial", "ladder": "HL-PIC", "mode": "hotspots", "picture": "ball-pair", "target": "en-small", "options": ["small", "big"], "wrong": {"big": "sem"}}
+  ],
+  "lessons": [
+    {"id": "adj-1", "title": "חַם, קַר, שָׂמֵחַ, עָצוּב", "items": ["i05", "i06", "i07", "i08"]},
+    {"id": "adj-more", "title": "חַם, קַר, שָׂמֵחַ, עָצוּב", "items": ["i01", "i02", "i03", "i04"]}
+  ]
+}

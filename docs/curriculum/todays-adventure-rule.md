@@ -5,7 +5,7 @@ Author: curriculum-expert, 2026-10-29. Status: **RULE, ready to implement** (it 
 ## 0. The rule in ten lines
 
 1. The bottle opens **one stop**: a call for help (a revisit mission), a lesson on a land's path, or a lesson played again. It is an invitation; nothing changes or fades if the child never taps it.
-2. **Revisit first, once a day:** if a check is due in an open land and the child has not had a revisit visit today, the bottle opens the revisit that fell due earliest.
+2. **Revisit first, once a day:** if a check is due in an open land and the child has not had a revisit visit today, the bottle opens the revisit that fell due earliest. (A language course's **check visit** takes this slot too, after every revisit of a mastered skill: section 15, owner's OK 2026-11-07.)
 3. **Then new learning:** after a revisit visit today, the next 2 visits are lessons; after that, a due revisit again. If nothing new is left, a due revisit always comes before a replay.
 4. **New learning continues the land the child played last** (their own choice on the map counts), for up to 3 finished lessons in a row.
 5. **After 3 lessons in a row in one land** (or when its path is done), the bottle suggests another land: the lowest level first (Band A before Band B), then the land not played for the longest time, then the map order.
@@ -287,3 +287,15 @@ Each language a parent turned on for the child is a **land** for this rule, with
 - **Visits** belong to the course of the pack their answers name (`Attempt.packId`), so two courses may use the same lesson id; a placement visit is `placement-<course>` and a mission names its skill, whose id says its course.
 - **Words.** The bottle's line for a language stop (`adventureLine`) is `null` until the hebrew-text-editor writes the lines with the door; the bubble stays calm. The app does not open a language stop from the bottle until the island and its doors exist (`_openStop`).
 - **Tests.** `test/todays_adventure_languages_test.dart` (the rule with language lands, order, shuffling, off is not a land, the adapter with a language pack).
+
+## 15. The course's check visit in the revisit slot (owner's OK 2026-11-07; docs/languages/band-a-build.md section 7.4)
+
+**Owner OK 2026-11-07.** A language course has a second kind of short visit besides the revisit of a mastered skill: the **check visit**, the short mission of one skill that is started, not fresh, whose lessons are all finished (or placed) and that was not answered today. It gives the skill the evidence a lesson cannot (a check, a second day). To the child it is a visit like a revisit; nothing says "check" or "test". Its eligibility, its items and what follows a failed check are in `band-a-build.md` section 7.4 (C-1 to C-6) and are the engine's (`engine/check_visit.dart`); this section is only where it stands in the rule.
+
+- **The slot.** A check visit is a `DueSkill` with `check: true`, and it takes the revisit's slot of section 4: it is offered when a revisit would be (no revisit visit today, or two path visits since the last one), and a check visit played today counts as the day's revisit. The stop is `TodaysAdventure.checkVisit(land, skillId)`: `kind` is `revisit`, `reason` is `checkVisit`; the app opens `courseCheckVisit`, a short mission `mission-<skill>-check`.
+- **Never ahead of a revisit of a mastered skill.** Among the due skills the rule sorts the revisits of mastered skills first (by `dueAt`, then the current land, the land's order, the skill id) and the check visits after them (the same order). A check visit is offered ahead of a lesson, as a revisit is.
+- **At most one a day per course.** The adapter makes at most one check visit for a course, and none when a check visit of that course was already played today (`Visit.check`, a revisit visit whose lesson id ends with `-check`). Among a course's ready skills the one whose last answer is oldest goes first, then the path's order.
+- **A skill that failed its checks on two visits in a row** is not sent to another check visit: the stop is `TodaysAdventure.replay(land, <the skill's last lesson>)` (reason `playAgain`), and the check visit comes back, on a later day, once a learn item of the skill was answered after the failure (band-a-build.md C-4).
+- **Only the language courses** have check visits. The lands' skills are checked by the session builder and the bells, as before.
+- **Words.** A language stop has one line for each language whatever the reason (section 14), so no new string is needed.
+- **Tests.** `test/check_visit_world_test.dart` (the slot, a mastered revisit first, one a day, the reteach lesson, the visit's short lesson) and `test/engine/check_visit_test.dart` (the engine's rules).

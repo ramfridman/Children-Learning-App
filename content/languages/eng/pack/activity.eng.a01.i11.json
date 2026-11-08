@@ -1,0 +1,161 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a01.i11",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.3",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-01",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "reverse",
+  "representation": "pictorial",
+  "variantGroup": "en-goodbye",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "listen and choose",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "שָׁלוֹשׁ תְּמוּנוֹת"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_ins_which_word",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיזוֹ מִלָּה מַתְאִימָה לַתְּמוּנָה?"
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_4",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מְצָאתֶם!"
+        }
+      ],
+      "target": "vo:eng.en_goodbye"
+    },
+    "incorrect": [
+      {
+        "when": "misconception:eng.lis.sem",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_hint_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:eng.he_hint_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "replay_prompt_slow",
+      "vo": "vo:eng.he_gl_goodbye",
+      "caption": [
+        {
+          "t": "he",
+          "v": "לְהִתְרָאוֹת"
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:eng.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:eng.en_goodbye"
+    }
+  ],
+  "scene": {
+    "group": {
+      "sprite": "asset:pip_leave",
+      "count": 1
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "label": "צְלִיל",
+        "clip": "vo:eng.en_goodbye"
+      },
+      {
+        "id": "o2",
+        "label": "צְלִיל",
+        "clip": "vo:eng.en_hello",
+        "misconception": "eng.lis.sem"
+      },
+      {
+        "id": "o3",
+        "label": "צְלִיל",
+        "clip": "vo:eng.en_hi",
+        "misconception": "eng.lis.sem"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

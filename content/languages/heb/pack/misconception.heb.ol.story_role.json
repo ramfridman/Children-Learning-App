@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.story_role",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "HEB-A-01"
+  ],
+  "parentText": "הילד מבין את הסיפור, ולפעמים עוד מתבלבל מי עשה מה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "כשקוראים ספר יחד, עצרו מדי פעם ושאלו \"מי עשה את זה?\", ותנו לילד להצביע על הדמות בתמונה."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story",
+    "pictorial"
+  ]
+}

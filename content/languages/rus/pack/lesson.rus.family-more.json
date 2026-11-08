@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.family-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִשְׁפָּחָה"
+    }
+  ],
+  "skills": [
+    "RUS-A-02"
+  ],
+  "items": [
+    "rus.a02.11",
+    "rus.a02.12",
+    "rus.a02.13",
+    "rus.a02.15"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 6
+}

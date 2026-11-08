@@ -1,0 +1,185 @@
+{
+  "skill": {
+    "id": "HEB-A-11",
+    "strand": "pk",
+    "title": "מזהה את השם הכתוב שלו (במכשיר בלבד)",
+    "prerequisites": [
+      {
+        "skill": "HEB-A-10"
+      }
+    ]
+  },
+  "ownName": {
+    "names": [
+      "אורי",
+      "אלה",
+      "בן",
+      "בר",
+      "גיל",
+      "גפן",
+      "דן",
+      "דנה",
+      "הדר",
+      "הילה",
+      "ורד",
+      "זיו",
+      "זוהר",
+      "חן",
+      "חיים",
+      "טל",
+      "טליה",
+      "יעל",
+      "יונתן",
+      "כרמל",
+      "כנרת",
+      "ליה",
+      "לביא",
+      "מאיה",
+      "מיכאל",
+      "נועה",
+      "ניר",
+      "סהר",
+      "סתיו",
+      "עומר",
+      "עדי",
+      "פז",
+      "פלג",
+      "צור",
+      "צליל",
+      "קרן",
+      "קשת",
+      "רון",
+      "רוני",
+      "שירה",
+      "שקד",
+      "תמר",
+      "תום",
+      "ניצי",
+      "נקודי",
+      "גוני",
+      "קובי",
+      "טימי",
+      "צעדון",
+      "פנינה",
+      "נוגה",
+      "איתן"
+    ],
+    "pairs": [
+      {
+        "a": "ב",
+        "b": "כ",
+        "tag": "shape_bk"
+      },
+      {
+        "a": "ד",
+        "b": "ר",
+        "tag": "shape_dr"
+      },
+      {
+        "a": "ה",
+        "b": "ח",
+        "tag": "shape_hxt"
+      },
+      {
+        "a": "ו",
+        "b": "ז",
+        "tag": "shape_vzn"
+      },
+      {
+        "a": "ס",
+        "b": "ם",
+        "tag": "shape_sm"
+      },
+      {
+        "a": "ע",
+        "b": "צ",
+        "tag": "shape_az"
+      },
+      {
+        "a": "ג",
+        "b": "נ",
+        "tag": "shape_gn"
+      },
+      {
+        "a": "ט",
+        "b": "מ",
+        "tag": "shape_tm"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "name",
+      "frame": "i-name",
+      "options": [
+        "own",
+        "length"
+      ],
+      "rep": "symbolic",
+      "ladder": "HL-NAME"
+    },
+    {
+      "id": "02",
+      "kind": "name",
+      "frame": "i-name",
+      "options": [
+        "own",
+        "first",
+        "length"
+      ],
+      "rep": "symbolic",
+      "ladder": "HL-NAME"
+    },
+    {
+      "id": "03",
+      "kind": "name-letter",
+      "frame": "i-name-letter",
+      "options": [
+        "first",
+        "lookalike",
+        "last"
+      ],
+      "rep": "symbolic",
+      "ladder": "HL-NAME"
+    },
+    {
+      "id": "04",
+      "kind": "name",
+      "frame": "i-name",
+      "purpose": "check",
+      "font": "display",
+      "options": [
+        "own",
+        "first",
+        "length"
+      ],
+      "rep": "symbolic",
+      "ladder": "HL-NAME"
+    },
+    {
+      "id": "05",
+      "kind": "name-letter",
+      "frame": "i-name-letter",
+      "purpose": "check",
+      "options": [
+        "first",
+        "lookalike",
+        "last"
+      ],
+      "rep": "symbolic",
+      "ladder": "HL-NAME"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "name-1",
+      "title": "הַשֵּׁם שֶׁלִּי",
+      "items": [
+        "01",
+        "02",
+        "03"
+      ]
+    }
+  ]
+}

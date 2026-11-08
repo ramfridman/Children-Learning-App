@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/content/bundled_packs.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
 
@@ -54,7 +55,7 @@ void main() {
       final AttemptRecord r = written.single;
       expect(r.profileId, 'p-1');
       expect(r.packId, 'starter');
-      expect(r.packVersion, '0.10.0');
+      expect(r.packVersion, bundledStarterVersion);
       expect(r.lessonId, 'butterflies');
       expect(r.activityId, 'count.butterflies.3');
       expect(r.activityRevision, 1);

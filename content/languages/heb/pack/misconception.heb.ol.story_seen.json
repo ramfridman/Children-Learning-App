@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.story_seen",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "HEB-A-01"
+  ],
+  "parentText": "הילד עונה לפעמים במשהו שרואים בתמונה, ולא במה שנשאל.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "כשקוראים יחד, שאלו שאלה אחת על מה שקרה בעמוד, וחזרו עליה לאט לפני שעונים. אם צריך, הצביעו יחד על התשובה."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story",
+    "pictorial"
+  ]
+}

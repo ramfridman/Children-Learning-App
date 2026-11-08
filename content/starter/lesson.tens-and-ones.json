@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "tens-and-ones",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "עֲשָׂרוֹת וִיחִידוֹת"
+    }
+  ],
+  "skills": [
+    "NUM-C-03"
+  ],
+  "items": [
+    "c.numc03.1",
+    "c.numc03.2",
+    "c.numc03.3",
+    "c.numc03.4",
+    "c.numc03.5",
+    "c.numc03.6",
+    "c.numc03.7",
+    "c.numc03.8"
+  ],
+  "estimatedMinutes": 7,
+  "sequence": 107,
+  "celebration": {
+    "vo": "vo:celebrate.tens_and_ones",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! פֵּרַקְתֶּם לַעֲשָׂרוֹת וְלִיחִידוֹת."
+      }
+    ]
+  }
+}

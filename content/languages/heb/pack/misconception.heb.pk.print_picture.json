@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pk.print_picture",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "PRINT",
+  "skills": [
+    "HEB-A-12"
+  ],
+  "parentText": "הילד חושב שקוראים את התמונה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "כשקוראים ספר יחד, העבירו אצבע מתחת למילים בזמן הקריאה, ומדי פעם הראו: \"פה התמונה, ופה המילים שאנחנו קוראים.\""
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "symbolic",
+    "embodied"
+  ]
+}

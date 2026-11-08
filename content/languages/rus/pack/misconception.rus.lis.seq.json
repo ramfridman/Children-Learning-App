@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "rus.lis.seq",
+  "review": "needs-editor",
+  "course": "rus",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "RUS-A-16"
+  ],
+  "parentText": "אחרי הסיפור הילד בחר תמונה שלא הייתה בו. כדאי להקשיב לסיפור שוב, עם התמונות.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "קראו יחד ספר תמונות ושאלו \"מה יקרה עכשיו?\" לפני שמדפדפים."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story"
+  ]
+}

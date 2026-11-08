@@ -6,6 +6,7 @@ import '../speech/hebrew_text.dart';
 import '../speech/lexicon.dart';
 import '../speech/spoken_options.dart';
 import '../speech/word_text.dart' show normalizeWords;
+import 'block_geometry.dart';
 import 'capabilities.dart' show compareTemplateVersion;
 import 'hint_ladder.dart';
 import 'language_checks.dart';
@@ -15,6 +16,7 @@ import 'ls02_checks.dart';
 import 'ls03_checks.dart';
 import 'ls04_checks.dart';
 import 'ls05_checks.dart';
+import 'own_name_docs.dart' show OwnNameDocs;
 import 'row_width.dart';
 import 'schema.dart';
 import 'schemas.dart';
@@ -284,6 +286,10 @@ List<Problem> validatePack({
     if (taughtBand != null && taughtBand != a['band']) {
       say(file, 'band', 'is ${a['band']}, but its skill ${taught.first['id']} is in band $taughtBand');
     }
+    // Only a Hebrew item may ask for the display face: English and Russian have their one teaching font (docs/languages/fonts.md).
+    if (a['font'] != null && a['course'] != Course.heb) {
+      say(file, 'font', 'belongs to a Hebrew course (the other courses have one teaching font)');
+    }
     final Map<String, Object?> prompt = a['prompt']! as Map<String, Object?>;
     checkVo(file, 'prompt.vo', prompt['vo']);
     checkTag(file, 'contradicts', a['contradicts']);
@@ -350,11 +356,30 @@ List<Problem> validatePack({
         } else {
           _choiceAnswer(file, a, answer, say);
           _options(file, answer, say, checkTag, checkAsset: checkAsset);
+          if (answer['type'] == 'name') _nameAnswer(file, a, answer, say, checkTag, course: course);
         }
         _stagePictureOf(file, scene['picture'], say);
+        _stagePictureOf(file, scene['picture2'], say, path: 'scene.picture2', blocksOnly: true);
+        if (scene['picture2'] != null && (scene['picture'] as Map<String, Object?>?)?['kind'] != 'base_ten') {
+          say(file, 'scene.picture2', 'a second picture needs a first, and both are blocks (base_ten)');
+        }
+        for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
+          _stagePictureOf(file, o['picture'], say, path: 'answer.options[$i].picture', blocksOnly: true);
+        }
+        if (!blockLimitWaivers.contains(a['id'])) {
+          for (final String problem in blockLimits(scene, answer)) {
+            final int colon = problem.indexOf(': ');
+            say(
+              file,
+              colon < 0 ? 'scene' : problem.substring(0, colon),
+              colon < 0 ? problem : problem.substring(colon + 2),
+            );
+          }
+        }
         _tapVersion(file, a, scene, answer, say);
         _tapBigNumbers(file, a, scene, answer, say);
         _tapRowWidth(file, scene, say);
+        _promptMath(file, a, scene, say);
         for (final (int i, Object? r) in ((scene['row'] as List<Object?>?) ?? const <Object?>[]).indexed) {
           if (r is String && r.startsWith('asset:')) checkAsset(file, 'scene.row[$i]', r);
         }
@@ -366,7 +391,10 @@ List<Problem> validatePack({
           if (group is Map<String, Object?>) checkAsset(file, 'scene.$g.sprite', group['sprite']);
         }
         for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
-          _optionKind(file, 'answer.options[$i]', o, say, language: Course.isLanguage(course));
+          // An option of the own-name answer has no face: it is made on the device (`_nameAnswer` holds it to its own rules).
+          if (answer['type'] != 'name') {
+            _optionKind(file, 'answer.options[$i]', o, say, language: Course.isLanguage(course));
+          }
           checkVo(file, 'answer.options[$i].clip', o['clip']);
           final Object? set = o['set'];
           if (set is Map<String, Object?>) checkAsset(file, 'answer.options[$i].set.sprite', set['sprite']);
@@ -376,7 +404,7 @@ List<Problem> validatePack({
           for (final Map<String, Object?> o in _maps(answer['options'])) _look(o),
         ];
         // A tap-all repeats a card (three t's among other letters); ls01_checks.dart holds it to its own rule.
-        if (answer['all'] != true && looks.toSet().length != looks.length) {
+        if (answer['all'] != true && answer['type'] != 'name' && looks.toSet().length != looks.length) {
           say(file, 'answer.options', 'two options look the same');
         }
       case 'story':
@@ -487,6 +515,28 @@ List<Problem> validatePack({
         bool onLine(int n) => n >= lineFrom && n <= lineTo;
         final int target = answer['target']! as int;
         if (!onLine(target)) say(file, 'answer.target', 'is not on the line');
+        if ((scene['tickStep'] != null || answer['tolerance'] != null) &&
+            compareTemplateVersion('${a['templateVersion']}', '1.1') < 0) {
+          say(
+            file,
+            'templateVersion',
+            'is ${a['templateVersion']}, but a tick step or a tolerance needs number_line 1.1',
+          );
+        }
+        final int step = (scene['tickStep'] as int?) ?? 1;
+        if ((lineTo - lineFrom) % step != 0) {
+          say(file, 'scene.tickStep', 'the line from $lineFrom to $lineTo does not end on a tick of $step');
+        }
+        final int tolerance = (answer['tolerance'] as int?) ?? 0;
+        if (tolerance > 0 && answer['mode'] == 'jump') {
+          say(file, 'answer.tolerance', 'only a place item has a tolerance');
+        }
+        if (tolerance >= lineTo - lineFrom) say(file, 'answer.tolerance', 'is as wide as the line');
+        if (tolerance > 0 &&
+            answer['mirrorMisconception'] != null &&
+            (lineFrom + lineTo - target - target).abs() <= 2 * tolerance) {
+          say(file, 'answer.mirrorMisconception', 'the mirror of the answer is inside the tolerance');
+        }
         for (final (int i, Object? l) in (scene['labels']! as List<Object?>).indexed) {
           if (!onLine(l! as int)) say(file, 'scene.labels[$i]', 'is not on the line');
         }
@@ -809,6 +859,7 @@ List<Problem> validatePack({
         checkVo(file, 'say.heard.vo', (speak['heard']! as Map<String, Object?>)['vo']);
         checkVo(file, 'say.together.vo', (speak['together']! as Map<String, Object?>)['vo']);
         _sayWords(file, a['course'] as String? ?? course, speak, say);
+        _sayRoutes(file, a, speak, say, course: a['course'] as String? ?? course);
       case 'give_n':
         checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> source = scene['source']! as Map<String, Object?>;
@@ -817,11 +868,14 @@ List<Problem> validatePack({
         if ((answer['n']! as int) > (source['count']! as int)) {
           say(file, 'answer.n', 'cannot be more than the ${source['count']} objects in the jar');
         }
+        if (scene['frame'] == true && compareTemplateVersion('${a['templateVersion']}', '1.1') < 0) {
+          say(file, 'templateVersion', 'is ${a['templateVersion']}, but a ten-frame target needs give_n 1.1');
+        }
         for (final (int i, Map<String, Object?> c) in _maps(answer['classifiers']).indexed) {
           checkTag(file, 'answer.classifiers[$i].misconception', c['misconception']);
         }
     }
-    _targetClips(file, a, checkVo);
+    _targetClips(file, a, say, checkVo);
     checkLs01(
       file,
       a,
@@ -864,7 +918,16 @@ List<Problem> validatePack({
   lessons.forEach((String id, Map<String, Object?> l) {
     final String file = 'lesson.$id.json';
     for (final (int i, Object? item) in (l['items']! as List<Object?>).indexed) {
-      if (!activityIds.contains(item)) say(file, 'items[$i]', 'there is no activity "$item" in this pack');
+      if (!activityIds.contains(item)) {
+        say(file, 'items[$i]', 'there is no activity "$item" in this pack');
+      } else if (activities[item] case final Map<String, Object?> doc when _isTeachScreen(doc)) {
+        // A teach screen is played from a `teach` set, which is filtered by route; among the items it would reach every route.
+        say(
+          file,
+          'items[$i]',
+          '"$item" is a teach screen, so it is not an item of any lesson (name it in `teach`)',
+        );
+      }
     }
     for (final (int i, Object? s) in (l['skills']! as List<Object?>).indexed) {
       checkSkill(file, 'skills[$i]', s);
@@ -873,15 +936,66 @@ List<Problem> validatePack({
         say(file, 'skills[$i]', 'the skill $s is in band $band, but the lesson is in band ${l['band']}');
       }
     }
+    for (final (int i, Map<String, Object?> set) in _maps(l['teach']).indexed) {
+      final bool hear = set['mode'] == 'hear';
+      final List<Object?> routes = set['routes']! as List<Object?>;
+      // A teach screen is for a new learner and never for a heritage speaker (the syllabus's rule); a hearing screen is for a heritage
+      // speaker. The reader is resolved to one of the two before the lesson is built, so it is no route of a set.
+      if (routes.any((Object? r) => r != (hear ? 'heritage' : 'new'))) {
+        say(
+          file,
+          'teach[$i].routes',
+          hear
+              ? 'a set of hearing screens (mode hear) is for the heritage route only'
+              : 'a set of teach screens is for the new route only: a heritage speaker is never shown one',
+        );
+      }
+      for (final (int j, Object? item) in (set['items']! as List<Object?>).indexed) {
+        final Map<String, Object?>? doc = activities[item];
+        if (doc == null) {
+          say(file, 'teach[$i].items[$j]', 'there is no activity "$item" in this pack');
+        } else if (!_isTeachScreen(doc)) {
+          say(file, 'teach[$i].items[$j]', '"$item" is not a teach screen (a say_it with answer.teach)');
+        } else if (_isHearScreen(doc) != hear) {
+          say(
+            file,
+            'teach[$i].items[$j]',
+            hear
+                ? '"$item" is a teach screen, and a hear set holds hearing screens (answer.hear)'
+                : '"$item" is a hearing screen, and it is in a hear set only',
+          );
+        } else if (l['items'] is List<Object?> && (l['items']! as List<Object?>).contains(item)) {
+          say(
+            file,
+            'teach[$i].items[$j]',
+            '"$item" is a teach screen, so it is not one of the lesson\'s items as well',
+          );
+        }
+      }
+    }
     final Map<String, Object?> cel = l['celebration']! as Map<String, Object?>;
     checkVo(file, 'celebration.vo', cel['vo']);
-    _targetClips(file, l, checkVo);
+    final Object? demo = l['demo'];
+    if (demo is Map<String, Object?>) {
+      checkVo(file, 'demo.vo', demo['vo']);
+      if (!(l['items']! as List<Object?>).any((Object? i) => _hasBlocks(activities[i]))) {
+        say(
+          file,
+          'demo',
+          'a lesson opens with the demonstration of blocks only when one of its items has blocks',
+        );
+      }
+    }
+    _targetClips(file, l, say, checkVo);
     _hebrew(file, l, say, pointed: l['band'] != 'C');
   });
 
   skills.forEach((String id, Map<String, Object?> s) {
     final String file = 'skill.$id.json';
     _skillId(file, id, s, say, course: course);
+    if (s.containsKey('readerAs') && course != Course.rus) {
+      say(file, 'readerAs', 'a reader route belongs to the Russian course');
+    }
     for (final (int i, Map<String, Object?> p) in _maps(s['prerequisites']).indexed) {
       if (p['skill'] == id) say(file, 'prerequisites[$i].skill', 'a skill cannot need itself');
     }
@@ -1140,6 +1254,45 @@ void _voiceAnswer(
   }
 }
 
+/// A teach screen: a `say_it` whose answer says `teach` (the child is shown the word, not asked it).
+bool _isTeachScreen(Map<String, Object?> doc) =>
+    doc['template'] == 'say_it' && (doc['answer'] as Map<String, Object?>?)?['teach'] == true;
+
+/// A hearing screen: a teach screen that is only heard (`answer.hear`).
+bool _isHearScreen(Map<String, Object?> doc) => (doc['answer'] as Map<String, Object?>?)?['hear'] == true;
+
+/// The routes of a say step (docs/languages/band-a-build.md 2.6.1 R3 and R4). Only the Russian course has routes, so only it may hear a word
+/// (`answer.hear`, which is a teach screen too) or give a step an order. A teach or hearing screen is always echo, so it has neither an order
+/// nor a picture-first line; any other step has both or none, and its picture-first line asks for the word, so no clip follows it.
+void _sayRoutes(
+  String file,
+  Map<String, Object?> a,
+  Map<String, Object?> speak,
+  Say say, {
+  required String course,
+}) {
+  final Map<String, Object?> answer = a['answer']! as Map<String, Object?>;
+  final bool hear = answer['hear'] == true;
+  final bool screen = answer['teach'] == true;
+  final bool ordered = speak.containsKey('order');
+  final bool asks = speak.containsKey('pictureFirst');
+  if (hear && !screen) say(file, 'answer.hear', 'a hearing screen is a teach screen (answer.teach) too');
+  if ((hear || ordered || asks) && course != Course.rus) {
+    say(file, hear ? 'answer.hear' : 'say.order', 'a route belongs to the Russian course');
+  }
+  if (screen && (ordered || asks)) {
+    say(file, 'say.order', 'a teach or hearing screen is always echo: it has no order and no pictureFirst');
+  }
+  if (ordered != asks) {
+    say(file, 'say.order', 'order and pictureFirst go together: a step has both or neither');
+  }
+  final Map<String, Object?> first =
+      (speak['pictureFirst'] as Map<String, Object?>?) ?? const <String, Object?>{};
+  if (first.containsKey('target') || first.containsKey('target2')) {
+    say(file, 'say.pictureFirst', 'asks for the word before it is heard: no clip may follow the line');
+  }
+}
+
 List<Map<String, Object?>> _maps(Object? v) => <Map<String, Object?>>[
   for (final Object? e in (v as List<Object?>? ?? const <Object?>[])) e! as Map<String, Object?>,
 ];
@@ -1201,7 +1354,10 @@ void _numberAnswer(
 /// What each kind of stage picture (`scene.picture`, X1) must say, and what belongs to no other kind.
 const Map<String, ({Set<String> needs, Set<String> may})> _pictureFields =
     <String, ({Set<String> needs, Set<String> may})>{
-      'base_ten': (needs: <String>{}, may: <String>{'thousands', 'hundreds', 'tens', 'ones'}),
+      'base_ten': (
+        needs: <String>{},
+        may: <String>{'thousands', 'hundreds', 'tens', 'ones', 'litRods', 'crossedRods'},
+      ),
       'array': (needs: <String>{'rows', 'columns'}, may: <String>{}),
       'hundred_chart': (needs: <String>{}, may: <String>{'lit', 'blank'}),
       'clock': (needs: <String>{'hour', 'minute'}, may: <String>{'digital'}),
@@ -1210,39 +1366,68 @@ const Map<String, ({Set<String> needs, Set<String> may})> _pictureFields =
       'fraction': (needs: <String>{'parts', 'shaded'}, may: <String>{}),
     };
 
-void _stagePictureOf(String file, Object? picture, void Function(String, String, String) say) {
+void _stagePictureOf(
+  String file,
+  Object? picture,
+  void Function(String, String, String) say, {
+  String path = 'scene.picture',
+  bool blocksOnly = false,
+}) {
   if (picture is! Map<String, Object?>) return;
   final ({Set<String> needs, Set<String> may})? fields = _pictureFields[picture['kind']];
   if (fields == null) return;
   final Object? kind = picture['kind'];
   final Set<String> given = picture.keys.toSet()..remove('kind');
   for (final String f in fields.needs.difference(given)) {
-    say(file, 'scene.picture.$f', 'a $kind picture needs it');
+    say(file, '$path.$f', 'a $kind picture needs it');
   }
   for (final String f in given.difference(fields.needs).difference(fields.may)) {
-    say(file, 'scene.picture.$f', 'does not belong to a $kind picture');
+    say(file, '$path.$f', 'does not belong to a $kind picture');
   }
   if (kind == 'base_ten' && given.isEmpty) {
-    say(file, 'scene.picture', 'a base_ten picture needs at least one of thousands, hundreds, tens or ones');
+    say(file, path, 'a base_ten picture needs at least one of thousands, hundreds, tens or ones');
+  }
+  if (blocksOnly && kind != 'base_ten') {
+    say(file, '$path.kind', 'only a picture of blocks (base_ten) goes here');
+  }
+  if (kind == 'base_ten') {
+    final Object? tens = picture['tens'];
+    final Object? lit = picture['litRods'];
+    final Object? crossed = picture['crossedRods'];
+    final int rods = tens is int ? tens : 0;
+    if (lit is int && lit > rods) say(file, '$path.litRods', 'is more than the tens rods');
+    if (crossed is int && crossed > rods) say(file, '$path.crossedRods', 'is more than the tens rods');
+    if (lit is int && crossed is int && lit + crossed > rods) {
+      say(file, '$path.crossedRods', 'a rod is lit or crossed out, not both');
+    }
   }
   if (kind == 'hundred_chart') {
     final Set<Object?> lit = <Object?>{...?(picture['lit'] as List<Object?>?)};
     final Set<Object?> blank = <Object?>{...?(picture['blank'] as List<Object?>?)};
     if (lit.intersection(blank).isNotEmpty) {
-      say(file, 'scene.picture.blank', 'a cell is lit or blank, not both');
+      say(file, '$path.blank', 'a cell is lit or blank, not both');
     }
   }
   // The fields a kind needs are reported above when missing, so a missing or odd one is skipped here (SEC-M10-2).
   final Object? parts = picture['parts'];
   final Object? shaded = picture['shaded'];
   if (kind == 'fraction' && parts is int && shaded is int && shaded > parts) {
-    say(file, 'scene.picture.shaded', 'is more than the parts');
+    say(file, '$path.shaded', 'is more than the parts');
   }
   final Object? top = picture['top'];
   final Object? bottom = picture['bottom'];
   if (kind == 'column' && top is String && bottom is String && top.length < bottom.length) {
-    say(file, 'scene.picture.bottom', 'a column sum has the longer number on top');
+    say(file, '$path.bottom', 'a column sum has the longer number on top');
   }
+}
+
+/// Whether a tap-the-answer item shows base-ten blocks, on its stage or on its tiles.
+bool _hasBlocks(Map<String, Object?>? a) {
+  final Object? scene = a?['scene'];
+  final Object? answer = a?['answer'];
+  if (scene is! Map<String, Object?> || answer is! Map<String, Object?>) return false;
+  return (scene['picture'] as Map<String, Object?>?)?['kind'] == 'base_ten' ||
+      _maps(answer['options']).any((Map<String, Object?> o) => o['picture'] != null);
 }
 
 final RegExp _bigNumberCell = RegExp(r'^n:[0-9]{4,}$');
@@ -1259,7 +1444,10 @@ void _tapVersion(
   void Function(String, String, String) say,
 ) {
   final List<Object?> row = (scene['row'] as List<Object?>?) ?? const <Object?>[];
-  final String? feature = scene['picture'] != null
+  final String? feature =
+      scene['picture'] != null ||
+          scene['picture2'] != null ||
+          _maps(answer['options']).any((Map<String, Object?> o) => o['picture'] != null)
       ? 'a stage picture'
       : answer['type'] == 'number'
       ? 'a number answer'
@@ -1269,6 +1457,8 @@ void _tapVersion(
       ? 'a cloze'
       : answer['all'] == true
       ? 'a tap-all'
+      : answer['type'] == 'name'
+      ? 'the own-name answer'
       : _maps(answer['options']).length > 4
       ? 'more than four choices'
       : row.length > 8
@@ -1281,6 +1471,127 @@ void _tapVersion(
       : null;
   if (feature != null && compareTemplateVersion('${a['templateVersion']}', '1.4') < 0) {
     say(file, 'templateVersion', 'is ${a['templateVersion']}, but $feature needs tap_answer 1.4');
+  }
+  if (answer['type'] == 'name' && compareTemplateVersion('${a['templateVersion']}', '1.5') < 0) {
+    say(file, 'templateVersion', 'is ${a['templateVersion']}, but the own-name answer needs tap_answer 1.5');
+  }
+}
+
+/// The own-name answer of Hebrew Band A (HEB-A-11, `answer.type` `name`): the options are made on the device, at run time, from the child's
+/// first name, so a pack holds only the rules and the closed list of names, never a name. [unit] `name` is a choice of names (the child's
+/// own, a name of the same first letter, a name of the same length); `letter` is a row of three letters of the name (its first letter, its
+/// look-alike, its last). An option has a source and no face of its own: a name is never recorded, voiced, shown to a voice or sent anywhere.
+void _nameAnswer(
+  String file,
+  Map<String, Object?> a,
+  Map<String, Object?> answer,
+  void Function(String, String, String) say,
+  void Function(String, String, Object?) checkTag, {
+  required String course,
+}) {
+  if (course != Course.heb) say(file, 'answer.type', 'the own-name answer belongs to the Hebrew course');
+  if (a['band'] != 'A') say(file, 'band', 'the own-name answer is a Band A item');
+  if (a['voiceAnswer'] == true) {
+    say(file, 'voiceAnswer', 'a name is never spoken or heard: the answer is a touch');
+  }
+  final Object? unit = answer['unit'];
+  if (unit != 'name' && unit != 'letter') {
+    say(file, 'answer.unit', 'is `name` (a choice of names) or `letter` (a row of letters of the name)');
+    return;
+  }
+  final Set<String> allowed = unit == 'name'
+      ? const <String>{'own', 'first', 'length'}
+      : const <String>{'first', 'lookalike', 'last'};
+  final String rightSource = unit == 'name' ? 'own' : 'first';
+  final List<Map<String, Object?>> options = _maps(answer['options']);
+  for (final (int i, Map<String, Object?> o) in options.indexed) {
+    final String path = 'answer.options[$i]';
+    final Object? source = o['source'];
+    if (source is! String || !allowed.contains(source)) {
+      say(file, '$path.source', 'is one of ${allowed.join(', ')} in a unit of $unit');
+    }
+    for (final String face in const <String>[
+      'sprite',
+      'numeral',
+      'set',
+      'text',
+      'clip',
+      'reveal',
+      'at',
+      'speech',
+    ]) {
+      if (o.containsKey(face)) {
+        say(file, '$path.$face', 'an option of the own-name answer has no $face: it is made on the device');
+      }
+    }
+    if ((o['id'] == answer['correct']) != (source == rightSource)) {
+      say(
+        file,
+        '$path.source',
+        'the right option is the child\'s own ${unit == 'name' ? 'name' : 'first letter'} ($rightSource), no other is',
+      );
+    }
+  }
+  final List<Object?> sources = <Object?>[for (final Map<String, Object?> o in options) o['source']];
+  if (sources.toSet().length != sources.length) {
+    say(file, 'answer.options', 'two options are made the same way');
+  }
+  final List<String> names = <String>[
+    for (final Object? n in (answer['names'] as List<Object?>? ?? const <Object?>[])) n! as String,
+  ];
+  if (unit == 'name' && names.isEmpty) {
+    say(file, 'answer.names', 'the closed list the distractor names come from is needed');
+  }
+  if (names.toSet().length != names.length) say(file, 'answer.names', 'a name is in the list twice');
+  // The device makes the options from the child's name, the companion's, or the house character's: with no name at all the last must work.
+  try {
+    if (OwnNameDocs().madeDoc(a) == null) {
+      say(
+        file,
+        'answer',
+        'no options can be made from the house character name (the list, the pairs or the options do not fit the rules)',
+      );
+    }
+  } on Object {
+    say(file, 'answer', 'the own-name item is not shaped so that its options can be made');
+  }
+  final List<Map<String, Object?>> pairs = _maps(answer['pairs']);
+  if (pairs.isEmpty && (unit == 'letter' || sources.contains('lookalike'))) {
+    say(file, 'answer.pairs', 'the look-alike pairs of letters are needed');
+  }
+  for (final (int i, Map<String, Object?> p) in pairs.indexed) {
+    if (p['a'] == p['b']) say(file, 'answer.pairs[$i]', 'a letter is not its own look-alike');
+    checkTag(file, 'answer.pairs[$i].misconception', p['misconception']);
+  }
+}
+
+/// The number sentence of `prompt.math` (`tap_answer` 1.4): shown in the bubble under the line, so the stage has no row of its own for it
+/// (the row already draws a sentence); it asks for one number at most; a number of four digits belongs to Band C; and it is no wider than the
+/// bubble of the smallest phone holds.
+void _promptMath(
+  String file,
+  Map<String, Object?> a,
+  Map<String, Object?> scene,
+  void Function(String, String, String) say,
+) {
+  final List<String>? run = ((a['prompt']! as Map<String, Object?>)['math'] as List<Object?>?)
+      ?.whereType<String>()
+      .toList();
+  if (run == null) return;
+  if (((scene['row'] as List<Object?>?) ?? const <Object?>[]).isNotEmpty) {
+    say(file, 'prompt.math', 'the scene already draws the sentence in a row');
+  }
+  if (run.where((String c) => c == '?').length > 1) say(file, 'prompt.math', 'asks for more than one number');
+  if (run.any((String c) => c.startsWith('n:') && c.length > 5)) {
+    if (a['band'] != 'C') say(file, 'prompt.math', 'a number of four digits belongs to Band C');
+  }
+  if (rowEm(run) > maxPromptMathEm) say(file, 'prompt.math', 'is too wide for the bubble of a small phone');
+  if (compareTemplateVersion('${a['templateVersion']}', '1.4') < 0) {
+    say(
+      file,
+      'templateVersion',
+      'is ${a['templateVersion']}, but a number sentence in the prompt needs tap_answer 1.4',
+    );
   }
 }
 
@@ -1416,8 +1727,13 @@ String _look(Map<String, Object?> o) {
       for (final MapEntry<String, Object?> e in set.entries) '${e.key}=${e.value}',
   ]..sort();
   // A sound button has no face, so its sound is all there is to tell it by.
-  final bool faceless = o['sprite'] == null && o['numeral'] == null && o['text'] == null && set == null;
-  return '${o['sprite']}|${o['numeral']}|${o['text']}|${parts.join(',')}${faceless ? '|${o['clip']}' : ''}';
+  final Object? picture = o['picture'];
+  final bool faceless =
+      o['sprite'] == null && o['numeral'] == null && o['text'] == null && set == null && picture == null;
+  final String blocks = picture is Map<String, Object?>
+      ? picture.entries.map((e) => '${e.key}=${e.value}').join(',')
+      : '';
+  return '${o['sprite']}|${o['numeral']}|${o['text']}|${parts.join(',')}|$blocks${faceless ? '|${o['clip']}' : ''}';
 }
 
 /// What an option of a `tap_answer` is: exactly one of a sprite, a numeral or a set; in a language course also a text, or only a
@@ -1429,10 +1745,10 @@ void _optionKind(
   void Function(String, String, String) say, {
   required bool language,
 }) {
-  final int faces = <String>['sprite', 'numeral', 'set', 'text'].where(o.containsKey).length;
+  final int faces = <String>['sprite', 'numeral', 'set', 'picture', 'text'].where(o.containsKey).length;
   if (!language) {
     if (faces - (o.containsKey('text') ? 1 : 0) != 1) {
-      say(file, path, 'must be exactly one of a sprite, a numeral or a set');
+      say(file, path, 'must be exactly one of a sprite, a numeral, a set or a picture of blocks');
     }
     return;
   }
@@ -1457,8 +1773,8 @@ void _languageFieldsInLands(String file, Map<String, Object?> a, void Function(S
         final String here = path.isEmpty ? k : '$path.$k';
         final bool option = RegExp(r'^answer\.options\[\d+\]$').hasMatch(path);
         final bool own =
-            const <String>{'show', 'clips', 'pole', 'pairWith'}.contains(k) ||
-            (k == 'target' && v is String) ||
+            const <String>{'show', 'clips', 'pole', 'pairWith', 'teach', 'hear'}.contains(k) ||
+            ((k == 'target' || k == 'target2') && v is String) ||
             (option && const <String>{'text', 'clip', 'reveal'}.contains(k));
         if (own) {
           say(file, here, 'belongs to a language course, not to the lands');
@@ -1970,6 +2286,17 @@ void _story(
       }
     }
   }
+  if (answer['mode'] == 'zones' || answer['mode'] == 'follow') {
+    _readPage(file, a, say, checkVo, checkTag, checkAsset);
+    return;
+  }
+  if (pages.length < 2) {
+    say(
+      file,
+      'scene.pages',
+      'a story has 2 or more pages (a page that shows its text is a `zones` or a `follow`)',
+    );
+  }
   if (answer['mode'] == 'listen') {
     _unscored(file, a, say, 'a story that is only heard');
     for (final String k in <String>['options', 'pauseAfter', 'question']) {
@@ -2004,13 +2331,93 @@ void _story(
   _l4Options(file, answer, say, checkAsset, checkVo, checkTag);
 }
 
+/// A page that shows its text and asks where to touch it (Hebrew Band A, HEB-A-12): one page, its text in lines of words, and 2 or 3 zones.
+/// `zones`: the child touches the end of a line the reading starts at (the right end in Hebrew); the wrong zones are the other end of a line
+/// and the picture. `follow`: the voice reads a word and waits for a touch on it, word by word (every word has its clip); the wrong zones are
+/// another word and the picture. Always scored, every wrong zone with its tag, and no face on the options (a zone is a place on the page).
+void _readPage(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say,
+  void Function(String, String, Object?) checkVo,
+  void Function(String, String, Object?) checkTag,
+  void Function(String, String, Object?) checkAsset,
+) {
+  final Map<String, Object?> answer = a['answer']! as Map<String, Object?>;
+  final String mode = answer['mode']! as String;
+  final List<Map<String, Object?>> pages = _maps((a['scene']! as Map<String, Object?>)['pages']);
+  if (pages.length != 1) say(file, 'scene.pages', 'a page that shows its text is one page');
+  if (a['course'] != Course.heb) {
+    say(file, 'answer.mode', 'the print-direction modes belong to the Hebrew course');
+  }
+  if (a['band'] != 'A') say(file, 'band', 'the print-direction modes are Band A items');
+  if (answer['type'] != 'choice') {
+    say(file, 'answer.type', 'a $mode page asks a choice: the type is "choice"');
+  }
+  final List<List<Map<String, Object?>>> lines = <List<Map<String, Object?>>>[
+    if (pages.isNotEmpty)
+      for (final Object? l in (pages.first['lines'] as List<Object?>? ?? const <Object?>[])) _maps(l),
+  ];
+  if (lines.isEmpty) say(file, 'scene.pages[0].lines', 'a $mode page shows its text: it needs `lines`');
+  final List<Map<String, Object?>> words = <Map<String, Object?>>[
+    for (final List<Map<String, Object?>> l in lines) ...l,
+  ];
+  for (final (int i, Map<String, Object?> w) in words.indexed) {
+    checkVo(file, 'scene.pages[0].lines.word[$i].clip', w['clip']);
+    if (mode == 'follow' && w['clip'] == null) {
+      say(
+        file,
+        'scene.pages[0].lines.word[$i].clip',
+        'a word of a `follow` page has the clip of the voice saying it alone',
+      );
+    }
+  }
+  if (mode == 'follow' && words.length < 2) {
+    say(file, 'scene.pages[0].lines', 'a `follow` page has two or more words to follow');
+  }
+  final List<Map<String, Object?>> options = _maps(answer['options']);
+  _l4Options(file, answer, say, checkAsset, checkVo, checkTag, faceless: true);
+  final Set<String> allowed = mode == 'zones'
+      ? <String>{
+          'picture',
+          for (int n = 1; n <= lines.length; n++) ...<String>['line$n-start', 'line$n-end'],
+        }
+      : const <String>{'word', 'other', 'picture'};
+  final List<Object?> zones = <Object?>[for (final Map<String, Object?> o in options) o['zone']];
+  for (final (int i, Object? z) in zones.indexed) {
+    if (z is! String || !allowed.contains(z)) {
+      say(file, 'answer.options[$i].zone', 'is a place of the page: one of ${allowed.join(', ')}');
+    }
+  }
+  if (zones.toSet().length != zones.length) say(file, 'answer.options', 'two options are the same zone');
+  final Object? right = options
+      .where((Map<String, Object?> o) => o['id'] == answer['correct'])
+      .firstOrNull?['zone'];
+  final String start = mode == 'zones' ? 'line1-start' : 'word';
+  if (right != start) say(file, 'answer.correct', 'the right zone of a $mode page is "$start"');
+  if (a['purpose'] == 'practice') say(file, 'purpose', 'a $mode page is scored: it is not practice');
+}
+
 /// The second clip of a spoken line (`target`) names a voice line of the pack, and only a language course has one.
-void _targetClips(String file, Map<String, Object?> a, void Function(String, String, Object?) checkVo) {
+void _targetClips(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say,
+  void Function(String, String, Object?) checkVo,
+) {
   void walk(Object? node, String path) {
     if (node is Map<String, Object?>) {
+      // A second target clip follows a first one: a line cannot have the second alone.
+      if (node['target2'] is String && node['target'] is! String) {
+        say(
+          file,
+          path.isEmpty ? 'target2' : '$path.target2',
+          'is the clip after `target`: the line has no `target`',
+        );
+      }
       node.forEach((String k, Object? v) {
         final String here = path.isEmpty ? k : '$path.$k';
-        if (k == 'target' && v is String) {
+        if ((k == 'target' || k == 'target2') && v is String) {
           checkVo(file, here, v);
         } else {
           walk(v, here);

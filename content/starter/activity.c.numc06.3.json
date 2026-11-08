@@ -1,0 +1,158 @@
+{
+  "schema": "activity/v1",
+  "id": "c.numc06.3",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "number_line",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "C",
+  "skills": [
+    {
+      "id": "NUM-C-06",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "estimate",
+  "difficulty": {
+    "authored": 0.5
+  },
+  "prompt": {
+    "vo": "vo:c.numc06.3.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל עֶשְׂרִים וְשָׁלוֹשׁ. אֵיפֹה זֶה בְּעֵרֶךְ? נוֹגְעִים בַּמָּקוֹם."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 100,
+    "markerSprite": "asset:frog",
+    "labels": [
+      0,
+      50,
+      100
+    ],
+    "tickStep": 10
+  },
+  "answer": {
+    "type": "line",
+    "mode": "place",
+    "target": 23,
+    "misconception": "M-NL-SPACE",
+    "tolerance": 8,
+    "mirrorMisconception": "M-NL-DIR"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.numc06.3.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יָפֶה! עֶשְׂרִים וְשָׁלוֹשׁ נִמְצָא בְּעֵרֶךְ כָּאן."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-NL-DIR",
+        "vo": "vo:fb.nl_dir",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמִּסְפָּרִים הַקְּטַנִּים בַּצַּד הַשְּׂמָאלִי, וְהֵם גְּדֵלִים לְכִוּוּן הַחֵץ."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-NL-SPACE",
+        "vo": "vo:fb.nl_space",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כׇּל הַקְּפִיצוֹת בְּאוֹתוֹ אֹרֶךְ. בּוֹאוּ נִקְפֹּץ יַחַד וְנִסְפֹּר."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.numc06.3.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הָאֶמְצַע שֶׁל הַצִּיר הוּא חֲמִשִּׁים. עֶשְׂרִים וְשָׁלוֹשׁ קָטָן מֵחֲמִשִּׁים, אָז הוּא בַּצַּד שֶׁל הָאֶפֶס."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.numc06.3.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "סוֹפְרִים אֶת הַקַּוִּים בַּעֲשָׂרוֹת: עֶשֶׂר, עֶשְׂרִים. עֶשְׂרִים וְשָׁלוֹשׁ הוּא קְצָת יוֹתֵר מֵעֶשְׂרִים. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child finds the number on the line",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל עֶשְׂרִים וְשָׁלוֹשׁ. אֵיפֹה זֶה בְּעֵרֶךְ? נוֹגְעִים בַּמָּקוֹם."
+  }
+}

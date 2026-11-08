@@ -1,0 +1,330 @@
+{
+  "skill": {
+    "id": "RUS-A-14",
+    "strand": "grm",
+    "title": "בְּבַקָּשָׁה וְתוֹדָה",
+    "prerequisites": [
+      {
+        "skill": "RUS-A-01"
+      },
+      {
+        "skill": "RUS-A-07"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "listen_do",
+      "mode": "drag",
+      "picture": "mika-body",
+      "frame": "f20",
+      "target": "ch-daj-mjach",
+      "options": [
+        "ball",
+        "balloon",
+        "doll"
+      ],
+      "right": "ball",
+      "wrong": {
+        "balloon": "sem",
+        "doll": "sem"
+      },
+      "after": "w-spasibo",
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "02",
+      "kind": "listen_do",
+      "mode": "drag",
+      "picture": "mika-body",
+      "frame": "f20",
+      "target": "ch-daj-sok",
+      "options": [
+        "juice",
+        "soup",
+        "milk"
+      ],
+      "right": "juice",
+      "wrong": {
+        "soup": "sound",
+        "milk": "sem"
+      },
+      "after": "w-spasibo",
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "03",
+      "kind": "listen_do",
+      "mode": "drag",
+      "picture": "mika-body",
+      "frame": "f20",
+      "target": "ch-daj-hleb",
+      "options": [
+        "bread",
+        "cheese",
+        "apple"
+      ],
+      "right": "bread",
+      "wrong": {
+        "cheese": "sem",
+        "apple": "sem"
+      },
+      "after": "w-spasibo",
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "04",
+      "kind": "listen_do",
+      "mode": "drag",
+      "picture": "mika-body",
+      "frame": "f20",
+      "target": "ch-daj-jabloko",
+      "options": [
+        "apple",
+        "banana",
+        "milk"
+      ],
+      "right": "apple",
+      "wrong": {
+        "banana": "sem",
+        "milk": "sound"
+      },
+      "after": "w-spasibo",
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "05",
+      "kind": "listen_do",
+      "mode": "drag",
+      "picture": "mika-body",
+      "frame": "f20",
+      "target": "ch-daj-banan",
+      "options": [
+        "banana",
+        "orange",
+        "apple"
+      ],
+      "right": "banana",
+      "wrong": {
+        "orange": "sem",
+        "apple": "sem"
+      },
+      "after": "w-spasibo",
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "06",
+      "kind": "listen_do",
+      "mode": "drag",
+      "picture": "mika-body",
+      "frame": "f20",
+      "target": "ch-daj-karandash",
+      "options": [
+        "pencil",
+        "book",
+        "ball"
+      ],
+      "right": "pencil",
+      "wrong": {
+        "book": "sem",
+        "ball": "sem"
+      },
+      "after": "w-spasibo",
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "07",
+      "kind": "listen_do",
+      "mode": "drag",
+      "picture": "mika-body",
+      "frame": "f20",
+      "target": "ch-hochu-syr",
+      "options": [
+        "cheese",
+        "juice",
+        "bread"
+      ],
+      "right": "cheese",
+      "wrong": {
+        "juice": "sound",
+        "bread": "sem"
+      },
+      "after": "w-spasibo",
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "08",
+      "kind": "listen_do",
+      "mode": "drag",
+      "picture": "mika-body",
+      "frame": "f20",
+      "target": "ch-hochu-apelsin",
+      "options": [
+        "orange",
+        "watermelon",
+        "banana"
+      ],
+      "right": "orange",
+      "wrong": {
+        "watermelon": "sound",
+        "banana": "sem"
+      },
+      "after": "w-spasibo",
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "09",
+      "kind": "listen_do",
+      "mode": "drag",
+      "picture": "mika-body",
+      "frame": "f20",
+      "target": "ch-hochu-moloko",
+      "options": [
+        "milk",
+        "water",
+        "apple"
+      ],
+      "right": "milk",
+      "wrong": {
+        "water": "sem",
+        "apple": "sound"
+      },
+      "after": "w-spasibo",
+      "ladder": "HL-1",
+      "rep": "embodied",
+      "purpose": "check"
+    },
+    {
+      "id": "10",
+      "kind": "puppet",
+      "frame": "f07",
+      "mode": "bubble",
+      "picture": "mika-gift",
+      "prompt": [
+        "w-na"
+      ],
+      "options": [
+        "mika-gift",
+        "mika-leave",
+        "mika-arrive"
+      ],
+      "wrong": {
+        "mika-leave": "sem",
+        "mika-arrive": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "story",
+      "after": "w-pozhalujsta",
+      "then": {
+        "kind": "say",
+        "purpose": "practice",
+        "picture": "mika-gift",
+        "clip": "w-na",
+        "frame": "f06",
+        "foils": [
+          "спасибо",
+          "привет"
+        ]
+      }
+    },
+    {
+      "id": "11",
+      "kind": "puppet",
+      "frame": "f07",
+      "purpose": "check",
+      "mode": "bubble",
+      "picture": "juice",
+      "prompt": [],
+      "options": [
+        {
+          "clip": "ch-daj-sok"
+        },
+        {
+          "clip": "ch-daj-sup"
+        },
+        "mika-gift"
+      ],
+      "wrong": {
+        "ch-daj-sup": "sound",
+        "mika-gift": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "story",
+      "then": {
+        "kind": "say",
+        "purpose": "practice",
+        "picture": "juice",
+        "clip": "ch-daj-sok",
+        "frame": "f06",
+        "forms": [
+          "Дай, пожалуйста, сок."
+        ],
+        "foils": [
+          "дай суп",
+          "дай хлеб"
+        ],
+        "keyWords": [
+          "пожалуйста",
+          "сок"
+        ]
+      }
+    }
+  ],
+  "lessons": [
+    {
+      "id": "please-1",
+      "title": "בְּבַקָּשָׁה וְתוֹדָה",
+      "items": [
+        "01",
+        "02",
+        "03"
+      ]
+    },
+    {
+      "id": "please-2",
+      "title": "בְּבַקָּשָׁה וְתוֹדָה",
+      "items": [
+        "04",
+        "05",
+        "06"
+      ]
+    },
+    {
+      "id": "please-3",
+      "title": "בְּבַקָּשָׁה וְתוֹדָה",
+      "items": [
+        "07",
+        "08"
+      ]
+    },
+    {
+      "id": "please-more",
+      "title": "בְּבַקָּשָׁה וְתוֹדָה",
+      "items": [
+        "10"
+      ]
+    }
+  ],
+  "routes": {
+    "new": {
+      "note": "all items"
+    },
+    "heritage": {
+      "teach": false,
+      "say": "picture"
+    },
+    "reader": {
+      "as": "oral",
+      "note": "as heritage or new"
+    }
+  }
+}

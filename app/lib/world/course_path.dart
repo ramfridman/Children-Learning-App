@@ -1,7 +1,9 @@
 import '../content/models.dart';
 import '../data/app_database.dart';
 import '../engine/course.dart';
+import '../engine/check_visit.dart' show checkVisitItemIds, checkVisitMax;
 import 'adventure_adapter.dart';
+import 'check_visits.dart';
 import 'language_placement.dart' show placedLanguageLessons;
 import 'lesson_path.dart';
 import 'next_lesson.dart' show finishedLessons;
@@ -140,6 +142,27 @@ Lesson? courseMission(LanguageCourse course, String skillId) {
   return Lesson.mission(
     // A lesson id is lower case, as `sync-push` takes it.
     id: 'mission-${skillId.toLowerCase()}',
+    itemIds: items,
+    skillIds: <String>[skillId],
+    celebration: from.celebration,
+  );
+}
+
+/// The short lesson of a course's check visit of [skillId] (docs/languages/band-a-build.md section 7.4): its items
+/// ([checkVisitItemIds], at most as many as the child's [band] takes), ended by the celebration of a lesson of the course that teaches
+/// the skill. Null when the skill has nothing to ask or the course has no lesson to borrow the line from.
+Lesson? courseCheckVisit(LanguageCourse course, String skillId, {required int band}) {
+  final List<Lesson> path = landPath(course.content, Course.languagesDomain);
+  final List<String> items = checkVisitItemIds(
+    course.engine,
+    skillId,
+    inLessonChecks: checksInLessons(path, course.engine.catalog),
+    max: checkVisitMax(band),
+  );
+  final Lesson? from = path.where((Lesson l) => l.skillIds.contains(skillId)).firstOrNull ?? path.firstOrNull;
+  if (items.isEmpty || from == null) return null;
+  return Lesson.mission(
+    id: checkVisitIdOf(skillId),
     itemIds: items,
     skillIds: <String>[skillId],
     celebration: from.celebration,

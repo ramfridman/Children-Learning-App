@@ -1,0 +1,27 @@
+{
+  "schema": "skill/v1",
+  "id": "HEB-A-14",
+  "review": "needs-editor",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוקב באצבע אחרי קווים של טרום כתיבה"
+    }
+  ],
+  "strand": "wr",
+  "prerequisites": [],
+  "representations": [
+    "embodied"
+  ],
+  "misconceptions": [
+    "heb.wr.stroke"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  },
+  "writing": "practised"
+}

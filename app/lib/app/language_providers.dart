@@ -1,10 +1,13 @@
+import 'dart:typed_data';
+
+import 'package:flutter/services.dart' show AssetManifest, rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show FutureProviderFamily, ProviderFamily;
 
+import '../content/bundled_packs.dart';
 import '../content/content_repository.dart';
 import '../content/engine_adapter.dart';
 import '../content/models.dart';
-import '../content/pack_verify.dart' show PackRejected;
 import '../data/app_database.dart';
 import '../engine/course.dart';
 import '../engine/engine.dart';
@@ -65,24 +68,47 @@ final Provider<bool> languagesReadyProvider = Provider<bool>((Ref ref) {
   return settled(ref.watch(languagesProvider)) && settled(ref.watch(languagePacksProvider));
 });
 
-/// The language packs installed on this device, by course. A pack that does not prove itself again is left out (one damaged
-/// course never hurts another, or the lands).
+/// Where the packs that ship inside the app are read from: the asset manifest and the asset files. Tests give their own.
+class BundledAssets {
+  const BundledAssets({required this.list, required this.read});
+
+  /// Every asset path of the app.
+  final Future<List<String>> Function() list;
+  final Future<Uint8List> Function(String asset) read;
+}
+
+final Provider<BundledAssets> bundledAssetsProvider = Provider<BundledAssets>(
+  (Ref ref) => BundledAssets(
+    list: () async => (await AssetManifest.loadFromAssetBundle(rootBundle)).listAssets(),
+    read: (String asset) async => (await rootBundle.load(asset)).buffer.asUint8List(),
+  ),
+);
+
+/// The languages some child has on, as one string: a change of any other switch leaves it as it was, so the packs are not read
+/// again for it.
+final Provider<String> _languagesOnProvider = Provider<String>(
+  (Ref ref) => (ref.watch(languagesProvider).value?.coursesOn ?? const <String>[]).join(','),
+);
+
+/// The language packs installed on this device, by course. The bundled pack of each language that is on for some child is installed
+/// first (once, the first time; nothing at all for a family with no language on), then every installed pack is read back and
+/// proven again. A pack that does not prove itself is put right from the bundle once, and if it still does not it is left out (one
+/// damaged course never hurts another, or the lands).
 final FutureProvider<Map<String, PackContent>> languagePacksProvider =
     FutureProvider<Map<String, PackContent>>((Ref ref) async {
+      // The settings are waited for once; after that only a change in which languages are on reads the packs again.
+      await ref.read(languagesProvider.future);
+      final String on = ref.watch(_languagesOnProvider);
+      final BundledAssets assets = ref.watch(bundledAssetsProvider);
       final ContentRepository repo = ContentRepository(
         installer: await ref.watch(packInstallerProvider.future),
-        bundled: () async => throw StateError('language packs are never bundled'),
+        bundled: () async => throw StateError('the starter pack is not read here'),
       );
-      final Map<String, PackContent> out = <String, PackContent>{};
-      for (final String course in await repo.installedLanguages()) {
-        try {
-          final PackContent? pack = await repo.languagePack(course);
-          if (pack != null) out[course] = pack;
-        } on PackRejected {
-          continue;
-        }
-      }
-      return out;
+      return repo.languagePacks(
+        wanted: on.isEmpty ? const <String>[] : on.split(','),
+        bundled: BundledLanguagePack.newestOf(await assets.list()),
+        read: assets.read,
+      );
     });
 
 /// The child's language courses as Today's Adventure, the course home and the parent's progress read them: the installed pack of each

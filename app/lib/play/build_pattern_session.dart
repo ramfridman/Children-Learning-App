@@ -8,6 +8,7 @@ import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import 'choice_row.dart' show withStageAtLeast, withWideStage;
 import 'hint_widgets.dart';
 import 'hints/hint_marks.dart';
 import 'hints/hint_pictures.dart' show hintScale;
@@ -16,6 +17,8 @@ import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
 import 'lesson_controller.dart';
 import 'response_code.dart';
+import 'size_scale.dart';
+import 'stage_picture.dart';
 import 'template_session.dart';
 
 /// The build-a-pattern template (T05): the pattern to copy is shown above, empty places below, and the pictures to put in
@@ -53,20 +56,67 @@ class BuildPatternSession extends TemplateSession {
 
   bool get _canDraw => _spec != null && !_size.isEmpty;
 
-  /// The cell [i] of a row of [n] cells in the row whose top is [top] and whose height is [height]: the row fills the stage 8 in,
-  /// each cell has 3 around it, and the rows are drawn left to right (a pattern is read from the left, whatever the language).
+  /// A small phone's stage is as tall as a phone's, so that the two rows (the model and the places) are tall enough for pictures that
+  /// can be read; the palette stands lower by what it takes. A tablet gives a long row (six places, or towers) the board's whole width.
+  @override
+  ActivitySpec layoutFor(ActivitySpec base) => withStageAtLeast(
+    activity.slots >= 6 || look != null ? withWideStage(base) : base,
+    ActivitySpec.phone.stage.height,
+    tilesBox: (tall ? tallTileHeight : math.min(96, base.tilesWidth / activity.palette.length - 16)) + 12,
+  );
+
+  /// The look of the size pictures of the pattern (towers), cut to one part of their box: where they are tall, their tiles are taller
+  /// and their margins smaller, so that the cubes can be counted (see `size_scale.dart`).
+  late final SizeLook? look = sizeLookOf(<String>[
+    ...activity.model,
+    ...activity.palette,
+    ...activity.sequence,
+  ], activity.assets.svg);
+  bool get tall => look?.tall ?? false;
+
+  /// The picture of [ref], as the pattern draws it.
+  String svg(String ref) => look?.svg(ref) ?? activity.assets.svg(ref);
+
+  /// The room a row of [n] cells leaves at the stage's two edges, round each cell, and between a model cell's edge and its picture: 8, 3
+  /// and 2; and 4, 1 and 0 where a model picture would be under the token `stagePictureMin` with those and is not with these (the 6
+  /// cells of a pattern on a small phone: 32 points with the usual room, 42 with the tight).
+  static ({double edge, double pad, double inner}) chromeOf(Size size, int n) {
+    const ({double edge, double pad, double inner}) usual = (edge: 8, pad: 3, inner: 2);
+    const ({double edge, double pad, double inner}) tight = (edge: 4, pad: 1, inner: 0);
+    final double least = minPictureOf(size);
+    double picture(({double edge, double pad, double inner}) r) =>
+        (size.width - 2 * r.edge) / n - 2 * r.pad - 2 * r.inner;
+    return picture(usual) < least && picture(tight) >= least ? tight : usual;
+  }
+
+  /// The cell [i] of a row of [n] cells in the row whose top is [top] and whose height is [height]: the row fills the stage's width
+  /// (see [chromeOf]), each cell has room round it, and the rows are drawn left to right (a pattern is read from the left, whatever
+  /// the language).
   static Rect cell(Size size, int n, int i, {required double top, required double height}) {
-    final double w = (size.width - 16) / n;
-    return Rect.fromLTWH(8 + i * w + 3, top + 3, w - 6, height - 6);
+    final ({double edge, double pad, double inner}) room = chromeOf(size, n);
+    final double w = (size.width - 2 * room.edge) / n;
+    return Rect.fromLTWH(
+      room.edge + i * w + room.pad,
+      top + room.pad,
+      w - 2 * room.pad,
+      height - 2 * room.pad,
+    );
   }
 
-  /// The cells of the model row (above), and of the row of places (below it, or alone when there is no model).
-  static Rect modelCell(Size size, int n, int i) => cell(size, n, i, top: 8, height: (size.height - 16) / 2);
+  /// The room under the row that shows the start dot (with "reduce motion"): the dot is 8 under its first cell, inside the stage.
+  static const double dotRoom = 8;
 
-  static Rect slotCell(Size size, int slots, int i, {required bool hasModel}) {
-    final double row = hasModel ? (size.height - 16) / 2 : size.height - 16;
-    return cell(size, slots, i, top: hasModel ? 8 + row : 8, height: row);
-  }
+  /// The height of each of the two rows of a stage of [size] with a model: the model's and the places' are the same, so that a picture
+  /// of the model and the picture that is put in its place are drawn as large as each other; the dot's room lies between them.
+  static double rowHeightOf(Size size) => (size.height - 16 - dotRoom) / 2;
+
+  /// The cells of the model row (above), and of the row of places (below it, or alone when there is no model). The start dot stands
+  /// under the first cell of one row only, the model's (the places alone when there is no model), in [dotRoom] that the row gives it.
+  static Rect modelCell(Size size, int n, int i) => cell(size, n, i, top: 8, height: rowHeightOf(size));
+
+  static Rect slotCell(Size size, int slots, int i, {required bool hasModel}) => hasModel
+      ? cell(size, slots, i, top: 8 + rowHeightOf(size) + dotRoom, height: rowHeightOf(size))
+      : cell(size, slots, i, top: 8, height: size.height - 16 - dotRoom);
 
   /// The length of the unit that repeats in [row] (the smallest one that is repeated at least once), or null when none does.
   static int? unitLength(List<String> row) {
@@ -366,7 +416,7 @@ class BuildPatternSession extends TemplateSession {
               key: Key('palette-$i'),
               data: p,
               maxSimultaneousDrags: _busy ? 0 : 1,
-              feedback: SizedBox(width: side, height: side, child: PackSvg(activity.assets.svg(p))),
+              feedback: SizedBox(width: side, height: tall ? tallTileHeight : side, child: PackSvg(svg(p))),
               childWhenDragging: Opacity(opacity: 0.3, child: _tile(p, side)),
               child: _tile(p, side),
             ),
@@ -377,11 +427,12 @@ class BuildPatternSession extends TemplateSession {
 
   Widget _tile(String p, double side) => AnswerTile(
     semanticLabel: p,
-    size: side,
+    size: tall ? tallTileHeight : side,
+    width: tall ? side : null,
     slop: 6,
     state: hintSprite == p ? AnswerState.selected : AnswerState.idle,
     onPressed: () => place(p),
-    child: Padding(padding: const EdgeInsets.all(8), child: PackSvg(activity.assets.svg(p))),
+    child: Padding(padding: EdgeInsets.all(tall ? 2 : 8), child: PackSvg(svg(p))),
   );
 }
 
@@ -406,22 +457,34 @@ class _PatternStage extends StatelessWidget {
               Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
             Positioned.fill(
               child: Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Directionality(
                   textDirection: TextDirection.ltr,
                   child: Column(
                     children: <Widget>[
-                      if (a.model.isNotEmpty) Expanded(child: _modelRow(a)),
+                      if (a.model.isNotEmpty) ...<Widget>[
+                        Expanded(child: _inRoom(a.model.length, _modelRow(a))),
+                        // The start dot stands in this room, under the model's first cell.
+                        const SizedBox(height: BuildPatternSession.dotRoom),
+                      ],
                       Expanded(
-                        // The places come after the model, so that the child reads the model first.
-                        child: RowEntrance(
-                          count: a.slots,
-                          startAfter: RowEntrance.step * a.model.length,
-                          builder: (BuildContext context, Widget Function(int, Widget) cell) => Row(
-                            key: const Key('pattern-slots'),
-                            children: <Widget>[
-                              for (int i = 0; i < a.slots; i++) Expanded(child: cell(i, _slot(i))),
-                            ],
+                        // The places come after the model, so that the child reads the model first. The start dot is under the model
+                        // (counting starts once), or under the places when there is no model.
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: a.model.isEmpty ? BuildPatternSession.dotRoom : 0),
+                          child: _inRoom(
+                            a.slots,
+                            RowEntrance(
+                              count: a.slots,
+                              startAfter: RowEntrance.step * a.model.length,
+                              startDot: a.model.isEmpty,
+                              builder: (BuildContext context, Widget Function(int, Widget) cell) => Row(
+                                key: const Key('pattern-slots'),
+                                children: <Widget>[
+                                  for (int i = 0; i < a.slots; i++) Expanded(child: cell(i, _slot(i))),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -437,6 +500,12 @@ class _PatternStage extends StatelessWidget {
     );
   }
 
+  /// A row of [n] cells, [BuildPatternSession.chromeOf] in from the stage's two edges.
+  Widget _inRoom(int n, Widget row) => Padding(
+    padding: EdgeInsets.symmetric(horizontal: BuildPatternSession.chromeOf(size, n).edge),
+    child: row,
+  );
+
   /// The pattern to copy. Its cells come one by one from the left; the light of the hints rests on one of them at a time.
   Widget _modelRow(BuildPatternActivity a) => RowEntrance(
     count: a.model.length,
@@ -446,7 +515,7 @@ class _PatternStage extends StatelessWidget {
         for (final (int i, String m) in a.model.indexed)
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(3),
+              padding: EdgeInsets.all(BuildPatternSession.chromeOf(size, a.model.length).pad),
               child: cell(
                 i,
                 DecoratedBox(
@@ -455,7 +524,10 @@ class _PatternStage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(TokenRadius.lg),
                     border: s.litModel == i ? Border.all(color: TokenColors.hintHalo, width: 5) : null,
                   ),
-                  child: Padding(padding: const EdgeInsets.all(2), child: PackSvg(a.assets.svg(m))),
+                  child: Padding(
+                    padding: EdgeInsets.all(BuildPatternSession.chromeOf(size, a.model.length).inner),
+                    child: PackSvg(s.svg(m)),
+                  ),
                 ),
               ),
             ),
@@ -465,7 +537,6 @@ class _PatternStage extends StatelessWidget {
   );
 
   Widget _slot(int i) {
-    final BuildPatternActivity a = s.activity;
     final String? picture = s.filled[i];
     return DragTarget<String>(
       onWillAcceptWithDetails: (DragTargetDetails<String> d) => true,
@@ -481,7 +552,7 @@ class _PatternStage extends StatelessWidget {
           behavior: HitTestBehavior.opaque,
           onTap: () => s.clear(i),
           child: Padding(
-            padding: const EdgeInsets.all(3),
+            padding: EdgeInsets.all(BuildPatternSession.chromeOf(size, s.activity.slots).pad),
             child: DecoratedBox(
               decoration: BoxDecoration(
                 color: TokenColors.paper.withValues(alpha: picture == null ? 0.7 : 0.95),
@@ -490,7 +561,7 @@ class _PatternStage extends StatelessWidget {
               ),
               child: picture == null
                   ? Center(child: Text('?', style: AppText.fixed(size: 26, weight: 800, lineHeight: 1)))
-                  : Padding(padding: const EdgeInsets.all(4), child: PackSvg(a.assets.svg(picture))),
+                  : Padding(padding: EdgeInsets.all(s.tall ? 1 : 4), child: PackSvg(s.svg(picture))),
             ),
           ),
         );

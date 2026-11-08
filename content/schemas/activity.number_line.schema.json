@@ -157,6 +157,12 @@
       "maxLength": 60,
       "pattern": "^(?:[a-z0-9._-]+)$"
     },
+    "font": {
+      "type": "string",
+      "enum": [
+        "display"
+      ]
+    },
     "difficulty": {
       "type": "object",
       "properties": {
@@ -207,6 +213,12 @@
           "type": "boolean"
         },
         "target": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 83,
+          "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+        },
+        "target2": {
           "type": "string",
           "minLength": 4,
           "maxLength": 83,
@@ -274,6 +286,11 @@
           },
           "minItems": 0,
           "maxItems": 21
+        },
+        "tickStep": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 25
         }
       },
       "required": [
@@ -301,6 +318,11 @@
           "type": "integer",
           "minimum": 0,
           "maximum": 100
+        },
+        "tolerance": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
         },
         "misconception": {
           "type": "string",
@@ -366,6 +388,12 @@
               "maxLength": 83,
               "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
             },
+            "target2": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 83,
+              "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+            },
             "show": {
               "type": "string",
               "minLength": 1,
@@ -424,6 +452,12 @@
                 "maxLength": 83,
                 "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
               },
+              "target2": {
+                "type": "string",
+                "minLength": 4,
+                "maxLength": 83,
+                "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+              },
               "show": {
                 "type": "string",
                 "minLength": 1,
@@ -473,6 +507,12 @@
               "maxItems": 1
             },
             "target": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 83,
+              "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+            },
+            "target2": {
               "type": "string",
               "minLength": 4,
               "maxLength": 83,
@@ -547,6 +587,12 @@
             "maxItems": 1
           },
           "target": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 83,
+            "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+          },
+          "target2": {
             "type": "string",
             "minLength": 4,
             "maxLength": 83,
