@@ -2,7 +2,7 @@
   "skill": {
     "id": "HEB-A-05",
     "strand": "ol",
-    "title": "מבין אחד והרבה (חתול, חתולים)",
+    "title": "מבינים אחד והרבה (חתול, חתולים)",
     "prerequisites": [
       {
         "skill": "HEB-A-02"

@@ -2,7 +2,7 @@
   "skill": {
     "id": "HEB-A-07",
     "strand": "pa",
-    "title": "מזהה איזו מילה מתחרזת עם מילה",
+    "title": "מזהים איזו מילה מתחרזת עם מילה",
     "prerequisites": [
       {
         "skill": "HEB-A-06"

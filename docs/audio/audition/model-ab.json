@@ -1,0 +1,342 @@
+{
+  "schema": "audition/v1",
+  "title": "Model A/B: eleven_v4_turbo against eleven_v4 on 11 representative lines, each by nitzi and hero-son. Same text, same settings; only the model differs. Listen to each pair side by side.",
+  "review": "needs-editor",
+  "note": "Ids sort in pairs: 01-hero-turbo, 01-hero-v4, 01-nitzi-turbo, 01-nitzi-v4. Settings are the usual ones (stability 0.5, similarity 0.75); the celebration uses the cheer style (0.1 / 0.8). Texts are the voice text as the tool sends it (kept points included). No parent-facing line is voiced in the app, so none is here.",
+  "defaults": {
+    "character": "nitzi",
+    "model": "eleven_v4_turbo",
+    "format": "mp3_44100_64",
+    "settings": {
+      "stability": 0.5,
+      "similarity_boost": 0.75,
+      "use_speaker_boost": true
+    }
+  },
+  "clips": [
+    {
+      "id": "01-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "חָמֵשׁ ועוד אַרְבַּע, מול שָׁלוֹשׁ ועוד שְׁתַּיִם. איזה צד כבד יותר?",
+      "tests": "a prompt with number words: gender, even rhythm, the pause at the comma and the full stop"
+    },
+    {
+      "id": "01-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "חָמֵשׁ ועוד אַרְבַּע, מול שָׁלוֹשׁ ועוד שְׁתַּיִם. איזה צד כבד יותר?",
+      "tests": "a prompt with number words: gender, even rhythm, the pause at the comma and the full stop"
+    },
+    {
+      "id": "01-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "חָמֵשׁ ועוד אַרְבַּע, מול שָׁלוֹשׁ ועוד שְׁתַּיִם. איזה צד כבד יותר?",
+      "tests": "a prompt with number words: gender, even rhythm, the pause at the comma and the full stop"
+    },
+    {
+      "id": "01-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "חָמֵשׁ ועוד אַרְבַּע, מול שָׁלוֹשׁ ועוד שְׁתַּיִם. איזה צד כבד יותר?",
+      "tests": "a prompt with number words: gender, even rhythm, the pause at the comma and the full stop"
+    },
+    {
+      "id": "02-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "עוד לא — בואו ננסה שוב.",
+      "tests": "a hint with a dash: a beat, not a stop; ננסה = nenase"
+    },
+    {
+      "id": "02-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "עוד לא — בואו ננסה שוב.",
+      "tests": "a hint with a dash: a beat, not a stop; ננסה = nenase"
+    },
+    {
+      "id": "02-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "עוד לא — בואו ננסה שוב.",
+      "tests": "a hint with a dash: a beat, not a stop; ננסה = nenase"
+    },
+    {
+      "id": "02-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "עוד לא — בואו ננסה שוב.",
+      "tests": "a hint with a dash: a beat, not a stop; ננסה = nenase"
+    },
+    {
+      "id": "03-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "שמעתי… נכון?",
+      "tests": "an ellipsis: a soft beat, then a gentle question"
+    },
+    {
+      "id": "03-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "שמעתי… נכון?",
+      "tests": "an ellipsis: a soft beat, then a gentle question"
+    },
+    {
+      "id": "03-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "שמעתי… נכון?",
+      "tests": "an ellipsis: a soft beat, then a gentle question"
+    },
+    {
+      "id": "03-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "שמעתי… נכון?",
+      "tests": "an ellipsis: a soft beat, then a gentle question"
+    },
+    {
+      "id": "04-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "מצוין, כל סִפְרָה במקומה.",
+      "tests": "a praise line: warm, short; סִפְרָה = sifra (a digit)"
+    },
+    {
+      "id": "04-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "מצוין, כל סִפְרָה במקומה.",
+      "tests": "a praise line: warm, short; סִפְרָה = sifra (a digit)"
+    },
+    {
+      "id": "04-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "מצוין, כל סִפְרָה במקומה.",
+      "tests": "a praise line: warm, short; סִפְרָה = sifra (a digit)"
+    },
+    {
+      "id": "04-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "מצוין, כל סִפְרָה במקומה.",
+      "tests": "a praise line: warm, short; סִפְרָה = sifra (a digit)"
+    },
+    {
+      "id": "05-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "כל הכבוד.",
+      "tests": "the cheer style (stability 0.1): bright, short, never shouting",
+      "settings": {
+        "stability": 0.1,
+        "similarity_boost": 0.8
+      }
+    },
+    {
+      "id": "05-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "כל הכבוד.",
+      "tests": "the cheer style (stability 0.1): bright, short, never shouting",
+      "settings": {
+        "stability": 0.1,
+        "similarity_boost": 0.8
+      }
+    },
+    {
+      "id": "05-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "כל הכבוד.",
+      "tests": "the cheer style (stability 0.1): bright, short, never shouting",
+      "settings": {
+        "stability": 0.1,
+        "similarity_boost": 0.8
+      }
+    },
+    {
+      "id": "05-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "כל הכבוד.",
+      "tests": "the cheer style (stability 0.1): bright, short, never shouting",
+      "settings": {
+        "stability": 0.1,
+        "similarity_boost": 0.8
+      }
+    },
+    {
+      "id": "06-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "הַקְשִׁיבוּ, וְגִרְרוּ את הָאֹכֶל לְפִיפּ.",
+      "tests": "the name Pip: lepip, with a p; hakshivu / girru as instructions"
+    },
+    {
+      "id": "06-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "הַקְשִׁיבוּ, וְגִרְרוּ את הָאֹכֶל לְפִיפּ.",
+      "tests": "the name Pip: lepip, with a p; hakshivu / girru as instructions"
+    },
+    {
+      "id": "06-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "הַקְשִׁיבוּ, וְגִרְרוּ את הָאֹכֶל לְפִיפּ.",
+      "tests": "the name Pip: lepip, with a p; hakshivu / girru as instructions"
+    },
+    {
+      "id": "06-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "הַקְשִׁיבוּ, וְגִרְרוּ את הָאֹכֶל לְפִיפּ.",
+      "tests": "the name Pip: lepip, with a p; hakshivu / girru as instructions"
+    },
+    {
+      "id": "07-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "סימן השווה אומר: בִּשְׁנֵי הצדדים יש אותו מספר.",
+      "tests": "שווה = shave, the colon is a small pause"
+    },
+    {
+      "id": "07-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "סימן השווה אומר: בִּשְׁנֵי הצדדים יש אותו מספר.",
+      "tests": "שווה = shave, the colon is a small pause"
+    },
+    {
+      "id": "07-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "סימן השווה אומר: בִּשְׁנֵי הצדדים יש אותו מספר.",
+      "tests": "שווה = shave, the colon is a small pause"
+    },
+    {
+      "id": "07-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "סימן השווה אומר: בִּשְׁנֵי הצדדים יש אותו מספר.",
+      "tests": "שווה = shave, the colon is a small pause"
+    },
+    {
+      "id": "08-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "שָׁלוֹשׁ כָּפוּל שְׁתַּיִם שָׁוֶה שֵׁשׁ.",
+      "tests": "כָּפוּל = kafúl and שָׁוֶה = shavé in a sum; a draft line for this test, not an app text"
+    },
+    {
+      "id": "08-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "שָׁלוֹשׁ כָּפוּל שְׁתַּיִם שָׁוֶה שֵׁשׁ.",
+      "tests": "כָּפוּל = kafúl and שָׁוֶה = shavé in a sum; a draft line for this test, not an app text"
+    },
+    {
+      "id": "08-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "שָׁלוֹשׁ כָּפוּל שְׁתַּיִם שָׁוֶה שֵׁשׁ.",
+      "tests": "כָּפוּל = kafúl and שָׁוֶה = shavé in a sum; a draft line for this test, not an app text"
+    },
+    {
+      "id": "08-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "שָׁלוֹשׁ כָּפוּל שְׁתַּיִם שָׁוֶה שֵׁשׁ.",
+      "tests": "כָּפוּל = kafúl and שָׁוֶה = shavé in a sum; a draft line for this test, not an app text"
+    },
+    {
+      "id": "09-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "משורה לשורה המספר גָּדֵל בְּעֶשֶׂר, וְסִפְרַת היחידות נשארת. אֶחָד מהמספרים לא מתאים. עכשיו תורכם.",
+      "tests": "a long Band C hint: calm pace, the pauses between sentences, גָּדֵל = gadel, תורכם = torkhem"
+    },
+    {
+      "id": "09-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "משורה לשורה המספר גָּדֵל בְּעֶשֶׂר, וְסִפְרַת היחידות נשארת. אֶחָד מהמספרים לא מתאים. עכשיו תורכם.",
+      "tests": "a long Band C hint: calm pace, the pauses between sentences, גָּדֵל = gadel, תורכם = torkhem"
+    },
+    {
+      "id": "09-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "משורה לשורה המספר גָּדֵל בְּעֶשֶׂר, וְסִפְרַת היחידות נשארת. אֶחָד מהמספרים לא מתאים. עכשיו תורכם.",
+      "tests": "a long Band C hint: calm pace, the pauses between sentences, גָּדֵל = gadel, תורכם = torkhem"
+    },
+    {
+      "id": "09-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "משורה לשורה המספר גָּדֵל בְּעֶשֶׂר, וְסִפְרַת היחידות נשארת. אֶחָד מהמספרים לא מתאים. עכשיו תורכם.",
+      "tests": "a long Band C hint: calm pace, the pauses between sentences, גָּדֵל = gadel, תורכם = torkhem"
+    },
+    {
+      "id": "10-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "נֹאמַר את הסדר בקול, וְנִמְחָא כפיים עם כל אֶחָד.",
+      "tests": "risky words: נֹאמַר = nomar, וְנִמְחָא = venimcha"
+    },
+    {
+      "id": "10-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "נֹאמַר את הסדר בקול, וְנִמְחָא כפיים עם כל אֶחָד.",
+      "tests": "risky words: נֹאמַר = nomar, וְנִמְחָא = venimcha"
+    },
+    {
+      "id": "10-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "נֹאמַר את הסדר בקול, וְנִמְחָא כפיים עם כל אֶחָד.",
+      "tests": "risky words: נֹאמַר = nomar, וְנִמְחָא = venimcha"
+    },
+    {
+      "id": "10-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "נֹאמַר את הסדר בקול, וְנִמְחָא כפיים עם כל אֶחָד.",
+      "tests": "risky words: נֹאמַר = nomar, וְנִמְחָא = venimcha"
+    },
+    {
+      "id": "11-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "במספר עם עשרות ויחידות יש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "risky word: סְפָרוֹת = sfarot (digits), not sifrut"
+    },
+    {
+      "id": "11-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "במספר עם עשרות ויחידות יש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "risky word: סְפָרוֹת = sfarot (digits), not sifrut"
+    },
+    {
+      "id": "11-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "במספר עם עשרות ויחידות יש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "risky word: סְפָרוֹת = sfarot (digits), not sifrut"
+    },
+    {
+      "id": "11-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "במספר עם עשרות ויחידות יש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "risky word: סְפָרוֹת = sfarot (digits), not sifrut"
+    }
+  ]
+}

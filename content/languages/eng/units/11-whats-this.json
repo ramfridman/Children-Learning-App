@@ -1,5 +1,5 @@
 {
-  "skill": {"id": "ENG-A-11", "strand": "lis", "title": "מָה זֶה?", "prerequisites": [{"skill": "ENG-A-05", "weight": 0.5}, {"skill": "ENG-A-09", "weight": 0.5}], "setCoverage": true},
+  "skill": {"id": "ENG-A-11", "strand": "lis", "title": "מַה זֶּה?", "prerequisites": [{"skill": "ENG-A-05", "weight": 0.5}, {"skill": "ENG-A-09", "weight": 0.5}], "setCoverage": true},
   "items": [
     {"id": "i01", "kind": "tap", "frame": "he-ins-whats-this", "target": "en-whats-this", "options": ["ball", "drum", "book"], "wrong": {"drum": "sem", "book": "l1_guess"}, "target2": "en-its-ball", "hintWord": "en-its-ball"},
     {"id": "i02", "kind": "tap", "frame": "he-ins-whats-this", "target": "en-whats-this", "options": ["book", "teddy", "car"], "wrong": {"teddy": "sem", "car": "l1_guess"}, "target2": "en-its-book", "hintWord": "en-its-book"},
@@ -15,8 +15,8 @@
     {"id": "i08", "kind": "puppet", "purpose": "learn", "frame": "he-ins-bubble", "rep": "story", "ladder": "HL-BUBBLE", "mode": "bubble", "picture": "pip-holds", "prompt": ["en-whats-this"], "options": [{"clip": "en-its-book", "pic": "book"}, {"clip": "en-its-ball"}, {"clip": "en-hello"}], "wrong": {"en-its-ball": "sem", "en-hello": "l1_guess"}, "shows": "book"}
   ],
   "lessons": [
-    {"id": "what-1", "title": "מָה זֶה?", "items": ["i01", "i02", "i03"]},
-    {"id": "what-2", "title": "וּמָה זֶה?", "items": ["i04", "i05", "i06"]},
-    {"id": "what-more", "title": "וּמָה זֶה?", "items": ["i07", "i08"]}
+    {"id": "what-1", "title": "מַה זֶּה?", "items": ["i01", "i02", "i03"]},
+    {"id": "what-2", "title": "וּמַה זֶּה?", "items": ["i04", "i05", "i06"]},
+    {"id": "what-more", "title": "וּמַה זֶּה?", "items": ["i07", "i08"]}
   ]
 }

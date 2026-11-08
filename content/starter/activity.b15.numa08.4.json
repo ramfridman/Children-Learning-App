@@ -59,7 +59,7 @@
     "incorrect": [
       {
         "when": "misconception:M-NUM-REV",
-        "vo": "vo:fb.num_rev",
+        "vo": "vo:fb.num_rev.first",
         "caption": [
           {
             "t": "he",

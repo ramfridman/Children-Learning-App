@@ -666,6 +666,7 @@ VOICE_SUBS = [
     (r'(?<![\u0590-\u05ff])ו… ', 'ועוד צבע… ', 'voice: "וְ…" alone cannot be said; the blank is said as "ועוד צבע…"'),
     (r'לחזור על: ', 'לחזור על הצעדים: ', 'voice: "על:" before a list is said as "על הצעדים:"'),
     (r'(?<![֐-׿])בואו נאמר(?![֐-׿])', 'בואו נגיד', 'voice: "נאמר" can be read as "was said"; "נגיד"'),
+    (r'(?<![֐-׿])בואו נֹאמַר(?![֐-׿])', 'בואו נגיד', 'voice: "נֹאמַר" is kept pointed (VOICE_SWEEP_KEEP), but "בואו נאמר" is still "בואו נגיד"'),
     (r'(?<![֐-׿])(ש?)אין כלום זה ', r'\1אין כלום — זה ', 'voice-audit 2026-10-29: a beat before "זה אֶפֶס" (without it '
      'the two clauses run together and the rule is not heard)'),
 ]
@@ -685,8 +686,38 @@ VOICE_AUDIT_KEEP = {
     'אֵלֶּה': 'plain "אלה" can be read "ela"; here it is "ele" (these)',
     'בַּשָּׁמַיִם': 'plain "בשמים" can be read "besamim" (spices); here it is "ba-shamayim" (in the sky)',
 }
+# The voice director's release sweep of 2026-11-08 (docs/audio/release-voicing-plan.md section 3 and
+# docs/audio/release-pronunciation-fixes.csv): the same rule over the 4,278 voice ids of starter 0.11.0. Each is a plain form
+# that a voice can read as a more common word, or a form whose reading changes the meaning or the gender. The number is how
+# many tokens of the spoken rows it covers on 2026-11-08.
+VOICE_SWEEP_KEEP = {
+    'סְפָרוֹת': 'plain "ספרות" is read "sifrut" (literature); here it is "sfarot" (digits) (71)',
+    'סִפְרָה': 'plain "ספרה" is read "safra" (she counted); here it is "sifra" (a digit) (55)',
+    'סִפְרַת': 'plain "ספרת" is read "safarta"; here it is "sifrat" (the digit of ...) (22)',
+    'וְסִפְרַת': 'as "סִפְרַת", with the vav (2)',
+    'סָפַרְנוּ': 'plain "ספרנו" is read "sifrenu" (our book); here it is "safarnu" (we counted) (146)',
+    'סְפַרְתֶּם': 'plain "ספרתם" can be read "safartem" or "sifartem"; here it is "sfartem" (you counted) (65)',
+    'וּסְפַרְתֶּם': 'as "סְפַרְתֶּם", with the vav (2)',
+    'נֹאמַר': 'plain "נאמר" is read "ne\'emar" (was said); here it is "nomar" (we will say) (63)',
+    'וְנִמְחָא': 'a rare word that a voice may not know: "venimcha" (and we clap) (40)',
+    'נְחַלֵּק': 'plain "נחלק" can be read "nachlak"; here it is "nechalek" (we will divide up) (10)',
+    'נַחֲלֹק': 'plain "נחלק" can be read "nechalek"; here it is "nachalok" (we will share) (16)',
+    'מְשַׁנֶּה': 'plain "משנה" is read "mishne" (a second); here it is "meshane" (changes) (6)',
+    'מַרְאָה': 'plain "מראה" is read "mar\'e" (a view); here it is "mar\'a" (shows) (4)',
+    'נַעֲשֶׂה': 'plain "נעשה" can be read "na\'asa"; here it is "na\'ase" (we will make) (3)',
+    'נַעֲשָׂה': 'plain "נעשה" can be read "na\'ase"; here it is "na\'asa" (became) (1)',
+    'גָּדֵל': 'plain "גדל" is read "godel" (size); here it is "gadel" (grows) (2)',
+    'גֹּדֶל': 'plain "גדל" is read "gadal"; here it is "godel" (size) (3)',
+    'וְגָדַל': 'plain "וגדל" is read "vegodel"; here it is "vegadal" (and grew) (1)',
+    'שֶׁקֶל': 'plain "שקל" can be read "shakal" (weighed); here it is "shekel" (the coin) (10)',
+    'וְשֶׁקֶל': 'as "שֶׁקֶל", with the vav (1)',
+    'שׁוֹנָה': 'the feminine "shona": the plain "שונה" is read "shone", masculine (1)',
+    'דּוֹמָה': 'the feminine "doma": the plain "דומה" is read "dome", masculine (8)',
+    'עוֹלָה': 'the feminine "ola": the plain "עולה" is read "oleh", masculine (2)',
+}
 VOICE_AUDIT_KEEP = {canon(w): why for w, why in VOICE_AUDIT_KEEP.items()}
-KEEP_POINTED |= set(VOICE_AUDIT_KEEP)
+VOICE_SWEEP_KEEP = {canon(w): why for w, why in VOICE_SWEEP_KEEP.items()}
+KEEP_POINTED |= set(VOICE_AUDIT_KEEP) | set(VOICE_SWEEP_KEEP)
 VOICE_AUDIT = 'voice-audit 2026-10-29'
 VOICE_SUBS = [(re.compile(p), r, why) for p, r, why in VOICE_SUBS]
 VOICE_MANUAL = {}  # the ui text -> (voice text, why), for lines no rule can say well
@@ -722,6 +753,9 @@ def eleven(text):
     for w, why in VOICE_AUDIT_KEEP.items():
         if re.search(B + w + E, t):
             notes.append('%s: kept the nikud of %s, %s' % (VOICE_AUDIT, w, why))
+    for w, why in VOICE_SWEEP_KEEP.items():
+        if re.search(B + w + E, t):
+            notes.append('voice-sweep 2026-11-08: kept the nikud of %s, %s' % (w, why))
     t = partial_nikud(t)
     for pat, repl, why in VOICE_SUBS:
         new = pat.sub(repl, t)
@@ -749,6 +783,22 @@ COURSE_KEEP |= {canon(w) for w in (
     'נְשַׂחֵק',     # the bottle's lines for a language stop (adventureLang…): plain "נשחק" is read with [ʃ] (and means "we will defeat")
     'הָאֹכֶל',      # plain "האוכל" is read with the stress on the last syllable ("the one who eats"); here it is "ha-O-khel" (the food)
     'אִי',          # plain "אי" alone is read "ai" or "ee" (not); here it is "i" (island), as in אִי הַשָּׂפוֹת
+    # The voice director's release sweep of 2026-11-08 (docs/audio/release-voicing-plan.md section 3): the plural imperatives that
+    # read the same as a past tense in plain spelling, and the name of Pip, whose final פ is read "f" without its dagesh.
+    'הַקְשִׁיבוּ',   # plain "הקשיבו" is the past "hikshivu" (they listened); the instruction is "hakshivu" (30 lines)
+    'גְּעוּ',        # plain "געו" is "ga'u" (they mooed); the instruction is "ge'u" (touch) (10)
+    'וּגְעוּ',       # as גְּעוּ (13)
+    'וְגִרְרוּ',     # plain "וגררו" is "vegararu" (and they dragged); the instruction is "vegirru" (2)
+    'וְהַרְאוּ',     # plain "והראו" is "vehera'u" (and they showed); the instruction is "vehar'u" (1)
+    'וְעִזְרוּ',     # plain "ועזרו" is "ve'azru" (they helped); the instruction is "ve'izru" (1)
+    'מִצְאוּ',       # plain "מצאו" is "matz'u" (they found); the instruction is "mitz'u" (1)
+    'וּמִצְאוּ',     # as מִצְאוּ (2)
+    'שִׁמְעוּ',      # plain "שמעו" is "sham'u" (they heard); the instruction is "shim'u" (4)
+    'חַבְּרוּ',      # plain "חברו" is "chibru" (they joined) or "chaveru"; the instruction is "chabru" (1)
+    'תּוֹפְפוּ',     # plain "תופפו" is read as a past or a noun; the instruction is "tofefu" (2)
+    'נִמְחָא',       # a rare word that a voice may not know: "nimcha" (we clap) (1)
+    'שָׁרָה',        # plain "שרה" is read "Sara" (a name); here it is "shara" (sang) (2)
+    'לְפִיפּ',       # Pip: a final פ without a dagesh is read "f", "lefif"; the name is "lepip" (3)
 )}
 
 
@@ -823,7 +873,15 @@ _C1_TAGS = 'M-HC-ROW|M-OP-SWAP|M-PV-FACE|M-PV-ZERO|M-SIGN-DIR|M-SUB-SMALLBIG|M-S
 # the first reading, because the editor read it in the pass that made the row: change this when a new pass is done (notes 11.8).
 READ_OLD_DAY = '2026-11-06'
 READ_NEW = "2026-11-07 (the 35 C1 items of commit 98f57707, blocks, keypad, pay and the middle of two marks; hebrew-notes.md section 11.9)"
+SWEEP = ('Editor sweep 2026-11-08 (owner: a full read before the children try the app; hebrew-notes.md section 14): the editor read it; '
+         'this row is the corrected text (what was wrong is in the section); waits for the owner.')
 READ = [
+    # The sweep of 2026-11-08: the 17 he.dart strings that were NOT READ (screen-reader labels of the L5 screens and the division setting)
+    # and the texts the sweep corrected. These entries come first so that they win over the C1 entries below.
+    ('1', r'^(boxBowl|boxStampVowel|boxStampHard|boxStampSoft|boxSound|boxPlace|changeTarget|changeThatsIt|wheelHub|wheelLetter|wheelSign|stripTile|stripWindow|slideKnob|mergeTile)Semantics$|^division(Heading|Help)$|^(medalExplainerHow|medalBugFixerHow|tutorLogHelp)$',
+     r'he\.dart$', SWEEP),
+    ('3', r'', r'^(activity\.(b15\.matha02\.1|b15\.shpa08\.2|shp\.where\.under|c\.mathc02\.(6|7|8|9|10)|c\.numc03\.20|c\.numc09\.(9|10)|same\.(apples\.4v5|bugs\.3v3|fish\.2v2)|x\.numa07\.[1-7])|lesson\.(give-up-to-20|giving|more-giving|many-things|many-things-more|more-queues-and-zero)|misconception\.M-CNT-DECADE|skill\.(NUM-A-06|NUM-B-04))\.json$',
+     SWEEP),
     # Hint 3 of 37 Band A and B items, shortened to 14 words or fewer (QA, the hint bubble covered the answer tiles on the phone SE;
     # hebrew-notes.md section 11.13): the count says its first three numbers, an ellipsis and the last; a count-on says "עַד" the total.
     ('3', r'^hints\.2\.caption', r'^activity\.(b|b15|count)\.', 'Hint 3 shortened to 14 words or fewer (QA, 2026-11-07; hebrew-notes.md section 11.13): '

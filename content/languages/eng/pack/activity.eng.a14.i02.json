@@ -36,7 +36,7 @@
     "mustNotRevealBeforeHint": 2
   },
   "a11y": {
-    "altText": "תּוֹף וְתְמוּנָה שֶׁל מִלָּה"
+    "altText": "תּוֹף וּתְמוּנָה שֶׁל מִלָּה"
   },
   "prompt": {
     "vo": "vo:eng.he_ins_drum",

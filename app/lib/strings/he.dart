@@ -171,8 +171,8 @@ abstract final class He {
     nikud: true,
   );
   static const Str medalTryAgainHow = Str('מְנַסִּים שׁוּב וּמַצְלִיחִים שָׁלוֹשׁ פְּעָמִים', nikud: true);
-  static const Str medalExplainerHow = Str('בְּקָרוֹב אֶפְשָׁר יִהְיֶה לִזְכּוֹת בָּהּ', nikud: true);
-  static const Str medalBugFixerHow = Str('בְּקָרוֹב אֶפְשָׁר יִהְיֶה לִזְכּוֹת בָּהּ', nikud: true);
+  static const Str medalExplainerHow = Str('בְּקָרוֹב יִהְיֶה אֶפְשָׁר לִזְכּוֹת בָּהּ', nikud: true);
+  static const Str medalBugFixerHow = Str('בְּקָרוֹב יִהְיֶה אֶפְשָׁר לִזְכּוֹת בָּהּ', nikud: true);
   static const Str medalLockedSemantics = Str('מדליה שעוד לא זכינו בה');
   static const Str outfitHoney = Str('צָעִיף דְּבַשׁ', nikud: true);
   static const Str outfitSky = Str('צָעִיף שָׁמַיִם', nikud: true);
@@ -358,7 +358,7 @@ abstract final class He {
   static const Str tutorLogOpen = Str('מה העוזר אמר');
   static const Str tutorLogTitle = Str('מה העוזר אמר ב-30 הימים האחרונים');
   static const Str tutorLogHelp = Str(
-    'כל משפט נבדק לפני שהילד שמע אותו. משפט שלא עבר את הבדיקות לא נשמע, ובמקומו נשמעה ההודעה הרגילה.',
+    'כל משפט נבדק לפני שהילד שמע אותו. משפט שלא עבר את הבדיקות לא נשמע, ובמקומו נשמעת ההודעה הרגילה.',
   );
   static const Str tutorLogEmpty = Str('עוד לא נשמעו משפטים של העוזר.');
   static const Str tutorLogOffline = Str('אי אפשר להגיע לשרת כרגע. נסו שוב בעוד רגע.');
@@ -621,7 +621,7 @@ abstract final class He {
   );
   static const Str divisionHeading = Str('סימן החילוק');
   static const Str divisionHelp = Str(
-    'איך מצויר חילוק בתרגילים: ÷ (ברירת המחדל) או נקודתיים (:). ההגדרה נשמרת במכשיר הזה.',
+    'איך מוצג החילוק בתרגילים: ÷ (ברירת המחדל) או נקודתיים (:). ההגדרה נשמרת במכשיר הזה.',
   );
   static const Str aiHeading = Str('עוזר מילולי');
   static const Str aiHelp = Str(

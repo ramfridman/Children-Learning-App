@@ -2,7 +2,7 @@
   "skill": {
     "id": "HEB-A-09",
     "strand": "pa",
-    "title": "מחבר הברות ששומעים למילה",
+    "title": "מחברים הברות ששומעים למילה",
     "prerequisites": [
       {
         "skill": "HEB-A-08"

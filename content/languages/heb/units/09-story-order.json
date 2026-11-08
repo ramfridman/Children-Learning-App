@@ -2,7 +2,7 @@
   "skill": {
     "id": "HEB-A-13",
     "strand": "ol",
-    "title": "מסדר 3 תמונות מסיפור לפי הסדר",
+    "title": "מסדרים 3 תמונות מסיפור לפי הסדר",
     "prerequisites": [
       {
         "skill": "HEB-A-01"

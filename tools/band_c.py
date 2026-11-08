@@ -571,7 +571,7 @@ def numbers_c1(u):
     for cells, w in (([5, 15, 25, 36, 45], 3), ([33, 43, 52, 63, 73], 2)):  # read left to right, growing (QA-C1-8)
         right = cells[w - 1] + (cells[1] - cells[0])
         u.act('NUM-C-09', 'spot', cells=['n:%d' % v for v in cells], wrong=w, tag='M-HC-ROW', check='error_spotting', difficulty=0.6,
-              prompt='חָבֵר כָּתַב מִסְפָּרִים מֵאוֹתוֹ טוּר שֶׁל לוּחַ הַמֵּאָה, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?',
+              prompt='כָּתוּבִים כָּאן מִסְפָּרִים מֵאוֹתוֹ טוּר שֶׁל לוּחַ הַמֵּאָה, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?',
               h3='מִשּׁוּרָה לְשׁוּרָה הַמִּסְפָּר גָּדֵל בְּעֶשֶׂר, וְסִפְרַת הַיְּחִידוֹת נִשְׁאֶרֶת. אֶחָד מֵהַמִּסְפָּרִים לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! כָּאן הָיָה צָרִיךְ לִהְיוֹת %s.' % F[right])
     jump(u, 'NUM-C-09', 20, 40, 23, 10, labels=[20, 30, 40])
@@ -665,7 +665,7 @@ def numbers_c1_waiting(u):
         for i, (t, o, wrong, prompt, check) in enumerate([
                 (3, 4, {7: 'M-PV-FACE', 43: 'M-NUM-REV', 304: 'M-PV-ZERO'}, 'כַּמָּה קֻבִּיּוֹת יֵשׁ כָּאן?', 'practice'),
                 (5, 0, {5: 'M-PV-FACE', 500: 'M-PV-ZERO'}, 'כַּמָּה קֻבִּיּוֹת יֵשׁ כָּאן?', 'practice'),
-                (6, 2, {26: 'M-NUM-REV', 602: 'M-PV-ZERO', 8: 'M-PV-FACE'}, 'אֵיזֶה מִסְפָּר בָּנוּ מֵהַקֻּבִּיּוֹת?', 'transfer')]):
+                (6, 2, {26: 'M-NUM-REV', 602: 'M-PV-ZERO', 8: 'M-PV-FACE'}, 'אֵיזֶה מִסְפָּר הַקֻּבִּיּוֹת מַרְאוֹת?', 'transfer')]):
             n = 10 * t + o
             blocks.append(choose(
                 u, 'NUM-C-03', prompt, n, wrong, i, picture={'kind': 'base_ten', 'tens': t, 'ones': o}, tag_lines=RODS,
@@ -901,7 +901,7 @@ def math_c1(u):
     for i, (b, a) in enumerate([(6, 9), (4, 8), (5, 9), (3, 8), (2, 9)]):  # ? − b = a
         s = a + b
         choose(u, 'MATH-C-02', 'אֵיזֶה מִסְפָּר חָסֵר?', s, {a - b: 'M-OP-SWAP', a: 'M-EQ-OPER'}, i, row=['?', '-', b, '=', a], check='reverse',
-               h2='מַה הָיָה לִפְנֵי שֶׁהוֹרַדְנוּ? מְחַבְּרִים אֶת מַה שֶּׁנִּשְׁאַר וְאֶת מַה שֶּׁהוֹרַדְנוּ.',
+               h2='מָה הָיָה לִפְנֵי שֶׁהוֹרַדְנוּ? מְחַבְּרִים אֶת מַה שֶּׁנִּשְׁאַר וְאֶת מַה שֶּׁהוֹרַדְנוּ.',
                h3='%s וְעוֹד %s שָׁוֶה %s. %s' % (F[a], F[b], F[s], NOW % F[s]), ok='%s! %s פָּחוֹת %s שָׁוֶה %s.' % (F[s], F[s], F[b], F[a]))
     for (la, lb, r) in [(9, 6, 7), (8, 5, 6)]:  # the balance: 9 + 6 on the left, 7 on the right; add blocks until level (15 − 7)
         u.act('MATH-C-02', 'scale', mode='balance', left=[('block', la, 1), ('block', lb, 1)], right=[('block', r, 1)], block='block',

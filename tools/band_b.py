@@ -231,7 +231,7 @@ def numbers():
              'Band B of Numbers: counting to 30, back from ten, 13 to 20 objects, reading the teens, which is bigger, the number '
              'line, splitting a number, ten and some, by tens and twos, even and odd. Hebrew is a draft by Claude, needs-editor.',
              30, assets=['frog', 'tick', 'cross', 'sock', 'block'], globs=['stick_*'])
-    u.tag('M-CNT-DECADE', ['NUM-B-02', 'NUM-B-17'], 'הילד לא יודע מה בא אחרי תשע בכל עשרת: אחרי 19 הוא אומר 10 או 100.',
+    u.tag('M-CNT-DECADE', ['NUM-B-02', 'NUM-B-17'], 'הילד לא יודע מה בא אחרי התשע בכל עשרה: אחרי 19 הוא אומר 10 או 100.',
           'לספור יחד מדרגות או מעלות לפני השינה: עשרים ותשע… ומה אחר כך? להפסיק לפני הספרה האחרונה ולתת לילד להשלים.',
           ['concrete', 'symbolic'], 'אַחֲרֵי הַתֵּשַׁע מַתְחִילָה עֲשָׂרָה חֲדָשָׁה. בּוֹאוּ נִסְפֹּר יַחַד.')
     u.tag('M-NUM-REV', ['NUM-B-08'], 'הילד מחליף בין שתי הספרות: 12 ו-21, 13 ו-31.',
@@ -279,7 +279,7 @@ def numbers():
               correct_text='כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת %s.' % F[right[w]])
 
     # ---- NUM-B-04, 05: objects up to 20
-    u.skill('NUM-B-04', 'סופרים עד 20 עצמים', 'סוֹפְרִים עַד עֶשְׂרִים חֲפָצִים', 'cone-tree', ['NUM-A-09'], ['concrete', 'pictorial'],
+    u.skill('NUM-B-04', 'סופרים עד 20 עצמים', 'סוֹפְרִים עַד עֶשְׂרִים דְּבָרִים', 'cone-tree', ['NUM-A-09'], ['concrete', 'pictorial'],
             ['M-CNT-DOUBLE', 'M-CNT-SKIP'])
     u.skill('NUM-B-05', 'נותנים עד 20', 'נוֹתְנִים בְּדִיּוּק כַּמָּה שֶׁמְּבַקְשִׁים', 'cone-tree', ['NUM-B-04', 'NUM-A-06'],
             ['concrete'], ['M-CNT-CARD'])
@@ -471,9 +471,9 @@ def numbers():
     u.lesson('count-to-30', 'סוֹפְרִים עַד שְׁלוֹשִׁים', ['NUM-B-02'], ids('NUM-B-02', 0, 5), 'כׇּל הַכָּבוֹד! עָבַרְתֶּם אֶת הָעֲשָׂרוֹת.')
     u.lesson('count-to-30-more', 'עוֹד עֲשָׂרוֹת', ['NUM-B-02'], ids('NUM-B-02', 5), 'נִפְלָא! הָעֲשָׂרוֹת כְּבָר מוּכָּרוֹת.')
     u.lesson('rocket-countdown', 'סְפִירָה לַאֲחוֹר', ['NUM-B-03'], ids('NUM-B-03'), 'שָׁלוֹשׁ, שְׁתַּיִם, אַחַת… הַחֲלָלִית טָסָה!')
-    u.lesson('many-things', 'הַרְבֵּה חֲפָצִים', ['NUM-B-04'], ids('NUM-B-04', 0, 5), 'כׇּל הַכָּבוֹד! סְפַרְתֶּם הַרְבֵּה חֲפָצִים.')
-    u.lesson('many-things-more', 'עוֹד הַרְבֵּה חֲפָצִים', ['NUM-B-04'], ids('NUM-B-04', 5), 'מְצֻיָּן! כׇּל אֶחָד פַּעַם אַחַת.')
-    u.lesson('give-up-to-20', 'נוֹתְנִים עַד עֶשְׂרִים', ['NUM-B-05'], ids('NUM-B-05'), 'יָפֶה! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁנוּ.')
+    u.lesson('many-things', 'הַרְבֵּה דְּבָרִים', ['NUM-B-04'], ids('NUM-B-04', 0, 5), 'כׇּל הַכָּבוֹד! סְפַרְתֶּם הַרְבֵּה דְּבָרִים.')
+    u.lesson('many-things-more', 'עוֹד הַרְבֵּה דְּבָרִים', ['NUM-B-04'], ids('NUM-B-04', 5), 'מְצֻיָּן! כׇּל אֶחָד פַּעַם אַחַת.')
+    u.lesson('give-up-to-20', 'נוֹתְנִים עַד עֶשְׂרִים', ['NUM-B-05'], ids('NUM-B-05'), 'יָפֶה! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁתִּי.')
     u.lesson('read-the-teens', 'קוֹרְאִים אֶת הַמִּסְפָּרִים', ['NUM-B-08'], ids('NUM-B-08', 0, 6), 'כׇּל הַכָּבוֹד! אַתֶּם קוֹרְאִים מִסְפָּרִים.')
     u.lesson('read-the-teens-more', 'עוֹד מִסְפָּרִים', ['NUM-B-08'], ids('NUM-B-08', 6), 'מְצֻיָּן! הַסִּפְרוֹת בַּמָּקוֹם הַנָּכוֹן.')
     u.lesson('which-is-bigger', 'אֵיזֶה גָּדוֹל יוֹתֵר', ['NUM-B-10'], ids('NUM-B-10', 0, 5), 'יָפֶה! הִשְׁוִיתֶם מִסְפָּרִים.')

@@ -104,6 +104,7 @@ def extra_numbers():
     for ns, obj, order in sets:
         o = OBJECTS[obj]
         u.act('NUM-A-07', 'match', band='A', domain='numbers', pairs=[['n:%d' % n, '%s*%d' % (obj, n)] for n in ns], order=order, tag='M-CNT-SIZE',
+              tag_lines={'M-CNT-SIZE': ('vo:fb.size.count', 'בּוֹאוּ נִסְפֹּר כַּמָּה יֵשׁ בְּכׇל קְבוּצָה.')},
               prompt='מַתְאִימִים כׇּל מִסְפָּר לַקְּבוּצָה שֶׁלּוֹ.', h3='סוֹפְרִים אֶת הַדְּבָרִים בְּכׇל קְבוּצָה, וּמוֹצְאִים אֶת הַמִּסְפָּר. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! כׇּל מִסְפָּר עִם הַקְּבוּצָה שֶׁלּוֹ.')
     ids = lambda s, a=0, b=None: lesson_ids(u, s, a, b)

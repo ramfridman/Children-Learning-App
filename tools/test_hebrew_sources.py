@@ -15,6 +15,7 @@ import re
 import shutil
 import sys
 import tempfile
+import unicodedata
 import unittest
 
 TOOLS = os.path.dirname(os.path.abspath(__file__))
@@ -143,7 +144,9 @@ class HebrewMasterTableTest(unittest.TestCase):
         # 1221 after the owner's option A for the two three-coin shop hints (x.mathb17.6, .7; 2026-11-08): their text is now what the source says, so the
         # table no longer counts them as changed (the review CSV was exported again with the new text)
         self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1221)
-        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 29)  # 88 before the owner's V1 for M-NL-DIR (2026-11-06): its 44 rows now have the source's final nikud
+        # 18 after the editor sweep of 2026-11-08: the 11 Q2 drafts (the NUM-A-11 pairing line, the NUM-A-07 counting line) are now
+        # written in the generators, each with an id of its own (vo:fb.size.pairs, vo:fb.size.count), so the pack says what the table says
+        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 18)  # 88 before the owner's V1 for M-NL-DIR (2026-11-06): its 44 rows now have the source's final nikud
 
     def test_done_rows_have_ui_text(self):
         want = lambda r: HELD[(r['source'], r['id'])][0] if (r['source'], r['id']) in HELD else r['ui_text']
@@ -268,6 +271,73 @@ class RegenerationTest(unittest.TestCase):
             regen_content.run(tmp, quiet=True)
             second = snapshot(tmp)
             self.assertEqual([k for k in first if first[k] != second.get(k)], [])
+
+
+class SweepGuardsTest(unittest.TestCase):
+    """Mistakes the editor's sweep of 2026-11-08 found and fixed, kept out by a scan of every Hebrew string of the starter pack, the
+    three language courses (pack, course.json, units) and he.dart (docs/agents/hebrew-notes.md section 14)."""
+
+    VAV_BEFORE_SHVA = re.compile('(?<![\u0590-\u05ff])\u05d5\u05b0(?:[\u05d0-\u05ea]\u05b0|\u05d9\u05b0)')      # וְתְ…, וְיְ… (want וּתְ…, וִי…)
+    VAV_BEFORE_LABIAL = re.compile('(?<![\u0590-\u05ff])\u05d5\u05b0[\u05d1\u05de\u05e4]')                        # וְמ…, וְב…, וְפ… (want וּ)
+    MA_QAMATS = re.compile('(?<![\u0590-\u05ff])\u05de\u05b8\u05d4 [\u05d1\u05d2\u05d3\u05d6\u05d8\u05d9\u05db\u05dc\u05de\u05e0\u05e1\u05e4\u05e6\u05e7\u05e9\u05ea]')   # מָה + a letter that takes the dagesh
+    MA_PATAH = re.compile('(?<![\u0590-\u05ff])\u05de\u05b7\u05d4 [\u05d0\u05d4\u05d7\u05e2\u05e8]')            # מַה + a guttural or resh
+    BA_ARTICLE = re.compile('(?<![\u0590-\u05ff])\u05d1\u05b7\u05bc\u05d0')                                    # בַּא… (the article before א is בָּ)
+    BARE_ZOT = re.compile('(?<![\u0590-\u05ff])\u05d6\u05b9\u05d0\u05ea')                                      # זֹאת without the article: write זוֹ
+    BANNED = [('חֲפָצִים', 'a written-register word: דְּבָרִים'), ('חָבֵר כָּתַב', 'an unnamed friend who does something'),
+              ('חָבֵר אוֹסֵף', 'an unnamed friend who does something'), ('חָבֵר סָפַר', 'an unnamed friend who does something'),
+              ('שֶׁבִּקְשׁוּ', 'who asked? (שֶׁבִּקַּשְׁתִּי or שֶׁמְּבַקְשִׁים)')]
+
+    @classmethod
+    def setUpClass(cls):
+        cls.texts = []
+
+        def walk(o, where):
+            if isinstance(o, str):
+                if re.search('[\u0590-\u05ff]', o):
+                    cls.texts.append((where, unicodedata.normalize('NFC', o)))
+            elif isinstance(o, dict):
+                for k, v in o.items():
+                    walk(v, where)
+            elif isinstance(o, list):
+                for v in o:
+                    walk(v, where)
+        files = sorted(glob.glob(os.path.join(ROOT, 'content', 'starter', '*.json')))
+        files += sorted(glob.glob(os.path.join(ROOT, 'content', 'languages', '*', '**', '*.json'), recursive=True))
+        for f in files:
+            if os.path.basename(f) in ('pack.json', 'voice-plan.json'):
+                continue
+            walk(read_json(f), os.path.relpath(f, ROOT))
+        for k, v in dart_strings().items():
+            cls.texts.append(('he.dart ' + k, unicodedata.normalize('NFC', v)))
+
+    def hits(self, pattern):
+        return sorted({'%s: %s' % (w, t[:70]) for w, t in self.texts if pattern.search(t)})
+
+    def test_vav_takes_its_vowel_from_the_next_letter(self):
+        self.assertEqual(self.hits(self.VAV_BEFORE_SHVA), [])
+        self.assertEqual(self.hits(self.VAV_BEFORE_LABIAL), [])
+
+    def test_ma_and_its_dagesh(self):
+        self.assertEqual(self.hits(self.MA_QAMATS), [])
+        self.assertEqual(self.hits(self.MA_PATAH), [])
+
+    def test_article_after_bet_and_the_written_zot(self):
+        self.assertEqual(self.hits(self.BA_ARTICLE), [])
+        self.assertEqual(self.hits(self.BARE_ZOT), [])
+
+    def test_words_the_sweep_removed(self):
+        bad = ['%s (%s): %s' % (w, why, t[:60]) for w, t in self.texts for word, why in self.BANNED if word in t]
+        self.assertEqual(sorted(set(bad)), [])
+
+    def test_course_voice_texts_end_in_a_stop_and_never_shout(self):
+        bad = []
+        for lang in ('eng', 'heb', 'rus'):
+            lines = read_json(os.path.join(ROOT, 'content', 'languages', lang, 'course.json'))['lines']
+            for key, line in lines.items():
+                v = line.get('voice')
+                if v and not key.startswith(('he-gl-', 'gl-')) and (v.rstrip()[-1] not in '.?\u2026:' or '!' in v):
+                    bad.append('%s %s: %s' % (lang, key, v))
+        self.assertEqual(bad, [])
 
 
 if __name__ == '__main__':
