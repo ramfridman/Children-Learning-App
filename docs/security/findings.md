@@ -38,6 +38,11 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L0-1 | Course isolation: an answer counts by its activity id alone, and activity ids are not kept apart between courses | low | closed (`a399488`: course-prefixed ids, the course on every replayed answer, the activity id in the pull guard; proof re-run) | 2026-11-03 |
 | SEC-L0-2 | A gate document of a language pack may omit its course and is then read as `core` | info | closed (`a399488`; proof re-run) | 2026-11-03 |
 | SEC-L0-3 | `settings-put` bounds the family's settings in characters, the table in bytes | low | fixed (`a399488`: 10,000 UTF-8 bytes at the gateway; Deno test green); closes when a pgTAP case stores the largest document the gateway takes | 2026-11-03 |
+| SEC-SU-3 | Open sign-up doc: "Confirm email" must stay on (the doc lets it be turned off) | low | open (`open-signup`) | 2026-11-08 |
+| SEC-SU-4 | Open sign-up doc: the CAPTCHA remedy would stop the app's code requests; the stop switch is sign-up off | low | open (`open-signup`) | 2026-11-08 |
+| SEC-SU-5 | Sign-in codes share one project-wide email budget and the owner's SMTP sender | low | open (`open-signup`) | 2026-11-08 |
+| SEC-SU-6 | Tutor and voice cost caps are per family only; a project-wide cap is needed before they are switched on with open sign-up | low | open (tutor and live voice off on the server) | 2026-11-08 |
+| SEC-SU-7 | `supabase/config.toml` still has sign-up off, unlike the live project | info | open (`open-signup`) | 2026-11-08 |
 | SEC-L0-4 | `content-publish` and `tutor-prewarm` do not refuse language-course skills under a core pack id (`tutor-turn` does) | info | closed (`a399488`: `content-publish` refuses them under any pack id; proof re-run) | 2026-11-03 |
 | SEC-L0-5 | A child deleted mid-round can have its settings put back once by a parent phone that synced just before | info | open | 2026-11-03 |
 | SEC-L1-1 | Lesson lines are outside the validator's new language-field rules | low | open | 2026-11-03 |
