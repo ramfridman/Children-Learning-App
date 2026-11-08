@@ -21,8 +21,8 @@ void main() {
 
   test('the starter pack gives its activities and misconceptions, with the facts the prompt needs', () {
     final List<Object?> items = starter['items']! as List<Object?>;
-    expect(items.length, 967);
-    expect((starter['misconceptions']! as List<Object?>).length, 44);
+    expect(items.length, 1206);
+    expect((starter['misconceptions']! as List<Object?>).length, 51);
     final Map<String, Object?> count = items.cast<Map<String, Object?>>().firstWhere(
       (Map<String, Object?> i) => i['item_id'] == 'count.butterflies.3',
     );
@@ -89,6 +89,65 @@ void main() {
       );
     },
   );
+
+  test('every activity of the source starter pack is indexed, in the shape the gateway accepts', () {
+    // The same limits as supabase/functions/content-publish/handler.ts.
+    final RegExp answerId = RegExp(r'^[a-z][a-z0-9-]{0,15}$');
+    final RegExp itemId = RegExp(r'^[a-z0-9][a-z0-9._-]{0,63}$');
+    final RegExp objectId = RegExp(r'^[a-z0-9][a-z0-9_-]{0,39}$');
+    final RegExp tag = RegExp(r'^M-[A-Z]{2,5}-[A-Z0-9]{2,12}$');
+    final RegExp refused = RegExp(r'[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]', unicode: true);
+    final List<File> files = Directory('../content/starter')
+        .listSync()
+        .whereType<File>()
+        .where((File f) => RegExp(r'activity\.[^\\/]*\.json$').hasMatch(f.path))
+        .toList();
+    expect(files.length, greaterThan(1000));
+    final Set<String> types = <String>{};
+    for (final File f in files) {
+      final Map<String, Object?> doc = jsonDecode(f.readAsStringSync()) as Map<String, Object?>;
+      types.add('${doc['template']}/${(doc['answer']! as Map<String, Object?>)['type']}');
+      final Map<String, Object?> i = itemOf(doc);
+      final String why = f.path;
+      expect(itemId.hasMatch(i['item_id']! as String), isTrue, reason: why);
+      final List<Map<String, Object?>> answers = (i['answers']! as List<Object?>)
+          .cast<Map<String, Object?>>();
+      expect(answers.length, inInclusiveRange(1, 8), reason: why);
+      expect(answers.where((Map<String, Object?> a) => a['correct'] == true).length, 1, reason: why);
+      expect(answers.map((Map<String, Object?> a) => a['id']).toSet().length, answers.length, reason: why);
+      for (final Map<String, Object?> a in answers) {
+        expect(answerId.hasMatch(a['id']! as String), isTrue, reason: '$why ${a['id']}');
+        if (a['value'] != null) expect(a['value'], inInclusiveRange(-999, 9999), reason: why);
+        if (a['misconception'] != null) {
+          expect(tag.hasMatch(a['misconception']! as String), isTrue, reason: why);
+        }
+        if (a['label'] != null) expect((a['label']! as String).length, inInclusiveRange(1, 80), reason: why);
+      }
+      expect((i['number_set']! as List<Object?>).length, lessThanOrEqualTo(40), reason: why);
+      final List<String> objects = (i['object_ids']! as List<Object?>).cast<String>();
+      expect(objects.length, lessThanOrEqualTo(40), reason: why);
+      expect(objects.every(objectId.hasMatch), isTrue, reason: why);
+      expect((i['skill_ids']! as List<Object?>), isNotEmpty, reason: why);
+      for (final String t in <String>[i['goal']! as String, i['prompt_text']! as String]) {
+        expect(t.isNotEmpty && !refused.hasMatch(t), isTrue, reason: why);
+      }
+    }
+    expect(types, containsAll(<String>['tap_answer/number', 'tap_answer/choice', 'give_n/give']));
+  });
+
+  test('a number activity gives the typed value as the right answer and each expected wrong number with its misconception', () {
+    final Map<String, Object?> doc = jsonDecode(
+      File('../content/starter/activity.c.mathc01.27.json').readAsStringSync(),
+    ) as Map<String, Object?>;
+    final Map<String, Object?> i = itemOf(doc);
+    final List<Map<String, Object?>> answers = (i['answers']! as List<Object?>).cast<Map<String, Object?>>();
+    expect(answers.first, <String, Object?>{'id': 'n15', 'value': 15, 'correct': true});
+    expect(
+      answers.skip(1).map((Map<String, Object?> a) => '${a['value']}:${a['misconception']}').toList(),
+      <String>['1:M-OP-SWAP', '8:M-CNT-CARD', '14:M-CNT-DOUBLE'],
+    );
+    expect(i['number_set'], <int>[1, 8, 14, 15]);
+  });
 
   test('nothing but text for the prompt goes up: no audio, no pictures, no ids of a device or a child', () {
     final String json = jsonEncode(starter);

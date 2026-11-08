@@ -1,4 +1,4 @@
-// Golden screenshots of the real islands with the real pack: the Counting Hills (15 skills) and the Colours island (1).
+// Golden screenshots of the real islands with the real pack: the Counting Hills (36 skills, Bands A to C) and the Colours island (12).
 //
 // Regenerate after a deliberate visual change:  flutter test --update-goldens test/land_golden_test.dart
 import 'package:flutter/material.dart';
@@ -38,7 +38,7 @@ void main() {
         // every skill of the land has its drawing on the island
         expect(
           find.byWidgetPredicate((Widget w) => w.key.toString().startsWith("[<'object-")).evaluate().length,
-          land == 'counting' ? 28 : 12,
+          land == 'counting' ? 36 : 12,
         );
         await expectLater(
           find.byType(MaterialApp),

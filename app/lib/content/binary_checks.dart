@@ -3,12 +3,14 @@ import 'dart:typed_data';
 
 import 'schema.dart';
 
-/// Checks on the pictures of character packs, which `validatePack` cannot make because it never sees bytes.
+/// Checks on the pictures of a pack, which `validatePack` cannot make because it never sees bytes.
 /// Runs after every file has been proven genuine, in the app and in the builder.
 
 const int maxCharacterBytes = 8 * 1024 * 1024;
 
-/// Things a picture of a character must not contain, whatever it claims to be.
+/// Things no picture of any pack may contain, whatever it claims to be. Nothing here can run in the
+/// renderer the app uses (flutter_svg drawing from text, never from a file or the network), but a picture
+/// is refused if it even tries: the check does not depend on what the renderer happens to support.
 const List<String> _unsafeSvg = <String>[
   '<script',
   'href',
@@ -18,9 +20,66 @@ const List<String> _unsafeSvg = <String>[
   'onload',
   'onclick',
   '<style',
-  'url(',
   '<use',
+  '<!doctype',
+  '<!entity',
 ];
+
+/// The one form of `url(` a picture may use: a reference to an element of the same file, `url(#id)`.
+final RegExp _urlOpen = RegExp(r'url\s*\(', caseSensitive: false);
+final RegExp _fragmentRef = RegExp(r'url\(#([A-Za-z_][A-Za-z0-9_.-]*)\)');
+final RegExp _idAttr = RegExp(r"""(?<![A-Za-z0-9_:.-])id\s*=\s*(?:"([^"]*)"|'([^']*)')""");
+
+/// The only character references a picture may use; a numeric one (`&#114;`) could spell out a word the
+/// checks look for.
+final RegExp _entity = RegExp(r'&(?!(?:amp|lt|gt|quot|apos);)');
+
+/// Why the SVG [text] may not be shown, in words; empty when it may.
+///
+/// Every `url(` must be exactly `url(#id)` with `id` defined in this same file (a clip path or a
+/// gradient); any other address (http, data:, file, a relative path, a quoted or spaced form) is refused.
+List<String> svgProblems(String text) {
+  final List<String> out = <String>[];
+  final String lower = text.toLowerCase();
+  for (final String bad in _unsafeSvg) {
+    if (lower.contains(bad)) out.add('contains "$bad"');
+  }
+  if (_entity.hasMatch(text)) {
+    out.add('contains a character reference other than &amp; &lt; &gt; &quot; &apos;');
+  }
+  final Set<String> ids = <String>{
+    for (final RegExpMatch m in _idAttr.allMatches(text)) m.group(1) ?? m.group(2)!,
+  };
+  for (final RegExpMatch open in _urlOpen.allMatches(text)) {
+    final Match? ref = _fragmentRef.matchAsPrefix(text, open.start);
+    if (ref == null) {
+      // The address itself is not repeated: problems can end up in a log.
+      out.add('contains a url( that is not url(#id) of an element of this file');
+    } else if (!ids.contains(ref.group(1))) {
+      out.add('refers to ${ref.group(0)}, which this file does not define');
+    }
+  }
+  return out;
+}
+
+/// Problems with every SVG file of a verified pack, whatever document uses it.
+List<Problem> checkPackPictures(Map<String, Uint8List> files) {
+  final List<Problem> out = <Problem>[];
+  for (final MapEntry<String, Uint8List> f in files.entries) {
+    if (!f.key.toLowerCase().endsWith('.svg')) continue;
+    final String text;
+    try {
+      text = utf8.decode(f.value);
+    } on FormatException {
+      out.add(Problem(f.key, '${f.key} is not valid UTF-8'));
+      continue;
+    }
+    for (final String p in svgProblems(text)) {
+      out.add(Problem(f.key, '${f.key} $p'));
+    }
+  }
+  return out;
+}
 
 final RegExp _viewBox = RegExp(r'viewBox="\s*0\s+0\s+([0-9.]+)\s+([0-9.]+)\s*"');
 
@@ -37,7 +96,7 @@ final RegExp _viewBox = RegExp(r'viewBox="\s*0\s+0\s+([0-9.]+)\s+([0-9.]+)\s*"')
   return (v.getUint32(16), v.getUint32(20));
 }
 
-/// Problems with the pictures of every character in a verified pack.
+/// Problems with the pictures of every character in a verified pack: present, the right kind and size.
 List<Problem> checkCharacterFiles(
   Map<String, Object?> manifest,
   Map<String, Object?> docs,
@@ -79,10 +138,7 @@ List<Problem> checkCharacterFiles(
           out.add(Problem('${d.key} › $where', '$name is not valid UTF-8'));
           continue;
         }
-        final String lower = text.toLowerCase();
-        for (final String bad in _unsafeSvg) {
-          if (lower.contains(bad)) out.add(Problem('${d.key} › $where', '$name contains "$bad"'));
-        }
+        // What the picture may contain is checked for every SVG of the pack by [checkPackPictures].
         final RegExpMatch? m = _viewBox.firstMatch(text);
         if (m == null) {
           out.add(Problem('${d.key} › $where', '$name has no viewBox starting at 0 0'));

@@ -1238,17 +1238,22 @@ class _Plans {
 
   // ---- TA-5 add, take away ----
 
-  HintPlan add(int level) {
+  /// Add or take away. With [hiddenStart] the first number is not drawn (a closed basket the question says holds that many): the
+  /// card holds it as hands and the group on the stage is what is counted on to it.
+  HintPlan add(int level, {int? hiddenStart}) {
     if (a.group == null) return generic(level);
     final TapGeometry g2 = g.withReserve(_reserve);
-    final List<Rect> first = _groupRects(level == 1 ? g : g2, 0);
-    final List<Rect> second = a.group2 != null ? _groupRects(level == 1 ? g : g2, 1) : <Rect>[];
-    final bool adds = a.group2 != null;
+    final bool hidden = hiddenStart != null && a.group2 == null;
+    final List<Rect> first = hidden ? <Rect>[] : _groupRects(level == 1 ? g : g2, 0);
+    final List<Rect> second = hidden
+        ? _groupRects(level == 1 ? g : g2, 0)
+        : (a.group2 != null ? _groupRects(level == 1 ? g : g2, 1) : <Rect>[]);
+    final bool adds = a.group2 != null || hidden;
     final int total = _answerValue ?? first.length;
-    final int start = first.length;
+    final int start = hiddenStart ?? first.length;
     if (level == 1) {
       return HintPlan(<HintFrame>[
-        HintFrame(<HintMark>[VeilMark(first)], hold: _ms(1500)),
+        if (first.isNotEmpty) HintFrame(<HintMark>[VeilMark(first)], hold: _ms(1500)),
         if (adds) HintFrame(<HintMark>[VeilMark(second)], hold: _ms(1500)),
       ]);
     }

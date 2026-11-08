@@ -192,7 +192,7 @@ void main() {
     });
 
     testWidgets(
-      'every counting and giving activity of the pack ends its level-2 aid on its own number (all 70)',
+      'every counting and giving activity of the pack ends its level-2 aid on its own number (all 75)',
       (WidgetTester t) async {
         int checked = 0;
         for (final CountTapActivity a in all<CountTapActivity>()) {
@@ -217,7 +217,7 @@ void main() {
           s.dispose();
           checked++;
         }
-        expect(checked, 70);
+        expect(checked, 75);
       },
     );
 
@@ -503,7 +503,7 @@ void main() {
       }
     });
 
-    testWidgets('tap the answer: no tile is lit or dimmed before the end of level 3 (all 626)', (
+    testWidgets('tap the answer: no tile is lit or dimmed before the end of level 3 (all 815)', (
       WidgetTester t,
     ) async {
       int n = 0;
@@ -516,7 +516,7 @@ void main() {
         s.dispose();
         n++;
       }
-      expect(n, 626);
+      expect(n, 815);
     });
 
     testWidgets('counting, flash and trace: levels 1 and 2 leave the tiles alone', (WidgetTester t) async {

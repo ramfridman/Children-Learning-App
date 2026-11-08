@@ -29,7 +29,7 @@ const Map<String, int> _spokenTapsBySkill = <String, int>{
   'NUM-B-02': 9,
   'NUM-B-03': 8,
   'NUM-B-08': 2,
-  'NUM-B-10': 10,
+  'NUM-B-10': 14, // 10 and the 4 of M10 (c.numb10.1 to .4: which number is bigger, a numeral each)
   'NUM-B-11': 12,
   'NUM-B-14': 10,
   'NUM-B-17': 6, 'SHP-B-02': 10,
@@ -52,26 +52,27 @@ void main() {
 
   Iterable<Activity> spoken() => pack.activities.values.where((Activity a) => a.voiceAnswer);
 
-  test('312 of the 967 activities are answered by voice, and 655 are not', () {
-    expect(pack.activities.length, 967);
-    expect(spoken().length, 312);
-    expect(pack.activities.length - spoken().length, 655);
+  test('319 of the 1,206 activities are answered by voice, and 887 are not', () {
+    expect(pack.activities.length, 1206);
+    expect(spoken().length, 319);
+    expect(pack.activities.length - spoken().length, 887);
   });
 
-  test('by template: tap_answer 252 of 626, every count_tap and flash, and no other template', () {
+  test('by template: tap_answer 256 of 815, every count_tap and the flash of the first 967, and no other template', () {
     final Map<String, (int, int)> byTemplate = <String, (int, int)>{};
     for (final Activity a in pack.activities.values) {
       final (int, int) n = byTemplate[a.template] ?? (0, 0);
       byTemplate[a.template] = a.voiceAnswer ? (n.$1 + 1, n.$2) : (n.$1, n.$2 + 1);
     }
-    expect(byTemplate.remove('tap_answer'), (252, 374));
-    expect(byTemplate.remove('count_tap'), (44, 0));
-    expect(byTemplate.remove('flash'), (16, 0));
+    expect(byTemplate.remove('tap_answer'), (256, 559));
+    expect(byTemplate.remove('count_tap'), (47, 0));
+    // The 8 flash items of NUM-B-09 (M10) are unspoken for now: text only (owner, 2026-11-06).
+    expect(byTemplate.remove('flash'), (16, 8));
     expect(byTemplate.length, 12, reason: 'the other twelve templates');
     for (final MapEntry<String, (int, int)> t in byTemplate.entries) {
       expect(t.value.$1, 0, reason: '${t.key} is answered by hand');
     }
-    expect(byTemplate.values.fold<int>(0, (int s, (int, int) n) => s + n.$2), 281);
+    expect(byTemplate.values.fold<int>(0, (int s, (int, int) n) => s + n.$2), 320);
   });
 
   test('the spoken tap_answer activities per skill are the ones of the table', () {
@@ -118,7 +119,7 @@ void main() {
     }
   });
 
-  test('the builder warns about exactly the nine numbers that start another option\'s number', () {
+  test('the builder warns about exactly the eight numbers that start another option\'s number', () {
     final List<Problem> warnings = packWarnings(
       docs: <String, Object?>{
         for (final Activity a in pack.activities.values) 'activity.${a.id}.json': a.json,
@@ -136,11 +137,10 @@ void main() {
           'b.numb02.2',
           'b.numb02.3',
           'b.numb02.6',
-          'b.numb10.10',
         ])
           'activity.$id.json',
       },
     );
-    expect(warnings.length, 9);
+    expect(warnings.length, 8);
   });
 }

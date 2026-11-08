@@ -462,7 +462,7 @@ void main() {
       WidgetTester t,
     ) async {
       await t.runAsync(warmHintHands);
-      for (final String id in <String>['log.copy.balloons', 'b.colb06.4']) {
+      for (final String id in <String>['b.colb06.1', 'b.colb06.4']) {
         final BuildPatternActivity a = content.activities[id]! as BuildPatternActivity;
         final LessonController c = controllerFor(a);
         final BuildPatternSession s = BuildPatternSession(c, a);
@@ -858,7 +858,7 @@ void main() {
         await end(t, s);
         n++;
       }
-      expect(n, 165);
+      expect(n, 167);
     }, timeout: const Timeout(Duration(minutes: 4)));
 
     testWidgets('with motion allowed the hand travels and the same hint plays', (WidgetTester t) async {
