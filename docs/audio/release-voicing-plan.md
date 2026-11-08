@@ -124,7 +124,7 @@ they are.
 - **Which model the owner chose after the Hebrew auditions is not written in any repo file I could find** (the rounds 1, 3
   and 4 clips are in `~\nitznutz-voice\auditions`; their scores are not). `voices.json` still says Turbo, so every figure
   here is Turbo, with the v4 figure beside it. **Decision 2** below.
-- **Included characters.** The Creator plan includes 275,000 characters a month [R, PLAN.md]. The Hebrew run alone is 374,000
+- **Included characters.** The owner's Creator subscription (read 2026-11-08): 363,000 a month, 1,186 used, resetting 2026-12-05 15:42 (PLAN.md's 275,000 is out of date). The Hebrew run alone is 374,000
   characters. Whether the plan counts one credit for a Turbo character or half is a fact on his usage page, not in the repo
   [G]; if it is one, the run needs two months of included characters or paid overage. The list-price USD figures stay the
   comparison.
@@ -446,8 +446,8 @@ paid step).
 
 ## 4a. The batched schedule (owner's decisions of 2026-11-08: nitzi on `eleven_v4`, hero-son on Turbo; whole groups, so a stop is coherent)
 
-**Why batches.** The monthly character allowance is smaller than the whole run (275,000 [R, PLAN.md line 1202] against 374,000 for the two
-narrators and about 395,000 with everything). So the run is cut into **groups**, each a whole unit that a child meets together, and the
+**Why batches.** The monthly character allowance is smaller than the whole run (361,814 credits left until 5 December, read from the owner's subscription, against about 376,000 characters for the two
+narrators and about 399,000 with everything). So the run is cut into **groups**, each a whole unit that a child meets together, and the
 groups are voiced in the order of the children's first tests. If the allowance ends, every group that was started is finished; the rest waits
 for the reset. A group is never split.
 
@@ -456,32 +456,27 @@ for the reset. A group is never split.
 `python tools/voicing_groups.py` writes `docs/audio/voicing-groups.json` (the manifest: group name, voice ids, characters) and prints the
 table. A group is the core lines, the end-of-lesson celebrations, or **one land and one band** (the six lands are the skill domains:
 numbers, colors, shapes, logic, cs, math). A line that several groups use sits in the **earliest** group, so it is already voiced when a later
-group needs it. Characters are for **one narrator** (the same set is said by nitzi and by hero-son).
+group needs it. Characters are for **one narrator** (the same set is said by nitzi and by hero-son). Snapshot of 2026-11-08 evening; the
+editor is still changing texts, so re-run the script (and `plan`) before typing a number.
 
 | Group | Ids | Characters | Tier |
 |---|---|---|---|
 | `core` (greeting, encouragement, listening, goodbye, ceremony) | 27 | 709 | 1 |
-| `celebrate` (the end of every lesson, cheer style) | 200 | 5,636 | 1 |
-| `numbers-A` | 661 | 27,640 | 1 |
-| `colors-A` | 198 | 5,125 | 1 |
-| `shapes-A` | 242 | 5,947 | 1 |
-| `logic-A` | 272 | 8,587 | 1 |
-| `cs-A` | 98 | 3,905 | 1 |
-| `math-A` | 192 | 8,586 | 1 |
-| **Tier 1, one narrator** | **1,890** | **66,135** | |
-| `numbers-B` | 762 | 36,744 | 2 |
-| `colors-B`, `shapes-B`, `logic-B`, `cs-B` | 128 + 155 + 160 + 49 | 3,883 + 5,714 + 5,740 + 2,351 = 17,688 | 2 |
-| `math-B` | 609 | 31,143 | 2 |
-| **Tier 2, one narrator** | **1,863** | **85,575** | |
-| `numbers-C` | 345 | 23,737 | 3 |
-| `math-C` | 183 | 12,238 | 3 |
-| **Tier 3, one narrator** | **528** | **35,975** | |
-| **All, one narrator** | **4,281** | **187,685** | |
+| `celebrate` (the end of every lesson, cheer style) | 200 | 5,678 | 1 |
+| `numbers-A` | 661 | 27,644 | 1 |
+| `colors-A`, `shapes-A`, `logic-A`, `cs-A`, `math-A` | 1002 | 32,156 | 1 |
+| **Tier 1, one narrator** | **1890** | **66,187** | |
+| `numbers-B` | 762 | 36,814 | 2 |
+| `colors-B`, `shapes-B`, `logic-B`, `cs-B` | 492 | 17,696 | 2 |
+| `math-B` | 609 | 31,151 | 2 |
+| **Tier 2, one narrator** | **1863** | **85,661** | |
+| `numbers-C`, `math-C` | 528 | 36,623 | 3 |
+| **All, one narrator** | **4281** | **188,471** | |
 
-Outside the narrators' manifest (separate counts, section 1): the pilots and probes (steps 1 and 2: 7,772 characters: the fix probe 1,756, round 1
-4,042, round 2 about 1,974), the three language packs (eng 3,305, rus 3,625, heb 3,906 = 10,836), the 30 UI lines (1,009 per narrator),
-and the friends' own nine lines (194 each, 1,358 for seven). The model-ab clips (1,836 characters) are already spent.
-The counts come from my script and match the paid tool's rule (code points of `voice_text`); the tool's own `plan --groups` figure is the one to type.
+Outside the narrators' manifest (separate counts, section 1): the pilots and probes (7,772 characters: the fix probe 1,756, round 1 4,042, round 2
+about 1,974), the three language packs (eng 3,305, rus 3,625, heb 3,906 = 10,836), the 30 UI lines (1,009 per narrator) and the friends' own nine
+lines (194 each, 1,358 for seven). The model-ab clips (1,836 characters) are already spent. The counts come from my script and follow the paid
+tool's rule (code points of `voice_text`); the tool's own `plan --groups` figure is the one to type.
 
 ### 4a.2 What a child hears while only some groups are voiced [R]
 
@@ -497,56 +492,92 @@ The counts come from my script and match the paid tool's rule (code points of `v
 - One more thing to expect: each batch makes a new voice pack of **everything made so far** (`voice_gen` puts every file of the work folder
   into the pack), so each batch needs a **higher `--pack-version`**; an installed pack of the same version is not replaced.
 
-### 4a.3 Credits: does v4 cost more per character than Turbo?
+### 4a.3 The allowance, and does v4 cost more per character than Turbo?
 
-**Unknown for v4.** Nothing in the repo says. `PLAN.md` says "Creator: 275,000 **v4** characters a month" and lists the API prices (v4 0.08, Turbo 0.04
-USD per 1,000). A web check (2026-11-08) found only that ElevenLabs' help says Eleven v3 is 1 credit a character on the website, that third-party
-write-ups say Flash/Turbo are 0.5 credit a character, and that **no source states a credit rate for v4 or v4 Turbo**
-([ElevenLabs help: cost of Eleven v3](https://help.elevenlabs.io/hc/en-us/articles/35869113958801-How-much-does-it-cost-to-generate-using-Eleven-v3),
-[ElevenLabs API pricing](https://elevenlabs.io/pricing/api), [activepieces: pricing 2026](https://www.activepieces.com/blog/elevenlabs-pricing-2026-plans-credits-and-costs)).
-The 2:1 price ratio makes "v4 = 1 credit, Turbo = 0.5" the likely reading [G].
+**The owner's subscription (read 2026-11-08, read-only):** tier Creator, **1,186 used of 363,000**, so **361,814 left**, resetting **2026-12-05 15:42** (local).
+Month 1 is everything before that moment; month 2 starts with the reset. I keep a **reserve of 18,000** for lines that must be voiced
+again after listening, so the month-1 budget is **343,814**.
 
-**So the schedule below is built for the worst case: every character counts as 1 credit, for both models.** If Turbo is really 0.5, hero-son's
-batches use half, and more of month 2 moves into month 1 (section 4a.5). **Please confirm the allowance** (still 275,000?) **and the day it resets**
-on the ElevenLabs usage page, and after the first batch compare the page's number with the batch's characters: that is the test of the rule.
+**The credit rate of v4 is still not written anywhere in the repo or on the pages I found.** `PLAN.md` says "275,000 v4 characters a month" (old
+figure; the real limit is 363,000). Third-party write-ups say Flash/Turbo are 0.5 credit a character; none gives v4 or v4 Turbo
+([ElevenLabs help](https://help.elevenlabs.io/hc/en-us/articles/35869113958801-How-much-does-it-cost-to-generate-using-Eleven-v3),
+[ElevenLabs API pricing](https://elevenlabs.io/pricing/api)). So I show **two cases**:
 
-### 4a.4 Month 1 and month 2 [M, worst case 1 credit a character]
+- **Case A, every model 1 credit a character** (worst case).
+- **Case B, Turbo 0.5, v4 1** (hero-son's characters count half, nitzi's and everything else full).
 
-The batches in the order of the first tests (both narrators for each tier: the default companion is nitzi, a child who picks a boy-voiced friend
-hears hero-son). `N` is nitzi (v4), `H` is hero-son (Turbo). Pack versions: one counter for each narrator, starting at 2.0.1.
+**The 1,186 already used is a clue [G].** The only paid run in this billing period that I know of is `model-ab`: 918 characters on Turbo and 918 on
+v4. Case A would have charged 1,836 and case B 1,377; the meter says 1,186 (and it cannot be less than what `model-ab` used, so it is at most
+1,186 for those 1,836 characters). So **neither case is exact; the real rates are lower than case A**. One reading that fits within about 1 percent:
+v4 about 0.8 and Turbo 0.5 (734 + 459 = 1,193) [G]. Under that reading nitzi's batches are cheaper than in case B. I plan with A and B because they are
+the safe pair; the first batch will say which is true.
 
-| Batch | Voice | Groups | Characters | Total so far | Pack |
-|---|---|---|---|---|---|
-| **Month 1** | | | | | |
-| 0 | pilots, probes, round 2 | (specs, section 4 steps 1 and 2) | 7,772 | 7,772 | |
-| 1 | N | `core,celebrate` | 6,345 | 14,117 | 2.0.1 |
-| 2 | H | `core,celebrate` | 6,345 | 20,462 | 2.0.1 |
-| 3 | N | `numbers-A` | 27,640 | 48,102 | 2.0.2 |
-| 4 | N | `colors-A,shapes-A,logic-A,cs-A,math-A` | 32,150 | 80,252 | 2.0.3 |
-| 5 | H | `numbers-A` | 27,640 | 107,892 | 2.0.2 |
-| 6 | H | `colors-A,shapes-A,logic-A,cs-A,math-A` | 32,150 | 140,042 | 2.0.3 |
-| 7 | languages | eng, rus, heb (needs F4) | 10,836 | 150,878 | lang packs |
-| 8 | N and H | UI lines (needs F3) | 2,018 | 152,896 | 2.0.4 |
-| 9 | N | `numbers-B` | 36,744 | 189,640 | 2.0.5 |
-| 10 | N | `colors-B,shapes-B,logic-B,cs-B` | 17,688 | 207,328 | 2.0.6 |
-| 11 | N | `math-B` | 31,143 | 238,471 | 2.0.7 |
-| 12 | H | `colors-B,shapes-B,logic-B,cs-B` | 17,688 | 256,159 | 2.0.4 |
-| | reserve for lines that must be voiced again after listening | | 18,841 | 275,000 | |
-| **Month 2 (after the reset)** | | | | | |
-| 13 | H | `numbers-B` | 36,744 | 36,744 | 2.0.5 |
-| 14 | H | `math-B` | 31,143 | 67,887 | 2.0.6 |
-| 15 | N | `numbers-C,math-C` | 35,975 | 103,862 | 2.0.8 |
-| 16 | H | `numbers-C,math-C` | 35,975 | 139,837 | 2.0.7 |
-| 17 | friends | their own 9 lines (needs F2) | 1,358 | 141,195 | |
+**After batch 1 (6,000 characters) the usage number tells which case is true.** The owner re-runs the same read-only subscription check
+before and after batch 1 and subtracts. Batch 1 is nitzi on v4 (about 6,387 characters), so the difference is v4's rate; batch 2 is hero-son on
+Turbo (the same text), so its difference is Turbo's rate. Rate = credits used / characters the tool printed.
 
-Month 2 uses about half of the allowance (141,195 of 275,000) and leaves about 134,000 for redoing lines, the Band B and C items that arrive later, and the live tutor.
-The first batch that breaks the allowance is the one to stop **before**: look at the remaining credits on the usage page, and if the next
-batch's printed "characters to send" is more, wait for the reset. Because every batch is whole groups, nothing is left half done.
+### 4a.4 The batches, case A (every model 1 credit a character) [M]
 
-### 4a.5 If Turbo counts half a credit
+`N` is nitzi (v4), `H` is hero-son (Turbo). Same order as before (the order of the children's first tests; both narrators for each tier).
+Month 1 budget 343,814 credits (361,814 left now, 18,000 reserve). Pack versions: one counter for each narrator, starting at 2.0.1, +1 for each batch of that narrator.
 
-hero-son's characters count 0.5. Month 1 then holds batches 0 to 12, and also 13 and 14 (hero's `numbers-B` and `math-B`: +18,372 +15,572),
-about 248,000 credits, leaving batches 15 and 16 (Band C, both narrators) and 17 for month 2. The order does not change; only the stopping point does.
+| Batch | Voice | Groups | Characters | Credits (case A) | Running total in its month | Month |
+|---|---|---|---|---|---|---|
+| 0 |  | pilots, probes, round 2 | 7,772 | 7,772 | 7,772 | 1 |
+| 1 | N | core,celebrate | 6,387 | 6,387 | 14,159 | 1 |
+| 2 | H | core,celebrate | 6,387 | 6,387 | 20,546 | 1 |
+| 3 | N | numbers-A | 27,644 | 27,644 | 48,190 | 1 |
+| 4 | N | colors-A,shapes-A,logic-A,cs-A,math-A | 32,156 | 32,156 | 80,346 | 1 |
+| 5 | H | numbers-A | 27,644 | 27,644 | 107,990 | 1 |
+| 6 | H | colors-A,shapes-A,logic-A,cs-A,math-A | 32,156 | 32,156 | 140,146 | 1 |
+| 7 |  | languages eng, rus, heb (F4) | 10,836 | 10,836 | 150,982 | 1 |
+| 8 | N and H | UI lines (F3) | 2,018 | 2,018 | 153,000 | 1 |
+| 9 | N | numbers-B | 36,814 | 36,814 | 189,814 | 1 |
+| 10 | N | colors-B,shapes-B,logic-B,cs-B | 17,696 | 17,696 | 207,510 | 1 |
+| 11 | N | math-B | 31,151 | 31,151 | 238,661 | 1 |
+| 12 | H | colors-B,shapes-B,logic-B,cs-B | 17,696 | 17,696 | 256,357 | 1 |
+| 13 | H | numbers-B | 36,814 | 36,814 | 293,171 | 1 |
+| 14 | H | math-B | 31,151 | 31,151 | 324,322 | 1 |
+| 15 | N | numbers-C,math-C | 36,623 | 36,623 | 36,623 | 2 |
+| 16 | H | numbers-C,math-C | 36,623 | 36,623 | 73,246 | 2 |
+| 17 |  | friends: their own 9 lines (F2) | 1,358 | 1,358 | 74,604 | 2 |
+
+**Case A: month 1 uses 324,322 credits** (the batches marked 1), **month 2 (from 5 December) uses 74,604**. Month 1 ends after the last batch above marked 1; the next
+batch would not fit whole, so it waits for the reset. The whole release is 398,926 characters, more than the 361,814 left, so in case A
+**it does not fit in month 1**.
+
+### 4a.5 The batches, case B (Turbo 0.5 credit, v4 1)
+
+| Batch | Voice | Groups | Characters | Credits (case B) | Running total in its month | Month |
+|---|---|---|---|---|---|---|
+| 0 |  | pilots, probes, round 2 | 7,772 | 7,772 | 7,772 | 1 |
+| 1 | N | core,celebrate | 6,387 | 6,387 | 14,159 | 1 |
+| 2 | H | core,celebrate | 6,387 | 3,194 | 17,352 | 1 |
+| 3 | N | numbers-A | 27,644 | 27,644 | 44,996 | 1 |
+| 4 | N | colors-A,shapes-A,logic-A,cs-A,math-A | 32,156 | 32,156 | 77,152 | 1 |
+| 5 | H | numbers-A | 27,644 | 13,822 | 90,974 | 1 |
+| 6 | H | colors-A,shapes-A,logic-A,cs-A,math-A | 32,156 | 16,078 | 107,052 | 1 |
+| 7 |  | languages eng, rus, heb (F4) | 10,836 | 10,836 | 117,888 | 1 |
+| 8 | N and H | UI lines (F3) | 2,018 | 1,514 | 119,402 | 1 |
+| 9 | N | numbers-B | 36,814 | 36,814 | 156,216 | 1 |
+| 10 | N | colors-B,shapes-B,logic-B,cs-B | 17,696 | 17,696 | 173,912 | 1 |
+| 11 | N | math-B | 31,151 | 31,151 | 205,063 | 1 |
+| 12 | H | colors-B,shapes-B,logic-B,cs-B | 17,696 | 8,848 | 213,911 | 1 |
+| 13 | H | numbers-B | 36,814 | 18,407 | 232,318 | 1 |
+| 14 | H | math-B | 31,151 | 15,576 | 247,894 | 1 |
+| 15 | N | numbers-C,math-C | 36,623 | 36,623 | 284,516 | 1 |
+| 16 | H | numbers-C,math-C | 36,623 | 18,312 | 302,828 | 1 |
+| 17 |  | friends: their own 9 lines (F2) | 1,358 | 1,358 | 304,186 | 1 |
+
+**Case B: month 1 uses 304,186 credits** of the 343,814 budget (plus the 18,000 reserve it is 322,186 of the 361,814 left). **The whole release fits in month 1 under case B**,
+with 39,628 credits to spare after the 18,000 reserve.
+
+Under the reading that the 1,186 suggests (v4 about 0.8, Turbo 0.5) nitzi's 188,000 characters cost about 150,000 instead of 188,000, so the whole release
+fits in month 1 with even more room, and the order of the batches does not change.
+
+**What to do in either case:** run the batches in the table's order; before each one read the remaining credits; if the next batch's printed
+"characters to send" (times its rate) is more than what is left minus the reserve, stop and continue after the reset. Because every batch is whole groups,
+nothing is left half done. If case B is true, the batches marked 2 in case A simply move into month 1.
 
 ### 4a.6 The owner's commands for a batch
 
@@ -657,7 +688,7 @@ duration), as in the diagnosis.
 1. **Approve the texts.** The sweep ends when the editor says so; then the owner approves the rows (4,151 now), including the
    106 `proposed`. Until then no Hebrew batch can start. (The probe and the pilots can.)
 2. **Which model for the Hebrew narrators. DECIDED (2026-11-08): nitzi on `eleven_v4`, hero-son on Turbo** (22.44 USD for the two; needs F6).
-   Still open: confirm the monthly allowance (275,000?) and its reset day (section 4a.3).
+   Allowance known: 361,814 left until 2026-12-05 (section 4a.3). Still open: the credit rate of v4 and Turbo, which the first batch will show.
 3. **Pay for repeated texts or have the app-developer remove them (F1).** 4 USD at Turbo. Not a quality question.
 4. **Languages: one round or two.** Round 1 only (faster, 0.27 USD) or round 1 and round 2 (0.42 USD in all, one more listening sitting). I
    recommend round 2 for English and Russian because the isolated-sound test (D2) is in it.
