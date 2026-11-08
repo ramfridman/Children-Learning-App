@@ -64,6 +64,7 @@ void main() {
           'hero-son': <String, Object?>{'voiceId': 'FixtureVoice0002', 'modelId': 'eleven_v4'},
           'lang-en-fixture': <String, Object?>{'candidate': true, 'voiceId': 'FixtureEnglish01'},
           'lang-ru-fixture': <String, Object?>{'candidate': true, 'voiceId': '', 'idStatus': 'OWNER-TO-FILL'},
+          'lang-en-fixture-male': <String, Object?>{'candidate': true, 'voiceId': 'FixtureEnglish02'},
         },
       }),
     );
@@ -148,6 +149,16 @@ void main() {
           <String, Object?>{'id': 'en-hi', 'vo': 'vo:eng.en_hi', 'shown': 'Hi!', 'say': 'Hi!'},
           <String, Object?>{'id': 'en-hi-slow', 'vo': 'vo:eng.en_hi_slow', 'shown': 'Hi!', 'say': 'Hi!'},
         ],
+      }),
+    );
+    // The puppet's line of the course: the clip `en-hi` is the puppet's own.
+    _put(
+      repo,
+      'content/languages/eng/pack/activity.eng.a01.i01.json',
+      jsonEncode(<String, Object?>{
+        'id': 'eng.a01.i01',
+        'template': 'puppet_talk',
+        'prompt': <String, Object?>{'vo': 'vo:eng.he_a', 'target': 'vo:eng.en_hi'},
       }),
     );
     _put(
@@ -439,6 +450,49 @@ void main() {
     expect(Directory(out).existsSync(), isFalse);
     expect(File('$out.voiced.jsonl').existsSync(), isFalse);
     expect(home.listSync(), isEmpty);
+  });
+
+  test(
+    'plan-lang with --puppet-voice gives the puppet its own lines and shows each voice, and stays free',
+    () async {
+      final String out = '${tmp.path}${Platform.pathSeparator}lang-puppet-out';
+      final ProcessResult r = await run(<String>[
+        'plan-lang',
+        'eng',
+        '--voice',
+        'lang-en-fixture',
+        '--puppet-voice',
+        'lang-en-fixture-male',
+        '--ffmpeg',
+        '${tmp.path}${Platform.pathSeparator}no-such-ffmpeg',
+        '--out',
+        out,
+        '--list',
+      ]);
+      expect(r.exitCode, 0, reason: '${r.stderr}');
+      final String text = r.stdout as String;
+      expect(text, contains("The puppet's own lines (1 clips) are voiced by lang-en-fixture-male"));
+      expect(text, contains('lang-en-fixture-male (eleven_v4_turbo, mp3_44100_64): new 1'));
+      expect(text, contains('characters to send for this voice 3'));
+      expect(text, contains('[new] lang-en-fixture-male vo:eng.en_hi (3)'));
+      expect(text, isNot(contains('lang-en-fixture vo:eng.en_hi')));
+      expect(text, contains('Characters of text in total: 10'));
+      expect(Directory(out).existsSync(), isFalse);
+      expect(home.listSync(), isEmpty);
+    },
+  );
+
+  test('plan-lang refuses a puppet voice that is also the course voice', () async {
+    final ProcessResult same = await run(<String>[
+      'plan-lang',
+      'eng',
+      '--voice',
+      'lang-en-fixture',
+      '--puppet-voice',
+      'lang-en-fixture',
+    ]);
+    expect(same.exitCode, 1);
+    expect(same.stderr, contains('must be another voice'));
   });
 
   test('plan-lang needs a course and a voice', () async {

@@ -282,9 +282,8 @@ Nothing else in the app changes. Later (not now): `voice_gen generate` and the p
 4. **Nothing else is spoken by the male voice.** A second voice that has to match the first in loudness and pace (within 1.5 LU) is the price; the
    pilot's step 5 and the loudness check settle it.
 
-`generate-lang` today takes **one** target voice (`--voice`) and one frame voice (`--frame-voice`). A puppet voice is request F7 for the app-developer
-(`--puppet-voice`, with the clip list taken from the `puppet_talk` prompts). Until it exists, the 20 puppet clips are said by the female voice (337 characters,
-nothing is lost, the plan does not change).
+`generate-lang`, `plan-lang` and `verify-lang` take `--puppet-voice` (F7, built 2026-11-08): the `prompt.target` and `prompt.target2` clips of the
+`puppet_talk` activities go to the male voice (English 9 clips, 187 characters; Russian 11 clips, 147 characters), the other target clips to `--voice`.
 
 **The pilot now.** One pilot per language, no voice-picking round:
 

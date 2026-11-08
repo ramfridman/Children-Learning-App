@@ -1036,6 +1036,275 @@ void main() {
     });
   });
 
+  group('F7: the puppet voice', () {
+    const VoiceProfile male = VoiceProfile(
+      voiceId: 'EnglishMale001',
+      modelId: 'eleven_v4',
+      outputFormat: 'mp3_44100_64',
+      settings: <String, Object?>{'stability': 0.5, 'similarity_boost': 0.75},
+    );
+    late Directory work;
+    setUp(() => work = _temp('nn_puppet_'));
+    tearDown(() => _drop(work));
+
+    Map<String, Object?> activity(String template, Map<String, Object?> prompt) => <String, Object?>{
+      'id': 'eng.x',
+      'template': template,
+      'prompt': prompt,
+      // The child's answers are bubbles of their own: they are never the puppet's.
+      'options': <Object?>[
+        <String, Object?>{'vo': 'vo:eng.en_bye'},
+      ],
+    };
+
+    final Map<String, Object?> json = _planJson(
+      frame: <Map<String, Object?>>[_frame('he-a', 'הקשיבו.')],
+      targets: <Map<String, Object?>>[
+        _target('en-apple', 'apple', say: 'apple.'),
+        _target('en-hello', 'Hello! I am Pip.', say: 'Hello! I am Pip.'),
+        _target('en-name', 'What is your name?'),
+        _target('en-bye', 'Goodbye!', say: 'Goodbye!'),
+        _target('en-name-slow', 'What is your name?'),
+      ],
+    );
+
+    LangPlan plan({PuppetVoice? puppet, Map<String, Object?>? source, String target = 'lang-en-female'}) =>
+        planLang(
+          LangSource.fromJson(source ?? json),
+          frameCharacter: 'nitzi',
+          frameProfile: _v4,
+          targetCharacter: target,
+          targetProfile: _english,
+          workDir: work,
+          puppet: puppet,
+        );
+
+    PuppetVoice puppet(Set<String> lines) => PuppetVoice('lang-en-male', male, lines);
+
+    Map<String, String> voiceOf(LangPlan p) => <String, String>{
+      for (final PlannedClip c in p.voices.clips) c.line.voId: c.character,
+    };
+
+    test("the puppet's lines are the target and target2 of puppet_talk activities, and nothing else", () {
+      expect(
+        puppetLines(<Object?>[
+          activity('puppet_talk', <String, Object?>{
+            'target': 'vo:eng.en_hello',
+            'target2': 'vo:eng.en_name',
+          }),
+          activity('puppet_talk', <String, Object?>{'target': 'vo:eng.en_hello'}),
+          activity('puppet_talk', <String, Object?>{'vo': 'vo:eng.he_a'}),
+          activity('tap_answer', <String, Object?>{'target': 'vo:eng.en_apple'}),
+          'not an activity',
+        ]),
+        <String>{'vo:eng.en_hello', 'vo:eng.en_name'},
+      );
+    });
+
+    test('without a puppet voice the plan is as before: one voice says every target clip', () {
+      final LangPlan p = plan();
+      expect(p.puppetCharacter, isNull);
+      expect(p.puppetClips, 0);
+      expect(p.voices.clips.where((PlannedClip c) => c.character == 'lang-en-female'), hasLength(4));
+      expect(p.describe((String m) => 0.08), isNot(contains("puppet's own lines")));
+      expect(p.voices.characters, <String>['nitzi', 'lang-en-female']);
+    });
+
+    test(
+      'the puppet voice says its lines, also one that is a bubble answer, and the course voice the rest',
+      () {
+        final LangPlan p = plan(
+          puppet: puppet(<String>{'vo:eng.en_hello', 'vo:eng.en_name', 'vo:eng.en_bye'}),
+        );
+        expect(voiceOf(p), <String, String>{
+          'vo:eng.he_a': 'nitzi',
+          'vo:eng.en_apple': 'lang-en-female',
+          'vo:eng.en_hello': 'lang-en-male',
+          'vo:eng.en_name': 'lang-en-male',
+          'vo:eng.en_bye': 'lang-en-male',
+        });
+        final Map<String, ClipRequest> requests = <String, ClipRequest>{
+          for (final PlannedClip c in p.voices.clips) c.line.voId: c.request,
+        };
+        expect(requests['vo:eng.en_hello']!.voiceId, 'EnglishMale001');
+        expect(requests['vo:eng.en_apple']!.voiceId, 'EnglishVoice01');
+        expect(requests['vo:eng.he_a']!.voiceId, _voice);
+        expect(p.puppetClips, 3);
+        expect(p.problems, isEmpty);
+      },
+    );
+
+    test("the plan shows each voice's clips and characters, and the total does not change", () {
+      final LangPlan without = plan();
+      final LangPlan p = plan(puppet: puppet(<String>{'vo:eng.en_hello', 'vo:eng.en_name'}));
+      final String text = p.describe((String m) => 0.08);
+      final int said = 'Hello. I am Pip.'.length + 'What is your name?'.length;
+      expect(text, contains("The puppet's own lines (2 clips) are voiced by lang-en-male"));
+      expect(text, contains('lang-en-male (eleven_v4, mp3_44100_64): new 2'));
+      expect(text, contains('characters to send for this voice $said'));
+      expect(text, contains('lang-en-female (eleven_v4, mp3_44100_64): new 2'));
+      expect(p.total, without.total);
+      expect(p.voices.characters, <String>['nitzi', 'lang-en-female', 'lang-en-male']);
+    });
+
+    test('a slow copy with a text of its own is voiced by the voice of its normal clip', () {
+      final Map<String, Object?> own = _planJson(
+        targets: <Map<String, Object?>>[
+          _target('en-name', 'What is your name?'),
+          _target('en-name-slow', 'What is your name', say: 'What is your name, please?'),
+        ],
+      );
+      final LangPlan p = plan(puppet: puppet(<String>{'vo:eng.en_name'}), source: own);
+      expect(voiceOf(p), <String, String>{
+        'vo:eng.en_name': 'lang-en-male',
+        'vo:eng.en_name_slow': 'lang-en-male',
+      });
+      // A slow copy made from the normal clip is no clip of its own to voice.
+      final LangPlan copy = plan(puppet: puppet(<String>{'vo:eng.en_name'}));
+      expect(voiceOf(copy).containsKey('vo:eng.en_name_slow'), isFalse);
+      expect(copy.derived.single.slow, isTrue);
+      expect(copy.puppetClips, 1);
+    });
+
+    test('a puppet line that is not a target clip of the plan stops the run', () {
+      final LangPlan p = plan(puppet: puppet(<String>{'vo:eng.en_hello', 'vo:eng.en_missing'}));
+      expect(p.refusals.map((TextProblem t) => t.id), <String>['vo:eng.en_missing']);
+      expect(p.describe((String m) => 0.08), contains('is a line of the puppet, but is not a target clip'));
+    });
+
+    test('a puppet voice that is also the course voice or the frame voice is refused', () {
+      expect(() => plan(puppet: puppet(<String>{}), target: 'lang-en-male'), throwsA(isA<VoiceGenFailed>()));
+      expect(
+        () => planLang(
+          LangSource.fromJson(json),
+          frameCharacter: 'lang-en-male',
+          frameProfile: _v4,
+          targetCharacter: 'lang-en-female',
+          targetProfile: _english,
+          workDir: work,
+          puppet: puppet(<String>{}),
+        ),
+        throwsA(isA<VoiceGenFailed>()),
+      );
+    });
+
+    test(
+      'a run sends each clip to its own voice, builds one pack, and a second run has nothing to pay',
+      () async {
+        final FakeEleven server = FakeEleven();
+        final List<String> printed = <String>[];
+        final PuppetVoice who = puppet(<String>{'vo:eng.en_hello'});
+        final Map<String, Object?> small = _planJson(
+          targets: <Map<String, Object?>>[
+            _target('en-apple', 'apple', say: 'apple.'),
+            _target('en-hello', 'Hello!', say: 'Hello!'),
+          ],
+        );
+        Future<BuiltPack> run(Keyboard keyboard) => generateLangGated(
+          source: LangSource.fromJson(small),
+          frameCharacter: 'nitzi',
+          frameProfile: _v4,
+          targetCharacter: 'lang-en-female',
+          targetProfile: _english,
+          workDir: work,
+          puppet: who,
+          key: key,
+          keyboard: keyboard,
+          synth: () => ElevenLabsSynthesizer(apiKey: 'k', client: server.client),
+          audio: _FakeAudio(),
+          write: printed.add,
+          priceOf: (String m) => 0.08,
+        );
+
+        final int total = 'apple.'.length + 'Hello.'.length;
+        final BuiltPack built = await run(FakeKeyboard(typed: <String>['$total']));
+        expect(server.requests.map((Map<String, Object?> r) => r['path']), <Object?>[
+          '/v1/text-to-speech/EnglishVoice01/with-timestamps',
+          '/v1/text-to-speech/EnglishMale001/with-timestamps',
+        ]);
+        expect(
+          server.requests.map((Map<String, Object?> r) => (r['body']! as Map<String, Object?>)['text']),
+          <Object?>['apple.', 'Hello.'],
+        );
+        expect(printed.first, contains('lang-en-male (eleven_v4, mp3_44100_64): new 1'));
+        expect(printed.first, contains('This run sends the $total characters above'));
+        final VerifiedPack pack = await verifyPack(built.bytes, publicKey: key.publicKey);
+        expect(VoiceBank.fromPack(pack).ids.toSet(), <String>{'vo:eng.en_apple', 'vo:eng.en_hello'});
+
+        final FakeKeyboard again = FakeKeyboard();
+        await run(again);
+        expect(again.reads, 0);
+        expect(server.requests, hasLength(2));
+      },
+    );
+
+    test('a puppet voice with no id yet stops the run before the number is asked for', () async {
+      const VoiceProfile noId = VoiceProfile(
+        voiceId: '',
+        modelId: 'eleven_v4',
+        outputFormat: 'mp3_44100_64',
+        settings: <String, Object?>{'stability': 0.5, 'similarity_boost': 0.75},
+      );
+      final FakeEleven server = FakeEleven();
+      final FakeKeyboard keyboard = FakeKeyboard(typed: <String>['99']);
+      await expectLater(
+        generateLangGated(
+          source: LangSource.fromJson(json),
+          frameCharacter: 'nitzi',
+          frameProfile: _v4,
+          targetCharacter: 'lang-en-female',
+          targetProfile: _english,
+          workDir: work,
+          puppet: PuppetVoice('lang-en-male', noId, <String>{'vo:eng.en_hello'}),
+          key: key,
+          keyboard: keyboard,
+          synth: () => ElevenLabsSynthesizer(apiKey: 'k', client: server.client),
+          audio: _FakeAudio(),
+          write: (String _) {},
+          priceOf: (String m) => 0.08,
+        ),
+        throwsA(
+          isA<VoiceGenFailed>().having((VoiceGenFailed e) => e.message, 'message', contains('lang-en-male')),
+        ),
+      );
+      expect(keyboard.reads, 0);
+      expect(server.requests, isEmpty);
+    });
+
+    for (final (String course, int clips) in <(String, int)>[('eng', 9), ('rus', 11)]) {
+      test(
+        'the real $course course has $clips puppet lines, all clips of its plan, said by the puppet and nobody else',
+        () {
+          final Set<String> lines = puppetLinesIn(Directory('../content/languages/$course/pack'));
+          final LangSource source = LangSource.fromJson(
+            jsonDecode(File('../content/languages/$course/voice-plan.json').readAsStringSync()),
+          );
+          final LangPlan p = planLang(
+            source,
+            frameCharacter: 'nitzi',
+            frameProfile: _v4,
+            targetCharacter: 'lang-$course-female',
+            targetProfile: _english,
+            workDir: work,
+            puppet: PuppetVoice('lang-$course-male', male, lines),
+          );
+          expect(lines, hasLength(clips));
+          expect(p.puppetClips, clips);
+          expect(p.problems.where((TextProblem t) => !t.why.contains('placeholder')), isEmpty);
+          // The characters are those of the clips of the lines, whatever the texts are today.
+          final int expected = source.targets
+              .where((LangTargetClip t) => lines.contains(t.voId))
+              .fold<int>(0, (int s, LangTargetClip t) => s + t.spoken.replaceAll('!', '.').runes.length);
+          final Iterable<PlannedClip> theirs = p.voices.clips.where(
+            (PlannedClip c) => c.character == 'lang-$course-male',
+          );
+          expect(theirs.fold<int>(0, (int s, PlannedClip c) => s + c.request.characters), expected);
+          expect(theirs.map((PlannedClip c) => c.line.voId).toSet(), lines);
+        },
+      );
+    }
+  });
+
   group('the paid language path in the source', () {
     final String lib = File('tool/lang_voice_lib.dart').readAsStringSync();
     final String audioLib = File('tool/audio_tool_lib.dart').readAsStringSync();

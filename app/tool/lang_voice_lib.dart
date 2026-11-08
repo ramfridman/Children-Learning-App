@@ -11,7 +11,10 @@
 //  - a text with a placeholder like {puppet} is refused: the editor gives one text for each value;
 //  - a `<name>-slow` clip with the same text as `<name>` is made from the normal clip with ffmpeg (atempo), not voiced;
 //  - a cut word is made from its page's clip and the character times the voice returned for it, with ffmpeg;
-//  - lines with exactly the same request are voiced once and copied (voice_gen_lib.dart, sharingSameText).
+//  - lines with exactly the same request are voiced once and copied (voice_gen_lib.dart, sharingSameText);
+//  - with a puppet voice, the puppet's own lines (the `prompt.target` and `prompt.target2` clips of the `puppet_talk`
+//    activities of the course's pack) are voiced by it and every other target clip by the course voice. A clip is one
+//    file with one voice, so a clip that is also a bubble answer belongs to the puppet (docs/languages/voices.md, section 11).
 // Every clip that is voiced goes through the same gate as `generate`: the plan, then the owner types the characters.
 import 'dart:convert';
 import 'dart:io';
@@ -133,6 +136,45 @@ class LangSource {
   String get language => courseLanguage[course]!;
 }
 
+// ---- the puppet's lines ----
+
+/// The template whose prompt is a puppet's own line.
+const String puppetTemplate = 'puppet_talk';
+
+/// The voice ids of the puppet's own lines among [activities] (decoded `activity/v1` files): the `prompt.target` and
+/// `prompt.target2` of every `puppet_talk` activity. The child's answers (`options`) are not the puppet's.
+Set<String> puppetLines(Iterable<Object?> activities) {
+  final Set<String> lines = <String>{};
+  for (final Object? a in activities) {
+    if (a is! Map<String, Object?> || a['template'] != puppetTemplate) continue;
+    final Object? prompt = a['prompt'];
+    if (prompt is! Map<String, Object?>) continue;
+    for (final String key in const <String>['target', 'target2']) {
+      final Object? vo = prompt[key];
+      if (vo is String) lines.add(vo);
+    }
+  }
+  return lines;
+}
+
+/// [puppetLines] of the `activity.*.json` files in [packFolder] (`content/languages/<course>/pack`).
+Set<String> puppetLinesIn(Directory packFolder) {
+  if (!packFolder.existsSync()) throw VoiceGenFailed('${packFolder.path} is missing');
+  return puppetLines(<Object?>[
+    for (final File f in packFolder.listSync().whereType<File>())
+      if (RegExp(r'activity\.[^\\/]*\.json$').hasMatch(f.path)) jsonDecode(f.readAsStringSync()),
+  ]);
+}
+
+/// The puppet's voice: its name in `content/voices.json`, its profile, and the voice ids of the clips it says.
+class PuppetVoice {
+  const PuppetVoice(this.character, this.profile, this.voIds);
+
+  final String character;
+  final VoiceProfile profile;
+  final Set<String> voIds;
+}
+
 // ---- the plan ----
 
 /// A clip made from another clip of the pack with no voice: a slow copy or a cut word.
@@ -196,11 +238,19 @@ class LangPlan {
     required this.softened,
     required this.problems,
     required this.warnings,
+    this.puppetCharacter,
+    this.puppetClips = 0,
   });
 
   final LangSource source;
   final String frameCharacter;
   final String targetCharacter;
+
+  /// The voice of the puppet's own lines, or null when the course voice says them all.
+  final String? puppetCharacter;
+
+  /// The clips the puppet voice says (a copy of a same-text clip counts; a slow copy made from one does not).
+  final int puppetClips;
 
   /// The clips to voice, the Hebrew frame lines first and then the target clips.
   final VoicePlan voices;
@@ -255,8 +305,14 @@ class LangPlan {
       )
       ..writeln(
         'Frame lines ${source.frame.length}, target clips ${source.targets.length}, cut words ${source.cuts.length}',
-      )
-      ..write(voices.describeVoices());
+      );
+    if (puppetCharacter != null) {
+      b.writeln(
+        "The puppet's own lines ($puppetClips clips) are voiced by $puppetCharacter, "
+        'the other target clips by $targetCharacter',
+      );
+    }
+    b.write(voices.describeVoices());
     if (noVoice.isNotEmpty) {
       b.writeln('Frame lines with no voice text, not voiced: ${noVoice.length}');
     }
@@ -320,7 +376,8 @@ class LangPlan {
 }
 
 /// The plan for voicing [source]: the Hebrew frame lines with [frameProfile] (as [frameCharacter]) and the clips in the
-/// language taught with [targetProfile]. [workDir] tells which clips exist already.
+/// language taught with [targetProfile], except the lines of [puppet] (when given), which its own voice says.
+/// [workDir] tells which clips exist already.
 LangPlan planLang(
   LangSource source, {
   required String frameCharacter,
@@ -328,8 +385,15 @@ LangPlan planLang(
   required String targetCharacter,
   required VoiceProfile targetProfile,
   required Directory workDir,
+  PuppetVoice? puppet,
   bool shareSameText = true,
 }) {
+  if (puppet != null && (puppet.character == targetCharacter || puppet.character == frameCharacter)) {
+    throw VoiceGenFailed(
+      'the puppet voice "${puppet.character}" must be another voice than the course voice and the frame voice: '
+      'a voice name has one role',
+    );
+  }
   final Map<String, String> made = ClipLedger(workDir).hashes();
   final Set<String> pages = <String>{for (final LangCutClip c in source.cuts) c.from};
   int softened = 0;
@@ -364,6 +428,34 @@ LangPlan planLang(
     warnings.add('$needsEditor Hebrew frame lines are still marked needs-editor in the course');
   }
 
+  // The target clips the puppet says: its lines, and the slow copy of a line (a copy with a text of its own is voiced, and
+  // must be voiced by the same voice as the normal clip).
+  final Map<String, LangTargetClip> byId = <String, LangTargetClip>{
+    for (final LangTargetClip t in source.targets) t.id: t,
+  };
+  final Set<String> puppetIds = <String>{
+    if (puppet != null)
+      for (final LangTargetClip t in source.targets)
+        if (puppet.voIds.contains(t.voId) ||
+            (t.id.endsWith(slowSuffix) &&
+                puppet.voIds.contains(byId[t.id.substring(0, t.id.length - slowSuffix.length)]?.voId)))
+          t.id,
+  };
+  if (puppet != null) {
+    final Set<String> targetVoIds = <String>{for (final LangTargetClip t in source.targets) t.voId};
+    for (final String voId in puppet.voIds.toList()..sort()) {
+      if (!targetVoIds.contains(voId)) {
+        problems.add(
+          TextProblem(
+            voId,
+            '',
+            'is a line of the puppet, but is not a target clip of the voice plan of ${source.course}',
+          ),
+        );
+      }
+    }
+  }
+
   final List<PlannedClip> clips = <PlannedClip>[];
   final List<String> noVoice = <String>[];
   void plan(String character, VoiceProfile profile, SpokenLine line, String language, {bool page = false}) {
@@ -395,7 +487,14 @@ LangPlan planLang(
   }
   for (final LangTargetClip t in source.targets) {
     if (slowIds.contains(t.id)) continue;
-    plan(targetCharacter, targetProfile, sent[t.id]!, source.language, page: pages.contains(t.id));
+    final bool puppetLine = puppetIds.contains(t.id);
+    plan(
+      puppetLine ? puppet!.character : targetCharacter,
+      puppetLine ? puppet!.profile : targetProfile,
+      sent[t.id]!,
+      source.language,
+      page: pages.contains(t.id),
+    );
   }
   final Map<String, ClipRequest> requestOf = <String, ClipRequest>{
     for (final PlannedClip c in clips) c.line.voId: c.request,
@@ -489,11 +588,14 @@ LangPlan planLang(
   final List<String> characters = <String>[
     frameCharacter,
     if (targetCharacter != frameCharacter) targetCharacter,
+    if (puppet != null) puppet.character,
   ];
   return LangPlan(
     source: source,
     frameCharacter: frameCharacter,
     targetCharacter: targetCharacter,
+    puppetCharacter: puppet?.character,
+    puppetClips: puppet == null ? 0 : clips.where((PlannedClip c) => c.character == puppet.character).length,
     voices: VoicePlan(
       characters: characters,
       lines: <SpokenLine>[for (final PlannedClip c in clips) c.line],
@@ -582,6 +684,7 @@ Future<BuiltPack> generateLangGated({
   required String targetCharacter,
   required VoiceProfile targetProfile,
   required Directory workDir,
+  PuppetVoice? puppet,
   required PackKey key,
   required Keyboard keyboard,
   required Synthesizer Function() synth,
@@ -603,6 +706,7 @@ Future<BuiltPack> generateLangGated({
     targetCharacter: targetCharacter,
     targetProfile: targetProfile,
     workDir: workDir,
+    puppet: puppet,
     shareSameText: shareSameText,
   );
   final String? audioProblem = plan.needsAudioTool ? await audio.unavailableReason() : null;
@@ -610,6 +714,7 @@ Future<BuiltPack> generateLangGated({
   for (final (String name, VoiceProfile profile) in <(String, VoiceProfile)>[
     (frameCharacter, frameProfile),
     (targetCharacter, targetProfile),
+    if (puppet != null) (puppet.character, puppet.profile),
   ]) {
     if (profile.voiceId.isEmpty) {
       throw VoiceGenFailed(

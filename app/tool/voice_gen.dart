@@ -5,9 +5,9 @@
 //   dart run tool/voice_gen.dart groups [--characters a,b,c] [--lines full|lessons|own]
 //   dart run tool/voice_gen.dart verify <character> [--groups a,b] [--lines full|lessons|own] [--out <folder>]
 //   dart run tool/voice_gen.dart generate <character> [--lines full|lessons|own] [--groups a,b] [--budget N] [--each-id] [--key <key file>] [--out <folder>] [--pack-version <x.y.z>]
-//   dart run tool/voice_gen.dart plan-lang <course> --voice <name> [--frame-voice <name>] [--model <id>] [--ffmpeg <path>] [--each-id] [--price <per 1,000 characters>] [--list] [--out <folder>]
-//   dart run tool/voice_gen.dart verify-lang <course> --voice <name> [--frame-voice <name>] [--out <folder>]
-//   dart run tool/voice_gen.dart generate-lang <course> --voice <name> [--frame-voice <name>] [--model <id>] [--ffmpeg <path>] [--each-id] [--key <key file>] [--out <folder>] [--pack-version <x.y.z>]
+//   dart run tool/voice_gen.dart plan-lang <course> --voice <name> [--puppet-voice <name>] [--frame-voice <name>] [--model <id>] [--ffmpeg <path>] [--each-id] [--price <per 1,000 characters>] [--list] [--out <folder>]
+//   dart run tool/voice_gen.dart verify-lang <course> --voice <name> [--puppet-voice <name>] [--frame-voice <name>] [--out <folder>]
+//   dart run tool/voice_gen.dart generate-lang <course> --voice <name> [--puppet-voice <name>] [--frame-voice <name>] [--model <id>] [--ffmpeg <path>] [--each-id] [--key <key file>] [--out <folder>] [--pack-version <x.y.z>]
 //   dart run tool/voice_gen.dart audition-batch plan <spec.json> [--out <folder>] [--price <per 1,000 characters>]
 //   dart run tool/voice_gen.dart audition-batch run <spec.json> [--out <folder>]
 //   dart run tool/voice_gen.dart audition <character> "<text>" [--model <id>] [--settings stability=0.25,similarity=0.8,boost=true] [--format <mp3_44100_...>] [--allow exclamation,ipa] [--language he|en|ru] [--out <folder>]
@@ -34,7 +34,9 @@
 // rus or heb): the Hebrew lines with `--frame-voice` (a voice of content/voices.json, `nitzi` by default), the clips in the
 // language taught with `--voice` (an audition candidate may be named here). A "!" is sent as "."; a `-slow` clip is made from
 // the normal clip and a cut word from its page's clip, with ffmpeg (free; the plan says if it is missing); a text with a
-// placeholder is refused.
+// placeholder is refused. With `--puppet-voice` (the voice director's rule, docs/languages/voices.md section 11) the puppet's
+// own lines, the `prompt.target` and `prompt.target2` clips of the course's `puppet_talk` activities, are said by that voice
+// and the other clips in the language taught by `--voice`; the plan shows each voice's clips and characters.
 //
 // `audition-batch` writes to ~/nitznutz-voice/auditions/<spec name>, with the language in front for a spec that is not
 // Hebrew (en-pilot, ru-pilot), unless --out says otherwise.
@@ -518,7 +520,15 @@ void _verify(List<String> args) {
 
 /// What `plan-lang` and `generate-lang` both need: the course's voice plan, the two voices and where the clips go.
 class _LangJob {
-  const _LangJob(this.source, this.frameName, this.frame, this.targetName, this.target, this.work);
+  const _LangJob(
+    this.source,
+    this.frameName,
+    this.frame,
+    this.targetName,
+    this.target,
+    this.work,
+    this.puppet,
+  );
 
   final LangSource source;
   final String frameName;
@@ -526,6 +536,9 @@ class _LangJob {
   final String targetName;
   final VoiceProfile target;
   final Directory work;
+
+  /// The puppet's voice, or null without `--puppet-voice`.
+  final PuppetVoice? puppet;
 }
 
 _LangJob _langJob(List<String> args) {
@@ -547,6 +560,7 @@ _LangJob _langJob(List<String> args) {
   VoiceProfile profile(String name) =>
       VoiceProfile.fromConfig(config, name, model: model.isEmpty ? null : model, audition: true);
   final String frameName = _option(args, '--frame-voice') ?? (course == 'heb' ? voice : 'nitzi');
+  final String? puppetName = _option(args, '--puppet-voice');
   return _LangJob(
     LangSource.fromJson(jsonDecode(planFile.readAsStringSync())),
     frameName,
@@ -554,6 +568,13 @@ _LangJob _langJob(List<String> args) {
     voice,
     profile(voice),
     Directory(_option(args, '--out') ?? '${_home()}${Platform.pathSeparator}lang-$course'),
+    puppetName == null
+        ? null
+        : PuppetVoice(
+            puppetName,
+            profile(puppetName),
+            puppetLinesIn(Directory(_repo(args, 'content/languages/$course/pack'))),
+          ),
   );
 }
 
@@ -570,6 +591,7 @@ Future<void> _planLang(List<String> args) async {
     targetCharacter: job.targetName,
     targetProfile: job.target,
     workDir: job.work,
+    puppet: job.puppet,
     shareSameText: !args.contains('--each-id'),
   );
   stdout.writeln(_repoHeading(args));
@@ -585,6 +607,7 @@ Future<void> _planLang(List<String> args) async {
   for (final (String name, VoiceProfile profile) in <(String, VoiceProfile)>[
     (job.frameName, job.frame),
     (job.targetName, job.target),
+    if (job.puppet != null) (job.puppet!.character, job.puppet!.profile),
   ]) {
     if (profile.voiceId.isEmpty) {
       stdout.writeln(
@@ -606,6 +629,7 @@ void _verifyLang(List<String> args) {
     targetCharacter: job.targetName,
     targetProfile: job.target,
     workDir: job.work,
+    puppet: job.puppet,
     shareSameText: false,
   );
   final List<String> faulty = <String>[
@@ -641,6 +665,7 @@ Future<void> _generateLang(List<String> args) async {
     targetCharacter: job.targetName,
     targetProfile: job.target,
     workDir: job.work,
+    puppet: job.puppet,
     key: readKeyFile(_option(args, '--key') ?? defaultKeyPath()),
     keyboard: _keyboard,
     synth: _eleven,
