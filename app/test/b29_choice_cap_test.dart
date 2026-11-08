@@ -104,10 +104,12 @@ void main() {
               ),
               reason: '${a.id} at $cap',
             );
-            expect(
-              after.options.map((ChoiceOption o) => o.id),
-              contains(before.correctId.isEmpty ? anything : before.correctId),
-            );
+            // A number answer (the keypad) has no options and no right option: the cap leaves it as it is.
+            if (before.correctId.isEmpty) {
+              expect(after.options, isEmpty, reason: '${a.id} has no right option and no options');
+            } else {
+              expect(after.options.map((ChoiceOption o) => o.id), contains(before.correctId), reason: a.id);
+            }
             expect(c.id, a.id);
             expect(c.template, a.template);
             expect(c.json['prompt'], a.json['prompt']);
