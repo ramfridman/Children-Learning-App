@@ -679,7 +679,7 @@
       "vo": "vo:eng.he_ins_give_it",
       "he": "הַקְשִׁיבוּ, וְגִרְרוּ לְפִיפּ:",
       "voice": "הַקְשִׁיבוּ, וְגִרְרוּ לְפִיפּ:",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-ins-how-many",
@@ -693,7 +693,7 @@
       "vo": "vo:eng.he_ins_its_a",
       "he": "מַה זֶּה? הַקְשִׁיבוּ לַתְּשׁוּבָה, וּגְעוּ בַּתְּמוּנָה.",
       "voice": "מה זה? הַקְשִׁיבוּ לתשובה, וּגְעוּ בתמונה.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-ins-listen-tap",
@@ -770,7 +770,7 @@
       "vo": "vo:eng.he_ins_which_word",
       "he": "אֵיזוֹ מִלָּה מַתְאִימָה לַתְּמוּנָה?",
       "voice": "איזו מילה מתאימה לתמונה?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-ins-who-doing",
@@ -784,7 +784,7 @@
       "vo": "vo:eng.he_pl_thanks",
       "he": "תּוֹדָה! מַמְשִׁיכִים.",
       "voice": "תודה, ממשיכים.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-q-ball-end",
@@ -819,7 +819,7 @@
       "vo": "vo:eng.pass",
       "he": "זֶה בְּסֵדֶר!",
       "voice": "זה בסדר.",
-      "review": "needs-editor"
+      "review": "text-ready"
     }
   ],
   "targetClips": [

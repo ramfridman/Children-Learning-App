@@ -489,7 +489,7 @@
     },
     "f37": {
       "he": "מִי עוֹשֶׂה אֶת הַקּוֹל הַזֶּה? הַקְשִׁיבוּ לִשְׁתֵּי הַמִּלִּים.",
-      "voice": "מי עוֹשֶׂה את הקול הזה? הקשיבו לִשְׁתֵּי המילים.",
+      "voice": "מי עוֹשֶׂה את הקול הזה? הַקְשִׁיבוּ לִשְׁתֵּי המילים.",
       "review": "text-ready"
     },
     "f38": {
@@ -510,7 +510,7 @@
     "he-pl-thanks": {
       "he": "תּוֹדָה!",
       "voice": "תודה.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     "he-hint-showme": {
       "he": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים.",
@@ -565,7 +565,7 @@
     "pass": {
       "he": "זֶה בְּסֵדֶר!",
       "voice": "זה בסדר.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     "personal": {
       "he": "אֶפְשָׁר לַעֲנוֹת בִּתְמוּנָה, אוֹ בְּקוֹל. אֶפְשָׁר גַּם לְדַלֵּג.",
@@ -575,67 +575,67 @@
     "f41": {
       "he": "הַקְשִׁיבוּ:",
       "voice": "הַקְשִׁיבוּ:",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     "gl-lehitraot": {
       "he": "לְהִתְרָאוֹת.",
-      "voice": "להתראות.",
-      "review": "needs-editor"
+      "voice": "לְהִתְרָאוֹת.",
+      "review": "text-ready"
     },
     "gl-shalom": {
       "he": "שָׁלוֹם.",
-      "voice": "שלום.",
-      "review": "needs-editor"
+      "voice": "שָׁלוֹם.",
+      "review": "text-ready"
     },
     "gl-kiftsu": {
       "he": "קִפְצוּ.",
       "voice": "קִפְצוּ.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     "gl-shvu": {
       "he": "שְׁבוּ.",
       "voice": "שְׁבוּ.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     "gl-dubi": {
       "he": "דֻּבִּי.",
-      "voice": "דובי.",
-      "review": "needs-editor"
+      "voice": "דֻּבִּי.",
+      "review": "text-ready"
     },
     "gl-kova": {
       "he": "כּוֹבַע.",
-      "voice": "כובע.",
-      "review": "needs-editor"
+      "voice": "כּוֹבַע.",
+      "review": "text-ready"
     },
     "gl-batsal": {
       "he": "בָּצָל.",
-      "voice": "בצל.",
-      "review": "needs-editor"
+      "voice": "בָּצָל.",
+      "review": "text-ready"
     },
     "gl-zot-ima": {
       "he": "זוֹ אִמָּא.",
       "voice": "זו אמא.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     "gl-ze-kadur": {
       "he": "זֶה כַּדּוּר.",
       "voice": "זה כדור.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     "gl-zot-chatula": {
       "he": "זוֹ חֲתוּלָה.",
       "voice": "זו חתולה.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     "gl-ze-tapuach": {
       "he": "זֶה תַּפּוּחַ.",
       "voice": "זה תפוח.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     "gl-livjatan": {
       "he": "לִוְיָתָן.",
       "voice": "לִוְיָתָן.",
-      "review": "needs-editor"
+      "review": "text-ready"
     }
   },
   "teachPictures": {

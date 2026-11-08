@@ -273,91 +273,91 @@
       "vo": "vo:rus.f41",
       "he": "הַקְשִׁיבוּ:",
       "voice": "הַקְשִׁיבוּ:",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "gl-batsal",
       "vo": "vo:rus.gl_batsal",
       "he": "בָּצָל.",
-      "voice": "בצל.",
-      "review": "needs-editor"
+      "voice": "בָּצָל.",
+      "review": "text-ready"
     },
     {
       "id": "gl-dubi",
       "vo": "vo:rus.gl_dubi",
       "he": "דֻּבִּי.",
-      "voice": "דובי.",
-      "review": "needs-editor"
+      "voice": "דֻּבִּי.",
+      "review": "text-ready"
     },
     {
       "id": "gl-kiftsu",
       "vo": "vo:rus.gl_kiftsu",
       "he": "קִפְצוּ.",
       "voice": "קִפְצוּ.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "gl-kova",
       "vo": "vo:rus.gl_kova",
       "he": "כּוֹבַע.",
-      "voice": "כובע.",
-      "review": "needs-editor"
+      "voice": "כּוֹבַע.",
+      "review": "text-ready"
     },
     {
       "id": "gl-lehitraot",
       "vo": "vo:rus.gl_lehitraot",
       "he": "לְהִתְרָאוֹת.",
-      "voice": "להתראות.",
-      "review": "needs-editor"
+      "voice": "לְהִתְרָאוֹת.",
+      "review": "text-ready"
     },
     {
       "id": "gl-livjatan",
       "vo": "vo:rus.gl_livjatan",
       "he": "לִוְיָתָן.",
       "voice": "לִוְיָתָן.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "gl-shalom",
       "vo": "vo:rus.gl_shalom",
       "he": "שָׁלוֹם.",
-      "voice": "שלום.",
-      "review": "needs-editor"
+      "voice": "שָׁלוֹם.",
+      "review": "text-ready"
     },
     {
       "id": "gl-shvu",
       "vo": "vo:rus.gl_shvu",
       "he": "שְׁבוּ.",
       "voice": "שְׁבוּ.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "gl-ze-kadur",
       "vo": "vo:rus.gl_ze_kadur",
       "he": "זֶה כַּדּוּר.",
       "voice": "זה כדור.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "gl-ze-tapuach",
       "vo": "vo:rus.gl_ze_tapuach",
       "he": "זֶה תַּפּוּחַ.",
       "voice": "זה תפוח.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "gl-zot-chatula",
       "vo": "vo:rus.gl_zot_chatula",
       "he": "זוֹ חֲתוּלָה.",
       "voice": "זו חתולה.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "gl-zot-ima",
       "vo": "vo:rus.gl_zot_ima",
       "he": "זוֹ אִמָּא.",
       "voice": "זו אמא.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-fb-check",
@@ -434,14 +434,14 @@
       "vo": "vo:rus.he_pl_thanks",
       "he": "תּוֹדָה!",
       "voice": "תודה.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "pass",
       "vo": "vo:rus.pass",
       "he": "זֶה בְּסֵדֶר!",
       "voice": "זה בסדר.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "personal",
@@ -707,9 +707,9 @@
     {
       "id": "ch-menja-zovut",
       "vo": "vo:rus.ch_menja_zovut",
-      "shown": "Меня зовут {puppet}.",
-      "say": "Меня́ зову́т {puppet}.",
-      "ipa": "[mʲɪˈnʲa zɐˈvut …]"
+      "shown": "Меня зовут Саша.",
+      "say": "Меня́ зову́т Са́ша.",
+      "ipa": "[mʲɪˈnʲa zɐˈvut ˈsaʂə]"
     },
     {
       "id": "ch-ochen-prijatno",

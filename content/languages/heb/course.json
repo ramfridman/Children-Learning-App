@@ -934,151 +934,151 @@
     "v1-play": {
       "he": "בַּשָּׁמַיִם יֵשׁ כּוֹכָב, וּבַגִּנָּה קוֹפֵץ אַרְנָב. בַּשָּׁמַיִם יֵשׁ כּוֹכָב, וּבַגִּנָּה קוֹפֵץ…",
       "voice": "בַּשָּׁמַיִם יש כוכב, ובגינה קופץ ארנב. בַּשָּׁמַיִם יש כוכב, ובגינה קופץ…",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-v1-full then heb-a-v1-open, one clip (the verse twice: whole, then to the pause)"
     },
     "v2-play": {
-      "he": "תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהַחָתוּל יוֹשֵׁב בַּחַלּוֹן. תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהַחָתוּל יוֹשֵׁב…",
-      "voice": "תיק תק עוֹשֶׂה השעון, והחתול יושב בחלון. תיק תק עוֹשֶׂה השעון, והחתול יושב…",
-      "review": "needs-editor",
+      "he": "תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהֶחָתוּל יוֹשֵׁב בַּחַלּוֹן. תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהֶחָתוּל יוֹשֵׁב…",
+      "voice": "תיק תַּק עוֹשֶׂה השעון, והחתול יושב בחלון. תיק תַּק עוֹשֶׂה השעון, והחתול יושב…",
+      "review": "text-ready",
       "note": "heb-a-v2-full then heb-a-v2-open, one clip (the verse twice: whole, then to the pause)"
     },
     "v3-play": {
       "he": "זוֹרְקִים לְמַעְלָה כַּדּוּר, אוֹפִים עוּגָה בַּתַּנּוּר. זוֹרְקִים לְמַעְלָה כַּדּוּר, אוֹפִים עוּגָה…",
       "voice": "זורקים למעלה כדור, אופים עוגה בתנור. זורקים למעלה כדור, אופים עוגה…",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-v3-full then heb-a-v3-open, one clip (the verse twice: whole, then to the pause)"
     },
     "v5-play": {
       "he": "בַּסַּל יֵשׁ תּוּת, וּבַיָּד שֶׁל סַבְתָּא חוּט. בַּסַּל יֵשׁ תּוּת, וּבַיָּד שֶׁל סַבְתָּא…",
-      "voice": "בסל יש תות, וביד של סבתא חוט. בסל יש תות, וביד של סבתא…",
-      "review": "needs-editor",
+      "voice": "בַּסַּל יש תּוּת, וביד של סבתא חוט. בַּסַּל יש תּוּת, וביד של סבתא…",
+      "review": "text-ready",
       "note": "heb-a-v5-full then heb-a-v5-open, one clip (the verse twice: whole, then to the pause)"
     },
     "v6-play": {
       "he": "בַּשָּׁמַיִם עָף מָטוֹס, וְעַל הַשֻּׁלְחָן יֵשׁ כּוֹס. בַּשָּׁמַיִם עָף מָטוֹס, וְעַל הַשֻּׁלְחָן יֵשׁ…",
-      "voice": "בַּשָּׁמַיִם עף מטוס, ועל השולחן יש כוס. בַּשָּׁמַיִם עף מטוס, ועל השולחן יש…",
-      "review": "needs-editor",
+      "voice": "בַּשָּׁמַיִם עָף מטוס, ועל השולחן יש כוס. בַּשָּׁמַיִם עָף מטוס, ועל השולחן יש…",
+      "review": "text-ready",
       "note": "heb-a-v6-full then heb-a-v6-open, one clip (the verse twice: whole, then to the pause)"
     },
     "v7-play": {
       "he": "יֵשׁ לַדֻּבִּי אַף, וּבַמָּרָק יֵשׁ כַּף. יֵשׁ לַדֻּבִּי אַף, וּבַמָּרָק יֵשׁ…",
-      "voice": "יש לדובי אף, ובמרק יש כף. יש לדובי אף, ובמרק יש…",
-      "review": "needs-editor",
+      "voice": "יש לַדֻּבִּי אף, ובמרק יש כַּף. יש לַדֻּבִּי אף, ובמרק יש…",
+      "review": "text-ready",
       "note": "heb-a-v7-full then heb-a-v7-open, one clip (the verse twice: whole, then to the pause)"
     },
     "v8-play": {
       "he": "עַל הַמַּיִם שָׁטָה סִירָה, וּבַגַּן שָׁרָה הַמּוֹרָה. עַל הַמַּיִם שָׁטָה סִירָה, וּבַגַּן שָׁרָה…",
-      "voice": "על המים שטה סירה, ובגן שָׁרָה המורה. על המים שטה סירה, ובגן שָׁרָה…",
-      "review": "needs-editor",
+      "voice": "על המים שָׁטָה סירה, ובגן שָׁרָה המורה. על המים שָׁטָה סירה, ובגן שָׁרָה…",
+      "review": "text-ready",
       "note": "heb-a-v8-full then heb-a-v8-open, one clip (the verse twice: whole, then to the pause)"
     },
     "r-dag": {
       "he": "דָּג. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
       "voice": "דָּג. איזו מילה נגמרת באותו צליל?",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-w-dag then heb-a-i-rhyme, one clip"
     },
     "r-pil": {
       "he": "פִּיל. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
       "voice": "פִּיל. איזו מילה נגמרת באותו צליל?",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-w-pil then heb-a-i-rhyme, one clip"
     },
     "r-kaf": {
       "he": "כַּף. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
       "voice": "כַּף. איזו מילה נגמרת באותו צליל?",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-w-kaf then heb-a-i-rhyme, one clip"
     },
     "r-kochav": {
       "he": "כּוֹכָב. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
       "voice": "כּוֹכָב. איזו מילה נגמרת באותו צליל?",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-w-kochav then heb-a-i-rhyme, one clip"
     },
     "r-balon": {
       "he": "בָּלוֹן. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
       "voice": "בָּלוֹן. איזו מילה נגמרת באותו צליל?",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-w-balon then heb-a-i-rhyme, one clip"
     },
     "r-tut": {
       "he": "תּוּת. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
       "voice": "תּוּת. איזו מילה נגמרת באותו צליל?",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-w-tut then heb-a-i-rhyme, one clip"
     },
     "r-bayit": {
       "he": "בַּיִת. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
       "voice": "בַּיִת. איזו מילה נגמרת באותו צליל?",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-w-bayit then heb-a-i-rhyme, one clip"
     },
     "r-tanur": {
       "he": "תַּנּוּר. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
       "voice": "תַּנּוּר. איזו מילה נגמרת באותו צליל?",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-w-tanur then heb-a-i-rhyme, one clip"
     },
     "r-sira": {
       "he": "סִירָה. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
       "voice": "סִירָה. איזו מילה נגמרת באותו צליל?",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-w-sira then heb-a-i-rhyme, one clip"
     },
     "r-matos": {
       "he": "מָטוֹס. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
       "voice": "מָטוֹס. איזו מילה נגמרת באותו צליל?",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-w-matos then heb-a-i-rhyme, one clip"
     },
     "r-til": {
       "he": "טִיל. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
       "voice": "טִיל. איזו מילה נגמרת באותו צליל?",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-w-til then heb-a-i-rhyme, one clip"
     },
     "r-chalon": {
       "he": "חַלּוֹן. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
       "voice": "חַלּוֹן. איזו מילה נגמרת באותו צליל?",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-w-chalon then heb-a-i-rhyme, one clip"
     },
     "h-end": {
       "he": "בּוֹאוּ נַקְשִׁיב לַסּוֹף.",
       "voice": "בואו נקשיב לסוף.",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "hint 2 of the rhyme items; the end of the text-ready heb-a-d-allit"
     },
     "h-look": {
       "he": "בּוֹאוּ נִסְתַּכֵּל שׁוּב.",
       "voice": "בואו נסתכל שוב.",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "hint 2 of the letter items (A-10)"
     },
     "i-letter": {
       "he": "אֵיפֹה הָאוֹת?",
       "voice": "איפה האות?",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "A-10 one-tap form of heb-a-i-letters (the tap-all mode has no recipe yet)"
     },
     "m-kadur": {
       "he": "כַּדּוּר הוּא עָגֹל. אֶפְשָׁר לִזְרֹק אוֹתוֹ וְלִבְעֹט בּוֹ.",
       "voice": "כדור הוא עגול. אפשר לזרוק אותו ולבעוט בו.",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "word card of כַּדּוּר for hint 2 of A-02.8 (the batch gives it no card: a known word)"
     },
     "plc-thanks": {
       "he": "תּוֹדָה רַבָּה!",
       "voice": "תודה רבה.",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "placement: after each probe (no result is shown)"
     },
     "plc-bye": {
       "he": "הָיָה כֵּיף לְשַׂחֵק יַחַד!",
-      "voice": "היה כיף לשחק יחד.",
-      "review": "needs-editor",
+      "voice": "היה כיף לְשַׂחֵק יחד.",
+      "review": "text-ready",
       "note": "placement: the end of a placement visit"
     },
     "s1-title": {
@@ -1204,7 +1204,7 @@
     "pass": {
       "he": "זֶה בְּסֵדֶר!",
       "voice": "זה בסדר.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     "d-start": {
       "he": "מַתְחִילִים כָּאן.",

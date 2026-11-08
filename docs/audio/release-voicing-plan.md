@@ -38,7 +38,7 @@ Files of this step:
 | **Already voiced** | 318 clips each for nitzi and hero-son, 54 for each of the seven friends, and 66 tutor lines. None can be reused (section 1.4): they were made from the old fully pointed captions, with the old settings, and no ledger records them |
 | **Blocked today** [M] | `voice_gen generate` refuses the whole run while any line is not approved: **4,151 of 4,278 ids are not** (4,045 `text-ready`, 106 `proposed`; only 127 are `owner-approved`). Two ids carry two or three different texts (`vo:fb.num_rev`, `vo:fb.size`). Section 2 |
 | **Tool gaps** [R] | The generator voices every line for every character, has no subset for the friends, no per-land lines, no language-pack path, and does not voice a repeated text once. Five requests for the app-developer, section 5 |
-| **Top pronunciation risks** | `תורכם` (786 lines), `המממ`, `ספרות`/`ספרה`/`ספרנו`/`ספרתם`, `נאמר`/`ונמחא`, the course's plural imperatives (`געו`, `הקשיבו`, `גררו`), the name `פיפ`, English `!` and "slow" copies, Russian `{puppet}`. Section 3 |
+| **Top pronunciation risks** | `תורכם` (786 lines), `המממ`, `ספרות`/`ספרה`/`ספרנו`/`ספרתם`, `נאמר`/`ונמחא`, the course's plural imperatives (`געו`, `הקשיבו`, `גררו`), the name `פיפ`, English `!` and "slow" copies. (Russian `{puppet}` is gone: `ch-menja-zovut` says `Меня́ зову́т Са́ша.`, 2026-11-08.) Section 3 |
 
 ---
 
@@ -90,9 +90,9 @@ A line is **one Hebrew clip then one or two target-language clips** (frame §1.3
 
 | Course | Hebrew frame lines | Characters | Target clips | Characters | Notes |
 |---|---|---|---|---|---|
-| English | 117 (`vo:eng.he_…`) | 1,605 | 212 (`vo:eng.en_…`) | 2,082 (1,700 for 147 distinct texts) | 63 of the 212 are `-slow` copies of another clip; 68 carry `!`; `review`: 112 `text-ready`, 5 `needs-editor` |
-| Russian | 64 | 1,165 | 232 | 2,460 | every word has its stress mark; 38 carry `!`; `{puppet}` in `ch-menja-zovut`; 15 frame lines `needs-editor` |
-| Hebrew | 93 (13 have no voice line) | 2,489 | 130 | 1,417 (the pointed `shown`; `say` is empty for 99) | 12 more clips are **cut** from the page clips by word times and are not voiced; 25 frame lines `needs-editor` |
+| English | 117 (`vo:eng.he_…`) | 1,605 | 212 (`vo:eng.en_…`) | 2,082 (1,700 for 147 distinct texts) | 63 of the 212 are `-slow` copies of another clip; 68 carry `!`; `review`: all 117 `text-ready` (the editor read the last 5 on 2026-11-08) |
+| Russian | 64 | 1,165 | 232 | 2,460 | every word has its stress mark; 38 carry `!`; `ch-menja-zovut` now says `Меня́ зову́т Са́ша.` (no placeholder); all 64 frame lines `text-ready` (the last 15 read on 2026-11-08) |
+| Hebrew | 93 (13 have no voice line) | 2,489 | 130 | 1,417 (the pointed `shown`; `say` is empty for 99) | 12 more clips are **cut** from the page clips by word times and are not voiced; all 106 frame lines `text-ready` (the last 25 read on 2026-11-08) |
 | **Total** | **274** | **5,259** | **574** | **5,959** | **11,218 as listed; about 10,800 once the English duplicates are voiced once** |
 
 The `pronunciation.csv` of each language has every row `draft` (222, 269 and 279 rows): the `say` forms wait for the pilots.
@@ -235,14 +235,14 @@ sample lines.
 
 ### 3.4 The table for the hebrew-text-editor
 
-All rows with id, text, problem and fix are in **`docs/audio/release-pronunciation-fixes.csv`** (81 rows). The shape:
+All rows with id, text, problem and fix are in **`docs/audio/release-pronunciation-fixes.csv`** (81 rows, and 6 the editor added on 2026-11-08, status `text-ready`). The shape:
 
 | Group (status) | Rows | What the editor does |
 |---|---|---|
 | `tool-done` | 19 | nothing; read them. They are the words above, with an example line, the problem and the count of plain rows |
 | `to-apply` | 48 | the 48 course frame lines: replace `voice` with the "fix" column (a pointed instruction verb; `לְפִיפּ`) |
 | `open` | 5 | decided by the probe: `המממ` (the fix, if it fails, is `רגע…`), `תורכם`, `אחר`, `ננסה`, the dash |
-| `blocker` | 3 | the two multi-text ids and Russian `{puppet}` |
+| `blocker` | 3 | the two multi-text ids (done) and Russian `{puppet}` (done 2026-11-08: the name Са́ша is in the text; status `text-ready`) |
 | `spec` / `pilot` | 6 | for the generator and the pilots, not for the editor |
 
 ### 3.5 The words at risk, ranked by how many lines they touch
@@ -283,8 +283,8 @@ number; a two-sentence line [G] (many prompts) has a visible pause between the s
 - **Russian** (269 draft rows). Every multi-syllable word carries U+0301 and `ё` is written (wherever the word has it: `ёжик`, `зелёный`, `пёс`). The open
   question is whether the voice honours U+0301: the Russian pilot has the same word with the mark, without it and in IPA.
   Fatal if heard: uvular р, `ы` as `и`, an unstressed `о` said as a full `о` (`молоко́` with three o), no hard/soft difference
-  (`лук`/`люк`), a wrong stress on 3 of 6 words (`docs/languages/voices.md` section 7). `Меня́ зову́т {puppet}.` has a
-  placeholder, which the pre-flight refuses: one clip per puppet name.
+  (`лук`/`люк`), a wrong stress on 3 of 6 words (`docs/languages/voices.md` section 7). `Меня́ зову́т Са́ша.` (`ch-menja-zovut`)
+  carries the puppet's name, a fixed character, so no placeholder reaches the pre-flight (2026-11-08).
 - **Hebrew course** (279 draft rows). 99 of 130 target clips have no `say`, so the fully pointed `shown` is sent (704 points
   in 1,758 characters). Whether a pointed or a plain text is better is open question 1 of the Hebrew brief; the Hebrew pilot
   has both. Isolated sounds: **no stop is ever voiced alone** (`voices.md` §6); a stretchable sound goes inside a word.
@@ -408,9 +408,9 @@ clips by ffmpeg, free; the cut words of the Hebrew pack are cut from their page 
 | Course | Command | Characters | USD (v4 list) | Needs |
 |---|---|---|---|---|
 | English | `dart run tool/voice_gen.dart plan-lang eng --voice lang-en-female --frame-voice nitzi --model eleven_v4` | 3,446 (3,405 sent: 2 clips share a text) | 0.28 | ffmpeg |
-| Russian | `dart run tool/voice_gen.dart plan-lang rus --voice lang-ru-female --frame-voice nitzi --model eleven_v4` | 3,741 | 0.30 | ffmpeg not needed; **blocked by one text:** `vo:rus.ch_menja_zovut` has `{puppet}` |
-| Hebrew | `dart run tool/voice_gen.dart plan-lang heb --voice nitzi --model eleven_v4` | 3,973 | 0.32 | ffmpeg (12 cut words) |
-| **Total** | | **11,160** | **0.90** | |
+| Russian | `dart run tool/voice_gen.dart plan-lang rus --voice lang-ru-female --frame-voice nitzi --model eleven_v4` | 3,755 | 0.30 | ffmpeg not needed; the plan has no refusal now (`vo:rus.ch_menja_zovut` says `Меня́ зову́т Са́ша.`) |
+| Hebrew | `dart run tool/voice_gen.dart plan-lang heb --voice nitzi --model eleven_v4` | 4,011 | 0.32 | ffmpeg (12 cut words) |
+| **Total** | | **11,212** | **0.90** | |
 
 The paid command for each is the same with `generate-lang` and `--pack-version 1.0.0` (the tool prints its plan and asks for the number):
 
@@ -421,8 +421,8 @@ dart run tool/voice_gen.dart generate-lang heb --voice nitzi --model eleven_v4 -
 ```
 
 Before the paid runs: (1) the pilot has passed and the `say` forms are final; (2) `winget install Gyan.FFmpeg`, then a new PowerShell window; (3) the Russian
-puppet line has its own text for Саша (`Меня́ зову́т Са́ша.`, the Russian teacher and the editor); (4) the 5, 15 and 25 frame lines still `needs-editor` in the three courses
-are approved. **The puppets (request F7):** `generate-lang` has one `--voice`; the 20 puppet lines (English 9, Russian 11, 337 characters) are said by the female voice
+puppet line has its own text for Саша (`Меня́ зову́т Са́ша.`; done 2026-11-08); (4) the 5, 15 and 25 frame lines that were `needs-editor` in the three courses
+are now `text-ready` (read by the editor on 2026-11-08) and wait for the owner's approval. **The puppets (request F7):** `generate-lang` has one `--voice`; the 20 puppet lines (English 9, Russian 11, 337 characters) are said by the female voice
 until a `--puppet-voice` exists. The count and the cost do not change.
 
 ### Step 6, later and optional

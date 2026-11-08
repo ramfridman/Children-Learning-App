@@ -613,6 +613,7 @@ def ktiv_lookup(p):
 
 SIN_KEEP = False  # language courses only (course_voice_text): a word with the sin dot keeps its nikud
 COURSE_KEEP = set()  # filled below, canonical forms
+COURSE_LINE_KEEP = set()  # filled below: words that keep their nikud in the lines of a language course only (never in the app's table)
 
 
 def partial_nikud(text):
@@ -621,7 +622,7 @@ def partial_nikud(text):
         tok = m.group(0)
         if not HE_WORD.match(tok):
             out.append(tok)
-        elif is_number_token(tok) or tok in KEEP_POINTED or canon(tok) in COURSE_KEEP or (SIN_KEEP and 'ׂ' in tok):
+        elif is_number_token(tok) or tok in KEEP_POINTED or canon(tok) in COURSE_KEEP or (SIN_KEEP and ('ׂ' in tok or canon(tok) in COURSE_LINE_KEEP)):
             out.append(tok)
         else:
             out.append(ktiv_lookup(ktiv_token(tok)))
@@ -809,11 +810,32 @@ COURSE_KEEP |= {canon(w) for w in (
 )}
 
 
+COURSE_LINE_KEEP |= {canon(w) for w in (
+    # The verses of the Hebrew course (frame lines v*-play), read on 2026-11-08: the rhyme words and the words a voice could read another way.
+    'תַּק',         # the clock's beat in "תִּיק־תַּק": plain "תק" can be read "tek" or "tok"
+    'בַּסַּל',       # plain "בסל" can be read "besal" (in a basket, without the article); here it is "ba-sal"
+    'תּוּת',         # plain "תות" can be read "tot"; the word is "tut" (a strawberry)
+    'עָף',          # plain "עף" can be read "of"; here it is "af" (flies)
+    'לַדֻּבִּי',     # plain "לדובי" can be read "ledovi" (to Dovi, from דב); here it is "ladubi" (to the teddy)
+    'כַּף',         # plain "כף" can be read "kef"; the word is "kaf" (a spoon)
+    'שָׁטָה',        # plain "שטה" can be read "shote" or "shata"; here it is "shata" (floated)
+)}
+
+
 def course_voice_text(text):
     """The voice text of a line of a language course (see the comment above). Returns (text, notes)."""
     global SIN_KEEP
     src = text.replace('"', '').replace('״', '').replace('־', ' ')  # a maqaf is a nikud-range mark and would be dropped: תִּיק־תַּק → "תיק תק"
     carrier = src.rstrip().endswith(':')
+    # A line that is one bare word (a gloss: "בָּצָל.", "דֻּבִּי.") has no sentence to read it by, so it keeps its nikud and the end mark
+    # it has; a sentence that begins with one bare word and a full stop ("דָּג. אֵיזוֹ מִלָּה נִגְמֶרֶת…") keeps that word pointed.
+    bare = re.fullmatch(r'\s*([֐-׿]+)\s*([.?]?)\s*', src)
+    if bare:
+        return bare.group(1) + bare.group(2), ['a bare word keeps its nikud (nothing to read it by); it keeps the end mark the screen text has']
+    head = re.match(r'^([֐-׿]+)\.\s+(\S.*)$', src, re.S)
+    if head:
+        rest, notes = course_voice_text(head.group(2))
+        return head.group(1) + '. ' + rest, ['the word the question is about keeps its nikud (no context)'] + notes
     SIN_KEEP = True
     try:
         t, notes = eleven(src)

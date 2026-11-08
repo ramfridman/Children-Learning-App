@@ -974,3 +974,24 @@ Pins: `tools/test_hebrew_sources.py` changed-and-proposed rows 18 (was 29: the 1
 5. **The formal forms** (answer to 14.4 item 6 and 7): `מַתְחִיל / נִגְמָר אוֹתוֹ דָּבָר` became `מַתְחִיל / מַתְחִילָה / מַתְחִילוֹת / נִגְמֶרֶת / שֶׁנִּגְמָרוֹת בְּאוֹתוֹ צְלִיל` in the Hebrew course (the sound-rhyme question, the allit feedback, the pairing instruction), the Russian course (3 frames) and the Russian parent text (screen and voice; `אוֹתוֹ דָּבָר, אוֹ לֹא?` "same or not" stays, it is not about a sound). `נִשְׁאָר עוֹד …` became `נִשְׁאֲרוּ עוֹד …` in the 8 make-ten hints. `מְתַקְּנֵי בָּאגִים` became `מְתַקְּנֵי תַּקָּלוֹת`. `בּוֹאוּ נְדַמְיֵן אֶת זֶה` became `בּוֹאוּ נְתָאֵר לְעַצְמֵנוּ אֶת הַצּוּרָה` (7 rows: `shpb08.9`, `x.shpb09.1-.6`).
 
 Pins: `test_hebrew_sources`: done-and-changed rows 1,215 (was 1,221: six rows whose old text needed a correction are now written right by their source), changed-and-proposed 6 (was 18: D12). Rows 15,823. Table: 14,325 text-ready, 740 owner-approved, 109 proposed.
+
+
+### 14.6 The last frame lines of the three language courses, and the Russian puppet (hebrew-text-editor, 2026-11-08)
+
+Nothing was voiced or paid. Sources changed: `docs/languages/russian/pronunciation.csv`, the three `course.json`, `docs/languages/hebrew/pronunciation.csv`
+and `band-a-content.md`, `tools/hebrew_voice_review.py`; then `tools/lang_pack.py all`.
+
+- **The Russian puppet.** `ch-menja-zovut` had `{puppet}`; a clip is voiced once and the voice tool refuses a placeholder. The puppet is a fixed character
+  (Са́ша, the owner, 2026-11-03), so its name is written in the line: shown `Меня зовут Саша.`, said `Меня́ зову́т Са́ша.`, ipa `[mʲɪˈnʲa zɐˈvut ˈsaʂə]`.
+  The clip id is unchanged and the pack activity `rus.a01.08` only names the id, so **the Russian pack did not change**. English and Hebrew have no placeholder
+  in any voice-plan text (a test now checks all three plans: `test_course_voice_plans_have_no_placeholder`).
+- **The 45 frame lines that were `needs-editor`** (English 5, Russian 15, Hebrew 25) are read and `text-ready`. Grammar, vocabulary and agreement were right in
+  all of them except one: `וְהַחָתוּל` in the verse `v2-play` is `וְהֶחָתוּל` (the article before ח with a qamats; `pl-3` already had it). That one changes the screen
+  text, so the **Hebrew pack changed (one activity, `activity.heb.a06.02`, two captions) and needs a new owner signature**; the clips `heb-a-v2-open` and `heb-a-v2-full` were written the same.
+- **Voice texts changed (6 Hebrew, 6 Russian):** plain `לשחק` has no sin dot (`plc-bye` is `לְשַׂחֵק`, as the English `he-bye`); the verses keep `בַּסַּל`, `תּוּת`, `עָף`, `לַדֻּבִּי`, `כַּף`,
+  `שָׁטָה`, `תַּק` pointed (rhyme words and words a voice reads another way); Russian `f37` was missing from the director's 48 (`הַקְשִׁיבוּ`). A line that is one bare word
+  (the Russian glosses `בָּצָל.`, `דֻּבִּי.`, `שָׁלוֹם.`, `כּוֹבַע.`, `לְהִתְרָאוֹת.`) keeps its nikud and its end mark, as every English `he-gl-*` does (plain `בצל` is also "in the shade of",
+  plain `דובי` is also the name Dovi). The word that opens a rhyme question (`דָּג. אֵיזוֹ מִלָּה…`) keeps its nikud. These rules are in `course_voice_text()`
+  (`COURSE_LINE_KEEP` is for course lines only; the app's table is untouched: `hebrew_voice_review.py` gives the same 15,823 rows and statuses).
+- **Left as written:** the carrier `הַקְשִׁיבוּ, וְגִרְרוּ לְפִיפּ:` (no object: the colon hands over to the English word, like `בּוֹאוּ נִמְצָא:`); `זו אמא` (the tool's ktiv is `אימא`; both are standard).
+- **The tag rows** (`tags.*.review` in the Hebrew `course.json`, 31 parent texts) still say `needs-editor`; they were read in the sweep of 14.1 and are not frame lines.

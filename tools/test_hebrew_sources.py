@@ -341,6 +341,18 @@ class SweepGuardsTest(unittest.TestCase):
                     bad.append('%s %s: %s' % (lang, key, v))
         self.assertEqual(bad, [])
 
+    def test_course_voice_plans_have_no_placeholder(self):
+        """A clip is voiced once, so no text of a course's voice plan may hold a {variable} (the Russian puppet is Саша, written in the line)."""
+        bad = []
+        for lang in ('eng', 'heb', 'rus'):
+            plan = read_json(os.path.join(ROOT, 'content', 'languages', lang, 'voice-plan.json'))
+            for kind, fields in (('frameLines', ('he', 'voice')), ('targetClips', ('shown', 'say')), ('cutClips', ('text',))):
+                for row in plan.get(kind, []):
+                    for f in fields:
+                        if '{' in (row.get(f) or '') or '}' in (row.get(f) or ''):
+                            bad.append('%s %s %s.%s: %s' % (lang, row.get('id'), kind, f, row.get(f)))
+        self.assertEqual(bad, [])
+
 
 if __name__ == '__main__':
     unittest.main()
