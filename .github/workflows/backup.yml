@@ -25,10 +25,7 @@ jobs:
     timeout-minutes: 20
     env:
       AGE_PUBLIC_KEY: age1c8ktydg7kdasj88khdwpnf83mr0jcvxw073m8av3h28l4uz9agwqvzj8tu
-      BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
-      # Storage-only S3 access key pair (docs/setup/push-and-backups.md, step 3). Neither can open a backup.
-      AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
+      # The three secrets are set per step below, only on the steps that need them (not on the package install).
       # Not secret: the project's S3 endpoint, its region and the private bucket.
       AWS_DEFAULT_REGION: eu-central-1
       S3_ENDPOINT: https://ungkvkabqxssggttajfs.storage.supabase.co/storage/v1/s3
@@ -39,6 +36,11 @@ jobs:
       AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
     steps:
       - name: Check the secret is set
+        env:
+          BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+          # Storage-only S3 access key pair (docs/setup/push-and-backups.md, step 3). Neither can open a backup.
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
         run: |
           if [ -z "$BACKUP_DATABASE_URL" ]; then
             echo "::error::The GitHub secret BACKUP_DATABASE_URL is not set (see docs/setup/push-and-backups.md, step 2)."
@@ -60,6 +62,8 @@ jobs:
           age --version
 
       - name: Dump the app schema
+        env:
+          BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
         run: |
           set -euo pipefail
           /usr/lib/postgresql/17/bin/pg_dump "$BACKUP_DATABASE_URL" \
@@ -82,6 +86,10 @@ jobs:
           sha256sum "$out"
 
       - name: Upload it to the private bucket, and check that it is not public
+        env:
+          # Storage-only S3 access key pair (docs/setup/push-and-backups.md, step 3). Neither can open a backup.
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
         run: |
           set -euo pipefail
           file=$(ls nitznutz-backup-*.dump.age)
@@ -95,9 +103,10 @@ jobs:
             exit 1
           fi
           echo "uploaded $file ($size bytes) to the private bucket"
+          echo "sha256 after upload (compare before a restore): $(sha256sum "$file")"
           # The bucket must be private. Asking for the file with no login at all must be refused (400 or 404).
           # Anything else (200, or no answer) means it cannot be shown to be private: delete the copy and fail.
-          code=$(curl -s -o /dev/null -m 30 -w '%{http_code}' "$PUBLIC_BASE/$BACKUP_BUCKET/$file" || true)
+          code=$(curl -s --retry 3 --retry-all-errors -o /dev/null -m 30 -w '%{http_code}' "$PUBLIC_BASE/$BACKUP_BUCKET/$file" || true)
           if [ "$code" != "400" ] && [ "$code" != "404" ]; then
             aws s3api delete-object --endpoint-url "$S3_ENDPOINT" --bucket "$BACKUP_BUCKET" --key "$file" > /dev/null || true
             echo "::error::The public address of the backup answered http $code instead of 400 or 404. The copy was deleted. Make the bucket private (docs/setup/push-and-backups.md, step 3)."
@@ -109,16 +118,21 @@ jobs:
         # Runs even when the dump failed, so deletions still age out of the backups within 28 days.
         # The newest copy is never deleted, whatever its age.
         if: ${{ !cancelled() }}
+        env:
+          # Storage-only S3 access key pair (docs/setup/push-and-backups.md, step 3). Neither can open a backup.
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
         run: |
           set -euo pipefail
-          cutoff=$(date -u -d '27 days ago' +%s)
+          cutoffday=$(date -u -d '27 days ago' +%Y-%m-%d)
           aws s3api list-objects-v2 --endpoint-url "$S3_ENDPOINT" --bucket "$BACKUP_BUCKET" --output json > listing.json
-          jq -r --argjson cutoff "$cutoff" '
-            [(.Contents // [])[]
-              | select(.Key | test("^nitznutz-backup-[0-9]{4}-[0-9]{2}-[0-9]{2}\\.dump\\.age$"))]
-            | sort_by(.LastModified) | .[:-1][]
-            | select((.LastModified | sub("\\.[0-9]+"; "") | fromdateiso8601) < $cutoff)
-            | .Key' listing.json > old.txt
+          # Compare the date in the key (written by this job with `date -u`), not LastModified: the AWS CLI prints
+          # "+00:00", which jq's fromdateiso8601 refuses (SEC-BK-1). Test: tools/backup_retention_test.sh
+          jq -r --arg cutoffday "$cutoffday" '
+            [(.Contents // [])[] | .Key
+              | select(test("^nitznutz-backup-[0-9]{4}-[0-9]{2}-[0-9]{2}\\.dump\\.age$"))]
+            | sort | .[:-1][]
+            | select(.[16:26] < $cutoffday)' listing.json > old.txt
           while IFS= read -r key; do
             [ -n "$key" ] || continue
             aws s3api delete-object --endpoint-url "$S3_ENDPOINT" --bucket "$BACKUP_BUCKET" --key "$key" > /dev/null

@@ -33,19 +33,29 @@ Until now the weekly backup was a GitHub artifact. The repository is public, so 
 
 1. **Make the bucket.** Supabase dashboard, project `ungkvkabqxssggttajfs`, **Storage**, **New bucket**:
    - Name: `nitznutz-backups` (exactly).
-   - **Public bucket: off.** (If you can set them: file size limit `100 MB`; allowed MIME types `application/octet-stream`.)
-   - Open the bucket, then **Storage**, **Policies**: there must be **no policy** for this bucket. Do not add one.
-2. **Make an S3 access key.** Dashboard, **Storage**, **S3 Configuration** (or **Settings**, Storage), **New access key**, name it `github-backup`. The page shows an access key ID and a secret **once**. Keep that page open, and do not copy them into any chat, file or note. (Supabase has no key that is limited to one bucket; this key reaches only Storage, nothing else, and this project has no other bucket. It is not the `service_role` key.)
-3. **Give them to GitHub.** Set both secrets from the page without printing them. In PowerShell, from the repository root, `gh` asks for each value and hides what you type (paste it, press Enter):
+   - **Public bucket: off.** (If you can set them: file size limit `50 MB` or leave it empty, since the project's own upload limit is 50 MB; allowed MIME types `application/octet-stream`.)
+   - Open the bucket, then **Storage**, **Policies**: there must be **no policy at all** on `storage.objects`, for this bucket or any other (a policy without a bucket name would still let signed-in users read it). Do not add one, and do not accept a template.
+2. **Make an S3 access key.** Dashboard, **Storage**, **S3 Configuration** (or **Settings**, Storage), **New access key**, name it `github-backup`. The page shows an access key ID and a secret **once**. Keep that page open, and do not copy them into any chat, file or note. Compare the endpoint and region it shows with `https://ungkvkabqxssggttajfs.storage.supabase.co/storage/v1/s3` and `eu-central-1`, and check that the **S3 protocol** switch is on; if any differs, stop and tell me. (Supabase has no key that is limited to one bucket; this key reaches only Storage, nothing else, and this project has no other bucket. It is not the `service_role` key.)
+3. **Give them to GitHub.** Set each secret from the page without printing it, one command at a time. In PowerShell, from the repository root, `gh` asks for the value and hides what you type (paste it, press Enter):
 
    ```powershell
    gh secret set BACKUP_S3_ACCESS_KEY_ID --repo ramfridman/Children-Learning-App
+   ```
+
+   then the same for the second one:
+
+   ```powershell
    gh secret set BACKUP_S3_SECRET_ACCESS_KEY --repo ramfridman/Children-Learning-App
+   ```
+
+   then, to see the names:
+
+   ```powershell
    gh secret list --repo ramfridman/Children-Learning-App
    ```
 
    The last command should list `BACKUP_DATABASE_URL`, `BACKUP_S3_ACCESS_KEY_ID` and `BACKUP_S3_SECRET_ACCESS_KEY` (names and dates only). Then close the Supabase page.
-4. **Merge** the change that moves the workflow (I tell you when it is ready), then tell me "bucket and secrets are set". I start the workflow by hand and check three lines in its log: `uploaded nitznutz-backup-... to the private bucket`, `public address refused with http 400` (or 404), and the list of deleted old copies (none on the first run).
+4. **Merge** the change that moves the workflow (I tell you when it is ready), then tell me "bucket and secrets are set". I start the workflow by hand and check these lines in its log: `uploaded nitznutz-backup-... to the private bucket`, `public address refused with http 400` (or 404), `sha256 after upload ...` (write that line down for restores), and the list of deleted old copies (none on the first run).
 5. **Check it yourself once** (read-only), in the dashboard SQL editor:
 
    ```sql
@@ -53,7 +63,8 @@ Until now the weekly backup was a GitHub artifact. The repository is public, so 
    select policyname, roles, cmd from pg_policies where schemaname = 'storage' and tablename = 'objects';
    ```
 
-   You should see one bucket, `nitznutz-backups`, with `public = false`, and no policy rows that mention it.
+   The first query should show one bucket, `nitznutz-backups`, with `public = false`. The second query should return **no rows** at all.
+   Optionally, to run the closed-check against the bucket, add `-BackupKey nitznutz-backup-YYYY-MM-DD.dump.age` (a real name, copied from the `uploaded` line of a run) to `tools\data-api-closed-check.ps1`; without it the two bucket checks are skipped.
 6. **Old artifacts.** Three older `nitznutz-backup` artifacts (2026-10-27, 2026-11-01, 2026-11-08) are still downloadable from the Actions page until they expire (28 days after each). Whether to delete them now (Actions, the run, **Artifacts**, the bin icon) or let them expire is your call; nothing is deleted for you. They are encrypted with your public key, and hold the children's nicknames; the school stage and birth month will be in later ones.
 7. **If a key is ever exposed**, delete it in the dashboard (S3 Configuration), make a new one and repeat step 3. Storage contents are unchanged.
 
