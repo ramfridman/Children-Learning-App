@@ -5,6 +5,12 @@ begin;
 create extension if not exists pgtap with schema extensions;
 select * from no_plan();
 
+-- SEC-RS-1: the migration as applied (not the copy below) left the prod package with the release key's fingerprint.
+select is((select e -> 'cert_sha256' ->> 0 from app.config, jsonb_array_elements(value) e
+           where key = 'android_allowed_apps' and e ->> 'package_name' = 'app.nitznutz.nitznutz'),
+  'fbf648da2461d4488f94e45562c21ca98b1cdf28d5531b11b7ba778253c7cc6f', 'the applied migration trusts the prod package with the release key');
+
+
 -- Stand-in for the live row: the dev package with a debug-key fingerprint, and an old prod entry with a wrong fingerprint.
 delete from app.config where key = 'android_allowed_apps';
 insert into app.config (key, value) values ('android_allowed_apps',

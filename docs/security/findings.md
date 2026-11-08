@@ -38,7 +38,7 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L0-1 | Course isolation: an answer counts by its activity id alone, and activity ids are not kept apart between courses | low | closed (`a399488`: course-prefixed ids, the course on every replayed answer, the activity id in the pull guard; proof re-run) | 2026-11-03 |
 | SEC-L0-2 | A gate document of a language pack may omit its course and is then read as `core` | info | closed (`a399488`; proof re-run) | 2026-11-03 |
 | SEC-L0-3 | `settings-put` bounds the family's settings in characters, the table in bytes | low | fixed (`a399488`: 10,000 UTF-8 bytes at the gateway; Deno test green); closes when a pgTAP case stores the largest document the gateway takes | 2026-11-03 |
-| SEC-RS-1 | Release-signing pgTAP test checks a copy of the migration's statement, not the applied migration | low | open (`release-signing`) | 2026-11-08 |
+| SEC-RS-1 | Release-signing pgTAP test checks a copy of the migration's statement, not the applied migration | low | fixed on `release-signing`: pgTAP 12 first checks the row the applied migration left (closes on a green database job) | 2026-11-08 |
 | SEC-RS-2 | The live Android allow-list still trusts the dev package with the PC's debug-key fingerprint | low | open | 2026-11-08 |
 | SEC-RS-3 | The release signing properties file is not refused inside a git work tree | info | open (`release-signing`) | 2026-11-08 |
 | SEC-RS-4 | Phones launched before 2021 cannot enrol (expired factory attestation certificates) | info | open (availability; not to be relaxed without the revocation list) | 2026-11-08 |
