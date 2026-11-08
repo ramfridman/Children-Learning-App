@@ -599,6 +599,97 @@
       [
         "Say which flat shape the solid leaves in the sand and point at it."
       ]
+    ],
+    "M-HC-ROW": [
+      [
+        "Remind the child that on the hundred chart one cell along the row is one more, and ten more is one whole row down, in the same column; ten less is one row up.",
+        "Invite the child to look at the ones digit: adding or taking away ten changes only the tens digit, and the ones digit stays the same."
+      ],
+      [
+        "Suggest counting ten single steps along the chart from the number, one at a time, and seeing that they end straight below it, in the next row.",
+        "Suggest picturing a rod of ten cubes laid down the column: it reaches from the number to the cell straight below it."
+      ],
+      [
+        "Put a finger on the number together, slide it straight down one row for ten more or straight up one row for ten less, in the same column, and read the number there."
+      ]
+    ],
+    "M-OP-SWAP": [
+      [
+        "Invite the child to look at the sign again and say what it asks for: putting together, taking away or sharing out.",
+        "Suggest deciding first whether the answer should be more than the first number or less, before working it out."
+      ],
+      [
+        "Suggest telling the problem as a short story with things: are more being put into the pile, or are some being taken out or shared out?",
+        "Suggest picturing the objects: when some are taken away there are fewer at the end, and when some are added there are more."
+      ],
+      [
+        "Read the sign together, say whether there will be more or fewer at the end, and then work it out together, one step at a time."
+      ]
+    ],
+    "M-PV-FACE": [
+      [
+        "Remind the child that where a digit stands tells what it is worth: in the tens place each one is a whole ten, not a one.",
+        "Suggest saying the number as tens and ones first, and then looking at the question again; when comparing, the tens decide first."
+      ],
+      [
+        "Suggest picturing the number as rods of ten and single cubes: each rod is worth ten, and only the single cubes are ones.",
+        "Suggest picturing coins of ten and coins of one: count the tens coins in tens, then add the ones."
+      ],
+      [
+        "Count the tens together in tens, then count on the ones, and use what each digit is worth to answer: the tens first, then the ones."
+      ]
+    ],
+    "M-PV-ZERO": [
+      [
+        "Remind the child that each place gets exactly one digit, and that a zero keeps a place that is empty.",
+        "Suggest saying how many hundreds, tens and ones the number has before writing or choosing it."
+      ],
+      [
+        "Suggest picturing a mat with a column for each place, and putting one digit in each column, with a zero where a column is empty.",
+        "Suggest picturing two cards, one for the tens and one for the ones, with the ones card laid over the zero of the tens card."
+      ],
+      [
+        "Build the number together place by place, from the biggest place, with one digit in each place, and count how many digits it needs."
+      ]
+    ],
+    "M-SIGN-DIR": [
+      [
+        "Invite the child to find the bigger number first, and then check that the open side of the sign faces it.",
+        "Remind the child that the sign opens wide toward the bigger number and points its tip at the smaller one."
+      ],
+      [
+        "Suggest picturing the sign as a hungry mouth that always opens toward the bigger pile.",
+        "Suggest picturing each number as a tower, and checking that the wide side of the sign is next to the taller tower."
+      ],
+      [
+        "Read the sentence together from the left, saying the sign in words, and check together that its open side faces the bigger number."
+      ]
+    ],
+    "M-SUB-ORDER": [
+      [
+        "Remind the child that in taking away the order matters: we start with the first number and take the second away from it.",
+        "Invite the child to read the sentence from the left and ask whether the second number can be taken away from the first."
+      ],
+      [
+        "Suggest a short story with things: if there are only a few in the pile, can we take away more than there are?",
+        "Suggest picturing the first number as a pile of objects and taking the second number away from that pile, one at a time."
+      ],
+      [
+        "Read the sentence together from the left, start with the first number, and check together whether the second can be taken away from it."
+      ]
+    ],
+    "M-SUB-SMALLBIG": [
+      [
+        "Invite the child to look at the ones of the first number and ask whether there are enough of them to take the ones away.",
+        "Remind the child that we always take the second number away from the first, and never swap the digits inside a place."
+      ],
+      [
+        "Suggest picturing the first number as rods of ten and single cubes: when there are not enough single cubes, open one rod into ten cubes.",
+        "Suggest counting up on a number line from the second number to the first, and seeing how far apart they are."
+      ],
+      [
+        "Together, open one ten into ten ones, take away the ones and then the tens, and count what is left."
+      ]
     ]
   }
 }
