@@ -90,8 +90,9 @@ def extra_numbers():
                   prompt='עוֹקְבִים בָּאֶצְבַּע אַחֲרֵי הַמִּסְפָּר %s.' % F[n] if guide == 'full' else 'כּוֹתְבִים אֶת הַמִּסְפָּר %s. מַתְחִילִים מֵהַנְּקֻדָּה.' % F[n],
                   dirTag='M-NUM-WRITE', h3='מַתְחִילִים מֵהַנְּקֻדָּה הַיְרֻקָּה וְהוֹלְכִים לְאַט אַחֲרֵי הַנְּקֻדּוֹת. עַכְשָׁו תּוֹרְכֶם.',
                   correct_text='כֵּן! כְּתַבְתֶּם אֶת הַמִּסְפָּר %s.' % F[n], difficulty=0.3 if guide == 'full' else 0.5)
+    # NUM-A-07 matches numerals 1 to 5 (curriculum §4; check-2026-11-06 §4: two sets had a 6)
     sets = [([1, 2, 3], 'apple', [1, 2, 0]), ([2, 3, 4], 'star', [2, 0, 1]), ([3, 4, 5], 'fish', [1, 2, 0]), ([1, 3, 5], 'duck', [2, 1, 0]),
-            ([2, 4, 6], 'apple', [1, 0, 2]), ([4, 5, 6], 'star', [0, 2, 1]), ([1, 2, 3, 4], 'fish', [2, 3, 0, 1])]
+            ([2, 4, 5], 'apple', [1, 0, 2]), ([1, 4, 5], 'star', [0, 2, 1]), ([1, 2, 3, 4], 'fish', [2, 3, 0, 1])]
     for ns, obj, order in sets:
         o = OBJECTS[obj]
         u.act('NUM-A-07', 'match', band='A', domain='numbers', pairs=[['n:%d' % n, '%s*%d' % (obj, n)] for n in ns], order=order, tag='M-CNT-SIZE',
@@ -129,7 +130,7 @@ def extra_math():
              60, assets=['coin_a10', 'coin_h50', 'coin_s1', 'coin_s2', 'coin_s5', 'coin_s10', 'note_20', 'note_50', 'note_100', 'note_200', 'banana_yellow', 'ball_red', 'apple', 'fish', 'star', 'block', 'duck', 'coin_s1'], prefix='x')
     u.tag('M-MONEY-SIZE', ['MATH-B-16'], 'הילד חושב שמטבע גדול שווה יותר (מטבע חצי השקל גדול ממטבע השקל).',
           'לשים על השולחן מטבעות אמיתיים, ולשאול: איזה שווה יותר? לבדוק יחד את המספר שכתוב עליו.', ['concrete', 'pictorial'],
-          'לֹא הַגֹּדֶל אוֹמֵר כַּמָּה הַמַּטְבֵּעַ שָׁוֶה, אֶלָּא הַמִּסְפָּר שֶׁעָלָיו. בּוֹאוּ נִסְתַּכֵּל.')
+          'הַמַּטְבֵּעַ גָּדוֹל אוֹ קָטָן, אֲבָל כַּמָּה הוּא שָׁוֶה? בּוֹאוּ נִסְתַּכֵּל עַל הַמִּסְפָּר שֶׁעָלָיו.')
     u.tag('M-MONEY-COUNT', ['MATH-B-17'], 'הילד סופר כמה מטבעות יש, ולא כמה הם שווים: שלושה מטבעות הם "שלושה שקלים" גם אם הם של חמישה.',
           'לשחק בחנות עם מטבעות: לשלם שלושה שקלים פעם עם מטבעות של שקל ופעם עם מטבע של שני שקלים ומטבע של שקל, ולהשוות.',
           ['concrete', 'symbolic'], 'כׇּל מַטְבֵּעַ שָׁוֶה כַּמָּה שֶׁכָּתוּב עָלָיו. בּוֹאוּ נְחַבֵּר אֶת מַה שֶּׁכָּתוּב.')
@@ -183,6 +184,7 @@ def extra_math():
             # B-15 §3: either other column (A4: never the bananas, which are always the answer here)
             u.act('MATH-B-19', 'pick', domain='math', chart=chart, options=[s for s, _ in cols] if i % 3 == 0 else [s for s, _ in cols][1:] + [cols[0][0]],
                   tags={s: 'M-CNT-SIZE' for s, _ in cols if s != pick[0]},
+                  tag_lines={'M-CNT-SIZE': ('vo:fb.size.chart', 'הַצִּיּוּר גָּדוֹל, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד.')},
                   correct=pick[0], prompt='%s' % ('מִמָּה יֵשׁ הֲכִי הַרְבֵּה?' if ask == 'most' else 'מִמָּה יֵשׁ הֲכִי מְעַט?'),
                   correct_text='כֵּן! בַּתַּרְשִׁים הָעַמּוּד שֶׁלּוֹ %s.' % ('הֲכִי גָּבוֹהַּ' if ask == 'most' else 'הֲכִי נָמוּךְ'),
                   h3='%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנָּכוֹן.' % ('בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ הֲכִי הַרְבֵּה' if ask == 'most' else 'בָּעַמּוּד הַנָּמוּךְ יֵשׁ הֲכִי מְעַט'))
@@ -198,7 +200,7 @@ def extra_math():
             d = big - small
             others = [x for x in (big, d + 1, d - 1) if x != d and x >= 0][:2]
             u.act('MATH-B-19', 'pick', domain='math', chart=chart, options=['n:%d' % v for v in place(d, others, i % 3)], correct='n:%d' % d,
-                  voice=True, tags={'n:%d' % big: 'M-COMP-DIFF'}, prompt='כַּמָּה יוֹתֵר בָּעַמּוּד הַגָּבוֹהַּ מֵאֲשֶׁר בָּעַמּוּד הַנָּמוּךְ?',
+                  voice=True, tags={'n:%d' % big: 'M-COMP-DIFF'}, prompt='בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ יוֹתֵר. כַּמָּה יוֹתֵר?',
                   correct_text='%s! בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ עוֹד %s.' % (F[d], F[d]),
                   h3='%s פָּחוֹת %s שָׁוֶה %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[big], F[small], F[d], F[d]))
 
@@ -242,10 +244,11 @@ def extra_shapes():
                   prompt='עוֹקְבִים בָּאֶצְבַּע אַחֲרֵי %s.' % name if guide == 'full' else 'מְצַיְּרִים אֶת %s. מַתְחִילִים מֵהַנְּקֻדָּה.' % name,
                   h3='מַתְחִילִים מֵהַנְּקֻדָּה הַיְרֻקָּה וְהוֹלְכִים לְאַט. עַכְשָׁו תּוֹרְכֶם.', correct_text='כֵּן! צִיַּרְתֶּם אֶת %s.' % name)
     u.skill('SHP-B-09', 'גוף וצורה שלו', 'כׇּל גּוּף וְהַצּוּרָה שֶׁעָלָיו', 'cone-tree', ['SHP-B-08', 'SHP-A-03'], ['pictorial', 'concrete'], ['M-SHP-FACE'])
+    # W1 of check-2026-11-06: a sphere has no flat face (a stamp leaves a point), so the fourth set has the cone, not the sphere
     pairs = [[('solid_cylinder', 'shape_circle'), ('solid_pyramid', 'shape_triangle'), ('solid_box', 'shape_rect')],
              [('solid_cone', 'shape_circle'), ('solid_box', 'shape_rect'), ('solid_pyramid', 'shape_triangle')],
              [('solid_cylinder', 'shape_circle'), ('solid_box', 'shape_rect')],
-             [('solid_sphere', 'shape_circle'), ('solid_pyramid', 'shape_triangle'), ('solid_box', 'shape_rect')]]
+             [('solid_cone', 'shape_circle'), ('solid_pyramid', 'shape_triangle'), ('solid_box', 'shape_rect')]]
     for i, ps in enumerate(pairs):
         order = list(range(len(ps)))
         order = order[1:] + order[:1] if i % 2 == 0 else order[::-1]

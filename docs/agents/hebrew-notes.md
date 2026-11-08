@@ -767,3 +767,125 @@ Every hint 3 of Band A and B is now 14 words or fewer, except two shop hints (be
 **For the owner (1), not changed:** `x.mathb17.6` and `.7` (the shop, 16 and 18 words) keep the Q11 form of the owner (each coin named `מַטְבֵּעַ שֶׁל …`, then the total), which cannot be 14 words with three coins. A version that names the coins by value without `מַטְבֵּעַ שֶׁל`
 (`חֲמִשָּׁה שְׁקָלִים, שְׁנֵי שְׁקָלִים וְעוֹד שְׁנֵי שְׁקָלִים — בְּיַחַד תִּשְׁעָה שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם.`, 12 words) keeps the teaching but changes his wording; both rows stay as they are until he chooses (or the layout takes 16 to 18 words for the shop).
 `test_hebrew_sources` pins 1,283 changed done rows (6 more rows whose old text needed a correction are now written right by their source). Run: `regen_content`, `export-hebrew-review`, `hebrew_voice_review` (`-X utf8`), `test_hebrew_sources`, `test_generators`, `check_maths` (full pack, non-strict).
+
+## 11b. The editor's full pass of 2026-11-06 (owner: "the Hebrew review now, voices later"; numbered 11 on the branch `hebrew-review`, renumbered 11b when it was merged with section 11 of M10 batch C1, 2026-11-08)
+
+Scope and counts, the 38 changed rows with before and after, the 5 questions for the owner and the verification are in
+`docs/review/hebrew-review-2026-11-06.md`. The sources were changed directly (`he.dart`, `content/units/{colours,logic,robots}.json`,
+`tools/band_b2.py`, `tools/band_b3.py`), the pack regenerated with `tools/regen_content.py`, and each change is recorded in
+`ROW_RULES` of `tools/hebrew_voice_review.py` ("Editor's second pass, 2026-11-06"). Everything is `text-ready`, waiting for the owner.
+
+**Rules learned in this pass** (add to sections 2 and 3 when the rules are next folded together):
+
+1. **`צָרִיךְ` is "needs", not "is needed".** `מִבְרֶשֶׁת לֹא צְרִיכָה לִרְחִיצַת יָדַיִם` says the brush needs nothing. Put the purpose first and
+   the thing after, as the hints do: `לִרְחִיצַת יָדַיִם לֹא צְרִיכָה מִבְרֶשֶׁת` (the verb agrees with the thing: `צָרִיךְ סַבּוֹן`, `צְרִיכָה מַגֶּבֶת`).
+2. **A question about a colour or a property of a thing needs a verb or `מַה`**: `מַה צֶּבַע הַשֶּׁמֶשׁ?`, not `אֵיזֶה צֶבַע הַשֶּׁמֶשׁ?`
+   (the dagesh follows `מַה`; `מָה` stays before א ה ח ע ר, as in the lesson title `מָה חָסֵר בַּתַּעֲרוֹבֶת`).
+3. **Sin or shin by the root.** `שׂחק` (play) is a sin everywhere: `לְשַׂחֵק`, `מִשְׂחָק`, `נִשְׂחַק`. A shin dot on it means "worn down". The
+   scan lists every sin-dot word of the table (30 words) and every shin-dot word of a sin root; run it when a verb of play is added.
+4. **Prizes are won, not earned**: `לִזְכּוֹת בָּהּ`, `שֶׁעוֹד לֹא זָכִינוּ בּוֹ`. `לְהַרְוִיחַ` is for money.
+5. **`זֵהֶה`** (tsere) is the one pointing for "identical" (`הַזֵּהֶה`, `זֵהָה`, `זֵהִים`).
+6. **Written words stay out of the pack**: `מֵאֲשֶׁר` (use two short sentences), `אֶלָּא`, `זֹאת` (use `זוֹ`). The register list of the scan: `האם`,
+   `אחרת` (as "otherwise"), `כאשר`, `בלבד`, `אינו`, `אולם`, `עליכם`, `ניתן`, `מאשר`, `אלא`, `זאת`.
+7. **A misconception line has no `לֹא`** (Q2) in all bands: what the eye caught, then the strategy (`הַמַּטְבֵּעַ גָּדוֹל אוֹ קָטָן, אֲבָל כַּמָּה הוּא שָׁוֶה?`).
+   Four lines in the pack still break this rule and wait for the owner (review log, question 2).
+
+**For the app-developer.** Nothing to bring in: the sources hold the corrected text and `tools/test_hebrew_sources.py` passes (pin: 12,777 rows).
+`content/starter` changed in 24 files, so `starter_pack_test` › "the pack was built from the sources" stays red until the owner builds the
+next pack version. **For the voice director.** The 21 changed texts need no direction; the spoken ones are re-voiced from `voice_text`.
+
+**Update, 2026-11-06 (the owner's answers, in chat).** Rule 7 now holds in the pack: the four `לֹא` misconception lines are reworded (`M-MEAS-BIG`, `M-SORT-SHIFT` colour line, the chart `M-CNT-SIZE` line with its own clip `vo:fb.size.chart`, `M-ORD-CARD`); the B-15 title is `זֵהֶה אוֹ שׁוֹנֶה?` (owner-approved in chat). **No line says `כִּמְעַט`** (owner: do not mislead a child who is not close): the default wrong-answer line is `בּוֹאוּ נְנַסֶּה שׁוּב.` (id `vo:fb.almost` kept) and `core.encourage.almost` is `עוֹד לֹא — בּוֹאוּ נְנַסֶּה שׁוּב.`. Add `כִּמְעַט` and `כמעט` to the register scan as "only when the app knows the answer was close". Details: `docs/review/hebrew-review-2026-11-06.md` section 7.
+
+## 12. The editor's read of the 59 maths-check rows, 2026-11-06
+
+Scope: the 59 rows that the Maths and CS teachers' fixes left `proposed` (`docs/knowledge/maths/check-2026-11-06-fixes.md` section 8.8), read for grammar,
+nikud, the plural address rule (9.1), the owner's decision that a square is a rectangle, and clarity at ages 3 to 8. All are `text-ready`, waiting for the owner;
+`MATHS_CHECK_ROWS` in `tools/hebrew_voice_review.py` is empty. Sources changed: `tools/band_b2.py`, `content/units/logic.json`; the pack and the tables regenerated.
+
+**Read and kept (57 rows).** The new numbers in reviewed templates (`b.numb05.8` with `תִּשְׁעָה עָשָׂר דָּגִים` and the bare `תְּשַׁע עֶשְׂרֵה`; `b.numb10.*` with bare
+feminine numbers and `וְשֵׁשׁ` / `וּשְׁמוֹנֶה`; `b.mathb08.13` and `.14`, where the finger count in the hint is true: 7 to 11 is five, 9 to 12 is four, with `חָמֵשׁ` and
+`אַרְבַּע אֶצְבָּעוֹת`; `b.mathb07.6`; the robot hints of `b.csb01.6` and `cs.robot.plan.6`), the MATH-B-09 caption `חָבֵר כָּתַב תַּרְגִּיל, וְהַתְּשׁוּבָה לֹא נְכוֹנָה. אֵיפֹה הַטָּעוּת?`
+(MATH-B-03's reviewed caption; it reads right with the answer written first, because the correct line and the hint say `שֶׁבַע שָׁוֶה שָׁלוֹשׁ וְעוֹד אַרְבַּע`) and the
+shared M-SHP-SQRECT line `בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בַּמַּלְבֵּן הַזֶּה יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת.` (13 rows). The W3 lines never say that a rectangle has long and
+short sides in general, and never that a square is not a rectangle: `הַזֶּה` points at the picture the child touched. No row addresses one child.
+
+**Changed (2 texts, 4 rows).**
+
+| Row | Was | Now | Why |
+|---|---|---|---|
+| `b.shpb03.7` › wrong tap (`vo:fb.sqrect.square_is_rect`) | גַּם רִבּוּעַ הוּא מַלְבֵּן: מַלְבֵּן שֶׁכׇּל הַצְּלָעוֹת שֶׁלּוֹ שָׁווֹת. בּוֹאוּ נִסְפֹּר אֶת הַצְּלָעוֹת בְּכׇל צוּרָה. | רִבּוּעַ הוּא גַּם מַלְבֵּן: מַלְבֵּן מְיֻחָד, שֶׁכׇּל הַצְּלָעוֹת שֶׁלּוֹ שָׁווֹת. בּוֹאוּ נִסְפֹּר אֶת הַצְּלָעוֹת בְּכׇל צוּרָה. | "a square is also a rectangle" is the natural order; `מְיֻחָד` is the owner's "special rectangle" in a word a child knows |
+| `b.shpb03.2/.4/.6` › hint 3 | בַּמַּלְבֵּן הַזֶּה שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. | בַּמַּלְבֵּן הַזֶּה **יֵשׁ** שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. | a verbless sentence with `הַזֶּה` reads like a label; the correct line already has `יֵשׁ` |
+
+**LOG-A-01 has its own feedback line.** M-COL-ONEATTR says `יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע.` That is right for COL-A (find the red ball), but in LOG-A-01 colour does not
+matter (a green apple is "the same thing"), so the line sent the child to a check that can make a right answer look wrong. The 7 items whose lure has the colour of the
+picture (`log.same.star`, `.duck`, `.apple`, `.bird`, `.balloon`, `b15.loga01.3`, `.4`) now say the owner-approved kind line `זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק.`
+(`vo:fb.sort_shift.kind`, one clip, no new text). `log.same.cat` offers a brown dog for a grey cat, so "same colour" would be false there; it says the new
+`זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק.` (`vo:fb.same_similar`, the wording of the approved size line). Done with `tag_lines` in `content/units/logic.json`.
+Open for the maths teacher: the dog is not a same-colour lure, so M-COL-ONEATTR on it is not honest; an untagged dog or a grey animal would be.
+
+**Square and rectangle, wording rule.** Say "this rectangle" for the picture shown, and "a square is also a rectangle" only where the item teaches it (SHP-B-03 spot, Band B).
+Never "a rectangle has long and short sides" as a general claim, and never `רִבּוּעַ וּמַלְבֵּן` or `רִבּוּעַ אוֹ מַלְבֵּן` as a title (two kinds). The proposal for the SHP-B-03
+lesson title and celebration is in the review report for the owner (not applied).
+
+**Pins.** `tools/test_hebrew_sources.py`: done-and-changed rows 1,290 (was 1,296: six LOG-A-01 rows whose corrected text is now the text the pack gives). Rows 12,751 and proposed 55 are unchanged.
+
+## 13. The editor's read of the logic land (riddles island), 2026-11-07
+
+Scope: the owner's phone test ("the riddle questions are not written properly"), the audit `docs/knowledge/logic/sweep-2026-11-06.md` (D25 to D35, D40, D29, and the shared lines D36 to D41 read as sentences), and the 207 rows the Maths Teacher left `proposed`
+(`LOGIC_SWEEP_ROWS`, now empty). Every question, hint, correct line, wrong-answer line, label, title and celebration of the 135 activities was read as a sentence, with
+the renders of three boards (phone, phone SE, tablet) open to check that the words match what is drawn. Sources changed: `content/units/logic.json`,
+`tools/band_b2.py`, `tools/band_b.py` (tower names), `tools/author.py` (`FAMILY_H2`, `k_same`, `k_odd`, `k_pat`, `k_story`, `k_size3`, `vav`); the pack and the tables regenerated.
+Every row is `text-ready`, waiting for the owner, except 18 rows held by the old V1 question (a kept nikud in `שָׂמִים` and `גְּדֵלִים`). 292 pack rows changed (89 distinct texts); `ROW_RULES` ("logic sweep 2026-11-07") records why in the `changes` and `comment` columns.
+
+**What was wrong, and the rules that follow** (add to sections 2 and 3 when they are next folded together):
+
+1. **Name what is asked; never "the same thing" or "he" with nothing to point at.** `אֵיפֹה אוֹתוֹ הַדָּבָר?` became `אֵיפֹה עוֹד חָתוּל?` (the noun of the picture, as the B-15 items already had it);
+   `הוּא לֹא אָדֹם וְלֹא עִגּוּל. אֵיזֶה הוּא?` became `אֵיזוֹ צוּרָה לֹא אֲדֻמָּה וְגַם לֹא עִגּוּל?` (צוּרָה is feminine, so the colour is too; the correct line names the tile: `כֵּן! זֶה רִבּוּעַ כָּחֹל: לֹא אָדֹם וְלֹא עִגּוּל.`).
+2. **`מִי` is for an animal, `מַה` for a thing.** `מִי שׁוֹנֶה?` said of balls and stars became `מַה שּׁוֹנֶה מֵהָאֲחֵרִים?` (the phrase of the owner-approved hint); animals keep `מִי שׁוֹנֶה מֵהָאֲחֵרִים?`. The skill line and the two celebrations say `אֶת הַזֵּהֶה וְאֶת הַשּׁוֹנֶה`.
+3. **No unnamed "friend" who is not on the screen** (`חָבֵר אוֹסֵף`, `חָבֵר מִיֵּן`, `חָבֵר סִדֵּר`): the rule is said in the impersonal present (`אוֹסְפִים רַק תַּפּוּחִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?`, the owner-approved question) or as what the row shows
+   (`הַצּוּרוֹת כֻּלָּן בְּאוֹתוֹ צֶבַע, חוּץ מֵאַחַת. אֵיזוֹ?`, `אֶחָד מֵהַמִּגְדָּלִים לֹא בַּמָּקוֹם שֶׁלּוֹ. אֵיזֶה?`). The same `חָבֵר אוֹסֵף רַק …` is still in the colours land (3 items) and the shapes land (4): outside this sweep.
+4. **A pattern is not "broken", a piece is missing:** `חָסֵר אֶחָד בַּסֵּדֶר. מַה צָּרִיךְ לָבוֹא כָּאן?` (the dagesh follows `מַה` before צ). The skill and lesson titles keep the metaphor (`מְתַקְּנִים סֵדֶר שֶׁנִּשְׁבַּר`, `מַה נִּשְׁבַּר`): "fix what broke" is a fair title.
+5. **`אַחֶרֶת` and `אִם … אָז` are out of the sorting prompt.** `שָׂמִים כׇּל צוּרָה אֲדֻמָּה בַּסַּל, וְאֶת כׇּל הַשְּׁאָר עַל הָעֵשֶׂב.` says where each thing goes; the bin is `הַסַּל` (a basket, never a box). Hint 3 asks the same question
+   of every shape (`הִיא אֲדֻמָּה? אִם כֵּן — בַּסַּל, וְאִם לֹא — עַל הָעֵשֶׂב.`).
+6. **A tower is named by its height in cubes**, not by a number in a line: `מִגְדָּל שֶׁל שָׁלוֹשׁ קֻבִּיּוֹת`, `שֶׁל קֻבִּיָּה אַחַת` (`NAMES` of `band_b.py` and `names` of `logic.json`).
+7. **A misconception line has no `לֹא`, and says what is true here.** The draft `זֶה לֹא אוֹתוֹ הַדָּבָר` (kind sorts) became `בּוֹאוּ נִסְתַּכֵּל שׁוּב: מַה זֶּה, וְעִם אֵיזוֹ קְבוּצָה הוּא הוֹלֵךְ?`;
+   `מָה לֹא תַּפּוּחַ?` (a Band A "not" question) became the approved `מָה הִגִּיעַ לְכָאן בְּטָעוּת?`; the M-LOG-NOT line (`הַתְּשׁוּבָה צְרִיכָה לְהַתְאִים לִשְׁנֵי הָרְמָזִים. בּוֹאוּ נִבְדֹּק אֶת שְׁנֵיהֶם.`);
+   the middle-size line (`הָאֶמְצַע בָּא בֵּין הַקָּטָן לַגָּדוֹל. בּוֹאוּ נִבְדֹּק.`, own clip `vo:fb.ser.middle`; the shared `vo:fb.ser_ends` stays, the colour shades of COL-B-02 use it); a colour-only sort says only `מְחַפְּשִׂים אֶת אוֹתוֹ הַצֶּבַע. בּוֹאוּ נִבְדֹּק.`
+8. **`מַה` before a non-guttural, `מָה` before א ה ח ע ר** (the scan found `מָה בָּא רִאשׁוֹן`, `מָה כֵּן דּוֹמֶה`, `מָה יֵשׁ לְכֻלָּם`, `מָה צָרִיךְ`): `מַה בָּא רִאשׁוֹן?`, `מַה דּוֹמֶה`, `מַה צָּרִיךְ`, `מַה שּׁוֹנֶה`.
+9. **Where a question says "first", say `רִאשׁוֹן`** (`מַה בָּא רִאשׁוֹן?`), not `קֹדֶם` (before what?). A story strip asks `מָה חָסֵר בֵּין הַבֵּיצָה לָאֶפְרוֹחַ?`, not `לִפְנֵי` (the egg is before the chick too).
+10. **The family hints (level 2).** `נִמְחָא כַּף עַל כׇּל אֶחָד` (literary, wrong preposition) became `נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִמְחָא כַּפַּיִם עִם כׇּל אֶחָד.`; `מָה יֵשׁ לְכֻלָּם, וְלָאֶחָד אֵין?` (untrue of size) became `נִסְתַּכֵּל עַל כֻּלָּם: מַה דּוֹמֶה, וּמַה שּׁוֹנֶה?`;
+    `אֵיפֹה מִשְׁתַּמְּשִׁים בָּזֶה?` (odd for rain) became `נַחְשֹׁב: מָה עוֹשִׂים עִם זֶה?`; the clue hint is one sentence (`בָּרֶמֶז הָרִאשׁוֹן … בָּרֶמֶז הַשֵּׁנִי`, the second noun said again so `בַּשֵּׁנִי` is not read `בִּשְׁנֵי`).
+11. **`vav()`** gives `וּ` before a labial `ב ו מ פ` and before a shva, and `וְ` elsewhere (`וּמִשְׁחָה`, `וּבָלוֹן`, `וְדָג`; `ב` and `פ` soft after it), the same code as batch C1. No logic text needed it (the pack already had `וּמְשֻׁלָּשִׁים` and the like through the shva branch); a test was added.
+
+**Read and kept** (no change): the whole `הַחֵלֶק שֶׁחוֹזֵר הוּא: …` hint family; `מַה בָּא אַחַר כָּךְ?`; the size, story, plant and weather correct lines; the A-03 size sort; the +2 tower lines
+(`כׇּל פַּעַם מוֹסִיפִים שְׁתֵּי קֻבִּיּוֹת`, `שְׁתֵּי` before a feminine noun, `בִּשְׁתֵּי`); `מַה מְשֻׁתָּף לְכֻלָּם?` (a word a 5-year-old knows); `הַמִּגְדָּלִים גְּדֵלִים` (`גְּדֵלִים` is the V1 question). All lines address the children in the plural or the impersonal
+(`בּוֹאוּ`, `עַכְשָׁו תּוֹרְכֶם`, `מְצָאתֶם`); no line addresses one child. No everyday word was removed as unsuitable.
+
+**For the voice director.** New clip ids: `vo:fb.sort_shift.colour_only`, `vo:fb.ser.middle`. Changed texts under old ids (the prompts above, the five `vo:hint.log_*` family clips, `vo:fb.sort_shift.kind_other`, `vo:fb.spot.not_apple`, `vo:fb.spot.not_duck`, `vo:fb.oneattr.*`, and the M-LOG-NOT clip) are voiced once with the new text; nothing was voiced.
+`שָׂמִים` keeps its nikud in the voice text (V1). In `בַּסַּל` the plain `בסל` is left to the voice; if it is misread, add `בַּסַּל` to `KEEP_POINTED`.
+
+**For the owner** (numbered):
+1. The skill and lesson titles still say `נִשְׁבַּר` (LOG-A-07 `מְתַקְּנִים סֵדֶר שֶׁנִּשְׁבַּר`, LOG-B-02 `מַה נִּשְׁבַּר`). Kept as the "fix what broke" metaphor; the questions no longer say it. Change them to `מַה לֹּא בַּמָּקוֹם`?
+2. The second bin is `הָעֵשֶׂב` (the label of `bin_grass`). A 4-year-old says `דֶּשֶׁא` for a lawn; `עֵשֶׂב` is understood, and the asset and label were set in the sweep. Prefer `הַדֶּשֶׁא`?
+3. Outside this sweep, for the colours and shapes reviews: `חָבֵר אוֹסֵף רַק אֲדֻמִּים / כְּחֻלִּים / כְּתֻמִּים / מְשֻׁלָּשִׁים / מַלְבֵּנִים / צוּרוֹת סְגוּרוֹת / גְּלִילִים` (the same unnamed "friend"), and the shared M-SER-ENDS line in COL-B-02 (shades of one colour are called "smallest / biggest").
+
+**Pins.** `tools/test_hebrew_sources.py`: done-and-changed rows 1,262 (was 1,267), proposed 49 (was 81); rows 12,746 unchanged; `test_vav_before_a_labial` added. `tools/test_generators.py`: the colour-only sort line is a known rule line.
+
+### 13a. The owner's three answers of 2026-11-07 (applied)
+
+1. **LOG-A-07 title and child line** `מְתַקְּנִים סֵדֶר שֶׁנִּשְׁבַּר` is now the owner's `מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?` (adult title `מה לא במקום שלו?`; dagesh in the `ל` after `מַה`, in `שֶׁלּוֹ`, and `בַּמָּקוֹם` as in the LOG-B-02 prompts). The lesson `fix-patterns-again` keeps `עוֹד מְתַקְּנִים סֵדֶר` (it does not say "broken"). The LOG-B-02 titles (`מַה נִּשְׁבַּר`, `מוֹצְאִים מַה נִּשְׁבַּר בַּסֵּדֶר`) were not in the brief and are unchanged: see the report.
+2. **The second bin is `הַדֶּשֶׁא`** (was `הָעֵשֶׂב`): the label of `bin_grass`, the six LOG-B-08 prompts (`וְאֶת כׇּל הַשְּׁאָר עַל הַדֶּשֶׁא`), hint 3 (`וְאִם לֹא — עַל הַדֶּשֶׁא`) and the alt texts; `tools/band_b2.py`. No adjective or verb touches the word. The colours land keeps `עֵשֶׂב` where it names the plant (`מַה צֶּבַע הָעֵשֶׂב?`).
+3. **`חָבֵר אוֹסֵף רַק …` is gone from the colours and shapes lands (15 items, not 7: 6 colours, 4 shapes A, 5 shapes B).** `אוֹסְפִים רַק X. מָה הִגִּיעַ לְכָאן בְּטָעוּת?`, as in the logic land. Where the old line named only a colour (an adjective with nothing to describe) the thing is named from the cells: `כַּדּוּרִים אֲדֻמִּים`, `פְּרָחִים כְּחֻלִּים`, `פְּרָחִים כְּתֻמִּים`, `כַּדּוּרִים שְׁחֹרִים`; a row that mixes balls, flowers and balloons says `דְּבָרִים חוּמִים`, `דְּבָרִים אֲפֹרִים`. The shape items already had a noun and only lose `חָבֵר`.
+
+`OWNER_APPROVED` has three new entries; the rows are `owner-approved` (the owner chose the wording of 1 and 2 and the pattern of 3; the nouns added in 3 are the editor's, within that pattern). No clip was voiced; the changed texts keep their voice ids (the list is in the hand-off).
+
+### 13b. The owner's follow-up answers of 2026-11-07 (applied)
+
+1. **LOG-B-02**: the skill (title and child line) and the lesson `broken-pattern` say `מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?` (adult title `מה לא במקום שלו?`), as LOG-A-07 does. The parent text of M-PAT-UNIT said "where it breaks" (`נשבר`); it now says `איזה חלק לא במקום שלו` (adult text, text-ready). Nothing else in the logic lands says "broken".
+2. **No unnamed "friend" does anything, in any land** (26 items; `חָבֵר` is left only in `לְכׇל חָבֵר לְפִי הַתּוֹר` (the sharing line) and the friends screens of `he.dart`, where a friend is a person on the screen):
+   - `חָבֵר סָפַר מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת` (NUM-A-01, 02, 03, NUM-B-03, NUM-B-11: 13 items) → `סוֹפְרִים מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת` (the impersonal present of the owner-approved `אוֹסְפִים רַק`; not the past `סָפְרוּ`, which a child hears as the command `סִפְרוּ`);
+   - `חָבֵר כָּתַב מִסְפָּרִים, …` (NUM-A-08, 2 items) → `כָּתוּבִים כָּאן מִסְפָּרִים, …`;
+   - `חָבֵר כָּתַב תַּרְגִּיל, וְהַתְּשׁוּבָה לֹא נְכוֹנָה` (MATH-B-03 and MATH-B-09, 8 items) → `כָּתוּב כָּאן תַּרְגִּיל, וְהַתְּשׁוּבָה לֹא נְכוֹנָה` (the same question; the sum is unchanged);
+   - `חָבֵר מִיֵּן לְפִי צֶבַע / צוּרָה, וְצוּרָה אַחַת לֹא בַּמָּקוֹם שֶׁלָּהּ. אֵיפֹה הַטָּעוּת?` (COL-B-04, 2 items) → the logic land's `הַצּוּרוֹת כֻּלָּן בְּאוֹתוֹ צֶבַע / אוֹתָהּ צוּרָה, חוּץ מֵאַחַת. אֵיזוֹ?` (same cells as LOG-B-06 .7 and .8);
+   - `חָבֵר בָּנָה קֶשֶׁת, וְיֵשׁ בָּהּ טָעוּת` (COL-B-06) → `בַּקֶּשֶׁת יֵשׁ טָעוּת` (`בּוֹנִים` would sound like the instruction of the build items).
+   The answers, the cells and the hints are untouched, so nothing these items check changes. Generators: `tools/band_b.py`, `tools/band_b2.py`; the hand-edited `content/units/counting-hills.json`.

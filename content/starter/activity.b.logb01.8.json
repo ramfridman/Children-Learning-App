@@ -4,7 +4,7 @@
   "review": "needs-editor",
   "revision": 1,
   "template": "tap_answer",
-  "templateVersion": "1.1",
+  "templateVersion": "1.4",
   "domain": "logic",
   "band": "B",
   "skills": [
@@ -41,6 +41,7 @@
       "asset:ball_green",
       "asset:ball_green",
       "asset:ball_red",
+      "asset:ball_red",
       "?"
     ]
   },
@@ -49,14 +50,14 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:ball_green",
-        "label": "כַּדּוּר יָרֹק",
-        "misconception": "M-PAT-UNIT"
+        "sprite": "asset:ball_red",
+        "label": "כַּדּוּר אָדֹם",
+        "misconception": "M-PAT-NEXT"
       },
       {
         "id": "o2",
-        "sprite": "asset:ball_red",
-        "label": "כַּדּוּר אָדֹם"
+        "sprite": "asset:ball_green",
+        "label": "כַּדּוּר יָרֹק"
       },
       {
         "id": "o3",
@@ -81,12 +82,12 @@
     },
     "incorrect": [
       {
-        "when": "misconception:M-PAT-UNIT",
-        "vo": "vo:fb.pat_unit",
+        "when": "misconception:M-PAT-NEXT",
+        "vo": "vo:fb.pat_next",
         "caption": [
           {
             "t": "he",
-            "v": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ."
+            "v": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא."
           }
         ]
       },
@@ -96,7 +97,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
           }
         ]
       }
@@ -126,11 +127,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.log_pattern.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִמְחָא כַּפַּיִם עִם כׇּל אֶחָד."
         }
       ]
     },

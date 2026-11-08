@@ -14,6 +14,7 @@ import '../speech/answer_matcher.dart';
 import '../speech/spoken_options.dart';
 import 'count_tap_session.dart' show Dots;
 import 'caption_policy.dart';
+import 'choice_row.dart' show withWideStage;
 import 'hint_widgets.dart';
 import 'hints/hint_marks.dart';
 import 'hints/hint_pictures.dart';
@@ -29,6 +30,7 @@ import 'number_entry.dart';
 import '../design/token_types.dart' show Band;
 import '../design/layout.dart';
 import 'option_faces.dart';
+import 'size_scale.dart';
 import 'sprite_group.dart';
 import 'stage_pictures.dart';
 import 'template_session.dart';
@@ -263,6 +265,7 @@ class TapAnswerSession extends TemplateSession {
   ActivitySpec layoutFor(ActivitySpec base) {
     // Blocks have their own two layouts (docs/design/c1-blocks.md section 5), which give the cubes the board's height.
     if (BlockLayout.hasBlocks(activity)) return BlockLayout.of(activity, base, scaler: bubbleScaler);
+    if (!_hasSpeakers && !numberMode) return _sizeLayout(_longRow ? withWideStage(base) : base);
     const double margin = 12;
     final double need = numberMode
         ? KeypadLayout.of(base).roomHeight
@@ -276,6 +279,23 @@ class TapAnswerSession extends TemplateSession {
         base.stage.width,
         math.max(0, math.min(base.stage.height, top - 16 - base.stage.top)),
       ),
+      tilesLeft: base.tilesLeft,
+      tilesTop: top,
+      tilesWidth: base.tilesWidth,
+    );
+  }
+
+  /// A row of six cells or more, or of pictures that compare sizes: a tablet gives it the whole width the board has (see [withWideStage]).
+  bool get _longRow => activity.row.length >= 6 || comparesSizes(activity);
+
+  /// A size item whose row stands in two lines (the balls of LOG-A-06 on a phone) has the stage taller: the tiles stand as low as the
+  /// board lets them (a tile is 96 with 12 of tap margin each side, over the edge where no hotspot may be) and the stage reaches 14
+  /// above them (a selected tile is lifted 6, its ring 6 wider), so that the pictures are as large as they can be.
+  ActivitySpec _sizeLayout(ActivitySpec base) {
+    if (base.stageIsCard || TapGeometry.rowLinesOf(activity, base.stage.size) < 2) return base;
+    final double top = math.max(base.tilesTop, base.boardHeight - TokenTouch.bottomNoHotspot - 96 - 12);
+    return base.withStageAndTiles(
+      stage: Rect.fromLTWH(base.stage.left, base.stage.top, base.stage.width, top - 14 - base.stage.top),
       tilesLeft: base.tilesLeft,
       tilesTop: top,
       tilesWidth: base.tilesWidth,
@@ -397,8 +417,14 @@ class TapAnswerSession extends TemplateSession {
     // One size for the numerals of the item and one for the cubes of its blocks: a tile never draws its own (see [numeralFontOf]).
     final double numeralFont = numeralFontOf(activity, spec.tileFont, width);
     final double? blockUnit = TapGeometry.blockUnitOf(activity, spec);
-    final double tileHeight = spec.tileHeight;
     final bool letterItem = activity.letterFace;
+    // An item that compares sizes draws its pictures on the tiles as large as in the row, see `size_scale.dart`.
+    final Size? same = TapGeometry.sameBoxOf(activity, TapGeometry.stageSizeOf(spec));
+    final SizeLook? look = sizeLookOfTap(activity);
+    final Size stageSize = TapGeometry.stageSizeOf(spec);
+    final double tileHeight = TapGeometry.rowIsTall(activity)
+        ? tallTileHeightOf(stageSize)
+        : (comparesSizes(activity) ? width : spec.tileHeight);
     return ListenableBuilder(
       listenable: this,
       builder: (BuildContext c, Widget? _) => Directionality(
@@ -418,8 +444,8 @@ class TapAnswerSession extends TemplateSession {
                         child: AnswerTile(
                           key: Key('tile-${o.id}'),
                           semanticLabel: o.label ?? '',
-                          width: width == 96 ? null : width,
                           size: tileHeight,
+                          width: width == 96 && tileHeight == 96 ? null : width,
                           state: chosenId == o.id
                               ? chosenState
                               : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
@@ -455,6 +481,8 @@ class TapAnswerSession extends TemplateSession {
                                           spec: spec,
                                           course: activity.course,
                                         ).size(letterItem ? FaceKind.letter : FaceKind.word),
+                                  pictureBox: same,
+                                  svgOf: look?.svg,
                                 ),
                         ),
                       ),
@@ -593,6 +621,8 @@ Widget _face(
   double? reading,
   required double numeralFont,
   double? blockUnit,
+  Size? pictureBox,
+  String Function(String ref)? svgOf,
 }) {
   if (o.text != null) {
     return OptionTextFace(
@@ -635,7 +665,17 @@ Widget _face(
     );
   }
   if (o.set == null) {
-    return Padding(padding: const EdgeInsets.all(6), child: PackSvg(a.assets.svg(o.sprite!)));
+    final Widget picture = PackSvg(svgOf?.call(o.sprite!) ?? a.assets.svg(o.sprite!));
+    return pictureBox == null
+        ? Padding(padding: const EdgeInsets.all(6), child: picture)
+        : Center(
+            child: SizedBox(
+              key: const Key('same-scale'),
+              width: pictureBox.width,
+              height: pictureBox.height,
+              child: picture,
+            ),
+          );
   }
   final SpriteSet g = o.set!;
   return SpriteGroup(
@@ -750,7 +790,7 @@ class _TapStage extends StatelessWidget {
               height: a.optionsInTiles
                   ? (TapGeometry.groupAndRow(a) ? size.height * TapGeometry.pictureShare : size.height)
                   : top,
-              child: _groups(a),
+              child: _groups(a, size),
             ),
           if (a.row.isNotEmpty)
             Positioned(
@@ -861,10 +901,13 @@ class _TapStage extends StatelessWidget {
   );
 
   /// The row of pictures of a pattern or an order; a `?` is the gap the child fills in. Left to right, whatever the language.
-  /// A number sentence stands lower, so that the cubes of a hint fit over its numbers (see [TapGeometry.rowLiftOf]). The cells are
-  /// laid out by [TapGeometry.rowLayoutOf] (the hints stand on the same places): every number and sign one size, the whole row
-  /// centred and clear of the stage's edge.
-  Widget _row(TapAnswerActivity a, Size stage) {
+  /// A number sentence stands lower, so that the cubes of a hint fit over its numbers (see [TapGeometry.rowLiftOf]). A row with numbers or
+  /// signs in it, or under pictures, is laid out by [TapGeometry.rowLayoutOf] (the hints stand on the same places): every number and sign
+  /// one size, the whole row centred and clear of the stage's edge. Any other row is one of pictures (see [_pictureRow]).
+  Widget _row(TapAnswerActivity a, Size stage) =>
+      TapGeometry.usesRowLayout(a) ? _laidOutRow(a, stage) : _pictureRow(a, stage);
+
+  Widget _laidOutRow(TapAnswerActivity a, Size stage) {
     final ({List<double> widths, double textSize}) layout = TapGeometry.rowLayoutOf(a, stage);
     final bool fitted = layout.textSize > 0;
     final double pad = TapGeometry.rowPadOf(a);
@@ -889,6 +932,55 @@ class _TapStage extends StatelessWidget {
                 ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  /// A row of pictures: an item that compares sizes draws its pictures in the box `sameBoxOf` (see `size_scale.dart`), the answer tiles'
+  /// pictures the same. A row of many cells stands in lines, the first lines full (see [TapGeometry.rowLinesOf]).
+  Widget _pictureRow(TapAnswerActivity a, Size stage) {
+    final Size? same = TapGeometry.sameBoxOf(a, stage);
+    final int lines = TapGeometry.rowLinesOf(a, stage);
+    final ({double edge, double pad}) room = TapGeometry.rowRoomOf(a, stage);
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        room.edge,
+        TapGeometry.rowInsetOf(a, stage) + TapGeometry.rowLiftOf(a, stage.height),
+        room.edge,
+        TapGeometry.rowInsetOf(a, stage),
+      ),
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        // The cells come one by one from the left, so the child sees where the row starts; the "?" is last.
+        child: RowEntrance(
+          count: a.row.length,
+          builder: (BuildContext context, Widget Function(int, Widget) cell) {
+            final List<Widget> cells = <Widget>[
+              for (final (int i, String r) in a.row.indexed)
+                Expanded(
+                  child: Padding(padding: EdgeInsets.all(room.pad), child: cell(i, _rowFace(a, r, same))),
+                ),
+            ];
+            if (lines == 1) return Row(key: const Key('tap-row'), children: cells);
+            final int per = (cells.length / lines).ceil();
+            return Column(
+              key: const Key('tap-row'),
+              children: <Widget>[
+                for (int l = 0; l < lines; l++)
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        ...cells.sublist(l * per, math.min(cells.length, (l + 1) * per)),
+                        // A last line with fewer cells keeps the width of the others: its cells start where the first line's do.
+                        for (int k = cells.length - l * per; k < per; k++)
+                          const Expanded(child: SizedBox.shrink()),
+                      ],
+                    ),
+                  ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -1052,8 +1144,39 @@ class _TapStage extends StatelessWidget {
     ),
   );
 
+  /// What one cell of a row of pictures shows: the gap or a picture (a number or a sign is a cell of a laid-out row, see [_rowCell]).
+  Widget _rowFace(TapAnswerActivity a, String r, Size? same) {
+    if (r == '?') {
+      return DecoratedBox(
+        decoration: BoxDecoration(
+          color: TokenColors.paper.withValues(alpha: 0.7),
+          borderRadius: BorderRadius.circular(TokenRadius.lg),
+          border: Border.all(color: TokenColors.hairline, width: 3),
+        ),
+        child: Center(child: Text('?', style: AppText.fixed(size: 36, weight: 800, lineHeight: 1))),
+      );
+    }
+    if (r.startsWith('asset:')) {
+      final Widget picture = PackSvg(sizeLookOfTap(a)?.svg(r) ?? a.assets.svg(r));
+      return same == null
+          ? picture
+          : Center(
+              // The box may be larger than the cell (see `sizeBleed`): the cell does not clip it.
+              child: OverflowBox(
+                minWidth: same.width,
+                maxWidth: same.width,
+                minHeight: same.height,
+                maxHeight: same.height,
+                child: SizedBox(key: const Key('same-scale'), child: picture),
+              ),
+            );
+    }
+    throw StateError('a picture row has only pictures and a gap: $r');
+  }
+
   /// The group (or the two groups, side by side) that the question is about. Not tappable.
-  Widget _groups(TapAnswerActivity a) {
+  Widget _groups(TapAnswerActivity a, Size stage) {
+    final ({double outer, double inner}) pad = TapGeometry.groupPadOf(a, stage);
     // A group scattered to be counted, alone on the stage, is drawn cut to its ink: a ladybug or a sock fills its place (its
     // picture has a wide margin) and reads on a phone. Never where two groups or a scale are compared, or a row is drawn.
     final bool inked = a.group2 == null && a.group!.arrangement == 'scatter' && a.group!.scale == 1;
@@ -1063,7 +1186,7 @@ class _TapStage extends StatelessWidget {
       arrangement: g.arrangement,
       seed: g.seed,
       scale: g.scale,
-      lineSlots: TapGeometry.lineSlotsOf(a, g),
+      lineSlots: TapGeometry.lineSlotsOf(a, g, stage),
     );
     final List<SpriteSet> sets = <SpriteSet>[a.group!, ?a.group2];
     return Semantics(
@@ -1071,7 +1194,7 @@ class _TapStage extends StatelessWidget {
       excludeSemantics: true,
       label: a.altText,
       child: Padding(
-        padding: EdgeInsets.all(TapGeometry.groupInsetOf(a)),
+        padding: EdgeInsets.all(pad.outer),
         // Two groups stand like "3 + 2", the first on the left, whatever the language (the hint stands on the same places).
         child: Directionality(
           textDirection: TextDirection.ltr,
@@ -1080,7 +1203,7 @@ class _TapStage extends StatelessWidget {
             children: <Widget>[
               for (final SpriteSet g in sets)
                 Expanded(
-                  child: Padding(padding: EdgeInsets.all(TapGeometry.cellInsetOf(a)), child: one(g)),
+                  child: Padding(padding: EdgeInsets.all(pad.inner), child: one(g)),
                 ),
             ],
           ),

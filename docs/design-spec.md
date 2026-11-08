@@ -173,7 +173,7 @@ Each land has its own **silhouette, colour, glyph and character**, so a land is 
 - **Personality:** literal‑minded and earnest. He does *exactly* what he is told, which is the whole joke and the whole lesson in debugging.
 - **Voice:** a warm male voice with clipped rhythm and a very light vocoder at most. Intelligibility first.
 - **Catchphrases:** "צַעַד, וְעוֹד צַעַד, בִּיפּ־בּוּפּ!", "תְּנוּ לִי הוֹרָאוֹת!"
-- **Role:** he executes the child's programs on the grid. When a program goes wrong he bumps into a crate *gently* and looks puzzled, which invites debugging.
+- **Role:** he hosts the land: intros, the island path and the error‑spotting play, where his own program goes wrong, he bumps into a crate *gently* and looks puzzled, which invites debugging. The robot that runs the child's programs on the path grid is **not** Tza'adon but a plain toy robot sprite (`robot`, a silver front view; the owner, 2026‑11‑07), so no lesson's robot reads as him.
 - **Key poses:** waving; stepping; turning; "bonk" (puzzled).
 
 ### 4.7 Grandma Pnina (סַבְתָא פְּנִינָה): Math host (she/her)
@@ -196,7 +196,7 @@ The owner will keep adding characters, so **no screen references a specific char
 |---|---|---|---|---|
 | **Guide** (מַדְרִיךְ) | Guide rail in every activity; speaks all instructions; drives voice listening states; AI tutor voice | Nitzi | 176×220 / 260×320 (compact "peek": 120×120) | `bubble`, `mic`, `hand`, `eyes` |
 | **Domain friend** (חָבֵר הָאִי) | Hosts a land; appears on the lesson path, intros, error‑spotting play | Nekudi, Goni, Kubi, Timi, Tza'adon, Pnina | 140×160 / 200×230 | `bubble`, `hand`, `feet` |
-| **Activity helper** (עוֹזֵר) | Small in‑scene actor: carries objects, demonstrates "show me", walks the robot path | Domain friend or hero | 96×96 / 140×140 | `hand`, `feet`, `prop` |
+| **Activity helper** (עוֹזֵר) | Small in‑scene actor: carries objects, demonstrates "show me" (the robot path is walked by the plain `robot` sprite, not a character) | Domain friend or hero | 96×96 / 140×140 | `hand`, `feet`, `prop` |
 | **Celebration cameo** (הוֹפָעַת חֲגִיגָה) | Tier‑2/3 celebrations; leaps in from the end side | Child's companion | 220×260 / 340×400 | `feet`, `burst` |
 | **Map companion** (בֶּן לְוָיָה) | Walks/hops beside the child's avatar on the world map; points at calls for help | Child's companion | 72×88 / 110×130 | `feet`, `point` |
 | **Collectible** (מַדְבֵּקָה) | Sticker card and Sticker Island figurine | Every character | 120×120 / 160×160 die‑cut | `center` |

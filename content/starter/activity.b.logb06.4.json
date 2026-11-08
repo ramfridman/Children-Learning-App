@@ -50,12 +50,8 @@
       {
         "id": "o2",
         "sprite": "asset:rule_colour",
-        "label": "הַצֶּבַע"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:rule_size",
-        "label": "הַגֹּדֶל"
+        "label": "הַצֶּבַע",
+        "misconception": "M-COL-ONEATTR"
       }
     ],
     "correct": "o1",
@@ -75,12 +71,22 @@
     },
     "incorrect": [
       {
+        "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.oneattr.rule_colour",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כָּאן הַצְּבָעִים שׁוֹנִים, אֲבָל מַה דּוֹמֶה אֵצֶל כֻּלָּם?"
+          }
+        ]
+      },
+      {
         "when": "default",
         "vo": "vo:fb.almost",
         "caption": [
           {
             "t": "he",
-            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
           }
         ]
       }

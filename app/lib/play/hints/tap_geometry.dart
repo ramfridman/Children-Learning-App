@@ -8,6 +8,8 @@ import '../../content/row_width.dart';
 import '../../design/course_text.dart';
 import '../number_entry.dart' show KeypadLayout;
 import '../sprite_group.dart';
+import '../size_scale.dart';
+import '../stage_picture.dart';
 import '../stage_pictures.dart';
 
 /// Where the things of a `tap_answer` stage and of its answer tiles are, in the stage's own points ((0, 0) is the stage's top left
@@ -71,14 +73,14 @@ class TapGeometry {
   /// With [count] the places of a group of that many (a ten-frame of ten, to see the cells that are still empty).
   List<Rect> groupObjects(int which, {int? count}) {
     final List<SpriteSet> sets = <SpriteSet>[a.group!, ?a.group2];
-    final Rect inner = groupArea.deflate(groupInsetOf(a));
-    final double pad = cellInsetOf(a);
+    final ({double outer, double inner}) pad = groupPadOf(a, size);
+    final Rect inner = groupArea.deflate(pad.outer);
     final double cellW = inner.width / sets.length;
     final Rect cell = Rect.fromLTWH(
-      inner.left + which * cellW + pad,
-      inner.top + pad,
-      cellW - 2 * pad,
-      inner.height - 2 * pad,
+      inner.left + which * cellW + pad.inner,
+      inner.top + pad.inner,
+      cellW - 2 * pad.inner,
+      inner.height - 2 * pad.inner,
     );
     final SpriteSet g = sets[which];
     return <Rect>[
@@ -88,7 +90,7 @@ class TapGeometry {
         count ?? g.count,
         seed: g.seed,
         scale: g.scale,
-        lineSlots: lineSlotsOf(a, g),
+        lineSlots: lineSlotsOf(a, g, size),
       ))
         r.shift(cell.topLeft),
     ];
@@ -96,24 +98,37 @@ class TapGeometry {
 
   /// How many places a `line` of [g] has room for (see [groupLayout]). A clock face or a shade of a colour alone on the stage is one
   /// thing to read, not a group to compare: it takes the whole room, so that its hands and its shade can be seen on a phone.
-  static int lineSlotsOf(TapAnswerActivity a, SpriteSet g) =>
+  static int lineSlotsOf(TapAnswerActivity a, SpriteSet g, Size stage) =>
       a.group2 == null &&
           g.count == 1 &&
-          (g.sprite.startsWith('asset:clock_') || g.sprite.startsWith('asset:shade_'))
+          (g.sprite.startsWith('asset:clock_') ||
+              g.sprite.startsWith('asset:shade_') ||
+              loneThingOf(a, stage))
       ? 1
       : 4;
+
+  /// A single thing alone on a phone's stage to be found among the tiles under it (the apple of "where is another apple?", the plate
+  /// of a pair): it takes the room the stage has, so that it is at least as large as the pictures on the tiles (76), which on the
+  /// small phone's stage of 104 it is not with the room round a group (18 on each side). A tablet's stage has the room.
+  static bool loneThingOf(TapAnswerActivity a, Size stage) =>
+      a.group != null && a.group2 == null && a.group!.count == 1 && a.optionsInTiles && stage.width <= 500;
+
+  /// The room round the groups of [a] in a stage of [stage]: round the box of all of them, and round each one (4 and 2 for a lone thing;
+  /// otherwise [groupInsetOf] and [cellInsetOf]: 12 and 6 for a group).
+  static ({double outer, double inner}) groupPadOf(TapAnswerActivity a, Size stage) =>
+      loneThingOf(a, stage) ? (outer: 4, inner: 2) : (outer: groupInsetOf(a), inner: cellInsetOf(a));
 
   /// The whole box of group [which], for a group with no pictures (a count of 0) that still has a place.
   Rect groupCell(int which) {
     final int n = a.group2 == null ? 1 : 2;
-    final Rect inner = groupArea.deflate(groupInsetOf(a));
-    final double pad = cellInsetOf(a);
+    final ({double outer, double inner}) pad = groupPadOf(a, size);
+    final Rect inner = groupArea.deflate(pad.outer);
     final double cellW = inner.width / n;
     return Rect.fromLTWH(
-      inner.left + which * cellW + pad,
-      inner.top + pad,
-      cellW - 2 * pad,
-      inner.height - 2 * pad,
+      inner.left + which * cellW + pad.inner,
+      inner.top + pad.inner,
+      cellW - 2 * pad.inner,
+      inner.height - 2 * pad.inner,
     );
   }
 
@@ -179,7 +194,7 @@ class TapGeometry {
   static double rowPadOf(TapAnswerActivity a) => groupAndRow(a) ? 2 : 10;
 
   /// The top of the drawn cells of the row (a cell is as tall as the row; a numeral in it may reach above [rowCells]' square).
-  double get rowTop => rowBandOf(a, h).top + 3 + rowPadOf(a) + rowLiftOf(a, h);
+  double get rowTop => rowBandOf(a, h).top + 3 + rowInsetOf(a, size) + rowLiftOf(a, h);
 
   /// The room kept free at each end of a row that has numbers or signs in it, so that it never touches the stage's rounded edge.
   static const double rowEdge = 16;
@@ -218,8 +233,112 @@ class TapGeometry {
     return gap < 0 ? entryCell : rowCells()[gap];
   }
 
-  /// The squares of the cells of the stage's row, left to right (the same places the stage draws the row's cells in).
+  /// Whether the row of [a] is laid out by [rowLayoutOf]: a row with a number or a sign in it (a number sentence, whose cells are as
+  /// wide as what they hold), and any row that stands under pictures (see [groupAndRow]). Such a row keeps its one line; every other
+  /// row of pictures is laid out by [rowLinesOf] and [rowSideOf].
+  static bool usesRowLayout(TapAnswerActivity a) =>
+      groupAndRow(a) || a.row.any((String r) => r.startsWith('n:') || r.startsWith('op:'));
+
+  /// How many lines the row of [a] stands in on a stage of [stage]. A row of seven cells or more whose cell would be smaller than
+  /// the token `stagePictureMin` in one line stands in two (the 9 of LOG-B-01 on a phone). A size item of five cells or more with
+  /// round pictures (a row of balls) stands in two when one line would draw them under [_sizeCell] (a tile's picture is 84 at most, so a tablet's row never needs two lines; the stage then takes the room
+  /// under it, see `TapAnswerSession.layoutFor`), so that the smallest ball can be seen at a glance. Any other row of six or fewer
+  /// keeps its one line, as its hints and its gap are laid for it.
+  static int rowLinesOf(TapAnswerActivity a, Size stage) {
+    if (usesRowLayout(a)) return 1;
+    final int n = a.row.length;
+    final SizeLook? look = sizeLookOfTap(a);
+    if (look != null) {
+      if (look.tall || n < 5) return 1;
+      return math.min(((stage.width - 20) / n) * sizeBleed, tilePictureSideOf(stage)) >= _sizeCell(stage)
+          ? 1
+          : 2;
+    }
+    if (n < 7) return 1;
+    final double one = math.min((stage.width - 20) / n - 6, stage.height - 26 - rowLiftOf(a, stage.height));
+    return one >= minPictureOf(stage) ? 1 : 2;
+  }
+
+  /// The smallest box a size item's pictures are drawn in on a stage of [stage] (so that its big picture is about 56 points on a
+  /// phone and its small one about 20): rows that cannot give it are cut into lines.
+  static double _sizeCell(Size stage) => 72;
+
+  /// The room over and under the row's cells: [rowPadOf] for a row laid out by [rowLayoutOf]; any other 10, and 4 where two lines, or tall pictures (towers), have to fit in the stage's height.
+  static double rowInsetOf(TapAnswerActivity a, Size stage) =>
+      usesRowLayout(a) ? rowPadOf(a) : (rowLinesOf(a, stage) == 1 && !rowIsTall(a) ? 10 : 4);
+
+  /// Whether the row of [a] draws tall pictures (the towers of a size item): its cells are then as tall as the stage leaves them.
+  static bool rowIsTall(TapAnswerActivity a) => sizeLookOfTap(a)?.tall ?? false;
+
+  /// The room a row of [a] leaves at the stage's two ends and round each cell, in a stage of [stage]: 10 and 3, and 4 and 1 for a row
+  /// of six or fewer unlike pictures whose cell would be under the token `stagePictureMin` with those (the 6 of a pattern on a small
+  /// phone: 36 points a picture, and 42 with this).
+  static ({double edge, double pad}) rowRoomOf(TapAnswerActivity a, Size stage) {
+    const ({double edge, double pad}) usual = (edge: 10, pad: 3);
+    const ({double edge, double pad}) tight = (edge: 4, pad: 1);
+    if (a.row.length >= 7 || sizeLookOfTap(a) != null) return usual;
+    final double least = minPictureOf(stage);
+    final int n = a.row.length;
+    double side(({double edge, double pad}) r) => (stage.width - 2 * r.edge) / n - 2 * r.pad;
+    return side(usual) < least && side(tight) >= least ? tight : usual;
+  }
+
+  /// The side of a square cell of the row of [a] in a stage of [stage]: the cells of a line share the stage's width (see [rowRoomOf]
+  /// for what is left at the ends and round each cell), and the lines share its height; no cell is taller than the stage leaves.
+  static double rowSideOf(TapAnswerActivity a, Size stage) {
+    final int lines = rowLinesOf(a, stage);
+    final double lift = rowLiftOf(a, stage.height);
+    final int per = (a.row.length / lines).ceil();
+    final ({double edge, double pad}) room = rowRoomOf(a, stage);
+    return math.min(
+      (stage.width - 2 * room.edge) / per - 2 * room.pad,
+      (stage.height - 2 * rowInsetOf(a, stage) - lift) / lines - 6,
+    );
+  }
+
+  /// The box that an item that compares sizes draws each of its pictures in, the same in the row and on the answer tiles (see
+  /// `size_scale.dart`), or null for any other item. A round picture has the row's cell, or a tile's picture if that is smaller. A
+  /// tall one (a tower) has the height that the stage's row leaves, or a tall tile's picture holds, and its own shape.
+  static Size? sameBoxOf(TapAnswerActivity a, Size stage) {
+    final SizeLook? look = sizeLookOfTap(a);
+    if (look == null) return null;
+    if (!look.tall) {
+      final double side = math.min((rowSideOf(a, stage) + 6) * sizeBleed, tilePictureSideOf(stage));
+      return Size(side, side);
+    }
+    final int lines = rowLinesOf(a, stage);
+    final int per = (a.row.length / lines).ceil();
+    final double cellW = (stage.width - 20) / per - 6;
+    final double cellH = (stage.height - 2 * rowInsetOf(a, stage) - rowLiftOf(a, stage.height)) / lines - 6;
+    final double height = math.min(math.min(cellH, cellW / look.aspect), tallTilePictureHeightOf(stage));
+    return Size(height * look.aspect, height);
+  }
+
+  /// The cells of the stage's row (squares, or the boxes of tall pictures), left to right and line by line from the top.
   List<Rect> rowCells() {
+    if (usesRowLayout(a)) return _layoutRowCells();
+    final int n = a.row.length;
+    final int lines = rowLinesOf(a, size);
+    final int per = (n / lines).ceil();
+    final double lift = rowLiftOf(a, h);
+    final double edge = rowRoomOf(a, size).edge;
+    final double cellW = (w - 2 * edge) / per;
+    final double side = rowSideOf(a, size);
+    final Size box = rowIsTall(a) ? sameBoxOf(a, size)! : Size(side, side);
+    final double inset = rowInsetOf(a, size);
+    final double pitch = (h - 2 * inset - lift) / lines;
+    return <Rect>[
+      for (int i = 0; i < n; i++)
+        Rect.fromCenter(
+          center: Offset(edge + (i % per + 0.5) * cellW, inset + lift + pitch * (i ~/ per + 0.5)),
+          width: box.width,
+          height: box.height,
+        ),
+    ];
+  }
+
+  /// The squares of the cells of a row laid out by [rowLayoutOf], left to right (the same places the stage draws them in).
+  List<Rect> _layoutRowCells() {
     final double lift = rowLiftOf(a, h);
     final ({double top, double height}) band = rowBandOf(a, h);
     final List<double> widths = rowLayoutOf(a, size).widths;
@@ -293,6 +412,10 @@ class TapGeometry {
   /// True when the options are tiles below the stage.
   bool get tiles => a.optionsInTiles;
 
+  /// The size of the stage's own room on [spec]'s board: a tablet's stage is a card, and its picture is 16 in from the card's edge.
+  static Size stageSizeOf(ActivitySpec spec) =>
+      spec.stageIsCard ? Size(spec.stage.width - 32, spec.stage.height - 32) : spec.stage.size;
+
   /// The width of one answer tile of [a] on [spec]'s board: a square 96 points for a numeral, a letter, a sound or a picture; as
   /// wide as the row allows for a set of things (170 at most) and for words (220 at most).
   static double tileWidthOf(TapAnswerActivity a, ActivitySpec spec) {
@@ -300,7 +423,8 @@ class TapGeometry {
     if (a.options.any((ChoiceOption o) => o.set != null)) return math.min(170, room);
     if (a.options.any((ChoiceOption o) => o.picture != null)) return math.min(260, room);
     if (a.options.any((ChoiceOption o) => o.text != null) && !a.letterFace) return math.min(220, room);
-    return 96;
+    // A size item's tiles are as large as its pictures need (see `size_scale.dart`).
+    return comparesSizes(a) ? tileSideOf(stageSizeOf(spec)) : 96;
   }
 
   /// Whether an option of [a] is blocks on its tile (`answer.options[].picture`).

@@ -1335,7 +1335,7 @@ def recognise_choice(it, svg):
     if it.has('איפה אותו צבע') and g:
         want = sprite_info(g).get('colour')
         return by_info('same-colour', lambda i: i.get('colour') == want), out
-    if it.has('איפה אותו הדבר') and g:
+    if (it.has('איפה אותו הדבר') or (it.has('איפה עוד') and not colours_in(cap))) and g:
         gi = sprite_info(g)
         same = [o for o in it.options if opt_info(o)['name'] == gi['name']]
         kin = [o['id'] for o in it.options if opt_info(o)['kind'] == gi['kind'] and o not in same]
@@ -1345,7 +1345,7 @@ def recognise_choice(it, svg):
         if same:
             return by_info('same-thing', lambda i: i['name'] == gi['name']), out
         return by_info('same-thing', lambda i: i['kind'] == gi['kind']), out
-    if it.has('הוא לא') and len(colours_in(cap)) == 1 and len(shapes_in(cap)) == 1:
+    if it.has('הוא לא', 'צורה לא') and len(colours_in(cap)) == 1 and len(shapes_in(cap)) == 1:
         nc, ns = colours_in(cap)[0], shapes_in(cap)[0]
         return by_info('not-not', lambda i: i.get('colour') != nc and i.get('shape') != ns), out
     if it.has('מערבבים'):
@@ -1366,7 +1366,7 @@ def recognise_choice(it, svg):
     if it.has('איפה עוד', 'מי עוד') and colours_in(cap):
         want = colours_in(cap)[0]
         return by_info('same-hue', lambda i: i.get('colour') == want), out
-    if it.has('איזה צבע') and g:
+    if it.has('איזה צבע', 'מה צבע') and g:
         want = sprite_info(g).get('colour')
         if it.has('בננה בשלה'):
             want = 'yellow'
@@ -1393,7 +1393,7 @@ def recognise_choice(it, svg):
         if len(sizes) == 1:
             common.add('rule_size')
         return by_info('common-rule', lambda i: i['name'] in common), out
-    if it.has('מי שונה') and row:
+    if it.has('מי שונה', 'מה שונה') and row:
         c = Counter(row)
         odd = {k for k, v in c.items() if v == 1}
         return Choice('odd-one-out', lambda o: ('asset:' + opt_info(o)['name']) in odd, nums=[]), out
@@ -1404,7 +1404,7 @@ def recognise_choice(it, svg):
         if row and '?' in row and all(r == '?' or sprite_info(r)['name'] in story for r in row):
             k = row.index('?')
             return by_info('story', lambda i, s=story, k=k: i['name'] == s[k]), out
-        if it.has('קדם'):
+        if it.has('קדם', 'בא ראשון'):
             return by_info('story', lambda i, s=story: i['name'] == s[0]), out
         if it.has('בסוף'):
             return by_info('story', lambda i, s=story: i['name'] == s[-1]), out
@@ -1439,7 +1439,7 @@ def recognise_choice(it, svg):
     if row:
         infos = [sprite_info(r) if r != '?' else None for r in row]
         gap = row.index('?') if '?' in row else None
-        if gap is not None and it.has('בסוף', 'קדם', 'באמצע', 'גדלים', 'חסר') and \
+        if gap is not None and it.has('בסוף', 'קדם', 'בא ראשון', 'באמצע', 'גדלים', 'חסר') and \
                 all(i is None or seq_value(i) is not None for i in infos):
             known = [(k, seq_value(i)) for k, i in enumerate(infos) if i is not None]
             (i0, v0), (i1, v1) = known[0], known[-1]
@@ -1449,7 +1449,7 @@ def recognise_choice(it, svg):
             if any(abs(v - (v0 + step * (k - i0))) > 1e-9 for k, v in known):
                 out.append(('WRONG', 'unsolvable', 'the row %s is not one series' % row))
             return by_info('series', lambda i: i['kind'] in kinds and seq_value(i) == want), out
-        if gap is not None and it.has('מה בא אחר כך', 'מה חסר'):
+        if gap is not None and it.has('מה בא אחר כך', 'מה חסר', 'מה צריך לבוא'):
             fills = period_fill(row, gap)
             if not fills:
                 out.append(('WRONG', 'unsolvable', 'the row %s does not repeat' % row))
@@ -1618,7 +1618,7 @@ def check_spot(f, it):
         return 'counting'
     infos = [sprite_info(c) for c in cells]
     cls = None
-    if it.has('אוסף רק'):
+    if it.has('אוסף רק', 'אוספים רק'):
         cs, ss = colours_in(it.cap), shapes_in(it.cap)
         solids = _find(it.words, SOLID_WORDS)
         kinds = _find(it.words, KIND_WORDS)
@@ -1632,7 +1632,7 @@ def check_spot(f, it):
             cls = lambda i: i.get('solid') == solids[0]
         elif kinds:
             cls = lambda i: i['kind'] == kinds[0]
-    elif it.has('מין לפי צבע', 'מין לפי צורה'):
+    elif it.has('מין לפי צבע', 'מין לפי צורה', 'כלן באותו צבע', 'כלן אותה צורה'):
         key = 'colour' if it.has('צבע') else 'shape'
         common = Counter(i.get(key) for i in infos).most_common(1)[0][0]
         cls = lambda i: i.get(key) == common
@@ -1642,7 +1642,7 @@ def check_spot(f, it):
             f.add('WRONG', it, 'spot', 'the cells that do not belong are %s, the item marks %d' % (odd, wrong))
         return 'collection'
     vals = [seq_value(i) for i in infos]
-    if it.has('סדר את המגדלים') and None not in vals:
+    if it.has('סדר את המגדלים', 'מהמגדלים לא במקום') and None not in vals:
         good = [k for k in range(len(vals)) if all(vals[j] == vals[0] + j for j in range(len(vals)) if j != k)
                 or all(vals[j] == vals[0] - j for j in range(len(vals)) if j != k)]
         if wrong not in good or len(good) != 1:

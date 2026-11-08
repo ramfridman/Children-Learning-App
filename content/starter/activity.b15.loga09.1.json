@@ -38,7 +38,7 @@
       "count": 1,
       "arrangement": "line",
       "seed": 3,
-      "scale": 1
+      "scale": 1.6
     }
   },
   "answer": {
@@ -82,7 +82,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
           }
         ]
       }
@@ -112,11 +112,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.log_pairs.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נַחְשֹׁב: מָה עוֹשִׂים עִם זֶה?"
         }
       ]
     },

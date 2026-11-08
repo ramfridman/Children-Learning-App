@@ -118,6 +118,8 @@ sealed class Activity {
       template = json['template']! as String,
       templateVersion = json['templateVersion']! as String,
       course = (json['course'] as String?) ?? Course.core,
+      band = json['band'] as String?,
+      domain = json['domain'] as String?,
       skills = <Skill>[
         for (final Map<String, Object?> s in _maps(json['skills']))
           Skill(id: s['id']! as String, weight: (s['weight']! as num).toDouble()),
@@ -238,6 +240,13 @@ sealed class Activity {
   /// `core` for every activity that exists today; a language pack's activities carry their language's course.
   final String course;
   bool get isLanguage => Course.isLanguage(course);
+
+  /// The band the activity is written for (`A`, `B` or `C`: the touch sizes of the child's controls, see the design tokens), where
+  /// the document says it.
+  final String? band;
+
+  /// The land the activity belongs to (`logic`, `math`, ...), where the document says it.
+  final String? domain;
   final List<Skill> skills;
   final Spoken promptLine;
 
