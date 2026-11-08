@@ -34,7 +34,7 @@ invite-only.
 
 ## Deploy order (the orchestrator, with the owner's OK; nothing is deployed yet)
 
-1. **Migration first**: `20261108120000_signup_allowlist.sql` creates the schema `signup_gate`, the list
+1. **Migration first**: `20261108130000_signup_allowlist.sql` creates the schema `signup_gate`, the list
    and the hook function. It changes no existing table. From the repository folder, after
    `npx supabase login` and the link in step 1 of `docs/setup/supabase-deploy.md`:
 
