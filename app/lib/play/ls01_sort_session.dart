@@ -7,7 +7,6 @@ import '../content/models.dart';
 import '../content/scripts.dart' show isSingleLetter;
 import '../design/components.dart';
 import '../design/course_text.dart';
-import '../design/token_types.dart' show Band;
 import '../design/tokens.g.dart';
 import 'hints/hint_pictures.dart' show SkyRing;
 import 'ls01_chips.dart';
@@ -317,7 +316,7 @@ class Ls01SortSession extends Ls01Session {
     tablet: zones.stageIsCard,
     bins: sort.bins.length,
     bigSpeakers: BinGeometry.bigSpeakersFor(
-      bandA: band == Band.a,
+      bandA: BinGeometry.isBandA(presentation: band, skillId: sort.skillId),
       cardTexts: <String?>[for (final SortItem i in sort.items) i.text],
     ),
   );

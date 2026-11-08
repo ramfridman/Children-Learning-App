@@ -334,7 +334,8 @@ class _StoryStage extends StatelessWidget {
   /// The arrow that turns the page, at the end corner of the stage in the story's direction; the last page has a tick.
   Widget _arrow(BuildContext context, bool rtl) {
     final bool end = s.atEnd;
-    return Positioned(
+    // The disc stands [storyArrowInset] from the edges: the button's tap margin is outside that (boardAt).
+    return boardAt(
       left: rtl ? storyArrowInset : null,
       right: rtl ? null : storyArrowInset,
       bottom: storyArrowInset,
@@ -355,8 +356,11 @@ class _StoryStage extends StatelessWidget {
   }
 }
 
-/// How far the arrow stands from the stage's bottom and end edges.
+/// How far the arrow's disc stands from the stage's bottom and end edges.
 const double storyArrowInset = 12;
+
+/// The room kept between a page and the arrow's disc when the page is fitted off the arrow.
+const double storyArrowGap = 8;
 
 /// Where a story page of [aspect] (width over height) stands in a [box] (the stage less its padding of 6): as large as the box allows,
 /// centred; but when the arrow ([arrow] points square, at the bottom end corner, [rtl] says which) would lie over the centred page, the
@@ -388,8 +392,8 @@ const double storyArrowInset = 12;
     arrow,
     arrow,
   );
-  if (!page.overlaps(button.inflate(4))) return (size: centred, align: Alignment.center);
-  final double band = arrow + inset + 6;
+  if (!page.overlaps(button.inflate(storyArrowGap))) return (size: centred, align: Alignment.center);
+  final double band = arrow + inset + storyArrowGap;
   final Size above = fit(box.width, box.height - band);
   final Size beside = fit(box.width - band, box.height);
   return above.width >= beside.width

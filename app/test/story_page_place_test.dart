@@ -21,7 +21,11 @@ void main() {
           () {
             final ({Size size, Alignment align}) p = storyPagePlace(b.value, aspect, arrow: 72, rtl: rtl);
             final Rect page = _rect(b.value, p);
-            expect(page.overlaps(_arrow(b.value, 72, rtl: rtl)), isFalse);
+            expect(
+              page.overlaps(_arrow(b.value, 72, rtl: rtl).inflate(storyArrowGap - 0.01)),
+              isFalse,
+              reason: 'a gap, not a touch',
+            );
             expect(
               p.size.width / p.size.height,
               closeTo(aspect, 0.001),
@@ -46,7 +50,7 @@ void main() {
     expect(p.align, Alignment.center);
   });
 
-  test("the phone's 16:9 page stands above the arrow, 279 by 157", () {
+  test("the phone's 16:9 page stands above the arrow with a gap, 275 by 155", () {
     final ({Size size, Alignment align}) p = storyPagePlace(
       const Size(318, 241),
       16 / 9,
@@ -54,6 +58,6 @@ void main() {
       rtl: false,
     );
     expect(p.align, Alignment.topCenter);
-    expect(p.size.height, closeTo(241 - 72 - 12, 0.01));
+    expect(p.size.height, closeTo(241 - 72 - 6 - storyArrowGap, 0.01));
   });
 }

@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/painting.dart';
 
 import '../content/scripts.dart' show isSingleLetter;
+import '../design/token_types.dart' show Band;
+import '../engine/presentation.dart' show contentLevelOf;
 import 'ls01_metrics.dart';
 
 // The bins of a sort and the kept chips in them (docs/design/languages-l5-ls01.md section 7.2). A card dropped in a bin stays there as a small
@@ -22,6 +24,11 @@ class BinGeometry {
   /// letter; a word is wider than the room a corner speaker leaves the chips).
   static bool bigSpeakersFor({required bool bandA, required Iterable<String?> cardTexts}) =>
       bandA && cardTexts.every((String? t) => t == null || isSingleLetter(t));
+
+  /// Whether a sort is Band A's for its speakers: the screen is shown in the Band A look, or the sort is Band A's own content (a child of
+  /// the older age bracket may be served it in a later band's look, and the speaker stays as big: QA-BA-11).
+  static bool isBandA({required Band presentation, required String skillId}) =>
+      presentation == Band.a || contentLevelOf(skillId) == 0;
 
   /// The room the stage gives the bins, how many bins, and whether the board is a tablet's (the stage is then a card).
   final Size room;

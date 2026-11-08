@@ -424,6 +424,30 @@ this check, a format mismatch between a deployed gateway and an installed app, i
     feature declare that version.
   - New findings: SEC-M10-1 to -3 (low) and SEC-M10-4 and -5 (info), in the table above. Their detail and proofs go to the
     orchestrator and stay out of the public file until they are fixed.
+- **Languages Band A QA fixes, `languages-band-a` (`41ab2f61..7c72dc56`, and `43997579`, which changes only
+  `band-a-build.md`; 2026-11-08): no new finding; SEC-BA-8 stays open (the fix has not landed, and its proof still fails).** In
+  scope: the check visit (`engine/check_visit.dart`, `CheckTrail`, `world/check_visits.dart`, the course home and Today's
+  Adventure), the catalogue that leaves out steps that are never scored, `ItemMeta.speech` and `pairWith`, the validator
+  changes in `language_checks.dart` (the two-choice half) and `ls02_checks.dart` (T04 strokes), the generator rules
+  (`_no_chips`, `check_reverse`, `check_bin_sign`, `inLesson`) and the layout changes. Not in scope: the pictures and the
+  goldens.
+  - `CheckTrail` lives in `SkillState`, which is never written down: the engine rebuilds it from the attempt rows each time
+    (replay), and `world_state` and `engine_adapter` only read it. Nothing new is stored, synced, logged or sent to the tutor.
+    A visit is the attempt's existing `sessionId`. `Visit.check` is read from the lesson id of the rows.
+  - The wire: a check visit is a mission lesson with the id `mission-<skill>-check`. The longest skill id the schema allows
+    (14 characters) gives 28 characters, inside `sync-push`'s `^[a-z0-9._-]{0,40}$`, and `wireLessonId` drops anything
+    else. No new answer, response code, row field, host, package, lock file or workflow.
+  - Bounds: a check visit holds at most 5, 8 or 12 items by band, and a balanced pair is taken whole or not at all.
+    `pairHalves` holds only catalogue items. An item that is not in the catalogue is ignored by `Engine.apply`, so an old row of
+    a step that is now left out changes nothing.
+  - A heritage speaker: the check visit takes only catalogue items, so it never gives a teach or hearing screen; a mission has
+    no `teach` set. Own-name items are still made on the phone. Say steps still open the microphone only on a tap. The layout
+    changes add no input path and no log line.
+  - The validator changes lower no security bound: probes leave both sides of the two-choice count, and the T04 strokes are
+    held to the practice-only rules of the trace items. The generator's new rules only refuse; `inLesson` is read by the
+    generator only and is not written to a pack document. `FILE_NAME` and `refuse_outside` still hold
+    (`test_sec_lang_pack.py`).
+  - CI: the `secrets` job still fails on the `2df98c60` false positive; there is no `.gitleaksignore` entry yet.
 - **Languages Band A re-check, `languages-band-a` (`33eccbdc` and `41ab2f61`; 2026-11-07): SEC-BA-1 to -6 closed (proofs run
   again; SEC-BA-5's in CI), one new info finding (SEC-BA-8).** In scope: the fixes, and the third step: `readerAs`, the teach
   set `mode`, `answer.hear`, `say.order` and `say.pictureFirst` in schema and validator, `served_route.dart`, how the lesson

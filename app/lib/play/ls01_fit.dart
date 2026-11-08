@@ -173,7 +173,7 @@ class _Fit {
       tablet: false,
       bins: a.bins.length,
       bigSpeakers: BinGeometry.bigSpeakersFor(
-        bandA: band == Band.a,
+        bandA: BinGeometry.isBandA(presentation: band, skillId: a.skillId),
         cardTexts: <String?>[for (final SortItem i in a.items) i.text],
       ),
     );

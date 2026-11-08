@@ -303,7 +303,8 @@ class Recipes(Talk, More, Print):
     def check_reverse(self, doc, faces, where):
         """A reverse check (band-a-build.md 7.3) shows the picture and the child finds its word among 2 or 3 sound buttons. No line before
         the third hint may play the right word: not the prompt, not the first two hints, not the first-error lines (the ladder `HL-REV` and
-        the item's `feedback` see to it). A clip that is not the answer, such as the question "who is this?", may be played."""
+        the item's `feedback` see to it), and neither may the "unsure" step. A clip that is not the answer, such as the question "who is
+        this?", may be played."""
         if doc['purpose'] != 'check':
             self.problem(where, 'a reverse item is a check (`"purpose": "check"`)')
         if not doc['scene'].get('group'):
@@ -323,6 +324,8 @@ class Recipes(Talk, More, Print):
         for rule in doc['feedback']['incorrect']:
             if says_right(rule):
                 self.problem(where, 'the first-error line of a reverse item plays the right word: it names no option (`feedback.wrong`, `byTag`)')
+        if says_right(doc['feedback']['unsure']):
+            self.problem(where, 'the "unsure" step of a reverse item plays the right word: that is the answer (`feedback.unsure`)')
 
     # ------------------------------------------------------------ LS11 listen and do
     def recipe_listen_do(self, sk, sid, aid, item, where):

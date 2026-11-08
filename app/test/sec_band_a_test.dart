@@ -78,4 +78,19 @@ void main() {
     }
     expect(rus.itemsOf(l), isNotEmpty);
   });
+
+  test('SEC-BA-8: a hear set that names a teach screen does not show it to a heritage speaker', () async {
+    final VerifiedPack pack = await verifyPack((await buildPack(dir, key)).bytes, publicKey: key.publicKey);
+    final Map<String, Object?> lesson = pack.docs['lesson.rus.pairs-1.json']! as Map<String, Object?>;
+    final Map<String, Object?> hear = (lesson['teach']! as List<Object?>)
+        .cast<Map<String, Object?>>()
+        .firstWhere((Map<String, Object?> s) => s['mode'] == 'hear');
+    (hear['items']! as List<Object?>).add('rus.a20.tc01'); // a teach screen of new words
+    final PackContent rus = PackContent.fromPack(pack);
+    final List<Activity> heritage = rus.itemsFor(rus.lessons['rus.pairs-1']!, route: 'heritage');
+    expect(
+      heritage.where((Activity a) => a.teachScreen && !(a as SayItActivity).hear).map((Activity a) => a.id),
+      isEmpty,
+    );
+  });
 }

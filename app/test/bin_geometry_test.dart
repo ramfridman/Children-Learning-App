@@ -3,6 +3,7 @@
 // 52 speaker beside the sign there, and a word as a card keeps the old layout (a word is wider than the room a corner speaker leaves).
 import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/design/token_types.dart' show Band;
 import 'package:nitznutz/play/ls01_chips.dart';
 
 void main() {
@@ -66,5 +67,18 @@ void main() {
   test('the corner is 6 from the inner edges: 70 for the speaker and its margin', () {
     expect(BinGeometry.cornerMargin, 6);
     expect(geo(se).cornerRoom, 70);
+  });
+
+  test('QA-BA-11: a Band A sort has the big speakers in any presentation band; a Band B sort only in the look of Band A', () {
+    expect(BinGeometry.isBandA(presentation: Band.a, skillId: 'HEB-B-02'), isTrue);
+    for (final Band look in <Band>[Band.a, Band.b, Band.c]) {
+      expect(
+        BinGeometry.isBandA(presentation: look, skillId: 'HEB-A-03'),
+        isTrue,
+        reason: '$look',
+      );
+    }
+    expect(BinGeometry.isBandA(presentation: Band.b, skillId: 'HEB-B-02'), isFalse);
+    expect(BinGeometry.isBandA(presentation: Band.c, skillId: 'ENG-C-01'), isFalse);
   });
 }

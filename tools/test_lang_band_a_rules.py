@@ -31,7 +31,7 @@ HL_REV = [{'line': 'he-again', 'action': 'highlight_objects_sequentially'},
 def reverse_item(**extra):
     item = {'id': 'i01', 'kind': 'tap', 'purpose': 'check', 'check': 'reverse', 'frame': 'he-tap', 'stage': 'a', 'ladder': 'HL-REV',
             'options': [{'clip': 'en-cat'}, {'clip': 'en-dog'}, {'clip': 'en-bye'}], 'wrong': {'en-dog': 'sem', 'en-bye': 'sem'},
-            'hintWord': 'en-cat', 'inLesson': True, 'feedback': {'wrong': 'he-check', 'byTag': {'sem': 'he-check'}}}
+            'hintWord': 'en-cat', 'inLesson': True, 'feedback': {'wrong': 'he-check', 'unsure': 'he-again', 'byTag': {'sem': 'he-check'}}}
     item.update(extra)
     return item
 
@@ -119,8 +119,14 @@ class ReverseItemTest(BandARulesBase):
         self.assertProblem('hint 1 of a reverse item plays the right word')
 
     def test_a_first_error_line_that_says_the_right_word_is_refused(self):
-        self.lesson_of(reverse_item(feedback={'wrong': {'line': 'he-check', 'target': '@target'}}))
+        self.lesson_of(reverse_item(feedback={'wrong': {'line': 'he-check', 'target': '@target'}, 'unsure': 'he-again'}))
         self.assertProblem('the first-error line of a reverse item plays the right word')
+
+    def test_an_unsure_step_that_says_the_right_word_is_refused_and_one_that_does_not_is_not(self):
+        self.lesson_of(reverse_item(feedback={'wrong': 'he-check', 'unsure': {'line': 'he-again', 'target': '@target'}, 'byTag': {'sem': 'he-check'}}))
+        self.assertProblem('the "unsure" step of a reverse item plays the right word')
+        self.lesson_of(reverse_item(feedback={'wrong': 'he-check', 'unsure': 'he-again', 'byTag': {'sem': 'he-check'}}))
+        self.assertEqual(self.sb.problems(), '')
 
     def test_a_prompt_that_plays_the_right_word_is_refused_but_a_question_clip_is_not(self):
         self.lesson_of(reverse_item(target='en-cat'))

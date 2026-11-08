@@ -2072,14 +2072,16 @@ class PackContent {
   /// What a child served on [route] (`new` or `heritage`: [servedRoute] has resolved a reader) plays in [lesson]: the screens of the sets
   /// that route is shown, then the lesson's items, the same for every route. A route that is not set yet counts as a new learner. A
   /// heritage speaker is never shown a teach screen (a `teach` set may not name that route) and is shown a hearing screen only from a
-  /// `hear` set, a new learner never; a pack that says otherwise is refused here as well. Any other route (a reader nobody resolved) is
+  /// `hear` set, a new learner never; a pack that says otherwise is refused here as well, by the set's label and by each screen's own kind
+  /// (a set shows only the teach or hearing screens it is for, whatever it lists). Any other route (a reader nobody resolved) is
   /// served as a new learner, the side that shows more. A route never removes, adds or reorders a lesson's items.
   List<Activity> itemsFor(Lesson lesson, {String? route}) {
     final bool heritage = route == 'heritage';
     return <Activity>[
       for (final TeachSet set in lesson.teach)
         if (set.routes.contains(heritage ? 'heritage' : 'new') && set.hear == heritage)
-          for (final String id in set.itemIds) ?activities[id],
+          for (final String id in set.itemIds)
+            if (activities[id] case final SayItActivity a when a.teach && a.hear == heritage) a,
       ...itemsOf(lesson),
     ];
   }

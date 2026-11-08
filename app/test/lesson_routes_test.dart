@@ -163,7 +163,11 @@ void main() {
         l.itemIds.length,
         reason: 'a hearing set is never for a new learner',
       );
-      expect(heard.itemsFor(hear, route: 'heritage').length, l.itemIds.length + 4);
+      expect(
+        heard.itemsFor(hear, route: 'heritage').length,
+        l.itemIds.length,
+        reason: 'a teach screen in a hearing set is not shown to a heritage speaker (SEC-BA-8)',
+      );
     });
 
     test('a lesson with no teach set plays as it is, whatever the route', () {
