@@ -143,10 +143,12 @@ class HebrewMasterTableTest(unittest.TestCase):
         # b.numb02.5, math.add.stars) whose old text needed a correction are now written right by their source
         # 1221 after the owner's option A for the two three-coin shop hints (x.mathb17.6, .7; 2026-11-08): their text is now what the source says, so the
         # table no longer counts them as changed (the review CSV was exported again with the new text)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1221)
+        # 1215 after the owner's answers of 2026-11-08: six rows whose old text needed a correction are now written right by their source (the x.shpb09 "נְדַמְיֵן" line was reworded)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1215)
         # 18 after the editor sweep of 2026-11-08: the 11 Q2 drafts (the NUM-A-11 pairing line, the NUM-A-07 counting line) are now
         # written in the generators, each with an id of its own (vo:fb.size.pairs, vo:fb.size.count), so the pack says what the table says
-        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 18)  # 88 before the owner's V1 for M-NL-DIR (2026-11-06): its 44 rows now have the source's final nikud
+        # 6 after the owner approved D12 (2026-11-08): the 12 balance rows (b.mathb13.7-.10) are in the sources
+        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 6)  # 88 before the owner's V1 for M-NL-DIR (2026-11-06): its 44 rows now have the source's final nikud
 
     def test_done_rows_have_ui_text(self):
         want = lambda r: HELD[(r['source'], r['id'])][0] if (r['source'], r['id']) in HELD else r['ui_text']

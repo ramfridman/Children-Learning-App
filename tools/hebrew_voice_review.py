@@ -665,6 +665,8 @@ PLACEHOLDERS = {'{child}': ('', 'PER-NAME (owner Q6, 2026-10-29): a separate nam
 VOICE_SUBS = [
     (r'(?<![\u0590-\u05ff])ו… ', 'ועוד צבע… ', 'voice: "וְ…" alone cannot be said; the blank is said as "ועוד צבע…"'),
     (r'לחזור על: ', 'לחזור על הצעדים: ', 'voice: "על:" before a list is said as "על הצעדים:"'),
+    (r'(?<![֐-׿])נֹאמַר את הסדר', 'נגיד יחד את הסדר', 'voice (owner-approved 2026-11-08, probe 10b): the chant "נֹאמַר אֶת הַסֵּדֶר בְּקוֹל" '
+     'is said "נגיד יחד את הסדר בקול"; the screen keeps נֹאמַר'),
     (r'(?<![֐-׿])בואו נאמר(?![֐-׿])', 'בואו נגיד', 'voice: "נאמר" can be read as "was said"; "נגיד"'),
     (r'(?<![֐-׿])בואו נֹאמַר(?![֐-׿])', 'בואו נגיד', 'voice: "נֹאמַר" is kept pointed (VOICE_SWEEP_KEEP), but "בואו נאמר" is still "בואו נגיד"'),
     (r'(?<![֐-׿])(ש?)אין כלום זה ', r'\1אין כלום — זה ', 'voice-audit 2026-10-29: a beat before "זה אֶפֶס" (without it '
@@ -714,6 +716,11 @@ VOICE_SWEEP_KEEP = {
     'שׁוֹנָה': 'the feminine "shona": the plain "שונה" is read "shone", masculine (1)',
     'דּוֹמָה': 'the feminine "doma": the plain "דומה" is read "dome", masculine (8)',
     'עוֹלָה': 'the feminine "ola": the plain "עולה" is read "oleh", masculine (2)',
+    # owner-approved 2026-11-08 (probe 11a): "עשרות" stays pointed in every form, so that it is "asarot" (tens), never "esrot"
+    'עֲשָׂרוֹת': 'plain "עשרות" can be read "esrot"; here it is "asarot" (tens) (279)',
+    'הָעֲשָׂרוֹת': 'as "עֲשָׂרוֹת", with the article (109)',
+    'בַּעֲשָׂרוֹת': 'as "עֲשָׂרוֹת", with בַּ (65)',
+    'לַעֲשָׂרוֹת': 'as "עֲשָׂרוֹת", with לַ (4)',
 }
 VOICE_AUDIT_KEEP = {canon(w): why for w, why in VOICE_AUDIT_KEEP.items()}
 VOICE_SWEEP_KEEP = {canon(w): why for w, why in VOICE_SWEEP_KEEP.items()}
@@ -938,6 +945,15 @@ DOUBT = [
 # Rows the OWNER approved (his own answers, relayed by the orchestrator; the editor never approves): (regex on the source,
 # regex on the original text, the comment). Their status is `owner-approved`. Nothing else is ever set to it by this script.
 OWNER_APPROVED = [
+    # The owner's answers of 2026-11-08 (hebrew-notes.md section 14.5)
+    (r'^activity\.(same|x\.numa07)\.', r'^(בּוֹאוּ נַעֲשֶׂה זוּגוֹת: לְכֻלָּם יֵשׁ זוּג\?|בּוֹאוּ נִסְפֹּר כַּמָּה יֵשׁ בְּכׇל קְבוּצָה\.)$',
+     'the two Q2 lines (NUM-A-11 pairing, NUM-A-07 counting), approved as written (owner-approved 2026-11-08).'),
+    (r'^activity\.(b\.numb17\.|c\.numc09\.)', r'וְכׇל פַּעַם מוֹסִיפִים (עֶשֶׂר|שְׁתַּיִם)', '09c (owner-approved 2026-11-08): "בְּעֶשֶׂר" is said as "וְכׇל פַּעַם מוֹסִיפִים עֶשֶׂר".'),
+    (r'^activity\.b\.mathb13\.', r'(הַצַּד שֶׁלְּמַעְלָה|בַּצַּד שֶׁלְּמַטָּה)', 'D12 (owner-approved 2026-11-08): the balance sides are named by where they are, and the scales are '
+     '"שְׁנֵי הַצְּדָדִים שָׁוִים".'),
+    (r'he\.dart$', r'^מְתַקְּנֵי תַּקָּלוֹת$', 'owner-approved 2026-11-08 (was "מְתַקְּנֵי בָּאגִים").'),
+    (r'^activity\.(b\.shpb08\.9|x\.shpb09\.\d)\.json$', r'נְתָאֵר לְעַצְמֵנוּ', 'owner-approved 2026-11-08 (was "בּוֹאוּ נְדַמְיֵן אֶת זֶה").'),
+    (r'^activity\.b\.mathb08\.', r'נִשְׁאֲרוּ עוֹד', 'owner-approved 2026-11-08 (was "נִשְׁאָר עוֹד").'),
     (r'core\.he\.json$', r'מָּתֵמָטִיקָאִים', 'Q4: the owner chose option A, "בְּדַקְתֶּם שׁוּב לִפְנֵי שֶׁעֲנִיתֶם. כָּכָה עוֹשִׂים '
      'חוֹקְרִים." (owner-approved 2026-10-29).'),
     (r'^activity\.', r'^לָקַחְנוּ אֶת כֻּלָּם\. הַפֶּרַח', 'B-13 (curriculum audit F1): the owner approved the neutral give-N line '
@@ -1046,6 +1062,22 @@ OWNER_APPROVED = [
      'Shop hint 3, owner (2026-11-08, option A): the three-coin hints drop "מַטְבֵּעַ שֶׁל" and name the values, so each fits 14 words; '
      'the other shop hints keep the Q11 form (owner-approved 2026-11-08).', r'^hints\.2\.caption'),
 ]
+
+
+# Rows the owner approved only for their VOICE text (the screen text was not asked): a row that is `text-ready` and matches becomes
+# `owner-approved`; a row that waits for something else keeps its status. (source regex, regex on the text, comment, optional regex on the id)
+VOICE_APPROVED = [
+    (r'', r'עֲשָׂרוֹת', 'owner, 2026-11-08 (probe 11a): "עֲשָׂרוֹת" stays pointed in the voice text, in every form (owner-approved for the voice text).'),
+    (r'', r'^נֹאמַר אֶת הַסֵּדֶר בְּקוֹל', 'owner, 2026-11-08 (probe 10b): the chant is said "נגיד יחד את הסדר בקול" in the voice; the screen keeps '
+     'נֹאמַר (owner-approved for the voice text).'),
+]
+
+
+def voice_approved(r):
+    for src, txt, comment, *rid in VOICE_APPROVED:
+        if (re.search(src, r['source']) and re.search(canon(txt), canon(r['text'])) and (not rid or re.search(rid[0], r['id']))):
+            return comment
+    return None
 
 
 def owner_approved(r):
@@ -1578,6 +1610,8 @@ def master(rows, result, rules):
             approved = owner_approved(r)
             if approved:
                 status, comment = 'owner-approved', EDITOR + approved
+            elif status == 'text-ready' and is_spoken and voice_approved(r):
+                status, comment = 'owner-approved', EDITOR + voice_approved(r)
             old = kept.get((r['source'], r['id'], r['text']))
             correction = r['correction (fill in)']
             if old:

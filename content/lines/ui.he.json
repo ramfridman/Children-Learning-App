@@ -1,0 +1,26 @@
+{
+  "schema": "ui-lines/v1",
+  "review": "needs-editor",
+  "note": "The lines of the app's shell that a narrator voices (docs/audio/release-voicing-plan.md, F3). The words are the voice_text of the strings named here, in docs/review/hebrew-master.csv (one place for the editor, one status for the owner). A line with perLand is voiced once for each land in lands, with {land} replaced by the land's voice name, as <id>.<land key>. The ids are the ones the app asks for in app/lib/child/adventure_line.dart (core.adventure.*); core.languages.doors_hello and core.home.bubble_empty are new ids that the app does not ask for yet.",
+  "masterSource": "app/lib/strings/he.dart",
+  "lands": {
+    "counting": "גבעות הספירה",
+    "colors": "מפרץ הצבעים",
+    "shapes": "יַעַר הצורות",
+    "logic": "מְעָרַת החידות",
+    "robots": "נְמַל הרובוטים",
+    "market": "כְּפַר השוק"
+  },
+  "lines": [
+    { "id": "core.adventure.welcome", "string": "adventureWelcome", "perLand": true },
+    { "id": "core.adventure.call_for_help", "string": "adventureCallForHelp", "perLand": true },
+    { "id": "core.adventure.same_land", "string": "adventureSameLand", "perLand": true },
+    { "id": "core.adventure.other_land", "string": "adventureOtherLand", "perLand": true },
+    { "id": "core.adventure.play_again", "string": "adventurePlayAgain" },
+    { "id": "core.adventure.lang.eng", "string": "adventureLangEnglish" },
+    { "id": "core.adventure.lang.rus", "string": "adventureLangRussian" },
+    { "id": "core.adventure.lang.heb", "string": "adventureLangHebrew" },
+    { "id": "core.languages.doors_hello", "string": "languagesDoorsHello" },
+    { "id": "core.home.bubble_empty", "string": "homeBubbleNoName" }
+  ]
+}

@@ -432,7 +432,7 @@ def numbers():
         cells[w] = 'n:%d' % v
         u.act('NUM-B-17', 'spot', cells=cells, wrong=w, tag='M-CNT-DECADE' if step == 10 else 'M-CNT-SEQ',
               prompt='סוֹפְרִים %s. אֵיפֹה הַטָּעוּת?' % nm,
-              h3='כׇּל מִסְפָּר גָּדוֹל מֵהַמִּסְפָּר שֶׁלְּפָנָיו %s. עַכְשָׁו תּוֹרְכֶם.' % prefix('ב', 'עֶשֶׂר' if step == 10 else 'שְׁתַּיִם'),
+              h3='הַמִּסְפָּרִים גְּדֵלִים, וְכׇל פַּעַם מוֹסִיפִים %s. עַכְשָׁו תּוֹרְכֶם.' % ('עֶשֶׂר' if step == 10 else 'שְׁתַּיִם'),
               correct_text='כֵּן! כָּאן הָיָה צָרִיךְ לִהְיוֹת %s.' % F[start + step * w])
     for i, (seq, nxt, nm) in enumerate([((10, 20, 30), 40, 'בַּעֲשָׂרוֹת'), ((20, 30, 40), 50, 'בַּעֲשָׂרוֹת'), ((50, 60, 70), 80, 'בַּעֲשָׂרוֹת'),
                                         ((2, 4, 6), 8, 'בִּשְׁתַּיִם'), ((4, 6, 8), 10, 'בִּשְׁתַּיִם'), ((6, 8, 10), 12, 'בִּשְׁתַּיִם')]):
@@ -636,7 +636,7 @@ def math():
         # B-15 §3 as MATH-B-03: the larger addend or the start (untagged), and counting the start too
         numpick(u, 'MATH-B-08', '%s וְעוֹד %s. כַּמָּה זֶה?' % (F[x], F[y]), r, [max(x, y), r - 1], i, tags={r - 1: 'M-CNT-SKIP'}, row=['n:%d' % x, 'op:+', 'n:%d' % y, 'op:=', '?'],
                 text='%s! %s וְעוֹד %s הֵם עֶשֶׂר, וְעוֹד %s.' % (F[r], F[x], F[10 - x], F[r - 10]),
-                h3='%s וְעוֹד %s הֵם עֶשֶׂר. נִשְׁאָר עוֹד %s, אָז %s. עַכְשָׁו תּוֹרְכֶם.' % (F[x], F[10 - x], F[y - (10 - x)], F[r]))
+                h3='%s וְעוֹד %s הֵם עֶשֶׂר. נִשְׁאֲרוּ עוֹד %s, אָז %s. עַכְשָׁו תּוֹרְכֶם.' % (F[x], F[10 - x], F[y - (10 - x)], F[r]))
     for i, (x, y) in enumerate([(13, 4), (15, 3), (12, 5), (17, 2)]):
         r = x - y
         numpick(u, 'MATH-B-08', '%s פָּחוֹת %s. כַּמָּה זֶה?' % (F[x], F[y]), r, [x, r + 1], i, tags={r + 1: 'M-CNT-DOUBLE'}, row=['n:%d' % x, 'op:-', 'n:%d' % y, 'op:=', '?'],
@@ -702,8 +702,8 @@ def math():
     for i, (lc, rc) in enumerate([(5, 2), (6, 3), (4, 1), (7, 5)]):
         u.act('MATH-B-13', 'scale', mode='balance', left=[('block', lc, 1)], right=[('block', rc, 1)], block='block', result=lc - rc, tag='M-MEAS-BIG',
               # the balance sides (D12) are an owner draft (proposed): this prompt keeps its text until he approves it
-              prompt='הַצַּד הַיְמָנִי קַל יוֹתֵר. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁהַמֹּאזְנַיִם שָׁווֹת.',
-              h3='בַּצַּד הַשְּׂמָאלִי יֵשׁ %s, וּבַצַּד הַיְמָנִי %s. צָרִיךְ עוֹד %s.' % (qty(lc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'}), qty(rc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'}), qty(lc - rc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'})),
+              prompt='הַצַּד שֶׁלְּמַעְלָה קַל יוֹתֵר. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים.',
+              h3='בַּצַּד שֶׁלְּמַטָּה יֵשׁ %s, וּבַצַּד שֶׁלְּמַעְלָה %s. צָרִיךְ עוֹד %s.' % (qty(lc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'}), qty(rc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'}), qty(lc - rc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'})),
               correct_text='כֵּן! הַמֹּאזְנַיִם מְאֻזָּנִים.')
 
     # B-15 §1 (H28): guess which side goes down, then see; the big light thing against a small heavy one

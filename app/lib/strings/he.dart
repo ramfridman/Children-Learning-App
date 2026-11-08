@@ -165,7 +165,7 @@ abstract final class He {
   static const Str medalBraveAsker = Str('אֹמֶץ לִשְׁאֹל', nikud: true);
   static const Str medalTryAgain = Str('מְנַסִּים שׁוּב', nikud: true);
   static const Str medalExplainer = Str('אֵיךְ יָדַעְתִּי', nikud: true);
-  static const Str medalBugFixer = Str('מְתַקְּנֵי בָּאגִים', nikud: true);
+  static const Str medalBugFixer = Str('מְתַקְּנֵי תַּקָּלוֹת', nikud: true);
   static const Str medalBraveAskerHow = Str(
     'אוֹמְרִים "לֹא בָּטוּחַ" אוֹ "תַּרְאוּ לִי" חָמֵשׁ פְּעָמִים',
     nikud: true,
