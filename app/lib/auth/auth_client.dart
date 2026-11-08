@@ -34,9 +34,11 @@ class AuthClient {
   final NetGate _gate;
   final Clock _clock;
 
-  /// Sends a 6-digit sign-in code to an existing user. Never creates a new user.
+  /// Sends a 6-digit code by email. A new address becomes a new parent account (open sign-up, owner,
+  /// 2026-11-08); the server's "Allow new users to sign up" switch decides, and every other call still
+  /// needs an enrolled device. The same code flow signs a returning parent in.
   Future<void> sendEmailCode(String email) async {
-    await _post('/auth/v1/otp', <String, Object?>{'email': email, 'create_user': false});
+    await _post('/auth/v1/otp', <String, Object?>{'email': email, 'create_user': true});
   }
 
   Future<AuthSession> verifyEmailCode(String email, String code) async {

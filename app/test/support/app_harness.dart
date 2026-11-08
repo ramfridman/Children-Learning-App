@@ -47,8 +47,15 @@ class FakeSetupBackend implements SetupBackend {
   final List<String> calls = <String>[];
   bool signedIn = false;
 
+  /// When set, the next code request fails with this gateway code (for example `rate_limited`).
+  String? sendFails;
+
   @override
-  Future<void> sendCode(String email) async => calls.add('send $email');
+  Future<void> sendCode(String email) async {
+    final String? code = sendFails;
+    if (code != null) throw GatewayException(code, status: 429);
+    calls.add('send $email');
+  }
 
   @override
   Future<void> verifyCode(String email, String code) async {

@@ -105,6 +105,35 @@ void main() {
       expect(saved.single.ageBand, 1, reason: 'age 5 is band B');
     });
 
+    testWidgets('a new parent is told that the first sign-in creates the account', (
+      WidgetTester tester,
+    ) async {
+      final AppRig rig = AppRig(butterfliesFirst: true);
+      await rig.pump(tester);
+
+      expect(find.text(He.setupNewAccountHint.text), findsNothing, reason: 'the welcome page stays short');
+      await tester.tap(find.text(He.setupStart.text));
+      await tester.pumpAndSettle();
+      expect(find.text(He.setupNewAccountHint.text), findsOneWidget);
+    });
+
+    testWidgets('too many code requests say to wait, not that the connection is bad', (
+      WidgetTester tester,
+    ) async {
+      final AppRig rig = AppRig(butterfliesFirst: true);
+      rig.setup.sendFails = 'rate_limited';
+      await rig.pump(tester);
+
+      await tester.tap(find.text(He.setupStart.text));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'parent@example.com');
+      await tester.tap(find.text(He.setupSendCode.text));
+      await tester.pumpAndSettle();
+
+      expect(find.text(He.setupRateLimited.text), findsOneWidget);
+      expect(find.text(He.setupCodeSent.text), findsNothing);
+    });
+
     testWidgets('an interrupted setup resumes at the PIN, not at the start', (WidgetTester tester) async {
       final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.store.write('device_id', 'aaaa');

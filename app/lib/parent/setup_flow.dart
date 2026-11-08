@@ -67,7 +67,11 @@ class _SetupFlowState extends ConsumerState<SetupFlow> {
     try {
       await action();
     } on GatewayException catch (e) {
-      _error = e.code == 'auth_failed' ? (onError ?? He.setupError.text) : He.setupError.text;
+      _error = switch (e.code) {
+        'auth_failed' => onError ?? He.setupError.text,
+        'rate_limited' => He.setupRateLimited.text,
+        _ => He.setupError.text,
+      };
     } on Object {
       _error = He.setupError.text;
     }
@@ -147,6 +151,8 @@ class _SetupFlowState extends ConsumerState<SetupFlow> {
             enableSuggestions: false,
             decoration: InputDecoration(labelText: He.setupEmail.text, border: const OutlineInputBorder()),
           ),
+          const SizedBox(height: 8),
+          Text(He.setupNewAccountHint.text, style: AppText.parent(TokenType.parentSmall)),
           const SizedBox(height: 12),
           ParentButton(label: He.setupSendCode.text, onPressed: _busy ? null : _sendCode),
           if (_codeSent) ...<Widget>[

@@ -21,14 +21,14 @@ http.Response session(String access, String refresh, {int expiresIn = 3600}) =>
     jsonReply(<String, Object?>{'access_token': access, 'refresh_token': refresh, 'expires_in': expiresIn});
 
 void main() {
-  test('the email code request never creates a user', () async {
+  test('the email code request lets a new parent sign up with the same code flow', () async {
     final Recorder rec = Recorder((http.Request r) => http.Response('{}', 200));
     await authFor(rec, FixedClock(0)).sendEmailCode('a@example.test');
 
     final http.Request sent = rec.requests.single;
     expect(sent.url.path, '/auth/v1/otp');
     expect(sent.headers['apikey'], testKey);
-    expect(jsonDecode(sent.body), <String, Object?>{'email': 'a@example.test', 'create_user': false});
+    expect(jsonDecode(sent.body), <String, Object?>{'email': 'a@example.test', 'create_user': true});
   });
 
   test('verifying the email code returns a session with an absolute expiry', () async {
