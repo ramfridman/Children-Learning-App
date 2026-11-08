@@ -168,7 +168,7 @@ class SpotErrorSession extends TemplateSession {
       ring = AnswerState.correct;
       hintCell = null;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
       return;
     }
     wrongCell = i;

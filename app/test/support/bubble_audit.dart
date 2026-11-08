@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/engine/age.dart';
 import 'package:nitznutz/play/hint_hand.dart';
 import 'package:nitznutz/play/lesson_screen.dart';
 
@@ -35,6 +36,32 @@ List<String> bubbleOverTiles(WidgetTester t) {
   ];
 }
 
+/// What the speech bubble covers of the stage on a phone board: one line when it reaches into it; empty when it keeps clear (B-29,
+/// docs/design/b29-caption-overlap.md). The scene is what the child has to count, compare or read, so a bubble over it is a line the
+/// content must shorten. A tablet's bubble stands above its stage's card, so tablets are not asked.
+List<String> bubbleOverStage(WidgetTester t) {
+  final Finder bubble = find.byKey(const Key('bubble-body'));
+  final Finder stage = find.byKey(const Key('lesson-stage'));
+  if (bubble.evaluate().isEmpty || stage.evaluate().isEmpty) return const <String>[];
+  final Rect b = t.getRect(bubble.first);
+  final Rect s = t.getRect(stage.first);
+  final Rect hit = b.intersect(s);
+  return hit.width > 0.5 && hit.height > 0.5
+      ? <String>['the bubble $b lies ${hit.width.toStringAsFixed(0)} pt over the stage $s']
+      : const <String>[];
+}
+
+/// The look a child of the audit has: a school stage and a birth (so the stage of the look P1 to P4), and the captions setting.
+typedef AuditLook = ({String name, SchoolStage school, BirthMonth birth, String? captions});
+
+/// The three looks the stage audit crosses with the board: the youngest with its captions turned on, and the two older ones, whose
+/// captions show by themselves. (The rig's day is 2026-10-26.)
+const List<AuditLook> auditLooks = <AuditLook>[
+  (name: 'P1 captions on', school: SchoolStage.gan3, birth: BirthMonth(2023, 8), captions: 'on'),
+  (name: 'P3', school: SchoolStage.gan5, birth: BirthMonth(2021, 3), captions: null),
+  (name: 'P4', school: SchoolStage.grade2, birth: BirthMonth(2019, 5), captions: null),
+];
+
 /// [openOne] with the waits cut down to what the first frame of the bubble needs.
 Future<void> openQuickly(WidgetTester t, PackContent content, Activity a) async {
   final NavigatorState nav = t.state<NavigatorState>(find.byType(Navigator).first);
@@ -53,28 +80,40 @@ Future<void> openQuickly(WidgetTester t, PackContent content, Activity a) async 
   await waitSteps(t, 300);
 }
 
-/// Opens each of [activities] on the board [size] at the system's text size [scale], and looks at the bubble at the start and at hint 1,
-/// 2 and 3. Returns the activities and states where it lay over a tile (one line each, naming them), so a failure says what to fix.
+/// What one audit pass found: the bubble over a tile (a defect of the layout, which must stay empty) and, on a phone board asked for it,
+/// the bubble over the stage (a line that does not fit its column even at 14 points, a defect of the content that the text editor
+/// shortens; counted, not yet failed).
+typedef BubbleFindings = ({Map<String, List<String>> overTiles, Map<String, List<String>> overStage});
+
+/// Opens each of [activities] on the board [size] at the system's text size [scale] (for the child of [look], or the oldest look when
+/// null), and looks at the bubble at the start and at hint 1, 2 and 3. Returns the activities and states where it lay over a tile and,
+/// with [stageToo], over the stage (one line each, naming them), so a failure says what to fix.
 ///
 /// Only the bubble's place is looked at, so the waits are short: the bubble and the tiles stand where they will stand as soon as the
 /// frame is built (the hint's hand is not drawn here, `warnIfMissed` taps a lamp the activity may not have).
-Future<Map<String, List<String>>> auditBubbles(
+Future<BubbleFindings> auditBubbles(
   WidgetTester t,
   PackContent content,
   Size size,
   double scale,
-  List<Activity> activities,
-) async {
+  List<Activity> activities, {
+  AuditLook? look,
+  bool stageToo = false,
+}) async {
   t.platformDispatcher.textScaleFactorTestValue = scale;
   addTearDown(t.platformDispatcher.clearAllTestValues);
   await t.runAsync(warmHintHands);
-  await startOn(t, content, size);
+  await startOn(t, content, size, look: look);
   final Map<String, List<String>> failures = <String, List<String>>{};
+  final Map<String, List<String>> spills = <String, List<String>>{};
   await collectErrors((List<FlutterErrorDetails> sink) async {
     for (final Activity a in activities) {
       void check(String state) {
         final List<String> p = bubbleOverTiles(t);
         if (p.isNotEmpty) failures['${a.id} $state'] = p.toSet().take(2).toList();
+        if (!stageToo) return;
+        final List<String> q = bubbleOverStage(t);
+        if (q.isNotEmpty) spills['${a.id} $state'] = q;
       }
 
       await openQuickly(t, content, a);
@@ -88,7 +127,7 @@ Future<Map<String, List<String>>> auditBubbles(
       sink.clear();
     }
   });
-  return failures;
+  return (overTiles: failures, overStage: spills);
 }
 
 /// Every activity of the pack, in id order: what the full audit opens.
@@ -144,19 +183,77 @@ void bubbleAuditTests(List<BubbleAuditCase> cases) {
           greaterThan(c.full ? 1000 : 150),
           reason: 'the pack is what the audit looks at',
         );
-        final Map<String, List<String>> failures = await auditBubbles(
+        final Map<String, List<String>> failures = (await auditBubbles(
           t,
           content,
           c.size,
           c.scale,
           activities,
-        );
+        )).overTiles;
         final String report = failures.entries
             .map((MapEntry<String, List<String>> e) => '${e.key}: ${e.value}')
             .join('\n');
         expect(failures, isEmpty, reason: report);
       },
       timeout: const Timeout(Duration(minutes: 15)),
+    );
+  }
+}
+
+/// One phone board at one text size and one look: the pinned number of lines that still spill over the stage, and of the states where the
+/// bubble's slop-free tile rect still meets a tile (see [bubbleStageAuditTests]).
+typedef StageAuditCase = ({String board, Size size, double scale, AuditLook look, int spills, int tiles});
+
+/// Registers the stage audit of [cases] (B-29, docs/design/b29-caption-overlap.md): every activity of the pack is opened on the phone board
+/// at the text size, for the child of the look, and the bubble must keep clear of the stage at the start and at hint 1, 2 and 3. A line
+/// that does not fit its column even at 14 points drawn spills into the stage: that is a defect of the content, listed here (printed
+/// as `SPILL`, id and state) for the hebrew-text-editor to shorten, and its count is pinned per case so it can only go down.
+///
+/// The bubble over a tile is counted too (`TILE`, pinned): at the youngest look the tiles' hit area reaches 18 points above the drawn tile,
+/// and a bubble that keeps its 16 points clear of the drawn tile lies 2 points over that hit area (the tiles are drawn above the bubble,
+/// so no tap is lost). It was the same before B-29's caption fit; the older looks have none.
+void bubbleStageAuditTests(List<StageAuditCase> cases) {
+  late PackContent content;
+  setUpAll(() async {
+    await loadAppFonts();
+    content = await loadSourcePack();
+  });
+
+  String lines(Map<String, List<String>> m) =>
+      m.entries.map((MapEntry<String, List<String>> e) => '${e.key}: ${e.value}').join('\n');
+
+  for (final StageAuditCase c in cases) {
+    testWidgets(
+      'every activity on the ${c.board} board at text size ${c.scale}, ${c.look.name}: the bubble keeps clear of the stage '
+      '(${c.spills} lines still spill, to be shortened)',
+      (WidgetTester t) async {
+        final List<Activity> activities = allActivities(content);
+        expect(activities.length, greaterThan(1000), reason: 'the pack is what the audit looks at');
+        final BubbleFindings found = await auditBubbles(
+          t,
+          content,
+          c.size,
+          c.scale,
+          activities,
+          look: c.look,
+          stageToo: true,
+        );
+        // ignore: avoid_print
+        print(
+          'COUNT ${c.board} ${c.scale} ${c.look.name} spills ${found.overStage.length} tiles ${found.overTiles.length}',
+        );
+        for (final String key in found.overStage.keys) {
+          // ignore: avoid_print
+          print('SPILL ${c.board} ${c.scale} ${c.look.name} $key');
+        }
+        for (final String key in found.overTiles.keys) {
+          // ignore: avoid_print
+          print('TILE ${c.board} ${c.scale} ${c.look.name} $key');
+        }
+        expect(found.overStage.length, c.spills, reason: lines(found.overStage));
+        expect(found.overTiles.length, c.tiles, reason: lines(found.overTiles));
+      },
+      timeout: const Timeout(Duration(minutes: 20)),
     );
   }
 }

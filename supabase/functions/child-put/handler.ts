@@ -1,7 +1,8 @@
 // Saves a child of the family: the nickname the parent chose (the one personal text on the server), the avatar, the
-// companion, the prize it wears, how to address the child, the age band and (B-29) the school stage the parent confirmed.
-// A child that was deleted can never be saved again. The month and year of birth are not here and cannot be sent: they stay
-// on the device (the shape refuses every key it does not name).
+// companion, the prize it wears, how to address the child, the age band and (B-29) the school stage the parent confirmed and,
+// since the owner's decision of 2026-11-08, the month and year of birth (never the day), so that a new phone gets them back.
+// `birth` absent keeps the stored value, null clears it, and {year, month} replaces it; every other key about a birth or an age
+// is refused (the shape refuses every key it does not name). A child that was deleted can never be saved again.
 import { GatewayError } from "../_shared/errors.ts";
 import type { FunctionSpec } from "../_shared/handler.ts";
 import type { ChildProfile } from "../_shared/store.ts";
@@ -33,6 +34,7 @@ interface Body {
   address_form: "f" | "m" | "n";
   age_band: number;
   school_stage?: SchoolStage;
+  birth?: { year: number; month: number } | null;
 }
 
 export const spec: FunctionSpec = {
@@ -47,6 +49,13 @@ export const spec: FunctionSpec = {
     address_form: { t: "enum", values: ["f", "m", "n"] },
     age_band: { t: "int", min: 0, max: 2 },
     school_stage: { t: "enum", values: SCHOOL_STAGES, optional: true },
+    // The year range is wide on purpose (the device checks the real one); the database check is the same range.
+    birth: {
+      t: "object",
+      shape: { year: { t: "int", min: 2010, max: 2100 }, month: { t: "int", min: 1, max: 12 } },
+      optional: true,
+      nullable: true,
+    },
   },
   run: async (ctx) => {
     const b = ctx.body as unknown as Body;
@@ -64,6 +73,8 @@ export const spec: FunctionSpec = {
       ageBand: b.age_band as 0 | 1 | 2,
       // Absent keeps the stored stage (the store does not overwrite with null).
       schoolStage: b.school_stage ?? null,
+      // Absent stays undefined (keeps the stored birth); null clears it.
+      ...(b.birth === undefined ? {} : { birth: b.birth }),
     };
     const r = await ctx.svc.store.upsertChild(ctx.auth!.device.familyId, child);
     if (r === "deleted") throw new GatewayError("bad_request", "child_deleted");

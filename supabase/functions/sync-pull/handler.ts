@@ -1,6 +1,7 @@
 // A device asks for everything that happened after the last event it saw. The cursor is the server's own number, so a
 // device's clock never decides what is sent. The answer also carries the family's children (with their nicknames) and
-// the children that were deleted, so that every device ends up with the same family.
+// the children that were deleted, so that every device ends up with the same family. A child carries the month and year of
+// birth when a parent gave them (this response and the body of child-put are the only places they travel).
 import type { FunctionSpec } from "../_shared/handler.ts";
 
 export const PULL_LIMIT = 100;
@@ -44,6 +45,7 @@ export const spec: FunctionSpec = {
         address_form: c.addressForm,
         age_band: c.ageBand,
         school_stage: c.schoolStage ?? null,
+        birth: c.birth ?? null,
       })),
       tombstones,
     };

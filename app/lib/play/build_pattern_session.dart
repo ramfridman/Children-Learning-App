@@ -190,7 +190,7 @@ class BuildPatternSession extends TemplateSession {
     if (o.correct) {
       ring = AnswerState.correct;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
     } else {
       ring = AnswerState.notYet;
       notify();

@@ -796,4 +796,111 @@ abstract final class He {
   static const Str langSetupEnglish = Str('אנגלית: לשמוע, לדבר ובהמשך לקרוא ולכתוב');
   static const Str langSetupHebrew = Str('עברית: מילים, סיפורים וצלילים, ובהמשך אותיות, קריאה וכתיבה');
   static const Str langSetupRussian = Str('רוסית: לשמוע, לדבר ובהמשך לקרוא ולכתוב, גם אם אין רוסית בבית');
+
+  // ---- parent area: the age and school stage (B-29 step 5b; the design-director's drafts of docs/design/b29-steps5-6.md section 5, for the
+  // hebrew-text-editor). Adult text, no niqqud. The month and year are saved for the family and never shared; only the captions
+  // setting says "this device". ----
+  static const Str ageBirthTitle = Str('חודש ושנת לידה');
+  static const Str ageBirthOptional = Str('(לא חובה)');
+  static const Str ageBirthHelp = Str(
+    'המידע נשמר בחשבון המשפחה, כדי שגם מכשיר חדש יתאים את המסכים לגיל. הוא לא נמסר לאף אחד. אחרי מחיקה הוא נשאר בגיבוי המוצפן עד 4 שבועות.',
+  );
+  static const Str ageYearLabel = Str('שנה');
+  static const Str ageMonthLabel = Str('חודש');
+  static const List<Str> months = <Str>[
+    Str('ינואר'),
+    Str('פברואר'),
+    Str('מרץ'),
+    Str('אפריל'),
+    Str('מאי'),
+    Str('יוני'),
+    Str('יולי'),
+    Str('אוגוסט'),
+    Str('ספטמבר'),
+    Str('אוקטובר'),
+    Str('נובמבר'),
+    Str('דצמבר'),
+  ];
+  static const Str ageBirthClear = Str('ניקוי');
+  static const Str ageBirthBoth = Str('כדי לשמור חודש ושנה צריך לבחור את שניהם');
+  static const Str ageBirthNone = Str('לא נבחרו');
+  static const Str ageStageTitle = Str('שלב הלימודים השנה');
+  static const Str ageStageHelp = Str('המשחק מתחיל בכל אי לפי השלב הזה, ומשם ממשיך לפי מה שכבר נלמד.');
+  static const List<Str> stageNames = <Str>[
+    Str('גן טרום־טרום חובה'),
+    Str('גן טרום חובה'),
+    Str('גן חובה'),
+    Str('כיתה א׳'),
+    Str('כיתה ב׳'),
+    Str('כיתה ג׳ ומעלה'),
+  ];
+
+  /// "To" a stage ("moving up to ...") and "in" a stage ("stay in ..."): the prefix changes the word, so each has its own form.
+  static const List<Str> stageNamesTo = <Str>[
+    Str('לגן טרום־טרום חובה'),
+    Str('לגן טרום חובה'),
+    Str('לגן חובה'),
+    Str('לכיתה א׳'),
+    Str('לכיתה ב׳'),
+    Str('לכיתה ג׳'),
+  ];
+  static const List<Str> stageNamesIn = <Str>[
+    Str('בגן טרום־טרום חובה'),
+    Str('בגן טרום חובה'),
+    Str('בגן חובה'),
+    Str('בכיתה א׳'),
+    Str('בכיתה ב׳'),
+    Str('בכיתה ג׳ ומעלה'),
+  ];
+  static const Str ageStageSuggested = Str(
+    'לפי שנת הלידה, השלב המתאים הוא {stage}. אפשר לשנות, למשל אם נשארים שנה נוספת בגן חובה.',
+  );
+  static const Str ageStageDiffers = Str('לפי שנת הלידה: {suggested}. השלב שנבחר: {current}.');
+  static const Str ageStageNeeded = Str('כדי לשמור צריך לבחור את שלב הלימודים');
+  static const Str ageStageYounger = Str('המסכים יותאמו לגיל צעיר יותר. השיעורים וההתקדמות לא משתנים.');
+  static const Str ageChangeNote = Str(
+    'השינוי יתחיל בפעם הבאה שמשחקים. השיעורים שכבר נלמדו וההתקדמות נשארים.',
+  );
+  static const Str agePageTitle = Str('גיל ושלב לימודים: {child}');
+  static const Str ageCardTitle = Str('גיל ושלב לימודים');
+  static const Str ageStageRow = Str('שלב הלימודים');
+  static const Str ageChange = Str('שינוי');
+  static const Str screensTitle = Str('התאמת המסכים');
+  static const Str lookTitle = Str('המראה במסכים');
+  static const Str lookHelp = Str(
+    'ברירת המחדל לפי הגיל. אפשר לבחור מראה של קבוצת גיל אחרת: כמה תשובות יש על המסך, גודל הכתב ואורך החגיגות. השיעורים עצמם לא משתנים.',
+  );
+  static const Str lookAuto = Str('לפי הגיל');
+  static const Str lookNow = Str('עכשיו: מראה ל{range}');
+  static const Str lookTablet = Str(
+    'בגיל הצעיר הזה נוח יותר עם טאבלט: המסך גדול יותר וקל יותר ללחוץ. אפשר גם בטלפון.',
+  );
+  static const Str captionsTitle = Str('כתוביות לשאלות');
+  static const Str captionsHelp = Str(
+    'השאלה תמיד מוקראת בקול. גם כשהכתוביות מוסתרות, מספרים ושם הילד מופיעים על המסך. ההגדרה הזאת נשמרת רק במכשיר הזה.',
+  );
+  static const Str captionsAuto = Str('לפי שלב הלימודים');
+  static const Str captionsOn = Str('להציג');
+  static const Str captionsOff = Str('להסתיר');
+  static const Str captionsNowOn = Str('עכשיו: מוצגות ({stage})');
+  static const Str captionsNowOff = Str('עכשיו: מוסתרות ({stage})');
+  static const Str septTitle = Str('שנת לימודים חדשה');
+  static const Str septQuestion = Str('{child} עולה {next}?');
+  static const Str septHelp = Str('השיעורים שכבר נלמדו נשארים. השינוי יתחיל בפעם הבאה שמשחקים.');
+  static const Str septYes = Str('כן, {next}');
+  static const Str septKeep = Str('להישאר {current}');
+  static const Str septOther = Str('שלב אחר');
+  static const Str addAgeTitle = Str('התאמה לגיל: {child}');
+  static const Str addAgeBody = Str(
+    'אפשר להוסיף חודש ושנת לידה ולאשר את שלב הלימודים, כדי שהמסכים יתאימו לגיל. לא חובה.',
+  );
+  static const Str addAgeYes = Str('להוספה');
+  static const Str addAgeLater = Str('לא עכשיו');
+  static const Str areaChildSettings = Str('הגדרות');
+
+  /// The idle ladder's offer (B-29 D5): a child's line, so it is pointed. On screen only until the voice director gives it a voice
+  /// (voice text: "רוצים רמז, או לחשוב עוד קצת?").
+  static const Str idleOffer = Str('רוֹצִים רֶמֶז, אוֹ לַחְשֹׁב עוֹד קְצָת?', nikud: true);
+  static const Str ageBirthYearSemantics = Str('שנת לידה {year}');
+  static const Str ageStageSemantics = Str('שלב הלימודים: {stage}');
 }

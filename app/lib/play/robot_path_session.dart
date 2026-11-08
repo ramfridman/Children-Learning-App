@@ -240,7 +240,7 @@ class RobotPathSession extends TemplateSession {
     if (disposed || !o.correct) return;
     ring = AnswerState.correct;
     notify();
-    later(TemplateSession.praisePause, controller.next);
+    later(praise, controller.next);
   }
 
   /// One numbered footprint on each of [squares], the first of them numbered [first] (the number of that step of the way).

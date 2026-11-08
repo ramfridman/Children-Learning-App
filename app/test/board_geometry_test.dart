@@ -507,7 +507,8 @@ void main() {
               reason: 'Colour Bay\'s sign starts inside the edge',
             );
             // Its text keeps its size at the system's own text size; on the SE it is held in only at a larger one.
-            if (scale == 1.0) expect(colors.width, closeTo(154.2, 0.6));
+            // 154.2 in Heebo 700; the sign is Heebo 500 since B-29 (D4), a little narrower.
+            if (scale == 1.0) expect(colors.width, closeTo(150.4, 0.6));
           }
         });
       }

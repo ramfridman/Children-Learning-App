@@ -75,6 +75,7 @@ class GateInput {
     this.switchesOn = const <String>{},
     this.placedOpen = const <String>{},
     this.route,
+    this.ageMonths,
   });
 
   /// The mastery of each skill (a skill that is missing has none).
@@ -91,6 +92,10 @@ class GateInput {
   /// The gates placement marked open ("a child placed above a gate has it marked open").
   final Set<String> placedOpen;
   final String? route;
+
+  /// The child's age in months on the device (B-29), or null when no month and year of birth were given. When it is known a gate's
+  /// minimum age is read from it, not from the bracket. It is worked out on the phone for this check and goes nowhere.
+  final int? ageMonths;
 }
 
 /// Why a gate is closed.
@@ -113,6 +118,12 @@ class GateResult {
 /// The youngest age, in years, in each age bracket.
 const List<int> bracketMinAge = <int>[3, 5, 7];
 
+/// Whether the child is under [minYears]: by the age in months when it is known ("not before 5" opens at 5;0), else by the bracket.
+bool _tooYoung(GateInput input, int minYears) {
+  final int? months = input.ageMonths;
+  return months != null ? months < minYears * 12 : bracketMinAge[input.ageBand.clamp(0, 2)] < minYears;
+}
+
 /// Whether [gate] is open for [input]. The order is: the parent's hold, a presentation band too young, the parent's override
 /// that opens, placement above the gate, the age, then the skills.
 GateResult gateResult(CourseGate gate, GateInput input) {
@@ -128,7 +139,7 @@ GateResult gateResult(CourseGate gate, GateInput input) {
 
   final List<GateReason> reasons = <GateReason>[];
   final bool ageApplies = gate.minAge != null && !gate.routeBypass.contains(input.route);
-  if (ageApplies && bracketMinAge[input.ageBand.clamp(0, 2)] < gate.minAge!) reasons.add(GateReason.tooYoung);
+  if (ageApplies && _tooYoung(input, gate.minAge!)) reasons.add(GateReason.tooYoung);
 
   final MasteryLevel needed = gate.durableBelowBand != null && input.presentationBand < gate.durableBelowBand!
       ? MasteryLevel.durable

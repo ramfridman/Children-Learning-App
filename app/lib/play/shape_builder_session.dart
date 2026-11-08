@@ -165,7 +165,7 @@ class ShapeBuilderSession extends TemplateSession {
     if (disposed) return;
     ring = AnswerState.correct;
     notify();
-    later(TemplateSession.praisePause, controller.next);
+    later(praise, controller.next);
   }
 
   /// The help shows the next place that is still empty and a piece that fits it.

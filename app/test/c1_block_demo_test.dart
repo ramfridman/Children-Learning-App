@@ -21,6 +21,10 @@ Future<void> _openLesson(WidgetTester t, String id) async {
       builder: (BuildContext c) => LessonScreen(profileId: 'p-1', lessonId: id),
     ),
   );
+  // The visit reads the child's look before it draws (B-29), which takes a few frames more than it did.
+  for (int i = 0; i < 4; i++) {
+    await t.pump();
+  }
   await t.pump(const Duration(milliseconds: 600));
   await t.pump(const Duration(milliseconds: 300));
 }
@@ -259,8 +263,11 @@ void main() {
         final String caption = content.lessons['blocks-tens-and-ones']!.demo!.caption;
         expect(caption, 'עֶשֶׂר קֻבִּיּוֹת הֵן מוֹט אֶחָד.');
         expect(said(), isNot(caption), reason: 'before the snap the bubble has the question');
-        // Reduced motion: the rod is whole at the snap, 6.4 s in.
-        await waitSteps(t, 6600);
+        // Reduced motion: the rod is whole at the snap, 6.4 s in. The visit now reads the child's look before it draws (B-29), so the
+        // demonstration starts a little after the lesson was opened.
+        for (int i = 0; i < 45 && said() != caption; i++) {
+          await waitSteps(t, 200);
+        }
         expect(said(), caption, reason: 'at the snap');
         await waitSteps(t, 1500);
         expect(find.byKey(const Key('block-demo')), findsNothing);

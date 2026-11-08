@@ -40,6 +40,8 @@ class ActivitySpec {
     required this.tilesWidth,
     required this.tileFont,
     this.tileHeight = 96,
+    this.tileSize = 96,
+    this.tileSlop = 12,
     this.stageDrawn = true,
     this.blocksStageTop,
     this.blocksBubbleTop,
@@ -85,6 +87,11 @@ class ActivitySpec {
   /// How tall an answer tile is: 96, or what the blocks on the tiles of a "which one" item need (docs/design/c1-blocks.md section 5.2).
   final double tileHeight;
 
+  /// The side of a plain answer tile and the room around it that still counts as touching it (B-29, the look's stage: 96 and 12 for the
+  /// legacy boards, and the stage's numbers on a lesson). The row of tiles starts [tileSlop] above where the tiles are drawn.
+  final double tileSize;
+  final double tileSlop;
+
   /// False when nothing is drawn on the stage and the tiles take its room: the box stays for what a hint draws (a card of blocks), but
   /// the scene and the tablet's card are not drawn.
   final bool stageDrawn;
@@ -125,6 +132,7 @@ class ActivitySpec {
     double? bubbleWidth,
     bool? tailAtMouth,
     bool? card,
+    double? tileSlop,
   }) => ActivitySpec(
     boardHeight: boardHeight,
     bubbleMaxWidth: bubbleWidth ?? bubbleMaxWidth,
@@ -154,12 +162,59 @@ class ActivitySpec {
     tilesWidth: tilesWidth,
     tileFont: tileFont,
     tileHeight: tileHeight ?? this.tileHeight,
+    tileSize: tileSize,
+    tileSlop: tileSlop ?? this.tileSlop,
     stageDrawn: stageDrawn ?? this.stageDrawn,
     blocksStageTop: blocksStageTop,
     blocksBubbleTop: blocksBubbleTop,
     blocksBubbleEdge: blocksBubbleEdge,
     blocksBubbleRight: blocksBubbleRight,
     tailAtMouth: tailAtMouth ?? this.tailAtMouth,
+  );
+
+  /// The same board with the look's sizes (B-29): the caption's font, the numeral's font, and the answer tile's side and slop. A tile that
+  /// is 96 high (the plain row) takes the stage's side; a layout with its own tile height (blocks, a tall row) keeps it.
+  ActivitySpec withLook({
+    required double captionFont,
+    required double numeralFont,
+    required double tile,
+    required double slop,
+  }) => ActivitySpec(
+    boardHeight: boardHeight,
+    bubbleMaxWidth: bubbleMaxWidth,
+    bubbleMaxHeight: bubbleMaxHeight,
+    homeRight: homeRight,
+    controlsTop: controlsTop,
+    eyeLeft: eyeLeft,
+    hintLeft: hintLeft,
+    trailLeft: trailLeft,
+    trailTop: trailTop,
+    trailWidth: trailWidth,
+    nitziLeft: nitziLeft,
+    nitziTop: nitziTop,
+    nitziSize: nitziSize,
+    micLeft: micLeft,
+    micTop: micTop,
+    micSize: micSize,
+    bubbleLeft: bubbleLeft,
+    bubbleRight: bubbleRight,
+    bubbleTop: bubbleTop,
+    bubbleFont: captionFont,
+    stage: stage,
+    stageIsCard: stageIsCard,
+    tilesLeft: tilesLeft,
+    tilesTop: tilesTop,
+    tilesWidth: tilesWidth,
+    tileFont: numeralFont,
+    tileHeight: tileHeight == 96 ? tile : tileHeight,
+    tileSize: tile,
+    tileSlop: slop,
+    stageDrawn: stageDrawn,
+    blocksStageTop: blocksStageTop,
+    blocksBubbleTop: blocksBubbleTop,
+    blocksBubbleEdge: blocksBubbleEdge,
+    blocksBubbleRight: blocksBubbleRight,
+    tailAtMouth: tailAtMouth,
   );
 
   // Board 13.

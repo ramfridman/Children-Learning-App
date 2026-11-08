@@ -219,6 +219,51 @@ String generateTokens(Map<String, Object?> t) {
   o.writeln('}');
   o.writeln();
 
+  // ---- stage (B-29: the four presentation stages) ----
+  final Map<String, Object?> stage = _map(t['stage']);
+  o.writeln(
+    '/// How a screen looks for each presentation stage P1 to P4 (B-29, docs/design/b29-steps5-6.md section 6.2), in stage order.',
+  );
+  o.writeln('abstract final class TokenStage {');
+  o.writeln('  static const List<StageToken> all = <StageToken>[');
+  for (final String k in <String>['P1', 'P2', 'P3', 'P4']) {
+    final Map<String, Object?> s = _map(stage[k]);
+    final Map<String, Object?> tile = _map(s['tile']);
+    final Map<String, Object?> gap = _map(s['gap']);
+    final Map<String, Object?> slop = _map(s['hitSlop']);
+    final Map<String, Object?> numeral = _map(s['numeral']);
+    final Map<String, Object?> caption = _map(s['caption']);
+    final Map<String, Object?> speaker = _map(s['speakerBubble']);
+    final Map<String, Object?> sign = _map(s['sign']);
+    final List<Object?> idle = s['idleS']! as List<Object?>;
+    final List<Object?> signPhone = sign['phone']! as List<Object?>;
+    final List<Object?> signTablet = sign['tablet']! as List<Object?>;
+    o.writeln('    StageToken(');
+    o.writeln('      maxChoices: ${s['maxChoices']},');
+    o.writeln('      tilePhone: ${_num(tile['phone'])}, tileTablet: ${_num(tile['tablet'])},');
+    o.writeln('      gapPhone: ${_num(gap['phone'])}, gapTablet: ${_num(gap['tablet'])},');
+    o.writeln('      hitSlopPhone: ${_num(slop['phone'])}, hitSlopTablet: ${_num(slop['tablet'])},');
+    o.writeln('      numeralPhone: ${_num(numeral['phone'])}, numeralTablet: ${_num(numeral['tablet'])},');
+    o.writeln(
+      '      captionPhone: ${_num(caption['phone'])}, captionPhoneSE: ${_num(caption['phoneSE'])}, '
+      'captionTablet: ${_num(caption['tablet'])}, captionFloorDrop: ${_num(s['captionFloorDrop'])},',
+    );
+    o.writeln('      speakerPhone: ${_num(speaker['phone'])}, speakerTablet: ${_num(speaker['tablet'])},');
+    o.writeln('      idleSeconds: <int>[${idle.join(', ')}],');
+    o.writeln(
+      '      transitionMs: ${s['transition']}, overshoot: ${_num(s['overshoot'])}, tier1Ms: ${s['tier1']}, '
+      'tier2Ms: ${s['tier2']}, tier2SkipAfterMs: ${s['tier2SkipAfter']}, focal: ${s['focal']},',
+    );
+    o.writeln(
+      '      signPhone: <double>[${signPhone.map(_num).join(', ')}], '
+      'signTablet: <double>[${signTablet.map(_num).join(', ')}], plusPebble: ${_num(s['plusPebble'])},',
+    );
+    o.writeln('    ),');
+  }
+  o.writeln('  ];');
+  o.writeln('}');
+  o.writeln();
+
   // ---- layout ----
   final Map<String, Object?> layout = _map(t['layout']);
   final Map<String, Object?> devices = _map(layout['devices']);

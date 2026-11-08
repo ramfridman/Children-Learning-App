@@ -139,7 +139,7 @@ class SayItSession extends TemplateSession {
     }
     await controller.sayItDone();
     if (disposed) return;
-    later(TemplateSession.praisePause, controller.next);
+    later(praise, controller.next);
   }
 
   @override

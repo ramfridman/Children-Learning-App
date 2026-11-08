@@ -1,5 +1,5 @@
 -- B-29 step 3: a child's school stage is one of six words or null, nothing else; no client role can reach the column; deleting a
--- child takes its look letter out of the family's settings and counts a new version; and nothing that looks like a birth is
+-- child takes its look letter out of the family's settings and counts a new version; and nothing that looks like a date or a day is
 -- anywhere in the child's table.
 begin;
 create extension if not exists pgtap with schema extensions;
@@ -48,12 +48,12 @@ select ok(has_column_privilege('app_gateway', 'app.child_profile', 'school_stage
 select ok(has_column_privilege('app_gateway', 'app.child_profile', 'school_stage', 'update'), 'and writes it');
 select ok((select relrowsecurity from pg_class where oid = 'app.child_profile'::regclass), 'row level security stays on for the table');
 
--- ---- the table holds no date of birth, month of birth or age in months ----------------------------------------------------
+-- ---- the table holds no date, no day of birth, no age in months and no look (the month and year of birth are file 14) ----------
 select is(
   (select count(*)::int from information_schema.columns
     where table_schema = 'app' and table_name = 'child_profile'
-      and (column_name ~* '(birth|born|dob|month|year|age_months|presentation|look)' or data_type in ('date', 'interval'))),
-  0, 'no column of the child table can hold a birth, a month, a year, a look or a date');
+      and (column_name ~* '(dob|day|age_months|presentation|look)' or data_type in ('date', 'interval'))),
+  0, 'no column of the child table can hold a date, a day, an age in months or a look');
 
 -- ---- deleting a child takes its look letter out of the family's settings ------------------------------------------------------
 insert into app.family_settings (family_id, rules, version)

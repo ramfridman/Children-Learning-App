@@ -88,3 +88,21 @@ Deno.test("unknown fields, missing fields and wrong types are refused", () => {
   assert.equal(code(() => validate({}, {})), "ok");
   assert.equal(code(() => validate({}, { a: 1 })), "bad_request/unknown_field");
 });
+
+Deno.test("a nullable field takes null and its own type, and nothing else; a field that is not nullable refuses null", () => {
+  const nullable: Shape = {
+    born: { t: "object", shape: { y: { t: "int", min: 1, max: 9 } }, optional: true, nullable: true },
+    plain: { t: "int", min: 0, max: 9, optional: true },
+  };
+  assert.equal(code(() => validate(nullable, {})), "ok", "absent");
+  assert.equal(code(() => validate(nullable, { born: null })), "ok", "null");
+  assert.equal(code(() => validate(nullable, { born: { y: 2 } })), "ok", "a value");
+  assert.equal(
+    code(() => validate(nullable, { born: { y: null } })),
+    "bad_request/born.y:int",
+    "null inside is not allowed",
+  );
+  assert.equal(code(() => validate(nullable, { born: { y: 2, z: 1 } })), "bad_request/unknown_field");
+  assert.equal(code(() => validate(nullable, { born: [] })), "bad_request/born:object");
+  assert.equal(code(() => validate(nullable, { plain: null })), "bad_request/plain:int", "not nullable");
+});

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'app_text.dart';
 import 'board.dart';
 import 'layout.dart';
+import 'stage_spec.dart';
 import 'token_types.dart';
 import 'tokens.g.dart';
 
@@ -42,6 +43,7 @@ class PebbleButton extends StatefulWidget {
     this.fill = TokenColors.paper,
     this.lip = TokenColors.cardLip,
     this.slop = 12,
+    this.slopLeft,
   });
 
   final Widget child;
@@ -51,6 +53,11 @@ class PebbleButton extends StatefulWidget {
   final Color fill;
   final Color lip;
   final double slop;
+
+  /// The touch margin on the physical left of the pebble, when it is not [slop] (the box keeps its width, so the margin on the right takes
+  /// what the left gives up): a pebble at the edge of a screen stands a little to the left of the middle of its touch box, and the box
+  /// itself does not move.
+  final double? slopLeft;
 
   @override
   State<PebbleButton> createState() => _PebbleButtonState();
@@ -75,7 +82,12 @@ class _PebbleButtonState extends State<PebbleButton> {
         onTapCancel: live ? () => setState(() => _down = false) : null,
         onTap: widget.onPressed,
         child: Padding(
-          padding: EdgeInsets.all(widget.slop),
+          padding: EdgeInsets.fromLTRB(
+            widget.slopLeft ?? widget.slop,
+            widget.slop,
+            widget.slop * 2 - (widget.slopLeft ?? widget.slop),
+            widget.slop,
+          ),
           child: Transform.translate(
             offset: Offset(0, TokenComponent.clayLip - lip),
             child: Container(
@@ -221,6 +233,90 @@ class BoardBubble extends StatelessWidget {
   );
 }
 
+/// The bubble that stands where the question's words would be when captions are hidden (B-29 D2): a white pebble with a speaker glyph and the
+/// small tail to the guide's mouth. A number sentence or a target word of the question still shows under the glyph, in the same bubble. A tap
+/// plays the question again (the frame wraps it). With [ring] the pebble is circled once in the sky colour: the idle prompt's first step.
+class SpeakerBubble extends StatelessWidget {
+  const SpeakerBubble({
+    super.key,
+    required this.size,
+    this.math,
+    this.chip,
+    this.pointerAt,
+    this.ring = false,
+  });
+
+  /// The pebble's diameter: 64 on a phone, 72 on a tablet.
+  final double size;
+  final Widget? math;
+  final Widget? chip;
+  final double? pointerAt;
+  final bool ring;
+
+  @override
+  Widget build(BuildContext context) {
+    final bool plain = math == null && chip == null;
+    final Widget glyph = Icon(Icons.volume_up_rounded, size: size * 0.5, color: TokenColors.ink);
+    return Stack(
+      clipBehavior: Clip.none,
+      children: <Widget>[
+        Positioned(
+          right: -10,
+          top: pointerAt == null ? null : pointerAt! - 11,
+          bottom: pointerAt == null ? (plain ? size / 2 - 11 : 18) : null,
+          child: Transform.rotate(
+            angle: 0.785398,
+            child: Container(
+              key: const Key('speaker-pointer'),
+              width: 22,
+              height: 22,
+              decoration: BoxDecoration(color: TokenColors.paper, borderRadius: BorderRadius.circular(4)),
+            ),
+          ),
+        ),
+        if (ring)
+          Positioned(
+            left: -8,
+            top: -8,
+            right: -8,
+            bottom: -8,
+            child: IgnorePointer(
+              child: DecoratedBox(
+                key: const Key('speaker-ring'),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(plain ? size : TokenRadius.lg + 8),
+                  border: Border.all(color: TokenColors.sky, width: 4),
+                ),
+              ),
+            ),
+          ),
+        Container(
+          key: const Key('speaker-body'),
+          width: plain ? size : null,
+          height: plain ? size : null,
+          padding: plain ? null : const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: TokenColors.paper,
+            borderRadius: BorderRadius.circular(plain ? size : TokenRadius.lg),
+            boxShadow: softShadow,
+          ),
+          child: plain
+              ? glyph
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    glyph,
+                    if (math != null) ...<Widget>[const SizedBox(height: 6), math!],
+                    if (chip != null) ...<Widget>[const SizedBox(height: 6), chip!],
+                  ],
+                ),
+        ),
+      ],
+    );
+  }
+}
+
 /// The colour and width of the outline around a bubble with a wedge tail (nitzi-home.md section 3, "Bubble tail").
 final Color bubbleOutlineColor = TokenColors.ink.withAlpha(0x33);
 const double bubbleOutlineWidth = 1.5;
@@ -305,6 +401,21 @@ class _WedgeTailPainter extends CustomPainter {
   bool shouldRepaint(_WedgeTailPainter old) => old.tip != tip;
 }
 
+/// A row of answer tiles, centred, as wide as its tiles need. With the look's tile margins a full row of the oldest look (five tiles) is 20
+/// points wider than the smallest phone's box (the tiles as drawn fit it exactly, docs/design/b29-steps5-6.md section 6.2: it is the margins
+/// at the two ends): then the row is scaled down to the box, 4 percent, and only then. A row that fits is not touched.
+class TileRow extends StatelessWidget {
+  const TileRow({super.key, required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => FittedBox(
+    fit: BoxFit.scaleDown,
+    child: Row(mainAxisSize: MainAxisSize.min, children: children),
+  );
+}
+
 /// An answer tile (board 05, 13, 23): [size] square, radius 28, a 4 px border, a clay lip and a soft
 /// shadow. The selected tile lifts 6 px and gets an ink outline. Numerals are drawn left to right.
 class AnswerTile extends StatelessWidget {
@@ -314,9 +425,9 @@ class AnswerTile extends StatelessWidget {
     required this.semanticLabel,
     this.state = AnswerState.idle,
     this.onPressed,
-    this.size = 96,
+    this.size,
     this.width,
-    this.slop = 12,
+    this.slop,
     this.hitPadding,
   });
 
@@ -332,16 +443,24 @@ class AnswerTile extends StatelessWidget {
   final String semanticLabel;
   final AnswerState state;
   final VoidCallback? onPressed;
-  final double size;
-  final double slop;
+
+  /// The side of the tile; null takes the look's (B-29: 96 for P1 and P2, 88 for P3, 80 for P4 on a phone), and 96 where no look is set.
+  final double? size;
+
+  /// The room around the tile that still counts as touching it; null takes the look's when [size] is the look's too, and 12 otherwise.
+  final double? slop;
 
   @override
   Widget build(BuildContext context) {
     final bool selected = state == AnswerState.selected;
+    final StageScope? look = StageScope.maybeOf(context);
+    final SizeClass sizeClass = sizeClassFor(MediaQuery.sizeOf(context));
+    final double side = size ?? look?.stage.tile(sizeClass) ?? 96;
+    final double margin = slop ?? (size == null ? look?.stage.slop(sizeClass) : null) ?? 12;
     final Widget tile = Container(
       key: const Key('answer-tile'),
-      width: width ?? size,
-      height: size,
+      width: width ?? side,
+      height: side,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: state == AnswerState.correct ? TokenColors.sparkTint : TokenColors.paper,
@@ -359,7 +478,7 @@ class AnswerTile extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: onPressed,
         child: Padding(
-          padding: hitPadding ?? EdgeInsets.all(slop),
+          padding: hitPadding ?? EdgeInsets.all(margin),
           child: Transform.translate(
             offset: Offset(0, selected ? -6 : 0),
             child: Stack(
@@ -677,12 +796,16 @@ class ParentButton extends StatelessWidget {
     required this.onPressed,
     this.destructive = false,
     this.quiet = false,
+    this.semanticLabel,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final bool destructive;
   final bool quiet;
+
+  /// What a screen reader says, when it must say more than the visible [label] (which child a bare "Settings" is for).
+  final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -695,7 +818,7 @@ class ParentButton extends StatelessWidget {
     return Semantics(
       button: true,
       enabled: onPressed != null,
-      label: label,
+      label: semanticLabel ?? label,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onPressed,

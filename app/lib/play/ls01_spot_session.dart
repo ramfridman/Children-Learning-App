@@ -75,7 +75,7 @@ class Ls01SpotSession extends Ls01Session {
     if (out.settled || out.correct) {
       chosenState = out.settled ? AnswerState.selected : AnswerState.correct;
       notify();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
     } else {
       chosenState = AnswerState.notYet;
       notify();

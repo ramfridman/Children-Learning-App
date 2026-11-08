@@ -95,6 +95,14 @@ void main() {
 
       await tester.enterText(find.byType(TextField), 'נועה');
       await tester.pump();
+      expect(
+        tester.widget<ParentButton>(find.byKey(const Key('form-save'))).onPressed,
+        isNull,
+        reason: 'a name is not enough: the school stage is needed too (B-29)',
+      );
+      await tester.ensureVisible(find.byKey(const Key('stage-gan5')));
+      await tester.tap(find.byKey(const Key('stage-gan5')));
+      await tester.pump();
       await tester.tap(find.text(He.setupSave.text));
       await tester.pumpAndSettle();
 
@@ -102,7 +110,8 @@ void main() {
       expect(find.text('נועה'), findsOneWidget);
       final List<Profile> saved = await rig.db.allProfiles();
       expect(saved.single.name, 'נועה');
-      expect(saved.single.ageBand, 1, reason: 'age 5 is band B');
+      expect(saved.single.ageBand, 1, reason: 'gan hova is band B');
+      expect(saved.single.schoolStage, 'gan5');
     });
 
     testWidgets('an interrupted setup resumes at the PIN, not at the start', (WidgetTester tester) async {

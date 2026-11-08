@@ -434,10 +434,13 @@ export function pgStore(sql: Sql): Store {
       if (gone) return "deleted";
       await sql`
         insert into app.child_profile
-          (family_id, id, nickname, avatar_id, companion_id, outfit_id, address_form, age_band, school_stage)
+          (family_id, id, nickname, avatar_id, companion_id, outfit_id, address_form, age_band, school_stage,
+           birth_year, birth_month)
         values (${familyId}, ${c.id}, ${c.nickname}, ${c.avatarId}, ${c.companionId}, ${
         c.outfitId ?? null
-      }, ${c.addressForm}, ${c.ageBand}, ${c.schoolStage ?? null})
+      }, ${c.addressForm}, ${c.ageBand}, ${c.schoolStage ?? null}, ${c.birth?.year ?? null}, ${
+        c.birth?.month ?? null
+      })
         on conflict (family_id, id) do update set nickname = excluded.nickname, avatar_id = excluded.avatar_id,
           companion_id = excluded.companion_id, outfit_id = excluded.outfit_id, address_form = excluded.address_form,
           age_band = excluded.age_band,
@@ -447,13 +450,19 @@ export function pgStore(sql: Sql): Store {
                           when 'gan3' then 0 when 'gan4' then 0 when 'gan5' then 1
                           when 'grade1' then 1 when 'grade2' then 2 when 'grade3' then 2 end) = excluded.age_band
                  then app.child_profile.school_stage end),
+          -- A birth that is not sent is kept; null clears both parts; a value replaces both (they are always set together).
+          birth_year = case when ${c.birth !== undefined}::boolean then excluded.birth_year
+                            else app.child_profile.birth_year end,
+          birth_month = case when ${c.birth !== undefined}::boolean then excluded.birth_month
+                             else app.child_profile.birth_month end,
           updated_at = now()`;
       return "saved";
     },
 
     async listChildren(familyId) {
       const rows = await sql`
-        select id, nickname, avatar_id, companion_id, outfit_id, address_form, age_band, school_stage
+        select id, nickname, avatar_id, companion_id, outfit_id, address_form, age_band, school_stage,
+               birth_year, birth_month
           from app.child_profile where family_id = ${familyId} order by created_at, id`;
       return rows.map((r): ChildProfile => ({
         id: r.id,
@@ -464,6 +473,7 @@ export function pgStore(sql: Sql): Store {
         addressForm: r.address_form,
         ageBand: r.age_band,
         schoolStage: r.school_stage,
+        birth: r.birth_year === null ? null : { year: r.birth_year, month: r.birth_month },
       }));
     },
 

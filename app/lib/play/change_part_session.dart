@@ -224,7 +224,7 @@ class ChangePartSession extends TemplateSession {
       hubLit = true;
       notify();
       replayResult();
-      later(TemplateSession.praisePause, controller.next);
+      later(praise, controller.next);
     } else {
       state = AnswerState.notYet;
       wobble = true;
@@ -248,7 +248,7 @@ class ChangePartSession extends TemplateSession {
     if (a.make || busy || heard.length < heardEnough) return;
     busy = true;
     controller.completePractice();
-    later(TemplateSession.praisePause, controller.next);
+    later(praise, controller.next);
   }
 
   bool get canGoOn => !a.make && heard.length >= heardEnough;

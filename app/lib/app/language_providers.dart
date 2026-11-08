@@ -20,6 +20,7 @@ import '../world/course_path.dart';
 import '../world/language_placement.dart';
 import 'providers.dart' show clockProvider;
 import 'reward_providers.dart' show rewardsProvider;
+import 'age_providers.dart' show childAgeProvider;
 import 'state.dart';
 
 /// The parent's language settings of the family on this device (docs/languages/frame.md section 1.4): which languages are on
@@ -200,6 +201,8 @@ final FutureProviderFamily<LanguageProgress?, ({String childId, String course})>
         now: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
         switches: (await ref.watch(languagesProvider.future)).of(key.childId, key.course),
         ageBand: child?.ageBand ?? 1,
+        // A gate's minimum age is read from the age in months when the parent gave a month and year (B-29); it stays on this phone.
+        ageMonths: (await ref.watch(childAgeProvider(key.childId).future)).months,
         placement: c.placement,
       );
     });

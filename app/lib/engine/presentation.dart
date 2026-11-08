@@ -33,9 +33,17 @@ class PresentationSpec {
     required this.sessionMinutes,
     required this.oneInstruction,
     required this.readingDemand,
+    this.stage,
+    this.instructionSteps = 1,
   });
 
   final int band;
+
+  /// The look stage 0 to 3 for P1 to P4 this spec was made for (B-29), or null for a spec made for a band alone.
+  final int? stage;
+
+  /// How many steps one instruction may hold (content): 1 for P1 and P2, 2 for P3, 3 for P4.
+  final int instructionSteps;
 
   /// The most choices an item may show, or null for no limit (Band A shows at most 3).
   final int? maxChoices;
@@ -73,5 +81,34 @@ PresentationSpec presentationSpec(int band, {String course = Course.core, Engine
     sessionMinutes: own == null ? p.sessionMinutes[b] : (own.$1 + own.$2) ~/ 2,
     oneInstruction: b == 0,
     readingDemand: b > 0,
+  );
+}
+
+// ---- the look stages P1 to P4 (B-29, docs/design/b29-steps5-6.md section 6.2): the pacing that belongs to the engine ----
+
+/// The most answer choices a stage shows (the UI cap; the stage's own token holds the same numbers for the layout).
+const List<int> maxChoicesByStage = <int>[3, 3, 4, 5];
+
+/// Items in an activity, the lower and the upper end, by stage.
+const List<(int, int)> itemsByStage = <(int, int)>[(3, 4), (3, 5), (5, 8), (8, 12)];
+
+/// The length of a visit in minutes by stage (the parent's limits still apply).
+const List<int> sessionMinutesByStage = <int>[6, 8, 12, 15];
+
+/// The look and pace of stage [stage] (0 to 3 for P1 to P4) in [course]. [band] is the content band, which only a course's own visit
+/// length reads (English keeps its minutes by band, the middle of its range); every other number follows the stage alone.
+PresentationSpec presentationSpecForStage(int stage, {String course = Course.core, int band = 1}) {
+  final int s = stage.clamp(0, 3);
+  final (int, int)? own = _sessionMinutesByCourse[course]?[band.clamp(0, 2)];
+  return PresentationSpec(
+    band: band.clamp(0, 2),
+    stage: s,
+    maxChoices: maxChoicesByStage[s],
+    itemsMin: itemsByStage[s].$1,
+    itemsMax: itemsByStage[s].$2,
+    sessionMinutes: own == null ? sessionMinutesByStage[s] : (own.$1 + own.$2) ~/ 2,
+    oneInstruction: s <= 1,
+    readingDemand: s >= 2,
+    instructionSteps: const <int>[1, 1, 2, 3][s],
   );
 }
