@@ -13657,7 +13657,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.x.mathb17.6.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.x.mathb17.6.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.x.mathb17.6.json | hints.1.caption.0.v | כׇּל מַטְבֵּעַ שָׁוֶה כַּמָּה שֶׁכָּתוּב עָלָיו. | needs-editor |
-| activity.x.mathb17.6.json | hints.2.caption.0.v | מַטְבֵּעַ שֶׁל חֲמִשָּׁה שְׁקָלִים, מַטְבֵּעַ שֶׁל שְׁנֵי שְׁקָלִים וּמַטְבֵּעַ שֶׁל שֶׁקֶל — בְּיַחַד שְׁמוֹנָה שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.x.mathb17.6.json | hints.2.caption.0.v | חֲמִשָּׁה שְׁקָלִים, שְׁנֵי שְׁקָלִים וְשֶׁקֶל אֶחָד — בְּיַחַד שְׁמוֹנָה שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
 | activity.x.mathb17.6.json | a11y.altText | הַמְּחִיר הוּא שְׁמוֹנָה שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַוִּי. | needs-editor |
 | activity.x.mathb17.7.json | prompt.caption.0.v | הַמְּחִיר הוּא תִּשְׁעָה שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַוִּי. | needs-editor |
 | activity.x.mathb17.7.json | feedback.correct.caption.0.v | כֵּן! שִׁלַּמְתֶּם בְּדִיּוּק תִּשְׁעָה שְׁקָלִים. | needs-editor |
@@ -13666,7 +13666,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.x.mathb17.7.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.x.mathb17.7.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.x.mathb17.7.json | hints.1.caption.0.v | כׇּל מַטְבֵּעַ שָׁוֶה כַּמָּה שֶׁכָּתוּב עָלָיו. | needs-editor |
-| activity.x.mathb17.7.json | hints.2.caption.0.v | מַטְבֵּעַ שֶׁל חֲמִשָּׁה שְׁקָלִים, מַטְבֵּעַ שֶׁל שְׁנֵי שְׁקָלִים וְעוֹד מַטְבֵּעַ שֶׁל שְׁנֵי שְׁקָלִים — בְּיַחַד תִּשְׁעָה שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.x.mathb17.7.json | hints.2.caption.0.v | חֲמִשָּׁה שְׁקָלִים, שְׁנֵי שְׁקָלִים וְעוֹד שְׁנֵי שְׁקָלִים — בְּיַחַד תִּשְׁעָה שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
 | activity.x.mathb17.7.json | a11y.altText | הַמְּחִיר הוּא תִּשְׁעָה שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַוִּי. | needs-editor |
 | activity.x.mathb17.8.json | prompt.caption.0.v | הַמְּחִיר הוּא עֲשָׂרָה שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַוִּי. | needs-editor |
 | activity.x.mathb17.8.json | feedback.correct.caption.0.v | כֵּן! שִׁלַּמְתֶּם בְּדִיּוּק עֲשָׂרָה שְׁקָלִים. | needs-editor |

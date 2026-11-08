@@ -27,7 +27,15 @@ def coins_said(sol):
     parts = [COIN_OF[coins[0]]] + [('עוֹד ' if k == coins[i] else '') + COIN_OF[k] for i, k in enumerate(coins[1:])]
     said = ', '.join(parts[:-1]) + (' וְ' if parts[-1].startswith('עוֹד') else ' וּ') + parts[-1]
     total = sum(COIN_VALUE[k] for k in coins) // 100
-    return '%s — בְּיַחַד %s שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם.' % (said, 'שְׁנֵי' if total == 2 else M[total])
+    text = '%s — בְּיַחַד %s שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם.' % (said, 'שְׁנֵי' if total == 2 else M[total])
+    if len(text.replace('—', ' ').split()) > 14:
+        # owner, 2026-11-08 (option A): three coins name only the values, so the hint keeps to 14 words
+        vals = [shekels(COIN_VALUE[k] // 100) for k in coins]
+        parts = [vals[0]] + [('עוֹד ' if coins[i] == coins[i - 1] else '') + v for i, v in enumerate(vals[1:], start=1)]
+        vav = 'וַ' if parts[-1].startswith('חֲ') else ('וּ' if parts[-1].startswith('שְׁ') else 'וְ')  # the vav before ח with a hataf, before a shva
+        said = ', '.join(parts[:-1]) + ' ' + vav + parts[-1]
+        text = '%s — בְּיַחַד %s. עַכְשָׁו תּוֹרְכֶם.' % (said, shekels(total))
+    return text
 
 
 def shekels(n):

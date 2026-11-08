@@ -768,6 +768,13 @@ Every hint 3 of Band A and B is now 14 words or fewer, except two shop hints (be
 (`חֲמִשָּׁה שְׁקָלִים, שְׁנֵי שְׁקָלִים וְעוֹד שְׁנֵי שְׁקָלִים — בְּיַחַד תִּשְׁעָה שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם.`, 12 words) keeps the teaching but changes his wording; both rows stay as they are until he chooses (or the layout takes 16 to 18 words for the shop).
 `test_hebrew_sources` pins 1,283 changed done rows (6 more rows whose old text needed a correction are now written right by their source). Run: `regen_content`, `export-hebrew-review`, `hebrew_voice_review` (`-X utf8`), `test_hebrew_sources`, `test_generators`, `check_maths` (full pack, non-strict).
 
+**Decided by the owner, 2026-11-08 (option A) for the "For the owner (1)" above:** the two three-coin shop hints drop `מַטְבֵּעַ שֶׁל` and name the values, `owner-approved`:
+- `x.mathb17.6` (price 8): `חֲמִשָּׁה שְׁקָלִים, שְׁנֵי שְׁקָלִים וְשֶׁקֶל אֶחָד — בְּיַחַד שְׁמוֹנָה שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם.` (11 words)
+- `x.mathb17.7` (price 9): `חֲמִשָּׁה שְׁקָלִים, שְׁנֵי שְׁקָלִים וְעוֹד שְׁנֵי שְׁקָלִים — בְּיַחַד תִּשְׁעָה שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם.` (12 words)
+Agreement: the coin before a noun is masculine (`שְׁנֵי`, `חֲמִשָּׁה`), the one-shekel coin is `שֶׁקֶל אֶחָד` (`וְשֶׁקֶל`: a plain vav before a letter that has a vowel; `וּשְׁנֵי` before a shva), a repeated value takes `וְעוֹד`. The rule is in the source, `coins_said()` in `tools/band_b3.py`: the Q11 form stays whenever it has 14 words or fewer (every other shop hint is unchanged),
+and the value-only form is used when it would be longer; `shop_coins()` in `hebrew_voice_review.py` builds the same text, with its own `ROW_RULES` entry for these two ids (the reason in `changes`) and an `OWNER_APPROVED` entry ("owner-approved 2026-11-08"). The Q11 rule for the other shop hints is unchanged.
+Voice text: `חֲמִשָּׁה שקלים, שְׁנֵי שקלים ושקל אֶחָד — ביחד שְׁמוֹנָה שקלים. עכשיו תורכם.` (number words keep their nikud). Not voiced; `docs/audio/voice-direction.csv` is not touched. `test_hebrew_sources` pins 1,221 changed done rows (the two rows no longer differ from the re-exported review text).
+
 ## 11b. The editor's full pass of 2026-11-06 (owner: "the Hebrew review now, voices later"; numbered 11 on the branch `hebrew-review`, renumbered 11b when it was merged with section 11 of M10 batch C1, 2026-11-08)
 
 Scope and counts, the 38 changed rows with before and after, the 5 questions for the owner and the verification are in

@@ -983,6 +983,10 @@ OWNER_APPROVED = [
      'Logic sweep follow-up, owner (2026-11-07): no unnamed "friend" (חָבֵר סָפַר / כָּתַב / מִיֵּן / בָּנָה) in any land; the line says what is on '
      'the screen (an impersonal present or a participle, or what the shapes have in common), with the same question, "אֵיפֹה הַטָּעוּת?" '
      '(owner-approved 2026-11-07).'),
+    # The owner's answer of 2026-11-08 (option A, hebrew-notes.md 11.14 "For the owner" 1): the two three-coin shop hints name the values only.
+    (r'^activity\.x\.mathb17\.(6|7)\.json$', r'^(חֲמִשָּׁה שְׁקָלִים, שְׁנֵי שְׁקָלִים (וְעוֹד שְׁנֵי שְׁקָלִים|וְשֶׁקֶל אֶחָד) — בְּיַחַד)',
+     'Shop hint 3, owner (2026-11-08, option A): the three-coin hints drop "מַטְבֵּעַ שֶׁל" and name the values, so each fits 14 words; '
+     'the other shop hints keep the Q11 form (owner-approved 2026-11-08).', r'^hints\.2\.caption'),
 ]
 
 
@@ -1077,7 +1081,16 @@ def shop_coins(r, ctx):
         name = ('עוֹד ' + COIN_NAME[v]) if v == coins[i - 1] else COIN_NAME[v]
         parts.append(name)
     said = ', '.join(parts[:-1]) + (' וְ' if parts[-1].startswith('עוֹד') else ' וּ') + parts[-1]
-    return '%s — בְּיַחַד %s שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם.' % (said, masc_before_noun(sum(coins)))
+    text = '%s — בְּיַחַד %s שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם.' % (said, masc_before_noun(sum(coins)))
+    if len(text.replace('—', ' ').split()) > 14:
+        # owner, 2026-11-08 (option A, the two three-coin hints x.mathb17.6 and .7): the values alone, as band_b3.py coins_said() does
+        vals = ['שֶׁקֶל אֶחָד' if v == 1 else '%s שְׁקָלִים' % masc_before_noun(v) for v in coins]
+        parts = [vals[0]] + [('עוֹד ' if coins[i] == coins[i - 1] else '') + vals[i] for i in range(1, len(vals))]
+        vav = 'וַ' if parts[-1].startswith('חֲ') else ('וּ' if parts[-1].startswith('שְׁ') else 'וְ')
+        total = sum(coins)
+        text = '%s %s%s — בְּיַחַד %s. עַכְשָׁו תּוֹרְכֶם.' % (', '.join(parts[:-1]), vav, parts[-1],
+                                                            'שֶׁקֶל אֶחָד' if total == 1 else '%s שְׁקָלִים' % masc_before_noun(total))
+    return text
 
 
 ROBOT_WORDS = {canon(k): v for k, v in {'יָמִינָה': 'h', 'שְׂמֹאלָה': 'h', 'לְמַעְלָה': 'לְמַעְלָה', 'לְמַטָּה': 'לְמַטָּה'}.items()}
@@ -1143,6 +1156,11 @@ ROW_RULES = [
      'teaching (owner Q3, 2026-10-29): hint 3 counts on from the first number, one finger per count, then names the answer '
      '(the old hint counted from one to the total)', TR,
      'Q3 (owner 2026-10-29). The fingers must be drawn (audit F12); the distractor 10 (M-PPW) is a content change (hebrew-notes.md D4).'),
+    # Owner 2026-11-08 (option A): the two three-coin shop hints name the values only ("חֲמִשָּׁה שְׁקָלִים, שְׁנֵי שְׁקָלִים וְעוֹד שְׁנֵי שְׁקָלִים"),
+    # so each fits 14 words; shop_coins() falls back to this form whenever the Q11 form is over 14 words
+    (r'^activity\.x\.mathb17\.(6|7)\.', r'^hints\.2\.caption', r'', shop_coins,
+     'teaching (owner Q11, 2026-10-29, changed by the owner on 2026-11-08, option A): with three coins the hint names the values and drops '
+     '"מַטְבֵּעַ שֶׁל", so it fits 14 words; the total follows', TR, 'Owner 2026-11-08, option A. The other shop hints keep the Q11 form.'),
     # Q11: the shop hint names each coin by its value, then the total; hint 2 stays
     (r'^activity\.x\.mathb17\.', r'^hints\.2\.caption', r'', shop_coins,
      'teaching (owner Q11, 2026-10-29): each coin is named by its value ("מַטְבֵּעַ שֶׁל שְׁנֵי שְׁקָלִים"), then the total; '

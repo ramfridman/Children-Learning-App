@@ -140,7 +140,9 @@ class HebrewMasterTableTest(unittest.TestCase):
         # whose old text still needed a correction (שְׁנַיִם, שְׁלוֹשָׁה, חֲמִשָּׁה …) are now written right by the generator
         # 1283 after the 85 hints that were still over 14 words were shortened (2026-11-07, second pass): 6 more rows (b.mathb01.2-.4, b.mathb09.7,
         # b.numb02.5, math.add.stars) whose old text needed a correction are now written right by their source
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1223)
+        # 1221 after the owner's option A for the two three-coin shop hints (x.mathb17.6, .7; 2026-11-08): their text is now what the source says, so the
+        # table no longer counts them as changed (the review CSV was exported again with the new text)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1221)
         self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 29)  # 88 before the owner's V1 for M-NL-DIR (2026-11-06): its 44 rows now have the source's final nikud
 
     def test_done_rows_have_ui_text(self):
