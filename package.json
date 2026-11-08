@@ -7,6 +7,6 @@
     "node": ">=22"
   },
   "devDependencies": {
-    "supabase": "2.122.0"
+    "supabase": "3.0.0"
   }
 }
