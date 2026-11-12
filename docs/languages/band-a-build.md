@@ -127,7 +127,16 @@ A pack holds **the rules and a closed list of 52 names, never a name**. An item 
 
 Names print in Heebo 500 (not 700: the shared tile face has one weight for words); the check A-11.4 is in Secular One (section 2.8).
 
-### 2.6 Teach screens and routes (Russian)
+### 2.6 Teach screens and routes (Russian; every course from L7)
+
+**Amended 2026-11-12 (L7; the rule the build follows, built in step L7-4; frame §2.3 LS09 teach mode, §3.5.1).** What this section says of Russian becomes the rule of **every course**, with four changes:
+
+* **Every course has teach screens** (the Meet screens). English and Hebrew get `teachPictures` and `defaults.teach` as Russian has them; `lang_routes.py` already runs for every course, and an unset route is served as `new`.
+* **A teach set may stand anywhere in a lesson.** A set says `before`: the lesson item it precedes (none: before the first item). `itemsFor` gives the lesson's items with each set's screens in front of its `before` item, and the validator checks that every `before` names an item of the lesson. This replaces "a set goes before the first lesson whose prompts ask one of its words" and "the screens of the sets, then the lesson's items" below: a lesson is authored as `recall`, `meet`, `find` and `use`, and the generator flattens it, so the Meet screens come after the Recall items.
+* **A set is 2 to 3 words** (it was 4 to 6), one Meet screen per word.
+* **The Meet screen** gains the Hebrew meaning, said once (eng, rus: the word's `gloss`; heb: a Hebrew explanation line), and a tap on the picture replays the word. The lesson keeps the words its Meet screens introduced, for frame §3.3.10.
+
+Unchanged: a heritage speaker never sees a teach screen (hearing screens instead, 2.6.1); a teach screen writes nothing and is not in the engine's catalogue; R5 below, read as "a route adds screens before or between a lesson's items".
 
 The teachers' unit files carry `teach` (the new words of the skill, in sets of 4 to 6) and `routes` (what each route is served). They are now data the app reads:
 
@@ -192,10 +201,10 @@ strand1PastFirstLevel = the placement has a strand "1", and every skill in its l
   4. From then on the step is the echo step as built: the child may say it, and the picture goes on.
 * **Echo** stays as built. Teach screens are always echo. Evidence is the same in both orders.
 
-**R5. The invariant (no code; a test holds it).** A route adds screens before a lesson's items and sets the order of a say step. It never removes, adds or reorders a lesson's items. So every lesson has the same items for every route, the path, its stones, "what is next" and the finished counts do not depend on the route, and Band A needs no route-aware path. The unit fields `from`, `order`, `weight`, `embodied` and the pacing notes of A-16 to A-19 stay as the teachers' notes. The generator reads them as notes, and the teacher may fold them into `note` at the next edit. Building one of them later (the first candidate is the A-16 heritage skip of the listen-first readings) means an exception to this invariant and its own guard.
+**R5. The invariant (no code; a test holds it).** A route adds screens before a lesson's items (from L7, 2026-11-12: before or between them, at a set's `before` item) and sets the order of a say step. It never removes, adds or reorders a lesson's items. So every lesson has the same items for every route, the path, its stones, "what is next" and the finished counts do not depend on the route, and Band A needs no route-aware path. The unit fields `from`, `order`, `weight`, `embodied` and the pacing notes of A-16 to A-19 stay as the teachers' notes. The generator reads them as notes, and the teacher may fold them into `note` at the next edit. Building one of them later (the first candidate is the A-16 heritage skip of the listen-first readings) means an exception to this invariant and its own guard.
 
 **R6. Guards (built: `app/test/lesson_routes_test.dart` for 1 to 4, `app/test/route_screens_test.dart` for 5 and the screens; 6 waits for LS03 1.1 boxes).**
-1. For every lesson of the Russian pack and each served route, `itemsFor` is that route's screens followed by `itemsOf(lesson)`. The `itemsOf` part is the same for both routes, and it is never empty.
+1. For every lesson of the Russian pack and each served route, `itemsFor` is that route's screens followed by `itemsOf(lesson)` (from L7: the screens at their `before` items, and the lesson's items in their order when the screens are taken out; the guard follows in step L7-4). The `itemsOf` part is the same for both routes, and it is never empty.
 2. A heritage child gets no `teach` screen anywhere, and gets hearing screens only before `pairs-1` (4) and `pairs-2` (2).
 3. `servedRoute` table: a reader with strand 1 not stopped, stopped at its first level, or past it, crossed with an `oral` skill (A-03) and a `heritage` skill (A-17).
 4. No say step's echo prompt is f06. No `pictureFirst` has a target clip. A-15 is `picture` for both routes. A-01 and A-14 are `echo` for `new` and `picture` for `heritage`. The quiet fallback turns picture first into echo.

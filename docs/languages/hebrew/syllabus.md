@@ -9,7 +9,7 @@ Evidence and sources: `docs/research/hebrew-course-2026-11-03.md` (cited below a
 
 ## 0. How to read this file
 
-- **Skill ids:** `HEB-<band>-<nn>` (bands A 3–4, B 5–6, C 7–8, as in `docs/PLAN.md`). A band is a label for the usual age. A child moves by mastery, never by age or date (`docs/curriculum.md` §4.1).
+- **Skill ids:** `HEB-<band>-<nn>` (bands A 3–4, B 5–6, C 7–8, as in `docs/PLAN.md`). A band is a label for the usual age. A child moves by mastery, never by age or date (`docs/curriculum.md` §4.1), with one exception since 2026-11-12 (L7): the letters gate of §9, where age is a default that level overrides.
 - **Strands:** OL oral language (listening, vocabulary, morphology, story); PA phonological awareness; PK print and letter knowledge; DEC decoding and reading; WR writing (handwriting and spelling).
 - **The code spine:** letters and vowel signs come in twelve steps S1–S12 (§3). A DEC or WR skill "for step Sn" uses only the letters and signs of S1…Sn.
 - **Mastery:** the standard evidence SE of `docs/curriculum.md` §4.1 (BKT ≥ 0.95, independent correct answers over ≥ 2 days, at least two representations, one understanding check; durable after a delayed check ≥ 7 days later). The "Mastery seen" column names the two representations and the check for each skill. Every piece of evidence is a **tap, drag or trace**. A spoken answer or reading aloud never counts against a child, and does not count for mastery either (R §12). **Speech (owner decision 1, CHANGED; frame §5.1):** when a parent turns voice on for the Hebrew course, say-it steps (LS09) and reading aloud (LS08 `echo` and `read_along`) get per-word feedback from the Hebrew on-device recogniser: *confident* (specific praise naming the word) or *unsure* ("let's say it together" and a model of the word), never "wrong". It still gives **no mastery evidence** in this course: the course has no speaking strand, and reading aloud is unscored practice (decision 22).
@@ -264,6 +264,12 @@ Band A also uses **M-HEB-ORDER** (reading starts on the left; story pictures lai
 - **Morphology by ear** (A-05, B-03, C-16, C-17) uses pictures, never grammar terms with the child.
 - **Rhymes and songs** are original (owner decision 12). They carry A-06/A-07 and the letter-name song.
 - All stories, rhymes and questions are **new Hebrew**, so they are drafts for the hebrew-text-editor and need pronunciation specs.
+- **The lesson order (amended 2026-11-12, L7; frame §3.5.1).** The course is for Hebrew speakers, so teach-before-asking applies to its **new** words (the story words, the A-02 verbs) and to its stories:
+  1. **A story plays before any lesson that asks its words** (it was file order, which put word lessons before their stories).
+  2. **Each new word gets a Meet page** (LS09 teach mode, frame §2.3): the story picture, the word twice, and one short Hebrew sentence that explains it (Biemiller and Boote 2006). New Hebrew, so `needs-editor`.
+  3. **Every wrong picture is a word already met, or an everyday word the teacher marks `everyday`.** A sound-alike distractor must be `everyday`. The mark lets the "met before asked" check (frame §3.5.1) pass words every Hebrew-speaking child knows.
+  4. Answers in the visit that introduces a word are not evidence (frame §3.3.10).
+  5. Story 3 stays a transfer check; whether it also gets a listening lesson is the Hebrew teacher's decision.
 
 ## 9. Placement entry points
 
@@ -281,8 +287,10 @@ Two strands are placed separately (R §11): **L** = oral language and phonologic
 
 - **The probes, in order:** rhyme pick → syllable count → first sound pick → letter name (hear → tap) → letter sound → read a CV unit → read a word → picture → read a sentence → picture.
 - **Reading** is placed only by "read, then tap the picture", with a look-alike word and a sound-alike word among the choices.
-- A parent may answer one question ("does the child read pointed words?") that sets **where the staircase starts**, never the result.
+- **The parent question (amended 2026-11-12, L7; replaces "does the child read pointed words?"):** does the child know letters or read Hebrew? **no**, **some letters**, **reads**. It sets **where the staircase starts**, never the result. The Hebrew wording is the hebrew-text-editor's (step L7-7).
+- **No placement for a beginner (L7):** "no", or no answer, means no placement: the child opens lesson 1. "Some letters" or "reads" runs the placement, so a 7-year-old reader does not start at gan lesson 1. The parent can ask for a placement later.
 - **The L strand of a P4+ child** still starts at the lowest unmastered oral-language skill of their age band, so a child who reads early does not miss vocabulary and story work.
+- **The letters gate (added 2026-11-12, L7; frame §3.3.6; replaces "heb has no gate").** `heb.letters`: age 5 or more (age in months, else the bracket; never the presentation band). It holds B-14 to B-28; the Band C code skills follow through their prerequisites. A-10 to A-12 (letters among other marks, the own name, print direction) stay open at 3 to 4. **Level comes before age** (the owner): a child of any age whose parent answers "some letters" or "reads" and who passes a C-strand level from P1 up (2/3 right, frame §3.3.6) has the gate open and is served letters from the placed level. A 3-to-4-year-old beginner gets the oral, sound-play and print skills of Band A, and no letter lessons.
 
 ## 10. Session shape and review
 

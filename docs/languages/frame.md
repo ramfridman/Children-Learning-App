@@ -14,7 +14,7 @@ Read with: `README.md` (the category's rules), `decisions-2026-11-03.md`, each c
 1. **One land, three courses.** The map gets one new land, the Languages island. At its entrance the child picks a language at one of three doors. Each door opens its own course: its own path, progress, mastery, placement and voice. A course never reads or writes another course's data (D5), and nothing in the other lands depends on any course (D4).
 2. **A course id on everything.** Each skill, item, misconception tag, placement result, progress row and pack carries `course` (`eng`, `heb`, `rus`; the existing lands are `core`). The validator refuses any link across courses.
 3. **One template set.** The teachers proposed 35 new or changed templates between them (English LT01 to LT11, Russian R1 to R11, Hebrew H1 to H6 and N1 to N7). They merge into **2 extensions of existing templates and 12 new templates (LS01 to LS14)**, each with one spec and per-language settings. They are built in three waves: Band A needs, then Band B, then Band C.
-4. **The engine rules stay those of `docs/curriculum.md` §10.** Languages add six things: a *presentation band* (from age) separate from the *content level* (from mastery); per-group sub-skills with a derived roll-up; **letter bundles** (a letter's shape, sound, name and writing open together and count as one new skill); **set coverage** for word sets; a **sound-right** spelling outcome; and **course gates** (the English oral gate, the Russian letters gate).
+4. **The engine rules stay those of `docs/curriculum.md` §10.** Languages add six things: a *presentation band* (from age) separate from the *content level* (from mastery); per-group sub-skills with a derived roll-up; **letter bundles** (a letter's shape, sound, name and writing open together and count as one new skill); **set coverage** for word sets; a **sound-right** spelling outcome; and **course gates** (the English oral gate, the Russian letters gate, and since 2026-11-12 the Hebrew letters gate: letters by age, level first, §3.3.6, L7).
 5. **Speech (D1).** There is an on-device recogniser per language. The outcome is per word, and there are only two outcomes: **confident** (real praise) or **unsure** ("let's say it together" and a model of the word). Speech is never "wrong", never counts against a child, and never counts for reading skills. It gives limited evidence for speaking skills only.
 6. **Personal questions (D10)** live only in authored lesson scripts: name, age, likes and family, never an address. The answer is used for the next line and then forgotten. It is not stored, synced, logged, or used to choose content. The AI tutor's rule is unchanged, and the AI tutor is off in language lessons anyway (§1.6).
 7. **Every letter is taught whole (D16):** its shape, sound, name and writing are introduced together, in every language. Blending always uses sounds, never names.
@@ -39,7 +39,7 @@ Read with: `README.md` (the category's rules), `decisions-2026-11-03.md`, each c
 - **One language on.** If only one language is on, tapping the land opens that course directly.
 - **Switching.** The child leaves a course by the usual "home" button and may enter another door at any time. Switching loses nothing: each course resumes where it was. No line ever compares languages or says that one was not practised.
 - **Order of the doors.** The order is fixed (the design-director's choice). It is not sorted by use, so a child does not learn that one language "comes first".
-- **Placement.** The first time a child opens a course, its placement game (LS13, §3.2) is the first activity. It is framed as "a visit", with no result shown.
+- **Placement.** **Amended 2026-11-12 (L7; replaces "the first time a child opens a course, its placement game is the first activity").** The placement game (LS13, §3.2) is the first activity only when the parent's answers say the child already knows some of the language or its letters. A beginner (every answer "no", or no answer) opens lesson 1 with no probe. It is framed as "a visit", with no result shown.
 
 ### 1.3 Voices and characters inside a course
 - **Who speaks.** Inside a course, the **language's teaching voice** speaks every line: the Hebrew frame and the target language (README rule 3, D6). The child's companion is present on screen and reacts with animation and non-verbal sounds only.
@@ -57,10 +57,12 @@ Read with: `README.md` (the category's rules), `decisions-2026-11-03.md`, each c
 | Voice answers in this language (the microphone, and the recogniser download) | all | off | D1; CLAUDE.md child safety |
 | Personal questions in lessons (name, age, likes, family) | all | on | D10; the switch is my recommendation (Q-F2) |
 | Oral only (no letters yet) | eng | off | D6 |
-| Letters before age 5 | rus | off | D17 |
+| Letters before age 5 | rus | off | D17 (kept by L7) |
+| Letters together with words (§3.3.6) | eng, rus | hidden under 6; shown from 6 (off); on from 7. A parent's own choice stands | L7, 2026-11-12 |
 | Stress marks on screen | rus | per route (§3.3) | D15 |
 | Parent check of reading aloud | heb | off | D22 |
-| Home language questionnaire (enums only) | rus (the others may add one) | asked on first open | rus syllabus §7.3 |
+| Home language questionnaire (enums only) | rus; eng (`understands`: no, some, most; `knowsLetters`); heb (one question: does the child know letters or read Hebrew? no, some letters, reads) | asked on first open | rus syllabus §7.3; eng and heb added by L7, 2026-11-12 (the Hebrew wording is the hebrew-text-editor's, step L7-7) |
+| Ask for a placement | all | a button, for a child who started at lesson 1 (§3.2) | L7, 2026-11-12 |
 | Russian-first instructions | rus | not in v1 | D12 |
 
 **Turning a language off** hides its door and keeps all its data. Turning it back on resumes the course; nothing is reset.
@@ -69,7 +71,7 @@ Read with: `README.md` (the category's rules), `decisions-2026-11-03.md`, each c
 - skills by status per strand (learning, fresh, durable, needs revisit);
 - "we start here" per strand after placement (the parent may move it one level);
 - the route (Russian: new learner, heritage or reader);
-- the gates and whether they are open (English oral gate, Russian letters gate);
+- the gates and whether they are open (English oral gate, Russian letters gate, Hebrew letters gate; L7);
 - speaking shown as **practised** or **said** (§5.1);
 - misconceptions found and fixed, with their parent texts;
 - the parent co-play cards (D9; the Hebrew handwriting cards, D23);
@@ -167,6 +169,7 @@ Inactivity prompts (§10.4) never fire while a clip or a story page is playing.
   - rus: stress marks only where D15 allows.
   - eng: lowercase until C-13.
 - **Classifiers.** The distractor's tag, as today.
+- **What a tap says (amended 2026-11-12, L7).** In every course, every picture option of a scored item names its word clip, and a tapped picture says its own word. The first wrong tap says the tapped picture's word, then the "and where is …?" line and the target, and the child tries again; this replaces the generic first-error line for picture options. **In a reading item** (a text stem, (d)) the first-error line says the tapped picture's word only, never the target: saying it would turn reading into listening ("read it to me" stays hint level 1). Why: the child learns from the error what the chosen picture is called, and a wrong tap is never a dead end.
 - **Courses.** All three. This one extension carries most items in every course: eng T01, T03, T05, T16, T21; heb H1, H2, H3, H5, H6; rus T01, T03, T05, T16, T21, R5.
 
 #### LS02 Write a letter (an extension of `trace`)
@@ -265,7 +268,8 @@ Inactivity prompts (§10.4) never fire while a clip or a story page is playing.
 - **With voice on** for this language (§5.1): the child taps the microphone and says it, and the per-word matcher returns **confident** or **unsure**.
 - **With voice off:** an "I said it" tap, which is practice only.
 - **Then** a tap on the picture to go on. This tap is a scored listening item when the author marks it.
-- **Courses.** eng A-12 and every new word (LT04); rus A-15 and all vocabulary (R8); heb optional for oral language, and the speaking part of reading aloud (N6, unscored).
+- **Teach mode: the Meet screen (amended 2026-11-12, L7; plan `docs/milestones/L7.md` §3).** The screen that introduces one new word on the new-learner route, in **every course** (it was Russian only). In order: the picture; the word; its meaning in Hebrew, **once** (eng, rus: the "in Hebrew:" line and the word's gloss; heb: one short Hebrew sentence that explains the word, on its story picture); the word again; the "let's say it together" line and the word; the child says it and taps "I said it". Touching the picture plays the word again, as often as the child likes. There is no right or wrong, no hint, no microphone (as on teach screens today) and no attempt written; it is not in the engine's catalogue. The lesson only remembers which words it introduced (§3.3.10). A heritage speaker never sees a Meet screen (band-a-build §2.6.1: hearing screens instead). Saying the word comes after two hearings and never replaces them (mixed evidence on production for 4-to-6-year-olds, L7 §9).
+- **Courses.** eng A-12 and every new word (LT04); rus A-15 and all vocabulary (R8); heb optional for oral language, and the speaking part of reading aloud (N6, unscored). From 2026-11-12 (L7) saying a word already met (LS09) is one of the Use items of a lesson from lesson 1 in every course (§3.5.1), not a late skill.
 
 #### LS10 Puppet talk (new, `puppet_talk`)
 - **What the child does.** A puppet speaks one turn ("How are you?", "Can I have an apple, please?", "Кто это?"). The child picks the answer bubble that fits the scene: 2 or 3 bubbles, picture-supported, each heard on tap. The puppet answers. The child may then say the bubble (an LS09 step).
@@ -340,7 +344,7 @@ The qa-engineer verifies once per finished template (the owner's rule, 2026-10-3
   - hint speed.
 - **The content level** comes from mastery: which skill a child is on. A skill id's band letter is only where the skill is *usually* first taught.
 - **The two are independent.** A 7-year-old new to English does `ENG-A-01` with Band C presentation: fewer items per skill, the same mastery evidence. A heritage 4-year-old may do Russian Band B sound work with Band A presentation.
-- **Letters are never offered under Band A presentation**, except Hebrew A-10 to A-12 (print awareness and the child's own name).
+- **Letters by age, level first (amended 2026-11-12, L7; replaces "letters are never offered under Band A presentation, except Hebrew A-10 to A-12").** Whether a child is served letters is decided by the course gates (§3.3.6), which read the child's **age and level**, never the presentation band. By default a beginner aged 3;0 to 4;11 gets no letter skill in any course (Hebrew A-10 to A-12, print and the own name, stay). **Level comes before age** (the owner, 2026-11-12): a child of any age whose placement confirms letters is served them at that level, with the presentation of the child's age (Band A presentation keeps at most 3 choices and one heard instruction; the letter is the content, never an instruction to read). This is the one place where age decides content, and only as a default.
 - This is curriculum §4.1 ("placed by mastery, not by age") made explicit for the engine. It is a new field, `presentationBand`, per child and course, derived from age and overridable by the parent.
 
 ### 3.2 Placement
@@ -357,13 +361,14 @@ The qa-engineer verifies once per finished template (the owner's rule, 2026-10-3
   3. **The strands run across the first 2–3 visits**, oral first, never more than about 8 probe items in one visit.
   4. **Speech is never a placement probe** (§5.1). Speaking is set by the parent's answer.
   5. **A gate** (§3.3.6) is checked after placement. A child placed above a gate has it marked open.
+  6. **No placement for a beginner (amended 2026-11-12, L7; replaces "placement runs first for everyone", §1.2).** Placement is due only when a parent's answer says the child knows something: eng `understands` some or most, or `knowsLetters` some; heb "some letters" or "reads"; rus any of `understands`, `letters`, `reads` above "no". When every answer is "no", or there is no answer, the child opens lesson 1 with no probe. The parent can ask for a placement later from the parent page (§1.4). Why: a beginner's placement is a row of failures before the first word is taught (the owner's play test, 2026-11-12).
 - **Per course:**
 
 | Course | Strands | Entry points | Notes |
 |---|---|---|---|
-| eng | **O** oral (listening, then chunks); **L** literacy, offered only to a child with Band B or C presentation whose parent ticked "knows some English letters" | E0 `ENG-A-01` · E1 stage 2 (stage 1 oral core assumed) · E2 `ENG-B-18` · E3 `ENG-C-01`/`C-02` · E4 `ENG-C-17` | The syllabus's "up to 10 items" becomes two strands of at most 8 each (§5.4) |
-| heb | **L** oral language and phonological awareness; **C** code (letters, reading, writing) | P0 to P6 (syllabus §9): P0 A-01, A-06, A-08 (L) and A-10 (C) … P6 C-11 (C) | A P4+ reader's L strand still starts at the lowest unmastered oral skill of the age band |
-| rus | **1** understanding · **2** sounds · **3** letters · **4** reading · **5** spelling; plus the **route** (new learner, heritage, reader) from the questionnaire and strand 1 | E0 `RUS-A-01` · E1 oral A-15 and B-01, PHO A-17 · E2 PHO B-09, LET B-18 · E3 REA B-23 (or C-01) · E4 REA C-08/C-12, WRI C-16 | Strands 3 to 5 are skipped for a child the questionnaire puts at "no letters"; the new-learner letters gate holds (D17) |
+| eng | **O** oral (listening, then chunks); **L** literacy, offered to a child **of any age** whose parent ticked "knows some English letters" (L7, 2026-11-12; it was "only with Band B or C presentation", §3.1) | E0 `ENG-A-01` · E1 stage 2 (stage 1 oral core assumed) · E2 `ENG-B-18` · E3 `ENG-C-01`/`C-02` · E4 `ENG-C-17` | The syllabus's "up to 10 items" becomes two strands of at most 8 each (§5.4) |
+| heb | **L** oral language and phonological awareness; **C** code (letters, reading, writing) | P0 to P6 (syllabus §9): P0 A-01, A-06, A-08 (L) and A-10 (C) … P6 C-11 (C) | A P4+ reader's L strand still starts at the lowest unmastered oral skill of the age band. Runs only when the parent answers "some letters" or "reads" (L7) |
+| rus | **1** understanding · **2** sounds · **3** letters · **4** reading · **5** spelling; plus the **route** (new learner, heritage, reader) from the questionnaire and strand 1 | E0 `RUS-A-01` · E1 oral A-15 and B-01, PHO A-17 · E2 PHO B-09, LET B-18 · E3 REA B-23 (or C-01) · E4 REA C-08/C-12, WRI C-16 | Strands 3 to 5 are skipped for a child the questionnaire puts at "no letters"; the new-learner letters gate holds (D17). Strand 2 (sounds) is offered only for `understands: most` or route heritage (L7) |
 
 ### 3.3 Mastery
 Curriculum §10.2 applies unchanged: BKT, credit by hint level, fresh mastery (P(L) ≥ 0.95, at least 4 successes over at least 2 days, or 6 for core skills; at least 2 representations; at least 1 check, or 2 for core skills), durable mastery after a delayed check at least 7 days later with a different item, and the 2-choice guard (at most 50% of the evidence). The language additions:
@@ -412,12 +417,15 @@ Curriculum §10.2 applies unchanged: BKT, credit by hint level, fresh mastery (P
 - **New attempt field:** `detail` (`exact`, `sound_right`), an enum for the parent view ("spells every sound; learning book spelling").
 - **In every case** the child's feedback names what is right first. Sound-right is never called wrong.
 
-**3.3.6 Course gates.**
-- **What a gate is.** A named condition on a set of skills, with fields: `skills` (fresh mastery required), `minAge` (a default), and a parent override switch.
+**3.3.6 Course gates.** *Amended 2026-11-12 (L7, the owner's decisions 5 and Q3): gates read age and level, never the presentation band; Hebrew gets a gate; "letters together with words". Where a line below says what it replaces, the old rule is gone.*
+- **What a gate is.** A named condition on a set of skills, with fields: `skills` (fresh mastery required), `minAge` (a default), a parent override switch, and (L7) an **early set**: the smaller `skills` the "letters together with words" switch uses. **Age** is the child's age in months from the profile, else its age bracket; a gate never reads the presentation band (L7).
 - **The gates:**
-  - **eng oral gate** (syllabus §6.2): A-01 to A-11, A-16, B-01, B-02, B-05, B-06, and B-12 to B-14 onset-rime. It holds B-16 to B-23 (letters, reading, building, writing and tracing). Fresh mastery is enough with Band C presentation. Never under Band A presentation. The parent's "oral only" switch keeps it closed (D6).
-  - **rus letters gate** for new learners (D17): A-12 and three themes, and age 5 or more. The parent can override.
-  - heb has no gate.
+  - **eng oral gate** (syllabus §6.2): A-01 to A-11, A-16, B-01, B-02, B-05, B-06, and B-12 to B-14 onset-rime, and **age 5 or more** (L7). It holds B-16 to B-23 (letters, reading, building, writing and tracing). Fresh mastery is enough **from age 7** (L7; replaces "with Band C presentation"); from 5 to 6 it needs durable mastery. *Replaced (L7):* "never under Band A presentation". Early set: A-01 to A-05 and A-08, about 40 words (the English teacher confirms). The parent's "oral only" switch keeps it closed whatever else is on (D6).
+  - **rus letters gate** for new learners (D17): A-12 and three themes, and age 5 or more. Kept by L7: the parent's "letters before 5" switch lowers the age, and the heritage and reader routes have no age gate (§3.3.7). Early set: A-12 and one theme (proposed; the Russian teacher confirms).
+  - **heb letters gate** `heb.letters` (L7; replaces "heb has no gate"): age 5 or more, no skill required. It holds B-14 to B-28 (letters, decoding, the concept of word, writing and the own name in writing); the Band C code skills follow through their prerequisites. A-10 to A-12 are outside it.
+- **Level comes before age (the owner, 2026-11-12, all three courses).** A child of any age whose parent says they know letters or read (eng `knowsLetters`; heb the letters question; rus `letters` or `reads`) **and** whose placement confirms it (on the letters strand, eng L, heb C from P1, rus 3 or 4, at least one level with letters is passed at 2/3 or more, before the "minus one unit" step) has the gate marked open and is served letter lessons from the placed level. This is §3.2 addition 5, now open to every age. Placement only opens a gate, never closes one; a child whose placement does not confirm letters keeps the default, and the parent can ask for a placement again later.
+- **"Letters together with words" (eng, rus; L7).** A parent switch, hidden under 6;0, shown (off) from 6;0, on by default from 7;0 (a parent's own choice stands). When on, the gate asks only for its early set. Nothing opens letters before the early set.
+- **Never letters before any words (eng, rus).** No switch, age or route serves a letter lesson to a child who has met none of the course's words. For a child opened by level, the early set still comes first when the oral placement is below it: a letter lesson's pictures are words already met (§3.5.1), and a child who knows the English or Russian letters but no words (the alphabet song is common in Israel) has not met them. *This is the curriculum-expert's reading of how decisions 5 and Q3 meet; the orchestrator confirms it with the owner.* The Russian heritage and reader routes know words by definition.
 - **How gates act.** They hold back skills; they are never shown to the child as locks.
 
 **3.3.7 Routes** (rus).
@@ -431,6 +439,13 @@ Curriculum §10.2 applies unchanged: BKT, credit by hint level, fresh mastery (P
 - **A trace node never blocks progress either** (rule E-1, owner 2026-11-06; writing-mastery §6). A `writing: practised` node (eng `B-23.Gn`; heb A-14, `B-24.Sn`, B-27, C-26; rus `B-24.Gn`) counts as met once practised (every letter of its group traced once with the start dot only, or for heb B-27 the name built and written once), or when placement assumed it. Fine-motor control matures at its own pace, and letter knowledge must not wait for it. The two rules share one hook: `Engine.isMet(id)` (a speaking skill: its practice set done; a trace node: practised or assumed; any other skill: p ≥ 0.8), which `isUnlocked` uses for every prerequisite. **Built in L5-2b (2026-11-06):** `Engine.isMet` is the hook and `isUnlocked` uses it for every prerequisite; the "practice set" of a speaking skill is every word (variant group) of its items met by any answer, spoken or not, counted as evidence or not (`EngineState.metWords`). A word that was only practised by the "I said it" tap writes no attempt today (the say step writes nothing for it), so the engine cannot yet see it: the tap needs a row of its own before a speaking prerequisite can be met by taps alone.
 
 **3.3.9 Two-choice items:** the rule of §2.3. The engine's 2-choice guard (curriculum §10.2) is unchanged; a check in a binary skill is a balanced pair.
+
+**3.3.10 The first meeting is not evidence (added 2026-11-12, L7; the owner's decision 4 and Q1).**
+- **The rule.** In the visit whose Meet screen (LS09 teach mode) introduces a word, a scored item whose **target** is that word writes **no evidence at all**: neither `correct` nor `incorrect`, no tag, no misconception evidence, no representation, nothing to the 2-choice guard, set coverage or the parent view. **Neither a right nor a wrong answer counts.**
+- **What still happens.** The item plays in full: the tap says its word, the first-error line, the hint ladder, the retry, the praise, stuck and bored (§3.6). The word counts as *met* (the practice set of §3.3.8 and the "met before asked" rule of §3.5.1).
+- **The first evidence** is a later visit: the word's Recall in one of the next 3 lessons, or a revisit.
+- **Scope.** Keyed on the words whose Meet screen played in this visit, nothing else: an item whose target is an older word is scored as usual even if a just-met word is one of its pictures. A heritage child sees no Meet screen, so is scored as today.
+- **Why.** A right tap seconds after hearing a word is short-term memory, and counting only right answers would push mastery up; a wrong tap among pictures just heard is a guess, not a misconception. Retrieval after a delay is what builds the word (Childers and Tomasello 2002; Vlach, Sandhofer and Kornell 2008).
 
 ### 3.4 Revisits
 - **The schedule** is that of curriculum §5.7, unchanged: FSRS, about 1, 3, 7, 21 and 60 days, checks of 1 to 3 items interleaved into play with a different item and representation, and the re-teach after a failed check.
@@ -457,6 +472,23 @@ Curriculum §10.2 applies unchanged: BKT, credit by hint level, fresh mastery (P
 - **rus:** activities of 2–4, 4–7 and 6–10 minutes by presentation band.
 
 **Unchanged:** the visit ends on success (the last item at p ≥ 0.85); there is no "one more?" prompt; the parent's daily limit ends the visit gracefully. The "mood check" of §10.3 (at least one domain the child chose) is met by the child having chosen the door.
+
+#### 3.5.1 The lesson shape on the new-learner route (added 2026-11-12, L7; plan `docs/milestones/L7.md` §3)
+Every lesson that brings new words is taught before it is asked, in all three courses. It has four parts, in this order:
+
+| Part | What | Limits |
+|---|---|---|
+| **Recall** | Scored items on words met in earlier lessons (the warm-up of the table above) | 1 to 2 items. Lesson 1 opens with the hello routine instead |
+| **Meet** | One Meet screen per new word (LS09 teach mode, §2.3): the worked example of the Focus segment | **2 to 3 new words, never more** |
+| **Find** | Scored picture choices on the new words (guided, then independent) | **At least 2 items per new word.** A word's **first** Find has **2 choices**, the next ones 3. **Every option is a word already met** (in this lesson's Meet or before; Hebrew: or a word the teacher marks `everyday`). The two closest words (мама / папа, a minimal pair) are never each other's first partner. A wrong tap: the picture says its word, then "and where is …?" and the target (LS01, §2.3) |
+| **Use** | The new words in use | **1 to 3 items:** say it (LS09), listen and do (LS11), a puppet turn or a chant (LS10, LS12) |
+
+- **Hearing and spacing.** Each new word is heard 8 to 10 times in its lesson, comes back in the **Recall of one of the next 3 lessons**, then in revisits (§3.4). Its first evidence is that Recall (§3.3.10).
+- **The Hebrew meaning** (eng, rus) is said once, on the Meet screen, and stays at hint level 2 where the course's ladder has it. Hebrew: each story plays **before** the lesson that asks its words, and each new word gets a Meet page (the story picture, the word twice, one short Hebrew sentence that explains it; Biemiller and Boote 2006). A sound-alike distractor in Hebrew must be `everyday`.
+- **The other rules still hold:** the 2-choice cap of §2.3 per skill (the first-Find items count toward it), at most 3 choices under Band A presentation, at most 2 new skills a visit, the course rules above.
+- **Heritage children** keep their route: no Meet screens, the hearing screens of band-a-build §2.6.1.
+- **The validator** (step L7-5) walks each course in `sequence` order as a new learner and refuses a scored item whose target or any option was not met before it (Hebrew: unless `everyday`), a Meet of more than 3 words, a first Find with more than 2 choices, a new word that is the target of fewer than 2 Find items, and a lesson with no Use; it warns when a new word is not recalled within 3 lessons.
+- **Why.** Spaced retrieval builds young children's words (Childers and Tomasello 2002; Vlach, Sandhofer and Kornell 2008), but only once the word has a meaning to retrieve. The gain from guessing before being taught is shown in adults (Kornell, Hays and Bjork 2009), not in preschoolers choosing among pictures of words they never heard; the evidence for young children is thin.
 
 ### 3.6 Stuck and bored (curriculum §10.4), in a language course
 - **Stuck** (3 errors in a row, or 2 "show me" in a row): switch to an easier related item of the **same course**, then to its delight segment. The next visit re-teaches with a new representation.

@@ -216,13 +216,14 @@ Stage 5-7: What's your name? / My name is ___ · How old are you? / I'm ___ · D
 **Personal questions (D10, frame §5.2).** Scripted lesson turns (LS10 personal mode only) may ask the child's **name, age, likes and who is in the family**. The puppet always answers first; the child answers by tap (pictures for likes, numbers 3 to 9 for age, family pictures with many shapes of family and "someone else") or by voice if voice is on; there is always a "pass". The answer is heard and used on the device for the next line only: it is never checked, scored, stored, synced, logged or used to choose content, and the puppet's reply is generic ("Nice to meet you!"), echoing only a target word ("Five!", "Apple!"), never the child's name. "Where do you live?", addresses, cities, the gan or school, phone numbers and photos are never asked. A parent switch turns personal turns off (Q-F2). The AI tutor never asks anything personal and is off in language lessons (frame §1.6).
 
 ### 4.3 How a word is taught (every word, every band)
-1. Heard with its picture and, where possible, an action (never translated first).
+*Amended 2026-11-12 (L7; frame §3.5.1): a word is taught before it is asked. Steps 1 and 3 changed; 2 to 3 new words a lesson, never more.*
+1. **Met** on its own Meet screen (frame §2.3, LS09 teach mode): heard with its picture and, where possible, an action; then its Hebrew meaning, **once**; then the English again, and "let's say it together". The English is always heard first (never translated first).
 2. Heard again in a chunk ("It's a cat."), then in a song or story.
-3. Chosen among 2-3 pictures (listening), then among 3-4 with a sound or meaning neighbour (distractor with a tag).
+3. Chosen first between **2 pictures**, then among 3 (listening; every picture a word already met, the closest word never its first partner), then among 3-4 with a sound or meaning neighbour (distractor with a tag). Answers in the lesson that introduces the word are not evidence (frame §3.3.10); its first evidence is its Recall in one of the next 3 lessons.
 4. Said (LS09; per-word feedback when voice is on); in later stages read and built.
 5. Revisited by the spaced schedule (1 → 3 → 7 → 21 → 60 days, [Curr]); at least 6 meaningful encounters before a check of durable mastery; every word of a set answered right once without a hint before the set is fresh (set coverage, frame §3.3.4).
 
-Hint ladder per item (curriculum §9.2, frame §2.3): **H1** the English again, slowly (the slow clip), with the word in a chunk where one exists; **H2** a new representation: the Hebrew word first, then the English again with the picture (D7: a Hebrew translation only at hint level 2, after the English was heard with a picture), or the action or the sound the thing makes; **H3** "show me": the friend picks it and says it, then the child does it.
+Hint ladder per item (curriculum §9.2, frame §2.3): **H1** the English again, slowly (the slow clip), with the word in a chunk where one exists; **H2** a new representation: the Hebrew word first, then the English again with the picture (D7 as amended by L7, 2026-11-12: the Hebrew meaning is said once on the word's Meet screen and stays here at hint level 2), or the action or the sound the thing makes; **H3** "show me": the friend picks it and says it, then the child does it.
 
 ---
 
@@ -257,13 +258,20 @@ The family order and the "2 o'clock" start are practice conventions (research §
 | E3 | Reads CVC words | Stage 5 (`ENG-C-01` / `C-02` as needed) | Band B (if ready) or C |
 | E4 | Reads simple sentences | Stage 6 (`ENG-C-17`) | Band C |
 
+*L7 (2026-11-12): the last column is the usual presentation, not a limit. Level comes before age: a younger child whose placement confirms E2 to E4 starts there, with the presentation of their own age (frame §3.1, §3.3.6). A beginner (E0, or no answer) gets no placement and opens lesson 1 (frame §3.2).*
+
 ### 6.2 The oral gate (before letters; frame §3.3.6)
-A child starts the literacy strand when **(a)** the stage 1-2 listening core has fresh mastery (A-01 to A-11, A-16, B-01, B-02, B-05, B-06: about 100 words and the stage 1-2 chunks understood) and **(b)** B-12, B-13 and B-14 onset-rime have fresh mastery. With Band B presentation the gate needs durable mastery of (a); with Band C presentation fresh mastery is enough, so a grade-3 beginner reaches letters in about 20-30 sessions, close to the Ministry's 3-4 months ([MoE-PF]). The gate holds B-16 to B-23 (letters, reading, building and writing). The gate never opens under Band A presentation. A parent's "oral only" switch keeps it closed (D6). A child placed above the gate has it marked open. The gate holds skills back; the child never sees it as a lock.
+*Amended 2026-11-12 (L7): the gate reads the child's age, never the presentation band.* A child starts the literacy strand when **(a)** the stage 1-2 listening core has fresh mastery (A-01 to A-11, A-16, B-01, B-02, B-05, B-06: about 100 words and the stage 1-2 chunks understood), **(b)** B-12, B-13 and B-14 onset-rime have fresh mastery, and **(c)** the child is **5 or older** (L7). From 5 to 6 the gate needs durable mastery of (a); from age 7 fresh mastery is enough (L7; it read "with Band B / Band C presentation"), so a grade-3 beginner reaches letters in about 20-30 sessions, close to the Ministry's 3-4 months ([MoE-PF]). The gate holds B-16 to B-23 (letters, reading, building and writing). *Replaced (L7):* "the gate never opens under Band A presentation"; a beginner under 5 gets no letters by age (c). A parent's "oral only" switch keeps it closed whatever else is on (D6). A child placed above the gate has it marked open.
+- **Level first (L7, the owner):** a child of **any age** whose parent ticked "knows some English letters" and who passes a level of the L strand (2/3 right, frame §3.3.6) has the gate marked open and is served letters from that level. A child who knows the letters but none of the early set's words meets those words first (never letters before any words; frame §3.3.6).
+- **"Letters together with words" (L7):** a parent switch, shown from 6, on by default from 7. When on, the gate asks only for the **early set**: A-01 to A-05 and A-08 (about 40 words), with (c). **The English teacher confirms the early set** (and whether B-12 to B-14 should join it).
+- The gate holds skills back; the child never sees it as a lock.
 
 ### 6.3 The placement game (LS13)
+*Amended 2026-11-12 (L7): no placement for a beginner.* The questionnaire asks `understands` (no, some, most) and `knowsLetters`; the placement runs only when one of them is above "no". Otherwise the child opens lesson 1, and the parent can ask for a placement later (frame §3.2).
+
 The shared staircase of frame §3.2, as a "visit to the English island", with **two strands**:
 - **O, oral**: listening (pictures), then chunks. Levels follow E0 → E1: A-01/A-03 words → A-05/A-09 words → A-11/A-16 chunks → B-01/B-02/B-05 words → B-06 positions → B-08/B-10 chunks and phrases. The probes are ordinary LS01 items with `purpose: probe` (the Band A probes are marked in `band-a-content.md` §5).
-- **L, literacy**: offered only to a child with Band B or C presentation whose parent ticked "knows some English letters" in the short questionnaire. Levels follow E2 → E4: letter sounds of groups 1-2 → CVC reading (B-18) → group 3-4 letters → digraph words (C-04) → a decodable sentence (C-17).
+- **L, literacy**: offered to a child **of any age** whose parent ticked "knows some English letters" in the short questionnaire (L7; it was "only with Band B or C presentation"). Levels follow E2 → E4: letter sounds of groups 1-2 → CVC reading (B-18) → group 3-4 letters → digraph words (C-04) → a decodable sentence (C-17).
 - **Rules:** at most **8 items per strand**; two right answers go up a level, one wrong goes down; stop after 2 reversals or 8 items; the placement is the highest level with at least 2/3 right, minus one unit; a strand whose first two probes fail at its floor stops at once; the strands run across the first 2-3 visits, oral first, never more than about 8 probe items in one visit; **speech is never a probe** (speaking is set by the parent's answer); the questionnaire sets where a staircase starts, never where it ends.
 - Skipped skills are "assumed" (prior 0.85) and checked by interleaved retrieval within 2 weeks; a failed check becomes a normal target with no penalty shown. Every probe gets warm feedback; no result is shown to the child. The parent sees "we start here" per strand and can move it one level. The oral gate (§6.2) is checked after placement.
 
@@ -274,15 +282,16 @@ The shared staircase of frame §3.2, as a "visit to the English island", with **
 ### 7.1 Session shape (frame §3.5, the English defaults)
 | Band | Length | Shape |
 |---|---|---|
-| A | 6-8 min | hello chant (LS12) → 2 retrieval items → 1 new word set (3-4 words, LS01/LS11) → say it (LS09) → chant or story (LS12/LS08) → goodbye |
+| A | 6-8 min | hello chant (LS12) → 2 retrieval items → 2-3 new words, each met on its Meet screen, then found (LS01/LS11; L7, it was "1 new word set, 3-4 words") → say it (LS09) → chant or story (LS12/LS08) → goodbye |
 | B | 10-12 min | hello routine → 3 retrieval items → one new item of one strand (words or sounds or a letter bundle) → practice in 2 representations → a chunk role-play (LS10) or a chant → goodbye |
 | C | 12-15 min | routine chunk → 4 retrieval items (mixed strands) → new phonics or reading skill → build or write → read (sentence or story) → goodbye |
 At most 2 new skills per session (a letter bundle counts as one); never a new letter group and a new word set together in Band B. Revisits stay inside the English course; confusable pairs (b/d, v/w) are revisited together.
+**Every lesson that brings new words** (any band, L7, 2026-11-12) has the shape of frame §3.5.1: Recall (1-2 items), Meet (2-3 new words), Find (at least 2 items a word, the first with 2 choices, every picture a word already met; no wordless picture), Use (1-3 items; say it from lesson 1). `hi` and `bye` come after `hello` and `goodbye` as "another way to say it", never as each other's wrong answer.
 
 ### 7.2 Hebrew around the English ("Hebrew frame, English target", D7)
 - The **instruction** of an item is Hebrew at first ("Hebrew frame", hebrew-text-editor), the **target** is English, voiced as separate clips (`voice-brief.md` §3; frame F3).
 - **Ten English classroom phrases** replace the Hebrew instruction step by step (with the same icon, and the Hebrew still on the replay button): Listen! (stage 1) · Look! · Touch the ___. · Find the ___. · What's this? (stage 2) · Read. · Build the word. · Write. (stage 3-4) · Read the sentence. · Put the words in order. (stage 6).
-- **A Hebrew translation** appears only at hint level 2, after the child heard the English with a picture (D7).
+- **The Hebrew meaning** (D7, amended 2026-11-12 by L7; replaces "a Hebrew translation appears only at hint level 2"): said **once**, on the word's Meet screen, after the English was heard with its picture and before it is heard again (frame §2.3); it **stays at hint level 2** as well. It is never said before the English, and never in an item's prompt. Why: a home-language meaning given once during the introduction helped 4-to-6-year-olds learn English story words (Lugo-Neris, Jackson and Goldstein 2010; a small sample), and the owner's play test showed that meaning reached only through a wrong answer is too hard for a beginner.
 - **Explicit contrasts** in Hebrew, once each, when a skill starts: English goes left to right (B-18); English has big and small letters (C-13); this sound is not in Hebrew (B-11, C-02, C-03), with a mouth picture.
 - **Praise and "not yet"** stay in Hebrew, specific and naming the English word ("נכון! זה cat"); a few English praise chunks ("Well done!", "Great!") are taught as words.
 - **Parent co-play cards** (D9) in the reading stages (B-16 on): a short card after a letter bundle or a story, with something to do together off screen ([McT20]: phonics apps help most with an adult involved).
@@ -361,7 +370,8 @@ Each tag names the signal the app can see, and the re-teach (the level-2 represe
 Decided in `docs/languages/decisions-2026-11-03.md`; this file applies them:
 - **D5** American spelling and a General American voice (§3.5).
 - **D6** When reading starts: ages 3-4 listening and speaking only; ages 5-6 letters after the oral gate, with a parent "oral only" switch; ages 7-8 full reading and writing (§6.2).
-- **D7** Hebrew frame, English target: Hebrew instructions at first, 10 classroom phrases move into English; a Hebrew translation only at hint level 2 (§7.2).
+- **D7** Hebrew frame, English target: Hebrew instructions at first, 10 classroom phrases move into English; a Hebrew translation only at hint level 2 (§7.2). **Amended by the owner on 2026-11-12 (L7):** the Hebrew meaning is also said once on the word's Meet screen, and stays at hint level 2.
+- **L7 (the owner, 2026-11-12)** also amends D6: letters by age and level (§6.2): under 5 no letters by default; a child whose placement confirms letters is served them at any age; "letters together with words" from 6. "Oral only" still keeps letters closed.
 - **D1 (CHANGED)** Speech recognition in English: per-word confident or unsure, never wrong (§1, frame §5.1).
 - Also binding here: D2 (isolated-sound fallback: stretched words), D3 (original stories and chants only; songs need the owner's OK on the melody), D4 (trace → copy → memory, §5), D8 (the Latin teaching font, "Nitznutz Letters" from Andika, frame §8), D9 (parent co-play cards, §7.2), D10 (CHANGED: scripted personal questions, §4.2), D16 (CHANGED: every letter taught whole, §3.4).
 
