@@ -266,7 +266,7 @@ Band A also uses **M-HEB-ORDER** (reading starts on the left; story pictures lai
 - All stories, rhymes and questions are **new Hebrew**, so they are drafts for the hebrew-text-editor and need pronunciation specs.
 - **The lesson order (amended 2026-11-12, L7; frame §3.5.1).** The course is for Hebrew speakers, so teach-before-asking applies to its **new** words (the story words, the A-02 verbs) and to its stories:
   1. **A story plays before any lesson that asks its words** (it was file order, which put word lessons before their stories).
-  2. **Each new word gets a Meet page** (LS09 teach mode, frame §2.3): the story picture, the word twice, and one short Hebrew sentence that explains it (Biemiller and Boote 2006). New Hebrew, so `needs-editor`.
+  2. **Each new word gets a Meet page** (LS09 teach mode, frame §2.3): the story picture, the word twice, and one short Hebrew sentence that explains it (Biemiller and Boote 2006). The order (2026-11-12, L7, C2): the word, the sentence, then "let's say it together" and the word, its second hearing. New Hebrew, so `needs-editor`.
   3. **Every wrong picture is a word already met, or an everyday word the teacher marks `everyday`.** A sound-alike distractor must be `everyday`. The mark lets the "met before asked" check (frame §3.5.1) pass words every Hebrew-speaking child knows.
   4. Answers in the visit that introduces a word are not evidence (frame §3.3.10).
   5. Story 3 stays a transfer check; whether it also gets a listening lesson is the Hebrew teacher's decision.
