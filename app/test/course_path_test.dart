@@ -22,6 +22,12 @@ import 'support/sample_pack.dart';
 final DateTime _now = DateTime.utc(2026, 11, 4, 9);
 final DateTime _earlier = DateTime.utc(2026, 11, 3, 9);
 
+/// The parent says the child knows a little English: the course has a placement game (a beginner has none, L7-2).
+const LanguageSwitches _knowsSome = LanguageSwitches(
+  on: true,
+  questionnaire: <String, String>{'knowsLetters': 'some'},
+);
+
 CourseHomeModel _home(
   LanguageCourse course, {
   List<Attempt> attempts = const <Attempt>[],
@@ -70,8 +76,27 @@ const List<(String, bool)> _allRight = <(String, bool)>[
 
 void main() {
   group('a child who has not played the course', () {
+    test('a beginner has no invitation: every stone is further on, and the pebble opens lesson 1 (L7-2)', () {
+      for (final String course in <String>['eng', 'heb', 'rus']) {
+        final CourseHomeModel m = _home(_course(course));
+        expect(m.placementDue, isFalse, reason: '$course with no answers');
+        expect(m.nextIndex, 0);
+        expect(m.pebbleLesson, isNotNull, reason: 'the pebble opens the first lesson, not a visit');
+        expect(m.pebbleLesson!.lessonId, m.stones.first.lessonId);
+        expect(m.canPlay, isTrue);
+      }
+    });
+
+    test('the parent can ask for the placement later, and then the host invites', () {
+      final CourseHomeModel m = _home(
+        _course('eng', switches: const LanguageSwitches(on: true, placementAsked: true)),
+      );
+      expect(m.placementDue, isTrue);
+      expect(m.pebbleLesson, isNull);
+    });
+
     test('every stone is further on, the first is next, and the host invites to the visit', () {
-      final CourseHomeModel m = _home(_course('eng'));
+      final CourseHomeModel m = _home(_course('eng', switches: _knowsSome));
       expect(m.stones, hasLength(7));
       expect(m.stones.every((PathStone s) => s.state == StoneState.later), isTrue);
       expect(<int>[for (final PathStone s in m.stones) s.number], <int>[1, 2, 3, 4, 5, 6, 7]);
@@ -117,7 +142,7 @@ void main() {
     test('a finished lesson is done, and the next stone is the one after it', () {
       final PackContent pack = courseContent('eng');
       final CourseHomeModel m = _home(
-        _course('eng'),
+        _course('eng', switches: _knowsSome),
         awards: <String>[Awards.sticker('eng.hello_1', 1)],
         sessions: <Session>[sessionRow(1, 'lesson:eng.hello_1', at: _earlier)],
         attempts: <Attempt>[

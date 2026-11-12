@@ -77,6 +77,25 @@ Future<_Env> _env({List<String> installed = const <String>['eng', 'heb', 'rus']}
   return _Env(rig, container);
 }
 
+/// The parent says the child knows a little of [course]: one answer that is not "no", so the course has a placement game (a beginner has none).
+Future<void> _parentSaysSome(_Env e, String course) async {
+  await e.db.putSetting(
+    languagesSettingKey,
+    const FamilyLanguages()
+        .withSwitches(
+          courseKid,
+          course,
+          LanguageSwitches(
+            on: true,
+            questionnaire: <String, String>{course == 'rus' ? 'letters' : 'knowsLetters': 'some'},
+          ),
+        )!
+        .encode(),
+  );
+  e.container.invalidate(languagesProvider);
+  e.refresh();
+}
+
 void main() {
   group('which courses', () {
     test('no pack installed: no course', () async {
@@ -93,14 +112,68 @@ void main() {
       expect(courses[1].engine.catalog.skills.keys.every((String id) => id.startsWith('RUS-')), isTrue);
     });
 
-    test('a child with no answers has an engine that knows nothing, a placement that has not begun, and nothing assumed', () async {
+    test('a child whose parent says they know something has an engine that knows nothing, a placement that has not begun, and nothing assumed', () async {
       final _Env e = await _env();
+      await _parentSaysSome(e, 'eng');
       final LanguageCourse c = await e.course('eng');
       expect(c.assumed, isEmpty);
       expect(c.placement!.begun, isFalse);
       expect(c.placement!.complete, isFalse);
       expect(c.engine.state.skills, isEmpty);
     });
+
+    test('a beginner (no answers, or only "no") has no placement game in any course: the course starts at lesson 1 (L7-2)', () async {
+      final _Env e = await _env();
+      for (final LanguageCourse c in await e.courses()) {
+        expect(c.placement, isNull, reason: '${c.course} with no answers');
+        expect(c.assumed, isEmpty);
+      }
+      await e.db.putSetting(
+        languagesSettingKey,
+        FamilyLanguages.fromJson(<String, Object?>{
+          courseKid: <String, Object?>{
+            'eng': <String, Object?>{
+              'q': <String, Object?>{'understands': 'no', 'knowsLetters': 'no'},
+            },
+            'heb': <String, Object?>{
+              'q': <String, Object?>{'knowsLetters': 'no'},
+            },
+            'rus': <String, Object?>{
+              'q': <String, Object?>{'understands': 'no', 'letters': 'no', 'reads': 'no', 'home': 'none'},
+            },
+          },
+        }).encode(),
+      );
+      e.container.invalidate(languagesProvider);
+      e.refresh();
+      for (final LanguageCourse c in await e.courses()) {
+        expect(c.placement, isNull, reason: '${c.course} with every answer "no"');
+      }
+    });
+
+    test('the parent can ask for the placement later: a beginner then has the game, not begun', () async {
+      final _Env e = await _env();
+      await e.db.putSetting(
+        languagesSettingKey,
+        const FamilyLanguages()
+            .withSwitches(courseKid, 'eng', const LanguageSwitches(on: true, placementAsked: true))!
+            .encode(),
+      );
+      final LanguageCourse c = await e.course('eng');
+      expect(c.placement!.begun, isFalse);
+      expect(c.placement!.complete, isFalse);
+    });
+
+    test(
+      'a placement that was begun stays whatever the answers say now: what it found stays the child history',
+      () async {
+        final _Env e = await _env();
+        await writePlacement(e.db, courseContent('eng'), _ladder, at: _then);
+        final LanguageCourse c = await e.course('eng');
+        expect(c.placement!.complete, isTrue);
+        expect(c.assumed, isNotEmpty);
+      },
+    );
   });
 
   group('the placement joins the engine', () {
@@ -196,6 +269,7 @@ void main() {
         ('pr_a_2', true),
       ], at: _then);
       await writeAnswer(e.db, courseContent('rus'), 'a_cat', lessonId: 'rus.animals_1', at: _then);
+      await _parentSaysSome(e, 'eng');
       final LanguageCourse eng = await e.course('eng');
       final LanguageCourse rus = await e.course('rus');
       expect(eng.engine.state.skills, isEmpty);
@@ -207,6 +281,7 @@ void main() {
     test('another child\'s answers never reach this child', () async {
       final _Env e = await _env();
       await writePlacement(e.db, courseContent('eng'), _ladder, at: _then, profileId: _other);
+      await _parentSaysSome(e, 'eng');
       expect((await e.course('eng')).placement!.begun, isFalse);
       final LanguageCourse theirs = await e.course('eng', _other);
       expect(theirs.placement!.complete, isTrue);
@@ -232,6 +307,7 @@ void main() {
           hintLevel: 0,
         ),
       );
+      await _parentSaysSome(e, 'eng');
       expect((await e.course('eng')).placement!.begun, isFalse);
     });
   });
@@ -300,6 +376,7 @@ void main() {
 
     test('more answers and a new read: the engine and the placement move on', () async {
       final _Env e = await _env();
+      await _parentSaysSome(e, 'eng');
       expect((await e.course('eng')).placement!.begun, isFalse);
       await writePlacement(e.db, courseContent('eng'), _ladder, at: _then);
       expect(

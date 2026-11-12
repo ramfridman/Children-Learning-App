@@ -22,9 +22,13 @@ enum StressMarks { route, on, off }
 /// An answer sets where a placement staircase starts, never where it ends (docs/languages/frame.md section 3.2).
 const Map<String, Map<String, List<String>>> languageQuestionnaire = <String, Map<String, List<String>>>{
   Course.eng: <String, List<String>>{
+    'understands': <String>['no', 'some', 'most'],
     'knowsLetters': <String>['no', 'some'],
   },
-  Course.heb: <String, List<String>>{},
+  // Hebrew is for Hebrew speakers: the one question is about letters and reading (docs/milestones/L7.md, owner's Q2).
+  Course.heb: <String, List<String>>{
+    'knowsLetters': <String>['no', 'some', 'reads'],
+  },
   Course.rus: <String, List<String>>{
     'home': <String>['none', 'oneParent', 'bothParents', 'grandparentsOthers'],
     'understands': <String>['no', 'some', 'most'],
@@ -57,6 +61,7 @@ class LanguageSwitches {
     this.route,
     this.band,
     this.questionnaire = const <String, String>{},
+    this.placementAsked = false,
   });
 
   /// Reads one course's switches from the document. A key that does not belong to the course, an unknown key, a value of the
@@ -76,6 +81,7 @@ class LanguageSwitches {
       stress: own.contains('stress') ? _stressOf(json['stress']) : StressMarks.route,
       readCheck: own.contains('readCheck') && flag('readCheck', false),
       route: own.contains('route') && courseRoutes.contains(json['route']) ? json['route']! as String : null,
+      placementAsked: flag('placement', false),
       band: json['band'] is int && (json['band']! as int) >= 0 && (json['band']! as int) <= 2
           ? json['band']! as int
           : null,
@@ -124,6 +130,33 @@ class LanguageSwitches {
   /// The answers to the course's questionnaire, by question.
   final Map<String, String> questionnaire;
 
+  /// The parent asked for a placement visit from the parent area, whatever the answers say (a child who knows nothing gets none until then).
+  final bool placementAsked;
+
+  /// What the parent's answers say about the child: some knowledge of the course's language. A missing answer and "no" say nothing, so a
+  /// child whose parent answered "no" to everything, or to nothing, starts at lesson 1 with no placement game (docs/milestones/L7.md step L7-2).
+  /// Hebrew asks one question (letters and reading); English two (understanding, letters); Russian three (understanding, letters, reading).
+  bool knowsSomething(String course) {
+    bool some(String question) => (questionnaire[question] ?? 'no') != 'no';
+    return switch (course) {
+      Course.eng => some('understands') || some('knowsLetters'),
+      Course.heb => some('knowsLetters'),
+      Course.rus => some('understands') || some('letters') || some('reads'),
+      _ => false,
+    };
+  }
+
+  /// The placement game is to be played: the answers say the child knows something, or the parent asked for it.
+  bool wantsPlacement(String course) => placementAsked || knowsSomething(course);
+
+  /// What a course's placement reads (`PlacementDoc` offers and starts): the questionnaire, and for Russian the answer that offers the sounds
+  /// strand (`soundsStrand`: the child understands most of it, or the parent set the heritage route). It is derived here and never stored.
+  Map<String, String> placementAnswers(String course) => <String, String>{
+    ...questionnaire,
+    if (course == Course.rus && (questionnaire['understands'] == 'most' || route == 'heritage'))
+      'soundsStrand': 'yes',
+  };
+
   /// The same, with the given fields changed. [route], [band] and [questionnaire] can be set to null or empty by passing the
   /// matching `clear...` flag, because null alone means "keep".
   LanguageSwitches copyWith({
@@ -139,6 +172,7 @@ class LanguageSwitches {
     int? band,
     bool clearBand = false,
     Map<String, String>? questionnaire,
+    bool? placementAsked,
   }) => LanguageSwitches(
     on: on ?? this.on,
     voice: voice ?? this.voice,
@@ -150,6 +184,7 @@ class LanguageSwitches {
     route: clearRoute ? null : route ?? this.route,
     band: clearBand ? null : band ?? this.band,
     questionnaire: questionnaire ?? this.questionnaire,
+    placementAsked: placementAsked ?? this.placementAsked,
   );
 
   /// Only what differs from the default.
@@ -161,6 +196,7 @@ class LanguageSwitches {
     if (lettersBefore5) 'lettersBefore5': true,
     if (stress != StressMarks.route) 'stress': stress.name,
     if (readCheck) 'readCheck': true,
+    if (placementAsked) 'placement': true,
     'route': ?route,
     'band': ?band,
     if (questionnaire.isNotEmpty) 'q': questionnaire,

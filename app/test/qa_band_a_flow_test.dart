@@ -1,6 +1,6 @@
 // QA of Languages Band A (2026-11-07): the real packs through the real app on the four boards with every clip PENDING (the app's voice
 // bank holds none of the pack's lines): the door, the course home, the placement visit, the first lesson of the course to its celebration and
-// back to the home. Pictures of the home, the first activity, the celebration and the home after it are written when NN_SHOTS names a folder.
+// back to the home (a child whose parent says they know a little, so the placement visit comes first; a beginner has none, L7-2). Pictures of the home, the first activity, the celebration and the home after it are written when NN_SHOTS names a folder.
 //
 //   NN_SHOTS=<folder> flutter test --no-pub test/qa_band_a_flow_test.dart
 import 'dart:io';
@@ -80,9 +80,7 @@ void main() {
           await rig.seedFinishedSetup(id: courseKid);
           await rig.db.putSetting(
             languagesSettingKey,
-            const FamilyLanguages()
-                .withSwitches(courseKid, course, const LanguageSwitches(on: true))!
-                .encode(),
+            const FamilyLanguages().withSwitches(courseKid, course, knowsALittle(course)[course]!)!.encode(),
           );
           await rig.pump(tester, size: b.value);
           await tester.tap(find.text('נועה'));

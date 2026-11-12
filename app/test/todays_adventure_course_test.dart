@@ -101,7 +101,7 @@ void main() {
   testWidgets(
     'while the placement is due it goes first, as a land\'s warm-up does, and the host invites when the child comes back',
     (WidgetTester tester) async {
-      await courseApp(tester, <String>['eng'], history: _inEnglishUnplaced);
+      await courseApp(tester, <String>['eng'], history: _inEnglishUnplaced, switches: knowsALittle('eng'));
       await _toBottle(tester);
       await tapBottleAndWait(tester);
       final LessonScreen visit = tester.widget<LessonScreen>(find.byType(LessonScreen));

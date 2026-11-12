@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/course_home.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/engine/course.dart';
 import 'package:nitznutz/parent/language_settings.dart';
 import 'package:nitznutz/parent/parent_rules.dart';
 import 'package:nitznutz/tutor/tutor.dart';
@@ -52,6 +53,21 @@ Future<AppRig> courseApp(
   expect(find.byType(HomeScreen), findsOneWidget);
   return rig;
 }
+
+/// What a parent says of a child who knows a little, so that the course starts with the placement visit: one answer of the course's own
+/// questions that says "some" and sets no starting level (the staircase starts at its floor).
+Map<String, LanguageSwitches> knowsALittle(String course) => <String, LanguageSwitches>{
+  course: LanguageSwitches(
+    on: true,
+    questionnaire: <String, String>{
+      switch (course) {
+        Course.eng => 'understands',
+        Course.rus => 'letters',
+        _ => 'knowsLetters',
+      }: 'some',
+    },
+  ),
+};
 
 /// From the map to the home of [course] (through the doors when several languages are on).
 Future<void> openCourse(WidgetTester tester, String course, {bool doors = false}) async {

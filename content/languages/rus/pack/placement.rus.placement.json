@@ -85,6 +85,10 @@
     },
     {
       "id": "2",
+      "offer": {
+        "answer": "soundsStrand",
+        "equals": "yes"
+      },
       "start": [
         {
           "answer": "understands",

@@ -726,6 +726,18 @@ abstract final class He {
   static const Str areaLangQuestTitle = Str('שאלון שפת הבית');
   static const Str areaLangQuestHelp = Str('התשובות קובעות רק מאיפה מתחילים. אפשר לשנות אותן בכל זמן.');
   static const Str areaLangQuestButton = Str('לשאלון');
+  // L7-2: English and Hebrew ask what the child already knows; a child who knows nothing, or has no answers, starts at lesson 1.
+  static const Str areaLangKnowsTitle = Str('מה הילד כבר יודע');
+  static const Str areaLangKnowsHelp = Str(
+    'אם הילד עוד לא מכיר את השפה, אפשר לא לענות: הוא מתחיל משיעור 1. התשובות קובעות רק מאיפה מתחילים, ואפשר לשנות אותן בכל זמן.',
+  );
+  static const Str areaLangPlacementTitle = Str('משחק היכרות');
+  static const Str areaLangPlacementHelp = Str(
+    'ילד שלא מכיר את השפה מתחיל משיעור 1, בלי משחק. אפשר לבקש משחק קצר שיראה מאיפה כדאי להתחיל.',
+  );
+  static const Str areaLangPlacementButton = Str('לבקש משחק היכרות');
+  static const Str areaLangPlacementAsked = Str('ביקשתם משחק היכרות, והילד ישחק בו בביקור.');
+  static const Str areaLangPlacementByAnswers = Str('לפי התשובות, יש לילד משחק היכרות.');
   static const Str areaLangProgressEng = Str('התקדמות באנגלית');
   static const Str areaLangProgressHeb = Str('התקדמות בעברית');
   static const Str areaLangProgressRus = Str('התקדמות ברוסית');
@@ -767,6 +779,8 @@ abstract final class He {
   static const Str langRoute = Str('מסלול הלמידה');
   static const Str langQuestionnaireDone = Str('סיום');
   static const Str qKnowsLetters = Str('הילד מכיר אותיות באנגלית?');
+  static const Str qUnderstandsEng = Str('הילד מבין אנגלית?');
+  static const Str qKnowsLettersHeb = Str('הילד מכיר אותיות או קורא בעברית?');
   static const Str qHome = Str('מי מדבר רוסית בבית?');
   static const Str qUnderstands = Str('הילד מבין רוסית?');
   static const Str qSpeaks = Str('הילד מדבר רוסית?');
@@ -775,6 +789,7 @@ abstract final class He {
   static const Str aNo = Str('לא');
   static const Str aSome = Str('קצת');
   static const Str aMost = Str('הרבה');
+  static const Str aReads = Str('קורא');
   static const Str aNone = Str('אף אחד');
   static const Str aOneParent = Str('אחד ההורים');
   static const Str aBothParents = Str('שני ההורים');

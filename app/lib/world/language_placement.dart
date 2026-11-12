@@ -2,6 +2,7 @@ import '../content/models.dart';
 import '../data/app_database.dart';
 import '../engine/course.dart';
 import '../engine/staircase.dart';
+import '../parent/language_settings.dart' show LanguageSwitches;
 import '../play/lesson_controller.dart' show ItemFlow;
 import 'placement.dart' show landPath, placementIdFor;
 
@@ -53,6 +54,26 @@ PlacementGame? placementGameFor(
   if (game == null) return null;
   replayPlacement(game, content.course, attempts.where((Attempt a) => a.packId == content.packId));
   return game;
+}
+
+/// The placement game of one child's course as the parent's settings stand (docs/milestones/L7.md step L7-2): none for a beginner, whose
+/// parent's answers say the child knows nothing of the language, or are missing, and who has not been asked to play it (the course then
+/// starts at lesson 1, with no probe and no assumed skill). A game that was begun stays, whatever the answers say now: what it found is
+/// the child's history. [ageBand] is the child's age bracket; the presentation band is the parent's choice or the age's.
+PlacementGame? placementGameOfChild(
+  PackContent content,
+  Iterable<Attempt> attempts,
+  LanguageSwitches switches, {
+  required int ageBand,
+}) {
+  final PlacementGame? game = placementGameFor(
+    content,
+    attempts,
+    answers: switches.placementAnswers(content.course),
+    presentationBand: switches.presentationBand(ageBand),
+  );
+  if (game == null) return null;
+  return switches.wantsPlacement(content.course) || PlacementStatus.of(game).begun ? game : null;
 }
 
 /// Where a child's placement stands in a course: what each strand found so far, and whether every strand has stopped. Read from a game

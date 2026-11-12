@@ -1,11 +1,12 @@
 {
-  "about": "The parent's settings for each language of each child (docs/languages/frame.md section 1.4), as they travel inside the family's rules document under the key `languages`: child id, then course, then only the values that differ from the default. settings-put/handler.ts (LANGUAGE_SWITCHES, LANGUAGE_QUESTIONNAIRE, MAX_LANGUAGE_CHILDREN) is asserted equal to this file by alerts_test.ts, and every example is pushed through the real settings-put; in Dart app/lib/parent/language_settings.dart is asserted equal to it by language_settings_test.dart, which also reads each example and writes it again unchanged. A new switch or value goes into the server and this file first (PLAN: Deploy order for the gateway). Defaults (not stored): on false, voice false, personal true, oralOnly false, lettersBefore5 false, readCheck false, stress and route and band absent, q empty.",
+  "about": "The parent's settings for each language of each child (docs/languages/frame.md section 1.4), as they travel inside the family's rules document under the key `languages`: child id, then course, then only the values that differ from the default. settings-put/handler.ts (LANGUAGE_SWITCHES, LANGUAGE_QUESTIONNAIRE, MAX_LANGUAGE_CHILDREN) is asserted equal to this file by alerts_test.ts, and every example is pushed through the real settings-put; in Dart app/lib/parent/language_settings.dart is asserted equal to it by language_settings_test.dart, which also reads each example and writes it again unchanged. A new switch or value goes into the server and this file first (PLAN: Deploy order for the gateway). Defaults (not stored): on false, voice false, personal true, oralOnly false, lettersBefore5 false, readCheck false, placement false, stress and route and band absent, q empty.",
   "max_children": 6,
   "courses": ["eng", "heb", "rus"],
   "switches": {
     "on": { "t": "bool", "courses": ["eng", "heb", "rus"] },
     "voice": { "t": "bool", "courses": ["eng", "heb", "rus"] },
     "personal": { "t": "bool", "courses": ["eng", "heb", "rus"] },
+    "placement": { "t": "bool", "courses": ["eng", "heb", "rus"] },
     "band": { "t": "int", "min": 0, "max": 2, "courses": ["eng", "heb", "rus"] },
     "oralOnly": { "t": "bool", "courses": ["eng"] },
     "readCheck": { "t": "bool", "courses": ["heb"] },
@@ -14,8 +15,8 @@
     "route": { "t": "enum", "values": ["new", "heritage", "reader"], "courses": ["rus"] }
   },
   "questionnaire": {
-    "eng": { "knowsLetters": ["no", "some"] },
-    "heb": {},
+    "eng": { "understands": ["no", "some", "most"], "knowsLetters": ["no", "some"] },
+    "heb": { "knowsLetters": ["no", "some", "reads"] },
     "rus": {
       "home": ["none", "oneParent", "bothParents", "grandparentsOthers"],
       "understands": ["no", "some", "most"],
@@ -27,8 +28,8 @@
   "examples": [
     {
       "child-aaaa-0001": {
-        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "band": 2, "q": { "knowsLetters": "some" } },
-        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "band": 0 },
+        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "placement": true, "band": 2, "q": { "understands": "most", "knowsLetters": "some" } },
+        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "placement": true, "band": 0, "q": { "knowsLetters": "reads" } },
         "rus": {
           "on": true,
           "voice": true,
@@ -41,8 +42,8 @@
         }
       },
       "child-aaaa-0002": {
-        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "band": 2, "q": { "knowsLetters": "some" } },
-        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "band": 0 },
+        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "placement": true, "band": 2, "q": { "understands": "most", "knowsLetters": "some" } },
+        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "placement": true, "band": 0, "q": { "knowsLetters": "reads" } },
         "rus": {
           "on": true,
           "voice": true,
@@ -55,8 +56,8 @@
         }
       },
       "child-aaaa-0003": {
-        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "band": 2, "q": { "knowsLetters": "some" } },
-        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "band": 0 },
+        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "placement": true, "band": 2, "q": { "understands": "most", "knowsLetters": "some" } },
+        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "placement": true, "band": 0, "q": { "knowsLetters": "reads" } },
         "rus": {
           "on": true,
           "voice": true,
@@ -69,8 +70,8 @@
         }
       },
       "child-aaaa-0004": {
-        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "band": 2, "q": { "knowsLetters": "some" } },
-        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "band": 0 },
+        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "placement": true, "band": 2, "q": { "understands": "most", "knowsLetters": "some" } },
+        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "placement": true, "band": 0, "q": { "knowsLetters": "reads" } },
         "rus": {
           "on": true,
           "voice": true,
@@ -83,8 +84,8 @@
         }
       },
       "child-aaaa-0005": {
-        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "band": 2, "q": { "knowsLetters": "some" } },
-        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "band": 0 },
+        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "placement": true, "band": 2, "q": { "understands": "most", "knowsLetters": "some" } },
+        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "placement": true, "band": 0, "q": { "knowsLetters": "reads" } },
         "rus": {
           "on": true,
           "voice": true,
@@ -97,8 +98,8 @@
         }
       },
       "child-aaaa-0006": {
-        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "band": 2, "q": { "knowsLetters": "some" } },
-        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "band": 0 },
+        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "placement": true, "band": 2, "q": { "understands": "most", "knowsLetters": "some" } },
+        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "placement": true, "band": 0, "q": { "knowsLetters": "reads" } },
         "rus": {
           "on": true,
           "voice": true,
@@ -131,8 +132,11 @@
     { "child-aaaa-0001": { "eng": { "band": -1 } } },
     { "child-aaaa-0001": { "eng": { "name": "Noa" } } },
     { "child-aaaa-0001": { "eng": { "q": { "knowsLetters": "all" } } } },
+    { "child-aaaa-0001": { "eng": { "q": { "understands": "all" } } } },
+    { "child-aaaa-0001": { "eng": { "placement": "yes" } } },
     { "child-aaaa-0001": { "eng": { "q": { "home": "none" } } } },
-    { "child-aaaa-0001": { "heb": { "q": { "knowsLetters": "no" } } } },
+    { "child-aaaa-0001": { "heb": { "q": { "knowsLetters": "most" } } } },
+    { "child-aaaa-0001": { "heb": { "q": { "understands": "no" } } } },
     { "child-aaaa-0001": { "rus": { "q": { "home": "Moscow" } } } },
     { "child-aaaa-0001": { "rus": { "q": "none" } } },
     { "child-aaaa-0001": { "rus": "on" } },

@@ -9,6 +9,7 @@ import '../core/clock.dart';
 import '../core/log.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
+import 'first_meeting.dart';
 import 'name_options.dart';
 import 'number_rules.dart';
 import 'response_code.dart';
@@ -226,6 +227,9 @@ class LessonController extends ChangeNotifier {
   final AttemptSink _record;
   final Clock _clock;
 
+  /// The words whose Meet screen has played in this visit: an item that asks one of them writes nothing ([FirstMeeting]).
+  final FirstMeeting _meeting = FirstMeeting();
+
   int index = 0;
   bool finished = false;
 
@@ -435,6 +439,7 @@ class LessonController extends ChangeNotifier {
 
   void _begin() {
     final Activity a = current;
+    _meeting.met(a);
     attemptNo = 1;
     errors = 0;
     hintLevel = 0;
@@ -823,6 +828,8 @@ class LessonController extends ChangeNotifier {
     bool byVoice = false,
   }) {
     final Activity a = current;
+    // The first meeting with a word is no evidence, right or wrong (L7-3): the child sees the same help and feedback, and nothing is kept.
+    if (_meeting.asks(a)) return Future<void>.value();
     final int now = _clock.nowMs();
     final AttemptRecord rec = AttemptRecord(
       at: DateTime.fromMillisecondsSinceEpoch(now, isUtc: true),

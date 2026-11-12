@@ -204,8 +204,8 @@ class _LanguageRow extends ConsumerWidget {
                   value: on,
                   onChanged: (bool v) async {
                     await _save(ref, profile.id, course, now.copyWith(on: v));
-                    // Turning Russian on for the first time asks the home-language questions.
-                    if (v && course == Course.rus && now.questionnaire.isEmpty && context.mounted) {
+                    // Turning a language on for the first time asks what the child already knows (Russian: the home-language questions).
+                    if (v && now.questionnaire.isEmpty && context.mounted) {
                       await Navigator.of(context).push(
                         MaterialPageRoute<void>(
                           builder: (BuildContext c) => QuestionnairePage(profile: profile, course: course),
@@ -332,21 +332,38 @@ class LanguagePage extends ConsumerWidget {
         const Divider(height: 1, color: TokenColors.hairline),
         _BandRow(switches: s, ageBand: profile.ageBand, onChanged: set),
       ]),
-      if (course == Course.rus)
-        _card(He.areaLangQuestTitle.text, <Widget>[
-          Text(He.areaLangQuestHelp.text, style: AppText.parent(TokenType.parentSmall)),
-          const SizedBox(height: 8),
-          ParentButton(
-            key: const Key('open-questionnaire'),
-            label: He.areaLangQuestButton.text,
-            quiet: true,
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (BuildContext c) => QuestionnairePage(profile: profile, course: course),
-              ),
+      _card(QuestionnairePage.titleOf(course).text, <Widget>[
+        Text(QuestionnairePage.helpOf(course).text, style: AppText.parent(TokenType.parentSmall)),
+        const SizedBox(height: 8),
+        ParentButton(
+          key: const Key('open-questionnaire'),
+          label: He.areaLangQuestButton.text,
+          quiet: true,
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (BuildContext c) => QuestionnairePage(profile: profile, course: course),
             ),
           ),
-        ]),
+        ),
+      ]),
+      _card(He.areaLangPlacementTitle.text, <Widget>[
+        Text(He.areaLangPlacementHelp.text, style: AppText.parent(TokenType.parentSmall)),
+        const SizedBox(height: 8),
+        // The placement is asked for once; a child whose answers already call for it (or who has played it) needs no button.
+        if (s.wantsPlacement(course))
+          Text(
+            s.placementAsked ? He.areaLangPlacementAsked.text : He.areaLangPlacementByAnswers.text,
+            key: const Key('placement-state'),
+            style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+          )
+        else
+          ParentButton(
+            key: const Key('ask-placement'),
+            label: He.areaLangPlacementButton.text,
+            quiet: true,
+            onPressed: () => set(s.copyWith(placementAsked: true)),
+          ),
+      ]),
       _card('', <Widget>[
         ParentButton(
           key: const Key('open-language-progress'),
@@ -476,26 +493,35 @@ class _BandRow extends StatelessWidget {
   );
 }
 
-/// The home-language questionnaire (Russian) and the one question of English: enums only, answered by a tap, saved at once. An
-/// answer sets where a placement staircase starts, never where it ends.
+/// What the parent says the child already knows, for each course: the home-language questions of Russian, two questions of English and
+/// one of Hebrew. Enums only, answered by a tap, saved at once. An answer sets where a placement staircase starts, never where it ends; a
+/// child with no answer, or only "no", starts at lesson 1 with no placement game (L7-2).
 class QuestionnairePage extends ConsumerWidget {
   const QuestionnairePage({super.key, required this.profile, required this.course});
 
   final Profile profile;
   final String course;
 
-  static const Map<String, Str> _questions = <String, Str>{
-    'knowsLetters': He.qKnowsLetters,
-    'home': He.qHome,
-    'understands': He.qUnderstands,
-    'speaks': He.qSpeaks,
-    'letters': He.qLetters,
-    'reads': He.qReads,
+  /// The title and the help of a course's questionnaire: Russian asks about the home language, the others about what the child knows.
+  static Str titleOf(String course) => course == Course.rus ? He.areaLangQuestTitle : He.areaLangKnowsTitle;
+  static Str helpOf(String course) => course == Course.rus ? He.areaLangQuestHelp : He.areaLangKnowsHelp;
+
+  /// The question's words: the same question key reads differently in each course (English and Hebrew both ask `knowsLetters`).
+  static Str _question(String course, String key) => switch ((course, key)) {
+    (Course.eng, 'understands') => He.qUnderstandsEng,
+    (Course.heb, 'knowsLetters') => He.qKnowsLettersHeb,
+    (_, 'knowsLetters') => He.qKnowsLetters,
+    (_, 'home') => He.qHome,
+    (_, 'understands') => He.qUnderstands,
+    (_, 'speaks') => He.qSpeaks,
+    (_, 'letters') => He.qLetters,
+    _ => He.qReads,
   };
   static const Map<String, Str> _answers = <String, Str>{
     'no': He.aNo,
     'some': He.aSome,
     'most': He.aMost,
+    'reads': He.aReads,
     'none': He.aNone,
     'oneParent': He.aOneParent,
     'bothParents': He.aBothParents,
@@ -510,12 +536,12 @@ class QuestionnairePage extends ConsumerWidget {
     final LanguageSwitches s =
         ref.watch(languagesProvider).value?.of(profile.id, course) ?? const LanguageSwitches();
     final Map<String, List<String>> asks = languageQuestionnaire[course] ?? const <String, List<String>>{};
-    return _page(context, He.areaLangQuestTitle.text, () => Navigator.pop(context), <Widget>[
+    return _page(context, titleOf(course).text, () => Navigator.pop(context), <Widget>[
       _card('', <Widget>[
-        Text(He.areaLangQuestHelp.text, style: AppText.parent(TokenType.parentSmall)),
+        Text(helpOf(course).text, style: AppText.parent(TokenType.parentSmall)),
         for (final MapEntry<String, List<String>> q in asks.entries) ...<Widget>[
           const SizedBox(height: 16),
-          Text(_questions[q.key]!.text, style: AppText.parent(TokenType.parentH3)),
+          Text(_question(course, q.key).text, style: AppText.parent(TokenType.parentH3)),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -538,7 +564,11 @@ class QuestionnairePage extends ConsumerWidget {
           ),
         ],
         const SizedBox(height: 16),
-        ParentButton(label: He.langQuestionnaireDone.text, onPressed: () => Navigator.pop(context)),
+        ParentButton(
+          key: const Key('questionnaire-done'),
+          label: He.langQuestionnaireDone.text,
+          onPressed: () => Navigator.pop(context),
+        ),
       ]),
     ]);
   }

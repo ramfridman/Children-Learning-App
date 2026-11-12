@@ -10,6 +10,7 @@ import 'package:nitznutz/parent/language_settings.dart';
 import 'package:nitznutz/strings/he.dart';
 
 import 'support/app_harness.dart';
+import 'support/course_flow.dart' show knowsALittle;
 import 'support/course_history.dart';
 import 'support/course_home_model.dart';
 import 'support/course_packs.dart';
@@ -211,13 +212,14 @@ void main() {
       List<String> on, {
       Size size = const Size(852, 393),
       Future<void> Function(AppRig rig)? history,
+      Map<String, LanguageSwitches>? switches,
     }) async {
       final AppRig rig = AppRig()..languagePacks = fixturePacks(on);
       await rig.seedFinishedSetup(id: courseKid);
       if (history != null) await history(rig);
       FamilyLanguages f = const FamilyLanguages();
       for (final String c in on) {
-        f = f.withSwitches(courseKid, c, const LanguageSwitches(on: true))!;
+        f = f.withSwitches(courseKid, c, switches?[c] ?? const LanguageSwitches(on: true))!;
       }
       await rig.db.putSetting(languagesSettingKey, f.encode());
       await rig.pump(tester, size: size);
@@ -238,7 +240,7 @@ void main() {
     testWidgets(
       'one language on: the island opens the course home with the invitation, and back comes to the map',
       (WidgetTester tester) async {
-        final AppRig rig = await app(tester, <String>['heb']);
+        final AppRig rig = await app(tester, <String>['heb'], switches: knowsALittle('heb'));
         await openLanguages(tester);
         expect(find.byType(LanguagesDoorsScreen), findsNothing);
         expect(find.byType(CourseHomeScreen), findsOneWidget);

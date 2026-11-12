@@ -2,7 +2,8 @@
 // `tools/lang_pack.py`, built and signed by the pack builder): for each course the child opens the door, the course home offers its
 // first lesson, the lesson is played to the celebration with the real lesson screen, and the answers are written as the rows the engine
 // and the sync read. The packs are signed here with a throw-away key. Every clip is pending (no voice yet), as the packs say.
-// Goldens of the first activity of each course on the phone and the tablet.
+// Goldens of the first activity of each course on the phone and the tablet. A child whose parent says they know something starts with the
+// placement visit; a beginner (no answers) goes straight to lesson 1 (L7-2).
 import 'dart:convert';
 import 'dart:io';
 
@@ -28,12 +29,13 @@ const String _languages = '../content/languages';
 
 /// The first lesson of each course's pilot: its id, how many items it plays and the skill it teaches.
 /// [teach] is how many teach screens a new learner is shown first (a child with no route set is one): the Russian lesson opens on the four new
-/// words, each shown and said, and they write nothing.
-const Map<String, ({String lesson, int items, String skill, int teach})> _first =
-    <String, ({String lesson, int items, String skill, int teach})>{
-      'eng': (lesson: 'eng.greet-1', items: 5, skill: 'ENG-A-01', teach: 0),
-      'heb': (lesson: 'heb.words-1', items: 4, skill: 'HEB-A-02', teach: 0),
-      'rus': (lesson: 'rus.greet-1', items: 3, skill: 'RUS-A-01', teach: 4),
+/// words, each shown and said, and they write nothing. [written] is how many answers the lesson leaves behind: none for Russian, whose items
+/// ask the words just met (the first meeting is no evidence, L7-3).
+const Map<String, ({String lesson, int items, String skill, int teach, int written})> _first =
+    <String, ({String lesson, int items, String skill, int teach, int written})>{
+      'eng': (lesson: 'eng.greet-1', items: 5, skill: 'ENG-A-01', teach: 0, written: 5),
+      'heb': (lesson: 'heb.words-1', items: 4, skill: 'HEB-A-02', teach: 0, written: 4),
+      'rus': (lesson: 'rus.greet-1', items: 3, skill: 'RUS-A-01', teach: 4, written: 0),
     };
 
 /// The teach screens of a lesson, one after the other: "I said it", then the picture. Nothing is asked and nothing is written.
@@ -104,8 +106,13 @@ void main() {
       testWidgets('from the door to the celebration, every answer written under the course', (
         WidgetTester tester,
       ) async {
-        final ({String lesson, int items, String skill, int teach}) first = _first[course]!;
-        final AppRig rig = await courseApp(tester, <String>[course], packs: packs);
+        final ({String lesson, int items, String skill, int teach, int written}) first = _first[course]!;
+        final AppRig rig = await courseApp(
+          tester,
+          <String>[course],
+          packs: packs,
+          switches: knowsALittle(course),
+        );
         await openCourse(tester, course);
         expect(find.byType(CourseHomeScreen), findsOneWidget);
         expect(find.byKey(const Key('course-play')), findsOneWidget);
@@ -130,8 +137,8 @@ void main() {
           for (final Attempt a in all)
             if (a.lessonId == first.lesson) a,
         ];
-        expect(rows, hasLength(first.items));
-        expect(all.length, greaterThan(first.items), reason: 'the placement probes were answered first');
+        expect(rows, hasLength(first.written));
+        expect(all.length, greaterThan(first.written), reason: 'the placement probes were answered first');
         for (final Attempt a in rows) {
           expect(a.packId, 'lang-$course');
           expect(a.lessonId, first.lesson);
@@ -150,7 +157,12 @@ void main() {
       testWidgets(
         'a wrong touch is the diagnosed error of its distractor, never marked as a failure of the child',
         (WidgetTester tester) async {
-          final AppRig rig = await courseApp(tester, <String>[course], packs: packs);
+          final AppRig rig = await courseApp(
+            tester,
+            <String>[course],
+            packs: packs,
+            switches: knowsALittle(course),
+          );
           await openCourse(tester, course);
           await playPlacement(tester);
           final int before = (await rig.db.attemptsOf(courseKid)).length;
@@ -159,6 +171,11 @@ void main() {
           await passTeachScreens(tester, _first[course]!.teach);
           await answer(tester, right: false);
           final List<Attempt> rows = (await rig.db.attemptsOf(courseKid)).skip(before).toList();
+          if (_first[course]!.written == 0) {
+            expect(rows, isEmpty, reason: 'the word was just met on a teach screen: a guess is no evidence');
+            expect(find.byKey(const Key('lesson-celebration')), findsNothing, reason: 'still being played');
+            return;
+          }
           expect(rows, hasLength(1));
           expect(rows.single.result, 'incorrect');
           expect(
@@ -179,7 +196,13 @@ void main() {
         (MapEntry<String, Size> e) => e.key == 'phone' || e.key == 'tabletLandscape',
       )) {
         testWidgets('the first activity on the ${b.key} board', (WidgetTester tester) async {
-          await courseApp(tester, <String>[course], packs: packs, size: b.value);
+          await courseApp(
+            tester,
+            <String>[course],
+            packs: packs,
+            size: b.value,
+            switches: knowsALittle(course),
+          );
           await openCourse(tester, course);
           await playPlacement(tester);
           await tester.tap(find.byKey(const Key('course-play')));
@@ -191,6 +214,20 @@ void main() {
           );
         });
       }
+
+      testWidgets(
+        'a beginner (no answers) is not asked to play: the first pebble opens lesson 1, no probe is written',
+        (WidgetTester tester) async {
+          final AppRig rig = await courseApp(tester, <String>[course], packs: packs);
+          await openCourse(tester, course);
+          await tester.tap(find.byKey(const Key('course-play')));
+          await settle(tester);
+          expect(find.byType(LessonScreen), findsOneWidget, reason: 'the lesson, not a placement visit');
+          final Lesson lesson = packs[course]!.lessons[_first[course]!.lesson]!;
+          expect(tester.widget<LessonScreen>(find.byType(LessonScreen)).lessonId, lesson.id);
+          expect(await rig.db.attemptsOf(courseKid), isEmpty);
+        },
+      );
 
       test('the pack plays text only: nothing is recorded, the lesson says so in its manifest', () {
         final String source = File('$_languages/$course/pack/pack.json').readAsStringSync();

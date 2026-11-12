@@ -146,6 +146,39 @@ void main() {
       },
     );
 
+    testWidgets(
+      'turning English or Hebrew on for the first time asks what the child already knows, and the answers are saved as enums',
+      (WidgetTester tester) async {
+        final AppRig rig = await langRig();
+        await pumpParentScreen(
+          tester,
+          rig,
+          ChildSettingsScreen(profile: await langProfile(rig), onClose: () {}),
+        );
+        await tester.tap(find.byKey(const Key('language-switch-eng')));
+        await tester.pumpAndSettle();
+        expect(find.byType(QuestionnairePage), findsOneWidget);
+        expect(find.text(He.qUnderstandsEng.text), findsOneWidget);
+        expect(find.text(He.qKnowsLetters.text), findsOneWidget);
+        await tester.tap(find.byKey(const Key('answer-understands-some')));
+        await tester.pumpAndSettle();
+        FamilyLanguages f = await stored(rig);
+        expect(f.of(langKid, 'eng').on, isTrue);
+        expect(f.of(langKid, 'eng').questionnaire, <String, String>{'understands': 'some'});
+        await tester.tap(find.byKey(const Key('questionnaire-done')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('language-switch-heb')));
+        await tester.pumpAndSettle();
+        expect(find.text(He.qKnowsLettersHeb.text), findsOneWidget);
+        expect(find.text(He.aReads.text), findsOneWidget);
+        await tester.tap(find.byKey(const Key('answer-knowsLetters-reads')));
+        await tester.pumpAndSettle();
+        f = await stored(rig);
+        expect(f.of(langKid, 'heb').questionnaire, <String, String>{'knowsLetters': 'reads'});
+        expect(f.of(langKid, 'eng').questionnaire, <String, String>{'understands': 'some'});
+      },
+    );
+
     testWidgets('the row opens the language page', (WidgetTester tester) async {
       final AppRig rig = await langRig();
       await pumpParentScreen(
@@ -179,7 +212,11 @@ void main() {
         expect(find.byKey(const Key('band-age')), findsOneWidget);
         expect(find.byKey(const Key('page-letters5')), findsNothing);
         expect(find.byKey(const Key('page-read-check')), findsNothing);
-        expect(find.byKey(const Key('open-questionnaire')), findsNothing);
+        expect(
+          find.byKey(const Key('open-questionnaire')),
+          findsOneWidget,
+          reason: 'English asks what the child knows (L7-2)',
+        );
       },
     );
 
@@ -204,6 +241,39 @@ void main() {
         expect(find.byKey(const Key('page-oral-only')), findsNothing);
       },
     );
+
+    for (final String course in <String>['eng', 'heb', 'rus']) {
+      testWidgets('$course: a beginner can ask for a placement game, and it is saved as a switch', (
+        WidgetTester tester,
+      ) async {
+        final AppRig rig = await page(tester, course);
+        await tester.ensureVisible(find.byKey(const Key('ask-placement')));
+        expect(find.byKey(const Key('placement-state')), findsNothing);
+        await tester.tap(find.byKey(const Key('ask-placement')));
+        await tester.pumpAndSettle();
+        expect((await stored(rig)).of(langKid, course).placementAsked, isTrue);
+        expect(
+          (await rig.db.setting(languagesSettingKey))!,
+          contains('"placement":true'),
+          reason: 'a boolean, and nothing else, is what travels',
+        );
+        expect(find.byKey(const Key('ask-placement')), findsNothing, reason: 'asked once');
+        expect(find.text(He.areaLangPlacementAsked.text), findsOneWidget);
+      });
+    }
+
+    testWidgets('a child whose answers already call for the placement has no button, and the page says so', (
+      WidgetTester tester,
+    ) async {
+      await page(
+        tester,
+        'eng',
+        switches: const LanguageSwitches(on: true, questionnaire: <String, String>{'knowsLetters': 'some'}),
+      );
+      await tester.ensureVisible(find.byKey(const Key('placement-state')));
+      expect(find.byKey(const Key('ask-placement')), findsNothing);
+      expect(find.text(He.areaLangPlacementByAnswers.text), findsOneWidget);
+    });
 
     testWidgets(
       'every switch is saved as the parent set it, and the voice is off, the personal questions on, until then',

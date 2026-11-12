@@ -36,7 +36,7 @@ Future<VisitOutcome> startCourseVisit(
       ? placementVisitFor(
           own.content,
           await db.attemptsOf(childId),
-          answers: switches.questionnaire,
+          answers: switches.placementAnswers(course),
           presentationBand: switches.presentationBand(band),
         )
       : null;

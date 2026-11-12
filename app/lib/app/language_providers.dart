@@ -141,12 +141,7 @@ LanguageCourse languageCourseOf(
   int ageBand,
 ) {
   final List<Attempt> own = attempts.where((Attempt a) => a.packId == pack.packId).toList();
-  final PlacementGame? game = placementGameFor(
-    pack,
-    own,
-    answers: switches.questionnaire,
-    presentationBand: switches.presentationBand(ageBand),
-  );
+  final PlacementGame? game = placementGameOfChild(pack, own, switches, ageBand: ageBand);
   final Set<String> assumed = game == null ? const <String>{} : assumedSkills(pack, game);
   final Engine engine = Engine(catalog: engineCatalog(pack))..assume(assumed);
   engine.replay(own.map(eventOf).toList()..sort((AttemptEvent x, AttemptEvent y) => x.at.compareTo(y.at)));
