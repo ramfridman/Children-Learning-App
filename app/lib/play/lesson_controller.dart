@@ -158,6 +158,7 @@ class LessonController extends ChangeNotifier {
     this.flow,
     this.route,
     this.routeOfSkill,
+    this.introVisit = true,
     this.echoOnly,
     this.captionsShown,
     this.fastHints = false,
@@ -198,6 +199,12 @@ class LessonController extends ChangeNotifier {
   /// How the child is served in another skill (a say step's own skill); null: every skill is served as [route].
   final String? Function(String skillId)? routeOfSkill;
 
+  /// This visit is the one that introduces the lesson's words: its Meet screens are the child's first meeting with them, so the items that ask
+  /// them write no evidence ([FirstMeeting], docs/languages/frame.md section 3.3.10). False when the child has finished this lesson before: a
+  /// lesson played again re-shows its Meet screens (re-teaching is cheap), but a word that was introduced in an earlier visit is scored as usual,
+  /// since the first evidence is a later visit.
+  final bool introVisit;
+
   /// Asked when a say step begins: is the visit's quiet fallback on (too many unsure turns)? Then the step is echo whatever its route says.
   final bool Function()? echoOnly;
 
@@ -205,8 +212,31 @@ class LessonController extends ChangeNotifier {
   /// when the step begins, from its order on the route the child is served on and the quiet fallback, and kept until the next step.
   bool pictureFirst = false;
 
-  /// How long the progress trail is: the lesson's items, or at most what the flow can give.
-  int get trailLength => flow?.length ?? items.length;
+  /// A Meet screen after the first of its set: the screens of one set are one socket of the trail (docs/design/l7-meet-find.md section 10.6).
+  bool _continuesSet(int i) {
+    final Activity a = items[i];
+    return a is SayItActivity && a.meetScreen && (a.meet?.position ?? 0) > 0;
+  }
+
+  /// How long the progress trail is: the lesson's items with each set of Meet screens as one, or at most what the flow can give.
+  int get trailLength =>
+      flow?.length ??
+      <int>[
+        for (int i = 0; i < items.length; i++)
+          if (!_continuesSet(i)) i,
+      ].length;
+
+  /// How many sockets of the trail are full: a set of Meet screens fills its socket at its last close, so a socket is full once its last
+  /// screen is behind the child.
+  int get trailDone {
+    if (finished) return trailLength;
+    if (flow != null) return index;
+    int done = 0;
+    for (int i = 0; i < index; i++) {
+      if (i + 1 >= items.length || !_continuesSet(i + 1)) done++;
+    }
+    return done;
+  }
 
   /// No lamp and no "show me": a probe of the placement game (one answer, one neutral line, frame section 3.2) and a step that is never
   /// scored (a personal turn, a story only heard, a chant, the embodied "done"), where "show me" would write an attempt that no such
@@ -439,7 +469,9 @@ class LessonController extends ChangeNotifier {
 
   void _begin() {
     final Activity a = current;
-    _meeting.met(a);
+    if (introVisit) {
+      _meeting.met(a);
+    }
     attemptNo = 1;
     errors = 0;
     hintLevel = 0;
@@ -452,6 +484,8 @@ class LessonController extends ChangeNotifier {
     hintShown = 0;
     _recent.clear();
     askedLine = null;
+    // A session that says the replay itself (a Meet screen, a story) asks for it again, once it is made.
+    replayQuiet = false;
     _say(_promptOf(a));
     _markMs = _clock.nowMs();
     resetNonce++;
@@ -464,6 +498,7 @@ class LessonController extends ChangeNotifier {
     pictureFirst =
         a is SayItActivity &&
         a.picturesFirst(routeOfSkill?.call(a.skillId) ?? route, echoOnly: echoOnly?.call() ?? false);
+    if (a is SayItActivity && a.meetScreen) return a.firstBeat;
     return pictureFirst ? (a as SayItActivity).pictureFirstLine! : a.promptLine;
   }
 
@@ -619,8 +654,11 @@ class LessonController extends ChangeNotifier {
     final SayItActivity a = current as SayItActivity;
     if (finished || solved) return;
     actionNonce++;
-    await _write(result: 'correct', tag: '', response: ResponseCode.said, byVoice: true);
-    attemptNo++;
+    // A Meet screen is a lesson of the word, not a check: its microphone says "heard" and writes nothing (frame section 2.3, LS09 teach mode).
+    if (!a.teach) {
+      await _write(result: 'correct', tag: '', response: ResponseCode.said, byVoice: true);
+      attemptNo++;
+    }
     _say(a.heard);
     notifyListeners();
   }
@@ -749,8 +787,14 @@ class LessonController extends ChangeNotifier {
       } else {
         _say(authored);
       }
-      // ...and the picture of the first help goes with it: the line is the diagnosis, the picture shows where to look.
-      if (a.hints.isNotEmpty) _applyHint(math.min(twoChoices ? 2 : 1, a.hints.length), speak: false);
+      // ...and the picture of the first help goes with it: the line is the diagnosis, the picture shows where to look. A picture choice of a
+      // language course says "and where is ...?" instead and shows no picture: the question is the first help, and the replay button asks
+      // it again (frame section 2.3, LS01 "what a tap says").
+      final bool asksWhere = a is TapAnswerActivity && a.askWhere;
+      if (asksWhere) askedLine = authored;
+      if (a.hints.isNotEmpty && !asksWhere) {
+        _applyHint(math.min(twoChoices ? 2 : 1, a.hints.length), speak: false);
+      }
     } else {
       // Later mistakes: help that changes how the child sees the problem, not the same words again.
       final int level = math.min(errors + (twoChoices ? 1 : 0), a.hints.length);

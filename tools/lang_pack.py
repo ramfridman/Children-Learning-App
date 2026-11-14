@@ -3,6 +3,7 @@
     python tools/lang_pack.py eng            # one course (eng, heb or rus)
     python tools/lang_pack.py all            # the three courses
     python tools/lang_pack.py all --check    # writes nothing; exits 1 if the committed files differ from what the spec gives
+    python tools/lang_pack.py eng --met-before   # writes nothing; lists every violation of "met before asked" (tools/lang_met_before.py)
 
 A course is written by its teacher in two kinds of file (the format is in docs/languages/band-a-build.md):
 
@@ -38,6 +39,8 @@ TOOLS = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(TOOLS, '..'))
 if TOOLS not in sys.path:  # `python -I` keeps the script's own folder off the path
     sys.path.insert(0, TOOLS)
+import lang_meet  # noqa: E402
+import lang_met_before  # noqa: E402
 import lang_recipes  # noqa: E402
 from lang_recipes_base import LETTER_SKILLS_OF_BAND_A  # noqa: E402
 import lang_routes  # noqa: E402
@@ -99,7 +102,7 @@ def chip_places(node, path=''):
     return found
 
 
-class Course(lang_recipes.Recipes, lang_routes.Routes):
+class Course(lang_recipes.Recipes, lang_routes.Routes, lang_meet.Meet):
     """One course's spec, read and checked, and the files it makes."""
 
     def __init__(self, course, root=ROOT):
@@ -116,6 +119,10 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
         self.groups = {}  # an item that makes two activities (a say step and its tap): its id -> [the activity ids, in order]
         self.cut_clips = {}  # the clip of a word cut from the clip of its page (follow): id -> {id, from, text}
         self.teach_count = 0  # the teach screens among self.items (they do not move the praise the other items say)
+        self.unrotated = 0  # the activities of items that say `"noRotation": true` (a new item with its own praise line moves no other item's)
+        self.lesson_shapes = {}  # lesson id (with the course) -> 'new' (written in recall, meet, find, use) or 'old' (written with items)
+        self.lesson_parts = {}  # lesson id -> {activity id: 'recall' | 'find' | 'use'}, for the lessons of the new shape
+        self.met_before = []  # the findings of the rule "met before asked" (tools/lang_met_before.py), after build()
         self.derived = {}  # asset id -> how the generator makes the picture (a lit copy of a picture, a blank one)
         self.template_versions = TEMPLATE_VERSIONS
         self.lessons = []
@@ -147,6 +154,8 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
         self.ladders = self.spec.get('ladders', {})
         self.glosses = self.spec.get('glosses', {})
         self.defaults = self.spec.get('defaults', {})
+        if self.spec.get('metBefore', 'report') not in lang_met_before.MODES:
+            self.problem('course.json', 'metBefore is "report" or "enforce" (how the rule "met before asked" treats the lessons still in the old form)')
         self.pronunciation = {}
         csv_path = os.path.join(self.root, 'docs', 'languages', {'eng': 'english', 'heb': 'hebrew', 'rus': 'russian'}[self.id],
                                 'pronunciation.csv')
@@ -294,9 +303,20 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
         self._placement()
         self._pack_json()
         self._voice_plan()
+        self._met_before()
         if self.problems:
             raise SpecError(self.problems)
         return self.files
+
+    def _met_before(self):
+        """The rule "met before asked" (tools/lang_met_before.py): what is enforced is a problem of the build; the rest is kept in
+        `self.met_before` for the report."""
+        if self.problems:
+            return
+        self.met_before = lang_met_before.check(self)
+        for f in self.met_before:
+            if f.enforced and f.rule != 'recall':
+                self.problem('lesson %s (%s)' % (f.lesson, f.rule), f.message)
 
     def _no_chips(self):
         """Band A has no reading (band-a-build.md 7.2): no prompt, say or teach or hearing screen, hint or feedback line of a Band A skill
@@ -312,6 +332,15 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
 
     def put(self, name, doc):
         self.files[name] = (json.dumps(doc, ensure_ascii=False, indent=2) + '\n').encode('utf-8')
+
+    def files_json(self, name):
+        """A document the generator has written, read back, or None."""
+        data = self.files.get(name)
+        return json.loads(data) if data else None
+
+    def met_before_mode(self):
+        """`report` (a lesson in the old form is only listed) or `enforce` (every lesson is held to the rule), course.json `metBefore`."""
+        return self.spec.get('metBefore', 'report')
 
     # ---- units, skills and items
     def _unit(self, fname, unit):
@@ -334,6 +363,7 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
         for i, doc in enumerate(unit.get('docs', [])):
             self._raw(fname, doc, '%s docs[%d]' % (fname, i))
         self.teach_items(fname, sk, sid, unit)
+        self.meet_screens(fname, sk, sid, unit)
         sk['lessons'] = unit.get('lessons', [])
         sk['lessonFile'] = fname
 
@@ -376,6 +406,8 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
         sk['items'].append(aid)
         self.items[aid] = {'doc': doc, 'skill': sid, 'purpose': doc.get('purpose', 'learn'), 'short': '%s.%s' % (sk['slug'], item_id),
                            'inLesson': bool((item or {}).get('inLesson'))}
+        if (item or {}).get('noRotation'):
+            self.unrotated += 1
         if doc.get('representation') in REPRESENTATIONS:
             self._skill_reps.setdefault(sid, set()).add(doc['representation'])
         self.put('activity.%s.json' % aid, doc)
@@ -432,12 +464,22 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
     def _lesson_ids(self, sid, lesson):
         """The activity ids of a lesson's items, in order (an item that makes two activities, a say step and its tap, gives both)."""
         ids = []
-        for ref in lesson.get('items', []):
+        for ref in self.lesson_refs(lesson, 'lesson %s' % lesson.get('id')):
             qualified = '%s.%s.%s' % (self.id, self.skills[sid]['slug'], ref) if '.' not in ref else '%s.%s' % (self.id, ref)
             if qualified not in self.items:
                 self.problem('lesson %s' % lesson.get('id'), 'the item "%s" is not in this course' % ref)
             ids.extend(self.groups.get(qualified, [qualified]))
         return ids
+
+    def _parts_of(self, sid, lesson):
+        """{activity id: part} of a lesson written in four parts."""
+        parts = {}
+        for part in ('recall', 'find', 'use'):
+            for ref in lesson.get(part, []) if isinstance(lesson.get(part), list) else []:
+                qualified = '%s.%s.%s' % (self.id, self.skills[sid]['slug'], ref) if '.' not in ref else '%s.%s' % (self.id, ref)
+                for aid in self.groups.get(qualified, [qualified]):
+                    parts[aid] = part
+        return parts
 
     def _no_checks_in(self, where, ids):
         """A check is served by the check visit, on a later day (band-a-build.md 7.4 C-6), so a lesson holds none unless the item says
@@ -481,6 +523,9 @@ class Course(lang_recipes.Recipes, lang_routes.Routes):
                     continue
                 number += 1
                 self.lessons.append(full)
+                self.lesson_shapes[full] = 'new' if self.new_shape(lesson) else 'old'
+                if self.new_shape(lesson):
+                    self.lesson_parts[full] = self._parts_of(sid, lesson)
                 extra = {}
                 teach = self.lesson_teach(self.skills[sid], i, unit_ids)
                 if teach:
@@ -709,6 +754,23 @@ def run(courses=COURSES, root=ROOT, check=False, quiet=False):
     return stale
 
 
+def report_met_before(courses, root=ROOT):
+    """Prints what each course asks of a word before it has taught it, whatever the course's mode; exits 0 (it is a report)."""
+    for course in courses:
+        c = Course(course, root)
+        try:
+            c.build()
+        except SpecError as e:
+            if not c.met_before:
+                print('The course files have %d problem(s):' % len(e.problems))
+                for p in e.problems:
+                    print('  ' + p)
+                continue
+        for line in lang_met_before.format_report(course, c.met_before):
+            print(line)
+    return 0
+
+
 def main(argv, root=ROOT):
     # A problem may quote Hebrew; a Windows console that is not UTF-8 must not stop the report.
     if hasattr(sys.stdout, 'reconfigure'):
@@ -722,6 +784,8 @@ def main(argv, root=ROOT):
         if c not in COURSES:
             print('unknown course "%s" (eng, heb, rus or all)' % c)
             return 2
+    if '--met-before' in argv:
+        return report_met_before(courses, root)
     try:
         stale = run(courses, root=root, check='--check' in argv)
     except SpecError as e:

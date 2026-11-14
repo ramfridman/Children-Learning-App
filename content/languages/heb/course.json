@@ -13,7 +13,12 @@
     "minutes": 4,
     "pass": "pass",
     "heard": "heard",
-    "together": "say-together"
+    "together": "say-together",
+    "teach": {
+      "frame": "say-together",
+      "heard": "heard",
+      "together": "say-together"
+    }
   },
   "feedback": {
     "right": [
@@ -1271,5 +1276,15 @@
       "voice": "השם שלכם מתחיל באות הזאת.",
       "review": "text-ready"
     }
+  },
+  "teachPictures": {
+    "heb-a-w-siach": "bush",
+    "heb-a-w-kemach": "flour",
+    "heb-a-w-keara": "bowl",
+    "heb-a-w-tanur": "oven",
+    "heb-a-w-sira": "boat",
+    "heb-a-w-kova": "hat",
+    "heb-a-w-ruach": "wind",
+    "heb-a-w-kadur": "ball"
   }
 }

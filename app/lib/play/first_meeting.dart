@@ -6,35 +6,34 @@ import '../content/models.dart';
 // item writes nothing at all: no `incorrect`, no misconception tag, no `correct`. The first evidence is a later lesson's recall. The help
 // and the feedback the child sees do not change.
 
-/// The words whose Meet screen has played in one visit, as the clip that says each word and the picture that shows it.
+/// The words whose Meet screen has played in one visit, as the clip that says each word.
 class FirstMeeting {
   final Set<String> _clips = <String>{};
-  final Set<String> _pictures = <String>{};
 
   /// A Meet screen is on show. A hearing screen of a heritage speaker is not a Meet screen: that child already knows the words and is
   /// scored as always.
   void met(Activity screen) {
-    if (screen is! SayItActivity || !screen.teach || screen.hear) return;
+    if (screen is! SayItActivity || !screen.meetScreen) return;
     _clips.add(screen.wordClip);
-    _pictures.add(screen.picture);
   }
 
-  /// [item] asks a word that was met in this visit. Its target is told by the clip its prompt ends with (a word to find, a word to say) or by
-  /// the correct picture of a choice. A command such as "show me the arms" names its target by a spot on one scene: there only the author's
-  /// label of the spot is left (`arms`), which is the end of the name of the Meet screen's picture (`body_arms`). Until an item names its
-  /// word itself (L7-4), that is how those are told.
+  /// [item] asks a word that was met in this visit (see [askedWords]).
   bool asks(Activity item) {
     if (_clips.isEmpty || item.unscored) return false;
-    final String? spoken = item.promptLine.target;
-    if (spoken != null && _clips.contains(spoken)) return true;
-    if (item is SayItActivity && _clips.contains(item.wordClip)) return true;
-    final Object any = item;
-    if (any is! ChoiceActivity) return false;
-    final ChoiceOption? right = any.options.where((ChoiceOption o) => o.id == any.correctId).firstOrNull;
-    if (right == null) return false;
-    if (right.clip != null && _clips.contains(right.clip)) return true;
-    if (right.sprite != null) return _pictures.contains(right.sprite);
-    final String? label = right.label;
-    return label != null && _pictures.any((String p) => p.endsWith('_$label'));
+    return askedWords(item).any(_clips.contains);
   }
+}
+
+/// The clips of the words an item asks. An item may name its word itself (`asks`: a command such as "show me the arms" has a phrase for a
+/// prompt, so that is all it asks). Otherwise they are the clip its prompt ends with (a word to find), the word a say step is to say, and
+/// the clip of the right option of a choice (a puppet's bubble: the puppet's line is the prompt, the answer is the word).
+Set<String> askedWords(Activity item) {
+  if (item.asksClip != null) return <String>{item.asksClip!};
+  final Object any = item;
+  return <String>{
+    ?item.promptLine.target,
+    if (item is SayItActivity) item.wordClip,
+    if (any is ChoiceActivity)
+      ?any.options.where((ChoiceOption o) => o.id == any.correctId).firstOrNull?.clip,
+  };
 }

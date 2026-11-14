@@ -56,6 +56,10 @@ class Recipes(Talk, More, Print):
             'tutor': {'llmAllowed': False, 'goal': goal, 'mustNotRevealBeforeHint': 2},
             'a11y': {'altText': item.get('alt') or alt or ALT.get(template, 'תְּמוּנָה')},
         }
+        if item.get('asks'):
+            # The word the item asks, when its prompt is a phrase and not the word (a command "show me the arms"): the lesson uses it to
+            # know which word the item is about (no evidence from a word's first meeting, the rule "met before asked").
+            doc['asks'] = self.clip(item['asks'], where)
         if item.get('contradicts'):
             doc['contradicts'] = self.tag(item['contradicts'], sid, where)
         if item.get('font'):
@@ -66,14 +70,14 @@ class Recipes(Talk, More, Print):
                 doc['font'] = 'display'
         return doc
 
-    def lines_of(self, doc, item, where, tag_ids=(), *, frame=None, target=None, target2=None, show=None, hints=True):
+    def lines_of(self, doc, item, where, tag_ids=(), *, frame=None, target=None, target2=None, show=None, hints=True, ask_where=False):
         """Adds the prompt, the feedback and the hints to [doc]; False when a line is missing (the problem is said)."""
         # `target=False` says the prompt has no clip after the frame line (the drum, the count, a sort).
         prompt = self.spoken({'line': frame or item.get('frame') or self.defaults.get('frame'),
                               'target': item.get('target') if target is None else (target or None),
                               'target2': item.get('target2') if target2 is None else (target2 or None),
                               'show': item.get('show', False) if show is None else show}, where + ' prompt', item)
-        feedback = self.feedback_of(item, tag_ids, where)
+        feedback = self.feedback_of(item, tag_ids, where, ask_where=ask_where)
         hint_list = self.hints_of(item, where) if hints else []
         if prompt is None or feedback is None:
             return False
@@ -82,7 +86,9 @@ class Recipes(Talk, More, Print):
         doc['hints'] = hint_list
         return True
 
-    def feedback_of(self, item, tag_ids, where):
+    def feedback_of(self, item, tag_ids, where, ask_where=False):
+        """The praise, the first-error lines and the "unsure" step of an item. With [ask_where] (a picture choice of a course that has
+        `defaults.where`) the one first-error line is "and where is ...?" and the item's word (the tapped picture has just said its own)."""
         fb = self.spec.get('feedback', {})
         own = item.get('feedback') or {}
         right = fb.get('right') or []
@@ -90,7 +96,7 @@ class Recipes(Talk, More, Print):
             self.problem('course.json', 'feedback needs "right" (a list of lines), "wrong" and "unsure"')
             return None
         # The praise is chosen by the item's place in the course (the same item always says the same line).
-        step = own.get('right') or right[(len(self.items) - self.teach_count) % len(right)]
+        step = own.get('right') or right[(len(self.items) - self.teach_count - self.unrotated) % len(right)]
         step = dict({'line': step} if isinstance(step, str) else step)
         after = item.get('after')
         if after:
@@ -102,14 +108,15 @@ class Recipes(Talk, More, Print):
         by_tag = dict(fb.get('byTag', {}))
         by_tag.update(own.get('byTag', {}))
         rules = []
-        for tag_id in tag_ids:
+        for tag_id in [] if ask_where else tag_ids:
             slug_ = next((k for k, v in self.tags.items() if v.get('id') == tag_id), None)
             line_step = by_tag.get(slug_)
             if line_step and not any(r['when'] == 'misconception:' + tag_id for r in rules):
                 line = self.spoken(line_step, '%s feedback.%s' % (where, slug_), item)
                 if line:
                     rules.append(dict([('when', 'misconception:' + tag_id)] + list(line.items())))
-        default = self.spoken(own.get('wrong') or fb['wrong'], where + ' feedback.wrong', item)
+        default = self.spoken({'line': self.defaults['where'], 'target': '@target'} if ask_where else own.get('wrong') or fb['wrong'],
+                              where + ' feedback.wrong', item)
         if default:
             rules.append(dict([('when', 'default')] + list(default.items())))
         unsure = self.spoken(own.get('unsure') or fb['unsure'], where + ' feedback.unsure', item)
@@ -244,6 +251,12 @@ class Recipes(Talk, More, Print):
             return None
         return options, (correct if len(correct) > 1 or item.get('letters') else correct[0]), [f for _, f in parsed], names
 
+    def asks_where(self, item, faces):
+        """Does a wrong tap on this picture choice say "and where is ...?" (frame section 2.3, LS01 "what a tap says")? The course has the
+        line (`defaults.where`), the item names its word and is no reverse check, and every option is a picture that names its own word."""
+        return bool(self.defaults.get('where') and item.get('target') and item.get('check') != 'reverse' and not item.get('letters')
+                    and faces and all('pic' in f and 'clip' in f for f in faces))
+
     def tag_ids(self, options):
         out = []
         for o in options:
@@ -292,7 +305,11 @@ class Recipes(Talk, More, Print):
                 alt_text = {2: 'שְׁתֵּי אֶפְשָׁרֻיּוֹת', 3: 'שָׁלוֹשׁ אֶפְשָׁרֻיּוֹת'}.get(len(options), alt_text)
         doc = self.head(sk, sid, aid, item, where, 'tap_answer', version='1.4' if item.get('letters') else None, alt=alt_text,
                         choices=len(options))
-        if not self.lines_of(doc, item, where, self.tag_ids(options)):
+        ask_where = self.asks_where(item, faces)
+        if ask_where:
+            # The first wrong tap says "and where is ...?" and shows no hint picture (frame section 2.3).
+            answer['askWhere'] = True
+        if not self.lines_of(doc, item, where, self.tag_ids(options), ask_where=ask_where):
             return None
         doc['scene'] = scene
         doc['answer'] = answer

@@ -108,6 +108,13 @@
       "review": "text-ready"
     },
     {
+      "id": "he-fb-where",
+      "vo": "vo:eng.he_fb_where",
+      "he": "וְאֵיפֹה",
+      "voice": "ואיפה",
+      "review": "needs-editor"
+    },
+    {
       "id": "he-gl-apple",
       "vo": "vo:eng.he_gl_apple",
       "he": "תַּפּוּחַ",
@@ -588,6 +595,13 @@
       "vo": "vo:eng.he_hint_beats",
       "he": "בּוֹאוּ נִמְחָא כַּפַּיִם לְכׇל חֵלֶק, לְאַט.",
       "voice": "בואו נמחא כפיים לכל חלק, לאט.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-hint-hebrew",
+      "vo": "vo:eng.he_hint_hebrew",
+      "he": "בְּעִבְרִית:",
+      "voice": "בעברית:",
       "review": "text-ready"
     },
     {

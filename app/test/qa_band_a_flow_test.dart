@@ -16,7 +16,7 @@ import 'package:nitznutz/parent/language_settings.dart';
 import 'package:nitznutz/play/lesson_screen.dart';
 
 import '../tool/pack_builder_lib.dart';
-import 'language_pilot_test.dart' show passTeachScreens, playPlacement;
+import 'language_pilot_test.dart' show passTeachScreens, playPlacement, playUse;
 import 'support/app_harness.dart';
 import 'support/course_flow.dart';
 import 'support/course_history.dart';
@@ -42,7 +42,7 @@ class _Shots extends GoldenFileComparator {
 }
 
 const Map<String, ({int items, int teach})> _first = <String, ({int items, int teach})>{
-  'eng': (items: 5, teach: 0),
+  'eng': (items: 4, teach: 2),
   'heb': (items: 4, teach: 0),
   'rus': (items: 3, teach: 4),
 };
@@ -121,6 +121,7 @@ void main() {
             }
             await answer(tester);
           }
+          await playUse(tester, course);
           expect(find.byKey(const Key('lesson-celebration')), findsOneWidget);
           if (shots != null) {
             await expectLater(

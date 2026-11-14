@@ -201,3 +201,12 @@ final FutureProviderFamily<LanguageProgress?, ({String childId, String course})>
         placement: c.placement,
       );
     });
+
+/// Whether the child's letters are open in a course (the letters gate, by level or by age), which lets a Meet screen print its word in a chip
+/// under the bubble's line (`meetShowsWord`, docs/design/l7-meet-find.md section 3.2). Closed until step L7-8 builds the gate by age and
+/// level: until then no Meet screen prints a word.
+final Provider<bool Function(String childId, String course)> meetLettersOpenProvider =
+    Provider<bool Function(String, String)>(
+      (Ref ref) =>
+          (String childId, String course) => false,
+    );

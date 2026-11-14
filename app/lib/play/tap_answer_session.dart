@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -14,7 +15,9 @@ import '../speech/answer_matcher.dart';
 import '../speech/spoken_options.dart';
 import 'count_tap_session.dart' show Dots;
 import 'caption_policy.dart';
-import 'choice_row.dart' show withWideStage;
+import 'choice_row.dart' show withPictureStage, withWideStage;
+import 'find_stage.dart';
+import 'speaking_badge.dart';
 import 'hint_widgets.dart';
 import 'hints/hint_marks.dart';
 import 'hints/hint_pictures.dart';
@@ -138,6 +141,34 @@ class TapAnswerSession extends TemplateSession {
   bool _busy = false;
   int? pulsing;
 
+  /// A picture choice of a language course whose pictures stand on the stage with no answer tiles (a Find, a Recall, a later check): the
+  /// pictures say their own words (docs/design/l7-meet-find.md section 6), and a phone gives the stage the whole start column. A probe of the
+  /// placement game keeps its layout (it has no feedback to speak), and so does an item that shows the right word under its picture after the
+  /// answer (LS01 g), which keeps the room it has for it.
+  bool get pictureFind =>
+      activity.isLanguage &&
+      activity.purpose != 'probe' &&
+      captionWord == null &&
+      !numberMode &&
+      !activity.optionsInTiles &&
+      activity.group == null &&
+      activity.picture == null &&
+      activity.row.isEmpty &&
+      activity.chart.isEmpty &&
+      activity.stageNumeral == null &&
+      activity.background == null &&
+      activity.options.every((ChoiceOption o) => o.sprite != null && o.set == null && o.text == null);
+
+  /// The picture that is saying its word now (it shows the speaking badge, lifted a little in a ring), or null.
+  String? speakingId;
+
+  /// The longest a tapped picture holds the stage's touches while it says its word (design section 6.2, step 2), and the moment after it.
+  static const Duration wordHoldMost = Duration(milliseconds: 1500);
+  static const Duration wordHoldAfter = Duration(milliseconds: 150);
+
+  /// How long a "not yet" settles on a picture that has said its word: the lilac ring fades and the picture drops back (the others stay).
+  static const Duration settlePause = Duration(milliseconds: 600);
+
   /// A number answer (M10, X3): the child types the number on a keypad instead of choosing a tile.
   bool get numberMode => activity.numberAnswer != null;
 
@@ -171,7 +202,7 @@ class TapAnswerSession extends TemplateSession {
     endDemo();
     _busy = true;
     chosenId = id;
-    if (!byVoice) _sayWord(id);
+    final Future<void> spoken = byVoice ? Future<void>.value() : _sayWord(id);
     // The dots of a first hint go with the child's next touch, and a demonstration (level 3) ends at any touch: the hand is taken
     // off at once, even for a wrong tile (the hint that the mistake brings starts a moment later).
     final bool demonstrating = controller.hintShown >= 3 && _hint.playing;
@@ -185,9 +216,12 @@ class TapAnswerSession extends TemplateSession {
       notify();
       later(praise, controller.next);
     } else {
+      // A picture says its own word first, and its touches are held until it has (the child's own word is never cut); the lilac comes after.
+      await spoken;
+      if (disposed) return;
       chosenState = AnswerState.notYet;
       notify();
-      later(TemplateSession.notYetPause, () {
+      later(activity.askWhere ? settlePause : TemplateSession.notYetPause, () {
         chosenId = null;
         chosenState = AnswerState.idle;
         _busy = false;
@@ -263,6 +297,7 @@ class TapAnswerSession extends TemplateSession {
   /// them). The stage, empty or small in such an item, gives way. A board with the room is unchanged.
   @override
   ActivitySpec layoutFor(ActivitySpec base) {
+    if (pictureFind) return withPictureStage(base);
     // Blocks have their own two layouts (docs/design/c1-blocks.md section 5), which give the cubes the board's height.
     if (BlockLayout.hasBlocks(activity)) return BlockLayout.of(activity, base, scaler: bubbleScaler);
     if (!_hasSpeakers && !numberMode) return _sizeLayout(_longRow ? withWideStage(base) : base);
@@ -310,10 +345,23 @@ class TapAnswerSession extends TemplateSession {
     );
   }
 
-  /// A picture, or a sound button, says its word as it is chosen. A text tile has a speaker of its own and does not.
-  void _sayWord(String id) {
+  /// A picture, or a sound button, says its word as it is chosen. A text tile has a speaker of its own and does not. The result completes
+  /// when a picture of a [pictureFind] has said its word (at most [wordHoldMost]): until then its badge shows and the stage takes no touch.
+  Future<void> _sayWord(String id) async {
     final ChoiceOption o = activity.options.firstWhere((ChoiceOption o) => o.id == id);
-    if (o.clip != null && o.text == null) playClips?.call(<String>[o.clip!], replace: true);
+    if (o.clip == null || o.text != null) return;
+    final FutureOr<void> played = playClips?.call(<String>[o.clip!], replace: true);
+    if (!pictureFind) return;
+    speakingId = id;
+    notify();
+    await Future.any(<Future<void>>[
+      played is Future<void> ? played : pause(const Duration(milliseconds: 700)),
+      pause(wordHoldMost),
+    ]);
+    await pause(wordHoldAfter);
+    if (disposed) return;
+    speakingId = null;
+    notify();
   }
 
   @override
@@ -323,6 +371,7 @@ class TapAnswerSession extends TemplateSession {
     chosenState = AnswerState.idle;
     _busy = false;
     pulsing = null;
+    speakingId = null;
     _hint.clear();
     notify();
   }
@@ -747,6 +796,10 @@ class _TapStage extends StatelessWidget {
         a.group!.count == 1 &&
         a.optionsInTiles &&
         Course.isLanguage(a.course);
+    // The pictures of a Find on a phone stand on the whole start column (design section 6.4); a tablet keeps its card's row.
+    final List<Rect>? cells = s.pictureFind && !(s._spec?.stageIsCard ?? true)
+        ? FindStage.cells(stage: size, n: n, lookA: (s._spec?.tileSize ?? 96) >= 96, firstAtRight: fromRight)
+        : null;
     final Widget stage = ClipRRect(
       borderRadius: BorderRadius.circular(TokenRadius.lg),
       child: Stack(
@@ -824,14 +877,17 @@ class _TapStage extends StatelessWidget {
                 ),
               ),
             ),
-          if (!a.optionsInTiles)
+          if (!a.optionsInTiles && cells != null)
+            for (final (int i, ChoiceOption o) in a.options.indexed)
+              Positioned.fromRect(rect: cells[i], child: _option(context, a, o, i, cells[i].width)),
+          if (!a.optionsInTiles && cells == null)
             for (final (int i, ChoiceOption o) in a.options.indexed)
               Positioned(
                 left: gap + (fromRight ? n - 1 - i : i) * (box + gap),
                 top: top + (room - box) / 2,
                 width: box,
                 height: box,
-                child: _option(a, o, i, box),
+                child: _option(context, a, o, i, box),
               ),
           if (word != null)
             for (final (int i, ChoiceOption o) in a.options.indexed)
@@ -1220,11 +1276,14 @@ class _TapStage extends StatelessWidget {
     );
   }
 
-  Widget _option(TapAnswerActivity a, ChoiceOption o, int i, double box) {
+  Widget _option(BuildContext context, TapAnswerActivity a, ChoiceOption o, int i, double box) {
     final bool chosen = s.chosenId == o.id;
     final bool guidedRight = s.controller.answerShown && o.id == a.correctId;
     final bool dimmed = s.controller.answerShown && o.id != a.correctId;
-    final Color? ring = chosen
+    final bool speaking = s.speakingId == o.id;
+    final Color? ring = speaking
+        ? TokenColors.selectedRing
+        : chosen
         ? (s.chosenState == AnswerState.correct
               ? TokenColors.correctGlow
               : s.chosenState == AnswerState.selected
@@ -1239,17 +1298,41 @@ class _TapStage extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: () => s.choose(o.id),
         child: AnimatedScale(
-          scale: s.pulsingNow == i ? 1.15 : 1,
+          scale: s.pulsingNow == i
+              ? 1.15
+              : speaking && !MediaQuery.disableAnimationsOf(context)
+              ? 1.04
+              : 1,
           duration: const Duration(milliseconds: 250),
-          child: Opacity(
-            opacity: dimmed ? 0.35 : 1,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: ring?.withValues(alpha: 0.22),
-                border: ring == null ? null : Border.all(color: ring, width: 5),
-              ),
-              child: Padding(padding: const EdgeInsets.all(6), child: PackSvg(a.assets.svg(o.sprite!))),
+          child: Transform.translate(
+            offset: Offset(0, speaking && !MediaQuery.disableAnimationsOf(context) ? -6 : 0),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                Positioned.fill(
+                  child: Opacity(
+                    opacity: dimmed ? 0.35 : 1,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: speaking ? TokenColors.mist : ring?.withValues(alpha: 0.22),
+                        border: ring == null ? null : Border.all(color: ring, width: 5),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(6),
+                        child: PackSvg(a.assets.svg(o.sprite!)),
+                      ),
+                    ),
+                  ),
+                ),
+                // The badge stands at the picture's top start (the right: the interface runs right to left), on the circle's edge.
+                if (s.pictureFind)
+                  Positioned(
+                    right: box * 0.146 - 20,
+                    top: box * 0.146 - 20,
+                    child: SpeakingBadge(on: speaking),
+                  ),
+              ],
             ),
           ),
         ),

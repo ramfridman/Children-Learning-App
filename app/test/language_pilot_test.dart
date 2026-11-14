@@ -27,18 +27,21 @@ import 'support/pack_fixtures.dart';
 
 const String _languages = '../content/languages';
 
-/// The first lesson of each course's pilot: its id, how many items it plays and the skill it teaches.
+/// The first lesson of each course's pilot: its id, how many choice items it plays and the skill it teaches.
 /// [teach] is how many teach screens a new learner is shown first (a child with no route set is one): the Russian lesson opens on the four new
-/// words, each shown and said, and they write nothing. [written] is how many answers the lesson leaves behind: none for Russian, whose items
-/// ask the words just met (the first meeting is no evidence, L7-3).
+/// words, the English one (L7-4, `docs/milestones/L7.md` section 3.1) on hello and goodbye, each shown and said, and they write nothing.
+/// [written] is how many answers the lesson leaves behind: none for English and Russian, whose items ask the words just met (the first meeting
+/// is no evidence, L7-3). English lesson 1 ends with its Use part, see [playUse].
 const Map<String, ({String lesson, int items, String skill, int teach, int written})> _first =
     <String, ({String lesson, int items, String skill, int teach, int written})>{
-      'eng': (lesson: 'eng.greet-1', items: 5, skill: 'ENG-A-01', teach: 0, written: 5),
+      'eng': (lesson: 'eng.greet-1', items: 4, skill: 'ENG-A-01', teach: 2, written: 0),
       'heb': (lesson: 'heb.words-1', items: 4, skill: 'HEB-A-02', teach: 0, written: 4),
       'rus': (lesson: 'rus.greet-1', items: 3, skill: 'RUS-A-01', teach: 4, written: 0),
     };
 
-/// The teach screens of a lesson, one after the other: "I said it", then the picture. Nothing is asked and nothing is written.
+/// The Meet screens of a lesson, one after the other. The beats are paced by the voice (a clip that is pending still has its pause of 1.2 s),
+/// and "I said it" arrives with "let's say it together" and closes the screen by itself; a touch on the picture never goes on. Nothing is
+/// asked and nothing is written.
 Future<void> passTeachScreens(WidgetTester tester, int count) async {
   for (int i = 0; i < count; i++) {
     expect(
@@ -46,11 +49,24 @@ Future<void> passTeachScreens(WidgetTester tester, int count) async {
       findsOneWidget,
       reason: 'teach screen ${i + 1} is on screen',
     );
+    await settle(tester, ms: 6500);
     await tester.tap(find.byKey(const Key('say-done')));
-    await tester.pump(const Duration(milliseconds: 300));
-    await tester.tap(find.byKey(const Key('say-picture')));
-    await settle(tester, ms: 3000);
+    await settle(tester, ms: 2500);
   }
+}
+
+/// What follows the choice items of the first lesson: English lesson 1 ends with its Use part, a say step (the old way on: "I said it", then
+/// the picture), Pip's bubble (the first one is the right answer) and the hello chant, which plays by itself.
+Future<void> playUse(WidgetTester tester, String course) async {
+  if (course != 'eng') return;
+  await settle(tester, ms: 500);
+  await tester.tap(find.byKey(const Key('say-done')));
+  await tester.pump(const Duration(milliseconds: 300));
+  await tester.tap(find.byKey(const Key('say-picture')));
+  await settle(tester, ms: 3000);
+  await tester.tap(find.byKey(const Key('tile-o1')));
+  await settle(tester, ms: 3000);
+  await settle(tester, ms: 12000);
 }
 
 /// The course has a placement game, so its first visit is the placement (frame 3.2): the child plays the probes, touching a wrong
@@ -127,6 +143,7 @@ void main() {
           expect(find.byKey(const Key('option-o1')), findsOneWidget, reason: 'item ${i + 1} is on screen');
           await answer(tester);
         }
+        await playUse(tester, course);
         expect(find.byKey(const Key('lesson-celebration')), findsOneWidget);
         await tester.tap(find.byKey(const Key('lesson-done')));
         await tester.pumpAndSettle();

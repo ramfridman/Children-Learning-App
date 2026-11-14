@@ -1,0 +1,306 @@
+"""The lesson shape of docs/milestones/L7.md section 3 (tools/lang_meet.py) and the rule "met before asked" (tools/lang_met_before.py).
+
+    python tools/test_lang_met_before.py
+
+* a lesson written in recall, meet, find and use is flattened (the Meet screens are not items, a set may stand anywhere with `before`),
+  and the old form (`items`) keeps working;
+* a Meet screen carries its place in its set, the words before it, the Hebrew meaning, the opener and the carrier;
+* the rule refuses, with a named reason each, a scored item that asks a word not met, a picture option with no word clip, a Meet set of more
+  than 3 words, a first Find with more than 2 choices, a new word with fewer than 2 Find items, a lesson with no Use item; it warns when a
+  new word is not recalled within 3 lessons;
+* report mode lists what a lesson in the old form breaks and does not fail the build; `"metBefore": "enforce"` makes every lesson refuse.
+Standard library only.
+"""
+import io
+import json
+import os
+import sys
+import unittest
+from contextlib import redirect_stdout
+
+TOOLS = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, TOOLS)
+import lang_pack  # noqa: E402
+import test_lang_pack as base  # noqa: E402
+
+CSV = ('id,shown,say,ipa\nen-hello,Hello!,Hello!,/h/\nen-bye,Bye!,Bye!,/b/\nen-cat,Cat,Cat,/k/\nen-dog,Dog,Dog,/d/\nen-pig,Pig,Pig,/p/\n'
+       'en-owl,Owl,Owl,/o/\n')
+LINES = {'he-meaning': 'בְּעִבְרִית:', 'he-open': 'בּוֹאוּ נַכִּיר.', 'he-hear': 'הַקְשִׁיבוּ:', 'he-gl-cat': 'חָתוּל'}
+
+
+class Fixture(base.Sandbox):
+    """The tiny English course with the four-part shape: words hello and bye on pictures a and b."""
+
+    def __init__(self):
+        super().__init__()
+        self.pictures = ['a', 'b', 'c', 'd', 'e']
+        self.course['defaults']['teach'] = {'frame': 'he-show', 'heard': 'he-again', 'together': 'he-show'}
+        self.course['teachPictures'] = {'en-hello': 'a', 'en-bye': 'b', 'en-cat': 'c', 'en-dog': 'd', 'en-pig': 'e', 'en-owl': 'e'}
+        self.course['glosses'].update({'en-cat': 'he-gl-cat', 'en-dog': 'he-gl', 'en-pig': 'he-gl', 'en-owl': 'he-gl'})
+        for k, v in LINES.items():
+            self.course['lines'][k] = {'he': v}
+        self.unit['items'] = [self.tap('f1', 'en-hello', 'a', 'b'), self.tap('f2', 'en-bye', 'b', 'a'),
+                              self.tap('f3', 'en-hello', 'b', 'a'), self.tap('f4', 'en-bye', 'a', 'b'), self.say('u1')]
+        self.unit['lessons'] = [{'id': 'greet-1', 'title': 'בְּרָכוֹת', 'meet': [['en-hello', 'en-bye']],
+                                 'find': ['f1', 'f2', 'f3', 'f4'], 'use': ['u1']}]
+
+    CLIPS = {'a': 'en-hello', 'b': 'en-bye', 'c': 'en-cat', 'd': 'en-dog', 'e': 'en-pig'}
+
+    def tap(self, item_id, target, right, *others, three=False):
+        """A tap item whose every picture names its word clip (the picture's own word: pictures a to e are hello, bye, cat, dog, pig)."""
+        order = [right] + list(others)
+        options = [{'pic': p, 'clip': self.CLIPS[p]} for p in order]
+        return {'id': item_id, 'kind': 'tap', 'target': target, 'options': options, 'wrong': {p: 'sem' for p in others}}
+
+    @staticmethod
+    def say(item_id):
+        return {'id': item_id, 'kind': 'say', 'purpose': 'practice', 'picture': 'a', 'clip': 'en-hello', 'forms': ['hello'],
+                'foils': ['yellow'], 'heard': 'he-again', 'together': 'he-show'}
+
+    def write(self):
+        super().write()
+        path = os.path.join(self.root, 'docs', 'languages', 'english', 'pronunciation.csv')
+        with open(path, 'w', encoding='utf-8', newline='') as fh:
+            fh.write(CSV)
+
+    def lesson_doc(self, lesson_id='greet-1'):
+        return json.loads(self.build()['lesson.eng.%s.json' % lesson_id])
+
+    def findings(self):
+        self.write()
+        course = lang_pack.Course('eng', self.root)
+        try:
+            course.build()
+        except lang_pack.SpecError:
+            pass
+        return course.met_before
+
+    def rules(self, enforced=None):
+        return sorted({f.rule for f in self.findings() if enforced is None or f.enforced == enforced})
+
+
+class Case(unittest.TestCase):
+    def setUp(self):
+        self.sb = Fixture()
+        self.addCleanup(self.sb.close)
+
+    def assertRefused(self, rule, fragment=''):
+        text = self.sb.problems()
+        self.assertIn('(%s)' % rule, text, text or 'the build was not refused')
+        self.assertIn(fragment, text)
+
+
+class ShapeTest(Case):
+    def test_a_good_lesson_builds_and_breaks_no_rule(self):
+        self.assertEqual('', self.sb.problems())
+        self.assertEqual([], self.sb.findings())
+
+    def test_the_four_parts_are_flattened_and_the_meet_screens_are_not_items(self):
+        doc = self.sb.lesson_doc()
+        self.assertEqual(['eng.a01.f1', 'eng.a01.f2', 'eng.a01.f3', 'eng.a01.f4', 'eng.a01.u1'], doc['items'])
+        self.assertEqual([{'items': ['eng.a01.tc01', 'eng.a01.tc02'], 'routes': ['new'], 'mode': 'teach'}], doc['teach'])
+
+    def test_a_set_may_stand_in_the_middle_of_a_lesson_before_the_item_it_names(self):
+        self.sb.unit['items'] += [self.sb.tap('f5', 'en-cat', 'c', 'a'), self.sb.tap('f6', 'en-dog', 'd', 'c'),
+                                  self.sb.tap('f7', 'en-cat', 'c', 'd'), self.sb.tap('f8', 'en-dog', 'd', 'a')]
+        lesson = self.sb.unit['lessons'][0]
+        lesson['meet'] = [['en-hello', 'en-bye'], {'words': ['en-cat', 'en-dog'], 'before': 'f5'}]
+        lesson['find'] = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8']
+        doc = self.sb.lesson_doc()
+        self.assertEqual(2, len(doc['teach']))
+        self.assertNotIn('before', doc['teach'][0])
+        self.assertEqual('eng.a01.f5', doc['teach'][1]['before'])
+        self.assertEqual(['eng.a01.tc03', 'eng.a01.tc04'], doc['teach'][1]['items'])
+
+    def test_a_set_that_stands_first_has_no_before(self):
+        self.sb.unit['lessons'][0]['meet'] = [{'words': ['en-hello', 'en-bye'], 'before': 'f1'}]
+        self.assertNotIn('before', self.sb.lesson_doc()['teach'][0])
+
+    def test_a_before_that_is_not_an_item_of_the_lesson_is_named(self):
+        self.sb.unit['lessons'][0]['meet'] = [{'words': ['en-hello', 'en-bye'], 'before': 'zz'}]
+        self.assertIn('"before" names "zz"', self.sb.problems())
+
+    def test_items_and_parts_may_not_be_mixed(self):
+        self.sb.unit['lessons'][0]['items'] = ['f1']
+        self.assertIn('not both', self.sb.problems())
+
+    def test_a_lesson_in_the_old_form_still_builds(self):
+        self.sb.unit['lessons'] = [{'id': 'greet-1', 'title': 'בְּרָכוֹת', 'items': ['f1', 'f2']}]
+        self.assertEqual('', self.sb.problems())
+        self.assertNotIn('teach', self.sb.lesson_doc())
+
+    def test_a_meet_screen_knows_its_place_in_its_set_and_the_words_before_it(self):
+        files = {k: json.loads(v) for k, v in self.sb.build().items() if k.startswith('activity.eng.a01.tc')}
+        first, second = files['activity.eng.a01.tc01.json']['say']['meet'], files['activity.eng.a01.tc02.json']['say']['meet']
+        self.assertEqual((0, 2), (first['position'], first['size']))
+        self.assertNotIn('earlier', first)
+        self.assertEqual((1, 2), (second['position'], second['size']))
+        self.assertEqual([{'sprite': 'asset:a', 'clip': 'vo:eng.en_hello'}], second['earlier'])
+        self.assertEqual('hello', first['written'])
+
+    def test_the_hebrew_meaning_the_opener_and_the_carrier_are_spoken_lines(self):
+        self.sb.course['defaults']['teach'].update({'meaning': 'he-meaning', 'opener': 'he-open', 'hear': 'he-hear'})
+        self.sb.course['glosses']['en-bye'] = 'he-gl'
+        files = {k: json.loads(v) for k, v in self.sb.build().items() if k.startswith('activity.eng.a01.tc')}
+        first = files['activity.eng.a01.tc01.json']['say']['meet']
+        second = files['activity.eng.a01.tc02.json']['say']['meet']
+        self.assertEqual('vo:eng.he_open', first['opener']['vo'])
+        self.assertNotIn('opener', second)
+        self.assertEqual({'vo': 'vo:eng.he_hear'}, {'vo': first['hear']['vo']})
+        self.assertEqual('vo:eng.en_hello', first['hear']['target'])
+        self.assertEqual('vo:eng.he_meaning', first['meaning']['vo'])
+        self.assertEqual('vo:eng.he_gl', first['meaning']['target'])
+        self.assertEqual('בְּעִבְרִית: שָׁלוֹם', first['meaning']['caption'][0]['v'])
+
+    def test_a_word_with_no_gloss_is_named_when_the_course_says_the_meaning(self):
+        self.sb.course['defaults']['teach']['meaning'] = 'he-meaning'
+        self.sb.course['glosses'].pop('en-bye')
+        self.assertIn('no gloss', self.sb.problems())
+
+    def test_a_word_with_no_picture_is_named(self):
+        self.sb.course['teachPictures'].pop('en-bye')
+        self.assertIn('no picture in course.json "teachPictures"', self.sb.problems())
+
+    def test_a_focus_stays_inside_its_picture(self):
+        self.sb.unit['lessons'][0]['meet'] = [[{'clip': 'en-hello', 'focus': [0.6, 0.5, 0.5, 0.4]}, 'en-bye']]
+        self.assertIn('"focus" is [x, y, w, h]', self.sb.problems())
+        self.sb.unit['lessons'][0]['meet'] = [[{'clip': 'en-hello', 'focus': [0.5, 0.5, 0.4, 0.4]}, 'en-bye']]
+        self.assertEqual('', self.sb.problems())
+
+    def test_a_picture_of_a_choice_that_names_every_word_asks_where(self):
+        self.sb.course['defaults']['where'] = 'he-hear'
+        files = {k: json.loads(v) for k, v in self.sb.build().items() if k.startswith('activity.eng.a01.f')}
+        f1 = files['activity.eng.a01.f1.json']
+        self.assertTrue(f1['answer']['askWhere'])
+        self.assertEqual([{'when': 'default', 'vo': 'vo:eng.he_hear', 'caption': [{'t': 'he', 'v': 'הַקְשִׁיבוּ:'}],
+                           'target': 'vo:eng.en_hello'}], f1['feedback']['incorrect'])
+
+    def test_an_item_with_a_picture_that_names_no_word_does_not_ask_where(self):
+        self.sb.course['defaults']['where'] = 'he-hear'
+        self.sb.unit['items'][0]['options'][1] = 'b'
+        self.sb.unit['lessons'] = [{'id': 'greet-1', 'title': 'x', 'items': ['f1', 'f2']}]
+        doc = json.loads(self.sb.build()['activity.eng.a01.f1.json'])
+        self.assertNotIn('askWhere', doc['answer'])
+
+    def test_an_item_names_its_word_when_its_prompt_is_a_phrase(self):
+        self.sb.unit['items'][0]['asks'] = 'en-hello'
+        doc = json.loads(self.sb.build()['activity.eng.a01.f1.json'])
+        self.assertEqual('vo:eng.en_hello', doc['asks'])
+
+    def test_a_new_item_with_no_rotation_moves_no_other_praise(self):
+        before = json.loads(self.sb.build()['activity.eng.a01.f4.json'])['feedback']['correct']['vo']
+        self.sb.unit['items'].append(dict(self.sb.tap('f5', 'en-hello', 'a', 'b'), noRotation=True,
+                                          feedback={'right': {'line': 'he-ok', 'target': '@target'}}))
+        self.sb.unit['items'].insert(0, dict(self.sb.tap('f0', 'en-hello', 'a', 'b'), noRotation=True,
+                                             feedback={'right': {'line': 'he-ok', 'target': '@target'}}))
+        self.sb.unit['lessons'][0]['find'] += ['f0', 'f5']
+        self.assertEqual(before, json.loads(self.sb.build()['activity.eng.a01.f4.json'])['feedback']['correct']['vo'])
+
+
+class RuleTest(Case):
+    def test_a_scored_item_that_asks_a_word_no_meet_screen_taught_is_refused(self):
+        self.sb.unit['items'].append(self.sb.tap('f5', 'en-cat', 'c', 'a'))
+        self.sb.unit['lessons'][0]['find'].append('f5')
+        self.assertRefused('not-met', 'asks the word "vo:eng.en_cat" before any Meet screen has taught it')
+
+    def test_an_option_that_is_a_word_not_met_is_refused_too(self):
+        self.sb.unit['items'][0] = self.sb.tap('f1', 'en-hello', 'a', 'c')
+        self.assertRefused('not-met', 'en_cat')
+
+    def test_a_word_is_met_from_its_meet_screen_on_not_before(self):
+        self.sb.unit['lessons'][0]['meet'] = [{'words': ['en-hello', 'en-bye'], 'before': 'f3'}]
+        self.assertRefused('not-met', 'en_hello')
+
+    def test_a_picture_option_that_names_no_word_clip_is_refused(self):
+        self.sb.unit['items'][0]['options'][1] = 'b'
+        self.assertRefused('unnamed', 'eng.a01.f1: the picture option(s) o2 name no word clip')
+
+    def test_a_meet_set_of_more_than_three_words_is_refused(self):
+        self.sb.unit['lessons'][0]['meet'] = [['en-hello', 'en-bye', 'en-cat', 'en-dog']]
+        self.assertRefused('meet-size', 'a Meet set has 4 words; at most 3')
+
+    def test_a_first_find_with_three_choices_is_refused(self):
+        self.sb.unit['items'][0] = self.sb.tap('f1', 'en-hello', 'a', 'b', 'c')
+        self.sb.unit['lessons'][0]['meet'] = [['en-hello', 'en-bye', 'en-cat']]
+        self.assertRefused('first-find', 'the first Find on the new word "vo:eng.en_hello" has 3 choices')
+
+    def test_a_new_word_with_fewer_than_two_find_items_is_refused(self):
+        self.sb.unit['lessons'][0]['find'] = ['f1', 'f2', 'f4']
+        self.assertRefused('find-count', 'the new word "vo:eng.en_hello" is the target of 1 Find item(s)')
+
+    def test_a_lesson_with_no_use_item_is_refused(self):
+        self.sb.unit['lessons'][0].pop('use')
+        self.assertRefused('no-use', 'the lesson has no Use item')
+
+    def test_a_find_item_in_the_use_part_does_not_count_as_a_use_item(self):
+        self.sb.unit['lessons'][0]['use'] = ['f3']
+        self.sb.unit['lessons'][0]['find'] = ['f1', 'f2', 'f4']
+        self.assertIn('(no-use)', self.sb.problems())
+
+    def test_a_new_word_that_is_not_recalled_within_three_lessons_is_only_a_warning(self):
+        self.sb.unit['items'] += [self.sb.tap('g%d' % n, 'en-bye', 'b', 'a') for n in range(1, 4)]
+        self.sb.unit['lessons'] += [{'id': 'later-%d' % n, 'title': 'x', 'items': ['g%d' % n, 'u1']} for n in range(1, 4)]
+        found = [f for f in self.sb.findings() if f.rule == 'recall']
+        self.assertEqual(['vo:eng.en_hello'], [f.where for f in found])
+        self.assertFalse(found[0].enforced)
+        self.assertNotIn('(recall)', self.sb.problems())
+
+    def test_a_word_recalled_in_the_next_lessons_is_not_warned(self):
+        self.sb.unit['items'] += [self.sb.tap('g1', 'en-hello', 'a', 'b'), self.sb.tap('g2', 'en-bye', 'b', 'a')]
+        self.sb.unit['lessons'] += [{'id': 'later-1', 'title': 'x', 'items': ['g1', 'g2', 'u1']}] * 1
+        self.sb.unit['lessons'] += [{'id': 'later-2', 'title': 'x', 'items': ['g1', 'u1']}, {'id': 'later-3', 'title': 'x', 'items': ['g2', 'u1']}]
+        self.assertNotIn('recall', self.sb.rules())
+
+
+class ModeTest(Case):
+    def old_lesson(self):
+        """A lesson in the old form that asks words no Meet screen has taught, and has no Use item."""
+        self.sb.unit['items'].append(self.sb.tap('o1', 'en-cat', 'c', 'a'))
+        self.sb.unit['lessons'].append({'id': 'old-1', 'title': 'x', 'items': ['o1']})
+
+    def test_in_report_mode_a_lesson_in_the_old_form_is_listed_and_does_not_fail_the_build(self):
+        self.old_lesson()
+        self.assertEqual('', self.sb.problems())
+        found = [f for f in self.sb.findings() if f.lesson == 'eng.old-1']
+        self.assertEqual({'not-met', 'no-use'}, {f.rule for f in found})
+        self.assertFalse(any(f.enforced for f in found))
+
+    def test_a_lesson_in_the_new_form_is_enforced_in_report_mode(self):
+        self.old_lesson()
+        self.sb.unit['items'].append(self.sb.tap('f5', 'en-cat', 'c', 'a'))
+        self.sb.unit['lessons'][0]['find'].append('f5')
+        self.assertRefused('not-met')
+
+    def test_enforce_mode_holds_every_lesson(self):
+        self.old_lesson()
+        self.sb.course['metBefore'] = 'enforce'
+        text = self.sb.problems()
+        self.assertIn('lesson eng.old-1 (not-met)', text)
+        self.assertIn('lesson eng.old-1 (no-use)', text)
+
+    def test_an_unknown_mode_is_refused(self):
+        self.sb.course['metBefore'] = 'sometimes'
+        self.assertIn('metBefore is "report" or "enforce"', self.sb.problems())
+
+    def test_the_command_prints_every_violation_of_a_course_and_exits_0(self):
+        self.old_lesson()
+        self.sb.write()
+        out = io.StringIO()
+        with redirect_stdout(out):
+            code = lang_pack.main(['eng', '--met-before'], root=self.sb.root)
+        self.assertEqual(0, code)
+        text = out.getvalue()
+        self.assertIn('eng: 2 finding(s)', text)
+        self.assertIn('not-met eng.old-1', text)
+        self.assertIn('no-use eng.old-1', text)
+        self.assertIn('0 would refuse the build now', text)
+
+    def test_the_words_of_the_hebrew_course_that_are_everyday_need_no_meet_screen(self):
+        self.old_lesson()
+        self.sb.course['metBefore'] = 'enforce'
+        self.sb.course['everyday'] = ['en-cat']
+        self.assertNotIn('lesson eng.old-1 (not-met)', self.sb.problems())
+
+
+if __name__ == '__main__':
+    unittest.main()

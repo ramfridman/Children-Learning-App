@@ -250,6 +250,30 @@ const SObject _spoken = SObject(<String, SField>{
   ..._lineExtras,
 });
 
+/// The data of a Meet screen beyond a teach screen (L7-4). `earlier` are the words of the same set met before this one, for the strip at the
+/// side of the card; `opener` is said before the first word of a set only; `hear` is the carrier said before the word; `meaning` is the Hebrew
+/// meaning said once (English and Russian: the carrier "in Hebrew:", then the gloss as the clip after it); `explain` is the Hebrew sentence
+/// that explains the word (the Hebrew course); `focus` is the part of a story picture the word names, as shares of the picture; `written` is
+/// the word as it is printed in the chip once the child's letters are open (the app shows it by its own rule, never the screen itself).
+const SObject _meet = SObject(<String, SField>{
+  'position': SField(SInt(min: 0, max: 2)),
+  'size': SField(SInt(min: 1, max: 6)),
+  'earlier': SField(
+    SArray(
+      SObject(<String, SField>{'sprite': SField(_asset), 'clip': SField(_vo)}),
+      minItems: 1,
+      maxItems: 5,
+    ),
+    required: false,
+  ),
+  'opener': SField(_spoken, required: false),
+  'hear': SField(_spoken, required: false),
+  'meaning': SField(_spoken, required: false),
+  'explain': SField(_spoken, required: false),
+  'focus': SField(SArray(SNum(min: 0, max: 1), minItems: 4, maxItems: 4), required: false),
+  'written': SField(SString(minLength: 1, maxLength: 40), required: false),
+});
+
 // ---- manifest ----
 
 const SArray _fileList = SArray(
@@ -621,6 +645,8 @@ const SObject lessonSchema = SObject(<String, SField>{
         'items': SField(SArray(_id, minItems: 1, maxItems: 8)),
         'routes': SField(SArray(SEnum(teachRoutes), minItems: 1, maxItems: 2)),
         'mode': SField(SEnum(teachModes), required: false),
+        // The lesson item this set stands in front of (L7-4: a Meet set may stand anywhere in a lesson); none: before the first item.
+        'before': SField(_id, required: false),
       }),
       minItems: 1,
       maxItems: 6,
@@ -1063,6 +1089,9 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
   'purpose': const SField(SEnum(<String>['learn', 'practice', 'probe', 'repair', 'check'])),
   // The misconception this item is built to expose (used by the session builder after a repair).
   'contradicts': const SField(_tag, required: false),
+  // The word the item asks, when its prompt is a phrase and not the word (a command "show me the arms"): the clip of the word, so that
+  // the lesson knows which word the item is about (docs/languages/frame.md section 3.3.10, a word's first meeting is no evidence).
+  'asks': const SField(_vo, required: false),
   'checkType': const SField(
     SEnum(<String>['practice', 'transfer', 'reverse', 'error_spotting', 'explain_back', 'predict']),
   ),
@@ -1284,6 +1313,9 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
             // Which side of a two-way skill this item is, and the item it is paired with in a check (frame section 2.3).
             'pole': const SField(SEnum(poles), required: false),
             'pairWith': const SField(_id, required: false),
+            // A picture choice of a language course whose every picture names its word (L7-4, frame section 2.3): the first wrong tap says the
+            // tapped word, then "and where is ...?" and the target, and the ladder shows no hint picture with it.
+            'askWhere': const SField(SBool(), required: false),
             // What the text tiles are: `letter` (square, large, bold) or `word` (Medium, as wide as the row allows). The text never
             // decides: an item whose options are all one or two letters must say which it is (the validator). Missing is `word`.
             'face': const SField(SEnum(<String>['letter', 'word']), required: false),
@@ -1983,6 +2015,9 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
             required: false,
           ),
           'pictureFirst': SField(_spoken, required: false),
+          // A Meet screen of the four-part lesson (L7-4, docs/design/l7-meet-find.md section 10.1): where it stands in its set, the words of
+          // the set met before it (the strip), the lines of its beats, and the part of the picture the word names.
+          'meet': SField(_meet, required: false),
         }),
       ),
       'answer': const SField(

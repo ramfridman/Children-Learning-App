@@ -18,6 +18,7 @@
       "picture": "mika-body",
       "frame": "f08",
       "target": "ch-pokazhi-nos",
+      "asks": "w-nos",
       "options": [
         "nose",
         "mouth",
@@ -38,6 +39,7 @@
       "picture": "mika-body",
       "frame": "f08",
       "target": "ch-pokazhi-rot",
+      "asks": "w-rot",
       "options": [
         "mouth",
         "nose",
@@ -58,6 +60,7 @@
       "picture": "mika-body",
       "frame": "f08",
       "target": "ch-pokazhi-glaza",
+      "asks": "w-glaza",
       "options": [
         "eyes",
         "ears",
@@ -78,6 +81,7 @@
       "picture": "mika-body",
       "frame": "f08",
       "target": "ch-pokazhi-ushi",
+      "asks": "w-ushi",
       "options": [
         "ears",
         "eyes",
@@ -98,6 +102,7 @@
       "picture": "mika-body",
       "frame": "f08",
       "target": "ch-pokazhi-ruki",
+      "asks": "w-ruki",
       "options": [
         "arms",
         "legs",
@@ -118,6 +123,7 @@
       "picture": "mika-body",
       "frame": "f08",
       "target": "ch-pokazhi-nogi",
+      "asks": "w-nogi",
       "options": [
         "legs",
         "arms",
@@ -138,6 +144,7 @@
       "picture": "mika-body",
       "frame": "f08",
       "target": "ch-pokazhi-zhivot",
+      "asks": "w-zhivot",
       "options": [
         "tummy",
         "head",
@@ -158,6 +165,7 @@
       "picture": "mika-body",
       "frame": "f08",
       "target": "ch-pokazhi-paltsy",
+      "asks": "w-paltsy",
       "options": [
         "fingers",
         "nose",
@@ -178,6 +186,7 @@
       "picture": "mika-body",
       "frame": "f08",
       "target": "ch-pokazhi-zuby",
+      "asks": "w-zuby",
       "options": [
         "teeth",
         "eyes",
@@ -198,6 +207,7 @@
       "picture": "mika-body",
       "frame": "f08",
       "target": "ch-pokazhi-volosy",
+      "asks": "w-volosy",
       "options": [
         "hair",
         "tummy",
@@ -218,6 +228,7 @@
       "picture": "mika-body",
       "frame": "f08",
       "target": "ch-pokazhi-golovu",
+      "asks": "w-golova",
       "options": [
         "head",
         "legs",
