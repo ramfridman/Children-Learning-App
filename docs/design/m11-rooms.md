@@ -1,0 +1,349 @@
+# M11 Stage 1: nine rooms, the host as teacher, a celebration per place, the stage that reacts (design spec)
+
+Owner: design-director. Date: 2026-11-14. Status: **spec for the app-developer** (steps 1.1, 1.3, 1.4, 1.5 of `docs/milestones/M11.md`, approved by the owner on 2026-11-14) and the pose sheet for step 1.2. The host sample (Nekudi's three poses) waits for the owner's eye before the other 24 drawings are made.
+
+Built on: `docs/milestones/M11.md` (§0 to §3 and the owner's answers in §9); `docs/design-spec.md` §3.2 (lands, hosts, landmarks), §4.9 (role slots, rig contract), §6, §7, §8, §9 (palette, colour-blind rules, §9.3 Colour Bay), §10 (motion, celebration tiers); `design/tokens.json`; `app/lib/child/activity_shell.dart` (`ActivitySpec`, the four boards), `app/lib/play/activity_frame.dart` (`ActivityFrame`, `LessonCelebration`), the goldens `lesson_2_count_three_answers_*`, `lesson_6_celebration_phone`, `hint_robot_*`, `hint_sort_*`, `c1b_give_frame_phone`; `docs/design/l7-meet-find.md` on `origin/languages-teach-first`; the art in `app/assets/art/world/`, `app/assets/art/languages/`, `design/assets/`.
+
+Boards (`docs/design/m11/make_m11_boards.py`; every board at its real size in points with the app's art and fonts, rendered by headless Chrome; red captions are for the team; every Hebrew line on them is a sample for the hebrew-text-editor):
+
+| File | What it shows |
+|---|---|
+| `docs/design/m11/counting_hills_phone.png` | Counting Hills on the phone: Show (Nekudi teaches, the companion watches), Alone (the companion asks), the stage reaction's end state, the celebration |
+| `docs/design/m11/robot_harbour_phone.png` | Robot Harbour on the phone: Show (predict, then watch), Alone (grid and arrow palette), the celebration |
+| `docs/design/m11/host_beat_boards.png` | one host beat (Counting Hills Show) on phone, phone SE, tablet landscape and tablet portrait, with the exact boxes |
+| `docs/design/m11/nine_rooms.png`, `nine_rooms_grey.png` | the nine rooms side by side (host beat, empty stage), in colour and in greyscale |
+| `docs/design/m11/nekudi_poses.png` | Nekudi's still and the three new poses: full size with baseline and centre, at the phone size on her room's tint, and as 48 pt silhouettes |
+
+---
+
+## 1. The spec in one page
+
+1. **Two places in the friend's corner.** The corner (start side, where the guide stands today) is where the talking happens. Its **front** holds whoever owns the current beat, at full size, with the bubble's tail at its mouth. Its **back place**, half a step behind on the outer side and smaller, holds the companion while the host teaches. The companion never leaves the corner; the host comes into it to teach and steps out when it is the child's turn.
+2. **Who owns which beat** (the owner's decision of 2026-11-14): the **host** owns the greeting, the Show (the worked example or predict-then-watch, including the child's last step in it), the lead-in of each Together item, and the cheer. The **companion** owns every child's turn: the Together item after its lead-in, Alone, Use, every hint and every feedback line, as today. The host is not on screen during the child's turns.
+3. **The tail always points at whoever is talking.** One bubble, one speaker at a time; the speaker is in `talk`, the other in `listen` looking at the speaker. A companion feedback line inside a host beat (the microphone's "heard" line on a Meet screen) moves the tail to the companion in the back place; nobody moves.
+4. **The host does not stand at the stage edge** (the plan's first idea). On a phone the stage is 330 by 128 and every template fills it; a host there would cover the task. The stage edge holds the **landmark** instead, and the landmark is where the stage reacts.
+5. **A room is told apart by shape first**: each room has its own backdrop silhouette (round hills, a forest of cones, a cave, a harbour, an awning, three rooms with three windows), its own landmark, and its own trail socket shape (stair, drop, tree, puzzle piece, nut, orange, porthole, arch, square window). Colour (the domain tint on the screen, the domain colour on the stage's rim) is the third cue, never the only one. The greyscale board shows all nine apart.
+6. **Colour Bay is neutral.** Its screen stays cream, its rim is the neutral `sketch` line, its backdrop is white paper and grey-lilac sea, and its host and pool use colour-safe skins: nothing in the room competes with the colours being taught.
+7. **The stage reacts after every right answer**, at any hint level and after a worked example: a short (at most 900 ms) motion at the landmark, then an end state that lasts until the item leaves. Never before the answer, never on a wrong one, never counted or kept. Reduce motion shows the end state only.
+8. **The celebration is the room's window**: the lesson's card shows the room's backdrop, the landmark gaining one piece, the host and the companion celebrating side by side, the sticker, the praise line and one way home.
+9. **Art to make**: 24 more host poses (the 27 of step 1.2 less Nekudi's three, drawn here), 9 small growth pieces, 2 small reaction pieces; generated from them without drawing: 9 stage pointers, 3 colour-safe Goni poses and the colour-safe pool. Nine colour values for the course rooms go into the tokens. Everything else (backdrops, trails, reactions) is drawn in code from existing tokens.
+
+---
+
+## 2. The host and the companion
+
+### 2.1 The beats of a lesson
+
+| Part | Front (speaker's place) | Back place | Bubble's tail | Microphone | The host's hand |
+|---|---|---|---|---|---|
+| **Greeting** (first screen of a lesson or mission, before its first item) | host, `wave` then `talk` | companion, `listen` | host | none | |
+| **Show** (unscored; the worked example, or predict-then-watch) | host, `show` while its hand acts, `talk` between | companion, `listen` | host | none (a Show has no spoken answer) | the host's pointer acts in the stage (2.4) |
+| **The child's last step of the Show** | host, `listen` (waits); "let's look again" on a wrong touch is the host's | companion | host | none | |
+| **Together: the lead-in** (the host does the first part) | host, `show` | companion | host | none yet | the host's pointer does the first part |
+| **Together: the child's part** | companion (the host steps out, 2.5) | empty | companion | as today | the B-40 hint hand, if a hint is asked |
+| **Alone, Use** | companion | empty | companion | as today | B-40 hint hand |
+| **Hints, feedback, idle prompts** | companion | (host, only inside a host beat) | companion | | |
+| **Celebration** | both, side by side in the card (section 4) | | the praise line is the companion's (as today); the host's cheer is its own edge line | | |
+
+- **The two hands mean two things**: the host's pointer (its own limb, section 7.4) shows how; the white B-40 glove is a hint. A child never sees the glove during a Show, nor the host's pointer during Alone.
+- **Revisit missions and warm-ups** keep their shapes and their room; the host greets and cheers, there is no Show, so the host is on screen only at the two ends.
+- **Tapping a character** replays the line that character said last (the existing `onReplay`); a character that has said nothing on this screen replays the current question. Neither is ever a scored target.
+
+### 2.2 The places, per board (board points; boxes are the square character boxes of the rig, baseline at 472/512 of the box)
+
+| Board | Companion alone (today's guide box) | Host in front | Companion in the back place | Bubble's right edge in a host beat (today) | Bubble's max width in a host beat (today) |
+|---|---|---|---|---|---|
+| Phone 852 × 393 | 617, 80, 176 | **597, 88, 168** | **697, 158, 96** | **591** (603) | **178** (190) |
+| Phone SE 667 × 375 | 490, 66, 150 | **478, 74, 144** | **565, 128, 86** | **470** (476) | **170** (176) |
+| Tablet landscape 1180 × 820 | 896, 150, 260 | **872, 150, 260** | **1004, 250, 152** | **932**, `bubbleRight` 248 (956, 224) | 600 |
+| Tablet portrait 820 × 1180 | 596, 112, 200 | **572, 128, 184** | **680, 190, 116** | **566**, `bubbleRight` 254 (596, 224) | **410** (440) |
+
+- The host and the companion stand on **one ground line** (the baselines match within 2 points), the companion drawn **behind** the host (lower z), so the pair reads as two friends standing together, not a stack.
+- Everything else of the frame (controls, trail, stage, tiles, microphone) keeps its place. The microphone is never shown in a host beat except on a Meet screen (section 6), and the back place is clear of it on every board (phone mic 661, 260 to 749, 348; the back place ends at y 254).
+- **The host's mouth** (the tail's target) comes from its pose file's `mouth` anchor (section 7.2), not from Nitzi's `mouthShare` 0.576: Nekudi's mouth is at 0.52 of her box.
+- The bubble's narrower width in a host beat goes through the frame's own `fitBubble` (it shrinks the font to the floor, then grows down). Host lines on the phones should hold **two lines at the band's size** (about six words); the hebrew-text-editor gets this limit (section 11).
+- Reference: `host_beat_boards.png` shows all four boards with these numbers; nothing overlaps the bubble, the stage or the controls.
+
+### 2.3 Device notes
+
+- **Phone and SE**: the host is a little smaller than the companion alone (168 against 176) so that the pair fits the corner; its out-held hand reaches toward the bubble and stops 6 points short of it.
+- **Tablet landscape**: the corner is tall, so the pair stands in it at the guide's height; the landmark moves out of the stage to the empty column at the stage's end side (section 3.4), which is where the stage reacts.
+- **Tablet portrait**: the guide strip is wide, so the pair stands side by side at its start; the bubble gives up 30 points of width for the host beat only.
+
+### 2.4 The host's pointer in the stage
+
+In a Show and a Together lead-in the worked example is acted by the host's own limb tip (its `hand` group cut from the show pose, section 7.4), entering the stage from the stage's bottom edge, as the B-40 hands do ("hands from below"). Its tip is the touch point; it moves pieces exactly as the hint-3 worked example does today (same paths, same timing), and it stops before the last step so the child does it. On the boards: Nekudi's leg points at the eighth place of the ten-frame.
+
+### 2.5 Entrances, exits, hand-overs (motion in section 5)
+
+- **Host enters** (greeting, the first host beat after a child's turn): it walks in from the start edge (right) to the front, the companion stepping back to the back place at the same time.
+- **Host hands over** (the end of a Show, the end of a Together lead-in): the host says its hand-over line ("now you!"), turns to the child, then walks out at the start edge while the companion steps forward and grows into the front, so the child sees the friend come to help.
+- **Between two host beats with no child's turn between them** (the Show's screens, a Meet set): nobody moves.
+
+---
+
+## 3. The nine rooms
+
+### 3.1 The table
+
+Domain tokens are `color.domain.<d>.{fill, deep, tint}`. The course values are new tokens (3.6).
+
+| Room | Screen (frame) | Stage rim (phones 4 pt, tablet card border 4 pt; card lip 6 pt) | Backdrop (3.2) | Landmark (3.4) | Trail socket (3.3) | Host | Celebration piece (4) | Stage reaction (5) |
+|---|---|---|---|---|---|---|---|---|
+| **Counting Hills** (Numbers) | `numbers.tint` #FFE3DF | `numbers.fill`; lip `numbers.deep` | **round hills**, five white stepping stones | `world/stair.svg` | **stair** (the row climbs 1.4 pt per socket toward the end) | Nekudi | a new step on the staircase | a dot hops up the steps, the top step lights |
+| **Colour Bay** (Colours) | `cream` (unchanged) | `sketch` (ink 35%); lip `cardLip` | **neutral**: white paper sky, a grey-lilac wave line, pale sand; all at or below 35% chroma | `world/pool.svg` in a **colour-safe** skin (new, generated) | **drop** | Goni, **colour-safe skin** (`goniColorSafe`) | a new swirl in the pool | a white drop falls into the pool, two ripple rings |
+| **Shape Forest** (Shapes) | `shapes.tint` #DDF3E6 | `shapes.fill`; `shapes.deep` | **a forest of cones**: triangles of `tree` and `treeShade` on flat grass | `world/cone-tree.svg` | **tree** (triangle on a trunk) | Kubi | a second cone tree | a small cone tree grows from the ground beside the landmark |
+| **Riddle Grotto** (Logic) | `logic.tint` #ECE3FE | `logic.fill`; `logic.deep` | **a cave**: `rockShade` walls, a `rock` ceiling with rounded drips, a sand floor | `world/pattern-door.svg` | **puzzle piece** | Timi | a fourth shape on the door | the door's three shapes light one after another, the door glows |
+| **Robot Harbour** (CS) | `cs.tint` #DEEBFC | `cs.fill`; `cs.deep` | **a harbour**: sky, a `sea1` band with white wave marks, a `woodLight` quay with plank joints | `world/dock.svg` | **nut** (hexagon with a hole) | Tza'adon | a crate on the dock | a crate is lifted on its line onto the dock |
+| **Market Village** (Math) | `math.tint` #FEEFD6 | `math.fill`; `math.deep` | **an awning**: `math.fill` and paper stripes with a scalloped edge across the top, a sand counter below | `world/stall.svg` | **orange** (round with a leaf) | Grandma Pnina | an orange on the stall | a coin (`coin_s1.svg`) drops into a jar on the stall |
+| **English** | `eng.tint` #E1ECF8 (new) | `eng.fill` #2C6FB8; `eng.deep` #1F5590 | **inside the blue door**: a pale wall, floorboards | the door's **round window** (code-drawn, 3.4) | **porthole** (ring) | Pip the budgie (`languages/host_eng.svg`) | a flower pot on the sill | the window lights (warm glass, a soft sun) |
+| **Hebrew** | `heb.tint` #FBE4DF (new) | `heb.fill` #D25E4E; `heb.deep` #A63A2C | **inside the red door**: a pale wall, stone tiles (the hyrax's rocks) | the door's **arched window** | **arch** | the hyrax (`host_heb.svg`) | a flower pot on the sill | the window lights |
+| **Russian** | `rus.tint` #EBE3F7 (new) | `rus.fill` #6D49B3; `rus.deep` #55358F | **inside the purple door**: a pale wall, a rug | the door's **square window** (four panes) | **square window** | the giraffe (`host_rus.svg`) | a flower pot on the sill | the window lights |
+
+- **The default** (an activity whose domain is unknown, the dev pages): today's cream frame, the meadow, round sockets, no landmark, no host.
+- **Contrast**: every screen tint is light (L* above 88); `ink` on any of them is above 11:1; the bubble, the tiles and the trail pill stay `paper`. The rim never changes with an answer (it is the room, not a state): right is still the gold ring and check, not-yet the lilac ring and wobble.
+- **Colour never carries an answer outside Colour Bay**: the room's colour is constant for the whole lesson, behind every answer alike.
+- **Content on the backdrop**: the middle band of every backdrop (from 15% to 80% of the stage's height) stays light and low in chroma, so a teaching colour drawn straight on the stage (apples, balls, pattern tiles) keeps its contrast; the colourful parts (awning, trees, walls, landmark) live at the stage's edges.
+
+### 3.2 The backdrops (code-drawn, step 1.1)
+
+The backdrop replaces `asset:meadow` (1,189 of the pack's activities) when the activity is in a room; any other `background` (`bin_box`, `nest_empty`, the `stroke_*` pictures) is kept. It is painted (a `CustomPainter` per room, `RoomBackdrop`) in the stage's own size, so it never stretches or crops a picture: every shape is placed in fractions of the stage's width and height. The exact recipe of each is the function `backdrop()` in `docs/design/m11/make_m11_boards.py` (fractions, colours, order); the developer copies its numbers. Summary:
+
+| Backdrop | Layers, back to front |
+|---|---|
+| hills | sky gradient `world.skyTop` → `world.skyBottom`; three far round hills (`tree`); two near hills (`grass`, `grassShade`); five white stepping stones at 75% opacity climbing to the end |
+| bay | white → #F5F2F8; a gentle wave band #E9E6EF from 70% down; a sand strip #F1ECE4 from 84% with a `rock` line |
+| forest | `skyTop` → #EAF7EE; nine cone triangles (six `tree`, three `treeShade`) on a base at 86%; grass from 84% |
+| grotto | #F7F3FF → `logic.tint`; side walls `rockShade` (7% wide, curved); a `rock` ceiling band with seven rounded drips; sand floor from 84% |
+| harbour | `skyTop` → #EEF6FD; `sea1` band 52% to 84% with four white wave marks; `woodLight` quay from 82% with seven `wood` plank joints |
+| market | #FFF8EC → `math.tint`; eight awning stripes (`math.fill`, paper) to 13% with scallops to 20%; sand counter from 84% with a `sandShade` line |
+| rooms (courses) | wall gradient (white-ish → the course tint); floor from 82%: English floorboards (`woodLight`, `wood` joints), Hebrew stone tiles (`rock`, #D8D3E4), Russian a rug (#E8DCC6 with the course colour at 35%) |
+
+No ambient motion in the backdrops in this stage (one focal motion at a time, design-spec §10.1).
+
+### 3.3 The trail (step 1.1, `ProgressTrail`)
+
+- The socket's size, gap and the pill are unchanged (20, 8, 36 high). Only the socket's **shape** changes, by room: the paths are `TRAIL` in the board script, each in a 20 by 20 box.
+- States: to come = the shape in `mist`; the current = the shape outlined in `ink` 2.2 on `paper`; done = the shape in `sparkTint` with a `sparkDeep` 1.2 outline and the **gold four-point spark** inside, so done still reads by the spark, in every room.
+- **Counting Hills only**: socket *i* (from the start side) sits 1.4 × *i* points higher, so the trail climbs like the staircase (8 sockets rise 9.8, inside the pill).
+- It still fills right to left (design-spec §8).
+
+### 3.4 The landmark
+
+| Board | Where | Size |
+|---|---|---|
+| Phone, phone SE, tablet portrait | inside the stage's backdrop, at its **end-bottom corner** (6 in from the end side, 2 up from the bottom); a course window sits higher, its bottom at 70% of the stage | 44% of the stage's (inner) height: phone 56, SE 46, portrait 118 |
+| Tablet landscape | **outside the card**, in the empty column at the stage's end side: x 106 to 256, standing on the card's bottom line (y 380 to 530), with a ground shadow (`world.shadow`) | 150 |
+
+- Inside the stage the landmark is part of the backdrop, **behind the content**; a template that fills the stage covers it, which is fine at rest. During a reaction it is raised above the content (section 5) and goes back behind when the reaction ends.
+- The course windows are drawn in code from the doors' window shapes (`window_svg()` in the board script: frame in the course colour, glass `#FFF3C4`, the bars); no new file.
+- On a Meet screen (L7) the strip column covers the window's corner on the phones; this is accepted (the Meet card is the focus).
+
+### 3.5 Frames on the tablets
+
+The stage card stays `paper` with radius 28; it gains a **4 pt border** in the room's rim colour, and its 6 pt lip becomes the room's `deep` (Colour Bay: the `cardLip`). The backdrop fills the card's inner box (16 in) with radius 16.
+
+### 3.6 Tokens to add (the developer runs `dart run tool/gen_tokens.dart`)
+
+```json
+"color": { "course": {
+  "eng": { "fill": "#2C6FB8", "deep": "#1F5590", "tint": "#E1ECF8", "window": "round" },
+  "heb": { "fill": "#D25E4E", "deep": "#A63A2C", "tint": "#FBE4DF", "window": "arch" },
+  "rus": { "fill": "#6D49B3", "deep": "#55358F", "tint": "#EBE3F7", "window": "square" },
+  "$note": "The language rooms (M11). fill = the door's panel in app/assets/art/languages/door_<c>.svg; deep carries white text at >= 5:1; tint = the room's screen."
+}}
+"layout": { "<board>": { "hostFront": [x, y, size], "companionBack": [x, y, size], "hostBubbleRight": n } }
+```
+
+with the numbers of 2.2. The fills are the doors' own panel colours; white on each `deep` is above 5:1 (eng 7.6, heb 6.4, rus 9.2).
+
+---
+
+## 4. The celebration per room (step 1.4, `LessonCelebration`)
+
+| | Phone, phone SE | Tablets |
+|---|---|---|
+| Card | width min(board − 80, 520), radius 28, **4 pt border in the room's rim**, lip 6 in the room's `deep`, `e3` | width 640 |
+| The room's window (top of the card) | 12 inside, full width, **140 high** (SE 124), radius 20: the room's backdrop | 220 high |
+| Landmark | 104 at the window's end side, on its ground, with a `sparkTint` glow; its **new piece** drawn on it | 160 |
+| Host, `celebrate` pose | 150, centred a little to the end side, on the window's ground | 220 |
+| Companion, `celebrate` | 132, beside the host on the start side | 200 |
+| Sticker (if earned) | as today (88 die-cut), at the window's top start corner | as today |
+| Praise line | Heebo 600, 26 (tablet 32), centred, under the window | |
+| Home | the spark pebble, **72** (tablet 88) | |
+| Scrim | `scrim`, as today | |
+
+- The card's total height on the phone is 140 + 12 + 46 + 10 + 78 + 20 = 306 plus 24 padding: it fits 393 and the SE's 375 with the line on one line; a two-line praise line takes the window down to 116.
+- The host says its cheer (an edge line, voiced later; text until then) after the companion's praise line, never over it.
+- `board_celebration()` in the script is the reference; `counting_hills_phone.png` and `robot_harbour_phone.png` show it.
+
+---
+
+## 5. Motion
+
+All durations by the band's `transition` (A 450, B 350, C 280) unless written; entrances `springOut` with the band's overshoot, exits `exit`, nothing faster than 3 Hz, one focal motion at a time. Reduce motion (`MediaQuery.disableAnimations`) replaces every movement with a cross-fade of at most 120 ms or the end state.
+
+| Moment | Motion | Reduce motion |
+|---|---|---|
+| Host enters | walks in from the start edge to the front: x from off-screen to its box, two small hops (squash 0.94 / stretch 1.04 on each landing); at the same time the companion moves to the back place and scales to its box (`standard`), turning to `listen` | the host fades in at the front, the companion fades to the back place (120 ms) |
+| Host hands over | host `talk` → a nod, then walks out to the start edge (`exit`); the companion grows to the front with the band's overshoot | cross-fade 120 ms |
+| Host's pointer | as the B-40 worked-example hand today (same path and timing); it enters from the stage's bottom edge and leaves the same way | it appears at each place it touches, no travel |
+| Speaker change inside a beat (tail moves) | the tail slides along the bubble's edge 120 ms; the new speaker lifts 6 and goes `talk` | the tail jumps |
+| **Stage reaction** | see 5.1 | the end state appears (fade 120 ms) |
+| Celebration | the card as today; then the landmark's new piece draws as a dashed outline (300 ms) and fills with a 1.1 squash (300 ms); host and companion hop twice (two × 400 ms), one after the other, not together; the sticker pops as today | the card with everything in its end state, one `sparkTint` glow on the new piece |
+
+### 5.1 The stage reaction (step 1.5)
+
+- **When**: on the answer's correct feedback, 220 ms after the check badge pops (so the child sees the check first), on every solved item: at any hint level, after a worked example finished by the child, after the last step of a Show. **Never** before the answer is accepted, never on a wrong one, never on a background tap.
+- **How long**: at most **900 ms**, then the **end state** stays until the item leaves (the page turn takes it away). The next item starts with the plain landmark: **nothing accumulates**, nothing is counted, nothing is lost.
+- **Where**: at the landmark. For its duration the landmark is drawn **above** the stage's content, scaled 1.0 → 1.15 → 1.0 around its bottom centre, with a `sparkTint` glow; then it goes back behind the content.
+- **One focal motion**: the reaction waits for the tier-1 correct motion to end and never runs during a voiced line's first word.
+
+| Room | Motion (≤ 900 ms) | End state |
+|---|---|---|
+| Counting Hills | a coral dot (`numbers.fill`, ink outline) hops up the three steps (3 × 200 ms), the top step fills `spark` (300 ms) | the dot on the lit top step (`counting_hills_phone.png`, third board) |
+| Colour Bay | a white drop falls into the pool (300 ms), two ink-35% ripple rings grow and fade (600 ms) | one faint ring on the pool |
+| Shape Forest | a small cone tree (the landmark's own drawing at 50%) grows from the ground beside it, scale from its base 0 → 1.1 → 1 | the small tree |
+| Riddle Grotto | the door's circle, square and triangle light in turn (3 × 200 ms), then the door's glass glows (300 ms) | the three lit shapes |
+| Robot Harbour | a crate rises on its line and is set on the dock (lift 500 ms, set 200 ms, squash) | the crate on the dock |
+| Market Village | a coin (`coin_s1.svg` at 30%) arcs into a jar on the stall (500 ms), the jar bounces | the coin in the jar |
+| English, Hebrew, Russian | the window's glass warms from #FFF3C4 to `spark` and a soft sun rises in it (600 ms) | the lit window |
+
+The reaction's sound (a chime, a per-land instrument) is item 6, later; the voice-and-sound-director gets the timings above.
+
+---
+
+## 6. With the language rebuild (L7 Meet and Find)
+
+One system: the course rooms are three of the nine rooms; a course lesson's **Meet** is its Show (the host's), **Recall, Find and Use** are the child's turns (the companion's). Points of `docs/design/l7-meet-find.md` that must change:
+
+1. **§3.1 beats, the Guide column**: the speaker of M0 to M5 is the **course host** in the front, the companion in the back place in `listen`. M0's `wave` becomes the host's entrance (2.5) on the first screen of a set.
+2. **§3.1 M4 "let's say it together"** (f03) is today the companion's clip; in a Meet it becomes the **host's** line (three new host lines, one per course, needs-editor; text until voiced). The companion keeps f03 for every other use.
+3. **§3.1 M6 close**: the microphone's `heard` and `together` lines stay the **companion's** (feedback); the tail moves to the companion in the back place (2.1 rule 3). "I said it" still closes silently.
+4. **§3.6 idle**: the idle prompt re-voices the host's M4 line; the hand stays absent.
+5. **§4.1 layout**: "the frame's pieces do not move" becomes "the frame's pieces do not move between the screens of a set"; in a Meet the corner holds the pair (2.2) and the bubble's right edge and width take the host-beat values (phone 591 and 178: the bubble may grow down to about 240 as L7 allows, it keeps clear of "I said it" at 256 by the frame's own rule). "I said it" and the microphone keep their L7 places; the back place is clear of both on every board.
+6. **§4.1 Meet stage**: the Meet card stands on the course's backdrop (3.2); on the phones the strip column covers the window landmark's corner; the tablet portrait's taller card (420) keeps the window inside its backdrop at the end-bottom.
+7. **§6 Find**: unchanged in behaviour; the host is not on screen. The hand-over (2.5) happens between the last Meet screen of a set and the first Find screen, inside the normal activity transition.
+8. **§7 motion**: add the host's entrance (first Meet screen of a set) and the hand-over before Find; between the Meet screens of a set nobody moves (as L7 already says for the frame).
+9. **§1 point 4 and §10.6, one socket per set**: the socket takes the course's shape (porthole, arch, square window).
+10. **§12 goldens**: every Meet golden gains the host in front and the companion behind, on the course backdrop; regenerate them after both branches merge (M11 §8 order: L7 first).
+11. **§2 speaking badge**: unchanged; the host has no pointer on a Meet screen (the picture speaks for itself).
+
+Recall (the warm-up of old words) is a child's turn: companion only.
+
+---
+
+## 7. The pose sheet (step 1.2: 27 drawings, Nekudi's 3 done)
+
+### 7.1 The three poses
+
+| Pose | Used in | What it shows |
+|---|---|---|
+| `talk` | greeting, Show between actions, lead-ins, hand-over | mouth open (dark interior, pink tongue, design-spec §4.1), the end-side hand raised in a small explaining gesture, eyes toward the end side |
+| `show` | whenever the host's pointer acts | the **worked-example hand** held out level toward the end side (the task), the head turned and the eyes on that hand, the body leaning 3° toward it; the other hand **at rest inside the figure's outline** (it must never reach a friend standing behind) |
+| `celebrate` | the celebration card | a hop (feet 22 above the baseline, the shadow stays on it, smaller), both hands up, happy closed eyes, open smile; one species-true flourish (Nekudi's shell halves lift and her wings peek out, as a ladybird's do before it flies) |
+
+`idle` stays the existing still (`design/assets/<host>.svg`); `listen` (the host's wait in the child's last Show step) is the still with the eyes turned to the stage: the developer uses the still for both until the full rig (Rive) exists.
+
+### 7.2 The artboard and the anchors (design-spec §4.9.2, unchanged)
+
+- 512 × 512, baseline y 472, centre x 256, the figure at most 400 high; **faces left** (front or ¾ with the gaze to the left), never mirrored at runtime (a `flip` would mirror the hand).
+- Same palette as the still (`color.character.<host>`), at most six fills plus `ink` and white, no outline (the cast's stills have none), one shade tone. No text, no letters, no numerals in a pose.
+- Each file names its groups: `head`, `mouth`, `hand` (show only), and the body parts. The anchors are written in an XML comment in each file and copied into the host pack:
+
+| Anchor | Nekudi talk | Nekudi show | Nekudi celebrate | Rule for every host |
+|---|---|---|---|---|
+| `mouth` (tail target) | 256, 268 | 252, 262 | — | the centre of the open mouth |
+| `hand` (pointer tip) | — | 46, 310 | — | the tip of the worked-example limb, at 50% to 65% of the height, x ≤ 72 |
+| `feet` | 256, 466 | 250, 466 | 256, 466 (shadow) | on the baseline |
+| `burst` | — | — | 256, 70 | above the head |
+
+### 7.3 The worked-example hand of each host
+
+| Host | Limb | References to look at before drawing |
+|---|---|---|
+| Nekudi (ladybug) | end-side front leg, the ball foot is the tip | done (below) |
+| Goni (chameleon) | front foot, its two bundled toes | chameleon feet (zygodactyl grip), tail curl |
+| Kubi (tortoise) | front leg, three blunt nails | tortoise forelimbs (scaled, elephant-like), shell scutes |
+| Timi (octopus) | a free arm's curled tip, suckers on its underside | octopus arm tips and sucker rows |
+| Tza'adon (robot) | arm with a round two-part gripper | toy robot arms (only his own design) |
+| Grandma Pnina (pelican) | wing tip, the primaries fanned like fingers | pelican wings in flight and folded, pouch |
+| Pip (budgie) | wing tip, primaries fanned | budgerigar wing bars and flight feathers |
+| the hyrax | **the tip of its coral pencil** (it already holds it) | rock hyrax paws and posture |
+| the giraffe | front hoof | giraffe legs, cloven hooves, ossicones |
+
+### 7.4 Files
+
+- Drawings: `design/assets/<host>-talk.svg`, `-show.svg`, `-celebrate.svg` (lands: `nekudi`, `goni`, `kubi`, `timi`, `tzaadon`, `pnina`; courses: `host-eng`, `host-heb`, `host-rus`). The bundled copies: `app/assets/art/hosts/<host>_<pose>.svg`.
+- **Generated, not drawn** (a small tool, the developer's): the stage pointer `app/assets/art/hosts/<host>_hand.svg`, cut from the show pose's `hand` group, scaled to a 64 by 64 box with the tip at the top; Goni's three poses in `goniColorSafe` (`goni_<pose>_safe.svg`) by colour mapping; `world/pool_safe.svg` (the pool's magenta, yellow and blue swapped for the colour-safe greys).
+
+### 7.5 Nekudi's sample (this run)
+
+Files: `design/assets/nekudi-talk.svg`, `design/assets/nekudi-show.svg`, `design/assets/nekudi-celebrate.svg`. Looked at in `docs/design/m11/nekudi_poses.png`: at 280 px beside the still, at the phone's 168 on her tint, and as 48 pt silhouettes (each pose reads as her, and the three differ). References (2026-11-14, nothing traced): Wikipedia "Coccinella septempunctata" and "Coccinellidae" (domed oval elytra meeting at a straight suture, short jointed legs with a knee, clubbed antennae, hard elytra covering the folded hind wings); photographs of walking seven-spot ladybirds reaching a leg onto a grass blade, and of take-off with the elytra lifted apart and the clear wings unfolding (Bing image search). What changed from the still, on purpose: her legs now bend at a knee, and in `celebrate` her shell opens a little to show her wings.
+
+---
+
+## 8. Right to left
+
+- The interface is right to left: the corner at the start (right), the host entering and leaving at the start edge, the back place on the outer (start) side, the trail filling from the right.
+- Never mirrored: the ten-frame (fills left to right), number lines, clocks, the robot's arrows and its program (read left to right, absolute directions), the pose files (a host faces the task, left; its hand would swap if mirrored). The staircase landmark already rises toward the end (left), the forward direction of the interface, and its trail climbs the same way.
+- English and Russian words stay in their left-to-right isolated chips (L7); the room changes nothing there.
+
+---
+
+## 9. For the app-developer (not obvious from the tables)
+
+1. **The room comes from the activity's domain** (the skill id's land: NUM, COL, SHP, LOG, CS, MATH) or the course (`eng`, `heb`, `rus`); one `RoomSpec` (tint, rim, deep, backdrop painter, landmark, trail shape, host id, reaction) looked up once per lesson. A Today's Adventure stop takes the room of its own land.
+2. **The backdrop swap is by value**: `asset:meadow` → the room's painter; any other background stays.
+3. **Who speaks is a field of the beat**, not of the screen: `speaker: host | companion`, set by `lesson_controller.dart` from the part (Show, the Together lead-in, the greeting and the cheer are host; everything else companion). The frame draws the pair when the speaker is the host or when a host beat is not finished, and the companion alone otherwise. The tail's target is the speaker's `mouth` anchor in board points.
+4. **The microphone is never shown in a host beat of a land lesson**; in a Meet it appears at M4 as L7 says. A Together item shows its microphone only after the hand-over.
+5. **The host's pointer replaces the B-40 hand only in host beats**; the hint ladder in a child's turn keeps the glove.
+6. **The reaction hook**: one call on the template sessions' "correct" path (after the check badge), the same for all templates; it is not called by the worked example's own moves, only when the item is solved. A test: the reaction count per item is 1 on a right answer and 0 on a wrong one; it never shows on the next item.
+7. **Until a host's poses exist** (24 drawings to come) the frame uses the host's still for all three poses; the layout does not change when the poses land (same artboard and anchors).
+8. **Goni and the pool in Colour Bay** use the safe files; the companion switches to its `colorSafe` skin as today.
+9. **Voice**: every host line shows as text until the owner voices it (M11 §9 Q2). The pair still moves at the beats, so a lesson without host clips looks and paces the same.
+10. **Accessibility**: the host is announced once at the greeting ("<host's name>", a label from `he.dart`, needs-editor); the landmark and the reaction are decoration (excluded from semantics); the trail's label is unchanged (it counts items, not shapes).
+
+---
+
+## 10. Goldens to add (developer; QA re-runs them in step 1.6)
+
+In a new `app/test/golden_m11_rooms_test.dart`:
+
+1. `m11_room_<room>_show_<board>`: the host beat (host in front, companion behind, empty stage with backdrop and landmark, the trail with 2 of 6 done): 9 rooms × phone, phoneSE, tabletLandscape = 27; plus tabletPortrait for Counting Hills and English.
+2. `m11_room_<room>_alone_phone`: the companion alone, the same room: 9.
+3. `m11_room_<room>_reacted_phone`: the reaction's end state after a right tap: 9; and `m11_room_numbers_reacted_phone_reduce_motion` (reduce motion on, same picture).
+4. `m11_celebration_<room>_phone`: 9; plus `_phoneSE` and `_tabletLandscape` for Counting Hills and Robot Harbour.
+5. `m11_meet_eng_m3_phone` and `_tabletPortrait` (after L7 merges): the course host in front on a Meet screen with the strip.
+6. A **greyscale check** (a test, not a golden): the 27 host-beat goldens converted to grey differ pairwise by more than a set share of pixels within each board (acceptance criterion 1).
+7. A text-scale 1.3 run of `m11_room_numbers_show_phone` with the longest host line: the bubble clear of the stage and of the pair.
+
+---
+
+## 11. Missing art and other hand-offs
+
+**Art (design-director, model Opus, after the owner's yes on the Nekudi sample):**
+
+| What | Count | Notes |
+|---|---|---|
+| Host poses | **24** (8 hosts × 3) | Nekudi's 3 done here; references per 7.3 first |
+| Celebration growth pieces | **9** small | step, swirl, cone tree (reuses the landmark), shape on the door, crate (shared with the reaction), orange, three flower pots |
+| Reaction pieces | **2** small | the crate with its hook line; the jar (the coin exists) |
+| Generated, no drawing | 9 pointers, 3 Goni colour-safe poses, 1 colour-safe pool | a tool step |
+| Optional, later | 6 richer landmarks | the world landmarks are the map's flat icons; at the tablet landscape's 150 points they look plain beside the hosts. Owner's call. |
+
+**Hand-offs:**
+- **app-developer**: sections 2, 3, 4, 5, 9; the tokens of 3.6; goldens of section 10.
+- **hebrew-text-editor**: the host lines (greeting, hand-over "now you!", cheer: the ~90 edge lines of step 1.3) hold **two lines at the band's size in a 178-point bubble on the phone** (about six words); the three host versions of "let's say it together" (6.2); the hosts' names as screen-reader labels.
+- **voice-and-sound-director**: the motion timings of section 5 (entrance about 450 ms, hand-over, reaction ≤ 900 ms starting 220 ms after the check) for the later chime; the host's cheer comes after the companion's praise line, never over it.
+- **curriculum-expert**: confirm that the child's last step of a Show is the host's beat (a wrong touch there is the host's "let's look again", not the companion's not-yet), and that a Meet is the course's Show.
+- **qa-engineer**: step 1.6 with section 10.
+- **Needs the owner**: `docs/design/m11/nekudi_poses.png` (the host sample, before the other 24 drawings), `docs/design/m11/counting_hills_phone.png`, `docs/design/m11/robot_harbour_phone.png`, `docs/design/m11/nine_rooms.png`. One decision is his to confirm: the host teaches **from the friend's corner** (in front, with the companion behind), not from the stage's edge as the plan first said (reason in 1.4).
+
+---
+
+## 12. What I looked at, and what I did not
+
+Looked at, at full size: every board above (the four Counting Hills phone boards, the three Robot Harbour boards, the host beat on all four boards, the nine rooms in colour and grey) and Nekudi's sheet; an enlarged crop of the reaction's end state and the stair trail. Fixed on the way: the show pose's resting hand reached the companion's face (moved inside her outline); the portrait pair overlapped the bubble (host moved to 572 and 184); the Show's tray covered the landmark on the phone (smaller frame). The goldens `lesson_2_count_three_answers_{phone, tablet_landscape, tablet_portrait}`, `lesson_6_celebration_phone`, `activity_phone_se`, `c1b_give_frame_phone`, `hint_robot_l2_phone`, `hint_robot_l3_tablet_landscape`, `hint_sort_l3_{phone, tablet_portrait}`, and the hosts, doors and landmarks as a contact sheet.
+
+Not looked at: anything in the running app (no Flutter run or test was made); motion (the boards are still frames); the real phone (the owner can). The boards place the frame's pieces at the measured `ActivitySpec` numbers, but a bubble that the frame shrinks or grows may sit a few points differently on a device. Tza'adon on the Robot Harbour boards is his still (his poses are not drawn yet); Goni and the pool in Colour Bay are simulated with a desaturation filter until their safe files exist.

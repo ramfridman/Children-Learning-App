@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Nekudi, pose "talk" (M11 step 1.2 sample). Original drawing in plain shapes, in the style and palette of design/assets/nekudi.svg
+     (tokens color.character.nekudi). Pose sheet: docs/design/m11-rooms.md section 7. Artboard 512, baseline y 472, faces left.
+     References looked at (2026-11-14), nothing traced: Wikipedia "Coccinella septempunctata" and "Coccinellidae" (domed oval elytra
+     meeting at a straight suture, short jointed legs with a knee between femur and tibia, small dark head, clubbed antennae);
+     macro photographs of walking seven-spot ladybirds (Bing image search "seven spot ladybird walking side view legs macro"). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="נְקוּדִי מְדַבֶּרֶת">
+  <ellipse cx="256" cy="466" rx="116" ry="11" fill="rgba(43,35,80,0.14)"/>
+  <g id="antennae">
+    <path d="M228 158 Q212 110 186 98" fill="none" stroke="#3F3A7A" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="184" cy="94" r="15" fill="#FFC83D"/>
+    <path d="M286 158 Q304 114 330 100" fill="none" stroke="#3F3A7A" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="332" cy="96" r="15" fill="#FFC83D"/>
+  </g>
+  <g id="feet">
+    <ellipse cx="214" cy="462" rx="24" ry="10" fill="#3F3A7A"/>
+    <ellipse cx="298" cy="462" rx="24" ry="10" fill="#3F3A7A"/>
+  </g>
+  <!-- the explaining hand (end side, toward the task): knee bent, tip up -->
+  <g id="arm-end">
+    <path d="M162 334 L120 304 L106 256" fill="none" stroke="#3F3A7A" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="104" cy="250" r="13" fill="#3F3A7A"/>
+  </g>
+  <g id="arm-start">
+    <path d="M356 352 L384 380 L396 400" fill="none" stroke="#3F3A7A" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="398" cy="404" r="13" fill="#3F3A7A"/>
+  </g>
+  <g id="shell">
+    <circle cx="248" cy="356" r="112" fill="#D94E44"/>
+    <circle cx="258" cy="348" r="110" fill="#F46A5E"/>
+    <path d="M256 250 L256 452" stroke="#3F3A7A" stroke-width="6" stroke-linecap="round" fill="none"/>
+    <circle cx="198" cy="316" r="17" fill="#3F3A7A"/>
+    <circle cx="178" cy="372" r="15" fill="#3F3A7A"/>
+    <circle cx="216" cy="414" r="16" fill="#3F3A7A"/>
+    <circle cx="314" cy="316" r="17" fill="#3F3A7A"/>
+    <circle cx="334" cy="372" r="15" fill="#3F3A7A"/>
+    <circle cx="296" cy="414" r="16" fill="#3F3A7A"/>
+    <ellipse cx="300" cy="286" rx="22" ry="10" fill="#FFFFFF" opacity="0.35" transform="rotate(-30 300 286)"/>
+  </g>
+  <g id="head" transform="rotate(-4 256 230)">
+    <circle cx="256" cy="218" r="76" fill="#3F3A7A"/>
+    <ellipse cx="222" cy="210" rx="24" ry="28" fill="#FFFFFF"/>
+    <ellipse cx="290" cy="210" rx="24" ry="28" fill="#FFFFFF"/>
+    <circle cx="214" cy="215" r="13" fill="#2B2350"/>
+    <circle cx="282" cy="215" r="13" fill="#2B2350"/>
+    <circle cx="209" cy="209" r="5" fill="#FFFFFF"/>
+    <circle cx="277" cy="209" r="5" fill="#FFFFFF"/>
+    <ellipse cx="194" cy="252" rx="13" ry="8" fill="#F4A7B4" opacity="0.9"/>
+    <ellipse cx="316" cy="252" rx="13" ry="8" fill="#F4A7B4" opacity="0.9"/>
+    <g id="mouth">
+      <path d="M233 249 Q256 246 279 249 Q277 287 256 289 Q235 287 233 249 Z" fill="#F4A7B4"/>
+      <path d="M240 255 Q256 253 272 255 Q269 280 256 281 Q243 280 240 255 Z" fill="#2B2350"/>
+      <ellipse cx="256" cy="274" rx="10" ry="5" fill="#F27D8E"/>
+    </g>
+  </g>
+</svg>
