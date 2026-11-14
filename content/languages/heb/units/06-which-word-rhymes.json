@@ -393,27 +393,271 @@
         "star+plane": "sem"
       },
       "ladder": "HL-WORD"
+    },
+    {
+      "id": "c-r1",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-v7-full",
+        "heb-a-v1-full"
+      ],
+      "pictures": [
+        {
+          "pic": "teddy-nose",
+          "clip": "heb-a-w-af"
+        },
+        {
+          "pic": "spoon",
+          "clip": "heb-a-w-kaf"
+        },
+        {
+          "pic": "star",
+          "clip": "heb-a-w-kochav"
+        },
+        {
+          "pic": "rabbit",
+          "clip": "heb-a-w-arnav"
+        }
+      ]
+    },
+    {
+      "id": "em-r1",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "h-end",
+      "picture": "spoon",
+      "clips": [
+        "heb-a-w-kaf",
+        "heb-a-w-af"
+      ]
+    },
+    {
+      "id": "so-r1",
+      "kind": "sort",
+      "frame": "i-sort-rhyme",
+      "rep": "concrete",
+      "bins": [
+        {
+          "id": "kochav",
+          "label": "heb-a-w-kochav",
+          "picture": "star"
+        },
+        {
+          "id": "pil",
+          "label": "heb-a-w-pil",
+          "picture": "elephant"
+        }
+      ],
+      "cards": [
+        {
+          "pic": "rabbit-tail",
+          "clip": "heb-a-w-zanav",
+          "bin": "kochav"
+        },
+        {
+          "pic": "rabbit",
+          "clip": "heb-a-w-arnav",
+          "bin": "kochav"
+        },
+        {
+          "pic": "rocket",
+          "clip": "heb-a-w-til",
+          "bin": "pil"
+        }
+      ],
+      "wrong": {
+        "rabbit-tail": "allit",
+        "rabbit": "allit",
+        "rocket": "allit"
+      },
+      "ladder": "HL-RHYME"
+    },
+    {
+      "id": "u-r1",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-w-kaf",
+        "heb-a-w-af",
+        "heb-a-w-dag",
+        "heb-a-w-gag",
+        "heb-a-w-pil",
+        "heb-a-w-til"
+      ],
+      "pictures": [
+        {
+          "pic": "spoon",
+          "clip": "heb-a-w-kaf"
+        },
+        {
+          "pic": "teddy-nose",
+          "clip": "heb-a-w-af"
+        },
+        {
+          "pic": "fish",
+          "clip": "heb-a-w-dag"
+        },
+        {
+          "pic": "house-roof",
+          "clip": "heb-a-w-gag"
+        },
+        {
+          "pic": "elephant",
+          "clip": "heb-a-w-pil"
+        },
+        {
+          "pic": "rocket",
+          "clip": "heb-a-w-til"
+        }
+      ]
+    },
+    {
+      "id": "c-r2",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-v3-full",
+        "heb-a-v5-full"
+      ],
+      "pictures": [
+        {
+          "pic": "ball",
+          "clip": "heb-a-w-kadur"
+        },
+        {
+          "pic": "oven",
+          "clip": "heb-a-w-tanur"
+        },
+        {
+          "pic": "strawberry",
+          "clip": "heb-a-w-tut"
+        },
+        {
+          "pic": "thread",
+          "clip": "heb-a-w-chut"
+        }
+      ]
+    },
+    {
+      "id": "so-r2",
+      "kind": "sort",
+      "frame": "i-sort-rhyme",
+      "rep": "concrete",
+      "bins": [
+        {
+          "id": "balon",
+          "label": "heb-a-w-balon",
+          "picture": "balloon"
+        },
+        {
+          "id": "kos",
+          "label": "heb-a-w-kos",
+          "picture": "cup"
+        }
+      ],
+      "cards": [
+        {
+          "pic": "clock",
+          "clip": "heb-a-w-shaon",
+          "bin": "balon"
+        },
+        {
+          "pic": "window",
+          "clip": "heb-a-w-chalon",
+          "bin": "balon"
+        },
+        {
+          "pic": "plane",
+          "clip": "heb-a-w-matos",
+          "bin": "kos"
+        },
+        {
+          "pic": "horse",
+          "clip": "heb-a-w-sus",
+          "bin": "kos"
+        }
+      ],
+      "wrong": {
+        "clock": "allit",
+        "window": "allit",
+        "plane": "allit",
+        "horse": "allit"
+      },
+      "ladder": "HL-RHYME"
+    },
+    {
+      "id": "u-r2",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-w-tanur",
+        "heb-a-w-kadur",
+        "heb-a-w-balon",
+        "heb-a-w-aron",
+        "heb-a-w-tut",
+        "heb-a-w-chut"
+      ],
+      "pictures": [
+        {
+          "pic": "oven",
+          "clip": "heb-a-w-tanur"
+        },
+        {
+          "pic": "ball",
+          "clip": "heb-a-w-kadur"
+        },
+        {
+          "pic": "balloon",
+          "clip": "heb-a-w-balon"
+        },
+        {
+          "pic": "cupboard",
+          "clip": "heb-a-w-aron"
+        },
+        {
+          "pic": "strawberry",
+          "clip": "heb-a-w-tut"
+        },
+        {
+          "pic": "thread",
+          "clip": "heb-a-w-chut"
+        }
+      ]
     }
   ],
   "lessons": [
     {
       "id": "rhymes-1",
       "title": "מִלִּים מִתְחָרְזוֹת",
+      "sequence": 130,
       "items": [
+        "c-r1",
+        "em-r1",
+        "03",
         "01",
         "02",
-        "03",
-        "04"
+        "04",
+        "so-r1",
+        "u-r1"
       ]
     },
     {
       "id": "rhymes-2",
       "title": "עוֹד מִלִּים מִתְחָרְזוֹת",
+      "sequence": 150,
       "items": [
+        "c-r2",
+        "08",
         "05",
         "06",
         "07",
-        "08"
+        "so-r2",
+        "u-r2"
       ]
     }
   ]

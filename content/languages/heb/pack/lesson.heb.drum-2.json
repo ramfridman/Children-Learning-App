@@ -15,9 +15,12 @@
     "HEB-A-08"
   ],
   "items": [
+    "heb.a08.ch-d2",
     "heb.a08.04",
     "heb.a08.05",
-    "heb.a08.06"
+    "heb.a08.06",
+    "heb.a08.11",
+    "heb.a08.em-d2"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,5 +32,5 @@
       }
     ]
   },
-  "sequence": 14
+  "sequence": 140
 }

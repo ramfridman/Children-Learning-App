@@ -4,7 +4,7 @@
     "version": "0.1.0",
     "minAppVersion": "0.5.0"
   },
-  "note": "HEB-1 Band A (docs/languages/hebrew/band-a-content.md): every item the generator can express today (LS01 tap), the placement, the tags. Items that wait for a template recipe or a picture are in units/pending/ (not read by the generator). Text only: every clip is pending. Lines copied from pronunciation.csv keep its review mark; new lines and joined lines are needs-editor.",
+  "note": "HEB-1 Band A (docs/languages/hebrew/band-a-content.md): every item the generator can express today (LS01 tap), the placement, the tags. Items that wait for a template recipe or a picture are in units/pending/ (not read by the generator). Text only: every clip is pending. Lines copied from pronunciation.csv keep its review mark; new lines and joined lines are needs-editor. L7-6 (2026-11-14): `everyday` lists the words a Hebrew-speaking child of 3 knows (frame 3.5.1), and, until the met-before check can tell them apart, five kinds of clip that are not new words: the forms of a taught word (סִירוֹת, the parrot's סִי… רָה), the parrot's parts of an everyday word, a page of story 1 or 2 replayed after the story was heard, a place sentence of everyday words, and the drum strips' counts. The eleven new words (story words and verbs) are taught by Meet pages and are not in the list.",
   "defaults": {
     "frame": "i-find",
     "ladder": "HL-WORD",
@@ -17,8 +17,11 @@
     "teach": {
       "frame": "say-together",
       "heard": "heard",
-      "together": "say-together"
-    }
+      "together": "say-together",
+      "hear": "meet-new",
+      "explain": true
+    },
+    "where": "fb-where"
   },
   "feedback": {
     "right": [
@@ -340,7 +343,11 @@
     "heb-a-w-tanur": "m-tanur",
     "heb-a-w-sira": "m-sira",
     "heb-a-w-kova": "m-kova",
-    "heb-a-w-ruach": "m-ruach"
+    "heb-a-w-ruach": "m-ruach",
+    "heb-a-w-boet": "m-boet",
+    "heb-a-w-mechapeset": "m-mechapeset",
+    "heb-a-w-meurbevet": "m-meurbevet",
+    "heb-a-w-soche": "m-soche"
   },
   "tags": {
     "sem": {
@@ -1275,6 +1282,66 @@
       "he": "הַשֵּׁם שֶׁלָּכֶם מַתְחִיל בָּאוֹת הַזֹּאת.",
       "voice": "השם שלכם מתחיל באות הזאת.",
       "review": "text-ready"
+    },
+    "meet-new": {
+      "he": "מִלָּה חֲדָשָׁה:",
+      "voice": "מילה חדשה:",
+      "review": "needs-editor"
+    },
+    "fb-where": {
+      "he": "וְאֵיפֹה",
+      "voice": "ואיפה",
+      "review": "needs-editor"
+    },
+    "do-like": {
+      "he": "בּוֹאוּ נַעֲשֶׂה כְּמוֹ בַּתְּמוּנָה:",
+      "voice": "בואו נעשה כמו בתמונה:",
+      "review": "needs-editor"
+    },
+    "i-sort-rhyme": {
+      "he": "שִׂימוּ כׇּל תְּמוּנָה אֵצֶל הַמִּלָּה שֶׁנִּגְמֶרֶת אוֹתוֹ דָּבָר.",
+      "voice": "שימו כל תמונה אצל המילה שנגמרת אותו דבר.",
+      "review": "needs-editor"
+    },
+    "look-letters": {
+      "he": "חַפְּשׂוּ אוֹתִיּוֹת מִסָּבִיב: עַל סְפָרִים, עַל קֻפְסָאוֹת וּבָרְחוֹב.",
+      "voice": "חפשו אותיות מסביב: על ספרים, על קופסאות וברחוב.",
+      "review": "needs-editor"
+    },
+    "name-show": {
+      "he": "לְכׇל אֶחָד וְאַחַת יֵשׁ שֵׁם, וְאֶת הַשֵּׁם כּוֹתְבִים בְּאוֹתִיּוֹת.",
+      "voice": "לכל אחד ואחת יש שם, ואת השם כותבים באותיות.",
+      "review": "needs-editor"
+    },
+    "name-clap": {
+      "he": "מַחְאוּ כַּף לְכׇל חֵלֶק שֶׁל הַשֵּׁם שֶׁלָּכֶם.",
+      "voice": "מחאו כף לכל חלק של השם שלכם.",
+      "review": "needs-editor"
+    },
+    "name-first": {
+      "he": "לְכׇל שֵׁם יֵשׁ אוֹת רִאשׁוֹנָה. הִיא בַּהַתְחָלָה, בַּצַּד הַיְּמָנִי.",
+      "voice": "לכל שם יש אות ראשונה. היא בהתחלה, בצד הימני.",
+      "review": "needs-editor"
+    },
+    "name-home": {
+      "he": "חַפְּשׂוּ בַּבַּיִת אֶת הָאוֹת הָרִאשׁוֹנָה שֶׁל הַשֵּׁם שֶׁלָּכֶם.",
+      "voice": "חפשו בבית את האות הראשונה של השם שלכם.",
+      "review": "needs-editor"
+    },
+    "retell": {
+      "he": "סַפְּרוּ אֶת הַסִּפּוּר לְמִישֶׁהוּ בַּבַּיִת: מַה קָּרָה קֹדֶם?",
+      "voice": "ספרו את הסיפור למישהו בבית: מה קרה קודם?",
+      "review": "needs-editor"
+    },
+    "air": {
+      "he": "קֹדֶם מְצַיְּרִים בָּאֲוִיר, עִם כׇּל הַיָּד!",
+      "voice": "קודם מציירים באוויר, עם כל היד!",
+      "review": "needs-editor"
+    },
+    "paper": {
+      "he": "עַכְשָׁו מְצַיְּרִים אֶת זֶה עַל דַּף, בְּעִפָּרוֹן.",
+      "voice": "עכשיו מציירים את זה על דף, בעיפרון.",
+      "review": "needs-editor"
     }
   },
   "teachPictures": {
@@ -1286,5 +1353,117 @@
     "heb-a-w-kova": "hat",
     "heb-a-w-ruach": "wind",
     "heb-a-w-kadur": "ball"
-  }
+  },
+  "metBefore": "enforce",
+  "everyday": [
+    "heb-a-w-aba",
+    "heb-a-w-af",
+    "heb-a-w-agala",
+    "heb-a-w-ananim",
+    "heb-a-w-arnav",
+    "heb-a-w-aron",
+    "heb-a-w-banana",
+    "heb-a-w-bayit",
+    "heb-a-w-beged-yam",
+    "heb-a-w-beitsa",
+    "heb-a-w-boreach",
+    "heb-a-w-bua",
+    "heb-a-w-buba",
+    "heb-a-w-bubot",
+    "heb-a-w-chalav",
+    "heb-a-w-chalon",
+    "heb-a-w-chamorim",
+    "heb-a-w-chatul",
+    "heb-a-w-chatula",
+    "heb-a-w-chatulim",
+    "heb-a-w-chultsa",
+    "heb-a-w-chut",
+    "heb-a-w-dubi",
+    "heb-a-w-dubim",
+    "heb-a-w-efroach",
+    "heb-a-w-ets",
+    "heb-a-w-gag",
+    "heb-a-w-gamal",
+    "heb-a-w-geshem",
+    "heb-a-w-kadur",
+    "heb-a-w-kadurim",
+    "heb-a-w-kaf",
+    "heb-a-w-kelev",
+    "heb-a-w-keshet",
+    "heb-a-w-klavim",
+    "heb-a-w-kochav",
+    "heb-a-w-kofets",
+    "heb-a-w-kos",
+    "heb-a-w-kufsa",
+    "heb-a-w-machat",
+    "heb-a-w-magevet",
+    "heb-a-w-matana",
+    "heb-a-w-matos",
+    "heb-a-w-mazleg",
+    "heb-a-w-mechabeket",
+    "heb-a-w-medaberet",
+    "heb-a-w-mekarer",
+    "heb-a-w-metosim",
+    "heb-a-w-mitriya",
+    "heb-a-w-motset",
+    "heb-a-w-ofa",
+    "heb-a-w-ohel",
+    "heb-a-w-pil",
+    "heb-a-w-pita",
+    "heb-a-w-pitsa",
+    "heb-a-w-pitsot",
+    "heb-a-w-saba",
+    "heb-a-w-sal",
+    "heb-a-w-shemesh",
+    "heb-a-w-shote",
+    "heb-a-w-sir",
+    "heb-a-w-sukar",
+    "heb-a-w-sus",
+    "heb-a-w-susim",
+    "heb-a-w-tabaat",
+    "heb-a-w-tapuach",
+    "heb-a-w-tarnegol",
+    "heb-a-w-til",
+    "heb-a-w-tsalachat",
+    "heb-a-w-uga",
+    "heb-a-w-ugot",
+    "heb-a-w-yam",
+    "heb-a-w-yareach",
+    "heb-a-w-zanav",
+    "heb-a-w-zayit",
+    "heb-a-w-zorek",
+    "heb-a-w-sirot",
+    "heb-a-u-sira",
+    "heb-a-u-aba",
+    "heb-a-u-agala",
+    "heb-a-u-banana",
+    "heb-a-u-buba",
+    "heb-a-u-chatula",
+    "heb-a-u-matana",
+    "heb-a-u-pitsa",
+    "heb-a-s1-p2",
+    "heb-a-s1-p3",
+    "heb-a-s1-p4",
+    "heb-a-s1-p5",
+    "heb-a-s2-p2",
+    "heb-a-s2-p3",
+    "heb-a-s2-p4",
+    "heb-a-s2-p5",
+    "heb-a-pl-5",
+    "heb-a-pl-5b",
+    "heb-a-pl-5c",
+    "heb-a-pl-6",
+    "heb-a-pl-6b",
+    "heb-a-pl-6c",
+    "heb-a-pl-7",
+    "heb-a-pl-7b",
+    "heb-a-pl-7c",
+    "heb-a-pl-8",
+    "heb-a-pl-8b",
+    "heb-a-pl-8c",
+    "heb-a-drums-1",
+    "heb-a-drums-2",
+    "heb-a-drums-3",
+    "heb-a-drums-4"
+  ]
 }

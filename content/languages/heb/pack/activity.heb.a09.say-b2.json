@@ -1,6 +1,6 @@
 {
   "schema": "activity/v1",
-  "id": "heb.a02.say-kadur",
+  "id": "heb.a09.say-b2",
   "review": "needs-editor",
   "revision": 1,
   "template": "say_it",
@@ -10,14 +10,14 @@
   "band": "A",
   "skills": [
     {
-      "id": "HEB-A-02",
+      "id": "HEB-A-09",
       "weight": 1
     }
   ],
   "purpose": "practice",
   "checkType": "practice",
   "representation": "embodied",
-  "variantGroup": "a02-say-kadur",
+  "variantGroup": "a09-say-b2",
   "difficulty": {
     "authored": 0.2
   },
@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:heb.heb_a_w_kadur",
+    "target": "vo:heb.heb_a_w_chatula",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_2",
+      "vo": "vo:heb.ok_7",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן, זֶהוּ זֶה!"
+          "v": "בְּדִיּוּק!"
         }
       ],
-      "target": "vo:heb.heb_a_w_kadur"
+      "target": "vo:heb.heb_a_w_chatula"
     },
     "incorrect": [
       {
@@ -80,24 +80,24 @@
           "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
         }
       ],
-      "target": "vo:heb.heb_a_w_kadur"
+      "target": "vo:heb.heb_a_w_chatula"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:ball"
+      "sprite": "asset:cat"
     }
   },
   "say": {
     "forms": [
-      "כַּדּוּר"
+      "חֲתוּלָה"
     ],
     "foils": [
-      "שִׂיחַ",
-      "קֶמַח"
+      "חָתוּל",
+      "עֲגָלָה"
     ],
-    "clip": "vo:heb.heb_a_w_kadur",
+    "clip": "vo:heb.heb_a_w_chatula",
     "heard": {
       "vo": "vo:heb.heard",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:heb.heb_a_w_kadur"
+      "target": "vo:heb.heb_a_w_chatula"
     },
     "together": {
       "vo": "vo:heb.say_together",
@@ -116,7 +116,7 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:heb.heb_a_w_kadur"
+      "target": "vo:heb.heb_a_w_chatula"
     }
   },
   "answer": {

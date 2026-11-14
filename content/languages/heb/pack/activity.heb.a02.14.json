@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_2",
+      "vo": "vo:heb.ok_1",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן, זֶהוּ זֶה!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:heb.heb_a_w_keara"
@@ -68,17 +68,6 @@
           {
             "t": "he",
             "v": "זֶה דּוֹמֶה. בּוֹאוּ נִשְׁמַע שׁוּב."
-          }
-        ],
-        "target": "vo:heb.heb_a_w_keara"
-      },
-      {
-        "when": "misconception:heb.ol.soundalike",
-        "vo": "vo:heb.fb_soundalike",
-        "caption": [
-          {
-            "t": "he",
-            "v": "שִׁמְעוּ עַד הַסּוֹף."
           }
         ],
         "target": "vo:heb.heb_a_w_keara"
@@ -159,9 +148,9 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:cave",
+        "sprite": "asset:plate",
         "label": "תְּמוּנָה",
-        "misconception": "heb.ol.soundalike"
+        "misconception": "heb.ol.sem"
       }
     ],
     "correct": "o1",

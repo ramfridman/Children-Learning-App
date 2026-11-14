@@ -6,6 +6,84 @@
   },
   "items": [
     {
+      "id": "l1",
+      "kind": "story",
+      "mode": "listen",
+      "frame": "s1-title",
+      "rep": "story",
+      "pages": [
+        {
+          "picture": "s1-p1",
+          "clips": [
+            "heb-a-s1-p1"
+          ]
+        },
+        {
+          "picture": "s1-p2",
+          "clips": [
+            "heb-a-s1-p2"
+          ]
+        },
+        {
+          "picture": "s1-p3",
+          "clips": [
+            "heb-a-s1-p3"
+          ]
+        },
+        {
+          "picture": "s1-p4",
+          "clips": [
+            "heb-a-s1-p4"
+          ]
+        },
+        {
+          "picture": "s1-p5",
+          "clips": [
+            "heb-a-s1-p5"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l2",
+      "kind": "story",
+      "mode": "listen",
+      "frame": "s2-title",
+      "rep": "story",
+      "pages": [
+        {
+          "picture": "s2-p1",
+          "clips": [
+            "heb-a-s2-p1"
+          ]
+        },
+        {
+          "picture": "s2-p2",
+          "clips": [
+            "heb-a-s2-p2"
+          ]
+        },
+        {
+          "picture": "s2-p3",
+          "clips": [
+            "heb-a-s2-p3"
+          ]
+        },
+        {
+          "picture": "s2-p4",
+          "clips": [
+            "heb-a-s2-p4"
+          ]
+        },
+        {
+          "picture": "s2-p5",
+          "clips": [
+            "heb-a-s2-p5"
+          ]
+        }
+      ]
+    },
+    {
       "id": "01",
       "kind": "story",
       "mode": "dialogic",
@@ -47,9 +125,18 @@
       "question": "s1-q2",
       "recast": "heb-a-s1-r2",
       "options": [
-        "cat",
-        "rabbit",
-        "dog"
+        {
+          "pic": "cat",
+          "clip": "heb-a-w-chatula"
+        },
+        {
+          "pic": "rabbit",
+          "clip": "heb-a-w-arnav"
+        },
+        {
+          "pic": "dog",
+          "clip": "heb-a-w-kelev"
+        }
       ],
       "wrong": {
         "rabbit": "story_role",
@@ -99,9 +186,18 @@
       "question": "s1-q1",
       "recast": "heb-a-s1-r1",
       "options": [
-        "bush",
-        "tree",
-        "window"
+        {
+          "pic": "bush",
+          "clip": "heb-a-w-siach"
+        },
+        {
+          "pic": "tree",
+          "clip": "heb-a-w-ets"
+        },
+        {
+          "pic": "window",
+          "clip": "heb-a-w-chalon"
+        }
       ],
       "wrong": {
         "tree": "story_seen",
@@ -151,9 +247,18 @@
       "question": "s2-q1",
       "recast": "heb-a-s2-r1",
       "options": [
-        "egg",
-        "spoon",
-        "apple"
+        {
+          "pic": "egg",
+          "clip": "heb-a-w-beitsa"
+        },
+        {
+          "pic": "spoon",
+          "clip": "heb-a-w-kaf"
+        },
+        {
+          "pic": "apple",
+          "clip": "heb-a-w-tapuach"
+        }
       ],
       "wrong": {
         "spoon": "story_seen",
@@ -203,9 +308,18 @@
       "question": "s2-q2",
       "recast": "heb-a-s2-r2",
       "options": [
-        "oven",
-        "bowl",
-        "fridge"
+        {
+          "pic": "oven",
+          "clip": "heb-a-w-tanur"
+        },
+        {
+          "pic": "bowl",
+          "clip": "heb-a-w-keara"
+        },
+        {
+          "pic": "fridge",
+          "clip": "heb-a-w-mekarer"
+        }
       ],
       "wrong": {
         "bowl": "story_seen",
@@ -307,9 +421,18 @@
       "question": "s3-q2",
       "recast": "heb-a-s3-r2",
       "options": [
-        "fish",
-        "tortoise",
-        "bird"
+        {
+          "pic": "fish",
+          "clip": "heb-a-w-dag"
+        },
+        {
+          "pic": "tortoise",
+          "clip": "heb-a-w-tsav"
+        },
+        {
+          "pic": "bird",
+          "clip": "heb-a-w-tsipor"
+        }
       ],
       "wrong": {
         "tortoise": "story_role",
@@ -360,9 +483,18 @@
       "question": "s3-q1",
       "recast": "heb-a-s3-r1",
       "options": [
-        "hat",
-        "boat",
-        "kite"
+        {
+          "pic": "hat",
+          "clip": "heb-a-w-kova"
+        },
+        {
+          "pic": "boat",
+          "clip": "heb-a-w-sira"
+        },
+        {
+          "pic": "kite",
+          "clip": "heb-a-w-afifon"
+        }
       ],
       "wrong": {
         "boat": "story_seen",
@@ -376,19 +508,37 @@
     {
       "id": "story-1",
       "title": "הַכַּדּוּר שֶׁל הָאַרְנָב",
-      "items": [
+      "sequence": 20,
+      "recall": [
+        "a02.r-siach",
+        "a02.r-boet"
+      ],
+      "find": [
         "02",
         "01",
         "05"
+      ],
+      "use": [
+        "a02.say-boet",
+        "a02.say-mechapeset",
+        "a02.ch-s1"
       ]
     },
     {
       "id": "story-2",
       "title": "נִיצִי אוֹפָה עוּגָה",
-      "items": [
+      "sequence": 60,
+      "recall": [
+        "a02.r-meurbevet"
+      ],
+      "find": [
         "03",
         "04",
         "06"
+      ],
+      "use": [
+        "a02.say-meurbevet",
+        "a02.ch-s2"
       ]
     }
   ]

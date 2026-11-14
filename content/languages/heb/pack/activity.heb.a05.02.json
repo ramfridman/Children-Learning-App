@@ -51,47 +51,26 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_5",
+      "vo": "vo:heb.ok_4",
       "caption": [
         {
           "t": "he",
-          "v": "מְצָאתֶם!"
+          "v": "הִקְשַׁבְתֶּם עַד הַסּוֹף!"
         }
       ],
       "target": "vo:heb.heb_a_w_kadurim"
     },
     "incorrect": [
       {
-        "when": "misconception:heb.ol.plural",
-        "vo": "vo:heb.d_plural",
-        "caption": [
-          {
-            "t": "he",
-            "v": "שִׁמְעוּ אֶת הַסּוֹף:"
-          }
-        ],
-        "target": "vo:heb.heb_a_w_kadurim"
-      },
-      {
-        "when": "misconception:heb.ol.sem",
-        "vo": "vo:heb.fb_sem",
-        "caption": [
-          {
-            "t": "he",
-            "v": "זֶה דּוֹמֶה. בּוֹאוּ נִשְׁמַע שׁוּב."
-          }
-        ],
-        "target": "vo:heb.heb_a_w_kadurim"
-      },
-      {
         "when": "default",
-        "vo": "vo:heb.try_1",
+        "vo": "vo:heb.fb_where",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:heb.heb_a_w_kadurim"
       }
     ],
     "unsure": {
@@ -149,23 +128,27 @@
       {
         "id": "o1",
         "sprite": "asset:set_balls_4",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_kadurim"
       },
       {
         "id": "o2",
         "sprite": "asset:ball",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_kadur",
         "misconception": "heb.ol.plural"
       },
       {
         "id": "o3",
         "sprite": "asset:set_dolls",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_bubot",
         "misconception": "heb.ol.sem"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true
+    "unsureAllowed": true,
+    "askWhere": true
   }
 }

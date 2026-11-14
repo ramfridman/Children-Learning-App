@@ -51,47 +51,26 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_7",
+      "vo": "vo:heb.ok_6",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "יוֹפִי שֶׁל הַקְשָׁבָה!"
         }
       ],
       "target": "vo:heb.heb_a_w_ugot"
     },
     "incorrect": [
       {
-        "when": "misconception:heb.ol.plural",
-        "vo": "vo:heb.d_plural",
-        "caption": [
-          {
-            "t": "he",
-            "v": "שִׁמְעוּ אֶת הַסּוֹף:"
-          }
-        ],
-        "target": "vo:heb.heb_a_w_ugot"
-      },
-      {
-        "when": "misconception:heb.ol.sem",
-        "vo": "vo:heb.fb_sem",
-        "caption": [
-          {
-            "t": "he",
-            "v": "זֶה דּוֹמֶה. בּוֹאוּ נִשְׁמַע שׁוּב."
-          }
-        ],
-        "target": "vo:heb.heb_a_w_ugot"
-      },
-      {
         "when": "default",
-        "vo": "vo:heb.try_1",
+        "vo": "vo:heb.fb_where",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:heb.heb_a_w_ugot"
       }
     ],
     "unsure": {
@@ -149,23 +128,27 @@
       {
         "id": "o1",
         "sprite": "asset:set_cakes",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_ugot"
       },
       {
         "id": "o2",
         "sprite": "asset:cake",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_uga",
         "misconception": "heb.ol.plural"
       },
       {
         "id": "o3",
         "sprite": "asset:set_pizzas",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_pitsot",
         "misconception": "heb.ol.sem"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true
+    "unsureAllowed": true,
+    "askWhere": true
   }
 }

@@ -15,9 +15,18 @@
       "kind": "tap",
       "target": "heb-a-u-buba",
       "options": [
-        "doll",
-        "soap-bubble",
-        "fam-grandfather"
+        {
+          "pic": "doll",
+          "clip": "heb-a-w-buba"
+        },
+        {
+          "pic": "soap-bubble",
+          "clip": "heb-a-w-bua"
+        },
+        {
+          "pic": "fam-grandfather",
+          "clip": "heb-a-w-saba"
+        }
       ],
       "wrong": {
         "soap-bubble": "blend_first",
@@ -31,9 +40,18 @@
       "kind": "tap",
       "target": "heb-a-u-pitsa",
       "options": [
-        "pizza",
-        "elephant",
-        "egg"
+        {
+          "pic": "pizza",
+          "clip": "heb-a-w-pitsa"
+        },
+        {
+          "pic": "elephant",
+          "clip": "heb-a-w-pil"
+        },
+        {
+          "pic": "egg",
+          "clip": "heb-a-w-beitsa"
+        }
       ],
       "wrong": {
         "elephant": "blend_first",
@@ -47,13 +65,22 @@
       "kind": "tap",
       "target": "heb-a-u-sira",
       "options": [
-        "boat",
-        "pot",
-        "teacher-sing"
+        {
+          "pic": "boat",
+          "clip": "heb-a-w-sira"
+        },
+        {
+          "pic": "pot",
+          "clip": "heb-a-w-sir"
+        },
+        {
+          "pic": "bowl",
+          "clip": "heb-a-w-keara"
+        }
       ],
       "wrong": {
         "pot": "blend_first",
-        "teacher-sing": "blend_last"
+        "bowl": "blend_last"
       },
       "frame": "i-blend",
       "ladder": "HL-BLEND"
@@ -63,9 +90,18 @@
       "kind": "tap",
       "target": "heb-a-u-aba",
       "options": [
-        "fam-father",
-        "teddy-nose",
-        "fam-grandfather"
+        {
+          "pic": "fam-father",
+          "clip": "heb-a-w-aba"
+        },
+        {
+          "pic": "teddy-nose",
+          "clip": "heb-a-w-af"
+        },
+        {
+          "pic": "fam-grandfather",
+          "clip": "heb-a-w-saba"
+        }
       ],
       "wrong": {
         "teddy-nose": "blend_first",
@@ -79,9 +115,18 @@
       "kind": "tap",
       "target": "heb-a-u-banana",
       "options": [
-        "banana",
-        "house",
-        "present"
+        {
+          "pic": "banana",
+          "clip": "heb-a-w-banana"
+        },
+        {
+          "pic": "house",
+          "clip": "heb-a-w-bayit"
+        },
+        {
+          "pic": "present",
+          "clip": "heb-a-w-matana"
+        }
       ],
       "wrong": {
         "house": "blend_first",
@@ -95,9 +140,18 @@
       "kind": "tap",
       "target": "heb-a-u-matana",
       "options": [
-        "present",
-        "plane",
-        "banana"
+        {
+          "pic": "present",
+          "clip": "heb-a-w-matana"
+        },
+        {
+          "pic": "plane",
+          "clip": "heb-a-w-matos"
+        },
+        {
+          "pic": "banana",
+          "clip": "heb-a-w-banana"
+        }
       ],
       "wrong": {
         "plane": "blend_first",
@@ -111,9 +165,18 @@
       "kind": "tap",
       "target": "heb-a-u-chatula",
       "options": [
-        "cat",
-        "milk",
-        "pram"
+        {
+          "pic": "cat",
+          "clip": "heb-a-w-chatula"
+        },
+        {
+          "pic": "milk",
+          "clip": "heb-a-w-chalav"
+        },
+        {
+          "pic": "pram",
+          "clip": "heb-a-w-agala"
+        }
       ],
       "wrong": {
         "milk": "blend_first",
@@ -127,9 +190,18 @@
       "kind": "tap",
       "target": "heb-a-u-agala",
       "options": [
-        "pram",
-        "clouds",
-        "cat"
+        {
+          "pic": "pram",
+          "clip": "heb-a-w-agala"
+        },
+        {
+          "pic": "clouds",
+          "clip": "heb-a-w-ananim"
+        },
+        {
+          "pic": "cat",
+          "clip": "heb-a-w-chatula"
+        }
       ],
       "wrong": {
         "clouds": "blend_first",
@@ -143,9 +215,18 @@
       "kind": "tap",
       "target": "heb-a-u-atalef",
       "options": [
-        "bat",
-        "clouds",
-        "bird"
+        {
+          "pic": "bat",
+          "clip": "heb-a-w-atalef"
+        },
+        {
+          "pic": "clouds",
+          "clip": "heb-a-w-ananim"
+        },
+        {
+          "pic": "bird",
+          "clip": "heb-a-w-tsipor"
+        }
       ],
       "wrong": {
         "clouds": "blend_first",
@@ -161,9 +242,18 @@
       "kind": "tap",
       "target": "heb-a-u-onia",
       "options": [
-        "ship",
-        "tent",
-        "umbrella"
+        {
+          "pic": "ship",
+          "clip": "heb-a-w-onia"
+        },
+        {
+          "pic": "tent",
+          "clip": "heb-a-w-ohel"
+        },
+        {
+          "pic": "umbrella",
+          "clip": "heb-a-w-mitriya"
+        }
       ],
       "wrong": {
         "tent": "blend_first",
@@ -172,27 +262,119 @@
       "frame": "i-blend",
       "ladder": "HL-BLEND",
       "purpose": "probe"
+    },
+    {
+      "id": "ch-b1",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "i-blend",
+      "lines": [
+        "heb-a-u-dubi",
+        "heb-a-w-dubi"
+      ],
+      "pictures": [
+        {
+          "pic": "teddy",
+          "clip": "heb-a-w-dubi"
+        }
+      ]
+    },
+    {
+      "id": "ch-b2",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-u-uga",
+        "heb-a-w-uga"
+      ],
+      "pictures": [
+        {
+          "pic": "cake",
+          "clip": "heb-a-w-uga"
+        }
+      ]
+    },
+    {
+      "id": "ch-b3",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "i-blend",
+      "lines": [
+        "heb-a-u-banana",
+        "heb-a-w-banana"
+      ],
+      "pictures": [
+        {
+          "pic": "banana",
+          "clip": "heb-a-w-banana"
+        }
+      ]
+    },
+    {
+      "id": "u-b2",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-u-matana",
+        "heb-a-w-matana",
+        "heb-a-u-agala",
+        "heb-a-w-agala"
+      ],
+      "pictures": [
+        {
+          "pic": "present",
+          "clip": "heb-a-w-matana"
+        },
+        {
+          "pic": "pram",
+          "clip": "heb-a-w-agala"
+        }
+      ]
+    },
+    {
+      "id": "say-b2",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "cat",
+      "clip": "heb-a-w-chatula",
+      "foils": [
+        "חָתוּל",
+        "עֲגָלָה"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
     }
   ],
   "lessons": [
     {
       "id": "blend-1",
       "title": "מָה אָמַר הַתֻּכִּי?",
+      "sequence": 170,
       "items": [
+        "ch-b1",
         "01",
         "02",
         "03",
-        "04"
+        "04",
+        "ch-b2"
       ]
     },
     {
       "id": "blend-2",
       "title": "עוֹד מִלִּים שֶׁל הַתֻּכִּי",
+      "sequence": 180,
       "items": [
+        "ch-b3",
         "05",
         "06",
         "07",
-        "08"
+        "08",
+        "u-b2",
+        "say-b2"
       ]
     }
   ]

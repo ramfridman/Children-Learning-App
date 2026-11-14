@@ -149,18 +149,21 @@
       {
         "id": "o1",
         "sprite": "asset:ball_yellow",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_kadur"
       },
       {
         "id": "o2",
         "sprite": "asset:dog",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_kelev",
         "misconception": "heb.ol.cat_look"
       },
       {
         "id": "o3",
         "sprite": "asset:chick",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_efroach",
         "misconception": "heb.ol.cat_theme"
       }
     ],

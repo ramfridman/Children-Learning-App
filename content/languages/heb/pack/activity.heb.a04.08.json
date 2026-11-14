@@ -51,47 +51,26 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_8",
+      "vo": "vo:heb.ok_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "בְּדִיּוּק!"
         }
       ],
       "target": "vo:heb.heb_a_pl_8"
     },
     "incorrect": [
       {
-        "when": "misconception:heb.ol.role_swap",
-        "vo": "vo:heb.fb_role_swap",
-        "caption": [
-          {
-            "t": "he",
-            "v": "עַל מַה מְדַבְּרִים?"
-          }
-        ],
-        "target": "vo:heb.heb_a_pl_8"
-      },
-      {
-        "when": "misconception:heb.ol.prep",
-        "vo": "vo:heb.fb_prep",
-        "caption": [
-          {
-            "t": "he",
-            "v": "שִׁמְעוּ אֵיפֹה:"
-          }
-        ],
-        "target": "vo:heb.heb_a_pl_8"
-      },
-      {
         "when": "default",
-        "vo": "vo:heb.try_1",
+        "vo": "vo:heb.fb_where",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:heb.heb_a_pl_8"
       }
     ],
     "unsure": {
@@ -150,23 +129,27 @@
       {
         "id": "o1",
         "sprite": "asset:place_bird_on_boat",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_pl_8"
       },
       {
         "id": "o2",
         "sprite": "asset:place_boat_on_bird",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_pl_8b",
         "misconception": "heb.ol.role_swap"
       },
       {
         "id": "o3",
         "sprite": "asset:place_bird_in_boat",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_pl_8c",
         "misconception": "heb.ol.prep"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true
+    "unsureAllowed": true,
+    "askWhere": true
   }
 }

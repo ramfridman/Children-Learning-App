@@ -10,9 +10,18 @@
       "kind": "tap",
       "target": "heb-a-w-buba",
       "options": [
-        "drum-strip-2",
-        "drum-strip-1",
-        "drum-strip-3"
+        {
+          "pic": "drum-strip-2",
+          "clip": "heb-a-drums-2"
+        },
+        {
+          "pic": "drum-strip-1",
+          "clip": "heb-a-drums-1"
+        },
+        {
+          "pic": "drum-strip-3",
+          "clip": "heb-a-drums-3"
+        }
       ],
       "wrong": {
         "drum-strip-1": "syll",
@@ -26,9 +35,18 @@
       "kind": "tap",
       "target": "heb-a-w-kos",
       "options": [
-        "drum-strip-1",
-        "drum-strip-2",
-        "drum-strip-3"
+        {
+          "pic": "drum-strip-1",
+          "clip": "heb-a-drums-1"
+        },
+        {
+          "pic": "drum-strip-2",
+          "clip": "heb-a-drums-2"
+        },
+        {
+          "pic": "drum-strip-3",
+          "clip": "heb-a-drums-3"
+        }
       ],
       "wrong": {
         "drum-strip-2": "syll",
@@ -42,9 +60,18 @@
       "kind": "tap",
       "target": "heb-a-w-chatula",
       "options": [
-        "drum-strip-3",
-        "drum-strip-2",
-        "drum-strip-4"
+        {
+          "pic": "drum-strip-3",
+          "clip": "heb-a-drums-3"
+        },
+        {
+          "pic": "drum-strip-2",
+          "clip": "heb-a-drums-2"
+        },
+        {
+          "pic": "drum-strip-4",
+          "clip": "heb-a-drums-4"
+        }
       ],
       "wrong": {
         "drum-strip-2": "syll",
@@ -58,9 +85,18 @@
       "kind": "tap",
       "target": "heb-a-w-sira",
       "options": [
-        "drum-strip-2",
-        "drum-strip-1",
-        "drum-strip-3"
+        {
+          "pic": "drum-strip-2",
+          "clip": "heb-a-drums-2"
+        },
+        {
+          "pic": "drum-strip-1",
+          "clip": "heb-a-drums-1"
+        },
+        {
+          "pic": "drum-strip-3",
+          "clip": "heb-a-drums-3"
+        }
       ],
       "wrong": {
         "drum-strip-1": "syll",
@@ -74,9 +110,18 @@
       "kind": "tap",
       "target": "heb-a-w-onia",
       "options": [
-        "drum-strip-3",
-        "drum-strip-2",
-        "drum-strip-4"
+        {
+          "pic": "drum-strip-3",
+          "clip": "heb-a-drums-3"
+        },
+        {
+          "pic": "drum-strip-2",
+          "clip": "heb-a-drums-2"
+        },
+        {
+          "pic": "drum-strip-4",
+          "clip": "heb-a-drums-4"
+        }
       ],
       "wrong": {
         "drum-strip-2": "syll",
@@ -92,9 +137,18 @@
       "kind": "tap",
       "target": "heb-a-w-uga",
       "options": [
-        "drum-strip-2",
-        "drum-strip-1",
-        "drum-strip-3"
+        {
+          "pic": "drum-strip-2",
+          "clip": "heb-a-drums-2"
+        },
+        {
+          "pic": "drum-strip-1",
+          "clip": "heb-a-drums-1"
+        },
+        {
+          "pic": "drum-strip-3",
+          "clip": "heb-a-drums-3"
+        }
       ],
       "wrong": {
         "drum-strip-1": "syll",
@@ -109,9 +163,18 @@
       "kind": "tap",
       "target": "heb-a-w-banana",
       "options": [
-        "drum-strip-3",
-        "drum-strip-2",
-        "drum-strip-4"
+        {
+          "pic": "drum-strip-3",
+          "clip": "heb-a-drums-3"
+        },
+        {
+          "pic": "drum-strip-2",
+          "clip": "heb-a-drums-2"
+        },
+        {
+          "pic": "drum-strip-4",
+          "clip": "heb-a-drums-4"
+        }
       ],
       "wrong": {
         "drum-strip-2": "syll",
@@ -211,35 +274,123 @@
       "oneMore": "syll",
       "oneFewer": "syll",
       "ladder": "HL-SYLL"
+    },
+    {
+      "id": "ch-d1",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-u-dubi",
+        "heb-a-w-dubi"
+      ],
+      "pictures": [
+        {
+          "pic": "teddy",
+          "clip": "heb-a-w-dubi"
+        }
+      ]
+    },
+    {
+      "id": "em-d1",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "i-drum",
+      "picture": "cat",
+      "clips": [
+        "heb-a-u-chatula"
+      ]
+    },
+    {
+      "id": "ch-d2",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-u-uga",
+        "heb-a-w-uga"
+      ],
+      "pictures": [
+        {
+          "pic": "cake",
+          "clip": "heb-a-w-uga"
+        }
+      ]
+    },
+    {
+      "id": "em-d2",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "i-drum",
+      "picture": "pram",
+      "clips": [
+        "heb-a-u-agala"
+      ]
+    },
+    {
+      "id": "ch-d3",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-u-pitsa",
+        "heb-a-w-pitsa"
+      ],
+      "pictures": [
+        {
+          "pic": "pizza",
+          "clip": "heb-a-w-pitsa"
+        }
+      ]
+    },
+    {
+      "id": "em-d3",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "i-drum",
+      "picture": "fam-father",
+      "clips": [
+        "heb-a-u-aba"
+      ]
     }
   ],
   "lessons": [
     {
-      "id": "beats-1",
-      "title": "כַּמָּה תֻּפִּים?",
-      "items": [
-        "08",
-        "07",
-        "10",
-        "09"
-      ]
-    },
-    {
       "id": "drum-1",
       "title": "תּוֹפְפִים מִלִּים",
+      "sequence": 120,
       "items": [
+        "ch-d1",
         "01",
         "02",
-        "03"
+        "03",
+        "em-d1"
       ]
     },
     {
       "id": "drum-2",
       "title": "עוֹד תּוֹפְפִים",
+      "sequence": 140,
       "items": [
+        "ch-d2",
         "04",
         "05",
-        "06"
+        "06",
+        "11",
+        "em-d2"
+      ]
+    },
+    {
+      "id": "beats-1",
+      "title": "כַּמָּה תֻּפִּים?",
+      "sequence": 160,
+      "items": [
+        "ch-d3",
+        "08",
+        "07",
+        "10",
+        "09",
+        "em-d3"
       ]
     }
   ]

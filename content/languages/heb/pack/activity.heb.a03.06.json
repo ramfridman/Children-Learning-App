@@ -149,18 +149,21 @@
       {
         "id": "o1",
         "sprite": "asset:towel_striped",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_magevet"
       },
       {
         "id": "o2",
         "sprite": "asset:swimsuit",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_beged_yam",
         "misconception": "heb.ol.cat_look"
       },
       {
         "id": "o3",
         "sprite": "asset:shirt_striped",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_chultsa",
         "misconception": "heb.ol.cat_theme"
       }
     ],

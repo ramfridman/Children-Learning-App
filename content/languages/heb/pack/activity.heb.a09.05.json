@@ -51,47 +51,26 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_7",
+      "vo": "vo:heb.ok_5",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "מְצָאתֶם!"
         }
       ],
       "target": "vo:heb.heb_a_u_banana"
     },
     "incorrect": [
       {
-        "when": "misconception:heb.pa.blend_first",
-        "vo": "vo:heb.fb_soundalike",
-        "caption": [
-          {
-            "t": "he",
-            "v": "שִׁמְעוּ עַד הַסּוֹף."
-          }
-        ],
-        "target": "vo:heb.heb_a_u_banana"
-      },
-      {
-        "when": "misconception:heb.pa.blend_last",
-        "vo": "vo:heb.fb_blend_last",
-        "caption": [
-          {
-            "t": "he",
-            "v": "שִׁמְעוּ מֵהַהַתְחָלָה."
-          }
-        ],
-        "target": "vo:heb.heb_a_u_banana"
-      },
-      {
         "when": "default",
-        "vo": "vo:heb.try_1",
+        "vo": "vo:heb.fb_where",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:heb.heb_a_u_banana"
       }
     ],
     "unsure": {
@@ -150,23 +129,27 @@
       {
         "id": "o1",
         "sprite": "asset:banana",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_banana"
       },
       {
         "id": "o2",
         "sprite": "asset:house",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_bayit",
         "misconception": "heb.pa.blend_first"
       },
       {
         "id": "o3",
         "sprite": "asset:present",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_matana",
         "misconception": "heb.pa.blend_last"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true
+    "unsureAllowed": true,
+    "askWhere": true
   }
 }

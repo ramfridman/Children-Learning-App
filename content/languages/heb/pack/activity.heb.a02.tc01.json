@@ -1,0 +1,157 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a02.tc01",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "say_it",
+  "templateVersion": "1.0",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "embodied",
+  "variantGroup": "a02-tc01",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 1,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "say the word with the voice",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנָה וּמִלָּה לוֹמַר"
+  },
+  "prompt": {
+    "vo": "vo:heb.say_together",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נֹאמַר יַחַד."
+      }
+    ],
+    "target": "vo:heb.heb_a_w_siach",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן, זֶהוּ זֶה!"
+        }
+      ],
+      "target": "vo:heb.heb_a_w_siach"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_siach"
+    }
+  },
+  "hints": [],
+  "scene": {
+    "picture": {
+      "sprite": "asset:s1_p3"
+    }
+  },
+  "say": {
+    "forms": [
+      "שִׂיחַ"
+    ],
+    "foils": [
+      "בּוֹעֵט",
+      "מְחַפֶּשֶׂת"
+    ],
+    "clip": "vo:heb.heb_a_w_siach",
+    "heard": {
+      "vo": "vo:heb.heard",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שָׁמַעְתִּי:"
+        }
+      ],
+      "target": "vo:heb.heb_a_w_siach"
+    },
+    "together": {
+      "vo": "vo:heb.say_together",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נֹאמַר יַחַד."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_siach"
+    },
+    "meet": {
+      "position": 0,
+      "size": 3,
+      "hear": {
+        "vo": "vo:heb.meet_new",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מִלָּה חֲדָשָׁה:"
+          }
+        ],
+        "target": "vo:heb.heb_a_w_siach"
+      },
+      "explain": {
+        "vo": "vo:heb.m_siach",
+        "caption": [
+          {
+            "t": "he",
+            "v": "שִׂיחַ הוּא כְּמוֹ עֵץ קָטָן וְנָמוּךְ, עִם הַרְבֵּה עָלִים."
+          }
+        ]
+      },
+      "focus": [
+        0.66,
+        0.46,
+        0.34,
+        0.4
+      ],
+      "written": "שִׂיחַ"
+    }
+  },
+  "answer": {
+    "type": "say_it",
+    "scored": false,
+    "teach": true
+  }
+}

@@ -149,18 +149,21 @@
       {
         "id": "o1",
         "sprite": "asset:kite_butterfly",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_afifon"
       },
       {
         "id": "o2",
         "sprite": "asset:horse",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_sus",
         "misconception": "heb.ol.cat_look"
       },
       {
         "id": "o3",
         "sprite": "asset:butterfly",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_parpar",
         "misconception": "heb.ol.cat_atypical"
       }
     ],

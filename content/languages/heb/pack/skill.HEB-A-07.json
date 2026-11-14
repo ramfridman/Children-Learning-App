@@ -19,7 +19,10 @@
     }
   ],
   "representations": [
-    "pictorial"
+    "concrete",
+    "pictorial",
+    "story",
+    "embodied"
   ],
   "misconceptions": [
     "heb.pa.allit",

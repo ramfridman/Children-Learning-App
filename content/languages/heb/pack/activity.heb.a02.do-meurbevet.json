@@ -1,0 +1,92 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a02.do-meurbevet",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "listen_do",
+  "templateVersion": "1.0",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "embodied",
+  "variantGroup": "a02-do-meurbevet",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "do it yourself",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנָה וְחָבֵר שֶׁעוֹשֶׂה מַה שֶּׁאוֹמְרִים"
+  },
+  "prompt": {
+    "vo": "vo:heb.do_like",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נַעֲשֶׂה כְּמוֹ בַּתְּמוּנָה:"
+      }
+    ],
+    "target": "vo:heb.heb_a_w_meurbevet",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_4",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִקְשַׁבְתֶּם עַד הַסּוֹף!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scene": {
+    "picture": "asset:act_he_stir_nitzi_b"
+  },
+  "answer": {
+    "type": "none",
+    "mode": "embodied"
+  }
+}

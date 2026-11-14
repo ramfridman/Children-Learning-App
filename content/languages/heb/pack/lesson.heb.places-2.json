@@ -15,8 +15,9 @@
     "HEB-A-04"
   ],
   "items": [
-    "heb.a04.01",
-    "heb.a04.02",
+    "heb.a04.say-p5",
+    "heb.a04.06",
+    "heb.a04.08",
     "heb.a04.03",
     "heb.a04.04"
   ],
@@ -30,5 +31,5 @@
       }
     ]
   },
-  "sequence": 11
+  "sequence": 110
 }

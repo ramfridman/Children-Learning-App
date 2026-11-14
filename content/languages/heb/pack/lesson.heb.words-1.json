@@ -8,17 +8,24 @@
   "title": [
     {
       "t": "he",
-      "v": "מִלִּים מֵהַסִּפּוּר"
+      "v": "הַכַּדּוּר שֶׁל הָאַרְנָב: מִלִּים חֲדָשׁוֹת"
     }
   ],
   "skills": [
+    "HEB-A-01",
     "HEB-A-02"
   ],
   "items": [
+    "heb.a01.l1",
+    "heb.a02.f-siach",
+    "heb.a02.f-boet",
+    "heb.a02.f-mechapeset",
     "heb.a02.01",
-    "heb.a02.02",
-    "heb.a02.03",
-    "heb.a02.04"
+    "heb.a02.09",
+    "heb.a02.10",
+    "heb.a02.say-siach",
+    "heb.a02.do-boet",
+    "heb.a02.do-mechapeset"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +37,19 @@
       }
     ]
   },
-  "sequence": 1
+  "sequence": 10,
+  "teach": [
+    {
+      "items": [
+        "heb.a02.tc01",
+        "heb.a02.tc02",
+        "heb.a02.tc03"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "heb.a02.f-siach"
+    }
+  ]
 }

@@ -1,0 +1,162 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a02.tc07",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "say_it",
+  "templateVersion": "1.0",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "embodied",
+  "variantGroup": "a02-tc07",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 1,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "say the word with the voice",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנָה וּמִלָּה לוֹמַר"
+  },
+  "prompt": {
+    "vo": "vo:heb.say_together",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נֹאמַר יַחַד."
+      }
+    ],
+    "target": "vo:heb.heb_a_w_tanur",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן, זֶהוּ זֶה!"
+        }
+      ],
+      "target": "vo:heb.heb_a_w_tanur"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_tanur"
+    }
+  },
+  "hints": [],
+  "scene": {
+    "picture": {
+      "sprite": "asset:s2_p4"
+    }
+  },
+  "say": {
+    "forms": [
+      "תַּנּוּר"
+    ],
+    "foils": [
+      "מְעַרְבֶּבֶת"
+    ],
+    "clip": "vo:heb.heb_a_w_tanur",
+    "heard": {
+      "vo": "vo:heb.heard",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שָׁמַעְתִּי:"
+        }
+      ],
+      "target": "vo:heb.heb_a_w_tanur"
+    },
+    "together": {
+      "vo": "vo:heb.say_together",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נֹאמַר יַחַד."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_tanur"
+    },
+    "meet": {
+      "position": 1,
+      "size": 2,
+      "earlier": [
+        {
+          "sprite": "asset:s2_p3",
+          "clip": "vo:heb.heb_a_w_meurbevet"
+        }
+      ],
+      "hear": {
+        "vo": "vo:heb.meet_new",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מִלָּה חֲדָשָׁה:"
+          }
+        ],
+        "target": "vo:heb.heb_a_w_tanur"
+      },
+      "explain": {
+        "vo": "vo:heb.m_tanur",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בַּתַּנּוּר חַם מְאֹד. בּוֹ אוֹפִים עוּגוֹת."
+          }
+        ]
+      },
+      "focus": [
+        0.48,
+        0.22,
+        0.34,
+        0.54
+      ],
+      "written": "תַּנּוּר"
+    }
+  },
+  "answer": {
+    "type": "say_it",
+    "scored": false,
+    "teach": true
+  }
+}

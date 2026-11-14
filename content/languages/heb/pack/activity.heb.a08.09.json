@@ -51,36 +51,26 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_1",
+      "vo": "vo:heb.ok_2",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "כֵּן, זֶהוּ זֶה!"
         }
       ],
       "target": "vo:heb.heb_a_w_chatula"
     },
     "incorrect": [
       {
-        "when": "misconception:heb.pa.syll",
-        "vo": "vo:heb.fb_syll",
+        "when": "default",
+        "vo": "vo:heb.fb_where",
         "caption": [
           {
             "t": "he",
-            "v": "בּוֹאוּ נִסְפֹּר לְאַט."
+            "v": "וְאֵיפֹה"
           }
         ],
         "target": "vo:heb.heb_a_w_chatula"
-      },
-      {
-        "when": "default",
-        "vo": "vo:heb.try_1",
-        "caption": [
-          {
-            "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
-          }
-        ]
       }
     ],
     "unsure": {
@@ -139,23 +129,27 @@
       {
         "id": "o1",
         "sprite": "asset:drum_strip_3",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_drums_3"
       },
       {
         "id": "o2",
         "sprite": "asset:drum_strip_2",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_drums_2",
         "misconception": "heb.pa.syll"
       },
       {
         "id": "o3",
         "sprite": "asset:drum_strip_4",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_drums_4",
         "misconception": "heb.pa.syll"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true
+    "unsureAllowed": true,
+    "askWhere": true
   }
 }

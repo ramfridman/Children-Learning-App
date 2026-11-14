@@ -10,9 +10,18 @@
       "kind": "tap",
       "target": "heb-a-pl-5",
       "options": [
-        "place-ball-on-box",
-        "place-box-on-ball",
-        "place-ball-in-box"
+        {
+          "pic": "place-ball-on-box",
+          "clip": "heb-a-pl-5"
+        },
+        {
+          "pic": "place-box-on-ball",
+          "clip": "heb-a-pl-5b"
+        },
+        {
+          "pic": "place-ball-in-box",
+          "clip": "heb-a-pl-5c"
+        }
       ],
       "wrong": {
         "place-box-on-ball": "role_swap",
@@ -25,9 +34,18 @@
       "kind": "tap",
       "target": "heb-a-pl-6",
       "options": [
-        "place-cat-in-basket",
-        "place-basket-on-cat",
-        "place-cat-by-basket"
+        {
+          "pic": "place-cat-in-basket",
+          "clip": "heb-a-pl-6"
+        },
+        {
+          "pic": "place-basket-on-cat",
+          "clip": "heb-a-pl-6b"
+        },
+        {
+          "pic": "place-cat-by-basket",
+          "clip": "heb-a-pl-6c"
+        }
       ],
       "wrong": {
         "place-basket-on-cat": "role_swap",
@@ -40,9 +58,18 @@
       "kind": "tap",
       "target": "heb-a-pl-7",
       "options": [
-        "place-dog-under-chair",
-        "place-dog-on-chair",
-        "place-dog-by-chair"
+        {
+          "pic": "place-dog-under-chair",
+          "clip": "heb-a-pl-7"
+        },
+        {
+          "pic": "place-dog-on-chair",
+          "clip": "heb-a-pl-7b"
+        },
+        {
+          "pic": "place-dog-by-chair",
+          "clip": "heb-a-pl-7c"
+        }
       ],
       "wrong": {
         "place-dog-on-chair": "role_swap",
@@ -55,9 +82,18 @@
       "kind": "tap",
       "target": "heb-a-pl-8",
       "options": [
-        "place-bird-on-boat",
-        "place-boat-on-bird",
-        "place-bird-in-boat"
+        {
+          "pic": "place-bird-on-boat",
+          "clip": "heb-a-pl-8"
+        },
+        {
+          "pic": "place-boat-on-bird",
+          "clip": "heb-a-pl-8b"
+        },
+        {
+          "pic": "place-bird-in-boat",
+          "clip": "heb-a-pl-8c"
+        }
       ],
       "wrong": {
         "place-boat-on-bird": "role_swap",
@@ -70,9 +106,18 @@
       "kind": "tap",
       "target": "heb-a-pl-10",
       "options": [
-        "place-apple-in-bowl",
-        "place-bowl-on-apple",
-        "place-apple-by-bowl"
+        {
+          "pic": "place-apple-in-bowl",
+          "clip": "heb-a-pl-10"
+        },
+        {
+          "pic": "place-bowl-on-apple",
+          "clip": "heb-a-pl-10b"
+        },
+        {
+          "pic": "place-apple-by-bowl",
+          "clip": "heb-a-pl-10c"
+        }
       ],
       "wrong": {
         "place-bowl-on-apple": "role_swap",
@@ -186,25 +231,59 @@
         "by": "prep"
       },
       "ladder": "HL-PLACE"
+    },
+    {
+      "id": "say-p6",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "place-cat-in-basket",
+      "clip": "heb-a-pl-6",
+      "foils": [
+        "הַסַּל עַל הֶחָתוּל",
+        "הֶחָתוּל לְיַד הַסַּל"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
+    },
+    {
+      "id": "say-p5",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "place-ball-on-box",
+      "clip": "heb-a-pl-5",
+      "foils": [
+        "הַקֻּפְסָה עַל הַכַּדּוּר",
+        "הַכַּדּוּר בְּתוֹךְ הַקֻּפְסָה"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
     }
   ],
   "lessons": [
     {
       "id": "places-1",
       "title": "אֵיפֹה זֶה?",
+      "sequence": 70,
       "items": [
+        "say-p6",
         "05",
-        "06",
         "07",
-        "08"
+        "01",
+        "02"
       ]
     },
     {
       "id": "places-2",
       "title": "שִׂימוּ בַּמָּקוֹם",
+      "sequence": 110,
       "items": [
-        "01",
-        "02",
+        "say-p5",
+        "06",
+        "08",
         "03",
         "04"
       ]

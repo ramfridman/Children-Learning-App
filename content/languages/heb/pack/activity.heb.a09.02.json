@@ -51,47 +51,26 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_4",
+      "vo": "vo:heb.ok_2",
       "caption": [
         {
           "t": "he",
-          "v": "הִקְשַׁבְתֶּם עַד הַסּוֹף!"
+          "v": "כֵּן, זֶהוּ זֶה!"
         }
       ],
       "target": "vo:heb.heb_a_u_pitsa"
     },
     "incorrect": [
       {
-        "when": "misconception:heb.pa.blend_first",
-        "vo": "vo:heb.fb_soundalike",
-        "caption": [
-          {
-            "t": "he",
-            "v": "שִׁמְעוּ עַד הַסּוֹף."
-          }
-        ],
-        "target": "vo:heb.heb_a_u_pitsa"
-      },
-      {
-        "when": "misconception:heb.pa.blend_last",
-        "vo": "vo:heb.fb_blend_last",
-        "caption": [
-          {
-            "t": "he",
-            "v": "שִׁמְעוּ מֵהַהַתְחָלָה."
-          }
-        ],
-        "target": "vo:heb.heb_a_u_pitsa"
-      },
-      {
         "when": "default",
-        "vo": "vo:heb.try_1",
+        "vo": "vo:heb.fb_where",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:heb.heb_a_u_pitsa"
       }
     ],
     "unsure": {
@@ -150,23 +129,27 @@
       {
         "id": "o1",
         "sprite": "asset:pizza",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_pitsa"
       },
       {
         "id": "o2",
         "sprite": "asset:elephant",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_pil",
         "misconception": "heb.pa.blend_first"
       },
       {
         "id": "o3",
         "sprite": "asset:egg",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_beitsa",
         "misconception": "heb.pa.blend_last"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true
+    "unsureAllowed": true,
+    "askWhere": true
   }
 }

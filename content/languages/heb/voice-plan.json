@@ -3,6 +3,13 @@
   "pack": "lang-heb",
   "frameLines": [
     {
+      "id": "air",
+      "vo": "vo:heb.air",
+      "he": "קֹדֶם מְצַיְּרִים בָּאֲוִיר, עִם כׇּל הַיָּד!",
+      "voice": "קודם מציירים באוויר, עם כל היד!",
+      "review": "needs-editor"
+    },
+    {
       "id": "d-cat-atypical",
       "vo": "vo:heb.d_cat_atypical",
       "he": "גַּם זֶה חַי: זֶה זָז וְאוֹכֵל.",
@@ -73,17 +80,17 @@
       "review": "text-ready"
     },
     {
+      "id": "do-like",
+      "vo": "vo:heb.do_like",
+      "he": "בּוֹאוּ נַעֲשֶׂה כְּמוֹ בַּתְּמוּנָה:",
+      "voice": "בואו נעשה כמו בתמונה:",
+      "review": "needs-editor"
+    },
+    {
       "id": "fb-allit",
       "vo": "vo:heb.fb_allit",
       "he": "זֶה מַתְחִיל אוֹתוֹ דָּבָר. בּוֹאוּ נַקְשִׁיב לַסּוֹף.",
       "voice": "זה מתחיל אותו דבר. בואו נקשיב לסוף.",
-      "review": "text-ready"
-    },
-    {
-      "id": "fb-blend-last",
-      "vo": "vo:heb.fb_blend_last",
-      "he": "שִׁמְעוּ מֵהַהַתְחָלָה.",
-      "voice": "שמעו מההתחלה.",
       "review": "text-ready"
     },
     {
@@ -105,13 +112,6 @@
       "vo": "vo:heb.fb_print_shape",
       "he": "זֶה צִיּוּר.",
       "voice": "זה ציור.",
-      "review": "text-ready"
-    },
-    {
-      "id": "fb-role-swap",
-      "vo": "vo:heb.fb_role_swap",
-      "he": "עַל מַה מְדַבְּרִים?",
-      "voice": "על מה מדברים?",
       "review": "text-ready"
     },
     {
@@ -155,6 +155,13 @@
       "he": "בּוֹאוּ נִסְפֹּר לְאַט.",
       "voice": "בואו נספור לאט.",
       "review": "text-ready"
+    },
+    {
+      "id": "fb-where",
+      "vo": "vo:heb.fb_where",
+      "he": "וְאֵיפֹה",
+      "voice": "ואיפה",
+      "review": "needs-editor"
     },
     {
       "id": "h-end",
@@ -283,6 +290,13 @@
       "review": "text-ready"
     },
     {
+      "id": "i-sort-rhyme",
+      "vo": "vo:heb.i_sort_rhyme",
+      "he": "שִׂימוּ כׇּל תְּמוּנָה אֵצֶל הַמִּלָּה שֶׁנִּגְמֶרֶת אוֹתוֹ דָּבָר.",
+      "voice": "שימו כל תמונה אצל המילה שנגמרת אותו דבר.",
+      "review": "needs-editor"
+    },
+    {
       "id": "i-start",
       "vo": "vo:heb.i_start",
       "he": "אֵיפֹה מַתְחִילִים לִקְרֹא?",
@@ -318,18 +332,18 @@
       "review": "text-ready"
     },
     {
+      "id": "look-letters",
+      "vo": "vo:heb.look_letters",
+      "he": "חַפְּשׂוּ אוֹתִיּוֹת מִסָּבִיב: עַל סְפָרִים, עַל קֻפְסָאוֹת וּבָרְחוֹב.",
+      "voice": "חפשו אותיות מסביב: על ספרים, על קופסאות וברחוב.",
+      "review": "needs-editor"
+    },
+    {
       "id": "m-boet",
       "vo": "vo:heb.m_boet",
       "he": "בּוֹעֲטִים בְּכַדּוּר בָּרֶגֶל, וְהוּא עָף רָחוֹק.",
       "voice": "בועטים בכדור ברגל, והוא עף רחוק.",
       "review": "text-ready"
-    },
-    {
-      "id": "m-kadur",
-      "vo": "vo:heb.m_kadur",
-      "he": "כַּדּוּר הוּא עָגֹל. אֶפְשָׁר לִזְרֹק אוֹתוֹ וְלִבְעֹט בּוֹ.",
-      "voice": "כדור הוא עגול. אפשר לזרוק אותו ולבעוט בו.",
-      "review": "needs-editor"
     },
     {
       "id": "m-keara",
@@ -402,6 +416,41 @@
       "review": "text-ready"
     },
     {
+      "id": "meet-new",
+      "vo": "vo:heb.meet_new",
+      "he": "מִלָּה חֲדָשָׁה:",
+      "voice": "מילה חדשה:",
+      "review": "needs-editor"
+    },
+    {
+      "id": "name-clap",
+      "vo": "vo:heb.name_clap",
+      "he": "מַחְאוּ כַּף לְכׇל חֵלֶק שֶׁל הַשֵּׁם שֶׁלָּכֶם.",
+      "voice": "מחאו כף לכל חלק של השם שלכם.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "name-first",
+      "vo": "vo:heb.name_first",
+      "he": "לְכׇל שֵׁם יֵשׁ אוֹת רִאשׁוֹנָה. הִיא בַּהַתְחָלָה, בַּצַּד הַיְּמָנִי.",
+      "voice": "לכל שם יש אות ראשונה. היא בהתחלה, בצד הימני.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "name-home",
+      "vo": "vo:heb.name_home",
+      "he": "חַפְּשׂוּ בַּבַּיִת אֶת הָאוֹת הָרִאשׁוֹנָה שֶׁל הַשֵּׁם שֶׁלָּכֶם.",
+      "voice": "חפשו בבית את האות הראשונה של השם שלכם.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "name-show",
+      "vo": "vo:heb.name_show",
+      "he": "לְכׇל אֶחָד וְאַחַת יֵשׁ שֵׁם, וְאֶת הַשֵּׁם כּוֹתְבִים בְּאוֹתִיּוֹת.",
+      "voice": "לכל אחד ואחת יש שם, ואת השם כותבים באותיות.",
+      "review": "needs-editor"
+    },
+    {
       "id": "ok-1",
       "vo": "vo:heb.ok_1",
       "he": "נָכוֹן!",
@@ -456,6 +505,13 @@
       "he": "כׇּל הַכָּבוֹד!",
       "voice": null,
       "review": "text-ready"
+    },
+    {
+      "id": "paper",
+      "vo": "vo:heb.paper",
+      "he": "עַכְשָׁו מְצַיְּרִים אֶת זֶה עַל דַּף, בְּעִפָּרוֹן.",
+      "voice": "עכשיו מציירים את זה על דף, בעיפרון.",
+      "review": "needs-editor"
     },
     {
       "id": "pl-1",
@@ -588,6 +644,13 @@
       "vo": "vo:heb.r_tut",
       "he": "תּוּת. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
       "voice": "תּוּת. איזו מילה נגמרת אותו דבר?",
+      "review": "needs-editor"
+    },
+    {
+      "id": "retell",
+      "vo": "vo:heb.retell",
+      "he": "סַפְּרוּ אֶת הַסִּפּוּר לְמִישֶׁהוּ בַּבַּיִת: מַה קָּרָה קֹדֶם?",
+      "voice": "ספרו את הסיפור למישהו בבית: מה קרה קודם?",
       "review": "needs-editor"
     },
     {
@@ -782,6 +845,34 @@
       "ipa": "[eˈχad]"
     },
     {
+      "id": "heb-a-drums-1",
+      "vo": "vo:heb.heb_a_drums_1",
+      "shown": "תֹּף אֶחָד",
+      "say": "תוף אחד",
+      "ipa": "[tof eˈχad]"
+    },
+    {
+      "id": "heb-a-drums-2",
+      "vo": "vo:heb.heb_a_drums_2",
+      "shown": "שְׁנֵי תֻּפִּים",
+      "say": "שני תופים",
+      "ipa": "[ʃne tuˈpim]"
+    },
+    {
+      "id": "heb-a-drums-3",
+      "vo": "vo:heb.heb_a_drums_3",
+      "shown": "שְׁלוֹשָׁה תֻּפִּים",
+      "say": "שלושה תופים",
+      "ipa": "[ʃloˈʃa tuˈpim]"
+    },
+    {
+      "id": "heb-a-drums-4",
+      "vo": "vo:heb.heb_a_drums_4",
+      "shown": "אַרְבָּעָה תֻּפִּים",
+      "say": "ארבעה תופים",
+      "ipa": "[aʁbaˈʔa tuˈpim]"
+    },
+    {
       "id": "heb-a-i-bin-letters",
       "vo": "vo:heb.heb_a_i_bin_letters",
       "shown": "אוֹתִיּוֹת",
@@ -803,11 +894,39 @@
       "ipa": "[hataˈpuaχ beˈtoχ hakeaˈʁa]"
     },
     {
+      "id": "heb-a-pl-10b",
+      "vo": "vo:heb.heb_a_pl_10b",
+      "shown": "הַקְּעָרָה עַל הַתַּפּוּחַ.",
+      "say": "הקערה על התפוח.",
+      "ipa": "[hakeaˈʁa al hataˈpuaχ]"
+    },
+    {
+      "id": "heb-a-pl-10c",
+      "vo": "vo:heb.heb_a_pl_10c",
+      "shown": "הַתַּפּוּחַ לְיַד הַקְּעָרָה.",
+      "say": "התפוח ליד הקערה.",
+      "ipa": "[hataˈpuaχ leˈjad hakeaˈʁa]"
+    },
+    {
       "id": "heb-a-pl-5",
       "vo": "vo:heb.heb_a_pl_5",
       "shown": "הַכַּדּוּר עַל הַקֻּפְסָה.",
       "say": "הכדור על הקופסה.",
       "ipa": "[hakaˈduʁ al hakufˈsa]"
+    },
+    {
+      "id": "heb-a-pl-5b",
+      "vo": "vo:heb.heb_a_pl_5b",
+      "shown": "הַקֻּפְסָה עַל הַכַּדּוּר.",
+      "say": "הקופסה על הכדור.",
+      "ipa": "[hakufˈsa al hakaˈduʁ]"
+    },
+    {
+      "id": "heb-a-pl-5c",
+      "vo": "vo:heb.heb_a_pl_5c",
+      "shown": "הַכַּדּוּר בְּתוֹךְ הַקֻּפְסָה.",
+      "say": "הכדור בתוך הקופסה.",
+      "ipa": "[hakaˈduʁ beˈtoχ hakufˈsa]"
     },
     {
       "id": "heb-a-pl-6",
@@ -817,6 +936,20 @@
       "ipa": "[heχaˈtul beˈtoχ haˈsal]"
     },
     {
+      "id": "heb-a-pl-6b",
+      "vo": "vo:heb.heb_a_pl_6b",
+      "shown": "הַסַּל עַל הֶחָתוּל.",
+      "say": "הסל על החתול.",
+      "ipa": "[haˈsal al haχaˈtul]"
+    },
+    {
+      "id": "heb-a-pl-6c",
+      "vo": "vo:heb.heb_a_pl_6c",
+      "shown": "הֶחָתוּל לְיַד הַסַּל.",
+      "say": "החתול ליד הסל.",
+      "ipa": "[haχaˈtul leˈjad haˈsal]"
+    },
+    {
       "id": "heb-a-pl-7",
       "vo": "vo:heb.heb_a_pl_7",
       "shown": "הַכֶּלֶב מִתַּחַת לַכִּסֵּא.",
@@ -824,11 +957,39 @@
       "ipa": "[haˈkelev miˈtaχat lakiˈse]"
     },
     {
+      "id": "heb-a-pl-7b",
+      "vo": "vo:heb.heb_a_pl_7b",
+      "shown": "הַכֶּלֶב עַל הַכִּסֵּא.",
+      "say": "הכלב על הכיסא.",
+      "ipa": "[haˈkelev al hakiˈse]"
+    },
+    {
+      "id": "heb-a-pl-7c",
+      "vo": "vo:heb.heb_a_pl_7c",
+      "shown": "הַכֶּלֶב לְיַד הַכִּסֵּא.",
+      "say": "הכלב ליד הכיסא.",
+      "ipa": "[haˈkelev leˈjad hakiˈse]"
+    },
+    {
       "id": "heb-a-pl-8",
       "vo": "vo:heb.heb_a_pl_8",
       "shown": "הַצִּפּוֹר עַל הַסִּירָה.",
       "say": "הציפור על הסירה.",
       "ipa": "[hatsiˈpoʁ al hasiˈʁa]"
+    },
+    {
+      "id": "heb-a-pl-8b",
+      "vo": "vo:heb.heb_a_pl_8b",
+      "shown": "הַסִּירָה עַל הַצִּפּוֹר.",
+      "say": "הסירה על הציפור.",
+      "ipa": "[hasiˈʁa al hatsiˈpoʁ]"
+    },
+    {
+      "id": "heb-a-pl-8c",
+      "vo": "vo:heb.heb_a_pl_8c",
+      "shown": "הַצִּפּוֹר בְּתוֹךְ הַסִּירָה.",
+      "say": "הציפור בתוך הסירה.",
+      "ipa": "[hatsiˈpoʁ beˈtoχ hasiˈʁa]"
     },
     {
       "id": "heb-a-s1-p1",
@@ -978,6 +1139,27 @@
       "ipa": "[naˈχon haˈdag heˈvi et haˈkova]"
     },
     {
+      "id": "heb-a-seq-1",
+      "vo": "vo:heb.heb_a_seq_1",
+      "shown": "קֹדֶם",
+      "say": "",
+      "ipa": "[ˈkodem]"
+    },
+    {
+      "id": "heb-a-seq-2",
+      "vo": "vo:heb.heb_a_seq_2",
+      "shown": "אַחַר כָּךְ",
+      "say": "",
+      "ipa": "[aˈχaʁ kaχ]"
+    },
+    {
+      "id": "heb-a-seq-3",
+      "vo": "vo:heb.heb_a_seq_3",
+      "shown": "בַּסּוֹף",
+      "say": "",
+      "ipa": "[baˈsof]"
+    },
+    {
       "id": "heb-a-u-aba",
       "vo": "vo:heb.heb_a_u_aba",
       "shown": "אַ… בָּא",
@@ -1020,6 +1202,13 @@
       "ipa": "[χa | tu | la]"
     },
     {
+      "id": "heb-a-u-dubi",
+      "vo": "vo:heb.heb_a_u_dubi",
+      "shown": "דֻּ… בִּי",
+      "say": "",
+      "ipa": "[du | bi]"
+    },
+    {
       "id": "heb-a-u-matana",
       "vo": "vo:heb.heb_a_u_matana",
       "shown": "מַ… תָּ… נָה",
@@ -1048,6 +1237,62 @@
       "ipa": "[si | ʁa]"
     },
     {
+      "id": "heb-a-u-uga",
+      "vo": "vo:heb.heb_a_u_uga",
+      "shown": "עוּ… גָה",
+      "say": "",
+      "ipa": "[u | ga]"
+    },
+    {
+      "id": "heb-a-v1-full",
+      "vo": "vo:heb.heb_a_v1_full",
+      "shown": "בַּשָּׁמַיִם יֵשׁ כּוֹכָב, וּבַגִּנָּה קוֹפֵץ אַרְנָב.",
+      "say": "בַּשָּׁמַיִם יש כוכב, ובגינה קופץ ארנב.",
+      "ipa": "[baʃaˈmajim jeʃ koˈχav uvagiˈna koˈfets aʁˈnav]"
+    },
+    {
+      "id": "heb-a-v2-full",
+      "vo": "vo:heb.heb_a_v2_full",
+      "shown": "תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהַחָתוּל יוֹשֵׁב בַּחַלּוֹן.",
+      "say": "תיק תק עוֹשֶׂה השעון, והחתול יושב בחלון.",
+      "ipa": "[tik-ˈtak oˈse haʃaˈon vehaχaˈtul joˈʃev baχaˈlon]"
+    },
+    {
+      "id": "heb-a-v3-full",
+      "vo": "vo:heb.heb_a_v3_full",
+      "shown": "זוֹרְקִים לְמַעְלָה כַּדּוּר, אוֹפִים עוּגָה בַּתַּנּוּר.",
+      "say": "זורקים למעלה כדור, אופים עוגה בתנור.",
+      "ipa": "[zoʁˈkim leˈmala kaˈduʁ oˈfim uˈga bataˈnuʁ]"
+    },
+    {
+      "id": "heb-a-v4-full",
+      "vo": "vo:heb.heb_a_v4_full",
+      "shown": "לַיָּרֵחַ טָס לוֹ טִיל, וּבַגַּן מְטַיֵּל לוֹ פִּיל.",
+      "say": "לירח טס לו טיל, ובגן מטייל לו פיל.",
+      "ipa": "[lajaˈʁeaχ tas lo til uvaˈgan metaˈjel lo pil]"
+    },
+    {
+      "id": "heb-a-v5-full",
+      "vo": "vo:heb.heb_a_v5_full",
+      "shown": "בַּסַּל יֵשׁ תּוּת, וּבַיָּד שֶׁל סַבְתָּא חוּט.",
+      "say": "בסל יש תות, וביד של סבתא חוט.",
+      "ipa": "[baˈsal jeʃ tut uvaˈjad ʃel ˈsavta χut]"
+    },
+    {
+      "id": "heb-a-v6-full",
+      "vo": "vo:heb.heb_a_v6_full",
+      "shown": "בַּשָּׁמַיִם עָף מָטוֹס, וְעַל הַשֻּׁלְחָן יֵשׁ כּוֹס.",
+      "say": "בַּשָּׁמַיִם עף מטוס, ועל השולחן יש כוס.",
+      "ipa": "[baʃaˈmajim af maˈtos veˈal haʃulˈχan jeʃ kos]"
+    },
+    {
+      "id": "heb-a-v7-full",
+      "vo": "vo:heb.heb_a_v7_full",
+      "shown": "יֵשׁ לַדֻּבִּי אַף, וּבַמָּרָק יֵשׁ כַּף.",
+      "say": "יש לדובי אף, ובמרק יש כף.",
+      "ipa": "[jeʃ laˈdubi af uvamaˈʁak jeʃ kaf]"
+    },
+    {
       "id": "heb-a-w-aba",
       "vo": "vo:heb.heb_a_w_aba",
       "shown": "אַבָּא",
@@ -1062,11 +1307,25 @@
       "ipa": "[af]"
     },
     {
+      "id": "heb-a-w-afifon",
+      "vo": "vo:heb.heb_a_w_afifon",
+      "shown": "עֲפִיפוֹן",
+      "say": "",
+      "ipa": "[afiˈfon]"
+    },
+    {
       "id": "heb-a-w-agala",
       "vo": "vo:heb.heb_a_w_agala",
       "shown": "עֲגָלָה",
       "say": "",
       "ipa": "[agaˈla]"
+    },
+    {
+      "id": "heb-a-w-ananim",
+      "vo": "vo:heb.heb_a_w_ananim",
+      "shown": "עֲנָנִים",
+      "say": "",
+      "ipa": "[anaˈnim]"
     },
     {
       "id": "heb-a-w-arnav",
@@ -1081,6 +1340,13 @@
       "shown": "אָרוֹן",
       "say": "",
       "ipa": "[aˈʁon]"
+    },
+    {
+      "id": "heb-a-w-atalef",
+      "vo": "vo:heb.heb_a_w_atalef",
+      "shown": "עֲטַלֵּף",
+      "say": "",
+      "ipa": "[ataˈlef]"
     },
     {
       "id": "heb-a-w-balon",
@@ -1102,6 +1368,13 @@
       "shown": "בַּיִת",
       "say": "",
       "ipa": "[ˈbajit]"
+    },
+    {
+      "id": "heb-a-w-beged-yam",
+      "vo": "vo:heb.heb_a_w_beged_yam",
+      "shown": "בֶּגֶד־יָם",
+      "say": "",
+      "ipa": "[beged ˈjam]"
     },
     {
       "id": "heb-a-w-beitsa",
@@ -1132,6 +1405,13 @@
       "ipa": "[boˈʁeaχ]"
     },
     {
+      "id": "heb-a-w-bua",
+      "vo": "vo:heb.heb_a_w_bua",
+      "shown": "בֻּעָה",
+      "say": "",
+      "ipa": "[buˈa]"
+    },
+    {
       "id": "heb-a-w-buba",
       "vo": "vo:heb.heb_a_w_buba",
       "shown": "בֻּבָּה",
@@ -1158,6 +1438,13 @@
       "shown": "חַלּוֹן",
       "say": "",
       "ipa": "[χaˈlon]"
+    },
+    {
+      "id": "heb-a-w-chamorim",
+      "vo": "vo:heb.heb_a_w_chamorim",
+      "shown": "חֲמוֹרִים",
+      "say": "",
+      "ipa": "[χamoˈʁim]"
     },
     {
       "id": "heb-a-w-chatul",
@@ -1216,6 +1503,27 @@
       "ipa": "[ˈdubi]"
     },
     {
+      "id": "heb-a-w-dubim",
+      "vo": "vo:heb.heb_a_w_dubim",
+      "shown": "דֻּבִּים",
+      "say": "",
+      "ipa": "[duˈbim]"
+    },
+    {
+      "id": "heb-a-w-efroach",
+      "vo": "vo:heb.heb_a_w_efroach",
+      "shown": "אֶפְרוֹחַ",
+      "say": "",
+      "ipa": "[efˈʁoaχ]"
+    },
+    {
+      "id": "heb-a-w-ets",
+      "vo": "vo:heb.heb_a_w_ets",
+      "shown": "עֵץ",
+      "say": "",
+      "ipa": "[ets]"
+    },
+    {
       "id": "heb-a-w-gag",
       "vo": "vo:heb.heb_a_w_gag",
       "shown": "גַּג",
@@ -1230,6 +1538,13 @@
       "ipa": "[gaˈmal]"
     },
     {
+      "id": "heb-a-w-geshem",
+      "vo": "vo:heb.heb_a_w_geshem",
+      "shown": "גֶּשֶׁם",
+      "say": "",
+      "ipa": "[ˈgeʃem]"
+    },
+    {
       "id": "heb-a-w-gezer",
       "vo": "vo:heb.heb_a_w_gezer",
       "shown": "גֶּזֶר",
@@ -1242,6 +1557,13 @@
       "shown": "כַּדּוּר",
       "say": "",
       "ipa": "[kaˈduʁ]"
+    },
+    {
+      "id": "heb-a-w-kadur-tsemer",
+      "vo": "vo:heb.heb_a_w_kadur_tsemer",
+      "shown": "כַּדּוּר צֶמֶר",
+      "say": "",
+      "ipa": "[kaˈduʁ ˈtsemeʁ]"
     },
     {
       "id": "heb-a-w-kadurim",
@@ -1279,6 +1601,20 @@
       "ipa": "[ˈkemaχ]"
     },
     {
+      "id": "heb-a-w-keshet",
+      "vo": "vo:heb.heb_a_w_keshet",
+      "shown": "קֶשֶׁת",
+      "say": "",
+      "ipa": "[ˈkeʃet]"
+    },
+    {
+      "id": "heb-a-w-kivsa",
+      "vo": "vo:heb.heb_a_w_kivsa",
+      "shown": "כִּבְשָׂה",
+      "say": "",
+      "ipa": "[kivˈsa]"
+    },
+    {
       "id": "heb-a-w-klavim",
       "vo": "vo:heb.heb_a_w_klavim",
       "shown": "כְּלָבִים",
@@ -1314,6 +1650,13 @@
       "ipa": "[ˈkova]"
     },
     {
+      "id": "heb-a-w-kufsa",
+      "vo": "vo:heb.heb_a_w_kufsa",
+      "shown": "קֻפְסָה",
+      "say": "",
+      "ipa": "[kufˈsa]"
+    },
+    {
       "id": "heb-a-w-lechem",
       "vo": "vo:heb.heb_a_w_lechem",
       "shown": "לֶחֶם",
@@ -1326,6 +1669,13 @@
       "shown": "מַחַט",
       "say": "",
       "ipa": "[ˈmaχat]"
+    },
+    {
+      "id": "heb-a-w-magevet",
+      "vo": "vo:heb.heb_a_w_magevet",
+      "shown": "מַגֶּבֶת",
+      "say": "",
+      "ipa": "[maˈgevet]"
     },
     {
       "id": "heb-a-w-matana",
@@ -1368,6 +1718,20 @@
       "shown": "מְדַבֶּרֶת",
       "say": "",
       "ipa": "[medaˈbeʁet]"
+    },
+    {
+      "id": "heb-a-w-mekarer",
+      "vo": "vo:heb.heb_a_w_mekarer",
+      "shown": "מְקָרֵר",
+      "say": "",
+      "ipa": "[mekaˈʁeʁ]"
+    },
+    {
+      "id": "heb-a-w-metosim",
+      "vo": "vo:heb.heb_a_w_metosim",
+      "shown": "מְטוֹסִים",
+      "say": "",
+      "ipa": "[metoˈsim]"
     },
     {
       "id": "heb-a-w-meurbevet",
@@ -1440,6 +1804,13 @@
       "ipa": "[pil]"
     },
     {
+      "id": "heb-a-w-pita",
+      "vo": "vo:heb.heb_a_w_pita",
+      "shown": "פִּתָּה",
+      "say": "",
+      "ipa": "[ˈpita]"
+    },
+    {
       "id": "heb-a-w-pitsa",
       "vo": "vo:heb.heb_a_w_pitsa",
       "shown": "פִּיצָה",
@@ -1447,11 +1818,25 @@
       "ipa": "[ˈpitsa]"
     },
     {
+      "id": "heb-a-w-pitsot",
+      "vo": "vo:heb.heb_a_w_pitsot",
+      "shown": "פִּיצוֹת",
+      "say": "",
+      "ipa": "[piˈtsot]"
+    },
+    {
       "id": "heb-a-w-ruach",
       "vo": "vo:heb.heb_a_w_ruach",
       "shown": "רוּחַ",
       "say": "",
       "ipa": "[ˈʁuaχ]"
+    },
+    {
+      "id": "heb-a-w-saba",
+      "vo": "vo:heb.heb_a_w_saba",
+      "shown": "סָבָא",
+      "say": "",
+      "ipa": "[ˈsaba]"
     },
     {
       "id": "heb-a-w-sal",
@@ -1466,6 +1851,13 @@
       "shown": "סַנְדָּל",
       "say": "",
       "ipa": "[sanˈdal]"
+    },
+    {
+      "id": "heb-a-w-shaon",
+      "vo": "vo:heb.heb_a_w_shaon",
+      "shown": "שָׁעוֹן",
+      "say": "",
+      "ipa": "[ʃaˈon]"
     },
     {
       "id": "heb-a-w-shemesh",
@@ -1503,6 +1895,13 @@
       "ipa": "[siˈnaʁ]"
     },
     {
+      "id": "heb-a-w-sir",
+      "vo": "vo:heb.heb_a_w_sir",
+      "shown": "סִיר",
+      "say": "",
+      "ipa": "[siʁ]"
+    },
+    {
       "id": "heb-a-w-sira",
       "vo": "vo:heb.heb_a_w_sira",
       "shown": "סִירָה",
@@ -1522,6 +1921,13 @@
       "shown": "שׂוֹחֶה",
       "say": "",
       "ipa": "[soˈχe]"
+    },
+    {
+      "id": "heb-a-w-sukar",
+      "vo": "vo:heb.heb_a_w_sukar",
+      "shown": "סֻכָּר",
+      "say": "",
+      "ipa": "[suˈkaʁ]"
     },
     {
       "id": "heb-a-w-sus",
@@ -1559,6 +1965,13 @@
       "ipa": "[taˈpuaχ]"
     },
     {
+      "id": "heb-a-w-tapuchim",
+      "vo": "vo:heb.heb_a_w_tapuchim",
+      "shown": "תַּפּוּחִים",
+      "say": "",
+      "ipa": "[tapuˈχim]"
+    },
+    {
       "id": "heb-a-w-tarnegol",
       "vo": "vo:heb.heb_a_w_tarnegol",
       "shown": "תַּרְנְגוֹל",
@@ -1585,6 +1998,13 @@
       "shown": "צָב",
       "say": "",
       "ipa": "[tsav]"
+    },
+    {
+      "id": "heb-a-w-tsipor",
+      "vo": "vo:heb.heb_a_w_tsipor",
+      "shown": "צִפּוֹר",
+      "say": "",
+      "ipa": "[tsiˈpoʁ]"
     },
     {
       "id": "heb-a-w-tut",

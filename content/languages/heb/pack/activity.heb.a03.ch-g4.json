@@ -1,0 +1,158 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a03.ch-g4",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sing_along",
+  "templateVersion": "1.0",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a03-ch-g4",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "say the chant together",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנוֹת שֶׁל שִׁיר"
+  },
+  "prompt": {
+    "vo": "vo:heb.say_together",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נֹאמַר יַחַד."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן, זֶהוּ זֶה!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scene": {
+    "pictures": [
+      {
+        "picture": "asset:dress",
+        "label": "שִׂמְלָה",
+        "clip": "vo:heb.heb_a_w_simla"
+      },
+      {
+        "picture": "asset:apron",
+        "label": "סִינָר",
+        "clip": "vo:heb.heb_a_w_sinar"
+      },
+      {
+        "picture": "asset:pita",
+        "label": "פִּתָּה",
+        "clip": "vo:heb.heb_a_w_pita"
+      },
+      {
+        "picture": "asset:carrot",
+        "label": "גֶּזֶר",
+        "clip": "vo:heb.heb_a_w_gezer"
+      }
+    ],
+    "lines": [
+      {
+        "clips": [
+          "vo:heb.heb_a_bin_clothes"
+        ],
+        "lights": []
+      },
+      {
+        "clips": [
+          "vo:heb.heb_a_w_simla"
+        ],
+        "lights": [
+          0
+        ]
+      },
+      {
+        "clips": [
+          "vo:heb.heb_a_w_sinar"
+        ],
+        "lights": [
+          1
+        ]
+      },
+      {
+        "clips": [
+          "vo:heb.heb_a_bin_food"
+        ],
+        "lights": []
+      },
+      {
+        "clips": [
+          "vo:heb.heb_a_w_pita"
+        ],
+        "lights": [
+          2
+        ]
+      },
+      {
+        "clips": [
+          "vo:heb.heb_a_w_gezer"
+        ],
+        "lights": [
+          3
+        ]
+      }
+    ]
+  },
+  "answer": {
+    "type": "none",
+    "mode": "chant"
+  }
+}

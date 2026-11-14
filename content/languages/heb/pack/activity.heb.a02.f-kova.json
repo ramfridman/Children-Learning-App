@@ -1,0 +1,147 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a02.f-kova",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.3",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "heb-a-w-kova",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 2,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "listen and choose",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "שְׁתֵּי תְּמוּנוֹת"
+  },
+  "prompt": {
+    "vo": "vo:heb.i_find",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נִמְצָא:"
+      }
+    ],
+    "target": "vo:heb.heb_a_w_kova",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_6",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יוֹפִי שֶׁל הַקְשָׁבָה!"
+        }
+      ],
+      "target": "vo:heb.heb_a_w_kova"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:heb.fb_where",
+        "caption": [
+          {
+            "t": "he",
+            "v": "וְאֵיפֹה"
+          }
+        ],
+        "target": "vo:heb.heb_a_w_kova"
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_kova"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_kova"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:heb.m_kova",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כּוֹבַע שָׂמִים עַל הָרֹאשׁ."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:heb.show",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַעֲשֶׂה אֶת זֶה יַחַד."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_kova"
+    }
+  ],
+  "scene": {},
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:hat",
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_kova"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:shirt",
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_chultsa",
+        "misconception": "heb.ol.sem"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true,
+    "askWhere": true
+  }
+}
