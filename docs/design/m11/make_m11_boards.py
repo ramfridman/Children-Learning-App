@@ -14,9 +14,11 @@ Boards written:
   nekudi_poses.png          Nekudi's three new poses beside her still, at full size, at the phone's size and as 48 pt silhouettes.
 
 Only existing art is used (design/assets, app/assets/art, content/starter), plus the three Nekudi poses drawn for this step
-(design/assets/nekudi-talk.svg, -show.svg, -celebrate.svg). The backdrops are not pictures: they are the code-drawn layers the spec
-defines (section 3.2), drawn here in inline SVG from the tokens so the developer can match them. Where the spec needs art that does not
-exist yet (Goni's colour-safe skin, the colour-safe pool), the board simulates it with a desaturation filter and says so in its caption.
+(design/assets/nekudi-talk.svg, -show.svg, -celebrate.svg). The rooms are the layered art of app/assets/art/rooms/ (tools/make_room_art.py,
+spec section 3.2), put together with that tool's own SKY and LAYERS table, so the boards and the app use the same numbers; Goni in
+Colour Bay is the generated colour-safe file app/assets/art/hosts/goni_*_safe.svg.
+  room_<room>.png           one board per room (9): empty, under three pictures, a ten-frame and the robot grid, the reaction's end
+                            state, tablet landscape and portrait, the celebration with its new piece.
 Every Hebrew line on the boards is a sample for the hebrew-text-editor, not final text. Red captions under a board are for the team.
 
 References for the backdrops (looked at, nothing traced; the shapes are the map's own vocabulary, design-spec 3.2 and 9.6): the
@@ -94,106 +96,60 @@ def svg_at(x, y, w, h, body, view=None, extra=''):
 
 
 # ---- the nine rooms (spec section 3.1) --------------------------------------------------------------------------------------
-def backdrop(kind, w, h):
-    """The code-drawn backdrop of a room, in the stage's own points (spec 3.2). Returns SVG body."""
-    g = lambda i, a, b: ('<defs><linearGradient id="g%s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="%s"/>'
-                         '<stop offset="1" stop-color="%s"/></linearGradient></defs>' % (i, a, b))
-    if kind == 'hills':
-        stones = ''.join('<ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="#FFFFFF" opacity="0.75"/>' % (
-            w * (0.50 + 0.085 * i), h * (0.90 - 0.035 * i), h * 0.045, h * 0.022) for i in range(5))
-        return (g('h', C['skyTop'], C['skyBottom']) + '<rect width="%g" height="%g" fill="url(#gh)"/>' % (w, h) +
-                '<circle cx="%g" cy="%g" r="%g" fill="%s"/>' % (w * 0.22, h * 1.18, h * 0.62, C['tree']) +
-                '<circle cx="%g" cy="%g" r="%g" fill="%s"/>' % (w * 0.62, h * 1.30, h * 0.70, C['tree']) +
-                '<circle cx="%g" cy="%g" r="%g" fill="%s"/>' % (w * 0.95, h * 1.10, h * 0.52, C['tree']) +
-                '<ellipse cx="%g" cy="%g" rx="%g" ry="%g" fill="%s"/>' % (w * 0.30, h * 1.06, w * 0.45, h * 0.32, C['grass']) +
-                '<ellipse cx="%g" cy="%g" rx="%g" ry="%g" fill="%s"/>' % (w * 0.80, h * 1.08, w * 0.42, h * 0.30, C['grassShade']) + stones)
-    if kind == 'bay':
-        wave = 'M0 %g ' % (h * 0.70) + ''.join('q%g %g %g 0 ' % (w / 16, -h * 0.05, w / 8) + 'q%g %g %g 0 ' % (w / 16, h * 0.05, w / 8)
-                                                for _ in range(4)) + 'V%g H0 Z' % h
-        return (g('b', '#FFFFFF', '#F5F2F8') + '<rect width="%g" height="%g" fill="url(#gb)"/>' % (w, h) +
-                '<path d="%s" fill="%s"/>' % (wave, '#E9E6EF') +
-                '<rect y="%g" width="%g" height="%g" fill="%s"/>' % (h * 0.84, w, h * 0.16, '#F1ECE4') +
-                '<path d="M0 %g H%g" stroke="%s" stroke-width="1.5" opacity="0.6"/>' % (h * 0.84, w, C['rock']))
-    if kind == 'forest':
-        trees = ''
-        for i, (fx, s, col) in enumerate([(0.10, 0.50, 'tree'), (0.28, 0.66, 'tree'), (0.46, 0.44, 'tree'), (0.63, 0.70, 'tree'),
-                                          (0.82, 0.52, 'tree'), (0.97, 0.62, 'tree'),
-                                          (0.20, 0.40, 'treeShade'), (0.55, 0.36, 'treeShade'), (0.88, 0.42, 'treeShade')]):
-            base = h * 0.86
-            th = h * s
-            cx = w * fx
-            trees += '<path d="M%g %g L%g %g L%g %g Z" fill="%s"/>' % (cx, base - th, cx + th * 0.36, base, cx - th * 0.36, base, C[col])
-        return (g('f', C['skyTop'], '#EAF7EE') + '<rect width="%g" height="%g" fill="url(#gf)"/>' % (w, h) + trees +
-                '<rect y="%g" width="%g" height="%g" fill="%s"/>' % (h * 0.84, w, h * 0.16, C['grass']))
-    if kind == 'grotto':
-        drips = ''.join('<path d="M%g 0 Q%g %g %g 0 Z" fill="%s"/>' % (
-            w * x0, w * (x0 + 0.03), h * d, w * (x0 + 0.06), C['rock']) for x0, d in
-            [(0.02, 0.30), (0.12, 0.18), (0.30, 0.22), (0.52, 0.14), (0.70, 0.26), (0.86, 0.16), (0.93, 0.28)])
-        return (g('c', '#F7F3FF', '#ECE3FE') + '<rect width="%g" height="%g" fill="url(#gc)"/>' % (w, h) +
-                '<path d="M0 0 H%g V%g Q%g %g %g %g Q%g %g 0 %g Z" fill="%s" opacity="0.55"/>' % (
-                    w, h * 0.10, w * 0.5, h * 0.02, w * 0.0, h * 0.10, 0, 0, h * 0.10, C['rock']) +
-                '<path d="M0 0 H%g Q%g %g %g %g H0 Z" fill="%s"/>' % (w * 0.07, w * 0.015, h * 0.5, w * 0.05, h, C['rockShade']) +
-                '<path d="M%g 0 H%g Q%g %g %g %g H%g Z" fill="%s"/>' % (w, w * 0.93, w * 0.985, h * 0.5, w * 0.95, h, w, C['rockShade']) + drips +
-                '<path d="M0 %g Q%g %g %g %g T%g %g V%g H0 Z" fill="%s"/>' % (
-                    h * 0.86, w * 0.25, h * 0.80, w * 0.5, h * 0.86, w, h * 0.84, h, C['sand']))
-    if kind == 'harbour':
-        waves = ''.join('<path d="M%g %g q%g %g %g 0" stroke="#FFFFFF" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8"/>' % (
-            w * x0, h * y0, w * 0.03, -h * 0.03, w * 0.06) for x0, y0 in [(0.08, 0.62), (0.30, 0.70), (0.55, 0.60), (0.78, 0.68)])
-        joints = ''.join('<path d="M%g %g V%g" stroke="%s" stroke-width="2"/>' % (w * i / 8, h * 0.82, h, C['wood']) for i in range(1, 8))
-        return (g('r', C['skyTop'], '#EEF6FD') + '<rect width="%g" height="%g" fill="url(#gr)"/>' % (w, h) +
-                '<rect y="%g" width="%g" height="%g" fill="%s"/>' % (h * 0.52, w, h * 0.32, C['sea1']) + waves +
-                '<rect y="%g" width="%g" height="%g" fill="%s"/>' % (h * 0.82, w, h * 0.18, C['woodLight']) + joints +
-                '<path d="M0 %g H%g" stroke="%s" stroke-width="2"/>' % (h * 0.82, w, C['wood']))
-    if kind == 'market':
-        n = 8
-        sw = w / n
-        stripes = ''.join('<rect x="%g" y="0" width="%g" height="%g" fill="%s"/>' % (i * sw, sw, h * 0.13, '#F59E1B' if i % 2 == 0 else '#FFFFFF')
-                          for i in range(n))
-        scallops = ''.join('<path d="M%g %g a%g %g 0 0 0 %g 0 Z" fill="%s"/>' % (i * sw, h * 0.13, sw / 2, h * 0.07, sw,
-                                                                                 '#F59E1B' if i % 2 == 0 else '#FFFFFF') for i in range(n))
-        return (g('m', '#FFF8EC', '#FEEFD6') + '<rect width="%g" height="%g" fill="url(#gm)"/>' % (w, h) + stripes + scallops +
-                '<path d="M0 %g H%g" stroke="%s" stroke-width="1.5" opacity="0.5"/>' % (h * 0.13, w, '#A35A00') +
-                '<rect y="%g" width="%g" height="%g" fill="%s"/>' % (h * 0.84, w, h * 0.16, C['sand']) +
-                '<path d="M0 %g H%g" stroke="%s" stroke-width="2"/>' % (h * 0.84, w, C['sandShade']))
-    if kind.startswith('room_'):
-        course = kind[5:]
-        wall = {'eng': ('#F4F8FD', '#E1ECF8'), 'heb': ('#FEF6F3', '#FBE4DF'), 'rus': ('#F8F4FD', '#EBE3F7')}[course]
-        out = g('w' + course, wall[0], wall[1]) + '<rect width="%g" height="%g" fill="url(#gw%s)"/>' % (w, h, course)
-        fy = h * 0.82
-        if course == 'eng':   # floorboards
-            out += '<rect y="%g" width="%g" height="%g" fill="%s"/>' % (fy, w, h - fy, C['woodLight'])
-            out += ''.join('<path d="M%g %g V%g" stroke="%s" stroke-width="2"/>' % (w * i / 6, fy, h, C['wood']) for i in range(1, 6))
-        elif course == 'heb':  # stone tiles (the hyrax's rocks)
-            out += '<rect y="%g" width="%g" height="%g" fill="%s"/>' % (fy, w, h - fy, C['rock'])
-            out += ''.join('<rect x="%g" y="%g" width="%g" height="%g" rx="3" fill="%s"/>' % (
-                w * i / 7 + 2, fy + 3, w / 7 - 4, h - fy - 6, '#D8D3E4') for i in range(7))
-        else:                  # a striped rug
-            out += '<rect y="%g" width="%g" height="%g" fill="%s"/>' % (fy, w, h - fy, '#E8DCC6')
-            out += '<rect x="%g" y="%g" width="%g" height="%g" rx="4" fill="%s" opacity="0.35"/>' % (w * 0.2, fy + 4, w * 0.6, h - fy - 8, '#6D49B3')
-        out += '<path d="M0 %g H%g" stroke="%s" stroke-width="2" opacity="0.6"/>' % (fy, w, C['wood'])
-        return out
-    return ''
+import sys
+sys.path.insert(0, os.path.join(ROOT, 'tools'))
+import make_room_art as RA   # noqa: E402  the room art and its layer table (the source of truth)
+ROOMART = os.path.join(ART, 'rooms')
 
 
-def window_svg(course, s):
-    """The landmark of a course room: its door's window, drawn from the door art's shapes (round, arched, square), with sky in it."""
-    frame = {'eng': '#2C6FB8', 'heb': '#D25E4E', 'rus': '#6D49B3'}[course]
-    glass = '#FFF3C4'
-    if course == 'eng':
-        return ('<circle cx="%g" cy="%g" r="%g" fill="%s"/><circle cx="%g" cy="%g" r="%g" fill="%s"/>'
-                '<path d="M%g %g V%g M%g %g H%g" stroke="%s" stroke-width="%g"/>') % (
-            s / 2, s / 2, s * 0.46, frame, s / 2, s / 2, s * 0.34, glass, s / 2, s * 0.16, s * 0.84, s * 0.16, s / 2, s * 0.84, frame, s * 0.06)
-    if course == 'heb':
-        return ('<path d="M%g %g V%g A%g %g 0 0 1 %g %g V%g Z" fill="%s"/>'
-                '<path d="M%g %g V%g A%g %g 0 0 1 %g %g V%g Z" fill="%s"/>'
-                '<path d="M%g %g V%g" stroke="%s" stroke-width="%g"/>') % (
-            s * 0.14, s * 0.96, s * 0.40, s * 0.36, s * 0.36, s * 0.86, s * 0.40, s * 0.96, frame,
-            s * 0.24, s * 0.88, s * 0.42, s * 0.26, s * 0.26, s * 0.76, s * 0.42, s * 0.88, glass,
-            s / 2, s * 0.18, s * 0.88, frame, s * 0.05)
-    return ('<rect x="%g" y="%g" width="%g" height="%g" rx="%g" fill="%s"/><rect x="%g" y="%g" width="%g" height="%g" rx="%g" fill="%s"/>'
-            '<path d="M%g %g V%g M%g %g H%g" stroke="%s" stroke-width="%g"/>') % (
-        s * 0.08, s * 0.08, s * 0.84, s * 0.84, s * 0.10, frame, s * 0.18, s * 0.18, s * 0.64, s * 0.64, s * 0.05, glass,
-        s / 2, s * 0.18, s * 0.82, s * 0.18, s / 2, s * 0.82, frame, s * 0.06)
+def layer_box(part, w, h, key=None):
+    """Where a layer of the backdrop goes in a stage of w x h (spec 3.2, tools/make_room_art.py LAYERS): x, y, width, height."""
+    L = RA.LAYERS
+    aw, ah = RA.SIZE[part]
+    if part in ('far', 'ground', 'top'):
+        lh = h * L[part]
+        lw = lh * aw / ah
+        return (w - lw) / 2, (0 if part == 'top' else h - lh), lw, lh
+    if part == 'corner':
+        room = key in RA.COURSES
+        lh = min(h * L['roomCorner' if room else 'corner'], w * L['roomCornerMaxW' if room else 'cornerMaxW'] * ah / aw)
+        lw = lh * aw / ah
+        ix, iy = L['cornerInset']
+        return w - lw - ix, h - lh - iy, lw, lh
+    raise ValueError(part)
+
+
+def landmark_box(key, w, h):
+    """The landmark's box inside a stage of w x h: 0.44 of the height at the end-bottom corner; a course window sits on the wall."""
+    L = RA.LAYERS
+    ix, iy = L['landmarkInset']
+    if key in RA.COURSES:
+        s = min(h * L['window'], w * L['windowMaxW'])
+        return 10, h * L['windowBottom'] - s, s
+    s = min(h * L['landmark'], w * L['landmarkMaxW'])
+    return ix, h - s - iy, s
+
+
+def backdrop(key, w, h, landmark=False, extra=None):
+    """The room's backdrop in the stage's own points: the sky or wall gradient, then far, ground, top and corner, each kept in
+    its aspect and cropped by the stage (never stretched). With landmark=True the landmark is drawn too, and extra (a list of
+    'piece' or 'reacted') is drawn over it in its box. Returns SVG body."""
+    top, bottom = RA.SKY[key]
+    out = ['<defs><linearGradient id="sky%s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="%s"/>'
+           '<stop offset="1" stop-color="%s"/></linearGradient></defs>' % (key, top, bottom),
+           '<rect width="%g" height="%g" fill="url(#sky%s)"/>' % (w, h, key)]
+    for part in ('far', 'ground', 'top', 'corner'):
+        f = os.path.join(ROOMART, '%s_%s.svg' % (key, part))
+        if not os.path.exists(f):
+            continue
+        x, y, lw, lh = layer_box(part, w, h, key)
+        out.append('<image href="%s" x="%.2f" y="%.2f" width="%.2f" height="%.2f" preserveAspectRatio="none"/>' % (uri(f), x, y, lw, lh))
+    if landmark:
+        x, y, s = landmark_box(key, w, h)
+        for part in ['landmark'] + list(extra or []):
+            out.append('<image href="%s" x="%.2f" y="%.2f" width="%.2f" height="%.2f"/>' % (
+                uri(os.path.join(ROOMART, '%s_%s.svg' % (key, part))), x, y, s, s))
+    return ''.join(out)
 
 
 TRAIL = {
@@ -213,28 +169,27 @@ SPARK = '<path d="M10 3.5 Q11 9 16.5 10 Q11 11 10 16.5 Q9 11 3.5 10 Q9 9 10 3.5 
 
 # name, Hebrew sample name, tint (screen), rim (stage frame), deep, backdrop, landmark file, trail, host file, host pose for Show
 ROOMS = [
-    dict(key='numbers', he='גִּבְעוֹת הַסְּפִירָה', en='Counting Hills', tint='#FFE3DF', rim='#F46A5E', deep='#B4233A', bd='hills',
+    dict(key='numbers', he='גִּבְעוֹת הַסְּפִירָה', en='Counting Hills', tint='#FFE3DF', rim='#F46A5E', deep='#B4233A', bd='numbers',
          lm=os.path.join(ART, 'world', 'stair.svg'), trail='stair', host=os.path.join(CAST, 'nekudi-show.svg'), hostName='Nekudi'),
-    dict(key='colors', he='מִפְרַץ הַצְּבָעִים', en='Colour Bay', tint=C['cream'], rim=C['sketch'], deep='#5A5378', bd='bay',
-         lm=os.path.join(ART, 'world', 'pool.svg'), lmSafe=True, trail='drop', host=os.path.join(CAST, 'goni.svg'), hostSafe=True,
+    dict(key='colors', he='מִפְרַץ הַצְּבָעִים', en='Colour Bay', tint=C['cream'], rim=C['sketch'], deep='#5A5378', bd='colors',
+          trail='drop', host=os.path.join(ART, 'hosts', 'goni_idle_safe.svg'),
          hostName='Goni (colour-safe skin)'),
-    dict(key='shapes', he='יַעַר הַצּוּרוֹת', en='Shape Forest', tint='#DDF3E6', rim='#34A86A', deep='#1E7F4C', bd='forest',
+    dict(key='shapes', he='יַעַר הַצּוּרוֹת', en='Shape Forest', tint='#DDF3E6', rim='#34A86A', deep='#1E7F4C', bd='shapes',
          lm=os.path.join(ART, 'world', 'cone-tree.svg'), trail='tree', host=os.path.join(CAST, 'kubi.svg'), hostName='Kubi'),
-    dict(key='logic', he='מְעָרַת הַחִידוֹת', en='Riddle Grotto', tint='#ECE3FE', rim='#8A5CF0', deep='#6B3FD1', bd='grotto',
+    dict(key='logic', he='מְעָרַת הַחִידוֹת', en='Riddle Grotto', tint='#ECE3FE', rim='#8A5CF0', deep='#6B3FD1', bd='logic',
          lm=os.path.join(ART, 'world', 'pattern-door.svg'), trail='puzzle', host=os.path.join(CAST, 'timi.svg'), hostName='Timi'),
-    dict(key='cs', he='נְמַל הָרוֹבּוֹטִים', en='Robot Harbour', tint='#DEEBFC', rim='#2F7FE0', deep='#1F63C7', bd='harbour',
+    dict(key='cs', he='נְמַל הָרוֹבּוֹטִים', en='Robot Harbour', tint='#DEEBFC', rim='#2F7FE0', deep='#1F63C7', bd='cs',
          lm=os.path.join(ART, 'world', 'dock.svg'), trail='nut', host=os.path.join(CAST, 'tzaadon.svg'), hostName="Tza'adon"),
-    dict(key='math', he='כְּפַר הַשּׁוּק', en='Market Village', tint='#FEEFD6', rim='#F59E1B', deep='#A35A00', bd='market',
+    dict(key='math', he='כְּפַר הַשּׁוּק', en='Market Village', tint='#FEEFD6', rim='#F59E1B', deep='#A35A00', bd='math',
          lm=os.path.join(ART, 'world', 'stall.svg'), trail='orange', host=os.path.join(CAST, 'pnina.svg'), hostName='Grandma Pnina'),
-    dict(key='eng', he='אַנְגְּלִית', en='English (door 1)', tint='#E1ECF8', rim='#2C6FB8', deep='#1F5590', bd='room_eng',
+    dict(key='eng', he='אַנְגְּלִית', en='English (door 1)', tint='#E1ECF8', rim='#2C6FB8', deep='#1F5590', bd='eng',
          lm='window:eng', trail='porthole', host=os.path.join(ART, 'languages', 'host_eng.svg'), hostName='Pip the budgie'),
-    dict(key='heb', he='עִבְרִית', en='Hebrew (door 2)', tint='#FBE4DF', rim='#D25E4E', deep='#A63A2C', bd='room_heb',
+    dict(key='heb', he='עִבְרִית', en='Hebrew (door 2)', tint='#FBE4DF', rim='#D25E4E', deep='#A63A2C', bd='heb',
          lm='window:heb', trail='arch', host=os.path.join(ART, 'languages', 'host_heb.svg'), hostName='the hyrax'),
-    dict(key='rus', he='רוּסִית', en='Russian (door 3)', tint='#EBE3F7', rim='#6D49B3', deep='#55358F', bd='room_rus',
+    dict(key='rus', he='רוּסִית', en='Russian (door 3)', tint='#EBE3F7', rim='#6D49B3', deep='#55358F', bd='rus',
          lm='window:rus', trail='square', host=os.path.join(ART, 'languages', 'host_rus.svg'), hostName='the giraffe'),
 ]
 ROOM = {r['key']: r for r in ROOMS}
-SAFE = 'filter:saturate(0.3);'   # stands in for the colour-safe skin / pool that is still to be drawn
 
 
 # ---- frame pieces --------------------------------------------------------------------------------------------------------
@@ -268,41 +223,36 @@ def trail(b, room, n=6, done=2):
 
 def stage(b, room, inner_parts=None, landmark=True, lit=False):
     """The stage: the room's backdrop in the room's frame; the landmark at the end-bottom corner (inside on phones and portrait,
-    beside the card on tablet landscape)."""
+    beside the card on tablet landscape; a course window always on the room's wall). lit = the reaction's end state."""
     x, y, w, h = B[b]['stage']
     out = []
     card = B[b]['card']
+    key = room['key']
+    inside = landmark and (b != 'tabletL' or key in ('eng', 'heb', 'rus'))
+    extra = ['reacted'] if lit else []
     if card:
         out.append(box(x, y, w, h, 'background:#fff;border-radius:28px;border:4px solid %s;box-shadow:0 6px 0 %s,0 6px 16px rgba(43,35,80,.14)' % (
-            room['rim'], room['deep'] if room['key'] != 'colors' else C['lip'])))
+            room['rim'], room['deep'] if key != 'colors' else C['lip'])))
         ix, iy, iw, ih = x + 16, y + 16, w - 32, h - 32
-        out.append(svg_at(ix, iy, iw, ih, backdrop(room['bd'], iw, ih), extra='border-radius:16px;overflow:hidden'))
+        out.append(svg_at(ix, iy, iw, ih, backdrop(key, iw, ih, inside, extra), extra='border-radius:16px;overflow:hidden'))
     else:
         ix, iy, iw, ih = x, y, w, h
         out.append(box(x - 4, y - 4, w + 8, h + 8, 'border-radius:28px;background:%s;box-shadow:0 2px 6px rgba(43,35,80,.10)' % room['rim']))
-        out.append(svg_at(ix, iy, iw, ih, backdrop(room['bd'], iw, ih), extra='border-radius:24px;overflow:hidden'))
-    if landmark:
-        out += landmark_at(b, room, ix, iy, iw, ih, lit)
+        out.append(svg_at(ix, iy, iw, ih, backdrop(key, iw, ih, inside, extra), extra='border-radius:24px;overflow:hidden'))
+    if landmark and not inside:
+        out += landmark_at(b, room, lit)
     if inner_parts:
         out += inner_parts(ix, iy, iw, ih)
     return out
 
 
-def landmark_at(b, room, ix, iy, iw, ih, lit=False):
-    out = []
-    if b == 'tabletL':
-        s = 150
-        lx, ly = 288 - 24 - s - 8, 230 + 300 - s + 4
-        out.append(box(lx + 6, ly + s - 22, s - 12, 22, 'border-radius:50%;background:rgba(43,35,80,0.14)'))
-    else:
-        s = round(ih * 0.44)
-        lx, ly = ix + 6, iy + ih - s - 2
-    if lit:
-        out.append(box(lx - 8, ly - 8, s + 16, s + 16, 'border-radius:50%%;background:radial-gradient(%s 0%%, rgba(255,241,196,0) 70%%)' % C['sparkTint']))
-    if room['lm'].startswith('window:'):
-        out.append(svg_at(lx, ly - (ih * 0.30 if b != 'tabletL' else 40), s, s, window_svg(room['lm'][7:], s)))
-    else:
-        out.append(img(room['lm'], lx, ly, s, s, SAFE if room.get('lmSafe') else ''))
+def landmark_at(b, room, lit=False):
+    """Tablet landscape: the landmark stands outside the card, in the empty column at the stage's end side (spec 3.4)."""
+    s = 150
+    lx, ly = 288 - 24 - s - 8, 230 + 300 - s + 4
+    out = [box(lx + 10, ly + s - 14, s - 20, 18, 'border-radius:50%;background:rgba(43,35,80,0.14)')]
+    for part in ['landmark'] + (['reacted'] if lit else []):
+        out.append(img(os.path.join(ROOMART, '%s_%s.svg' % (room['key'], part)), lx, ly, s, s))
     return out
 
 
@@ -461,13 +411,6 @@ def board_counting_alone(b='phone', reacted=False):
         return ten_frame(fx, fy, cell, 9)
 
     out += stage(b, room, inner, lit=reacted)
-    if reacted:
-        # the reaction's end state: one step of the staircase is lit and a counting dot stands on its top step (spec 5.1)
-        x, y, w, h = B[b]['stage']
-        s = round(h * 0.44)
-        lx, ly = x + 6, y + h - s - 2
-        out.append(svg_at(lx, ly, s, s, '<path d="M24 22 H40 V38 H24 Z" fill="%s" stroke="#2B2540" stroke-width="3"/>'
-                          '<circle cx="32" cy="14" r="6" fill="%s" stroke="#2B2540" stroke-width="2"/>' % (C['spark'], '#F46A5E'), '0 0 100 100'))
     out += alone(b)
     out += bubble(b, 'כַּמָּה תַּפּוּחִים יֵשׁ?', tail_y=46)
     tx, ty, tw = B[b]['tiles']
@@ -483,7 +426,7 @@ def board_counting_alone(b='phone', reacted=False):
     return out
 
 
-def board_celebration(b, room, host_pose, line, piece_svg):
+def board_celebration(b, room, host_pose, line):
     out = base(b, room, n=6, done=6)
     out += stage(b, room)
     out += alone(b)
@@ -496,15 +439,15 @@ def board_celebration(b, room, host_pose, line, piece_svg):
     out.append(box(cx, cy, cw, chh, 'background:#fff;border-radius:28px;border:4px solid %s;box-shadow:0 6px 0 %s,0 12px 28px rgba(43,35,80,.18)' % (
         room['rim'], room['deep'])))
     # the room's window: backdrop, the landmark with its new piece, the host and the companion celebrating
-    out.append(svg_at(cx + 12, cy + 12, cw - 24, band, backdrop(room['bd'], cw - 24, band), extra='border-radius:20px;overflow:hidden'))
+    out.append(svg_at(cx + 12, cy + 12, cw - 24, band, backdrop(room['key'], cw - 24, band), extra='border-radius:20px;overflow:hidden'))
     ls = 104
     lx, ly = cx + 28, cy + 12 + band - ls - 4
+    if room['key'] in ('eng', 'heb', 'rus'):     # a course window hangs on the room's wall
+        ls = round(band * 0.66)
+        lx, ly = cx + 32, cy + 12 + 6
     out.append(box(lx - 14, ly - 14, ls + 28, ls + 28, 'border-radius:50%;background:radial-gradient(rgba(255,241,196,.95) 0%, rgba(255,241,196,0) 68%)'))
-    if room['lm'].startswith('window:'):
-        out.append(svg_at(lx, ly, ls, ls, window_svg(room['lm'][7:], ls)))
-    else:
-        out.append(img(room['lm'], lx, ly, ls, ls))
-    out.append(svg_at(lx, ly, ls, ls, piece_svg, '0 0 100 100'))
+    for part in ('landmark', 'piece'):
+        out.append(img(os.path.join(ROOMART, '%s_%s.svg' % (room['key'], part)), lx, ly, ls, ls))
     out.append(character(host_pose, cx + cw / 2 - 150, cy + 12 + band - 150, 150))
     out.append(character(os.path.join(CAST, 'nitzi-celebrate.svg'), cx + cw / 2 - 10, cy + 12 + band - 132, 132))
     # the sticker the child earned pops in at the start side of the window
@@ -518,22 +461,12 @@ def board_celebration(b, room, host_pose, line, piece_svg):
     return out
 
 
-STAIR_PIECE = ('<path d="M12 54 V6 H24 V54 Z" fill="%s" stroke="#2B2540" stroke-width="3" stroke-linejoin="round"/>'
-               '<path d="M12 6 H24 V22 H12 Z" fill="%s" stroke="#2B2540" stroke-width="3"/>'
-               '<path d="M4 2 L8 8 M32 0 L28 6 M18 -6 V0" stroke="%s" stroke-width="3" stroke-linecap="round"/>') % ('#F46A5E', '#FFC83D', '#E0A21A')
-CRATE_PIECE = ('<path d="M50 4 V28" stroke="#2B2540" stroke-width="2.5"/>'
-               '<rect x="38" y="10" width="24" height="18" rx="2" fill="#D7A27A" stroke="#2B2540" stroke-width="3"/>'
-               '<path d="M38 10 L62 28 M62 10 L38 28" stroke="#B07A52" stroke-width="2"/>')
-
-
 def board_robot_show(b='phone'):
     room = ROOM['cs']
     out = base(b, room, n=6, done=0)
     x, y, w, h = 71, 96, 330, 282           # the phone's tall stage of the robot templates (B-38)
     out.append(box(x - 4, y - 4, w + 8, h + 8, 'border-radius:28px;background:%s;box-shadow:0 2px 6px rgba(43,35,80,.10)' % room['rim']))
-    out.append(svg_at(x, y, w, h, backdrop('harbour', w, h), extra='border-radius:24px;overflow:hidden'))
-    s = round(h * 0.30)
-    out.append(img(room['lm'], x + 4, y + h - s - 2, s, s))
+    out.append(svg_at(x, y, w, h, backdrop('cs', w, h, True), extra='border-radius:24px;overflow:hidden'))
     parts, pos, cs = robot_grid(x + 14, y + 12, w - 28, h - 70, (0, 0), (2, 1), path=[(1, 0), (2, 0), (2, 1)])
     out += parts
     # the program, read left to right (arrows are absolute directions and never mirror)
@@ -554,9 +487,7 @@ def board_robot_alone(b='phone'):
     out = base(b, room, n=6, done=2)
     x, y, w, h = 71, 96, 330, 282
     out.append(box(x - 4, y - 4, w + 8, h + 8, 'border-radius:28px;background:%s;box-shadow:0 2px 6px rgba(43,35,80,.10)' % room['rim']))
-    out.append(svg_at(x, y, w, h, backdrop('harbour', w, h), extra='border-radius:24px;overflow:hidden'))
-    s = round(h * 0.30)
-    out.append(img(room['lm'], x + 4, y + h - s - 2, s, s))
+    out.append(svg_at(x, y, w, h, backdrop('cs', w, h, True), extra='border-radius:24px;overflow:hidden'))
     parts, pos, cs = robot_grid(x + 14, y + 12, w - 28, h - 70, (0, 0), (3, 2))
     out += parts
     py = y + h - 46
@@ -581,10 +512,96 @@ def board_nine(room):
     out = base(b, room, n=6, done=2)
     out += stage(b, room)
     hb = B[b]
-    extra = SAFE if room.get('hostSafe') else ''
-    out += duo(b, room, host_extra=extra)
+    out += duo(b, room)
     out += bubble(b, room['he'], right=hb['hostBubbleRight'], tail_y=40, maxw=hb['bubble']['w'] - 12)
     return out
+
+
+# ---- one board per room: the backdrop empty and under real activities, on phone and tablet, the reaction and the celebration --
+PICS3 = {'numbers': ('apple', 'apple_green', 'banana_yellow'), 'colors': ('ball_red', 'ball_blue', 'ball_yellow'),
+         'shapes': ('shape_triangle', 'shape_circle', 'shape_square'), 'logic': ('shape_circle_red', 'shape_square_orange', 'shape_triangle_green'),
+         'cs': ('robot', 'flag', 'key'), 'math': ('coin_s1', 'coin_s2', 'coin_s5'), 'eng': ('cat', 'dog', 'bird'),
+         'heb': ('fish', 'duck', 'frog'), 'rus': ('butterfly', 'chick', 'ladybug')}
+CELEBRATE = {'numbers': os.path.join(CAST, 'nekudi-celebrate.svg'), 'colors': os.path.join(ART, 'hosts', 'goni_celebrate_safe.svg')}
+SHOW = {'numbers': os.path.join(CAST, 'nekudi-show.svg')}
+
+
+def three_pictures(key):
+    """A choice of three pictures laid straight on the stage (no cards), the hardest case for the backdrop."""
+    def inner(ix, iy, iw, ih):
+        s = ih * 0.62
+        gap = s * 0.42
+        total = 3 * s + 2 * gap
+        x0 = ix + (iw - total) / 2 + iw * 0.04
+        return [img(os.path.join(PICS, p + '.svg'), x0 + i * (s + gap), iy + (ih - s) / 2, s, s) for i, p in enumerate(PICS3[key])]
+    return inner
+
+
+def ten_frame_inner(ix, iy, iw, ih):
+    cell = min(ih * 0.375, 62)
+    fw = cell * 5
+    return ten_frame(ix + iw - fw - max(12, (iw - fw) / 2 - 60), iy + (ih - cell * 2) / 2, cell, 9)
+
+
+def stage_only(room, w, h, inner=None, lit=False, card=False):
+    """A stage by itself (frame, backdrop, landmark, content) at the origin, for the close-ups."""
+    out = []
+    key = room['key']
+    if card:
+        out.append(box(0, 0, w, h, 'background:#fff;border-radius:28px;border:4px solid %s;box-shadow:0 6px 0 %s' % (
+            room['rim'], room['deep'] if key != 'colors' else C['lip'])))
+        ix, iy, iw, ih = 16, 16, w - 32, h - 32
+        rad = 16
+    else:
+        out.append(box(0, 0, w, h, 'border-radius:28px;background:%s' % room['rim']))
+        ix, iy, iw, ih = 4, 4, w - 8, h - 8
+        rad = 24
+    out.append(svg_at(ix, iy, iw, ih, backdrop(key, iw, ih, True, ['reacted'] if lit else []), extra='border-radius:%dpx;overflow:hidden' % rad))
+    if inner:
+        out += inner(ix, iy, iw, ih)
+    return out
+
+
+def scaled(parts, w, h, k):
+    return [box(0, 0, w * k, h * k, 'overflow:hidden', '<div style="position:absolute;left:0;top:0;width:%dpx;height:%dpx;transform:scale(%g);'
+                'transform-origin:0 0">%s</div>' % (w, h, k, ''.join(parts)))]
+
+
+def board_alone_pictures(b, room):
+    out = base(b, room, n=6, done=2)
+    out += stage(b, room, three_pictures(room['key']))
+    out += alone(b)
+    out += bubble(b, 'אֵיזוֹ תְּמוּנָה?', tail_y=46)
+    return out
+
+
+def board_host_beat(b, room):
+    out = base(b, room, n=6, done=2)
+    out += stage(b, room, three_pictures(room['key']) if b.startswith('tablet') else None)
+    hb = B[b]
+    out += duo(b, room, SHOW.get(room['key']))
+    out += bubble(b, room['he'], right=hb['hostBubbleRight'], tail_y=40, maxw=hb['bubble']['w'] - (hb['bubble']['right'] - hb['hostBubbleRight']))
+    return out
+
+
+def room_page(room):
+    key = room['key']
+    host = CELEBRATE.get(key, room['host'])
+    robot = lambda ix, iy, iw, ih: robot_grid(ix + 10, iy + 10, iw - 20, ih - 66, (0, 0), (3, 2))[0]
+    cells = [
+        (board_nine(room), 852, 393, '%s, phone, HOST BEAT, the stage empty: the backdrop as the child first sees it.' % room['en']),
+        (board_alone_pictures('phone', room), 852, 393, 'phone, ALONE: three pictures straight on the backdrop (the hardest case): '
+                                                        'each must keep its contrast in the calm middle.'),
+        (scaled(stage_only(room, 338, 136, ten_frame_inner), 338, 136, 2), 676, 272, 'phone stage x2: a ten-frame over the backdrop.'),
+        (scaled(stage_only(room, 338, 136, ten_frame_inner, lit=True), 338, 136, 2), 676, 272,
+         'phone stage x2: the STAGE REACTION\'s end state (landmark + its reaction piece).'),
+        (stage_only(room, 338, 290, robot), 338, 290, 'the tall robot stage (330 x 282): a 4 x 3 grid.'),
+        (scaled(board_host_beat('tabletL', room), 1180, 820, 0.75), 885, 615, 'tablet landscape (x0.75): host beat with three pictures; '
+                                                                             'a land\'s landmark stands beside the card, a course window stays on the wall.'),
+        (board_celebration('phone', room, host, 'כָּל הַכָּבוֹד!'), 852, 393, 'phone, CELEBRATION: the landmark gains its new piece (glow).'),
+        (stage_only(room, 772, 300, three_pictures(key), card=True), 772, 300, 'tablet portrait stage (772 x 300) with three pictures.'),
+    ]
+    page(cells, os.path.join(HERE, 'room_%s.png' % key), 1784)
 
 
 # ---- the page ---------------------------------------------------------------------------------------------------------------
@@ -654,7 +671,7 @@ def main():
           (board_counting_alone('phone', reacted=True), 852, 393, 'Counting Hills, phone, the STAGE REACTION\'s end state after a right answer: the top '
                                                                   'step lit and a dot on it (reduce motion shows only this). Not counted, not kept: '
                                                                   'the next item starts plain.'),
-          (board_celebration('phone', ROOM['numbers'], os.path.join(CAST, 'nekudi-celebrate.svg'), 'כָּל הַכָּבוֹד! סְפַרְתֶּם הַכֹּל.', STAIR_PIECE),
+          (board_celebration('phone', ROOM['numbers'], os.path.join(CAST, 'nekudi-celebrate.svg'), 'כָּל הַכָּבוֹד! סְפַרְתֶּם הַכֹּל.'),
            852, 393, 'Counting Hills, phone, CELEBRATION: the room\'s window on the card, the staircase gains one step (gold), Nekudi and the companion '
                      'celebrate, the sticker pops in, one way home.')],
          os.path.join(out, 'counting_hills_phone.png'), 1784)
@@ -663,7 +680,7 @@ def main():
                                                 '(unscored). Arrows read left to right and never mirror.'),
           (board_robot_alone('phone'), 852, 393, 'Robot Harbour, phone, ALONE: the robot grid in the tall stage, the arrow palette under the bubble '
                                                  '(as built, B-38); the companion asks, the host has stepped out. The dock at the stage corner.'),
-          (board_celebration('phone', ROOM['cs'], os.path.join(CAST, 'tzaadon.svg'), 'כָּל הַכָּבוֹד! הָרוֹבּוֹט הִגִּיעַ לַדֶּגֶל.', CRATE_PIECE),
+          (board_celebration('phone', ROOM['cs'], os.path.join(CAST, 'tzaadon.svg'), 'כָּל הַכָּבוֹד! הָרוֹבּוֹט הִגִּיעַ לַדֶּגֶל.'),
            852, 393, 'Robot Harbour, phone, CELEBRATION: the dock gains a crate lifted on its line; Tza\'adon (still) and the companion; the sticker; '
                      'home.')],
          os.path.join(out, 'robot_harbour_phone.png'), 1784)
@@ -676,6 +693,8 @@ def main():
     page(nine, os.path.join(out, 'nine_rooms.png'), 3 * 403 + 20, scale=0.45)
     page(nine, os.path.join(out, 'nine_rooms_grey.png'), 3 * 403 + 20, scale=0.45, grey=True)
     nekudi_sheet(os.path.join(out, 'nekudi_poses.png'))
+    for r in ROOMS:
+        room_page(r)
 
 
 if __name__ == '__main__':

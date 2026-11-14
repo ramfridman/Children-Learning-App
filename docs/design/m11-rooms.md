@@ -13,6 +13,7 @@ Boards (`docs/design/m11/make_m11_boards.py`; every board at its real size in po
 | `docs/design/m11/host_beat_boards.png` | one host beat (Counting Hills Show) on phone, phone SE, tablet landscape and tablet portrait, with the exact boxes |
 | `docs/design/m11/nine_rooms.png`, `nine_rooms_grey.png` | the nine rooms side by side (host beat, empty stage), in colour and in greyscale |
 | `docs/design/m11/nekudi_poses.png` | Nekudi's still and the three new poses: full size with baseline and centre, at the phone size on her room's tint, and as 48 pt silhouettes |
+| `docs/design/m11/room_<room>.png` (9: `numbers`, `colors`, `shapes`, `logic`, `cs`, `math`, `eng`, `heb`, `rus`) | one room each: the host beat with the stage empty; three pictures straight on the backdrop (phone); a ten-frame, the reaction's end state (phone stage x2); the tall robot stage with a 4 x 3 grid; the tablet landscape host beat (x0.75); the celebration with the new piece; the tablet portrait stage with three pictures |
 
 ---
 
@@ -26,7 +27,7 @@ Boards (`docs/design/m11/make_m11_boards.py`; every board at its real size in po
 6. **Colour Bay is neutral.** Its screen stays cream, its rim is the neutral `sketch` line, its backdrop is white paper and grey-lilac sea, and its host and pool use colour-safe skins: nothing in the room competes with the colours being taught.
 7. **The stage reacts after every right answer**, at any hint level and after a worked example: a short (at most 900 ms) motion at the landmark, then an end state that lasts until the item leaves. Never before the answer, never on a wrong one, never counted or kept. Reduce motion shows the end state only.
 8. **The celebration is the room's window**: the lesson's card shows the room's backdrop, the landmark gaining one piece, the host and the companion celebrating side by side, the sticker, the praise line and one way home.
-9. **Art to make**: 24 more host poses (the 27 of step 1.2 less Nekudi's three, drawn here), 9 small growth pieces, 2 small reaction pieces; generated from them without drawing: 9 stage pointers, 3 colour-safe Goni poses and the colour-safe pool. Nine colour values for the course rooms go into the tokens. Everything else (backdrops, trails, reactions) is drawn in code from existing tokens.
+9. **Art**: the room art is drawn (2026-11-14, owner's request for richer rooms): per room a layered backdrop (far, ground, top bands and a corner cluster), a richer landmark, its celebration piece and its reaction end state, 63 SVGs in `app/assets/art/rooms/` from `tools/make_room_art.py`; Goni's colour-safe still and poses in `app/assets/art/hosts/`. Still to make: 24 more host poses (step 1.2, another run) and 9 stage pointers (cut from the show poses, a tool step). Nine colour values for the course rooms go into the tokens. Only the sky or wall gradient and the trail sockets stay code-drawn.
 
 ---
 
@@ -90,36 +91,42 @@ Domain tokens are `color.domain.<d>.{fill, deep, tint}`. The course values are n
 
 | Room | Screen (frame) | Stage rim (phones 4 pt, tablet card border 4 pt; card lip 6 pt) | Backdrop (3.2) | Landmark (3.4) | Trail socket (3.3) | Host | Celebration piece (4) | Stage reaction (5) |
 |---|---|---|---|---|---|---|---|---|
-| **Counting Hills** (Numbers) | `numbers.tint` #FFE3DF | `numbers.fill`; lip `numbers.deep` | **round hills**, five white stepping stones | `world/stair.svg` | **stair** (the row climbs 1.4 pt per socket toward the end) | Nekudi | a new step on the staircase | a dot hops up the steps, the top step lights |
-| **Colour Bay** (Colours) | `cream` (unchanged) | `sketch` (ink 35%); lip `cardLip` | **neutral**: white paper sky, a grey-lilac wave line, pale sand; all at or below 35% chroma | `world/pool.svg` in a **colour-safe** skin (new, generated) | **drop** | Goni, **colour-safe skin** (`goniColorSafe`) | a new swirl in the pool | a white drop falls into the pool, two ripple rings |
-| **Shape Forest** (Shapes) | `shapes.tint` #DDF3E6 | `shapes.fill`; `shapes.deep` | **a forest of cones**: triangles of `tree` and `treeShade` on flat grass | `world/cone-tree.svg` | **tree** (triangle on a trunk) | Kubi | a second cone tree | a small cone tree grows from the ground beside the landmark |
-| **Riddle Grotto** (Logic) | `logic.tint` #ECE3FE | `logic.fill`; `logic.deep` | **a cave**: `rockShade` walls, a `rock` ceiling with rounded drips, a sand floor | `world/pattern-door.svg` | **puzzle piece** | Timi | a fourth shape on the door | the door's three shapes light one after another, the door glows |
-| **Robot Harbour** (CS) | `cs.tint` #DEEBFC | `cs.fill`; `cs.deep` | **a harbour**: sky, a `sea1` band with white wave marks, a `woodLight` quay with plank joints | `world/dock.svg` | **nut** (hexagon with a hole) | Tza'adon | a crate on the dock | a crate is lifted on its line onto the dock |
-| **Market Village** (Math) | `math.tint` #FEEFD6 | `math.fill`; `math.deep` | **an awning**: `math.fill` and paper stripes with a scalloped edge across the top, a sand counter below | `world/stall.svg` | **orange** (round with a leaf) | Grandma Pnina | an orange on the stall | a coin (`coin_s1.svg`) drops into a jar on the stall |
-| **English** | `eng.tint` #E1ECF8 (new) | `eng.fill` #2C6FB8; `eng.deep` #1F5590 | **inside the blue door**: a pale wall, floorboards | the door's **round window** (code-drawn, 3.4) | **porthole** (ring) | Pip the budgie (`languages/host_eng.svg`) | a flower pot on the sill | the window lights (warm glass, a soft sun) |
-| **Hebrew** | `heb.tint` #FBE4DF (new) | `heb.fill` #D25E4E; `heb.deep` #A63A2C | **inside the red door**: a pale wall, stone tiles (the hyrax's rocks) | the door's **arched window** | **arch** | the hyrax (`host_heb.svg`) | a flower pot on the sill | the window lights |
-| **Russian** | `rus.tint` #EBE3F7 (new) | `rus.fill` #6D49B3; `rus.deep` #55358F | **inside the purple door**: a pale wall, a rug | the door's **square window** (four panes) | **square window** | the giraffe (`host_rus.svg`) | a flower pot on the sill | the window lights |
+| **Counting Hills** (Numbers) | `numbers.tint` #FFE3DF | `numbers.fill`; lip `numbers.deep` | **round hills**: pale far hills and a footpath, grass with flowers, a sun; corner: a round tree on a mound | `rooms/numbers_landmark.svg`: four 3D coral steps with a handrail | **stair** (the row climbs 1.4 pt per socket toward the end) | Nekudi | a fifth, gold step at the end side | a dot hops up the steps, the top step lights |
+| **Colour Bay** (Colours) | `cream` (unchanged) | `sketch` (ink 35%); lip `cardLip` | **neutral**: white sky, a pale sun and clouds, a grey-lilac sea in three bands, an islet with a grey palm, a white sailboat, pale sand with foam; corner: a blank easel, a jar of brushes, a white parasol; all at or below 35% chroma | `rooms/colors_landmark.svg`: a giant open scallop shell behind a round rock pool, pearl and grey-lilac (colour-safe by design) | **drop** | Goni, **colour-safe skin** (`goniColorSafe`) | a soft rainbow swirl in the pool (the only colour in the room, after the last answer) | a white drop falls into the pool, two ripple rings |
+| **Shape Forest** (Shapes) | `shapes.tint` #DDF3E6 | `shapes.fill`; `shapes.deep` | **a forest of firs**: two rows of pale tiered firs (rounded tiers, so they read as trees, not as triangles), grass, a sun; corner: a fir, a clipped sphere bush, a limestone cube, a log | `rooms/shapes_landmark.svg`: a tall tiered cypress and a small sphere bush | **tree** (triangle on a trunk) | Kubi | a second fir at the start side | a small fir grows at the end side of the landmark |
+| **Riddle Grotto** (Logic) | `logic.tint` #ECE3FE | `logic.fill`; `logic.deep` | **a cave**: a lilac ceiling with stalactites of many lengths and three glowing crystals, a pale back wall with columns and an arch open onto the sea, a sand floor with shells in a pink-gold pattern; corner: the cave's side wall and a crystal cluster | `rooms/logic_landmark.svg`: a violet door in a chalk arch, four slots top to bottom: circle, square, triangle, and an empty dashed fourth | **puzzle piece** | Timi | the fourth slot fills with a circle (the pattern goes on) | the door's three shapes light one after another, the door glows |
+| **Robot Harbour** (CS) | `cs.tint` #DEEBFC | `cs.fill`; `cs.deep` | **a harbour**: sky, clouds and gulls, a `sea1` sea with a container ship, a lighthouse on its breakwater and a moored boat, a plank quay with bollards, a rope and tyre fenders; corner: stacked containers and a bollard | `rooms/cs_landmark.svg`: a blue gantry crane on wheels with its cab, trolley, cable and hook | **nut** (hexagon with a hole) | Tza'adon | a gold crate on the quay | the crate is set on the quay under the hook (straps to the hook) |
+| **Market Village** (Math) | `math.tint` #FEEFD6 | `math.fill`; `math.deep` | **a covered market**: a striped awning with scallops across the top, a pale stone arcade with stalls in its arches and hanging lamps, stone paving; corner: crates of oranges and pears, a basket of grapes. No clock anywhere (the land teaches time) | `rooms/math_landmark.svg`: a stall with a striped awning, a heap of oranges and an empty glass jar | **orange** (round with a leaf) | Grandma Pnina | an orange on top of the heap | a coin drops into the jar |
+| **English** | `eng.tint` #E1ECF8 (new) | `eng.fill` #2C6FB8; `eng.deep` #1F5590 | **Pip's reading nook**: a cornice with round paper lanterns, beadboard wainscot, floorboards and a bordered rug; corner: Pip's perch stand (T-perch, ring, bell) and a bookshelf with a globe | `rooms/eng_landmark.svg`: the **round window** with a sill | **porthole** (ring) | Pip the budgie (`languages/host_eng.svg`) | a daisy in a pot on the sill | the window lights (warm glass, a soft sun) |
+| **Hebrew** | `heb.tint` #FBE4DF (new) | `heb.fill` #D25E4E; `heb.deep` #A63A2C | **the hyrax's drawing room**: practice sheets (wavy lines, zigzags, loops; never letters) pegged on a twine, a limestone lower wall, stone tiles; corner: an easel with practice lines, a stool with a jar of big pencils, a basket of rolled paper | `rooms/heb_landmark.svg`: the **arched window** (a rocky hill outside) with a sill | **arch** | the hyrax (`host_heb.svg`) | a paper boat on the sill | the window lights |
+| **Russian** | `rus.tint` #EBE3F7 (new) | `rus.fill` #6D49B3; `rus.deep` #55358F | **the giraffe's tall room**: two pendant lamps, panelled lower wall, herringbone parquet and a bordered rug; corner: a tall leafy plant, a floor lamp, two floor cushions | `rooms/rus_landmark.svg`: the **square window** (four panes) with a sill | **square window** | the giraffe (`host_rus.svg`) | a tall flower in a pot on the sill | the window lights |
 
 - **The default** (an activity whose domain is unknown, the dev pages): today's cream frame, the meadow, round sockets, no landmark, no host.
+- **Nothing to count, nothing to find by accident**: no backdrop has a row of small repeated objects in the stage's working area (Counting Hills' stepping stones became one footpath; the English rug has no ring pattern; the Hebrew sheets are one per twine sag, with strokes only), no clock face (Market Village), no letters or numerals anywhere. Shape Forest's firs are drawn in rounded tiers so that "tap the triangle" never points at a tree (curriculum-expert to confirm).
 - **Contrast**: every screen tint is light (L* above 88); `ink` on any of them is above 11:1; the bubble, the tiles and the trail pill stay `paper`. The rim never changes with an answer (it is the room, not a state): right is still the gold ring and check, not-yet the lilac ring and wobble.
 - **Colour never carries an answer outside Colour Bay**: the room's colour is constant for the whole lesson, behind every answer alike.
 - **Content on the backdrop**: the middle band of every backdrop (from 15% to 80% of the stage's height) stays light and low in chroma, so a teaching colour drawn straight on the stage (apples, balls, pattern tiles) keeps its contrast; the colourful parts (awning, trees, walls, landmark) live at the stage's edges.
 
-### 3.2 The backdrops (code-drawn, step 1.1)
+### 3.2 The backdrops (layered art, step 1.1)
 
-The backdrop replaces `asset:meadow` (1,189 of the pack's activities) when the activity is in a room; any other `background` (`bin_box`, `nest_empty`, the `stroke_*` pictures) is kept. It is painted (a `CustomPainter` per room, `RoomBackdrop`) in the stage's own size, so it never stretches or crops a picture: every shape is placed in fractions of the stage's width and height. The exact recipe of each is the function `backdrop()` in `docs/design/m11/make_m11_boards.py` (fractions, colours, order); the developer copies its numbers. Summary:
+The backdrop replaces `asset:meadow` (1,189 of the pack's activities) when the activity is in a room; any other `background` (`bin_box`, `nest_empty`, the `stroke_*` pictures) is kept. It is built (`RoomBackdrop`) in the stage's own size from a code-drawn gradient and five SVG layers. **No layer is ever stretched**: each keeps its aspect and the stage's rounded clip crops it, so one set of files serves the phone (2.6:1), the SE, both tablets (2.1:1 and 2.8:1), the celebration window (3.5:1) and the tall robot stage (1.2:1).
 
-| Backdrop | Layers, back to front |
-|---|---|
-| hills | sky gradient `world.skyTop` → `world.skyBottom`; three far round hills (`tree`); two near hills (`grass`, `grassShade`); five white stepping stones at 75% opacity climbing to the end |
-| bay | white → #F5F2F8; a gentle wave band #E9E6EF from 70% down; a sand strip #F1ECE4 from 84% with a `rock` line |
-| forest | `skyTop` → #EAF7EE; nine cone triangles (six `tree`, three `treeShade`) on a base at 86%; grass from 84% |
-| grotto | #F7F3FF → `logic.tint`; side walls `rockShade` (7% wide, curved); a `rock` ceiling band with seven rounded drips; sand floor from 84% |
-| harbour | `skyTop` → #EEF6FD; `sea1` band 52% to 84% with four white wave marks; `woodLight` quay from 82% with seven `wood` plank joints |
-| market | #FFF8EC → `math.tint`; eight awning stripes (`math.fill`, paper) to 13% with scallops to 20%; sand counter from 84% with a `sandShade` line |
-| rooms (courses) | wall gradient (white-ish → the course tint); floor from 82%: English floorboards (`woodLight`, `wood` joints), Hebrew stone tiles (`rock`, #D8D3E4), Russian a rug (#E8DCC6 with the course colour at 35%) |
+**Source of truth**: the SVG files in `app/assets/art/rooms/`, generated by `tools/make_room_art.py` (its `SKY` and `LAYERS` are the numbers below; the boards script imports them, so boards and art never drift). The developer copies the numbers, never redraws the art.
 
-No ambient motion in the backdrops in this stage (one focal motion at a time, design-spec §10.1).
+| Order | Layer | File | Box (fractions of the stage's inner size) |
+|---|---|---|---|
+| 1 | sky or wall | code: vertical gradient `SKY[room]` | the whole stage |
+| 2 | far band | `<room>_far.svg` (1600 x 200) | height 0.66 H, bottom on the stage's bottom, centred, width = height x 8 (cropped) |
+| 3 | ground band | `<room>_ground.svg` (2400 x 100) | height 0.22 H, bottom, centred, width = height x 24 (cropped) |
+| 4 | top band | `<room>_top.svg` (2400 x 100) | height 0.22 H, top, centred (cropped) |
+| 5 | corner cluster | `<room>_corner.svg` (240 x 200) | height 0.52 H, at most 0.30 W wide (rooms: 0.64 H, at most 0.32 W); 6 in from the start (right) edge, 2 up |
+| 6 | landmark | `<room>_landmark.svg` (200 x 200) | 3.4 |
+
+The gradients (top, bottom): numbers `skyTop` → `skyBottom`; colors #FFFFFF → #F5F2F8; shapes `skyTop` → #EAF7EE; logic #F7F3FF → `logic.tint`; cs `skyTop` → #EEF6FD; math #FFF8EC → `math.tint`; eng #F4F8FD → `eng.tint`; heb #FEF6F3 → `heb.tint`; rus #F8F4FD → `rus.tint`.
+
+With `flutter_svg`: each layer is an `SvgPicture.asset` in a `Positioned` of the computed box inside a `ClipRRect` of the stage's radius (phone 24, tablet card inner 16, celebration 20). Six pictures per stage; they are static, so wrap the stack in a `RepaintBoundary`. The files use no filters and no masks; one clip path (the course windows' reaction).
+
+The art keeps the rule of 3.1: the middle band (15% to 80% of the height) is light and low in chroma; colour lives at the edges and corners. Checked on every room board with a ten-frame, three pictures laid straight on the stage and the 4 x 3 robot grid. No ambient motion in the backdrops in this stage (one focal motion at a time, design-spec §10.1).
 
 ### 3.3 The trail (step 1.1, `ProgressTrail`)
 
@@ -132,11 +139,13 @@ No ambient motion in the backdrops in this stage (one focal motion at a time, de
 
 | Board | Where | Size |
 |---|---|---|
-| Phone, phone SE, tablet portrait | inside the stage's backdrop, at its **end-bottom corner** (6 in from the end side, 2 up from the bottom); a course window sits higher, its bottom at 70% of the stage | 44% of the stage's (inner) height: phone 56, SE 46, portrait 118 |
-| Tablet landscape | **outside the card**, in the empty column at the stage's end side: x 106 to 256, standing on the card's bottom line (y 380 to 530), with a ground shadow (`world.shadow`) | 150 |
+| Phone, phone SE, tablet portrait | inside the stage's backdrop, at its **end-bottom corner** (6 in from the end side, 2 up from the bottom), at most 24% of the stage's width (the tall robot stage: 79) | 44% of the stage's (inner) height: phone 56, SE 46, portrait 118 |
+| A course window (all boards, tablet landscape too) | on the room's wall, 10 in from the end side, its box's bottom at 74% of the stage's height | 52% of the height, at most 26% of the width: phone 67, SE 54, portrait 139, tablet landscape 139 |
+| Tablet landscape (the six lands) | **outside the card**, in the empty column at the stage's end side: x 106 to 256, standing on the card's bottom line (y 380 to 530), with a ground shadow (`world.shadow`) | 150 |
 
 - Inside the stage the landmark is part of the backdrop, **behind the content**; a template that fills the stage covers it, which is fine at rest. During a reaction it is raised above the content (section 5) and goes back behind when the reaction ends.
-- The course windows are drawn in code from the doors' window shapes (`window_svg()` in the board script: frame in the course colour, glass `#FFF3C4`, the bars); no new file.
+- The landmark files replace the map icons (`world/stair.svg` and the others stay for the map). The course windows are files too (`eng_landmark.svg`, round; `heb_landmark.svg`, arched; `rus_landmark.svg`, square, four panes), each with a sill for its celebration piece and a view outside (a hill, a cloud).
+- **Piece and reaction are overlays in the landmark's own box**: `<room>_piece.svg` and `<room>_reacted.svg` are drawn at the landmark's exact rect, over it. The reaction motion (5.1) animates the overlay in (fade, scale from the landmark's bottom centre, the dot's hop); its end state is the file.
 - On a Meet screen (L7) the strip column covers the window's corner on the phones; this is accepted (the Meet card is the focus).
 
 ### 3.5 Frames on the tablets
@@ -164,8 +173,8 @@ with the numbers of 2.2. The fills are the doors' own panel colours; white on ea
 | | Phone, phone SE | Tablets |
 |---|---|---|
 | Card | width min(board − 80, 520), radius 28, **4 pt border in the room's rim**, lip 6 in the room's `deep`, `e3` | width 640 |
-| The room's window (top of the card) | 12 inside, full width, **140 high** (SE 124), radius 20: the room's backdrop | 220 high |
-| Landmark | 104 at the window's end side, on its ground, with a `sparkTint` glow; its **new piece** drawn on it | 160 |
+| The room's window (top of the card) | 12 inside, full width, **140 high** (SE 124), radius 20: the room's backdrop (3.2, without its landmark) | 220 high |
+| Landmark | 104 at the window's end side, on its ground, with a `sparkTint` glow; its **new piece** (`<room>_piece.svg`) drawn over it in the same box; a course window hangs on the wall at 0.66 of the window's height, 6 from its top | 160 |
 | Host, `celebrate` pose | 150, centred a little to the end side, on the window's ground | 220 |
 | Companion, `celebrate` | 132, beside the host on the start side | 200 |
 | Sticker (if earned) | as today (88 die-cut), at the window's top start corner | as today |
@@ -201,13 +210,13 @@ All durations by the band's `transition` (A 450, B 350, C 280) unless written; e
 
 | Room | Motion (≤ 900 ms) | End state |
 |---|---|---|
-| Counting Hills | a coral dot (`numbers.fill`, ink outline) hops up the three steps (3 × 200 ms), the top step fills `spark` (300 ms) | the dot on the lit top step (`counting_hills_phone.png`, third board) |
-| Colour Bay | a white drop falls into the pool (300 ms), two ink-35% ripple rings grow and fade (600 ms) | one faint ring on the pool |
-| Shape Forest | a small cone tree (the landmark's own drawing at 50%) grows from the ground beside it, scale from its base 0 → 1.1 → 1 | the small tree |
-| Riddle Grotto | the door's circle, square and triangle light in turn (3 × 200 ms), then the door's glass glows (300 ms) | the three lit shapes |
-| Robot Harbour | a crate rises on its line and is set on the dock (lift 500 ms, set 200 ms, squash) | the crate on the dock |
-| Market Village | a coin (`coin_s1.svg` at 30%) arcs into a jar on the stall (500 ms), the jar bounces | the coin in the jar |
-| English, Hebrew, Russian | the window's glass warms from #FFF3C4 to `spark` and a soft sun rises in it (600 ms) | the lit window |
+| Counting Hills | a coral dot (`numbers.fill`, ink outline) hops up the four steps (4 × 150 ms), the top step fills `spark` (300 ms) | `numbers_reacted.svg`: the dot on the lit top step |
+| Colour Bay | a white drop falls from the shell's rim into the pool (300 ms), two ink-35% ripple rings grow and fade (600 ms) | `colors_reacted.svg`: one faint ring on the pool |
+| Shape Forest | a small fir grows from the ground at the landmark's end side, scale from its base 0 → 1.1 → 1 | `shapes_reacted.svg`: the small fir |
+| Riddle Grotto | the door's circle, square and triangle light in turn, top to bottom (3 × 200 ms), then the door's arch glows (300 ms) | `logic_reacted.svg`: the three lit shapes and the glowing arch |
+| Robot Harbour | a crate rises on the hook's line and the trolley sets it on the quay between the legs (lift 500 ms, set 200 ms, squash) | `cs_reacted.svg`: the crate on the quay, strapped to the hook |
+| Market Village | a gold coin arcs into the jar on the stall (500 ms), the jar bounces | `math_reacted.svg`: the coin in the jar |
+| English, Hebrew, Russian | the window's glass warms from the sky to #FFE7A0 and a sun rises in it (600 ms) | `<course>_reacted.svg`: the lit window with its sun |
 
 The reaction's sound (a chime, a per-land instrument) is item 6, later; the voice-and-sound-director gets the timings above.
 
@@ -275,7 +284,7 @@ Recall (the warm-up of old words) is a child's turn: companion only.
 ### 7.4 Files
 
 - Drawings: `design/assets/<host>-talk.svg`, `-show.svg`, `-celebrate.svg` (lands: `nekudi`, `goni`, `kubi`, `timi`, `tzaadon`, `pnina`; courses: `host-eng`, `host-heb`, `host-rus`). The bundled copies: `app/assets/art/hosts/<host>_<pose>.svg`.
-- **Generated, not drawn** (a small tool, the developer's): the stage pointer `app/assets/art/hosts/<host>_hand.svg`, cut from the show pose's `hand` group, scaled to a 64 by 64 box with the tip at the top; Goni's three poses in `goniColorSafe` (`goni_<pose>_safe.svg`) by colour mapping; `world/pool_safe.svg` (the pool's magenta, yellow and blue swapped for the colour-safe greys).
+- **Generated, not drawn**: the stage pointer `app/assets/art/hosts/<host>_hand.svg`, cut from the show pose's `hand` group, scaled to a 64 by 64 box with the tip at the top (a small tool, the developer's, once the poses exist); Goni in `goniColorSafe`: `app/assets/art/hosts/goni_{idle,talk,show,celebrate}_safe.svg`, made by `tools/make_room_art.py` by colour mapping from `design/assets/goni*.svg` (re-run it when Goni's poses change). `world/pool_safe.svg` is no longer needed: Colour Bay's new landmark is colour-safe by design.
 
 ### 7.5 Nekudi's sample (this run)
 
@@ -302,7 +311,8 @@ Files: `design/assets/nekudi-talk.svg`, `design/assets/nekudi-show.svg`, `design
 7. **Until a host's poses exist** (24 drawings to come) the frame uses the host's still for all three poses; the layout does not change when the poses land (same artboard and anchors).
 8. **Goni and the pool in Colour Bay** use the safe files; the companion switches to its `colorSafe` skin as today.
 9. **Voice**: every host line shows as text until the owner voices it (M11 §9 Q2). The pair still moves at the beats, so a lesson without host clips looks and paces the same.
-10. **Accessibility**: the host is announced once at the greeting ("<host's name>", a label from `he.dart`, needs-editor); the landmark and the reaction are decoration (excluded from semantics); the trail's label is unchanged (it counts items, not shapes).
+10. **Assets**: add `assets/art/rooms/` and `assets/art/hosts/` to `pubspec.yaml`; 63 room files plus 4 Goni files.
+11. **Accessibility**: the host is announced once at the greeting ("<host's name>", a label from `he.dart`, needs-editor); the landmark and the reaction are decoration (excluded from semantics); the trail's label is unchanged (it counts items, not shapes).
 
 ---
 
@@ -327,10 +337,12 @@ In a new `app/test/golden_m11_rooms_test.dart`:
 | What | Count | Notes |
 |---|---|---|
 | Host poses | **24** (8 hosts × 3) | Nekudi's 3 done here; references per 7.3 first |
-| Celebration growth pieces | **9** small | step, swirl, cone tree (reuses the landmark), shape on the door, crate (shared with the reaction), orange, three flower pots |
-| Reaction pieces | **2** small | the crate with its hook line; the jar (the coin exists) |
-| Generated, no drawing | 9 pointers, 3 Goni colour-safe poses, 1 colour-safe pool | a tool step |
-| Optional, later | 6 richer landmarks | the world landmarks are the map's flat icons; at the tablet landscape's 150 points they look plain beside the hosts. Owner's call. |
+| Celebration growth pieces | 9, **drawn** | `app/assets/art/rooms/<room>_piece.svg` |
+| Reaction end states | 9, **drawn** (the crate and the jar among them) | `app/assets/art/rooms/<room>_reacted.svg` |
+| Backdrops | 9 rooms x 4 layers, **drawn** | `<room>_far.svg`, `_ground.svg`, `_top.svg`, `_corner.svg` |
+| Richer landmarks | 9, **drawn** (6 lands and 3 windows) | `<room>_landmark.svg` |
+| Goni colour-safe | 4, **generated** | `app/assets/art/hosts/goni_<pose>_safe.svg` |
+| Stage pointers | 9, to generate | after the poses; a tool step |
 
 **Hand-offs:**
 - **app-developer**: sections 2, 3, 4, 5, 9; the tokens of 3.6; goldens of section 10.
@@ -343,6 +355,9 @@ In a new `app/test/golden_m11_rooms_test.dart`:
 ---
 
 ## 12. What I looked at, and what I did not
+
+**Room art run (2026-11-14, second run).** Looked at, at full size: the nine `room_<room>.png` boards (every cell), `nine_rooms.png` and `nine_rooms_grey.png`, `counting_hills_phone.png`, `robot_harbour_phone.png`, and a contact sheet of every landmark with its piece and reaction and every corner at 200 px. Fixed on the way: corners clipped by the stage's rounded corner (now 6 in), Colour Bay's boulder that read as a ghost (now a scallop shell), firs that read as plain triangles (now tiered), the harbour's thin jib crane (now the map's gantry crane), the stall's awning stripes lost on white, a row of four stepping stones, a ring-pattern rug and nine pegged sheets that a child could count, the Russian rug that read as a grille. References (nothing traced): photographs of container and fishing harbours (gantry cranes, containers, bollards, fenders, a lighthouse), Mahane Yehuda stalls, the Soreq stalactite cave, cypress and fir woods, kindergarten reading corners; facts from Wikipedia (Stalactite, Cupressus sempervirens). Not looked at: the art inside the running app, the motion, the real phone.
+
 
 Looked at, at full size: every board above (the four Counting Hills phone boards, the three Robot Harbour boards, the host beat on all four boards, the nine rooms in colour and grey) and Nekudi's sheet; an enlarged crop of the reaction's end state and the stair trail. Fixed on the way: the show pose's resting hand reached the companion's face (moved inside her outline); the portrait pair overlapped the bubble (host moved to 572 and 184); the Show's tray covered the landmark on the phone (smaller frame). The goldens `lesson_2_count_three_answers_{phone, tablet_landscape, tablet_portrait}`, `lesson_6_celebration_phone`, `activity_phone_se`, `c1b_give_frame_phone`, `hint_robot_l2_phone`, `hint_robot_l3_tablet_landscape`, `hint_sort_l3_{phone, tablet_portrait}`, and the hosts, doors and landmarks as a contact sheet.
 
