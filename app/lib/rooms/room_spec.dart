@@ -112,8 +112,8 @@ class RoomSpec {
     screen: TokenColors.domainMathTint,
     rim: TokenColors.domainMathFill,
     lip: TokenColors.domainMathDeep,
-    skyTop: Color(0xFFFFF8EC),
-    skyBottom: Color(0xFFFEEFD6),
+    skyTop: Color(0xFFDCE3EF),
+    skyBottom: Color(0xFFE6EAF3),
     trail: TrailShape.orange,
     hostId: 'pnina',
   );

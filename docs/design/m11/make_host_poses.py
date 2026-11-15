@@ -5,7 +5,8 @@ Nekudi (whose three poses are the approved sample, drawn by hand), and their com
     python docs/design/m11/make_host_poses.py --sheets # only the sheets
 
 Writes design/assets/<host>-talk.svg, -show.svg, -celebrate.svg for goni, kubi, timi, tzaadon, pnina, host-eng, host-heb, host-rus;
-docs/design/m11/<host>_poses.png (same layout as nekudi_poses.png) and docs/design/m11/all_host_poses.png.
+docs/design/m11/<host>_poses.png (same layout as nekudi_poses.png) and docs/design/m11/all_host_poses.png. Goni's still is also
+app/assets/art/stickers/sticker_01.svg (2026-11-15), and Pnina's and Goni's stills their design/assets copies.
 
 Every pose is an original drawing in plain SVG shapes, built from its host's approved still (design/assets/<host>.svg,
 app/assets/art/languages/host_<c>.svg): the same proportions, palette (tokens color.character.<host>), face style and line weights,
@@ -1213,13 +1214,16 @@ def gi_stand(x, colour):
         x, colour, x, R_HOOF))
 
 
-def gi_neckhead(eyes='open', look=(0, 0), mouth='closed'):
+def gi_neckhead(eyes='open', look=(0, 0), mouth='closed', head_tr=None):
+    """The neck and the head. `head_tr` turns the head alone on the top of the neck (the celebrate pose swings the neck out and
+    keeps the face nearly upright)."""
     lx, ly = look
     out = '<path d="M214 330 L226 170 Q256 150 286 170 L300 330 Z" fill="%s"/>' % R_SHADE
     out += '<path d="M220 330 L232 170 Q258 154 284 170 L296 330 Z" fill="%s"/>' % R_BODY
     out += line('M286 172 Q298 250 300 318', R_MANE, 11)
     out += ''.join('<ellipse cx="%d" cy="%d" rx="%d" ry="%d" fill="%s"/>' % (x, y, a, b, R_SPOT) for x, y, a, b in (
         (248, 300, 18, 14), (268, 262, 14, 12), (246, 228, 14, 11), (266, 196, 11, 9)))
+    neck, out = out, ''
     out += '<rect x="219" y="48" width="14" height="46" rx="7" fill="%s"/><circle cx="226" cy="48" r="13" fill="%s"/>' % (R_SHADE, R_KNOB)
     out += '<rect x="283" y="48" width="14" height="46" rx="7" fill="%s"/><circle cx="290" cy="48" r="13" fill="%s"/>' % (R_SHADE, R_KNOB)
     out += '<ellipse cx="164" cy="110" rx="38" ry="16" fill="%s" transform="rotate(18 164 110)"/>' % R_SHADE
@@ -1249,7 +1253,7 @@ def gi_neckhead(eyes='open', look=(0, 0), mouth='closed'):
             out += line('M%d 128 Q%d 112 %d 128' % (ex - 14, ex, ex + 14), R_EYE, 7)
             out += line('M%d 118 l-6 -8 M%d 114 l0 -10 M%d 118 l6 -8' % (ex - 9, ex, ex + 9), R_EYE, 3.5)
     out += '<ellipse cx="192" cy="158" rx="13" ry="8" fill="%s" opacity="0.8"/><ellipse cx="324" cy="158" rx="13" ry="8" fill="%s" opacity="0.8"/>' % (LIP, LIP)
-    return out
+    return neck + (out if head_tr is None else '<g transform="%s">%s</g>' % (head_tr, out))
 
 
 def gi_body():
@@ -1295,8 +1299,10 @@ def gi_show():
 
 
 def gi_celebrate():
-    body = '<ellipse cx="256" cy="466" rx="100" ry="9" fill="%s"/>' % SHADOW_HOP
-    body += grp('sparks', spark(116, 60, 15) + spark(404, 196, 11))
+    # 2026-11-15 (QA of Stage 1: "reads small"): the long neck swings out to the end side with the face kept almost upright, so the
+    # figure is as tall as his talk pose and wider, and fits the y >= 72 rule without being scaled down (it was scaled to 0.85)
+    body = '<ellipse cx="248" cy="466" rx="112" ry="9" fill="%s"/>' % SHADOW_HOP
+    body += grp('sparks', spark(372, 112, 15) + spark(436, 196, 11))
     inner = gi_tail(curl=True)
     # a prancing hop: all four hooves off the ground, both front knees lifted high
     legs = gi_leg([(200, 380), (188, 446)], R_SHADE, hoof_ang=100) + gi_leg([(316, 380), (330, 446)], R_SHADE, hoof_ang=80)
@@ -1304,9 +1310,9 @@ def gi_celebrate():
     legs += gi_leg([(290, 376), (326, 404), (312, 436)], R_BODY, hoof_ang=100)
     inner += grp('legs', legs)
     inner += gi_body()
-    inner += grp('head', gi_neckhead(eyes='closed', mouth='cheer'), 'rotate(5 258 330)')
-    body += grp('body', inner, 'translate(0 -22)')
-    anchors = dict(feet=(256, 466), burst=(258, 14))
+    inner += grp('head', gi_neckhead(eyes='closed', mouth='cheer', head_tr='rotate(26 258 170)'), 'rotate(-36 258 330)')
+    body += grp('body', inner, 'translate(0 -4)')
+    anchors = dict(feet=(256, 466), burst=(160, 80))
     return body, anchors
 
 
@@ -1316,6 +1322,9 @@ HOSTS = [
     dict(id='goni', still=os.path.join(CAST, 'goni.svg'), tint='#FCE1F0', room='Colour Bay (colors.tint)',
          stillfn=lambda: goni_pose(goni_still), stillLabel='גּוֹנִי – זִקִּית',
          stillNote='redrawn on 2026-11-15 in his recolourable skin (the owner gave him colour; docs/design/m11-rooms.md section 5.2)',
+         # the still is also the first sticker (the owner, 2026-11-15: "redraw Goni on the maps and stickers"); the home maps take
+         # it from design/assets/goni.svg through tools/make_home_map.py
+         stillAlso=(os.path.join(ROOT, 'app', 'assets', 'art', 'stickers', 'sticker_01.svg'),),
          labels=('גּוֹנִי מְדַבֵּר', 'גּוֹנִי מַרְאֶה', 'גּוֹנִי חוֹגֵג'),
          fns=(lambda: goni_pose(goni_talk), lambda: goni_pose(goni_show), lambda: goni_pose(goni_celebrate)),
          name='Goni the chameleon',
@@ -1368,7 +1377,7 @@ HOSTS = [
          notes=dict(talk='the end-side paw lifted beside the cheek with its soft pads showing; the pencil rests in the other paw',
                     show='the end-side paw holds the coral pencil out level; the graphite tip is the pointer',
                     celebrate='a hop with both paws up, the pencil held high like a baton with a coral swirl drawn in the air')),
-    dict(id='host-rus', celebrateTop=0, still=os.path.join(LANG, 'host_rus.svg'), tint='#EBE3F7', room='the Russian room',
+    dict(id='host-rus', celebrateTop=55, still=os.path.join(LANG, 'host_rus.svg'), tint='#EBE3F7', room='the Russian room',
          labels=('host of the Russian course, talking', 'host of the Russian course, showing', 'host of the Russian course, celebrating'),
          fns=(gi_talk, gi_show, gi_celebrate), name='the giraffe (Russian)',
          notes=dict(talk='the neck leaning toward the task and one front hoof lifted, the knee bent', show='the end-side '
@@ -1409,7 +1418,7 @@ def write_svgs(hosts):
                    '     references are in its docstring. Artboard 512, baseline y 472, faces left. Anchors (artboard units): %s.%s -->\n'
                    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="%s">\n%s\n</svg>\n') % (
                 h['name'], note, anc, skin, h['stillLabel'], body)
-            for path in (h['still'], os.path.join(BUNDLED, '%s_idle.svg' % h['id'].replace('-', '_'))):
+            for path in (h['still'], os.path.join(BUNDLED, '%s_idle.svg' % h['id'].replace('-', '_'))) + h.get('stillAlso', ()):
                 with open(path, 'w', encoding='utf-8', newline='\n') as fh:
                     fh.write(svg)
         for pose, fn, label in zip(('talk', 'show', 'celebrate'), h['fns'], h['labels']):

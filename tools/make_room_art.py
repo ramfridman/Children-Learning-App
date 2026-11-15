@@ -62,7 +62,6 @@ References looked at on 2026-11-15 (the vivid Colour Bay and the harbour's crate
 """
 import math
 import os
-import re
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 OUT = os.path.join(ROOT, 'app', 'assets', 'art', 'rooms')
@@ -89,7 +88,7 @@ SKY = {
     'shapes': (SKY_TOP, '#EAF7EE'),
     'logic': ('#F7F3FF', '#ECE3FE'),
     'cs': (SKY_TOP, '#EEF6FD'),
-    'math': ('#FFF8EC', '#FEEFD6'),
+    'math': ('#DCE3EF', '#E6EAF3'),   # 2026-11-15: the covered market's roof (was #FFF8EC to #FEEFD6, the screen's own tint)
     'eng': ('#F4F8FD', '#E1ECF8'),
     'heb': ('#FEF6F3', '#FBE4DF'),
     'rus': ('#F8F4FD', '#EBE3F7'),
@@ -321,16 +320,39 @@ def numbers_piece():
             spark(x0 + 8, top + 22, 4.5, WHITE), spark(x1 + 20, top + 8, 5), spark(x0 + 22, top + 46, 3.6, WHITE)]
 
 
+def burst(cx, cy, r0, r1, n=10, col=GOLD, deep=GOLD_DEEP, rot=0.0):
+    """A ring of n tapering rays from radius r0 to r1 (a "ta-da" burst); each ray has a darker edge so it holds on pale skies."""
+    out = []
+    for k in range(n):
+        a = math.radians(rot + 360 * k / n)
+        w = math.radians(180 / n * 0.55)
+        p = [(cx + r0 * math.cos(a - w), cy + r0 * math.sin(a - w)), (cx + r1 * math.cos(a), cy + r1 * math.sin(a)),
+             (cx + r0 * math.cos(a + w), cy + r0 * math.sin(a + w))]
+        out.append(P(poly(*p), col, stroke=deep, stroke_width=1.6, stroke_linejoin='round'))
+    return ''.join(out)
+
+
 def numbers_reacted():
-    """The top step lit and the counting dot standing on it."""
+    """The counting dot arrives on the top step: the dot is big and bold, a gold burst of rays stands round it above the stair
+    (a new shape on the skyline, so the change reads at the 56 to 64 point header slot, not only a change of colour), and the
+    whole top column lights gold. The motion (stage_reaction.dart) ends its hops at (68, 36), the dot's place here."""
     s = STAIR
     x0 = 186 - s['w'] * 4 - 12
     top = s['base'] - s['w'] * 4
     d = s['depth']
-    return [glow(x0 + 22, top - 6, 32),
-            P(poly((x0, top), (x0 + s['w'], top), (x0 + s['w'] + d, top - d), (x0 + d, top - d)), GOLD),
-            R(x0, top, s['w'], 10, GOLD, opacity=0.85),
-            C(x0 + 30, top - 14, 9, '#F46A5E', stroke=INK, stroke_width=2.4), C(x0 + 27, top - 17, 2.6, WHITE, opacity=0.7)]
+    cx, cy = x0 + 30, top - 17
+    return [glow(cx, cy, 44),
+            burst(cx, cy, 18, 32, 10, rot=-90),
+            # the top column, lit: its front, its top and its side in gold
+            R(x0, top, s['w'], s['base'] - top, GOLD, opacity=0.88),
+            P(poly((x0 + s['w'], top), (x0 + s['w'] + d, top - d), (x0 + s['w'] + d, s['base'] - d), (x0 + s['w'], s['base'])), GOLD_DEEP,
+              opacity=0.9),
+            P(poly((x0, top), (x0 + s['w'], top), (x0 + s['w'] + d, top - d), (x0 + d, top - d)), '#FFE08A'),
+            R(x0, top, 5, s['base'] - top, WHITE, opacity=0.3),
+            # the dot: coral with a thick ink ring, standing on the step
+            E(cx, top - 4, 12, 3, INK, opacity=0.18),
+            C(cx, cy, 14, '#F46A5E', stroke=INK, stroke_width=3.4), C(cx - 4.5, cy - 4.5, 4, WHITE, opacity=0.75),
+            spark(cx + 44, cy + 26, 7), spark(cx - 30, cy + 46, 5.5, WHITE)]
 
 
 # ================================================================ Colour Bay (colors): the most vivid room, colour at the edges
@@ -861,8 +883,25 @@ def cs_reacted():
 
 
 # ================================================================ Market Village (math)
+# 2026-11-15 (QA of Stage 1: "pale and empty next to the new Colour Bay"): a busy covered market at the edges, a calm wall in the
+# middle. Strong colour only where activity content never sits: the awning and its garland at the top (above 16% of the stage),
+# the stalls' produce at the foot of the arcade and the crates on the paving (below 80%), the corner and the landmark. Between
+# 15% and 80% every colour is light (relative luminance 0.44 or more, so ink #2B2350 keeps 7:1 on it): the honey wall, the arches'
+# shade and the stalls' pastel awnings. References: the Mahane Yehuda photographs (see the docstring; looked at again on
+# 2026-11-15): produce heaped in sloping one-colour blocks at the front of each stall, striped and plain awnings, stacked crates,
+# brass lamps under the arched roof.
+MARKET_FRUIT = (('#E5484D', '#B8323A', '#F6AEB0'), ('#FF9F43', '#D9762A', '#FFD6AE'), ('#6FBF4A', '#4E9A33', '#B8E39A'),
+                ('#FFD84D', '#E0A21A', '#FFF1B8'), ('#8B5BB0', '#5C3480', '#C7A8E0'))
+MARKET_AWNINGS = ('#FFA894', '#7FD6CB', '#FFD054', '#A9DC7E', '#C4AEF5', '#FFB774')
+PENNANTS = ('#F46A5E', '#FFC83D', '#2BA39B', '#8FD45C', '#9B6BE0', '#3E9BEA')
+
+
 def math_top():
-    out = []
+    # the roof's light steel trusses, seen under the front awning (pale: they reach 22% of the stage)
+    out = [R(0, 60, 2400, 4, '#CBD3E3')]
+    for x in range(0, 2400, 120):
+        out += [P('M%s 62 L%s 100 M%s 62 L%s 100' % (f(x), f(x + 60), f(x + 120), f(x + 60)), stroke='#CBD3E3', stroke_width=3),
+                R(x + 58, 62, 4, 38, '#C2CBDD')]
     sw = 80
     for i in range(30):
         x = i * sw
@@ -874,32 +913,100 @@ def math_top():
                 P('M%s 50 a%s 20 0 0 1 %s 0' % (f(x), f(sw / 2), f(sw)), 'none')]
         out.append(P('M%s 50 a%s 20 0 0 0 %s 0' % (f(x), f(sw / 2), f(sw)), stroke='#C9760A', stroke_width=2, opacity=0.35))
     out += [R(0, 0, 2400, 10, '#C9760A', opacity=0.55), R(0, 47, 2400, 4, '#C9760A', opacity=0.25)]
+    # a garland of pennants under the awning, sagging between hooks 400 apart (a festive line, not a row to count: it runs on
+    # past every edge of the stage)
+    for h0 in range(0, 2400, 400):
+        d = 'M%s 47 Q%s 59 %s 47' % (f(h0), f(h0 + 200), f(h0 + 400))
+        out.append(P(d, stroke='#B07A52', stroke_width=2, opacity=0.8))
+        for k in range(11):
+            t = (k + 0.5) / 11
+            x = h0 + 400 * t
+            y = 47 + 2 * t * (1 - t) * 12
+            c = PENNANTS[(h0 // 400 * 11 + k) % len(PENNANTS)]
+            out.append(P(poly((x - 10, y), (x + 10, y), (x, y + 13)), c))
+            out.append(P(poly((x + 2, y), (x + 10, y), (x, y + 13)), INK, opacity=0.1))
     return out
 
 
+def stall_heap(x, base, w, h, col, deep, hi):
+    """One sloping block of one fruit at the front of a stall: a mound with a few round bumps on its top and a shade."""
+    d = 'M%s %s L%s %s Q%s %s %s %s Z' % (f(x), f(base), f(x + w * 0.08), f(base - h * 0.7), f(x + w * 0.5), f(base - h * 1.25),
+                                          f(x + w), f(base - h * 0.45))
+    bumps = ''.join(C(x + w * fx, base - h * fy, w * 0.11, col) for fx, fy in ((0.2, 0.82), (0.4, 0.95), (0.6, 0.88), (0.8, 0.66)))
+    return ''.join([P(d + ' V%s Z' % f(base), col), bumps, P('M%s %s Q%s %s %s %s V%s Z' % (f(x + w * 0.62), f(base), f(x + w * 0.9),
+                    f(base - h * 0.62), f(x + w), f(base - h * 0.45), f(base)), deep, opacity=0.4),
+                    C(x + w * 0.3, base - h * 0.88, w * 0.04, hi), C(x + w * 0.55, base - h * 0.98, w * 0.035, hi)])
+
+
 def math_far():
-    wall, arch, shade = '#F7E9CC', '#EEDAB3', '#F2E0BE'
-    out = [R(0, 70, 1600, 130, wall), R(0, 64, 1600, 8, shade)]
-    for x in range(40, 1600, 200):               # the covered market's stone arcade, with pale stalls inside the arches
-        out += [P('M%s 200 V116 A60 60 0 0 1 %s 116 V200 Z' % (f(x), f(x + 120)), arch),
-                P('M%s 116 A60 60 0 0 1 %s 116' % (f(x - 6), f(x + 126)), stroke='#F9EED8', stroke_width=8),
-                R(x + 14, 138, 92, 8, '#F9D2A0'), P('M%s 146 ' % f(x + 14) + ''.join('a%s 6 0 0 0 %s 0 ' % (f(23 / 2), f(23)) for _ in range(4)), '#F9D2A0'),
-                R(x + 22, 168, 76, 32, '#E8CA98'), C(x + 40, 168, 9, '#F6C9A0'), C(x + 60, 166, 10, '#E3DDA4'), C(x + 80, 168, 9, '#F6C9A0')]
-    for x in (230, 1030, 1430):                  # hanging lamps, pale
-        out += [P('M%s 72 V96' % f(x), stroke='#E2C9A0', stroke_width=2), P('M%s 96 h20 l-4 10 h-12 Z' % f(x - 10), '#F1D9AE')]
+    """The covered market across the aisle: its high vaulted roof with a skylight (pale, 34% to 54% of the stage), then the
+    arcade of honey limestone with a stall in every arch (the pastel awnings at about 66% to 72%), and the stalls' produce in
+    full colour at the arcade's foot, below 80%."""
+    roof, rib, pane, wall, course, arch, inner = '#E6EAF3', '#D2D9E8', '#F6F9FD', '#F8DDB4', '#EFCD9C', '#ECCFA0', '#E3C38F'
+    out = [R(0, 0, 1600, 60, roof)]
+    for x in range(0, 1600, 100):                    # the vault's ribs and, between them, the skylight's panes
+        out += [R(x + 14, 8, 72, 22, pane, rx=3), R(x + 14, 8, 72, 4, WHITE, rx=2, opacity=0.8),
+                R(x - 3, 0, 6, 60, rib), P('M%s 60 Q%s 40 %s 60' % (f(x + 3), f(x + 50), f(x + 97)), stroke=rib, stroke_width=4)]
+    out += [R(0, 0, 1600, 4, rib), R(0, 54, 1600, 8, '#EFD8AE'), R(0, 60, 1600, 140, wall), R(0, 60, 1600, 4, '#E2C38E')]
+    for y in (78, 96):                               # the limestone's courses, broken by the arches
+        out.append(R(0, y, 1600, 1.6, course, opacity=0.8))
+    for n, x in enumerate(range(40, 1600, 200)):     # the arcade: in every arch a stall of its own
+        aw = MARKET_AWNINGS[n % len(MARKET_AWNINGS)]
+        out += [P('M%s 200 V104 A60 60 0 0 1 %s 104 V200 Z' % (f(x), f(x + 120)), arch),
+                P('M%s 200 V110 A52 52 0 0 1 %s 110 V200 Z' % (f(x + 8), f(x + 112)), inner),
+                P('M%s 104 A66 66 0 0 1 %s 104' % (f(x - 6), f(x + 126)), stroke='#FCEBD0', stroke_width=8),
+                R(x + 12, 104, 96, 18, WHITE)]
+        for i in range(4):
+            out.append(R(x + 12 + i * 24, 104, 12, 18, aw))
+        out += [P('M%s 122 ' % f(x + 12) + ''.join('a6 6 0 0 0 12 0 ' for _ in range(8)) + 'Z', aw),
+                R(x + 12, 101, 96, 4, '#E2C79C'), R(x + 14, 128, 3, 30, '#DDBB86'), R(x + 103, 128, 3, 30, '#DDBB86')]
+        # the counter and its produce in sloping one-colour blocks (below 80% of the stage: full colour)
+        out.append(R(x + 14, 154, 92, 46, '#C99A6B'))
+        for k in range(3):
+            c, cd, hi = MARKET_FRUIT[(n * 2 + k) % len(MARKET_FRUIT)]
+            out.append(stall_heap(x + 16 + k * 30, 156, 28, 13, c, cd, hi))
+    for x in (230, 630, 1030, 1430):                 # brass lamps hanging from the cornice between the arches, a warm glow round each
+        out += [P('M%s 62 V78' % f(x), stroke='#D6B98C', stroke_width=2), C(x, 88, 13, GOLD_TINT, opacity=0.6),
+                P('M%s 78 h18 l-4 12 h-10 Z' % f(x - 9), '#F2CB72'), R(x - 3, 90, 6, 3, '#FFE7A0')]
     return out
 
 
 def math_ground():
-    out = [R(0, 22, 2400, 78, '#EFDCBD')]
+    out = [R(0, 22, 2400, 78, '#EBD3A6')]
     for row, (y, h, off) in enumerate(((26, 30, 0), (60, 38, 50))):
         for x in range(-100 + off, 2400, 100):
-            out.append(R(x + 3, y, 94, h - 4, '#F6E7CC', rx=8))
-    return out + [R(0, 22, 2400, 4, '#E3C99E')]
+            out.append(R(x + 3, y, 94, h - 4, '#F5E3C2', rx=8))
+            out.append(R(x + 3, y + h - 9, 94, 5, '#E8CFA1', rx=2.5, opacity=0.7))
+    out.append(R(0, 22, 2400, 4, '#DDBE8A'))
+    # crates of produce standing on the paving, out at both sides (never under the middle of the stage)
+    for x0, fruits in ((700, (0, 2)), (1560, (1, 4))):
+        out.append(shadow(x0 + 80, 82, 92, 6))
+        for k, i in enumerate(fruits):
+            c, cd, hi = MARKET_FRUIT[i]
+            x = x0 + k * 84
+            out += [orange_heap(x + 4, 52, 74, 22, c, cd, hi), crate(x, 46, 82, 36)]
+    # a lemon and an orange rolled away, and a leaf
+    out += [C(1010, 86, 7, '#FFD84D'), C(1008, 84, 2, '#FFF1B8'), C(1392, 84, 8, '#FF9F43'), C(1389, 81, 2.2, '#FFD6AE'),
+            P('M1200 90 q12 -10 24 -2 q-12 8 -24 2 Z', '#6FBF4A')]
+    return out
+
+
+def sack(x, base, w, h, heap, heap_deep):
+    """A burlap sack with its top rolled down and a cone of spice heaped in it."""
+    return ''.join([P('M%s %s Q%s %s %s %s H%s Q%s %s %s %s Z' % (f(x), f(base), f(x - 4), f(base - h * 0.6), f(x + 4), f(base - h),
+                                                                 f(x + w - 4), f(x + w + 4), f(base - h * 0.6), f(x + w), f(base)), '#D9B98A'),
+                    P('M%s %s Q%s %s %s %s V%s Z' % (f(x + w * 0.6), f(base), f(x + w + 4), f(base - h * 0.6), f(x + w - 4),
+                                                     f(base - h), f(base)), '#B08A5E', opacity=0.45),
+                    E(x + w / 2, base - h, w / 2 + 3, 6, '#C9A472'),
+                    P(poly((x + 2, base - h), (x + w / 2, base - h - h * 0.55), (x + w - 2, base - h)), heap),
+                    P(poly((x + w / 2, base - h - h * 0.55), (x + w - 2, base - h), (x + w * 0.62, base - h)), heap_deep, opacity=0.5)])
 
 
 def math_corner():
-    out = [shadow(124, 196, 90, 6)]
+    out = [shadow(124, 196, 112, 6)]
+    # behind: three sacks of spices heaped in cones (paprika, turmeric, cinnamon)
+    out += [sack(8, 156, 40, 40, '#E2533F', '#B23A2A'), sack(50, 152, 40, 44, '#F2B632', '#C98A10'),
+            sack(196, 156, 38, 38, '#C46A3A', '#94461E')]
     # two crates of fruit and a woven basket of grapes on top
     out += [orange_heap(40, 156, 82, 30), crate(36, 150, 88, 46), orange_heap(130, 156, 80, 28, '#9CCB5B', '#76A93A', '#C3E39A'),
             crate(126, 150, 86, 46)]
@@ -908,6 +1015,10 @@ def math_corner():
             P('M100 124 H188 M99 138 H189', stroke=WOOD, stroke_width=2, opacity=0.6),
             orange_heap(106, 106, 76, 22, '#8B5BB0', '#5C3480', '#B58BD1'),
             P('M118 104 Q144 64 170 104', stroke=WOOD, stroke_width=4)]
+    # in front: a watermelon on the ground, its stripes along its length
+    out += [shadow(36, 198, 30, 4), E(36, 186, 30, 14, '#3E8E3A'),
+            P('M10 184 Q36 176 62 184 M8 190 Q36 182 64 190', stroke='#8FD45C', stroke_width=3, opacity=0.8),
+            E(28, 180, 9, 3.5, '#B8E39A', opacity=0.6)]
     return out
 
 
@@ -955,11 +1066,37 @@ def math_piece():
             C(x - 5, y - 5, 3.6, '#FFC79E'), P('M%s %s q6 -8 14 -6 q-4 8 -14 6 Z' % (f(x), f(y - 13)), '#5BA35A'), spark(x + 24, y - 18, 6)]
 
 
+def coin_flat(cx, cy, rx=9.0):
+    """A gold coin lying flat: its edge, its face and a glint (no numeral: the app draws numerals, never a picture)."""
+    ry = rx * 0.42
+    return ''.join([E(cx, cy + ry * 0.45, rx, ry, '#C98A10'), E(cx, cy, rx, ry, GOLD, stroke='#C98A10', stroke_width=1.2),
+                    E(cx - rx * 0.3, cy - ry * 0.25, rx * 0.32, ry * 0.32, '#FFE7A0')])
+
+
 def math_reacted():
+    """The coin drops in and the jar is full: gold to the brim and a heap of coins standing up out of its mouth, the lid pushed
+    up and tipped on top, a gold burst behind (the jar's outline grows, so the change reads at the 56 to 64 point header slot,
+    not only as a change of colour). The motion (stage_reaction.dart) drops its coin at (144, 108), inside this gold."""
     jx, jy, jw, jh = STALL['jar']
-    cx, cy = jx + jw / 2, jy + jh - 9
-    return [glow(cx, cy, 24), E(cx, cy, 12, 5, GOLD_DEEP), E(cx, cy - 1.8, 12, 5, GOLD), E(cx - 3.5, cy - 3, 4, 1.6, '#FFE7A0'),
-            spark(jx + jw + 7, jy + 4, 5.5)]
+    cx = jx + jw / 2
+    body = 'M%s %s h%s v%s q0 6 -6 6 h%s q-6 0 -6 -6 Z' % (f(jx), f(jy + 6), f(jw), f(jh - 12), f(-(jw - 12)))
+    out = [glow(cx, jy + 18, 46), burst(cx, jy + 20, 30, 42, 12, rot=-75)]
+    # the jar, full: the glass with gold inside it to the brim, coin edges stacked in it, the glass's sheen over the gold
+    out += [P(body, '#E6F2F6'), P(body, GOLD), P(body, 'none', stroke='#C98A10', stroke_width=2)]
+    for y in range(jy + 16, jy + jh - 2, 7):
+        out.append(P('M%s %s q%s 4 %s 0' % (f(jx + 2), f(y), f((jw - 4) / 2), f(jw - 4)), stroke='#C98A10', stroke_width=1.6, opacity=0.8))
+    out += [R(jx + 5, jy + 13, 6, jh - 22, WHITE, opacity=0.55)]
+    # the heap standing out of the mouth (it covers the lid's place)
+    out.append(P('M%s %s Q%s %s %s %s Q%s %s %s %s Z' % (f(jx - 4), f(jy + 10), f(jx + 2), f(jy - 5), f(cx), f(jy - 9),
+                                                         f(jx + jw - 2), f(jy - 5), f(jx + jw + 4), f(jy + 10)), GOLD,
+                 stroke='#C98A10', stroke_width=1.8, stroke_linejoin='round'))
+    for (dx, dy, rx) in ((-12, 6, 9), (10, 7, 9), (-2, 2, 10), (-13, -1, 7.5), (12, 0, 8), (1, -5, 8.5)):
+        out.append(coin_flat(cx + dx, jy + dy, rx))
+    # the lid, pushed off: it leans on the jar's start side, standing on the counter
+    out += [G([R(-22, -4.5, 44, 9, '#9CB8C8', rx=3), R(-22, -4.5, 44, 3, WHITE, rx=1.5, opacity=0.45)],
+              'translate(%s %s) rotate(-72)' % (f(jx + jw + 7), f(STALL['counter'] - 21))),
+            spark(jx + jw + 16, jy - 4, 7), spark(jx - 12, jy + 2, 5.5, WHITE)]
+    return out
 
 
 # ================================================================ the language rooms (eng, heb, rus)
@@ -1318,15 +1455,6 @@ def room_svg(room, part):
     return doc(w, h, fn(), '%s %s' % (room, part))
 
 
-# Goni's colour-safe skin: the still and any pose that exists, by colour mapping (tokens color.character.goniColorSafe).
-GONI_SAFE = {'#7FD3B0': '#C9D9D2', '#5DB894': '#AFC2BA', '#FFC2B5': '#E6DCDA', '#FFE6A8': '#ECE6D8', '#BDE6F7': '#DCE4E8',
-             '#D6C6FA': '#E2DDEB', '#B0477A': '#C9BBC2', '#F4A7B4': '#E3D9DB', '#B07A52': '#BEB1A6'}
-
-
-def goni_safe(text):
-    return re.sub(r'#[0-9A-Fa-f]{6}', lambda m: GONI_SAFE.get(m.group(0).upper(), m.group(0)), text)
-
-
 def main():
     os.makedirs(OUT, exist_ok=True)
     n = 0
@@ -1338,7 +1466,6 @@ def main():
             with open(os.path.join(OUT, '%s_%s.svg' % (room, part)), 'w', encoding='utf-8', newline='\n') as fh:
                 fh.write(s)
             n += 1
-    # Goni's colour-safe files are no longer written (2026-11-15; see the docstring).
     print('%d files' % n)
 
 

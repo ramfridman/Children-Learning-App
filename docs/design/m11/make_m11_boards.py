@@ -173,7 +173,7 @@ ROOMS = [
          lm=os.path.join(ART, 'world', 'stair.svg'), trail='stair', host=os.path.join(CAST, 'nekudi-show.svg'), hostName='Nekudi'),
     dict(key='colors', he='מִפְרַץ הַצְּבָעִים', en='Colour Bay', tint='#FCE1F0', rim='#E04F9E', deep='#B4337C', bd='colors',
           trail='drop', host=os.path.join(ART, 'hosts', 'goni_idle.svg'),
-         hostName='Goni (colour-safe skin)'),
+         hostName='Goni (his mint skin)'),
     dict(key='shapes', he='יַעַר הַצּוּרוֹת', en='Shape Forest', tint='#DDF3E6', rim='#34A86A', deep='#1E7F4C', bd='shapes',
          lm=os.path.join(ART, 'world', 'cone-tree.svg'), trail='tree', host=os.path.join(CAST, 'kubi.svg'), hostName='Kubi'),
     dict(key='logic', he='מְעָרַת הַחִידוֹת', en='Riddle Grotto', tint='#ECE3FE', rim='#8A5CF0', deep='#6B3FD1', bd='logic',

@@ -6,7 +6,11 @@ Writes (deterministic: the same input files give the same bytes):
   app/assets/art/scenes/home_phone.svg            2102 x 393   the phone world strip (pans sideways, home island at the right end)
   app/assets/art/scenes/home_phone_se.svg         1834 x 375   the same strip for the iPhone SE
   app/assets/art/scenes/home_tablet_portrait.svg   820 x 1580  the tablet portrait scene (scrolls up, Market Village at the top)
-The tablet landscape scene (home_tablet_landscape.svg) is not touched.
+The tablet landscape scene (home_tablet_landscape.svg) is not redrawn; only Goni in it is brought up to date (goni_now, below).
+Run tools/make_languages_art.py after this one: the language variants (home_*_lang.svg) are built from these scenes.
+
+Goni (2026-11-15, the owner: "redraw Goni on the maps and stickers"): the frozen boards draw him with his old pastel crest; every
+scene takes his body from today's still, design/assets/goni.svg (written by docs/design/m11/make_host_poses.py), at the boards' 0.1.
 
 What is kept exactly: the approved boards 10, 12 and 25 (frozen copies in tools/home_map_src/, the files the app shipped before
 B-23). Their islands, hosts, clouds, sparkles and paths are copied element for element and only moved (phone +1250, SE +1167
@@ -75,8 +79,32 @@ def g(body, x=0, y=0, s=1, opacity=None):
 
 
 # ---------------------------------------------------------------- reading the approved boards
+def goni_now(s):
+    """Goni as he is now (the owner, 2026-11-15: "redraw Goni on the maps and stickers"): the boards drew him with the old pastel
+    crest (peach, cream, blue, lilac stripes). Each host group at 0.1 whose body is that old Goni gets the body of today's still,
+    design/assets/goni.svg (his mint skin, teal stripes and outline; docs/design/m11-rooms.md section 5.2), in the same place and at
+    the same 0.1 as the other hosts. Ids are dropped, so a scene never has two elements with one id. A scene that already has
+    the new Goni is left as it is."""
+    still = open(os.path.join(CAST, 'goni.svg'), encoding='utf-8').read()
+    new = re.sub(r' id="[^"]*"', '', still[still.index('>', still.index('<svg')) + 1:still.rindex('</svg>')].strip())
+    out, pos = [], 0
+    for m in re.finditer(r'<g transform="translate\([^)]*\) scale\(0\.1\)">', s):
+        if m.start() < pos:
+            continue
+        depth, k = 1, m.end()
+        while depth:                                  # the group's own </g>
+            nxt = re.search(r'<g[ >]|</g>', s[k:])
+            depth += -1 if nxt.group(0) == '</g>' else 1
+            k += nxt.end()
+        body = s[m.end():k - 4]
+        if '#7FD3B0' in body and '#FFC2B5' in body:   # his old crest
+            out += [s[pos:m.end()], new, '</g>']
+            pos = k
+    return ''.join(out) + s[pos:]
+
+
 def read_board(name):
-    s = open(os.path.join(SRC, name), encoding='utf-8').read()
+    s = goni_now(open(os.path.join(SRC, name), encoding='utf-8').read())
     head = re.match(r'<svg [^>]*>', s).group(0)
     label = re.search(r'aria-label="([^"]*)"', head).group(1)
     body = s[len(head):s.rindex('</svg>')]
@@ -377,3 +405,10 @@ if __name__ == '__main__':
     print('phone', phone_strip('board10_home_phone.svg', 'home_phone.svg', 2102, 393, 1250, 262, 248, 280, 124, 67))
     print('phoneSE', phone_strip('board12_home_phone_se.svg', 'home_phone_se.svg', 1834, 375, 1167, 258, 244, 252, 120, 65))
     print('portrait', portrait('board25_home_tablet_portrait.svg', 'home_tablet_portrait.svg', 820, 1580, 400))
+    # The landscape scene is not redrawn, only Goni in it (goni_now); then tools/make_languages_art.py makes the _lang scenes.
+    land = os.path.join(OUT, 'home_tablet_landscape.svg')
+    text = open(land, encoding='utf-8').read()
+    if goni_now(text) != text:
+        with open(land, 'w', encoding='utf-8', newline='\n') as fh:
+            fh.write(goni_now(text))
+        print('landscape: Goni redrawn')
