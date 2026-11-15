@@ -20,6 +20,7 @@ start with "[editor]" and are rewritten on every run.
 """
 import argparse
 import csv
+import difflib
 import os
 import re
 import sys
@@ -1118,6 +1119,10 @@ OWNER_APPROVED = [
     (r'^activity\.x\.mathb17\.(6|7)\.json$', r'^(חֲמִשָּׁה שְׁקָלִים, שְׁנֵי שְׁקָלִים (וְעוֹד שְׁנֵי שְׁקָלִים|וְשֶׁקֶל אֶחָד) — בְּיַחַד)',
      'Shop hint 3, owner (2026-11-08, option A): the three-coin hints drop "מַטְבֵּעַ שֶׁל" and name the values, so each fits 14 words; '
      'the other shop hints keep the Q11 form (owner-approved 2026-11-08).', r'^hints\.2\.caption'),
+    # The owner's approval of 2026-11-15 (in chat, relayed by the orchestrator): only the prompt and its alt text of NUM-B-11 items 13 to 18.
+    (r'^activity\.b\.numb11\.1[3-8]\.json$', r'^קְחוּ אֶחָד מִתּוֹךְ (אַרְבַּע|שֶׁבַע|תֵּשַׁע|שְׁתֵּים עֶשְׂרֵה|חֲמֵשׁ עֶשְׂרֵה|שְׁמוֹנֶה עֶשְׂרֵה)\. כַּמָּה נִשְׁאֲרוּ\?$',
+     'NUM-B-11 items 13 to 18: the prompt "קְחוּ אַחַת מִתּוֹךְ …" (a number standing alone is feminine) and its alt text; '
+     'owner approved in chat, 2026-11-15 (owner-approved 2026-11-15).', r'^(prompt\.caption\.0\.v|a11y\.altText)$'),
 ]
 
 
@@ -1603,6 +1608,32 @@ EDITOR = '[editor] '
 OWNER_STATUSES = ('owner-approved', 'voice-ready', 'voiced')
 
 
+# The word differences a voice text may have from the shown text, all documented in docs/agents/hebrew-notes.md (the director's
+# listening probes and the owner's answers): the hesitation sound, the blank said as words, the list opener, the chant opener,
+# the clock chant. Every other word difference between ui_text and voice_text is a defect (the 2026-11-15 sweep found none).
+VOICE_WORD_OK = {('הממ', 'המממ'), ('ו', 'ועוד צבע'), ('', 'הצעדים'), ('נאמר', 'נגיד'), ('נאמר', 'נגיד יחד'), ('תיקתק', 'תיק תק')}
+
+
+def _word_key(t):
+    return t.replace('ו', '').replace('י', '').replace('"', '').replace("'", '')
+
+
+def voice_word_mismatches(rows):
+    """Spoken rows whose voice_text differs from the shown text (ui_text) in a WORD: not nikud, ktiv male, punctuation or a pair
+    of VOICE_WORD_OK. Returns (source, id, shown, voiced, [(shown words, voiced words)])."""
+    out = []
+    for r in rows:
+        if r['spoken'] != 'yes' or not r['voice_text'].strip():
+            continue
+        shown = re.findall(r"[א-ת'\"]+|\d+|[=×÷+\-]", plain(r['ui_text'] or r['text']))
+        voiced = re.findall(r"[א-ת'\"]+|\d+|[=×÷+\-]", plain(r['voice_text']))
+        sm = difflib.SequenceMatcher(None, [_word_key(t) for t in shown], [_word_key(t) for t in voiced], autojunk=False)
+        diffs = [(' '.join(shown[i1:i2]), ' '.join(voiced[j1:j2])) for op, i1, i2, j1, j2 in sm.get_opcodes() if op != 'equal']
+        if any(d not in VOICE_WORD_OK for d in diffs):
+            out.append((r['source'], r['id'], r['ui_text'] or r['text'], r['voice_text'], diffs))
+    return out
+
+
 def master(rows, result, rules, path=None, approval=None):
     """The one big table: every text of the app with the corrected screen text, the voice text, what changed and where it stands.
     What the owner typed in the last version of the table (a correction, a comment that is not the editor's, a status after
@@ -1705,6 +1736,10 @@ def master(rows, result, rules, path=None, approval=None):
             w.writerow([row[c] for c in MASTER_COLUMNS])
             written.append(dict(row, base_status=status_before if by_snapshot else status))
     print('master', len(rows), 'rows', counts)
+    mismatches = voice_word_mismatches(written)
+    print('voice words that differ from the shown text (outside VOICE_WORD_OK): %d' % len(mismatches))
+    for source, rid, shown, voiced, diffs in mismatches:
+        print('  %s › %s: %s -> %s  %s' % (source, rid, shown, voiced, diffs))
     if kept and new_rows:
         # Not in the last table: the editor has not read them; a row in a REVIEWED group needs a PENDING entry or a read.
         print('new since the last table (%d):' % len(new_rows))

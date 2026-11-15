@@ -305,7 +305,7 @@ void main() {
       test('the pack plays text only: nothing is recorded, the lesson says so in its manifest', () {
         final String source = File('$_languages/$course/pack/pack.json').readAsStringSync();
         expect((jsonDecode(source) as Map<String, Object?>)['vo'], isEmpty);
-        expect(packs[course]!.packVersion, '0.1.0');
+        expect(packs[course]!.packVersion, '1.0.0');
       });
     });
   }
