@@ -15,10 +15,17 @@
     "RUS-A-03"
   ],
   "items": [
+    "rus.a03.r01",
+    "rus.a03.r02",
+    "rus.a03.f07",
+    "rus.a03.f08",
+    "rus.a03.f09",
+    "rus.a03.f10",
+    "rus.a03.f11",
+    "rus.a03.f12",
     "rus.a03.05",
-    "rus.a03.06",
-    "rus.a03.07",
-    "rus.a03.11"
+    "rus.a03.e12",
+    "rus.a03.s02"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,19 +37,19 @@
       }
     ]
   },
-  "sequence": 8,
+  "sequence": 10,
   "teach": [
     {
       "items": [
+        "rus.a03.tc04",
         "rus.a03.tc05",
-        "rus.a03.tc06",
-        "rus.a03.tc07",
-        "rus.a03.tc08"
+        "rus.a03.tc06"
       ],
       "routes": [
         "new"
       ],
-      "mode": "teach"
+      "mode": "teach",
+      "before": "rus.a03.f07"
     }
   ]
 }

@@ -15,10 +15,10 @@
     "RUS-A-04"
   ],
   "items": [
-    "rus.a04.08",
-    "rus.a04.09",
+    "rus.a04.r05",
+    "rus.a04.r06",
     "rus.a04.10",
-    "rus.a04.11",
+    "rus.a04.b01",
     "rus.a04.e01"
   ],
   "estimatedMinutes": 4,
@@ -31,5 +31,5 @@
       }
     ]
   },
-  "sequence": 13
+  "sequence": 18
 }

@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_chaj",
+    "target": "vo:rus.w_hleb",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
-      "target": "vo:rus.w_chaj"
+      "target": "vo:rus.w_hleb"
     },
     "incorrect": [
       {
@@ -80,24 +80,24 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_chaj"
+      "target": "vo:rus.w_hleb"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:tea"
+      "sprite": "asset:bread"
     }
   },
   "say": {
     "forms": [
-      "чай"
+      "хлеб"
     ],
     "foils": [
-      "молоко",
-      "вода"
+      "сыр",
+      "чай"
     ],
-    "clip": "vo:rus.w_chaj",
+    "clip": "vo:rus.w_hleb",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_chaj"
+      "target": "vo:rus.w_hleb"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +116,22 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_chaj"
+      "target": "vo:rus.w_hleb"
+    },
+    "meet": {
+      "position": 0,
+      "size": 3,
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: לֶחֶם."
+          }
+        ],
+        "target": "vo:rus.gl_lechem"
+      },
+      "written": "хлеб"
     }
   },
   "answer": {

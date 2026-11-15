@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_5",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_belka"
@@ -94,8 +94,8 @@
       "белка"
     ],
     "foils": [
-      "ёж",
-      "слон"
+      "лиса",
+      "ёж"
     ],
     "clip": "vo:rus.w_belka",
     "heard": {
@@ -117,6 +117,31 @@
         }
       ],
       "target": "vo:rus.w_belka"
+    },
+    "meet": {
+      "position": 2,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:fox",
+          "clip": "vo:rus.w_lisa"
+        },
+        {
+          "sprite": "asset:hedgehog",
+          "clip": "vo:rus.w_yozh"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: סְנָאִי."
+          }
+        ],
+        "target": "vo:rus.gl_snai"
+      },
+      "written": "белка"
     }
   },
   "answer": {

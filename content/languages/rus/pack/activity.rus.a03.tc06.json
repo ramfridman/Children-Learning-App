@@ -46,7 +46,7 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_nogi",
+    "target": "vo:rus.w_ruki",
     "replayButton": true
   },
   "feedback": {
@@ -58,7 +58,7 @@
           "v": "כֵּן!"
         }
       ],
-      "target": "vo:rus.w_nogi"
+      "target": "vo:rus.w_ruki"
     },
     "incorrect": [
       {
@@ -80,24 +80,24 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_nogi"
+      "target": "vo:rus.w_ruki"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:body_legs"
+      "sprite": "asset:body_arms"
     }
   },
   "say": {
     "forms": [
-      "ноги"
+      "руки"
     ],
     "foils": [
-      "руки",
+      "уши",
       "живот"
     ],
-    "clip": "vo:rus.w_nogi",
+    "clip": "vo:rus.w_ruki",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_nogi"
+      "target": "vo:rus.w_ruki"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +116,32 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_nogi"
+      "target": "vo:rus.w_ruki"
+    },
+    "meet": {
+      "position": 2,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:body_ears",
+          "clip": "vo:rus.w_ushi"
+        },
+        {
+          "sprite": "asset:body_tummy",
+          "clip": "vo:rus.w_zhivot"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: יָדַיִם."
+          }
+        ],
+        "target": "vo:rus.gl_yadayim"
+      },
+      "written": "руки"
     }
   },
   "answer": {

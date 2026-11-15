@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_zhiraf",
+    "target": "vo:rus.w_kot",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_5",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
-      "target": "vo:rus.w_zhiraf"
+      "target": "vo:rus.w_kot"
     },
     "incorrect": [
       {
@@ -80,24 +80,23 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_zhiraf"
+      "target": "vo:rus.w_kot"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:giraffe"
+      "sprite": "asset:cat_tomcat"
     }
   },
   "say": {
     "forms": [
-      "жираф"
+      "кот"
     ],
     "foils": [
-      "ёж",
-      "белка"
+      "слон"
     ],
-    "clip": "vo:rus.w_zhiraf",
+    "clip": "vo:rus.w_kot",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +105,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_zhiraf"
+      "target": "vo:rus.w_kot"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +115,28 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_zhiraf"
+      "target": "vo:rus.w_kot"
+    },
+    "meet": {
+      "position": 1,
+      "size": 2,
+      "earlier": [
+        {
+          "sprite": "asset:elephant",
+          "clip": "vo:rus.w_slon"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: חָתוּל."
+          }
+        ],
+        "target": "vo:rus.gl_chatul"
+      },
+      "written": "кот"
     }
   },
   "answer": {

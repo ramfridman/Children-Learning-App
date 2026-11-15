@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_1",
+      "vo": "vo:rus.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "כֵּן!"
         }
       ],
       "target": "vo:rus.w_dedushka"
@@ -94,8 +94,7 @@
       "дедушка"
     ],
     "foils": [
-      "мама",
-      "папа"
+      "сестра"
     ],
     "clip": "vo:rus.w_dedushka",
     "heard": {
@@ -117,6 +116,21 @@
         }
       ],
       "target": "vo:rus.w_dedushka"
+    },
+    "meet": {
+      "position": 0,
+      "size": 2,
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: סַבָּא."
+          }
+        ],
+        "target": "vo:rus.gl_saba"
+      },
+      "written": "дедушка"
     }
   },
   "answer": {

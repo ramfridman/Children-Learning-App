@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_7",
+      "vo": "vo:rus.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "הִקְשַׁבְתֶּם יָפֶה!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:rus.w_poka"
@@ -94,8 +94,7 @@
       "пока"
     ],
     "foils": [
-      "привет",
-      "здравствуйте"
+      "привет"
     ],
     "clip": "vo:rus.w_poka",
     "heard": {
@@ -117,6 +116,27 @@
         }
       ],
       "target": "vo:rus.w_poka"
+    },
+    "meet": {
+      "position": 1,
+      "size": 2,
+      "earlier": [
+        {
+          "sprite": "asset:mika_arrive",
+          "clip": "vo:rus.w_privet"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: ביי."
+          }
+        ],
+        "target": "vo:rus.gl_bai"
+      },
+      "written": "Пока"
     }
   },
   "answer": {

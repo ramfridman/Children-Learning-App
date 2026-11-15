@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_1",
+      "vo": "vo:rus.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "כֵּן!"
         }
       ],
       "target": "vo:rus.w_malysh"
@@ -94,8 +94,7 @@
       "малыш"
     ],
     "foils": [
-      "брат",
-      "сестра"
+      "брат"
     ],
     "clip": "vo:rus.w_malysh",
     "heard": {
@@ -117,6 +116,27 @@
         }
       ],
       "target": "vo:rus.w_malysh"
+    },
+    "meet": {
+      "position": 1,
+      "size": 2,
+      "earlier": [
+        {
+          "sprite": "asset:fam_brother",
+          "clip": "vo:rus.w_brat"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: תִּינוֹק."
+          }
+        ],
+        "target": "vo:rus.gl_tinok"
+      },
+      "written": "малыш"
     }
   },
   "answer": {

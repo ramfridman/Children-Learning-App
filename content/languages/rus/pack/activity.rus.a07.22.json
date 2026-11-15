@@ -140,6 +140,7 @@
         "id": "o1",
         "sprite": "asset:juice",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_sok",
         "at": {
           "x": 0.02,
           "y": 0.05,
@@ -149,9 +150,10 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:soup",
+        "sprite": "asset:water",
         "label": "תְּמוּנָה",
-        "misconception": "rus.voc.sound",
+        "clip": "vo:rus.w_voda",
+        "misconception": "rus.lis.sem",
         "at": {
           "x": 0.02,
           "y": 0.355,
@@ -161,8 +163,9 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:water",
+        "sprite": "asset:milk",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_moloko",
         "misconception": "rus.lis.sem",
         "at": {
           "x": 0.02,

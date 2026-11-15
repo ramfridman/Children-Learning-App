@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_5",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_lisa"
@@ -94,8 +94,8 @@
       "лиса"
     ],
     "foils": [
-      "заяц",
-      "медведь"
+      "ёж",
+      "белка"
     ],
     "clip": "vo:rus.w_lisa",
     "heard": {
@@ -117,6 +117,21 @@
         }
       ],
       "target": "vo:rus.w_lisa"
+    },
+    "meet": {
+      "position": 0,
+      "size": 3,
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: שׁוּעָל."
+          }
+        ],
+        "target": "vo:rus.gl_shual"
+      },
+      "written": "лиса"
     }
   },
   "answer": {

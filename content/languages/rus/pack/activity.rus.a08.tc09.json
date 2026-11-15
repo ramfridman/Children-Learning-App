@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_karandash",
+    "target": "vo:rus.w_piramidka",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
-      "target": "vo:rus.w_karandash"
+      "target": "vo:rus.w_piramidka"
     },
     "incorrect": [
       {
@@ -80,24 +80,23 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_karandash"
+      "target": "vo:rus.w_piramidka"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:pencil"
+      "sprite": "asset:stacker"
     }
   },
   "say": {
     "forms": [
-      "карандаш"
-    ],
-    "foils": [
-      "шарик",
       "пирамидка"
     ],
-    "clip": "vo:rus.w_karandash",
+    "foils": [
+      "юла"
+    ],
+    "clip": "vo:rus.w_piramidka",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +105,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_karandash"
+      "target": "vo:rus.w_piramidka"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +115,22 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_karandash"
+      "target": "vo:rus.w_piramidka"
+    },
+    "meet": {
+      "position": 0,
+      "size": 2,
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: מגדל טבעות."
+          }
+        ],
+        "target": "vo:rus.gl_migdal_tabaot"
+      },
+      "written": "пирамидка"
     }
   },
   "answer": {

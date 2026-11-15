@@ -15,11 +15,14 @@
     "RUS-A-20"
   ],
   "items": [
+    "rus.a20.17",
+    "rus.a20.f04",
+    "rus.a20.f05",
     "rus.a20.05",
     "rus.a20.06",
-    "rus.a20.17",
-    "rus.a20.23",
-    "rus.a20.24"
+    "rus.a20.04",
+    "rus.a20.s02",
+    "rus.a20.15"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -31,10 +34,22 @@
       }
     ]
   },
-  "sequence": 67,
+  "sequence": 91,
   "teach": [
     {
       "items": [
+        "rus.a20.tc04",
+        "rus.a20.tc05",
+        "rus.a20.tc06"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach"
+    },
+    {
+      "items": [
+        "rus.a20.th04",
         "rus.a20.th05",
         "rus.a20.th06"
       ],

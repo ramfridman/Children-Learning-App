@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_1",
+      "vo": "vo:rus.he_fb_right_8",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "כׇּל הַכָּבוֹד!"
         }
       ]
     },
@@ -85,11 +85,13 @@
     "pictures": [
       {
         "picture": "asset:cat_tomcat",
-        "label": "תְּמוּנָה"
+        "label": "кот",
+        "clip": "vo:rus.w_kot"
       },
       {
         "picture": "asset:body_mouth",
-        "label": "תְּמוּנָה"
+        "label": "рот",
+        "clip": "vo:rus.w_rot"
       }
     ],
     "lines": [
@@ -97,13 +99,19 @@
         "clips": [
           "vo:rus.rh2"
         ],
-        "lights": []
+        "lights": [
+          0,
+          1
+        ]
       },
       {
         "clips": [
           "vo:rus.rh2"
         ],
-        "lights": []
+        "lights": [
+          0,
+          1
+        ]
       }
     ]
   },

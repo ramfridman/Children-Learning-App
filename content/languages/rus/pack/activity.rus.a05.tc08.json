@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_5",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_svinja"
@@ -94,8 +94,8 @@
       "свинья"
     ],
     "foils": [
-      "корова",
-      "лошадь"
+      "лошадь",
+      "коза"
     ],
     "clip": "vo:rus.w_svinja",
     "heard": {
@@ -117,6 +117,27 @@
         }
       ],
       "target": "vo:rus.w_svinja"
+    },
+    "meet": {
+      "position": 1,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:horse",
+          "clip": "vo:rus.w_loshad"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: חֲזִיר."
+          }
+        ],
+        "target": "vo:rus.gl_chazir"
+      },
+      "written": "свинья"
     }
   },
   "answer": {

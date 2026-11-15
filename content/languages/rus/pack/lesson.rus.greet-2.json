@@ -1,0 +1,51 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.greet-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "בְּרָכוֹת"
+    }
+  ],
+  "skills": [
+    "RUS-A-01"
+  ],
+  "items": [
+    "rus.a01.r01",
+    "rus.a01.r02",
+    "rus.a01.f01",
+    "rus.a01.f02",
+    "rus.a01.f03",
+    "rus.a01.11",
+    "rus.a01.06",
+    "rus.a01.s01"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 2,
+  "teach": [
+    {
+      "items": [
+        "rus.a01.tc03",
+        "rus.a01.tc04"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "rus.a01.f01"
+    }
+  ]
+}

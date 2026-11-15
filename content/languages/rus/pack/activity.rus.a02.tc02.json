@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_papa",
+    "target": "vo:rus.w_babushka",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_1",
+      "vo": "vo:rus.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "כֵּן!"
         }
       ],
-      "target": "vo:rus.w_papa"
+      "target": "vo:rus.w_babushka"
     },
     "incorrect": [
       {
@@ -80,24 +80,24 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_papa"
+      "target": "vo:rus.w_babushka"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:fam_father"
+      "sprite": "asset:fam_grandmother"
     }
   },
   "say": {
     "forms": [
-      "папа"
+      "бабушка"
     ],
     "foils": [
       "мама",
-      "бабушка"
+      "папа"
     ],
-    "clip": "vo:rus.w_papa",
+    "clip": "vo:rus.w_babushka",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_papa"
+      "target": "vo:rus.w_babushka"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +116,28 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_papa"
+      "target": "vo:rus.w_babushka"
+    },
+    "meet": {
+      "position": 1,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:fam_mother",
+          "clip": "vo:rus.w_mama"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: סָבְתָא."
+          }
+        ],
+        "target": "vo:rus.gl_savta"
+      },
+      "written": "бабушка"
     }
   },
   "answer": {

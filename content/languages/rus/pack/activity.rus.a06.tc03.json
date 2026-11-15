@@ -46,7 +46,7 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_zholtyj",
+    "target": "vo:rus.w_sinij",
     "replayButton": true
   },
   "feedback": {
@@ -58,7 +58,7 @@
           "v": "מְצָאתֶם!"
         }
       ],
-      "target": "vo:rus.w_zholtyj"
+      "target": "vo:rus.w_sinij"
     },
     "incorrect": [
       {
@@ -80,24 +80,24 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_zholtyj"
+      "target": "vo:rus.w_sinij"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:col_yellow"
+      "sprite": "asset:col_blue"
     }
   },
   "say": {
     "forms": [
-      "жёлтый"
+      "синий"
     ],
     "foils": [
       "красный",
-      "синий"
+      "жёлтый"
     ],
-    "clip": "vo:rus.w_zholtyj",
+    "clip": "vo:rus.w_sinij",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_zholtyj"
+      "target": "vo:rus.w_sinij"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +116,32 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_zholtyj"
+      "target": "vo:rus.w_sinij"
+    },
+    "meet": {
+      "position": 2,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:col_red",
+          "clip": "vo:rus.w_krasnyj"
+        },
+        {
+          "sprite": "asset:col_yellow",
+          "clip": "vo:rus.w_zholtyj"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: כָּחֹל."
+          }
+        ],
+        "target": "vo:rus.gl_kachol"
+      },
+      "written": "синий"
     }
   },
   "answer": {

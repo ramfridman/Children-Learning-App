@@ -15,9 +15,13 @@
     "RUS-A-06"
   ],
   "items": [
-    "rus.a06.10",
+    "rus.a06.r04",
     "rus.a06.13",
-    "rus.a06.14"
+    "rus.a06.10",
+    "rus.a06.14",
+    "rus.a06.d04",
+    "rus.a06.s03",
+    "rus.a06.s07"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,5 +33,5 @@
       }
     ]
   },
-  "sequence": 23
+  "sequence": 31
 }

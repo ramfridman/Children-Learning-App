@@ -15,8 +15,9 @@
     "RUS-A-14"
   ],
   "items": [
-    "rus.a14.10",
-    "rus.a14.10s"
+    "rus.a14.08",
+    "rus.a14.s05",
+    "rus.a14.s04"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -28,5 +29,5 @@
       }
     ]
   },
-  "sequence": 49
+  "sequence": 69
 }

@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_mashina"
@@ -117,6 +117,31 @@
         }
       ],
       "target": "vo:rus.w_mashina"
+    },
+    "meet": {
+      "position": 2,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:ball",
+          "clip": "vo:rus.w_mjach"
+        },
+        {
+          "sprite": "asset:doll",
+          "clip": "vo:rus.w_kukla"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: מְכוֹנִית."
+          }
+        ],
+        "target": "vo:rus.gl_mechonit"
+      },
+      "written": "машина"
     }
   },
   "answer": {

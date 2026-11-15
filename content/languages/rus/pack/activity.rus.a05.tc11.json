@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_kuritsa",
+    "target": "vo:rus.w_utka",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_5",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
-      "target": "vo:rus.w_kuritsa"
+      "target": "vo:rus.w_utka"
     },
     "incorrect": [
       {
@@ -80,24 +80,24 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_kuritsa"
+      "target": "vo:rus.w_utka"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:hen"
+      "sprite": "asset:duck"
     }
   },
   "say": {
     "forms": [
-      "курица"
+      "утка"
     ],
     "foils": [
-      "утка",
+      "курица",
       "петух"
     ],
-    "clip": "vo:rus.w_kuritsa",
+    "clip": "vo:rus.w_utka",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_kuritsa"
+      "target": "vo:rus.w_utka"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +116,28 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_kuritsa"
+      "target": "vo:rus.w_utka"
+    },
+    "meet": {
+      "position": 1,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:hen",
+          "clip": "vo:rus.w_kuritsa"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: בַּרְוָז."
+          }
+        ],
+        "target": "vo:rus.gl_barvaz"
+      },
+      "written": "утка"
     }
   },
   "answer": {

@@ -46,19 +46,19 @@
         "v": "מָה עוֹנִים לֶחָבֵר?"
       }
     ],
-    "target": "vo:rus.ch_chto_eto",
+    "target": "vo:rus.ch_kto_eto",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_6",
+      "vo": "vo:rus.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "שְׁמַעְתֶּם טוֹב!"
+          "v": "נָכוֹן!"
         }
       ],
-      "target": "vo:rus.ch_eto_jabloko"
+      "target": "vo:rus.ch_eto_mama"
     },
     "incorrect": [
       {
@@ -80,7 +80,7 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.ch_eto_jabloko"
+      "target": "vo:rus.ch_eto_mama"
     }
   },
   "hints": [
@@ -98,11 +98,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:rus.gl_ze_tapuach",
+      "vo": "vo:rus.gl_zot_ima",
       "caption": [
         {
           "t": "he",
-          "v": "זֶה תַּפּוּחַ."
+          "v": "זֹאת אִמָּא."
         }
       ]
     },
@@ -116,11 +116,11 @@
           "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
         }
       ],
-      "target": "vo:rus.ch_eto_jabloko"
+      "target": "vo:rus.ch_eto_mama"
     }
   ],
   "scene": {
-    "picture": "asset:apple"
+    "picture": "asset:fam_mother"
   },
   "answer": {
     "type": "choice",
@@ -129,19 +129,19 @@
       {
         "id": "o1",
         "label": "צְלִיל",
-        "clip": "vo:rus.ch_eto_jabloko"
+        "clip": "vo:rus.ch_eto_mama"
       },
       {
         "id": "o2",
         "label": "צְלִיל",
-        "clip": "vo:rus.ch_eto_banan",
+        "clip": "vo:rus.ch_eto_koshka",
         "misconception": "rus.lis.sem"
       },
       {
         "id": "o3",
         "label": "צְלִיל",
-        "clip": "vo:rus.ch_eto_moloko",
-        "misconception": "rus.voc.sound"
+        "clip": "vo:rus.ch_eto_mjach",
+        "misconception": "rus.lis.sem"
       }
     ],
     "correct": "o1",

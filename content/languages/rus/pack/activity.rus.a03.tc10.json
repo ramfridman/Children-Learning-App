@@ -94,7 +94,6 @@
       "зубы"
     ],
     "foils": [
-      "пальцы",
       "волосы"
     ],
     "clip": "vo:rus.w_zuby",
@@ -117,6 +116,21 @@
         }
       ],
       "target": "vo:rus.w_zuby"
+    },
+    "meet": {
+      "position": 0,
+      "size": 2,
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: שִׁנַּיִם."
+          }
+        ],
+        "target": "vo:rus.gl_shinayim"
+      },
+      "written": "зубы"
     }
   },
   "answer": {

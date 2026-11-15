@@ -34,6 +34,10 @@
       "file": "act_walk.svg"
     },
     {
+      "id": "act_wave",
+      "file": "act_wave.svg"
+    },
+    {
       "id": "apple",
       "file": "apple.svg"
     },
@@ -78,10 +82,6 @@
       "file": "balloon.svg"
     },
     {
-      "id": "balloon_big",
-      "file": "balloon_big.svg"
-    },
-    {
       "id": "banana",
       "file": "banana.svg"
     },
@@ -90,12 +90,12 @@
       "file": "bear.svg"
     },
     {
-      "id": "beetle",
-      "file": "beetle.svg"
-    },
-    {
       "id": "bird",
       "file": "bird.svg"
+    },
+    {
+      "id": "bird_2",
+      "file": "bird_2.svg"
     },
     {
       "id": "blank",
@@ -182,6 +182,10 @@
       "file": "cat.svg"
     },
     {
+      "id": "cat_2",
+      "file": "cat_2.svg"
+    },
+    {
       "id": "cat_tomcat",
       "file": "cat_tomcat.svg"
     },
@@ -222,12 +226,20 @@
       "file": "cow.svg"
     },
     {
+      "id": "cow_2",
+      "file": "cow_2.svg"
+    },
+    {
       "id": "cucumber",
       "file": "cucumber.svg"
     },
     {
       "id": "dog",
       "file": "dog.svg"
+    },
+    {
+      "id": "dog_2",
+      "file": "dog_2.svg"
     },
     {
       "id": "dog_shaggy",
@@ -242,24 +254,16 @@
       "file": "doll_body.svg"
     },
     {
-      "id": "doll_eyes",
-      "file": "doll_eyes.svg"
-    },
-    {
-      "id": "doll_mouth",
-      "file": "doll_mouth.svg"
-    },
-    {
-      "id": "doll_nose",
-      "file": "doll_nose.svg"
-    },
-    {
       "id": "dress",
       "file": "dress.svg"
     },
     {
       "id": "duck",
       "file": "duck.svg"
+    },
+    {
+      "id": "duck_2",
+      "file": "duck_2.svg"
     },
     {
       "id": "duck_lit",
@@ -354,10 +358,6 @@
       "file": "horse.svg"
     },
     {
-      "id": "house",
-      "file": "house.svg"
-    },
-    {
       "id": "jacket",
       "file": "jacket.svg"
     },
@@ -382,6 +382,10 @@
       "file": "mika_body.svg"
     },
     {
+      "id": "mika_eat",
+      "file": "mika_eat.svg"
+    },
+    {
       "id": "mika_gift",
       "file": "mika_gift.svg"
     },
@@ -396,6 +400,10 @@
     {
       "id": "mika_no",
       "file": "mika_no.svg"
+    },
+    {
+      "id": "mika_present",
+      "file": "mika_present.svg"
     },
     {
       "id": "mika_yes",

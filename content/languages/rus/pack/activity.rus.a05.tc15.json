@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_5",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_volk"
@@ -117,6 +117,31 @@
         }
       ],
       "target": "vo:rus.w_volk"
+    },
+    "meet": {
+      "position": 2,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:rabbit",
+          "clip": "vo:rus.w_zajats"
+        },
+        {
+          "sprite": "asset:bear",
+          "clip": "vo:rus.w_medved"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: זְאֵב."
+          }
+        ],
+        "target": "vo:rus.gl_zeev"
+      },
+      "written": "волк"
     }
   },
   "answer": {

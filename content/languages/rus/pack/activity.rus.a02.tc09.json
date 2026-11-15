@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_malchik",
+    "target": "vo:rus.w_semja",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_1",
+      "vo": "vo:rus.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "כֵּן!"
         }
       ],
-      "target": "vo:rus.w_malchik"
+      "target": "vo:rus.w_semja"
     },
     "incorrect": [
       {
@@ -80,23 +80,24 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_malchik"
+      "target": "vo:rus.w_semja"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:boy"
+      "sprite": "asset:fam_all"
     }
   },
   "say": {
     "forms": [
-      "мальчик"
+      "семья"
     ],
     "foils": [
+      "мальчик",
       "девочка"
     ],
-    "clip": "vo:rus.w_malchik",
+    "clip": "vo:rus.w_semja",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -105,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_malchik"
+      "target": "vo:rus.w_semja"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -115,7 +116,28 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_malchik"
+      "target": "vo:rus.w_semja"
+    },
+    "meet": {
+      "position": 1,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:boy",
+          "clip": "vo:rus.w_malchik"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: מִשְׁפָּחָה."
+          }
+        ],
+        "target": "vo:rus.gl_mishpacha"
+      },
+      "written": "семья"
     }
   },
   "answer": {

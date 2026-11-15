@@ -46,7 +46,7 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_belyj",
+    "target": "vo:rus.w_zeljonyj",
     "replayButton": true
   },
   "feedback": {
@@ -58,7 +58,7 @@
           "v": "מְצָאתֶם!"
         }
       ],
-      "target": "vo:rus.w_belyj"
+      "target": "vo:rus.w_zeljonyj"
     },
     "incorrect": [
       {
@@ -80,24 +80,24 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_belyj"
+      "target": "vo:rus.w_zeljonyj"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:col_white"
+      "sprite": "asset:col_green"
     }
   },
   "say": {
     "forms": [
-      "белый"
+      "зелёный"
     ],
     "foils": [
-      "зелёный",
-      "чёрный"
+      "чёрный",
+      "белый"
     ],
-    "clip": "vo:rus.w_belyj",
+    "clip": "vo:rus.w_zeljonyj",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_belyj"
+      "target": "vo:rus.w_zeljonyj"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +116,28 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_belyj"
+      "target": "vo:rus.w_zeljonyj"
+    },
+    "meet": {
+      "position": 1,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:col_black",
+          "clip": "vo:rus.w_chornyj"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: יָרֹק."
+          }
+        ],
+        "target": "vo:rus.gl_yarok"
+      },
+      "written": "зелёный"
     }
   },
   "answer": {

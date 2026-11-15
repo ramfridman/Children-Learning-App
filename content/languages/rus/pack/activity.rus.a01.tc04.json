@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_7",
+      "vo": "vo:rus.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "הִקְשַׁבְתֶּם יָפֶה!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:rus.w_do_svidanija"
@@ -94,8 +94,7 @@
       "до свидания"
     ],
     "foils": [
-      "привет",
-      "пока"
+      "здравствуйте"
     ],
     "keyWords": [
       "до",
@@ -121,6 +120,27 @@
         }
       ],
       "target": "vo:rus.w_do_svidanija"
+    },
+    "meet": {
+      "position": 1,
+      "size": 2,
+      "earlier": [
+        {
+          "sprite": "asset:neighbour_arrive",
+          "clip": "vo:rus.w_zdravstvujte"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: לְהִתְרָאוֹת."
+          }
+        ],
+        "target": "vo:rus.gl_lehitraot"
+      },
+      "written": "До свидания"
     }
   },
   "answer": {

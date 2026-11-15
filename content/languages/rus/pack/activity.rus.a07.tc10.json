@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_pechenje"
@@ -94,8 +94,8 @@
       "печенье"
     ],
     "foils": [
-      "хлеб",
-      "сыр"
+      "яблоко",
+      "банан"
     ],
     "clip": "vo:rus.w_pechenje",
     "heard": {
@@ -117,6 +117,21 @@
         }
       ],
       "target": "vo:rus.w_pechenje"
+    },
+    "meet": {
+      "position": 0,
+      "size": 3,
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: עוּגִיָּה."
+          }
+        ],
+        "target": "vo:rus.gl_ugiya"
+      },
+      "written": "печенье"
     }
   },
   "answer": {

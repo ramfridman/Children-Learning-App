@@ -137,12 +137,14 @@
         "id": "o2",
         "sprite": "asset:mika_leave",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_poka",
         "misconception": "rus.lis.tyvy"
       },
       {
         "id": "o3",
         "sprite": "asset:mika_arrive",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_privet",
         "misconception": "rus.lis.sem"
       }
     ],

@@ -15,10 +15,13 @@
     "RUS-A-02"
   ],
   "items": [
-    "rus.a02.11",
-    "rus.a02.12",
-    "rus.a02.13",
-    "rus.a02.15"
+    "rus.a02.14",
+    "rus.a02.r03",
+    "rus.a02.s10",
+    "rus.a02.s10t",
+    "rus.a02.s11",
+    "rus.a02.s11t",
+    "rus.a02.h03"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +33,5 @@
       }
     ]
   },
-  "sequence": 6
+  "sequence": 8
 }

@@ -1,0 +1,150 @@
+{
+  "schema": "activity/v1",
+  "id": "rus.a12.y05",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "puppet_talk",
+  "templateVersion": "1.0",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "RUS-A-12",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "ch-eto-mjach-q",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 2,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "answer the puppet",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "בֻּבָּה שֶׁמְּדַבֶּרֶת"
+  },
+  "prompt": {
+    "vo": "vo:rus.f18",
+    "caption": [
+      {
+        "t": "he",
+        "v": "זֶה נָכוֹן?"
+      }
+    ],
+    "target": "vo:rus.ch_eto_mjach_q",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:rus.he_fb_right_6",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁמַעְתֶּם טוֹב!"
+        }
+      ],
+      "target": "vo:rus.w_net",
+      "target2": "vo:rus.ch_eto_kukla"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:rus.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ],
+      "target": "vo:rus.ch_eto_mjach_q"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ],
+      "target": "vo:rus.ch_eto_mjach_q"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:rus.f18",
+      "caption": [
+        {
+          "t": "he",
+          "v": "זֶה נָכוֹן?"
+        }
+      ],
+      "target": "vo:rus.ch_eto_mjach_q"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:rus.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:rus.ch_eto_mjach_q"
+    }
+  ],
+  "scene": {
+    "picture": "asset:doll"
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "bubble",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:mika_no",
+        "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_net"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:mika_yes",
+        "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_da",
+        "misconception": "rus.grm.yesno"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

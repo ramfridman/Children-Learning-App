@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_shtany"
@@ -94,8 +94,8 @@
       "штаны"
     ],
     "foils": [
-      "шапка",
-      "куртка"
+      "куртка",
+      "ботинки"
     ],
     "clip": "vo:rus.w_shtany",
     "heard": {
@@ -117,6 +117,27 @@
         }
       ],
       "target": "vo:rus.w_shtany"
+    },
+    "meet": {
+      "position": 1,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:jacket",
+          "clip": "vo:rus.w_kurtka"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: מִכְנָסַיִם."
+          }
+        ],
+        "target": "vo:rus.gl_michnasayim"
+      },
+      "written": "штаны"
     }
   },
   "answer": {

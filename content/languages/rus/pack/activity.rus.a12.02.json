@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_5",
+      "vo": "vo:rus.he_fb_right_8",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "כׇּל הַכָּבוֹד!"
         }
       ],
       "target": "vo:rus.ch_eto_koshka"
@@ -134,13 +134,13 @@
       {
         "id": "o2",
         "label": "צְלִיל",
-        "clip": "vo:rus.ch_eto_sobaka",
+        "clip": "vo:rus.ch_eto_mjach",
         "misconception": "rus.lis.sem"
       },
       {
         "id": "o3",
         "label": "צְלִיל",
-        "clip": "vo:rus.ch_eto_mjach",
+        "clip": "vo:rus.ch_eto_mama",
         "misconception": "rus.lis.sem"
       }
     ],

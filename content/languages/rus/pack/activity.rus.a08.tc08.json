@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_kniga",
+    "target": "vo:rus.w_karandash",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
-      "target": "vo:rus.w_kniga"
+      "target": "vo:rus.w_karandash"
     },
     "incorrect": [
       {
@@ -80,24 +80,23 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_kniga"
+      "target": "vo:rus.w_karandash"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:book"
+      "sprite": "asset:pencil"
     }
   },
   "say": {
     "forms": [
-      "книга"
+      "карандаш"
     ],
     "foils": [
-      "шарик",
-      "пирамидка"
+      "книга"
     ],
-    "clip": "vo:rus.w_kniga",
+    "clip": "vo:rus.w_karandash",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +105,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_kniga"
+      "target": "vo:rus.w_karandash"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +115,28 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_kniga"
+      "target": "vo:rus.w_karandash"
+    },
+    "meet": {
+      "position": 1,
+      "size": 2,
+      "earlier": [
+        {
+          "sprite": "asset:book",
+          "clip": "vo:rus.w_kniga"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: עִפָּרוֹן."
+          }
+        ],
+        "target": "vo:rus.gl_iparon"
+      },
+      "written": "карандаш"
     }
   },
   "answer": {

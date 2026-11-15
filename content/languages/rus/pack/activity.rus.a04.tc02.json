@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_begi",
+    "target": "vo:rus.w_prygaj",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_3",
+      "vo": "vo:rus.he_fb_right_6",
       "caption": [
         {
           "t": "he",
-          "v": "יָפֶה מְאֹד!"
+          "v": "שְׁמַעְתֶּם טוֹב!"
         }
       ],
-      "target": "vo:rus.w_begi"
+      "target": "vo:rus.w_prygaj"
     },
     "incorrect": [
       {
@@ -80,24 +80,24 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_begi"
+      "target": "vo:rus.w_prygaj"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:act_run"
+      "sprite": "asset:act_jump"
     }
   },
   "say": {
     "forms": [
-      "беги"
+      "прыгай"
     ],
     "foils": [
       "иди",
-      "прыгай"
+      "сядь"
     ],
-    "clip": "vo:rus.w_begi",
+    "clip": "vo:rus.w_prygaj",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_begi"
+      "target": "vo:rus.w_prygaj"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +116,28 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_begi"
+      "target": "vo:rus.w_prygaj"
+    },
+    "meet": {
+      "position": 1,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:act_walk",
+          "clip": "vo:rus.w_idi"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: קִפְצוּ."
+          }
+        ],
+        "target": "vo:rus.gl_kiftsu"
+      },
+      "written": "Прыгай"
     }
   },
   "answer": {

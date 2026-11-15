@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_5",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_petuh"
@@ -94,8 +94,8 @@
       "петух"
     ],
     "foils": [
-      "утка",
-      "курица"
+      "курица",
+      "утка"
     ],
     "clip": "vo:rus.w_petuh",
     "heard": {
@@ -117,6 +117,31 @@
         }
       ],
       "target": "vo:rus.w_petuh"
+    },
+    "meet": {
+      "position": 2,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:hen",
+          "clip": "vo:rus.w_kuritsa"
+        },
+        {
+          "sprite": "asset:duck",
+          "clip": "vo:rus.w_utka"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: תַּרְנְגוֹל."
+          }
+        ],
+        "target": "vo:rus.gl_tarnegol"
+      },
+      "written": "петух"
     }
   },
   "answer": {

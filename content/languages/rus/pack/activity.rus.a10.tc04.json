@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_3",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "יָפֶה מְאֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.n_4"
@@ -94,8 +94,7 @@
       "четыре"
     ],
     "foils": [
-      "один",
-      "два"
+      "пять"
     ],
     "clip": "vo:rus.n_4",
     "heard": {
@@ -117,6 +116,21 @@
         }
       ],
       "target": "vo:rus.n_4"
+    },
+    "meet": {
+      "position": 0,
+      "size": 2,
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: אַרְבַּע."
+          }
+        ],
+        "target": "vo:rus.gl_arba"
+      },
+      "written": "четыре"
     }
   },
   "answer": {

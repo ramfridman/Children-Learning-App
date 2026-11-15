@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_3",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "יָפֶה מְאֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.n_3"
@@ -117,6 +117,31 @@
         }
       ],
       "target": "vo:rus.n_3"
+    },
+    "meet": {
+      "position": 2,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:set_balls_1",
+          "clip": "vo:rus.n_1"
+        },
+        {
+          "sprite": "asset:set_balls_2",
+          "clip": "vo:rus.n_2"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: שָׁלוֹשׁ."
+          }
+        ],
+        "target": "vo:rus.gl_shalosh"
+      },
+      "written": "три"
     }
   },
   "answer": {

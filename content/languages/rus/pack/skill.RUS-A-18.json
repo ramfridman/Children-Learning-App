@@ -20,7 +20,9 @@
   ],
   "representations": [
     "concrete",
-    "pictorial"
+    "pictorial",
+    "story",
+    "embodied"
   ],
   "misconceptions": [
     "rus.pho.syll"

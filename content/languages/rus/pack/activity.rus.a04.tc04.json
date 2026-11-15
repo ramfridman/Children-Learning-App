@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_sjad",
+    "target": "vo:rus.w_begi",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_3",
+      "vo": "vo:rus.he_fb_right_6",
       "caption": [
         {
           "t": "he",
-          "v": "יָפֶה מְאֹד!"
+          "v": "שְׁמַעְתֶּם טוֹב!"
         }
       ],
-      "target": "vo:rus.w_sjad"
+      "target": "vo:rus.w_begi"
     },
     "incorrect": [
       {
@@ -80,24 +80,23 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_sjad"
+      "target": "vo:rus.w_begi"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:act_sit"
+      "sprite": "asset:act_run"
     }
   },
   "say": {
     "forms": [
-      "сядь"
+      "беги"
     ],
     "foils": [
-      "встань",
-      "хлопай"
+      "встань"
     ],
-    "clip": "vo:rus.w_sjad",
+    "clip": "vo:rus.w_begi",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +105,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_sjad"
+      "target": "vo:rus.w_begi"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +115,22 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_sjad"
+      "target": "vo:rus.w_begi"
+    },
+    "meet": {
+      "position": 0,
+      "size": 2,
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: רוּצוּ."
+          }
+        ],
+        "target": "vo:rus.gl_rutsu"
+      },
+      "written": "Беги"
     }
   },
   "answer": {

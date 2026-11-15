@@ -15,10 +15,14 @@
     "RUS-A-07"
   ],
   "items": [
-    "rus.a07.22",
-    "rus.a07.23",
-    "rus.a07.24",
-    "rus.a07.25"
+    "rus.a07.r11",
+    "rus.a07.r12",
+    "rus.a07.15",
+    "rus.a07.18",
+    "rus.a07.d05",
+    "rus.a07.s10",
+    "rus.a07.s10t",
+    "rus.a07.s16"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +34,5 @@
       }
     ]
   },
-  "sequence": 30
+  "sequence": 39
 }

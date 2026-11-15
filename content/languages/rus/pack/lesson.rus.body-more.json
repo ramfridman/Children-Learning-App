@@ -15,8 +15,13 @@
     "RUS-A-03"
   ],
   "items": [
-    "rus.a03.12",
+    "rus.a03.r07",
+    "rus.a03.r08",
+    "rus.a03.10",
     "rus.a03.13",
+    "rus.a03.s05",
+    "rus.a03.s05t",
+    "rus.a03.e14",
     "rus.a03.e01"
   ],
   "estimatedMinutes": 4,
@@ -29,5 +34,5 @@
       }
     ]
   },
-  "sequence": 10
+  "sequence": 13
 }
