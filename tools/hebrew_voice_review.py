@@ -10,11 +10,15 @@ docs/review/hebrew-elevenlabs-review.md and .csv (only the rows that changed or 
     comment for the rows that wait for the owner (`DOUBT`) and for new rows the editor has not signed (`PENDING`).
 
     PYTHONIOENCODING=utf-8 python tools/hebrew_voice_review.py
+    python -I -X utf8 tools/hebrew_voice_review.py --approval-snapshot docs/review/owner-approval-2026-11-08.csv
+
+The second form also writes the snapshot of the rows `text-ready` or `proposed` for the owner's bulk approval (tools/owner_approval.py).
 
 Nothing is written back to the pack: the owner decides which rows to take. What the owner typed in the master table
 (the `correction (fill in)` and `comment` columns, and any status after `text-ready`) is kept. The editor's own comments
 start with "[editor]" and are rewritten on every run.
 """
+import argparse
 import csv
 import os
 import re
@@ -22,7 +26,9 @@ import sys
 import unicodedata
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+ARGV = sys.argv[1:]  # author.py reads sys.argv when it is imported
 sys.argv = sys.argv[:1] + ['-']
+import owner_approval  # noqa: E402
 from author import F, M  # noqa: E402
 from band_b import NAMES, OBJECTS  # noqa: E402
 
@@ -613,6 +619,7 @@ def ktiv_lookup(p):
 
 SIN_KEEP = False  # language courses only (course_voice_text): a word with the sin dot keeps its nikud
 COURSE_KEEP = set()  # filled below, canonical forms
+COURSE_LINE_KEEP = set()  # filled below: words that keep their nikud in the lines of a language course only (never in the app's table)
 
 
 def partial_nikud(text):
@@ -621,7 +628,7 @@ def partial_nikud(text):
         tok = m.group(0)
         if not HE_WORD.match(tok):
             out.append(tok)
-        elif is_number_token(tok) or tok in KEEP_POINTED or canon(tok) in COURSE_KEEP or (SIN_KEEP and 'ׂ' in tok):
+        elif is_number_token(tok) or tok in KEEP_POINTED or canon(tok) in COURSE_KEEP or (SIN_KEEP and ('ׂ' in tok or canon(tok) in COURSE_LINE_KEEP)):
             out.append(tok)
         else:
             out.append(ktiv_lookup(ktiv_token(tok)))
@@ -665,7 +672,10 @@ PLACEHOLDERS = {'{child}': ('', 'PER-NAME (owner Q6, 2026-10-29): a separate nam
 VOICE_SUBS = [
     (r'(?<![\u0590-\u05ff])ו… ', 'ועוד צבע… ', 'voice: "וְ…" alone cannot be said; the blank is said as "ועוד צבע…"'),
     (r'לחזור על: ', 'לחזור על הצעדים: ', 'voice: "על:" before a list is said as "על הצעדים:"'),
+    (r'(?<![֐-׿])נֹאמַר את הסדר', 'נגיד יחד את הסדר', 'voice (owner-approved 2026-11-08, probe 10b): the chant "נֹאמַר אֶת הַסֵּדֶר בְּקוֹל" '
+     'is said "נגיד יחד את הסדר בקול"; the screen keeps נֹאמַר'),
     (r'(?<![֐-׿])בואו נאמר(?![֐-׿])', 'בואו נגיד', 'voice: "נאמר" can be read as "was said"; "נגיד"'),
+    (r'(?<![֐-׿])בואו נֹאמַר(?![֐-׿])', 'בואו נגיד', 'voice: "נֹאמַר" is kept pointed (VOICE_SWEEP_KEEP), but "בואו נאמר" is still "בואו נגיד"'),
     (r'(?<![֐-׿])(ש?)אין כלום זה ', r'\1אין כלום — זה ', 'voice-audit 2026-10-29: a beat before "זה אֶפֶס" (without it '
      'the two clauses run together and the rule is not heard)'),
 ]
@@ -685,8 +695,43 @@ VOICE_AUDIT_KEEP = {
     'אֵלֶּה': 'plain "אלה" can be read "ela"; here it is "ele" (these)',
     'בַּשָּׁמַיִם': 'plain "בשמים" can be read "besamim" (spices); here it is "ba-shamayim" (in the sky)',
 }
+# The voice director's release sweep of 2026-11-08 (docs/audio/release-voicing-plan.md section 3 and
+# docs/audio/release-pronunciation-fixes.csv): the same rule over the 4,278 voice ids of starter 0.11.0. Each is a plain form
+# that a voice can read as a more common word, or a form whose reading changes the meaning or the gender. The number is how
+# many tokens of the spoken rows it covers on 2026-11-08.
+VOICE_SWEEP_KEEP = {
+    'סְפָרוֹת': 'plain "ספרות" is read "sifrut" (literature); here it is "sfarot" (digits) (71)',
+    'סִפְרָה': 'plain "ספרה" is read "safra" (she counted); here it is "sifra" (a digit) (55)',
+    'סִפְרַת': 'plain "ספרת" is read "safarta"; here it is "sifrat" (the digit of ...) (22)',
+    'וְסִפְרַת': 'as "סִפְרַת", with the vav (2)',
+    'סָפַרְנוּ': 'plain "ספרנו" is read "sifrenu" (our book); here it is "safarnu" (we counted) (146)',
+    'סְפַרְתֶּם': 'plain "ספרתם" can be read "safartem" or "sifartem"; here it is "sfartem" (you counted) (65)',
+    'וּסְפַרְתֶּם': 'as "סְפַרְתֶּם", with the vav (2)',
+    'נֹאמַר': 'plain "נאמר" is read "ne\'emar" (was said); here it is "nomar" (we will say) (63)',
+    'וְנִמְחָא': 'a rare word that a voice may not know: "venimcha" (and we clap) (40)',
+    'נְחַלֵּק': 'plain "נחלק" can be read "nachlak"; here it is "nechalek" (we will divide up) (10)',
+    'נַחֲלֹק': 'plain "נחלק" can be read "nechalek"; here it is "nachalok" (we will share) (16)',
+    'מְשַׁנֶּה': 'plain "משנה" is read "mishne" (a second); here it is "meshane" (changes) (6)',
+    'מַרְאָה': 'plain "מראה" is read "mar\'e" (a view); here it is "mar\'a" (shows) (4)',
+    'נַעֲשֶׂה': 'plain "נעשה" can be read "na\'asa"; here it is "na\'ase" (we will make) (3)',
+    'נַעֲשָׂה': 'plain "נעשה" can be read "na\'ase"; here it is "na\'asa" (became) (1)',
+    'גָּדֵל': 'plain "גדל" is read "godel" (size); here it is "gadel" (grows) (2)',
+    'גֹּדֶל': 'plain "גדל" is read "gadal"; here it is "godel" (size) (3)',
+    'וְגָדַל': 'plain "וגדל" is read "vegodel"; here it is "vegadal" (and grew) (1)',
+    'שֶׁקֶל': 'plain "שקל" can be read "shakal" (weighed); here it is "shekel" (the coin) (10)',
+    'וְשֶׁקֶל': 'as "שֶׁקֶל", with the vav (1)',
+    'שׁוֹנָה': 'the feminine "shona": the plain "שונה" is read "shone", masculine (1)',
+    'דּוֹמָה': 'the feminine "doma": the plain "דומה" is read "dome", masculine (8)',
+    'עוֹלָה': 'the feminine "ola": the plain "עולה" is read "oleh", masculine (2)',
+    # owner-approved 2026-11-08 (probe 11a): "עשרות" stays pointed in every form, so that it is "asarot" (tens), never "esrot"
+    'עֲשָׂרוֹת': 'plain "עשרות" can be read "esrot"; here it is "asarot" (tens) (279)',
+    'הָעֲשָׂרוֹת': 'as "עֲשָׂרוֹת", with the article (109)',
+    'בַּעֲשָׂרוֹת': 'as "עֲשָׂרוֹת", with בַּ (65)',
+    'לַעֲשָׂרוֹת': 'as "עֲשָׂרוֹת", with לַ (4)',
+}
 VOICE_AUDIT_KEEP = {canon(w): why for w, why in VOICE_AUDIT_KEEP.items()}
-KEEP_POINTED |= set(VOICE_AUDIT_KEEP)
+VOICE_SWEEP_KEEP = {canon(w): why for w, why in VOICE_SWEEP_KEEP.items()}
+KEEP_POINTED |= set(VOICE_AUDIT_KEEP) | set(VOICE_SWEEP_KEEP)
 VOICE_AUDIT = 'voice-audit 2026-10-29'
 VOICE_SUBS = [(re.compile(p), r, why) for p, r, why in VOICE_SUBS]
 VOICE_MANUAL = {}  # the ui text -> (voice text, why), for lines no rule can say well
@@ -722,6 +767,9 @@ def eleven(text):
     for w, why in VOICE_AUDIT_KEEP.items():
         if re.search(B + w + E, t):
             notes.append('%s: kept the nikud of %s, %s' % (VOICE_AUDIT, w, why))
+    for w, why in VOICE_SWEEP_KEEP.items():
+        if re.search(B + w + E, t):
+            notes.append('voice-sweep 2026-11-08: kept the nikud of %s, %s' % (w, why))
     t = partial_nikud(t)
     for pat, repl, why in VOICE_SUBS:
         new = pat.sub(repl, t)
@@ -752,6 +800,34 @@ COURSE_KEEP |= {canon(w) for w in (
     'מַחֲאוּ',      # "clap" (plural imperative, the gloss of clap in eng and rus; hebrew-notes.md section 15)
     'סַפְּרוּ',     # plain "ספרו" is also "their book" and "they counted"; here it is "tell" (section 15)
     'קְחוּ',        # "take" (plural imperative; section 15)
+    # The voice director's release sweep of 2026-11-08 (docs/audio/release-voicing-plan.md section 3): the plural imperatives that
+    # read the same as a past tense in plain spelling, and the name of Pip, whose final פ is read "f" without its dagesh.
+    'הַקְשִׁיבוּ',   # plain "הקשיבו" is the past "hikshivu" (they listened); the instruction is "hakshivu" (30 lines)
+    'גְּעוּ',        # plain "געו" is "ga'u" (they mooed); the instruction is "ge'u" (touch) (10)
+    'וּגְעוּ',       # as גְּעוּ (13)
+    'וְגִרְרוּ',     # plain "וגררו" is "vegararu" (and they dragged); the instruction is "vegirru" (2)
+    'וְהַרְאוּ',     # plain "והראו" is "vehera'u" (and they showed); the instruction is "vehar'u" (1)
+    'וְעִזְרוּ',     # plain "ועזרו" is "ve'azru" (they helped); the instruction is "ve'izru" (1)
+    'מִצְאוּ',       # plain "מצאו" is "matz'u" (they found); the instruction is "mitz'u" (1)
+    'וּמִצְאוּ',     # as מִצְאוּ (2)
+    'שִׁמְעוּ',      # plain "שמעו" is "sham'u" (they heard); the instruction is "shim'u" (4)
+    'חַבְּרוּ',      # plain "חברו" is "chibru" (they joined) or "chaveru"; the instruction is "chabru" (1)
+    'תּוֹפְפוּ',     # plain "תופפו" is read as a past or a noun; the instruction is "tofefu" (2)
+    'נִמְחָא',       # a rare word that a voice may not know: "nimcha" (we clap) (1)
+    'שָׁרָה',        # plain "שרה" is read "Sara" (a name); here it is "shara" (sang) (2)
+    'לְפִיפּ',       # Pip: a final פ without a dagesh is read "f", "lefif"; the name is "lepip" (3)
+)}
+
+
+COURSE_LINE_KEEP |= {canon(w) for w in (
+    # The verses of the Hebrew course (frame lines v*-play), read on 2026-11-08: the rhyme words and the words a voice could read another way.
+    'תַּק',         # the clock's beat in "תִּיק־תַּק": plain "תק" can be read "tek" or "tok"
+    'בַּסַּל',       # plain "בסל" can be read "besal" (in a basket, without the article); here it is "ba-sal"
+    'תּוּת',         # plain "תות" can be read "tot"; the word is "tut" (a strawberry)
+    'עָף',          # plain "עף" can be read "of"; here it is "af" (flies)
+    'לַדֻּבִּי',     # plain "לדובי" can be read "ledovi" (to Dovi, from דב); here it is "ladubi" (to the teddy)
+    'כַּף',         # plain "כף" can be read "kef"; the word is "kaf" (a spoon)
+    'שָׁטָה',        # plain "שטה" can be read "shote" or "shata"; here it is "shata" (floated)
 )}
 
 
@@ -760,6 +836,15 @@ def course_voice_text(text):
     global SIN_KEEP
     src = text.replace('"', '').replace('״', '').replace('־', ' ')  # a maqaf is a nikud-range mark and would be dropped: תִּיק־תַּק → "תיק תק"
     carrier = src.rstrip().endswith(':')
+    # A line that is one bare word (a gloss: "בָּצָל.", "דֻּבִּי.") has no sentence to read it by, so it keeps its nikud and the end mark
+    # it has; a sentence that begins with one bare word and a full stop ("דָּג. אֵיזוֹ מִלָּה נִגְמֶרֶת…") keeps that word pointed.
+    bare = re.fullmatch(r'\s*([֐-׿]+)\s*([.?]?)\s*', src)
+    if bare:
+        return bare.group(1) + bare.group(2), ['a bare word keeps its nikud (nothing to read it by); it keeps the end mark the screen text has']
+    head = re.match(r'^([֐-׿]+)\.\s+(\S.*)$', src, re.S)
+    if head:
+        rest, notes = course_voice_text(head.group(2))
+        return head.group(1) + '. ' + rest, ['the word the question is about keeps its nikud (no context)'] + notes
     SIN_KEEP = True
     try:
         t, notes = eleven(src)
@@ -841,7 +926,26 @@ _C1_TAGS = 'M-HC-ROW|M-OP-SWAP|M-PV-FACE|M-PV-ZERO|M-SIGN-DIR|M-SUB-SMALLBIG|M-S
 # the first reading, because the editor read it in the pass that made the row: change this when a new pass is done (notes 11.8).
 READ_OLD_DAY = '2026-11-06'
 READ_NEW = "2026-11-07 (the 35 C1 items of commit 98f57707, blocks, keypad, pay and the middle of two marks; hebrew-notes.md section 11.9)"
+SWEEP = ('Editor sweep 2026-11-08 (owner: a full read before the children try the app; hebrew-notes.md section 14): the editor read it; '
+         'this row is the corrected text (what was wrong is in the section); waits for the owner.')
 READ = [
+    # The sweep of 2026-11-08: the 17 he.dart strings that were NOT READ (screen-reader labels of the L5 screens and the division setting)
+    # and the texts the sweep corrected. These entries come first so that they win over the C1 entries below.
+    ('1', r'^(boxBowl|boxStampVowel|boxStampHard|boxStampSoft|boxSound|boxPlace|changeTarget|changeThatsIt|wheelHub|wheelLetter|wheelSign|stripTile|stripWindow|slideKnob|mergeTile)Semantics$|^division(Heading|Help)$|^(medalExplainerHow|medalBugFixerHow|tutorLogHelp)$',
+     r'he\.dart$', SWEEP),
+    ('3', r'', r'^(activity\.(b15\.matha02\.1|b15\.shpa08\.2|shp\.where\.under|c\.mathc02\.(6|7|8|9|10)|c\.numc03\.20|c\.numc09\.(9|10)|same\.(apples\.4v5|bugs\.3v3|fish\.2v2)|x\.numa07\.[1-7])|lesson\.(give-up-to-20|giving|more-giving|many-things|many-things-more|more-queues-and-zero)|misconception\.M-CNT-DECADE|skill\.(NUM-A-06|NUM-B-04))\.json$',
+     SWEEP),
+    # Generator fix of 2026-11-08 (tools/band_b.py): hint 3 of c.numb11.1-.6 now writes כׇּל (qamatz qatan) in the generator itself, so the pack has the
+    # text the sweep meant; only the pointing of one word changed, the editor read the line again.
+    ('3', r'^hints\.2\.caption', r'^activity\.b\.numb11\.[1-6]\.json$', 'Editor sweep 2026-11-08: the generator (tools/band_b.py) now writes כׇּל with a qamatz '
+     'qatan, as the rest of the pack; the editor read the line again (agreement, plural address, the teaching move are as before); waits for the owner.',
+     r'^הַמִּסְפָּרִים גְּדֵלִים בְּאֶחָד כׇּל פַּעַם\.'),
+    # Hint 3 of c.mathc03.15 and c.numc03.25 shortened for the phone (B-29 bubble audit: on the small phone at text size 1.3 they spilled over the
+    # stage); the generator (tools/band_c.py, HINT_LETTERS) now picks the shorter option of its own list.
+    ('3', r'^hints\.2\.caption', r'^activity\.c\.(mathc03\.15|numc03\.25)\.json$', 'Editor 2026-11-08 (B-29 bubble audit, phone SE at text size 1.3): hint 3 shortened so it keeps '
+     'clear of the stage; the editor read it (mathc03.15 drops "אֶת כׇּל הַמּוֹטוֹת" and keeps the count by tens; numc03.25 drops the closing "לִלְחֹץ עַל …" and keeps '
+     '"שְׁלוֹשָׁה מוֹטוֹת וְאַרְבַּע קֻבִּיּוֹת" and "עַכְשָׁו תּוֹרְכֶם."; number agreement, plural address and the teaching move are as before); waits for the owner.',
+     r'^(סוֹפְרִים בַּעֲשָׂרוֹת: עֶשֶׂר, עֶשְׂרִים, שְׁלוֹשִׁים, אַרְבָּעִים, חֲמִשִּׁים, שִׁשִּׁים, שִׁבְעִים\. עַכְשָׁו תּוֹרְכֶם\.|שְׁלוֹשִׁים וְאַרְבַּע: שְׁלוֹשָׁה מוֹטוֹת וְאַרְבַּע קֻבִּיּוֹת\. עַכְשָׁו תּוֹרְכֶם\.)$'),
     # Hint 3 of 37 Band A and B items, shortened to 14 words or fewer (QA, the hint bubble covered the answer tiles on the phone SE;
     # hebrew-notes.md section 11.13): the count says its first three numbers, an ellipsis and the last; a count-on says "עַד" the total.
     ('3', r'^hints\.2\.caption', r'^activity\.(b|b15|count)\.', 'Hint 3 shortened to 14 words or fewer (QA, 2026-11-07; hebrew-notes.md section 11.13): '
@@ -898,6 +1002,15 @@ DOUBT = [
 # Rows the OWNER approved (his own answers, relayed by the orchestrator; the editor never approves): (regex on the source,
 # regex on the original text, the comment). Their status is `owner-approved`. Nothing else is ever set to it by this script.
 OWNER_APPROVED = [
+    # The owner's answers of 2026-11-08 (hebrew-notes.md section 14.5)
+    (r'^activity\.(same|x\.numa07)\.', r'^(בּוֹאוּ נַעֲשֶׂה זוּגוֹת: לְכֻלָּם יֵשׁ זוּג\?|בּוֹאוּ נִסְפֹּר כַּמָּה יֵשׁ בְּכׇל קְבוּצָה\.)$',
+     'the two Q2 lines (NUM-A-11 pairing, NUM-A-07 counting), approved as written (owner-approved 2026-11-08).'),
+    (r'^activity\.(b\.numb17\.|c\.numc09\.)', r'וְכׇל פַּעַם מוֹסִיפִים (עֶשֶׂר|שְׁתַּיִם)', '09c (owner-approved 2026-11-08): "בְּעֶשֶׂר" is said as "וְכׇל פַּעַם מוֹסִיפִים עֶשֶׂר".'),
+    (r'^activity\.b\.mathb13\.', r'(הַצַּד שֶׁלְּמַעְלָה|בַּצַּד שֶׁלְּמַטָּה)', 'D12 (owner-approved 2026-11-08): the balance sides are named by where they are, and the scales are '
+     '"שְׁנֵי הַצְּדָדִים שָׁוִים".'),
+    (r'he\.dart$', r'^מְתַקְּנֵי תַּקָּלוֹת$', 'owner-approved 2026-11-08 (was "מְתַקְּנֵי בָּאגִים").'),
+    (r'^activity\.(b\.shpb08\.9|x\.shpb09\.\d)\.json$', r'נְתָאֵר לְעַצְמֵנוּ', 'owner-approved 2026-11-08 (was "בּוֹאוּ נְדַמְיֵן אֶת זֶה").'),
+    (r'^activity\.b\.mathb08\.', r'נִשְׁאֲרוּ עוֹד', 'owner-approved 2026-11-08 (was "נִשְׁאָר עוֹד").'),
     (r'core\.he\.json$', r'מָּתֵמָטִיקָאִים', 'Q4: the owner chose option A, "בְּדַקְתֶּם שׁוּב לִפְנֵי שֶׁעֲנִיתֶם. כָּכָה עוֹשִׂים '
      'חוֹקְרִים." (owner-approved 2026-10-29).'),
     (r'^activity\.', r'^לָקַחְנוּ אֶת כֻּלָּם\. הַפֶּרַח', 'B-13 (curriculum audit F1): the owner approved the neutral give-N line '
@@ -1006,6 +1119,22 @@ OWNER_APPROVED = [
      'Shop hint 3, owner (2026-11-08, option A): the three-coin hints drop "מַטְבֵּעַ שֶׁל" and name the values, so each fits 14 words; '
      'the other shop hints keep the Q11 form (owner-approved 2026-11-08).', r'^hints\.2\.caption'),
 ]
+
+
+# Rows the owner approved only for their VOICE text (the screen text was not asked): a row that is `text-ready` and matches becomes
+# `owner-approved`; a row that waits for something else keeps its status. (source regex, regex on the text, comment, optional regex on the id)
+VOICE_APPROVED = [
+    (r'', r'עֲשָׂרוֹת', 'owner, 2026-11-08 (probe 11a): "עֲשָׂרוֹת" stays pointed in the voice text, in every form (owner-approved for the voice text).'),
+    (r'', r'^נֹאמַר אֶת הַסֵּדֶר בְּקוֹל', 'owner, 2026-11-08 (probe 10b): the chant is said "נגיד יחד את הסדר בקול" in the voice; the screen keeps '
+     'נֹאמַר (owner-approved for the voice text).'),
+]
+
+
+def voice_approved(r):
+    for src, txt, comment, *rid in VOICE_APPROVED:
+        if (re.search(src, r['source']) and re.search(canon(txt), canon(r['text'])) and (not rid or re.search(rid[0], r['id']))):
+            return comment
+    return None
 
 
 def owner_approved(r):
@@ -1400,6 +1529,12 @@ def read_batch(r):
 
 
 def main():
+    parser = argparse.ArgumentParser(description='Writes docs/review/hebrew-master.csv and the ElevenLabs review.')
+    parser.add_argument('--approval-snapshot', metavar='FILE', help='also write the snapshot of the rows text-ready or proposed for '
+                        "the owner's bulk approval (and its summary, FILE with .md); the switch is not applied in this run")
+    args = parser.parse_args(ARGV)
+    # while a snapshot is written the switch is ignored: its file is about to change, and its list is of the rows before any approval
+    approval = None if args.approval_snapshot else owner_approval.load_approval()
     rows = list(csv.DictReader(open(SRC, encoding='utf-8-sig')))
     by_source = {}
     for r in rows:
@@ -1455,7 +1590,10 @@ def main():
         fh.write('| ID | Original Text | Corrected Text (For UI) | ElevenLabs Optimized Text | Explanation |\n|---|---|---|---|---|\n')
         for x in out:
             fh.write('| %s | %s | %s | %s | %s |\n' % (esc(x['id']), esc(x['original']), esc(x['ui']), esc(x['eleven']), esc(x['explanation'])))
-    master(rows, result, rules)
+    master_rows = master(rows, result, rules, approval=approval)
+    if args.approval_snapshot:
+        sha = owner_approval.write_snapshot(master_rows, args.approval_snapshot)
+        print('approval snapshot', args.approval_snapshot, len(owner_approval.candidates(master_rows)), 'rows, sha256', sha)
     print('rows', len(out), 'grammar', sum(x['grammar'] for x in out), 'review', sum(x['review'] for x in out))
 
 
@@ -1465,17 +1603,22 @@ EDITOR = '[editor] '
 OWNER_STATUSES = ('owner-approved', 'voice-ready', 'voiced')
 
 
-def master(rows, result, rules):
+def master(rows, result, rules, path=None, approval=None):
     """The one big table: every text of the app with the corrected screen text, the voice text, what changed and where it stands.
     What the owner typed in the last version of the table (a correction, a comment that is not the editor's, a status after
-    text-ready) is kept; such a row is the owner's and the editor does not change its status."""
-    path = os.path.join(ROOT, 'docs', 'review', 'hebrew-master.csv')
+    text-ready) is kept; such a row is the owner's and the editor does not change its status.
+    `approval` (owner_approval.Approval or None): the owner's bulk approval; it makes a `text-ready` or `proposed` row `owner-approved`
+    only while the row's three texts hash as the snapshot says. Returns the rows written (each with its `base_status`, the status
+    before the approval)."""
+    path = path or os.path.join(ROOT, 'docs', 'review', 'hebrew-master.csv')
     kept = {}
     if os.path.exists(path):
-        for r in csv.DictReader(open(path, encoding='utf-8-sig')):
-            kept[(r['source'], r['id'], r['text'])] = r
+        with open(path, encoding='utf-8-sig') as fh:
+            for r in csv.DictReader(fh):
+                kept[(r['source'], r['id'], r['text'])] = r
     counts = {}
     new_rows = []
+    written = []
     with open(path, 'w', encoding='utf-8-sig', newline='') as fh:
         w = csv.writer(fh)
         w.writerow(MASTER_COLUMNS)
@@ -1538,25 +1681,36 @@ def master(rows, result, rules):
             approved = owner_approved(r)
             if approved:
                 status, comment = 'owner-approved', EDITOR + approved
+            elif status == 'text-ready' and is_spoken and voice_approved(r):
+                status, comment = 'owner-approved', EDITOR + voice_approved(r)
             old = kept.get((r['source'], r['id'], r['text']))
             correction = r['correction (fill in)']
+            owner_comment = old and old['comment'].strip() and not old['comment'].startswith(EDITOR.strip())
+            by_snapshot, status_before = False, status
+            # the owner's bulk approval (tools/owner_approval.py): not over something the owner typed in the table
+            if (approval and status in owner_approval.CANDIDATE_STATUSES and not (old and (old['correction (fill in)'].strip() or owner_comment))
+                    and owner_approval.approves(approval, r['source'], r['id'], r['text'], ui, el)):
+                status, comment, by_snapshot = 'owner-approved', (comment or r['comment'] or EDITOR.rstrip()) + owner_approval.mark(approval), True
             if old:
-                owner_comment = old['comment'].strip() and not old['comment'].startswith(EDITOR.strip())
-                if old['correction (fill in)'].strip() or owner_comment or old['status'] in OWNER_STATUSES:
-                    status = old['status'] if old['status'] in OWNER_STATUSES or old['correction (fill in)'].strip() else status
+                # a status the snapshot gave is worked out again (above), not kept: this is how an edited row falls back
+                kept_status = old['status'] in OWNER_STATUSES and not owner_approval.is_marked(old['comment'])
+                if old['correction (fill in)'].strip() or owner_comment or kept_status:
+                    status = old['status'] if kept_status or old['correction (fill in)'].strip() else status
                     correction = old['correction (fill in)']
                     comment = old['comment'] if owner_comment else comment
             counts[status] = counts.get(status, 0) + 1
-            w.writerow([
-                r['group'], r['source'], r['id'], r['kind'], 'yes' if is_spoken else 'no', r['text'], ui, el,
-                '; '.join(notes), status, correction, comment or r['comment'],
-            ])
+            row = {'group': r['group'], 'source': r['source'], 'id': r['id'], 'kind': r['kind'], 'spoken': 'yes' if is_spoken else 'no',
+                   'text': r['text'], 'ui_text': ui, 'voice_text': el, 'changes': '; '.join(notes), 'status': status,
+                   'correction (fill in)': correction, 'comment': comment or r['comment']}
+            w.writerow([row[c] for c in MASTER_COLUMNS])
+            written.append(dict(row, base_status=status_before if by_snapshot else status))
     print('master', len(rows), 'rows', counts)
     if kept and new_rows:
         # Not in the last table: the editor has not read them; a row in a REVIEWED group needs a PENDING entry or a read.
         print('new since the last table (%d):' % len(new_rows))
         for r in new_rows:
             print('  %s › %s: %s' % (r['source'], r['id'] or '-', r['text']))
+    return written
 
 
 if __name__ == '__main__':

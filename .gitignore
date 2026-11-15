@@ -55,6 +55,11 @@ tools/voice_gen/output/
 *.wav
 *.flac
 
+# ---- The bundled voices (about 98 MiB; the repository is public and the voices are the owner's paid work) ----
+# Copied in at build time by tools/copy-release-voices.ps1 from the owner's voice folder. Never committed.
+app/assets/characters/voice-*.nnpack
+app/assets/packs/voice-lang-*.nnpack
+
 # ---- Editors and OS ----
 .idea/
 .vscode/

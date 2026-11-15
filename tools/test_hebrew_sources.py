@@ -5,9 +5,13 @@
 * every `text-ready` and `owner-approved` row: the source text is the row's `ui_text` (the corrections are in);
 * every `proposed` row: the source text is still the row's `text` (a draft is never brought in before the owner's OK);
 * running the generators (tools/regen_content.py) on a copy of the repository gives the committed unit specs and starter
-  files, and a second run gives the same bytes again (so a regeneration never brings an old text back).
+  files, and a second run gives the same bytes again (so a regeneration never brings an old text back);
+* the owner's bulk approval (tools/owner_approval.py): a row is approved by the snapshot only while its hash matches, the snapshot's
+  own sha256 is checked, and while the switch is off nothing changes.
 """
+import contextlib
 import csv
+import io
 import glob
 import json
 import os
@@ -15,11 +19,13 @@ import re
 import shutil
 import sys
 import tempfile
+import unicodedata
 import unittest
 
 TOOLS = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(TOOLS, '..'))
 sys.path.insert(0, TOOLS)
+import owner_approval  # noqa: E402
 import regen_content  # noqa: E402
 
 TABLE = os.path.join(ROOT, 'docs', 'review', 'hebrew-master.csv')
@@ -135,6 +141,8 @@ class HebrewMasterTableTest(unittest.TestCase):
         # 15823 since the logic sweep was merged (2026-11-08): its reshaped items and wording (one option fewer in LOG-B-06 .5 and .6, no unnamed
         # "friend", the new LOG-A-07 and LOG-B-02 titles, the +2 towers) replace some of C1's rows with other texts
         self.assertEqual(len(self.rows), 15823)
+        # the owner's bulk approval (the switch in tools/owner_approval.py) moves the rows with a changed text to `owner-approved` (none is `proposed` and changed now)
+        approved_all = owner_approval.load_approval() is not None
         # 1308 before C1: 19 corrections (מֵאֶפֶס, מֵאַחַת …) are now in the sources; 1296 after the 7 of the deferred items (מַה שֶּׁ, מַה מִּסְתַּתֵּר)
         # 1289 after the hint 3 of 37 Band A and B items was shortened to 14 words (2026-11-07): the 7 rows of b.numb14.1-.4, .7, .8 and b.mathb18.3
         # whose old text still needed a correction (שְׁנַיִם, שְׁלוֹשָׁה, חֲמִשָּׁה …) are now written right by the generator
@@ -142,8 +150,13 @@ class HebrewMasterTableTest(unittest.TestCase):
         # b.numb02.5, math.add.stars) whose old text needed a correction are now written right by their source
         # 1221 after the owner's option A for the two three-coin shop hints (x.mathb17.6, .7; 2026-11-08): their text is now what the source says, so the
         # table no longer counts them as changed (the review CSV was exported again with the new text)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1221)
-        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 29)  # 88 before the owner's V1 for M-NL-DIR (2026-11-06): its 44 rows now have the source's final nikud
+        # 1215 after the owner's answers of 2026-11-08: six rows whose old text needed a correction are now written right by their source (the x.shpb09 "נְדַמְיֵן" line was reworded)
+        # the same 1215 with the owner's bulk approval on (2026-11-08): its 6 extra rows were b.numb11.1-.6, now written right by their generator
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1215)
+        # 18 after the editor sweep of 2026-11-08: the 11 Q2 drafts (the NUM-A-11 pairing line, the NUM-A-07 counting line) are now
+        # written in the generators, each with an id of its own (vo:fb.size.pairs, vo:fb.size.count), so the pack says what the table says
+        # 6 after the owner approved D12 (2026-11-08): the 12 balance rows (b.mathb13.7-.10) are in the sources
+        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 0)  # 0 after the generator fix of 2026-11-08 (hint 3 of b.numb11.1-.6 writes כׇּל itself, so the pack has the text of the table; they were the 6 proposed rows with a changed text); 88 before the owner's V1 for M-NL-DIR (2026-11-06): its 44 rows now have the source's final nikud
 
     def test_done_rows_have_ui_text(self):
         want = lambda r: HELD[(r['source'], r['id'])][0] if (r['source'], r['id']) in HELD else r['ui_text']
@@ -166,6 +179,203 @@ class HebrewMasterTableTest(unittest.TestCase):
     def test_unchanged_rows_keep_their_text(self):
         bad = ['%s › %s' % (r['source'], r['id']) for r, t in self.current if r['status'] == 'unchanged' and t != r['text']]
         self.assertEqual(bad, [])
+
+
+class OwnerApprovalTest(unittest.TestCase):
+    """The owner's bulk approval pinned to a snapshot (tools/owner_approval.py, tools/hebrew_voice_review.py --approval-snapshot)."""
+
+    GROUP = '3. Lesson content (skills, activities, misconceptions)'
+    HELLO, BYE = 'שָׁלוֹם', 'לְהִתְרָאוֹת'
+    HELLO_ID, BYE_ID = 'prompt.caption.0.v', 'hints.0.caption.0.v'
+
+    @classmethod
+    def setUpClass(cls):
+        argv = sys.argv
+        sys.argv = argv[:1] + ['-']
+        try:
+            import hebrew_voice_review
+        finally:
+            sys.argv = argv
+        cls.review = hebrew_voice_review
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.table = os.path.join(self.tmp.name, 'hebrew-master.csv')
+        self.snapshot = os.path.join(self.tmp.name, 'snapshot.csv')
+
+    def source_row(self, rid, text):
+        return {'group': self.GROUP, 'source': 'activity.zz.json', 'id': rid, 'kind': 'child (nikud)', 'text': text,
+                'correction (fill in)': '', 'comment': ''}
+
+    def two_rows(self):
+        return [self.source_row(self.HELLO_ID, self.HELLO), self.source_row(self.BYE_ID, self.BYE)]
+
+    def run_master(self, rows, voice=None, approval=None):
+        """Writes the master table of synthetic rows to self.table (voice text: the `voice` dict by id, else the text itself) and
+        returns the rows written, by id."""
+        voice = voice or {}
+        result = {(r['text'], None, None): (r['text'], [], voice.get(r['id'], r['text']), []) for r in rows}
+        with contextlib.redirect_stdout(io.StringIO()):
+            written = self.review.master(rows, result, {n: None for n in range(len(rows))}, path=self.table, approval=approval)
+        return {r['id']: r for r in written}
+
+    def approval_for(self, written):
+        """Writes the snapshot of `written`; returns (the switch that names it, the approval it gives)."""
+        config = {'file': 'snapshot.csv', 'sha256': owner_approval.write_snapshot(list(written.values()), self.snapshot),
+                  'date': '2026-11-08'}
+        return config, owner_approval.load_approval(config, self.tmp.name)
+
+    def edit_table(self, change):
+        with open(self.table, encoding='utf-8-sig', newline='') as fh:
+            table = list(csv.DictReader(fh))
+        for r in table:
+            change(r)
+        with open(self.table, 'w', encoding='utf-8-sig', newline='') as fh:
+            w = csv.DictWriter(fh, fieldnames=self.review.MASTER_COLUMNS)
+            w.writeheader()
+            w.writerows(table)
+
+    def test_hash_covers_all_three_texts(self):
+        h = owner_approval.row_hash('a', 'b', 'c')
+        self.assertEqual(len(h), 64)
+        self.assertEqual(h, owner_approval.row_hash('a', 'b', 'c'))
+        for other in (('x', 'b', 'c'), ('a', 'x', 'c'), ('a', 'b', 'x'), ('ab', '', 'c'), ('a', 'bc', '')):
+            self.assertNotEqual(h, owner_approval.row_hash(*other), other)
+
+    def test_a_matching_row_is_approved(self):
+        rows = self.two_rows()
+        before = self.run_master(rows)
+        self.assertEqual({r['status'] for r in before.values()}, {'text-ready'})
+        config, approval = self.approval_for(before)
+        after = self.run_master(rows, approval=approval)
+        for r in after.values():
+            self.assertEqual(r['status'], 'owner-approved')
+            self.assertTrue(owner_approval.is_marked(r['comment']))
+        with open(self.table, encoding='utf-8-sig', newline='') as fh:  # what the voice tool reads is the file
+            self.assertEqual({r['status'] for r in csv.DictReader(fh)}, {'owner-approved'})
+
+    def test_a_changed_row_falls_back_and_the_rest_stay_approved(self):
+        rows = self.two_rows()
+        config, approval = self.approval_for(self.run_master(rows))
+        self.run_master(rows, approval=approval)  # the table now holds `owner-approved`
+        # the voice text of one row is edited, its text is the same: the master finds the row by the same key, but its status must not stay
+        edited = self.run_master(rows, voice={self.HELLO_ID: 'שלום'}, approval=approval)
+        self.assertEqual(edited[self.HELLO_ID]['status'], 'text-ready')
+        self.assertFalse(owner_approval.is_marked(edited[self.HELLO_ID]['comment']))
+        self.assertEqual(edited[self.BYE_ID]['status'], 'owner-approved')
+        # the text of a row is edited: a new text is a row the editor has not read (`proposed`), whatever the snapshot says
+        rows[1] = self.source_row(self.BYE_ID, self.BYE + '!')
+        self.assertIn(self.run_master(rows, approval=approval)[self.BYE_ID]['status'], ('text-ready', 'proposed'))
+        # an edit that is put back is approved again, as the snapshot says
+        rows[1] = self.source_row(self.BYE_ID, self.BYE)
+        self.assertEqual(self.run_master(rows, approval=approval)[self.BYE_ID]['status'], 'owner-approved')
+
+    def test_a_row_that_is_not_in_the_snapshot_is_untouched(self):
+        rows = [self.source_row(self.HELLO_ID, self.HELLO)]
+        config, approval = self.approval_for(self.run_master(rows))
+        rows.append(self.source_row(self.BYE_ID, self.BYE))  # a row that came after the snapshot
+        after = self.run_master(rows, approval=approval)
+        self.assertEqual(after[self.HELLO_ID]['status'], 'owner-approved')
+        self.assertIn(after[self.BYE_ID]['status'], ('text-ready', 'proposed'))  # `proposed`: not read by the editor yet
+        self.assertFalse(owner_approval.is_marked(after[self.BYE_ID]['comment']))
+
+    def test_switching_off_takes_the_approval_back_but_not_the_owners_own(self):
+        rows = self.two_rows()
+        config, approval = self.approval_for(self.run_master(rows))
+        self.run_master(rows, approval=approval)
+
+        def by_hand(r):  # the owner types owner-approved for one row in the table, as before this module
+            if r['id'] == self.BYE_ID:
+                r['status'], r['comment'] = 'owner-approved', '[editor] '
+        self.edit_table(by_hand)
+        off = self.run_master(rows, approval=None)
+        self.assertEqual(off[self.HELLO_ID]['status'], 'text-ready')
+        self.assertEqual(off[self.BYE_ID]['status'], 'owner-approved')
+
+    def test_a_correction_the_owner_typed_is_not_overridden(self):
+        rows = [self.source_row(self.HELLO_ID, self.HELLO)]
+        config, approval = self.approval_for(self.run_master(rows))
+
+        def correct(r):
+            r['correction (fill in)'] = 'שלום!'
+        self.edit_table(correct)
+        self.assertEqual(self.run_master(rows, approval=approval)[self.HELLO_ID]['status'], 'text-ready')
+
+    def test_the_snapshot_lists_only_text_ready_and_proposed_rows(self):
+        written = self.run_master(self.two_rows())
+        written[self.BYE_ID]['base_status'] = 'owner-approved'
+        written[self.HELLO_ID]['base_status'] = 'proposed'
+        owner_approval.write_snapshot(list(written.values()), self.snapshot)
+        with open(self.snapshot, encoding='utf-8', newline='') as fh:
+            lines = list(csv.reader(fh))
+        self.assertEqual(lines[0], ['source', 'id', 'hash'])
+        self.assertEqual([l[:2] for l in lines[1:]], [['activity.zz.json', self.HELLO_ID]])
+        with open(self.snapshot, 'rb') as fh:
+            self.assertNotIn(b'\r', fh.read())
+        self.assertTrue(os.path.exists(os.path.splitext(self.snapshot)[0] + '.md'))
+
+    def test_the_snapshots_own_sha256_is_checked(self):
+        config, approval = self.approval_for(self.run_master([self.source_row(self.HELLO_ID, self.HELLO)]))
+        self.assertEqual(len(approval.keys), 1)
+        # the file is changed after the owner approved it
+        with open(self.snapshot, 'a', encoding='utf-8', newline='') as fh:
+            fh.write('activity.zz.json,%s,%s\n' % (self.BYE_ID, '0' * 64))
+        with self.assertRaises(owner_approval.ApprovalError):
+            owner_approval.load_approval(config, self.tmp.name)
+        # the switch is right for the new file, then wrong in each way it can be
+        good = dict(config, sha256=owner_approval.file_sha256(self.snapshot))
+        self.assertEqual(len(owner_approval.load_approval(good, self.tmp.name).keys), 2)
+        for bad in (dict(good, sha256='0' * 64), dict(good, file='missing.csv'), dict(good, date=''), dict(good, sha256=''),
+                    dict(good, date='08/11/2026'), dict(good, sha256='abc')):
+            with self.assertRaises(owner_approval.ApprovalError, msg=bad):
+                owner_approval.load_approval(bad, self.tmp.name)
+
+    def test_the_sha256_is_the_same_with_windows_line_ends(self):
+        path = os.path.join(self.tmp.name, 'a.csv')
+        with open(path, 'wb') as fh:
+            fh.write(b'source,id,hash\nx,y,z\n')
+        lf = owner_approval.file_sha256(path)
+        with open(path, 'wb') as fh:
+            fh.write(b'source,id,hash\r\nx,y,z\r\n')
+        self.assertEqual(owner_approval.file_sha256(path), lf)
+
+    def test_nothing_changes_while_the_switch_is_off(self):
+        off = {'file': 'snapshot.csv', 'sha256': '', 'date': ''}
+        rows = [self.source_row(self.HELLO_ID, self.HELLO)]
+        written = self.run_master(rows)
+        self.approval_for(written)  # a snapshot file is there, but the switch does not name it
+        self.assertIsNone(owner_approval.load_approval(off, self.tmp.name))
+        after = self.run_master(rows, approval=owner_approval.load_approval(off, self.tmp.name))
+        self.assertEqual(after[self.HELLO_ID]['status'], 'text-ready')
+        self.assertEqual(after[self.HELLO_ID]['comment'], written[self.HELLO_ID]['comment'])
+
+    def test_the_committed_table_follows_the_switch(self):
+        """Switch off (as committed): no row is marked, none is approved by the snapshot. Switch on: every row that is still as the
+        snapshot says is `owner-approved`, and every marked row is in the snapshot."""
+        approval = owner_approval.load_approval()
+        marked = 0
+        for r in load_rows():
+            listed = owner_approval.approves(approval, r['source'], r['id'], r['text'], r['ui_text'], r['voice_text'])
+            where = '%s › %s' % (r['source'], r['id'])
+            if r['status'] in owner_approval.CANDIDATE_STATUSES:
+                self.assertFalse(listed, where + ' is in the snapshot but is not approved')
+            if owner_approval.is_marked(r['comment']):
+                marked += 1
+                self.assertTrue(listed and r['status'] == 'owner-approved', where)
+        if approval is None:
+            self.assertEqual(marked, 0)
+            self.assertEqual(owner_approval.CONFIG['sha256'] + owner_approval.CONFIG['date'], '')
+
+    def test_the_committed_snapshot_is_well_formed(self):
+        path = os.path.join(ROOT, owner_approval.CONFIG['file'])
+        if not os.path.exists(path):
+            self.skipTest('no snapshot file yet')
+        with open(path, encoding='utf-8', newline='') as fh:
+            rows = list(csv.reader(fh))
+        self.assertEqual(rows[0], ['source', 'id', 'hash'])
+        self.assertEqual(rows[1:], sorted(rows[1:]))
+        self.assertTrue(all(len(r) == 3 and re.fullmatch('[0-9a-f]{64}', r[2]) for r in rows[1:]))
 
 
 class PrefixHelpersTest(unittest.TestCase):
@@ -268,6 +478,86 @@ class RegenerationTest(unittest.TestCase):
             regen_content.run(tmp, quiet=True)
             second = snapshot(tmp)
             self.assertEqual([k for k in first if first[k] != second.get(k)], [])
+
+
+class SweepGuardsTest(unittest.TestCase):
+    """Mistakes the editor's sweep of 2026-11-08 found and fixed, kept out by a scan of every Hebrew string of the starter pack, the
+    three language courses (pack, course.json, units) and he.dart (docs/agents/hebrew-notes.md section 14)."""
+
+    VAV_BEFORE_SHVA = re.compile('(?<![\u0590-\u05ff])\u05d5\u05b0(?:[\u05d0-\u05ea]\u05b0|\u05d9\u05b0)')      # וְתְ…, וְיְ… (want וּתְ…, וִי…)
+    VAV_BEFORE_LABIAL = re.compile('(?<![\u0590-\u05ff])\u05d5\u05b0[\u05d1\u05de\u05e4]')                        # וְמ…, וְב…, וְפ… (want וּ)
+    MA_QAMATS = re.compile('(?<![\u0590-\u05ff])\u05de\u05b8\u05d4 [\u05d1\u05d2\u05d3\u05d6\u05d8\u05d9\u05db\u05dc\u05de\u05e0\u05e1\u05e4\u05e6\u05e7\u05e9\u05ea]')   # מָה + a letter that takes the dagesh
+    MA_PATAH = re.compile('(?<![\u0590-\u05ff])\u05de\u05b7\u05d4 [\u05d0\u05d4\u05d7\u05e2\u05e8]')            # מַה + a guttural or resh
+    BA_ARTICLE = re.compile('(?<![\u0590-\u05ff])\u05d1\u05b7\u05bc\u05d0')                                    # בַּא… (the article before א is בָּ)
+    BARE_ZOT = re.compile('(?<![\u0590-\u05ff])\u05d6\u05b9\u05d0\u05ea')                                      # זֹאת without the article: write זוֹ
+    BANNED = [('חֲפָצִים', 'a written-register word: דְּבָרִים'), ('חָבֵר כָּתַב', 'an unnamed friend who does something'),
+              ('חָבֵר אוֹסֵף', 'an unnamed friend who does something'), ('חָבֵר סָפַר', 'an unnamed friend who does something'),
+              ('שֶׁבִּקְשׁוּ', 'who asked? (שֶׁבִּקַּשְׁתִּי or שֶׁמְּבַקְשִׁים)')]
+
+    @classmethod
+    def setUpClass(cls):
+        cls.texts = []
+
+        def walk(o, where):
+            if isinstance(o, str):
+                if re.search('[\u0590-\u05ff]', o):
+                    cls.texts.append((where, unicodedata.normalize('NFC', o)))
+            elif isinstance(o, dict):
+                for k, v in o.items():
+                    walk(v, where)
+            elif isinstance(o, list):
+                for v in o:
+                    walk(v, where)
+        files = sorted(glob.glob(os.path.join(ROOT, 'content', 'starter', '*.json')))
+        files += sorted(glob.glob(os.path.join(ROOT, 'content', 'languages', '*', '**', '*.json'), recursive=True))
+        for f in files:
+            if os.path.basename(f) in ('pack.json', 'voice-plan.json'):
+                continue
+            walk(read_json(f), os.path.relpath(f, ROOT))
+        for k, v in dart_strings().items():
+            cls.texts.append(('he.dart ' + k, unicodedata.normalize('NFC', v)))
+
+    def hits(self, pattern):
+        return sorted({'%s: %s' % (w, t[:70]) for w, t in self.texts if pattern.search(t)})
+
+    def test_vav_takes_its_vowel_from_the_next_letter(self):
+        self.assertEqual(self.hits(self.VAV_BEFORE_SHVA), [])
+        self.assertEqual(self.hits(self.VAV_BEFORE_LABIAL), [])
+
+    def test_ma_and_its_dagesh(self):
+        self.assertEqual(self.hits(self.MA_QAMATS), [])
+        self.assertEqual(self.hits(self.MA_PATAH), [])
+
+    def test_article_after_bet_and_the_written_zot(self):
+        self.assertEqual(self.hits(self.BA_ARTICLE), [])
+        self.assertEqual(self.hits(self.BARE_ZOT), [])
+
+    def test_words_the_sweep_removed(self):
+        bad = ['%s (%s): %s' % (w, why, t[:60]) for w, t in self.texts for word, why in self.BANNED if word in t]
+        self.assertEqual(sorted(set(bad)), [])
+
+    def test_course_voice_texts_end_in_a_stop_and_never_shout(self):
+        bad = []
+        for lang in ('eng', 'heb', 'rus'):
+            lines = read_json(os.path.join(ROOT, 'content', 'languages', lang, 'course.json'))['lines']
+            for key, line in lines.items():
+                v = line.get('voice')
+                # The three "and where is" carriers (hebrew-notes.md section 15) are half a question that the next clip finishes: no mark on purpose.
+                if v and not key.startswith(('he-gl-', 'gl-')) and key not in ('he-fb-where', 'fb-where', 'f43') and (v.rstrip()[-1] not in '.?\u2026:' or '!' in v):
+                    bad.append('%s %s: %s' % (lang, key, v))
+        self.assertEqual(bad, [])
+
+    def test_course_voice_plans_have_no_placeholder(self):
+        """A clip is voiced once, so no text of a course's voice plan may hold a {variable} (the Russian puppet is Саша, written in the line)."""
+        bad = []
+        for lang in ('eng', 'heb', 'rus'):
+            plan = read_json(os.path.join(ROOT, 'content', 'languages', lang, 'voice-plan.json'))
+            for kind, fields in (('frameLines', ('he', 'voice')), ('targetClips', ('shown', 'say')), ('cutClips', ('text',))):
+                for row in plan.get(kind, []):
+                    for f in fields:
+                        if '{' in (row.get(f) or '') or '}' in (row.get(f) or ''):
+                            bad.append('%s %s %s.%s: %s' % (lang, row.get('id'), kind, f, row.get(f)))
+        self.assertEqual(bad, [])
 
 
 if __name__ == '__main__':

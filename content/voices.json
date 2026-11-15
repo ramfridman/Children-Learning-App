@@ -8,12 +8,14 @@
   "settings": { "stability": 0.5, "similarity_boost": 0.75, "use_speaker_boost": true },
   "_settingsNote": "Sent explicitly with every line (voice_gen refuses settings without stability and similarity_boost), so nothing depends on the settings stored with a voice in the ElevenLabs account. 0.5 and 0.75 are ElevenLabs' API defaults and the values of round 1 of the diagnostic audition (docs/audio/voice-quality-diagnosis.md); the voice-and-sound-director sets the final values after round 2. A style's settings go on top of these, key by key. style and speed are never sent to a v4 model (v4 does not use them), so on eleven_v4 and eleven_v4_turbo the cheer is stability 0.1 only.",
   "listPricePer1000Chars": { "eleven_v4": 0.08, "eleven_v4_turbo": 0.04 },
-  "_candidatesNote": "Voices with \"candidate\": true are for voice_gen auditions only (the Languages voice pilot, docs/languages/voices.md): voice_gen plan and generate never use them, and no pack or character points at them. idStatus OWNER-TO-FILL means the voiceId is empty on purpose: the owner copies it from the ElevenLabs Voice Library (add the voice to My Voices first), and audition-batch plan names the voice until he has. from-third-party-list-unverified ids come from a public list of ElevenLabs default voices and are not checked against his account.",
+  "_candidatesNote": "Voices with \"candidate\": true are for voice_gen auditions only (the Languages voice pilot, docs/languages/voices.md): voice_gen plan and generate never use them, and no pack or character points at them. The four lang-* voices are the English and Russian course voices the owner chose himself on 2026-11-08 (idStatus owner-chosen 2026-11-08); they stay candidates until the pilot (docs/languages/voices.md section 11) has passed the isolated-sound test, then the candidate flag is dropped. An idStatus OWNER-TO-FILL would mean an empty voiceId on purpose.",
+  "_modelNote": "A voice may have its own modelId (voices.<name>.modelId); the others use the modelId above. Owner's decision of 2026-11-08: nitzi is voiced on eleven_v4 and hero-son on eleven_v4_turbo (the global one).",
   "_priceNote": "USD per 1,000 characters, list API prices (PLAN.md › costs), used only for the estimate that voice_gen plan prints. The owner's plan may differ; --price replaces them.",
   "pronunciation": {},
   "voices": {
     "nitzi": {
-      "voiceId": "Tbj9UQjXon5RB9MPEyc2"
+      "voiceId": "Tbj9UQjXon5RB9MPEyc2",
+      "modelId": "eleven_v4"
     },
     "alien-jili": {
       "voiceId": "Tbj9UQjXon5RB9MPEyc2"
@@ -40,45 +42,29 @@
     "weaver-keshet": {
       "voiceId": "6Ijsl5024dyMrE00loVE"
     },
-    "lang-en-jessica": {
+    "lang-en-female": {
       "candidate": true,
-      "voiceId": "cgSgspJ2msm6clMCkdW9",
-      "idStatus": "from-third-party-list-unverified"
+      "voiceId": "qSeXEcewz7tA0Q0qk9fH",
+      "idStatus": "owner-chosen 2026-11-08",
+      "role": "English course, main target voice: every English clip except the puppet's lines (docs/languages/voices.md section 11)"
     },
-    "lang-en-sarah": {
+    "lang-en-male": {
       "candidate": true,
-      "voiceId": "EXAVITQu4vr4xnSDxMaL",
-      "idStatus": "from-third-party-list-unverified"
+      "voiceId": "Aa6nEBJJMKJwJkCx8VU2",
+      "idStatus": "owner-chosen 2026-11-08",
+      "role": "English course, the puppet Pip (male): the lines of the puppet_talk activities (9 clips)"
     },
-    "lang-en-matilda": {
+    "lang-ru-female": {
       "candidate": true,
-      "voiceId": "XrExE9yKIg1WjnnlVkGX",
-      "idStatus": "from-third-party-list-unverified"
+      "voiceId": "ymDCYd8puC7gYjxIamPt",
+      "idStatus": "owner-chosen 2026-11-08",
+      "role": "Russian course, main target voice: every Russian clip except the puppet's lines"
     },
-    "lang-en-brian": {
+    "lang-ru-male": {
       "candidate": true,
-      "voiceId": "nPczCjzI2devNBz1zQrb",
-      "idStatus": "from-third-party-list-unverified"
-    },
-    "lang-ru-marina": {
-      "candidate": true,
-      "voiceId": "",
-      "idStatus": "OWNER-TO-FILL"
-    },
-    "lang-ru-ekaterina": {
-      "candidate": true,
-      "voiceId": "",
-      "idStatus": "OWNER-TO-FILL"
-    },
-    "lang-ru-maxim": {
-      "candidate": true,
-      "voiceId": "",
-      "idStatus": "OWNER-TO-FILL"
-    },
-    "lang-ru-ivan": {
-      "candidate": true,
-      "voiceId": "",
-      "idStatus": "OWNER-TO-FILL"
+      "voiceId": "XuEV9VY3VUASYgJVNBh0",
+      "idStatus": "owner-chosen 2026-11-08",
+      "role": "Russian course, the puppet Саша: the lines of the puppet_talk activities (11 clips)"
     }
   }
 }

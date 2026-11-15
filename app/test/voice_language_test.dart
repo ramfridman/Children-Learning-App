@@ -14,6 +14,21 @@ String u(int r) => String.fromCharCode(r);
 Map<String, Object?> _config() =>
     jsonDecode(File('../content/voices.json').readAsStringSync()) as Map<String, Object?>;
 
+/// The real file with the voice ids of the Russian voices blanked, as a candidate whose id the owner has not filled in yet
+/// (the tool still has to plan around such a voice).
+Map<String, Object?> _withoutIds() {
+  final Map<String, Object?> config = _config();
+  final Map<String, Object?> voices = Map<String, Object?>.of(config['voices']! as Map<String, Object?>);
+  for (final String name in <String>['lang-ru-female', 'lang-ru-male']) {
+    voices[name] = <String, Object?>{
+      ...(voices[name]! as Map<String, Object?>),
+      'voiceId': '',
+      'idStatus': 'OWNER-TO-FILL',
+    };
+  }
+  return <String, Object?>{...config, 'voices': voices};
+}
+
 Map<String, Object?> _spec(
   List<Map<String, Object?>> clips, {
   Map<String, Object?>? defaults,
@@ -30,8 +45,11 @@ Map<String, Object?> _spec(
   'clips': clips,
 };
 
-List<AuditionClip> _read(List<Map<String, Object?>> clips, {Map<String, Object?>? defaults}) =>
-    readAuditionSpec(_spec(clips, defaults: defaults), config: _config());
+List<AuditionClip> _read(
+  List<Map<String, Object?>> clips, {
+  Map<String, Object?>? defaults,
+  Map<String, Object?>? config,
+}) => readAuditionSpec(_spec(clips, defaults: defaults), config: config ?? _config());
 
 Set<String> _chars(List<TextProblem> p) => p.map((TextProblem t) => t.char).toSet();
 
@@ -194,7 +212,7 @@ void main() {
   group('the language key of a spec', () {
     test('a clip and the defaults carry it into language_code, and the clip wins; Hebrew is the default', () {
       final Map<String, Object?> defaults = <String, Object?>{
-        'character': 'lang-en-jessica',
+        'character': 'lang-en-female',
         'language': 'en',
         'model': 'eleven_v4',
         'settings': <String, Object?>{'stability': 0.5, 'similarity_boost': 0.75},
@@ -297,20 +315,20 @@ void main() {
       final AuditionPlan p = AuditionPlan(
         title: 't',
         clips: _read(<Map<String, Object?>>[
-          <String, Object?>{'id': 'a', 'text': 'cat.', 'language': 'en', 'character': 'lang-en-jessica'},
+          <String, Object?>{'id': 'a', 'text': 'cat.', 'language': 'en', 'character': 'lang-en-female'},
           <String, Object?>{'id': 'b', 'text': 'שלום.'},
           <String, Object?>{
             'id': 'c',
             'text': '/ma/',
             'allow': <Object?>['ipa'],
             'language': 'en',
-            'character': 'lang-en-sarah',
+            'character': 'lang-en-male',
           },
         ]),
       );
       expect(p.byLanguage, <String, int>{'en': 8, 'he': 5});
       final String text = p.describe(price);
-      expect(text, contains('a: lang-en-jessica, language en, eleven_v4'));
+      expect(text, contains('a: lang-en-female, language en, eleven_v4'));
       expect(text, contains('b: nitzi, language he, eleven_v4'));
       expect(text, contains('Characters by language: en 8, he 5'));
       expect(text, contains('Characters of text in total: 13'));
@@ -352,51 +370,55 @@ void main() {
         .where((MapEntry<String, Object?> e) => (e.value! as Map<String, Object?>)['candidate'] == true)
         .map((MapEntry<String, Object?> e) => e.key);
 
-    test('the eight pilot voices are there, marked as candidates; the placeholders are marked and empty', () {
-      expect(candidates().toSet(), <String>{
-        'lang-en-jessica',
-        'lang-en-sarah',
-        'lang-en-matilda',
-        'lang-en-brian',
-        'lang-ru-marina',
-        'lang-ru-ekaterina',
-        'lang-ru-maxim',
-        'lang-ru-ivan',
-      });
-      for (final String c in candidates()) {
-        final Map<String, Object?> v = voices()[c]! as Map<String, Object?>;
-        final String id = v['voiceId']! as String;
-        if (id.isEmpty) {
-          expect(v['idStatus'], 'OWNER-TO-FILL', reason: c);
-        } else {
-          checkVoiceId(id);
-          expect(v['idStatus'], 'from-third-party-list-unverified', reason: c);
+    test(
+      'the four voices the owner chose (2026-11-08) are there, with their ids and roles; no other candidate',
+      () {
+        const Map<String, (String, String)> chosen = <String, (String, String)>{
+          'lang-en-female': ('qSeXEcewz7tA0Q0qk9fH', 'English course, main target voice'),
+          'lang-en-male': ('Aa6nEBJJMKJwJkCx8VU2', 'English course, the puppet Pip'),
+          'lang-ru-female': ('ymDCYd8puC7gYjxIamPt', 'Russian course, main target voice'),
+          'lang-ru-male': ('XuEV9VY3VUASYgJVNBh0', 'Russian course, the puppet'),
+        };
+        expect(candidates().toSet(), chosen.keys.toSet());
+        for (final MapEntry<String, (String, String)> e in chosen.entries) {
+          final Map<String, Object?> v = voices()[e.key]! as Map<String, Object?>;
+          expect(v['voiceId'], e.value.$1, reason: e.key);
+          checkVoiceId(v['voiceId']! as String);
+          expect(v['idStatus'], 'owner-chosen 2026-11-08', reason: e.key);
+          expect(v['role'], startsWith(e.value.$2), reason: e.key);
+          expect(
+            v.keys.where((String k) => k.startsWith('_')),
+            isEmpty,
+            reason: 'underscore notes are dropped',
+          );
         }
         expect(
-          v.keys.where((String k) => k.startsWith('_')),
-          isEmpty,
-          reason: 'underscore notes are dropped',
+          <String>{
+            for (final String c in chosen.keys) (voices()[c]! as Map<String, Object?>)['voiceId']! as String,
+          },
+          hasLength(4),
+          reason: 'four different voices',
         );
-      }
-      expect(
-        voices()['nitzi'],
-        isNot(contains('candidate')),
-        reason: 'the real characters are not candidates',
-      );
-    });
+        expect(
+          voices()['nitzi'],
+          isNot(contains('candidate')),
+          reason: 'the real characters are not candidates',
+        );
+      },
+    );
 
     test('a candidate is never a character of the packs: plan, generate and a plain profile refuse it', () {
       final Map<String, Object?> config = _config();
-      expect(packCharacters(config), isNot(anyOf(contains('lang-en-jessica'), contains('lang-ru-marina'))));
+      expect(packCharacters(config), isNot(anyOf(contains('lang-en-female'), contains('lang-ru-female'))));
       expect(packCharacters(config), containsAll(<String>['nitzi', 'hero-son', 'climber-tzuri']));
       for (final String c in candidates()) {
         expect(() => VoiceProfile.fromConfig(config, c), throwsA(isA<VoiceGenFailed>()), reason: c);
       }
       expect(
-        VoiceProfile.fromConfig(config, 'lang-en-jessica', audition: true).voiceId,
-        'cgSgspJ2msm6clMCkdW9',
+        VoiceProfile.fromConfig(config, 'lang-en-female', audition: true).voiceId,
+        'qSeXEcewz7tA0Q0qk9fH',
       );
-      expect(VoiceProfile.fromConfig(config, 'lang-ru-marina', audition: true).voiceId, isEmpty);
+      expect(VoiceProfile.fromConfig(_withoutIds(), 'lang-ru-female', audition: true).voiceId, isEmpty);
       expect(
         () => VoiceProfile.fromConfig(config, 'nobody', audition: true),
         throwsA(isA<VoiceGenFailed>()),
@@ -438,28 +460,28 @@ void main() {
       AuditionPlan plan() => AuditionPlan(
         title: 'ru',
         clips: _read(<Map<String, Object?>>[
-          <String, Object?>{'id': 'ru-a', 'text': 'мама.', 'language': 'ru', 'character': 'lang-ru-marina'},
-          <String, Object?>{'id': 'ru-b', 'text': 'кот.', 'language': 'ru', 'character': 'lang-ru-marina'},
-          <String, Object?>{'id': 'ru-c', 'text': 'дом.', 'language': 'ru', 'character': 'lang-ru-maxim'},
-          <String, Object?>{'id': 'en-a', 'text': 'cat.', 'language': 'en', 'character': 'lang-en-jessica'},
-        ]),
+          <String, Object?>{'id': 'ru-a', 'text': 'мама.', 'language': 'ru', 'character': 'lang-ru-female'},
+          <String, Object?>{'id': 'ru-b', 'text': 'кот.', 'language': 'ru', 'character': 'lang-ru-female'},
+          <String, Object?>{'id': 'ru-c', 'text': 'дом.', 'language': 'ru', 'character': 'lang-ru-male'},
+          <String, Object?>{'id': 'en-a', 'text': 'cat.', 'language': 'en', 'character': 'lang-en-female'},
+        ], config: _withoutIds()),
       );
 
       test('plan names the voices to fill in and the clips that wait, and does not crash', () {
         final AuditionPlan p = plan();
-        expect(p.missingVoices.keys, <String>['lang-ru-marina', 'lang-ru-maxim']);
+        expect(p.missingVoices.keys, <String>['lang-ru-female', 'lang-ru-male']);
         final String text = p.describe((String m) => 0.08);
-        expect(text, contains('ru-a: lang-ru-marina, language ru, eleven_v4, mp3_44100_64'));
+        expect(text, contains('ru-a: lang-ru-female, language ru, eleven_v4, mp3_44100_64'));
         expect(text, contains(', VOICE ID MISSING'));
         expect(
           text,
           contains(
-            'en-a: lang-en-jessica, language en, eleven_v4, mp3_44100_64, {"similarity_boost":0.75,"stability":0.5,"use_speaker_boost":true}, 4 characters\n',
+            'en-a: lang-en-female, language en, eleven_v4, mp3_44100_64, {"similarity_boost":0.75,"stability":0.5,"use_speaker_boost":true}, 4 characters\n',
           ),
         );
         expect(text, contains('VOICE IDS MISSING for 2 voices'));
-        expect(text, contains('  lang-ru-marina: 2 clips, 9 characters'));
-        expect(text, contains('  lang-ru-maxim: 1 clips, 4 characters'));
+        expect(text, contains('  lang-ru-female: 2 clips, 9 characters'));
+        expect(text, contains('  lang-ru-male: 1 clips, 4 characters'));
         expect(text, contains('Characters of text in total: 17'), reason: 'the count is still there to read');
         expect(text, isNot(contains('run in a terminal')), reason: 'it cannot be run yet');
         expect(text, isNot(contains('Type the total')));
@@ -482,7 +504,7 @@ void main() {
             isA<VoiceGenFailed>().having(
               (VoiceGenFailed e) => e.message,
               'message',
-              allOf(contains('lang-ru-marina, lang-ru-maxim'), contains('Nothing was sent')),
+              allOf(contains('lang-ru-female, lang-ru-male'), contains('Nothing was sent')),
             ),
           ),
         );
@@ -497,7 +519,7 @@ void main() {
         final AuditionPlan p = AuditionPlan(
           title: 'en',
           clips: _read(<Map<String, Object?>>[
-            <String, Object?>{'id': 'en-a', 'text': 'cat.', 'language': 'en', 'character': 'lang-en-jessica'},
+            <String, Object?>{'id': 'en-a', 'text': 'cat.', 'language': 'en', 'character': 'lang-en-female'},
           ]),
         );
         expect(p.missingVoices, isEmpty);
@@ -518,9 +540,7 @@ void main() {
   group('the pilot files of docs/languages', () {
     final List<String> files = <String>[
       'english/pilot',
-      'english/pilot-round2',
       'russian/pilot',
-      'russian/pilot-round2',
       'hebrew/pilot',
       'hebrew/pilot-ipa',
       'hebrew/pilot-round2',

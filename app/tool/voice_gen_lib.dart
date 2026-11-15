@@ -13,6 +13,8 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:nitznutz/content/pack_verify.dart';
+import 'package:nitznutz/content/zip_store.dart' show ZipLimits;
+import 'package:nitznutz/voice/voice_bank.dart' show maxVoiceBytes, voicePackId;
 
 import 'pack_builder_lib.dart';
 import 'voice_text_lib.dart';
@@ -195,7 +197,11 @@ class VoiceProfile {
       throw VoiceGenFailed('"$character" has no voiceId in content/voices.json yet');
     }
     if (voiceId.isNotEmpty) checkVoiceId(voiceId);
-    final String modelId = model ?? (config['modelId'] ?? '') as String;
+    // A voice may have its own model (`voices.<name>.modelId`); the others use the global one.
+    final Object? own = voice['modelId'];
+    if (own != null && own is! String) throw VoiceGenFailed('the modelId of "$character" is not text');
+    final String modelId =
+        model ?? (own is String && own.isNotEmpty ? own : (config['modelId'] ?? '') as String);
     if (modelId.isEmpty) throw const VoiceGenFailed('content/voices.json has no modelId yet');
     checkModel(modelId);
     final String format = (config['outputFormat'] ?? defaultOutputFormat) as String;
@@ -246,8 +252,9 @@ class VoiceProfile {
   final Map<String, List<String>> styleRules;
   final Map<String, String> pronunciation;
 
-  /// The request for [line]: its text respelled, and the usual settings with the line's style on top.
-  ClipRequest requestFor(SpokenLine line) {
+  /// The request for [line]: its text respelled, and the usual settings with the line's style on top. [language] is
+  /// the line's `language_code` (Hebrew unless the line is a clip of a language course).
+  ClipRequest requestFor(SpokenLine line, {String language = defaultVoiceLanguage}) {
     final String? style = styleOf(line.voId, styleRules);
     return ClipRequest(
       text: respelled(line.text, pronunciation),
@@ -255,6 +262,7 @@ class VoiceProfile {
       modelId: modelId,
       settings: settingsToSend(modelId, settings, style == null ? null : styles[style]),
       outputFormat: outputFormat,
+      languageCode: language,
     );
   }
 
@@ -288,6 +296,22 @@ class ClipLedger {
 
   final File file;
 
+  /// The models the clips of this folder were made with (`model_id` of each record). A clip made from another clip (a slow copy,
+  /// a cut word) names none. A run with another model than these voices every clip again, so the commands compare.
+  Set<String> models() {
+    final Set<String> out = <String>{};
+    if (!file.existsSync()) return out;
+    for (final String line in file.readAsLinesSync()) {
+      try {
+        final Object? j = jsonDecode(line);
+        if (j is Map<String, Object?> && j['model_id'] is String) out.add(j['model_id']! as String);
+      } on FormatException {
+        continue;
+      }
+    }
+    return out;
+  }
+
   /// The hash each clip was last made from. A line cut short by a crash is skipped (its clip is made again).
   Map<String, String> hashes() {
     final Map<String, String> out = <String, String>{};
@@ -307,6 +331,14 @@ class ClipLedger {
 
   void record(String id, String audioFile, ClipRequest request) => file.writeAsStringSync(
     '${jsonEncode(<String, Object?>{'id': id, 'hash': request.hash, 'file': audioFile, 'characters': request.characters, 'voice': request.voiceId, 'format': request.outputFormat, ...request.body})}\n',
+    mode: FileMode.append,
+    flush: true,
+  );
+
+  /// A clip made from another clip of the folder with no voice (a slow copy, a word cut from a page): [hash] stands for
+  /// what it was made from, so that it is made again when its source changes. It cost no characters.
+  void recordMade(String id, String audioFile, String hash, String how) => file.writeAsStringSync(
+    '${jsonEncode(<String, Object?>{'id': id, 'hash': hash, 'file': audioFile, 'characters': 0, 'made': how})}\n',
     mode: FileMode.append,
     flush: true,
   );
@@ -350,26 +382,146 @@ File? _audioOf(Directory workDir, String id) {
 }
 
 /// The state of line [id]'s clip in [workDir], given the hashes in its ledger ([made]).
-ClipState clipState(Directory workDir, String id, ClipRequest request, Map<String, String> made) {
+ClipState clipState(Directory workDir, String id, ClipRequest request, Map<String, String> made) =>
+    clipStateOfHash(workDir, id, request.hash, made);
+
+/// The same for a clip that stands for [hash] (a request's hash, or what a clip made from another clip was made from).
+ClipState clipStateOfHash(Directory workDir, String id, String hash, Map<String, String> made) {
   if (_audioOf(workDir, id) == null || !File(_inFolder(workDir, 'cue.$id.json')).existsSync()) {
     return ClipState.newLine;
   }
-  return made[id] == request.hash ? ClipState.unchanged : ClipState.changed;
+  return made[id] == hash ? ClipState.unchanged : ClipState.changed;
 }
 
 // ---- the plan ----
 
 /// One clip of the plan: who says which line, the request, and whether it is still to be made.
 class PlannedClip {
-  const PlannedClip(this.character, this.line, this.request, this.state);
+  const PlannedClip(this.character, this.line, this.request, this.state, {this.copyOf});
 
   final String character;
   final SpokenLine line;
   final ClipRequest request;
   final ClipState state;
 
-  bool get toSay => state != ClipState.unchanged;
+  /// The id of the line whose sound this one copies: an earlier line of the same voice with exactly the same request
+  /// (text, voice, model, settings, language, format). The copy costs nothing; it is a free copy of that sound.
+  final String? copyOf;
+
+  bool get isCopy => copyOf != null;
+
+  /// Still to be sent to the voice: not up to date, and not a copy of another line's sound.
+  bool get toSay => state != ClipState.unchanged && !isCopy;
+
+  PlannedClip asCopyOf(String voId) => PlannedClip(character, line, request, state, copyOf: voId);
 }
+
+/// For each item, the index of the item that holds the sound for its key: the first item with that key that is made
+/// already ([madeAlready]), or else the first item with that key. An item that holds its own sound maps to itself. A
+/// line whose text now equals a clip that exists therefore copies that clip instead of paying again.
+List<int> holderIndexes(List<String> keys, List<bool> madeAlready) {
+  final Map<String, int> holder = <String, int>{};
+  for (int i = 0; i < keys.length; i++) {
+    if (madeAlready[i]) holder.putIfAbsent(keys[i], () => i);
+  }
+  for (int i = 0; i < keys.length; i++) {
+    holder.putIfAbsent(keys[i], () => i);
+  }
+  return <int>[for (final String k in keys) holder[k]!];
+}
+
+/// [clips] with every clip that repeats the request of another clip of the same voice marked as a copy of it, so that
+/// a sentence that several lines share (the hints and corrections of sibling activities) is voiced once. Two voices that
+/// share a voice id are still two voices.
+List<PlannedClip> sharingSameText(List<PlannedClip> clips) {
+  final List<int> holder = holderIndexes(
+    <String>[for (final PlannedClip c in clips) '${c.character}|${c.request.hash}'],
+    <bool>[for (final PlannedClip c in clips) c.state == ClipState.unchanged],
+  );
+  return <PlannedClip>[
+    for (int i = 0; i < clips.length; i++)
+      holder[i] == i ? clips[i] : clips[i].asCopyOf(clips[holder[i]].line.voId),
+  ];
+}
+
+/// What a run does with one line: whether the line is part of it, and the sound it copies instead of being voiced.
+class LineWork {
+  const LineWork({required this.active, this.copyFrom});
+
+  /// The line is in the run: it has its sound already, it is to be voiced, or it copies a sound.
+  final bool active;
+
+  /// The id (file id, without `vo:`) of the clip whose sound this line copies for free; null when it keeps or gets its
+  /// own sound.
+  final String? copyFrom;
+}
+
+/// What a run does with each of [ids], given the hash of each one's request ([keys]), whether its clip is up to date
+/// ([made]), and which lines the run voices ([inScope], null for all of them: a whole group at a time, never a part).
+/// [elsewhere] is the clips already made in the same folder for lines that are not among [ids], by request hash.
+///
+/// A line that is made already or in scope is in the run. A line that is neither is left for a later run, unless its
+/// request equals the request of a clip the run has, and then it copies that clip for free. Of the lines with one
+/// request, the sound is held by a clip made already (also one of [elsewhere]), or else by the first line in scope, so a
+/// copy never pulls a line of a group that is not in the run into it.
+List<LineWork> workForLines({
+  required List<String> ids,
+  required List<String> keys,
+  required List<bool> made,
+  List<bool>? inScope,
+  Map<String, String> elsewhere = const <String, String>{},
+  bool share = true,
+}) {
+  final int n = ids.length;
+  bool scoped(int i) => made[i] || (inScope?[i] ?? true);
+  if (!share) {
+    return <LineWork>[for (int i = 0; i < n; i++) LineWork(active: scoped(i))];
+  }
+  // The clips that could hold a sound: those of the run (made or in scope), then those made for other lines.
+  final List<int> own = <int>[
+    for (int i = 0; i < n; i++)
+      if (scoped(i)) i,
+  ];
+  final List<String> extraIds = elsewhere.values.toList();
+  final List<String> pool = <String>[for (final int i in own) keys[i], ...elsewhere.keys];
+  final List<bool> poolMade = <bool>[
+    for (final int i in own) made[i],
+    ...List<bool>.filled(extraIds.length, true),
+  ];
+  final List<String> poolIds = <String>[for (final int i in own) ids[i], ...extraIds];
+  final List<int> holder = holderIndexes(pool, poolMade);
+  final Map<String, String> soundOf = <String, String>{
+    for (int p = 0; p < pool.length; p++) pool[p]: poolIds[holder[p]],
+  };
+  final Map<int, int> position = <int, int>{for (int p = 0; p < own.length; p++) own[p]: p};
+  return <LineWork>[
+    for (int i = 0; i < n; i++)
+      position.containsKey(i)
+          ? LineWork(
+              active: true,
+              copyFrom: poolIds[holder[position[i]!]] == ids[i] ? null : poolIds[holder[position[i]!]],
+            )
+          : (soundOf[keys[i]] == null
+                ? const LineWork(active: false)
+                : LineWork(active: true, copyFrom: soundOf[keys[i]])),
+  ];
+}
+
+/// The clips of [workDir] that are up to date and are not for any of [lineIds], by the hash they were made from: sounds
+/// an earlier run made that a line of this run can copy for free instead of being voiced again.
+Map<String, String> madeElsewhere(Directory workDir, Set<String> lineIds, Map<String, String> made) {
+  final Map<String, String> out = <String, String>{};
+  for (final MapEntry<String, String> e in made.entries) {
+    if (lineIds.contains(e.key) || out.containsKey(e.value)) continue;
+    if (clipStateOfHash(workDir, e.key, e.value, made) == ClipState.unchanged) out[e.value] = e.key;
+  }
+  return out;
+}
+
+/// What a pack costs in bytes, measured on the voice pack of hero-son 2.0.0 (2026-11-08): 93,869,746 bytes of 64 kbps sound
+/// for 137,552 characters of text, and 2,440,279 bytes of mouth cues for 4,311 lines.
+const int soundBytesPerCharacter = 683;
+const int cueBytesPerLine = 566;
 
 class VoicePlan {
   const VoicePlan({required this.characters, required this.lines, required this.clips});
@@ -390,16 +542,175 @@ class VoicePlan {
       .fold<int>(0, math.max);
 
   int get toSay => _toSay.length;
-  int get reused => clips.length - toSay;
-  int count(ClipState s) => clips.where((PlannedClip c) => c.state == s).length;
+
+  /// Lines that copy the sound of another line with the same text.
+  int get shared => clips.where((PlannedClip c) => c.isCopy).length;
+
+  /// The characters those copies would have cost if each line were voiced on its own (only the ones not up to date).
+  int get sharedCharacters => clips
+      .where((PlannedClip c) => c.isCopy && c.state != ClipState.unchanged)
+      .fold<int>(0, (int s, PlannedClip c) => s + c.request.characters);
+
+  int get reused => clips.length - toSay - shared;
+  int count(ClipState s) => clips.where((PlannedClip c) => c.state == s && !c.isCopy).length;
 
   /// The texts the pre-flight check refuses, among those still to be said.
   List<TextProblem> get problems => <TextProblem>[
     for (final PlannedClip c in _toSay) ...c.request.problems(c.line.voId),
   ];
 
+  /// About how many bytes the pack of [character] has: its sounds (a sound shared by several ids is in once) and its cues.
+  /// An estimate from [soundBytesPerCharacter] and [cueBytesPerLine], to see a pack that will not fit before paying for it.
+  int estimatedPackBytes(String character, {Set<String>? voIds}) {
+    int bytes = 0;
+    for (final PlannedClip c in clips) {
+      if (c.character != character || (voIds != null && !voIds.contains(c.line.voId))) continue;
+      bytes += cueBytesPerLine + (c.isCopy ? 0 : c.request.characters * soundBytesPerCharacter);
+    }
+    return bytes;
+  }
+
+  /// About how many bytes of sound the app holds for [character]: each distinct sound once, as the app counts them against
+  /// [maxVoiceBytes]. A free copy shares its holder's sound, except when the holder is in another part ([partOfLine]), where
+  /// it has a file of its own.
+  int estimatedVoiceBytes(String character, {Map<String, int>? partOfLine}) {
+    int bytes = 0;
+    for (final PlannedClip c in clips) {
+      if (c.character != character) continue;
+      final bool ownFile =
+          !c.isCopy || (partOfLine != null && partOfLine[c.line.voId] != partOfLine[c.copyOf]);
+      if (ownFile) bytes += c.request.characters * soundBytesPerCharacter;
+    }
+    return bytes;
+  }
+
   /// The cost at [pricePer1000Chars] (the price per thousand characters of the model).
   double cost(double pricePer1000Chars) => total / 1000 * pricePer1000Chars;
+
+  /// The characters still to be said, by model (voices may use different models).
+  Map<String, int> get charactersByModel {
+    final Map<String, int> out = <String, int>{};
+    for (final PlannedClip c in _toSay) {
+      out[c.request.modelId] = (out[c.request.modelId] ?? 0) + c.request.characters;
+    }
+    return out;
+  }
+
+  /// The cost when [priceOf] gives the price per thousand characters of each model.
+  double costBy(double Function(String model) priceOf) => charactersByModel.entries.fold<double>(
+    0,
+    (double s, MapEntry<String, int> e) => s + e.value / 1000 * priceOf(e.key),
+  );
+
+  /// What each voice has to say: how many lines are new, changed, up to date and copies, and the characters it sends.
+  String describeVoices() {
+    final StringBuffer b = StringBuffer();
+    for (final String ch in characters) {
+      final List<PlannedClip> mine = clips.where((PlannedClip c) => c.character == ch).toList();
+      if (mine.isEmpty) continue;
+      final ClipRequest r = mine.first.request;
+      final int chars = mine
+          .where((PlannedClip c) => c.toSay)
+          .fold<int>(0, (int s, PlannedClip c) => s + c.request.characters);
+      final int copies = mine.where((PlannedClip c) => c.isCopy).length;
+      int of(ClipState s) => mine.where((PlannedClip c) => c.state == s && !c.isCopy).length;
+      b.writeln(
+        '  $ch (${r.modelId}, ${r.outputFormat}): '
+        'new ${of(ClipState.newLine)}, changed ${of(ClipState.changed)}, unchanged ${of(ClipState.unchanged)}'
+        '${copies == 0 ? '' : ', same text as another line $copies'}; '
+        'characters to send for this voice $chars',
+      );
+    }
+    return b.toString();
+  }
+
+  /// Every clip still to be made, with the exact text it sends.
+  String describeClips() {
+    final StringBuffer b = StringBuffer();
+    for (final PlannedClip c in _toSay) {
+      b.writeln(
+        '  [${c.state == ClipState.newLine ? 'new' : 'changed'}] ${c.character} ${c.line.voId} '
+        '(${c.request.characters}) ${jsonEncode(c.request.settings)}: ${c.request.text}',
+      );
+    }
+    return b.toString();
+  }
+
+  /// The lines to say, the characters and the cost: the figures the owner reads before he types the total.
+  ///
+  /// With [priceOf] and more than one model among the voices, the characters and the price of each model are shown, and
+  /// the cost is their sum.
+  String describeTotals(
+    double pricePer1000Chars, {
+    String priceSource = '',
+    double Function(String model)? priceOf,
+    Map<int, Set<String>>? parts,
+  }) {
+    final StringBuffer b = StringBuffer()
+      ..writeln(
+        'Lines still to say, over all voices: $toSay (new ${count(ClipState.newLine)}, changed '
+        '${count(ClipState.changed)}; the other $reused are unchanged and reused for free)',
+      );
+    if (shared > 0) {
+      b.writeln(
+        'Lines with the same text as another line of the same voice: $shared (voiced once and copied for free; '
+        '$sharedCharacters characters not sent)',
+      );
+    }
+    b
+      ..writeln('Characters of text per voice: $perCharacter')
+      ..writeln('Characters of text in total: $total');
+    final Map<String, int> byModel = charactersByModel;
+    if (priceOf != null && byModel.length > 1) {
+      for (final MapEntry<String, int> e in byModel.entries) {
+        b.writeln(
+          '  ${e.key}: ${e.value} characters at ${priceOf(e.key)} per 1,000 characters$priceSource: '
+          '${(e.value / 1000 * priceOf(e.key)).toStringAsFixed(2)}',
+        );
+      }
+      b.writeln('Estimated cost, all models: ${costBy(priceOf).toStringAsFixed(2)}');
+    } else {
+      b.writeln(
+        'Estimated cost at $pricePer1000Chars per 1,000 characters$priceSource: '
+        '${cost(pricePer1000Chars).toStringAsFixed(2)}',
+      );
+    }
+    final String limit = (ZipLimits.maxTotalBytes / (1024 * 1024)).toStringAsFixed(0);
+    final Map<String, int>? partOfLine = parts == null
+        ? null
+        : <String, int>{
+            for (final MapEntry<int, Set<String>> p in parts.entries)
+              for (final String id in p.value) id: p.key,
+          };
+    if (partOfLine != null) {
+      for (final String ch in characters) {
+        final String? warning = voiceBytesWarning(ch, estimatedVoiceBytes(ch, partOfLine: partOfLine));
+        if (warning != null) b.writeln(warning);
+      }
+    }
+    for (final String ch in characters) {
+      final List<(String, int)> packs = parts == null
+          ? <(String, int)>[('the pack of $ch', estimatedPackBytes(ch))]
+          : <(String, int)>[
+              for (final MapEntry<int, Set<String>> p
+                  in parts.entries.toList()..sort((a, b) => a.key.compareTo(b.key)))
+                ('part ${p.key} of $ch', estimatedPackBytes(ch, voIds: p.value)),
+            ];
+      for (final (String what, int bytes) in packs) {
+        if (bytes == 0) continue;
+        final String size = (bytes / (1024 * 1024)).toStringAsFixed(0);
+        b.writeln(
+          bytes > ZipLimits.maxTotalBytes
+              ? 'WARNING, $what would be about $size MB and the app reads $limit MB at most: the clips would be saved but '
+                    'the pack could not be built (`pack` builds it afterwards, free).'
+              : bytes > ZipLimits.maxTotalBytes * 0.9
+              ? 'Expected size of $what: about $size MB, over 90% of the $limit MB the app reads: move a group to the next part.'
+              : 'Expected size of $what: about $size MB (the app reads $limit MB at most).',
+        );
+      }
+    }
+    return b.toString();
+  }
 
   /// The summary; with [list], also every clip still to be made with the exact text it sends.
   ///
@@ -410,46 +721,21 @@ class VoicePlan {
     bool list = false,
     String priceSource = '',
     bool inRun = false,
+    double Function(String model)? priceOf,
+    Map<int, Set<String>>? parts,
   }) {
     final StringBuffer b = StringBuffer()
       ..writeln('Voices: ${characters.join(', ')}')
-      ..writeln('Lines per voice: ${lines.length}');
-    for (final String ch in characters) {
-      final List<PlannedClip> mine = clips.where((PlannedClip c) => c.character == ch).toList();
-      if (mine.isEmpty) continue;
-      final ClipRequest r = mine.first.request;
-      final int chars = mine
-          .where((PlannedClip c) => c.toSay)
-          .fold<int>(0, (int s, PlannedClip c) => s + c.request.characters);
-      b.writeln(
-        '  $ch (${r.modelId}, ${r.outputFormat}): '
-        'new ${mine.where((PlannedClip c) => c.state == ClipState.newLine).length}, '
-        'changed ${mine.where((PlannedClip c) => c.state == ClipState.changed).length}, '
-        'unchanged ${mine.where((PlannedClip c) => c.state == ClipState.unchanged).length}; '
-        'characters to send for this voice $chars',
-      );
-    }
+      ..writeln('Lines per voice: ${lines.length}')
+      ..write(describeVoices());
     if (list) {
-      b.writeln();
-      for (final PlannedClip c in _toSay) {
-        b.writeln(
-          '  [${c.state == ClipState.newLine ? 'new' : 'changed'}] ${c.character} ${c.line.voId} '
-          '(${c.request.characters}) ${jsonEncode(c.request.settings)}: ${c.request.text}',
-        );
-      }
+      b
+        ..writeln()
+        ..write(describeClips());
     }
     b
       ..writeln()
-      ..writeln(
-        'Lines still to say, over all voices: $toSay (new ${count(ClipState.newLine)}, changed '
-        '${count(ClipState.changed)}; the other $reused are unchanged and reused for free)',
-      )
-      ..writeln('Characters of text per voice: $perCharacter')
-      ..writeln('Characters of text in total: $total')
-      ..writeln(
-        'Estimated cost at $pricePer1000Chars per 1,000 characters$priceSource: '
-        '${cost(pricePer1000Chars).toStringAsFixed(2)}',
-      );
+      ..write(describeTotals(pricePer1000Chars, priceSource: priceSource, priceOf: priceOf, parts: parts));
     final List<TextProblem> refused = problems;
     if (refused.isNotEmpty) {
       b
@@ -484,20 +770,42 @@ class VoicePlan {
 }
 
 /// The plan for every character of [profiles] saying every line of [lines]. [stateOf] tells which clips exist already
-/// (none, when it is not given).
+/// (none, when it is not given). With [shareSameText] (the default) a line whose request is the same as that of another
+/// line of the same voice, or of a clip made before for another line ([madeElsewhere], by character and request hash), is
+/// a free copy of that sound.
+///
+/// With [scope] (the voice ids of the lines to voice) the plan holds the lines that are made already, those in scope, and
+/// the free copies of their sounds: the rest are left for a later run ([workForLines]). Without it, all the lines.
 VoicePlan planVoices(
   Map<String, VoiceProfile> profiles,
   List<SpokenLine> lines, {
   ClipState Function(String character, SpokenLine line, ClipRequest request)? stateOf,
+  bool shareSameText = true,
+  Set<String>? scope,
+  Map<String, Map<String, String>> madeElsewhere = const <String, Map<String, String>>{},
 }) {
-  final List<PlannedClip> clips = <PlannedClip>[
-    for (final MapEntry<String, VoiceProfile> p in profiles.entries)
-      for (final SpokenLine l in lines)
-        () {
-          final ClipRequest r = p.value.requestFor(l);
-          return PlannedClip(p.key, l, r, stateOf?.call(p.key, l, r) ?? ClipState.newLine);
-        }(),
-  ];
+  final List<PlannedClip> clips = <PlannedClip>[];
+  for (final MapEntry<String, VoiceProfile> p in profiles.entries) {
+    final List<ClipRequest> requests = <ClipRequest>[for (final SpokenLine l in lines) p.value.requestFor(l)];
+    final List<ClipState> states = <ClipState>[
+      for (int i = 0; i < lines.length; i++) stateOf?.call(p.key, lines[i], requests[i]) ?? ClipState.newLine,
+    ];
+    final List<LineWork> work = workForLines(
+      ids: <String>[for (final SpokenLine l in lines) l.fileId],
+      keys: <String>[for (final ClipRequest r in requests) r.hash],
+      made: <bool>[for (final ClipState s in states) s == ClipState.unchanged],
+      inScope: scope == null ? null : <bool>[for (final SpokenLine l in lines) scope.contains(l.voId)],
+      elsewhere: madeElsewhere[p.key] ?? const <String, String>{},
+      share: shareSameText,
+    );
+    for (int i = 0; i < lines.length; i++) {
+      if (!work[i].active) continue;
+      final String? from = work[i].copyFrom;
+      clips.add(
+        PlannedClip(p.key, lines[i], requests[i], states[i], copyOf: from == null ? null : 'vo:$from'),
+      );
+    }
+  }
   return VoicePlan(characters: profiles.keys.toList(), lines: lines, clips: clips);
 }
 
@@ -565,8 +873,8 @@ void requireTyped(Keyboard keyboard, int planned, String what, void Function(Str
 }
 
 /// Never says a word: the voice of a run in which every clip is up to date.
-class _Silent implements Synthesizer {
-  const _Silent();
+class SilentVoice implements Synthesizer {
+  const SilentVoice();
 
   @override
   Future<Synthesis> say(ClipRequest request) =>
@@ -578,7 +886,7 @@ class _Silent implements Synthesizer {
 /// then asks for the voice ([synth], which reads the key) and makes the pack. [heading] (where the texts come from) is
 /// printed above the plan, after the terminal check. When every clip is up to date it builds
 /// the pack without asking for the voice or the count.
-Future<BuiltPack> generateGated({
+Future<List<BuiltPack>> generateGated({
   required String characterId,
   required List<SpokenLine> lines,
   required VoiceProfile profile,
@@ -591,6 +899,9 @@ Future<BuiltPack> generateGated({
   String priceSource = '',
   String heading = '',
   String version = '1.0.0',
+  bool shareSameText = true,
+  Set<String>? scope,
+  Map<String, int>? partOfLine,
 }) async {
   requireTerminal(keyboard, 'generate');
   if (heading.isNotEmpty) write(heading);
@@ -600,8 +911,22 @@ Future<BuiltPack> generateGated({
     <String, VoiceProfile>{characterId: profile},
     lines,
     stateOf: (String c, SpokenLine l, ClipRequest r) => clipState(workDir, l.fileId, r, made),
+    shareSameText: shareSameText,
+    scope: scope,
+    madeElsewhere: shareSameText
+        ? <String, Map<String, String>>{
+            characterId: madeElsewhere(workDir, <String>{for (final SpokenLine l in lines) l.fileId}, made),
+          }
+        : const <String, Map<String, String>>{},
   );
-  write(plan.describe(pricePer1000Chars, priceSource: priceSource, inRun: true));
+  write(
+    plan.describe(
+      pricePer1000Chars,
+      priceSource: priceSource,
+      inRun: true,
+      parts: partOfLine == null ? null : partsOfVoiceIds(partOfLine),
+    ),
+  );
   final List<TextProblem> refused = plan.problems;
   if (refused.isNotEmpty) {
     throw VoiceGenFailed(
@@ -610,21 +935,49 @@ Future<BuiltPack> generateGated({
   }
   final Synthesizer voice;
   if (plan.total == 0) {
-    voice = const _Silent();
+    voice = const SilentVoice();
   } else {
     requireTyped(keyboard, plan.total, 'voicing $characterId', write);
     voice = synth();
   }
-  return generateVoicePack(
-    characterId: characterId,
-    lines: lines,
-    synth: voice,
-    profile: profile,
-    key: key,
-    workDir: workDir,
-    version: version,
-    progress: write,
-  );
+  if (partOfLine != null) {
+    return generateVoiceParts(
+      characterId: characterId,
+      lines: lines,
+      synth: voice,
+      profile: profile,
+      key: key,
+      workDir: workDir,
+      partOfLine: partOfLine,
+      version: version,
+      progress: write,
+      shareSameText: shareSameText,
+      scope: scope,
+    );
+  }
+  return <BuiltPack>[
+    await generateVoicePack(
+      characterId: characterId,
+      lines: lines,
+      synth: voice,
+      profile: profile,
+      key: key,
+      workDir: workDir,
+      version: version,
+      progress: write,
+      shareSameText: shareSameText,
+      scope: scope,
+    ),
+  ];
+}
+
+/// The voice ids of each part, from the part of each voice id.
+Map<int, Set<String>> partsOfVoiceIds(Map<String, int> partOfLine) {
+  final Map<int, Set<String>> out = <int, Set<String>>{};
+  for (final MapEntry<String, int> e in partOfLine.entries) {
+    (out[e.value] ??= <String>{}).add(e.key);
+  }
+  return out;
 }
 
 // ---- mouth cues ----
@@ -646,9 +999,31 @@ class Alignment {
   final List<String> characters;
   final List<double> starts;
   final List<double> ends;
+
+  Map<String, Object?> toJson() => <String, Object?>{
+    'characters': characters,
+    'character_start_times_seconds': starts,
+    'character_end_times_seconds': ends,
+  };
 }
 
 bool _isLetter(int r) => r >= 0x05D0 && r <= 0x05EA;
+
+/// The lower-case vowel letters of English (a e i o u y) and of Russian (а е ё и о у ы э ю я) as code points.
+const Set<int> _latinCyrillicVowels = <int>{
+  0x61, 0x65, 0x69, 0x6F, 0x75, 0x79, // a e i o u y
+  0x430, 0x435, 0x451, 0x438, 0x43E, 0x443, 0x44B, 0x44D, 0x44E, 0x44F, // а е ё и о у ы э ю я
+};
+
+/// Whether [r] is a vowel letter of English or Russian, in either case: the mouth is open while it is said. Language
+/// clips have no points to read it from, so each vowel letter is one open mouth.
+bool _isOpenLatinOrCyrillic(int r) {
+  final bool upperLatin = r >= 0x41 && r <= 0x5A;
+  final bool upperCyrillic = r >= 0x410 && r <= 0x42F;
+  final int lower = upperLatin || upperCyrillic ? r + 0x20 : (r == 0x401 ? 0x451 : r);
+  return _latinCyrillicVowels.contains(lower);
+}
+
 bool _isPoint(int r) => r >= 0x05B0 && r <= 0x05C7;
 
 /// Points that open the mouth: all vowels except the silent shva (U+05B0). Holam (U+05B9) and qubuts (U+05BB) round it,
@@ -666,6 +1041,13 @@ List<(int, int)> cuesFromAlignment(Alignment a) {
   final List<(int, bool)> raw = <(int, bool)>[];
   int i = 0;
   while (i < n) {
+    if (_isOpenLatinOrCyrillic(rune(i))) {
+      raw
+        ..add(((a.starts[i] * 1000).round(), true))
+        ..add(((a.ends[i] * 1000).round(), false));
+      i++;
+      continue;
+    }
     if (!_isLetter(rune(i)) && !_isPoint(rune(i))) {
       i++;
       continue;
@@ -875,6 +1257,14 @@ void checkApiKey(String key) {
 /// the sources to [workDir] first and records each clip's hash in its [ClipLedger], so that a run that stops can be
 /// continued, and a line whose text, voice, model, settings or format changed is said again. Refuses before sending
 /// anything if a text fails the pre-flight check.
+///
+/// With [shareSameText] (the default) lines that send exactly the same request are said once: the others get a free
+/// copy of that sound in the work folder, and the pack lists their ids with the one file (`VoiceBank` reads them alike).
+/// A line with the request of a clip an earlier run made for another line copies that clip too.
+///
+/// With [scope] (voice ids) only those lines are voiced; the lines made before stay in the pack, and the lines of other
+/// groups that are not made are left out of it until their own run ([workForLines]). The pack holds exactly the lines of
+/// the run: clips in the work folder of other lines (another set, a line that has gone) stay on disk and stay out of it.
 Future<BuiltPack> generateVoicePack({
   required String characterId,
   required List<SpokenLine> lines,
@@ -884,59 +1274,259 @@ Future<BuiltPack> generateVoicePack({
   required Directory workDir,
   String version = '1.0.0',
   void Function(String)? progress,
+  bool shareSameText = true,
+  Set<String>? scope,
 }) async {
-  final List<ClipRequest> requests = <ClipRequest>[for (final SpokenLine l in lines) profile.requestFor(l)];
+  final List<_RunLine> run = await _voiceRun(
+    lines: lines,
+    synth: synth,
+    profile: profile,
+    workDir: workDir,
+    progress: progress,
+    shareSameText: shareSameText,
+    scope: scope,
+  );
+  return _buildPart(workDir, voicePackId(characterId, 1), version, <Map<String, String>>[
+    for (final _RunLine r in run)
+      <String, String>{'id': r.line.fileId, 'file': audioNameOf(workDir, r.copyFrom ?? r.line.fileId)},
+  ], key);
+}
+
+/// The same run, but the voice of a character is more than one pack may hold ([ZipLimits]): one pack per part, `voice-<id>`
+/// for part 1 and `voice-<id>-N` for the others. [partOfLine] gives the part of every voice id of the run (one part for
+/// each line, so a line is in exactly one pack); a line of the run with no part stops the run before anything is sent. A
+/// part with no line in the run is not built. A free copy stays in its part: when the sound it copies is in another part, its
+/// own file goes into the pack, so no pack points at a sound that is in another. Returns the packs by part number.
+Future<List<BuiltPack>> generateVoiceParts({
+  required String characterId,
+  required List<SpokenLine> lines,
+  required Synthesizer synth,
+  required VoiceProfile profile,
+  required PackKey key,
+  required Directory workDir,
+  required Map<String, int> partOfLine,
+  String version = '1.0.0',
+  void Function(String)? progress,
+  bool shareSameText = true,
+  Set<String>? scope,
+}) async {
+  final List<_RunLine> run = await _voiceRun(
+    lines: lines,
+    synth: synth,
+    profile: profile,
+    workDir: workDir,
+    progress: progress,
+    shareSameText: shareSameText,
+    scope: scope,
+    partOfLine: partOfLine,
+  );
+  final List<int> parts = <int>{for (final _RunLine r in run) partOfLine[r.line.voId]!}.toList()..sort();
+  final List<BuiltPack> built = <BuiltPack>[];
+  for (final int part in parts) {
+    final List<Map<String, String>> vo = <Map<String, String>>[
+      for (final _RunLine r in run)
+        if (partOfLine[r.line.voId] == part)
+          <String, String>{
+            'id': r.line.fileId,
+            'file': audioNameOf(
+              workDir,
+              r.copyFrom != null && partOfLine['vo:${r.copyFrom}'] == part ? r.copyFrom! : r.line.fileId,
+            ),
+          },
+    ];
+    built.add(await _buildPart(workDir, voicePackId(characterId, part), version, vo, key));
+  }
+  return built;
+}
+
+/// A line of a run, and the clip whose sound it copies (null: it has its own).
+typedef _RunLine = ({SpokenLine line, String? copyFrom});
+
+/// Voices what the run needs and makes the free copies; returns the lines of the run. With [partOfLine], a line of the run
+/// that has no part stops the run before anything is sent.
+Future<List<_RunLine>> _voiceRun({
+  required List<SpokenLine> lines,
+  required Synthesizer synth,
+  required VoiceProfile profile,
+  required Directory workDir,
+  required bool shareSameText,
+  void Function(String)? progress,
+  Set<String>? scope,
+  Map<String, int>? partOfLine,
+}) async {
+  checkWorkFolder(workDir);
+  final ClipLedger ledger = ClipLedger(workDir);
+  if (isInsideFolder(ledger.file, workDir)) {
+    throw VoiceGenFailed('the hashes of ${workDir.path} would land inside it. Nothing was sent.');
+  }
+  final Map<String, String> made = ledger.hashes();
+  final List<ClipRequest> all = <ClipRequest>[for (final SpokenLine l in lines) profile.requestFor(l)];
+  final List<ClipState> allStates = <ClipState>[
+    for (int i = 0; i < lines.length; i++) clipState(workDir, lines[i].fileId, all[i], made),
+  ];
+  final List<LineWork> allWork = workForLines(
+    ids: <String>[for (final SpokenLine l in lines) l.fileId],
+    keys: <String>[for (final ClipRequest r in all) r.hash],
+    made: <bool>[for (final ClipState s in allStates) s == ClipState.unchanged],
+    inScope: scope == null ? null : <bool>[for (final SpokenLine l in lines) scope.contains(l.voId)],
+    elsewhere: shareSameText
+        ? madeElsewhere(workDir, <String>{for (final SpokenLine l in lines) l.fileId}, made)
+        : const <String, String>{},
+    share: shareSameText,
+  );
+  // From here on only the lines of the run.
+  final List<int> run = <int>[
+    for (int i = 0; i < lines.length; i++)
+      if (allWork[i].active) i,
+  ];
+  if (partOfLine != null) {
+    final List<String> loose = <String>[
+      for (final int i in run)
+        if (!partOfLine.containsKey(lines[i].voId)) lines[i].voId,
+    ];
+    if (loose.isNotEmpty) {
+      throw VoiceGenFailed(
+        '${loose.length} lines are in no part of the voice (docs/audio/voicing-parts.json), for example ${loose.first}. '
+        'Nothing was sent.',
+      );
+    }
+  }
   final List<TextProblem> problems = <TextProblem>[
-    for (int i = 0; i < lines.length; i++) ...requests[i].problems(lines[i].voId),
+    for (final int i in run) ...all[i].problems(lines[i].voId),
   ];
   if (problems.isNotEmpty) {
     throw VoiceGenFailed(
       'the pre-flight check refuses ${problems.length} texts. Nothing was sent:\n${problems.join('\n')}',
     );
   }
-  checkWorkFolder(workDir);
-  final ClipLedger ledger = ClipLedger(workDir);
-  if (isInsideFolder(ledger.file, workDir)) {
-    throw VoiceGenFailed('the hashes of ${workDir.path} would land inside it. Nothing was sent.');
-  }
   workDir.createSync(recursive: true);
-  final Map<String, String> made = ledger.hashes();
-  final List<Map<String, String>> vo = <Map<String, String>>[];
-  for (int i = 0; i < lines.length; i++) {
-    final String id = lines[i].fileId;
-    final ClipRequest request = requests[i];
-    if (clipState(workDir, id, request, made) != ClipState.unchanged) {
-      final Synthesis s = await synth.say(request);
-      // The old sound goes only once the new one is here (it may have had the other extension).
-      _audioOf(workDir, id)?.deleteSync();
-      File(_inFolder(workDir, 'vo.$id.${s.extension}')).writeAsBytesSync(s.audio);
-      File(_inFolder(workDir, 'cue.$id.json')).writeAsStringSync(
-        jsonEncode(<String, Object?>{
-          'schema': 'cue/v1',
-          'id': id,
-          'cues': <Object?>[
-            for (final (int, int) c in cuesFromAlignment(s.alignment))
-              <String, Object?>{'t': c.$1, 'o': c.$2},
-          ],
-        }),
-      );
-      ledger.record(id, 'vo.$id.${s.extension}', request);
-      progress?.call('said $id');
+  // The lines that hold their own sound first, then the copies, which need theirs to be there.
+  for (final bool copies in <bool>[false, true]) {
+    for (final int i in run) {
+      if ((allWork[i].copyFrom != null) != copies || allStates[i] == ClipState.unchanged) continue;
+      final String id = lines[i].fileId;
+      if (copies) {
+        final String from = allWork[i].copyFrom!;
+        final String extension = audioNameOf(workDir, from).split('.').last;
+        writeClip(workDir, id, extension, audioBytesOf(workDir, from), readCues(workDir, from));
+        ledger.record(id, 'vo.$id.$extension', all[i]);
+        progress?.call('copied $id');
+      } else {
+        final Synthesis s = await synth.say(all[i]);
+        writeClip(workDir, id, s.extension, s.audio, cuesFromAlignment(s.alignment));
+        ledger.record(id, 'vo.$id.${s.extension}', all[i]);
+        progress?.call('said $id');
+      }
     }
-    vo.add(<String, String>{'id': id, 'file': _audioOf(workDir, id)!.uri.pathSegments.last});
   }
+  return <_RunLine>[for (final int i in run) (line: lines[i], copyFrom: allWork[i].copyFrom)];
+}
+
+/// Writes pack.json for [packId] and builds the pack of the lines in [vo] from a stage folder.
+Future<BuiltPack> _buildPart(
+  Directory workDir,
+  String packId,
+  String version,
+  List<Map<String, String>> vo,
+  PackKey key,
+) {
   File(_inFolder(workDir, 'pack.json')).writeAsStringSync(
     jsonEncode(<String, Object?>{
       'schema': 'pack-source/v1',
-      'id': 'voice-$characterId',
+      'id': packId,
       'version': version,
       'minAppVersion': '0.3.0',
       'assets': <Object?>[],
       'vo': vo,
     }),
   );
-  return buildPack(workDir, key);
+  return buildStagedPack(workDir, vo, key);
 }
+
+/// Builds the pack of the lines in [vo] (`id` and `file` of each) from a stage folder next to [workDir] that holds only
+/// what the pack needs: pack.json, the sound files that [vo] names, and the cue file of each id. So the work folder may
+/// hold more (clips of another set, copies, clips of lines that are gone) and a sound shared by several ids is in the
+/// pack once. The stage is removed at the end.
+Future<BuiltPack> buildStagedPack(Directory workDir, List<Map<String, String>> vo, PackKey key) async {
+  final Directory stage = Directory('${normalisedFolder(workDir)}.pack-stage');
+  _removeStage(stage);
+  stage.createSync();
+  try {
+    final Set<String> names = <String>{
+      'pack.json',
+      for (final Map<String, String> v in vo) ...<String>[v['file']!, 'cue.${v['id']}.json'],
+    };
+    for (final String name in names) {
+      File(_inFolder(workDir, name)).copySync(_inFolder(stage, name));
+    }
+    return await buildPack(stage, key);
+  } finally {
+    // Only a copy of clips that are kept: if Windows still holds a file in it, a pack that was built is not lost for that.
+    try {
+      _removeStage(stage);
+    } on FileSystemException {
+      // The next build clears it before it starts.
+    }
+  }
+}
+
+/// Removes a stage folder; Windows sometimes reports "not empty" for a moment after its files were closed, so it tries
+/// again once before it gives up.
+void _removeStage(Directory stage) {
+  if (!stage.existsSync()) return;
+  try {
+    stage.deleteSync(recursive: true);
+  } on FileSystemException {
+    sleep(const Duration(milliseconds: 200));
+    stage.deleteSync(recursive: true);
+  }
+}
+
+/// A warning when the sounds of a narrator's voice, each counted once, pass 90% of what the app holds for one voice
+/// ([maxVoiceBytes]); a part past it is left out and plays as text only. Null while there is room.
+String? voiceBytesWarning(String character, int bytes) {
+  if (bytes <= maxVoiceBytes * 0.9) return null;
+  String mib(int n) => (n / (1024 * 1024)).toStringAsFixed(1);
+  return bytes > maxVoiceBytes
+      ? 'WARNING, the audio of $character is about ${mib(bytes)} MiB and the app joins at most ${mib(maxVoiceBytes)} MiB of '
+            'one voice: the last part would play as text only.'
+      : 'WARNING, the audio of $character is about ${mib(bytes)} MiB, over 90% of the ${mib(maxVoiceBytes)} MiB the app '
+            'joins for one voice: little room is left before a part is left out.';
+}
+
+// ---- the files of a work folder ----
+
+/// Writes the sound of line [id] and its mouth cues into [workDir]. The old sound goes only once the new one is here
+/// (it may have had the other extension).
+void writeClip(Directory workDir, String id, String extension, Uint8List audio, List<(int, int)> cues) {
+  _audioOf(workDir, id)?.deleteSync();
+  File(_inFolder(workDir, 'vo.$id.$extension')).writeAsBytesSync(audio);
+  File(_inFolder(workDir, 'cue.$id.json')).writeAsStringSync(
+    jsonEncode(<String, Object?>{
+      'schema': 'cue/v1',
+      'id': id,
+      'cues': <Object?>[
+        for (final (int, int) c in cues) <String, Object?>{'t': c.$1, 'o': c.$2},
+      ],
+    }),
+  );
+}
+
+/// The mouth cues of clip [id] in [workDir].
+List<(int, int)> readCues(Directory workDir, String id) {
+  final Map<String, Object?> doc =
+      jsonDecode(File(_inFolder(workDir, 'cue.$id.json')).readAsStringSync()) as Map<String, Object?>;
+  return <(int, int)>[
+    for (final Object? c in doc['cues']! as List<Object?>)
+      ((c! as Map<String, Object?>)['t']! as int, (c as Map<String, Object?>)['o']! as int),
+  ];
+}
+
+/// The file name of the sound of line [id] in [workDir] (it must exist).
+String audioNameOf(Directory workDir, String id) => _audioOf(workDir, id)!.uri.pathSegments.last;
+
+/// The bytes of the sound of line [id] in [workDir] (it must exist).
+Uint8List audioBytesOf(Directory workDir, String id) => _audioOf(workDir, id)!.readAsBytesSync();
 
 /// Whether any file under [dir] contains [secret] (used by tests: the key must never be written anywhere).
 bool anyFileContains(Directory dir, String secret) {

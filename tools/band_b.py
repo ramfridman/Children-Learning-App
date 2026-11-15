@@ -231,7 +231,7 @@ def numbers():
              'Band B of Numbers: counting to 30, back from ten, 13 to 20 objects, reading the teens, which is bigger, the number '
              'line, splitting a number, ten and some, by tens and twos, even and odd. Hebrew is a draft by Claude, needs-editor.',
              30, assets=['frog', 'tick', 'cross', 'sock', 'block'], globs=['stick_*'])
-    u.tag('M-CNT-DECADE', ['NUM-B-02', 'NUM-B-17'], 'הילד לא יודע מה בא אחרי תשע בכל עשרת: אחרי 19 הוא אומר 10 או 100.',
+    u.tag('M-CNT-DECADE', ['NUM-B-02', 'NUM-B-17'], 'הילד לא יודע מה בא אחרי התשע בכל עשרה: אחרי 19 הוא אומר 10 או 100.',
           'לספור יחד מדרגות או מעלות לפני השינה: עשרים ותשע… ומה אחר כך? להפסיק לפני הספרה האחרונה ולתת לילד להשלים.',
           ['concrete', 'symbolic'], 'אַחֲרֵי הַתֵּשַׁע מַתְחִילָה עֲשָׂרָה חֲדָשָׁה. בּוֹאוּ נִסְפֹּר יַחַד.')
     u.tag('M-NUM-REV', ['NUM-B-08'], 'הילד מחליף בין שתי הספרות: 12 ו-21, 13 ו-31.',
@@ -279,7 +279,7 @@ def numbers():
               correct_text='כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת %s.' % F[right[w]])
 
     # ---- NUM-B-04, 05: objects up to 20
-    u.skill('NUM-B-04', 'סופרים עד 20 עצמים', 'סוֹפְרִים עַד עֶשְׂרִים חֲפָצִים', 'cone-tree', ['NUM-A-09'], ['concrete', 'pictorial'],
+    u.skill('NUM-B-04', 'סופרים עד 20 עצמים', 'סוֹפְרִים עַד עֶשְׂרִים דְּבָרִים', 'cone-tree', ['NUM-A-09'], ['concrete', 'pictorial'],
             ['M-CNT-DOUBLE', 'M-CNT-SKIP'])
     u.skill('NUM-B-05', 'נותנים עד 20', 'נוֹתְנִים בְּדִיּוּק כַּמָּה שֶׁמְּבַקְשִׁים', 'cone-tree', ['NUM-B-04', 'NUM-A-06'],
             ['concrete'], ['M-CNT-CARD'])
@@ -345,7 +345,7 @@ def numbers():
         cells[w] = 'n:%d' % v
         u.act('NUM-B-11', 'spot', cells=cells, wrong=w, tag='M-CNT-SEQ',
               prompt='סוֹפְרִים מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?',
-              h3='הַמִּסְפָּרִים גְּדֵלִים בְּאֶחָד כָּל פַּעַם. אֶחָד מֵהֶם לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם.',
+              h3='הַמִּסְפָּרִים גְּדֵלִים בְּאֶחָד כׇּל פַּעַם. אֶחָד מֵהֶם לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת %s.' % F[start + w])
     for i, n in enumerate([3, 6, 8, 11, 14, 17]):
         numpick(u, 'NUM-B-11', 'הוֹסִיפוּ עוֹד אַחַת אֶל %s. כַּמָּה יֵשׁ עַכְשָׁו?' % F[n], n + 1, [n, n + 2], i,
@@ -432,7 +432,7 @@ def numbers():
         cells[w] = 'n:%d' % v
         u.act('NUM-B-17', 'spot', cells=cells, wrong=w, tag='M-CNT-DECADE' if step == 10 else 'M-CNT-SEQ',
               prompt='סוֹפְרִים %s. אֵיפֹה הַטָּעוּת?' % nm,
-              h3='כׇּל מִסְפָּר גָּדוֹל מֵהַמִּסְפָּר שֶׁלְּפָנָיו %s. עַכְשָׁו תּוֹרְכֶם.' % prefix('ב', 'עֶשֶׂר' if step == 10 else 'שְׁתַּיִם'),
+              h3='הַמִּסְפָּרִים גְּדֵלִים, וְכׇל פַּעַם מוֹסִיפִים %s. עַכְשָׁו תּוֹרְכֶם.' % ('עֶשֶׂר' if step == 10 else 'שְׁתַּיִם'),
               correct_text='כֵּן! כָּאן הָיָה צָרִיךְ לִהְיוֹת %s.' % F[start + step * w])
     for i, (seq, nxt, nm) in enumerate([((10, 20, 30), 40, 'בַּעֲשָׂרוֹת'), ((20, 30, 40), 50, 'בַּעֲשָׂרוֹת'), ((50, 60, 70), 80, 'בַּעֲשָׂרוֹת'),
                                         ((2, 4, 6), 8, 'בִּשְׁתַּיִם'), ((4, 6, 8), 10, 'בִּשְׁתַּיִם'), ((6, 8, 10), 12, 'בִּשְׁתַּיִם')]):
@@ -471,9 +471,9 @@ def numbers():
     u.lesson('count-to-30', 'סוֹפְרִים עַד שְׁלוֹשִׁים', ['NUM-B-02'], ids('NUM-B-02', 0, 5), 'כׇּל הַכָּבוֹד! עָבַרְתֶּם אֶת הָעֲשָׂרוֹת.')
     u.lesson('count-to-30-more', 'עוֹד עֲשָׂרוֹת', ['NUM-B-02'], ids('NUM-B-02', 5), 'נִפְלָא! הָעֲשָׂרוֹת כְּבָר מוּכָּרוֹת.')
     u.lesson('rocket-countdown', 'סְפִירָה לַאֲחוֹר', ['NUM-B-03'], ids('NUM-B-03'), 'שָׁלוֹשׁ, שְׁתַּיִם, אַחַת… הַחֲלָלִית טָסָה!')
-    u.lesson('many-things', 'הַרְבֵּה חֲפָצִים', ['NUM-B-04'], ids('NUM-B-04', 0, 5), 'כׇּל הַכָּבוֹד! סְפַרְתֶּם הַרְבֵּה חֲפָצִים.')
-    u.lesson('many-things-more', 'עוֹד הַרְבֵּה חֲפָצִים', ['NUM-B-04'], ids('NUM-B-04', 5), 'מְצֻיָּן! כׇּל אֶחָד פַּעַם אַחַת.')
-    u.lesson('give-up-to-20', 'נוֹתְנִים עַד עֶשְׂרִים', ['NUM-B-05'], ids('NUM-B-05'), 'יָפֶה! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁנוּ.')
+    u.lesson('many-things', 'הַרְבֵּה דְּבָרִים', ['NUM-B-04'], ids('NUM-B-04', 0, 5), 'כׇּל הַכָּבוֹד! סְפַרְתֶּם הַרְבֵּה דְּבָרִים.')
+    u.lesson('many-things-more', 'עוֹד הַרְבֵּה דְּבָרִים', ['NUM-B-04'], ids('NUM-B-04', 5), 'מְצֻיָּן! כׇּל אֶחָד פַּעַם אַחַת.')
+    u.lesson('give-up-to-20', 'נוֹתְנִים עַד עֶשְׂרִים', ['NUM-B-05'], ids('NUM-B-05'), 'יָפֶה! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁתִּי.')
     u.lesson('read-the-teens', 'קוֹרְאִים אֶת הַמִּסְפָּרִים', ['NUM-B-08'], ids('NUM-B-08', 0, 6), 'כׇּל הַכָּבוֹד! אַתֶּם קוֹרְאִים מִסְפָּרִים.')
     u.lesson('read-the-teens-more', 'עוֹד מִסְפָּרִים', ['NUM-B-08'], ids('NUM-B-08', 6), 'מְצֻיָּן! הַסִּפְרוֹת בַּמָּקוֹם הַנָּכוֹן.')
     u.lesson('which-is-bigger', 'אֵיזֶה גָּדוֹל יוֹתֵר', ['NUM-B-10'], ids('NUM-B-10', 0, 5), 'יָפֶה! הִשְׁוִיתֶם מִסְפָּרִים.')
@@ -636,7 +636,7 @@ def math():
         # B-15 §3 as MATH-B-03: the larger addend or the start (untagged), and counting the start too
         numpick(u, 'MATH-B-08', '%s וְעוֹד %s. כַּמָּה זֶה?' % (F[x], F[y]), r, [max(x, y), r - 1], i, tags={r - 1: 'M-CNT-SKIP'}, row=['n:%d' % x, 'op:+', 'n:%d' % y, 'op:=', '?'],
                 text='%s! %s וְעוֹד %s הֵם עֶשֶׂר, וְעוֹד %s.' % (F[r], F[x], F[10 - x], F[r - 10]),
-                h3='%s וְעוֹד %s הֵם עֶשֶׂר. נִשְׁאָר עוֹד %s, אָז %s. עַכְשָׁו תּוֹרְכֶם.' % (F[x], F[10 - x], F[y - (10 - x)], F[r]))
+                h3='%s וְעוֹד %s הֵם עֶשֶׂר. נִשְׁאֲרוּ עוֹד %s, אָז %s. עַכְשָׁו תּוֹרְכֶם.' % (F[x], F[10 - x], F[y - (10 - x)], F[r]))
     for i, (x, y) in enumerate([(13, 4), (15, 3), (12, 5), (17, 2)]):
         r = x - y
         numpick(u, 'MATH-B-08', '%s פָּחוֹת %s. כַּמָּה זֶה?' % (F[x], F[y]), r, [x, r + 1], i, tags={r + 1: 'M-CNT-DOUBLE'}, row=['n:%d' % x, 'op:-', 'n:%d' % y, 'op:=', '?'],
@@ -702,8 +702,8 @@ def math():
     for i, (lc, rc) in enumerate([(5, 2), (6, 3), (4, 1), (7, 5)]):
         u.act('MATH-B-13', 'scale', mode='balance', left=[('block', lc, 1)], right=[('block', rc, 1)], block='block', result=lc - rc, tag='M-MEAS-BIG',
               # the balance sides (D12) are an owner draft (proposed): this prompt keeps its text until he approves it
-              prompt='הַצַּד הַיְמָנִי קַל יוֹתֵר. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁהַמֹּאזְנַיִם שָׁווֹת.',
-              h3='בַּצַּד הַשְּׂמָאלִי יֵשׁ %s, וּבַצַּד הַיְמָנִי %s. צָרִיךְ עוֹד %s.' % (qty(lc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'}), qty(rc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'}), qty(lc - rc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'})),
+              prompt='הַצַּד שֶׁלְּמַעְלָה קַל יוֹתֵר. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים.',
+              h3='בַּצַּד שֶׁלְּמַטָּה יֵשׁ %s, וּבַצַּד שֶׁלְּמַעְלָה %s. צָרִיךְ עוֹד %s.' % (qty(lc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'}), qty(rc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'}), qty(lc - rc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'})),
               correct_text='כֵּן! הַמֹּאזְנַיִם מְאֻזָּנִים.')
 
     # B-15 §1 (H28): guess which side goes down, then see; the big light thing against a small heavy one

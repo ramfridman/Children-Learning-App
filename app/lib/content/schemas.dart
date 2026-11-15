@@ -8,6 +8,9 @@ import 'schema.dart';
 
 abstract final class Patterns {
   static const String packId = r'[a-z0-9][a-z0-9-]{2,40}';
+  // A character id never ends in `-2` to `-9`: `voice-<id>-N` is part N of a voice, so it must never also be the voice pack
+  // of a character called `<id>-N` (SEC-VP-2).
+  static const String characterId = r'(?!.*-[2-9]$)[a-z0-9][a-z0-9-]{2,40}';
   static const String semver = r'\d{1,3}\.\d{1,3}\.\d{1,3}';
   static const String templateVersion = r'\d{1,2}\.\d{1,2}';
   static const String activityId = r'[a-z0-9][a-z0-9._-]{2,80}';
@@ -188,7 +191,7 @@ const SString _id = SString(minLength: 3, maxLength: 81, pattern: Patterns.activ
 
 /// Every answer carries its lesson id, and `sync-push` takes at most 40 characters (SEC-12).
 const SString _lessonId = SString(minLength: 3, maxLength: 40, pattern: Patterns.activityId);
-const SString _characterId = SString(minLength: 3, maxLength: 41, pattern: Patterns.packId);
+const SString _characterId = SString(minLength: 3, maxLength: 41, pattern: Patterns.characterId);
 const SString _tag = SString(minLength: 5, maxLength: 36, pattern: Patterns.tag);
 const SString _skill = SString(minLength: 6, maxLength: 14, pattern: Patterns.skillId);
 

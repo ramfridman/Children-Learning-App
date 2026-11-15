@@ -3,7 +3,8 @@
 
 The owner's rule (2026-10-29): no voice is generated, no ElevenLabs call is made and the ElevenLabs key is not used
 without the owner doing it himself, in his own terminal. This hook reads the command text and refuses:
-  - `voice_gen` paid commands: `generate`, `audition`, `audition-batch` anything but `plan` (free: `plan`, `mock`, `list`, and `pack`, which
+  - `voice_gen` paid commands: `generate`, `generate-lang`, `audition`, any sub-command that starts with `generate` or
+    `audition`, and `audition-batch` anything but `plan` (free: `plan`, `plan-lang`, `groups`, `verify`, `verify-lang`, `mock`, `list`, and `pack`, which
     re-packs clips already on disk and has no path to ElevenLabs; the owner allowed it on 2026-11-02);
   - the tutor prewarm tool and live tutor calls through the gateway (they voice lines on ElevenLabs);
   - any direct call to api.elevenlabs.io or the `xi-api-key` header;
@@ -21,7 +22,9 @@ READ_ONLY = {
     "git", "grep", "egrep", "fgrep", "rg", "cat", "ls", "dir", "head", "tail", "wc", "type", "get-content", "gc",
     "select-string", "sls", "findstr", "less", "more", "diff", "get-childitem", "gci", "test-path", "stat",
 }
-FREE_VOICE_GEN = {"plan", "mock", "list", "pack", "help", "--help", "-h"}
+FREE_VOICE_GEN = {"plan", "plan-lang", "groups", "verify", "verify-lang", "mock", "list", "pack", "help", "--help", "-h"}
+PAID_VOICE_GEN = {"generate", "generate-lang", "audition"}
+PAID_PREFIXES = ("generate", "audition")
 
 GUARDED_WORDS = (
     "api.elevenlabs.io",
@@ -35,8 +38,8 @@ GUARDED_WORDS = (
 
 REASON = (
     "Blocked: paid ElevenLabs voicing is the owner's to run himself, in his own terminal "
-    "(CLAUDE.md, 'Characters and money'). Free commands are allowed: `voice_gen plan`, `audition-batch plan`, "
-    "`mock`, `list`, `pack`. Ask the owner to run the paid command and type the character count."
+    "(CLAUDE.md, 'Characters and money'). Free commands are allowed: `voice_gen plan`, `plan-lang`, "
+    "`audition-batch plan`, `mock`, `list`, `pack`. Ask the owner to run the paid command and type the character count."
 )
 
 
@@ -75,7 +78,8 @@ def voice_gen_paid(toks):
             continue
         if r.startswith("-"):
             # options that take a value
-            if r in ("--repo", "--characters", "--out", "--model", "--price", "--voices", "--work"):
+            if r in ("--repo", "--characters", "--out", "--model", "--price", "--voices", "--work", "--lines", "--voice",
+                     "--frame-voice", "--ffmpeg", "--key", "--pack-version", "--groups", "--budget", "--max-characters"):
                 skip = True
             continue
         sub = r.lower()
@@ -88,7 +92,8 @@ def voice_gen_paid(toks):
     if sub == "audition-batch":
         after = [r.lower() for r in rest[sub_at + 1:] if not r.startswith("-")]
         return not (after and after[0] == "plan")
-    if sub in ("generate", "audition"):
+    # `generate`, `generate-lang`, `audition`, and any sub-command that starts like them (a future `generate-...`).
+    if sub in PAID_VOICE_GEN or sub.startswith(PAID_PREFIXES):
         return True
     # unknown sub-command or a path-like token after a tool name (compile, analyze, format, git add ...): only the
     # known paid ones are refused here; anything else cannot spend money.

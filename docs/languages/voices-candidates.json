@@ -1,16 +1,22 @@
 {
   "schema": "voices-candidates/v1",
-  "note": "PROPOSAL, not merged. Entries to add under \"voices\" in content/voices.json before the owner runs the pilots (docs/languages/voices.md section 2). Empty voiceId = the owner copies the id from his ElevenLabs Voice Library (the voice's page, 'Copy voice ID'; add the voice to My Voices first). Ids marked from-third-party-list come from a public listing of ElevenLabs default voices (wavespeed.ai) and are NOT verified against the owner's account. These are audition characters only: they do not change any friend, narrator or pack.",
+  "note": "SUPERSEDED 2026-11-08: the owner chose the English and Russian course voices himself; they are now in content/voices.json (lang-en-female, lang-en-male, lang-ru-female, lang-ru-male). The eight library candidates of the first plan are dropped.",
   "voices": {
-    "lang-en-jessica": { "voiceId": "cgSgspJ2msm6clMCkdW9", "_source": "from-third-party-list; default voice, American, young, expressive, warm" },
-    "lang-en-sarah": { "voiceId": "EXAVITQu4vr4xnSDxMaL", "_source": "from-third-party-list; default voice, young woman, soft, reassuring" },
-    "lang-en-matilda": { "voiceId": "XrExE9yKIg1WjnnlVkGX", "_source": "from-third-party-list; default voice, female, friendly, alto" },
-    "lang-en-brian": { "voiceId": "nPczCjzI2devNBz1zQrb", "_source": "from-third-party-list; default voice, male, resonant, comforting; confirm American accent by ear" },
-    "lang-ru-marina": { "voiceId": "", "_source": "Voice Library: Russian, female, 'soft, clear, warm'" },
-    "lang-ru-ekaterina": { "voiceId": "", "_source": "Voice Library: Russian (Moscow), female, 'soft, silky, tender'" },
-    "lang-ru-maxim": { "voiceId": "", "_source": "Voice Library: Russian (Moscow), male, 'calm, neutral'" },
-    "lang-ru-ivan": { "voiceId": "", "_source": "Voice Library: 'Ivan Nazarov', male, narrator, soft, unhurried; listed for Russian AND English" }
-  },
-  "alreadyInVoicesJson": ["nitzi", "hero-son", "climber-tzuri"],
-  "optionalFourthHebrewVoice": "lang-he-library: any voice the owner finds with the Library's language filter set to Hebrew; add it here and run the generator with --he nitzi,hero-son,climber-tzuri,lang-he-library"
+    "lang-en-female": {
+      "voiceId": "qSeXEcewz7tA0Q0qk9fH",
+      "idStatus": "owner-chosen 2026-11-08"
+    },
+    "lang-en-male": {
+      "voiceId": "Aa6nEBJJMKJwJkCx8VU2",
+      "idStatus": "owner-chosen 2026-11-08"
+    },
+    "lang-ru-female": {
+      "voiceId": "ymDCYd8puC7gYjxIamPt",
+      "idStatus": "owner-chosen 2026-11-08"
+    },
+    "lang-ru-male": {
+      "voiceId": "XuEV9VY3VUASYgJVNBh0",
+      "idStatus": "owner-chosen 2026-11-08"
+    }
+  }
 }
