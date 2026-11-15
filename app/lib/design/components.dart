@@ -8,6 +8,7 @@ import 'layout.dart';
 import 'stage_spec.dart';
 import 'token_types.dart';
 import 'tokens.g.dart';
+import 'trail_shape.dart';
 
 // Every number in this file is taken from the CSS of the design boards (05, 10, 13, 22, 23): sizes,
 // radii, the clay lip under a button, shadows and font sizes.
@@ -531,10 +532,13 @@ Color answerBorderColor(AnswerState state) => switch (state) {
 /// spark on a pale yellow disc, the next one is ringed, the rest are empty wells. It fills from the
 /// start side (the right in Hebrew).
 class ProgressTrail extends StatelessWidget {
-  const ProgressTrail({super.key, required this.total, required this.done});
+  const ProgressTrail({super.key, required this.total, required this.done, this.shape = TrailShape.circle});
 
   final int total;
   final int done;
+
+  /// The shape of the sockets: the room's own (M11), a round socket by default. Done still reads by the gold spark in every shape.
+  final TrailShape shape;
 
   @override
   Widget build(BuildContext context) => Semantics(
@@ -554,12 +558,85 @@ class ProgressTrail extends StatelessWidget {
         children: <Widget>[
           for (int i = 0; i < total; i++) ...<Widget>[
             if (i > 0) const SizedBox(width: TokenComponent.trailGap),
-            _Socket(done: i < done, current: i == done),
+            if (shape == TrailShape.circle)
+              _Socket(done: i < done, current: i == done)
+            else
+              // The stair climbs 1.4 points a socket from the start side, like the staircase of its room.
+              Transform.translate(
+                offset: shape == TrailShape.stair ? Offset(0, 3.5 - 1.4 * i) : Offset.zero,
+                child: _ShapeSocket(shape: shape, done: i < done, current: i == done),
+              ),
           ],
         ],
       ),
     ),
   );
+}
+
+/// A socket in a room's shape: a well in `mist` to come, outlined in ink for the current one, `sparkTint` with the gold spark when done.
+class _ShapeSocket extends StatelessWidget {
+  const _ShapeSocket({required this.shape, required this.done, required this.current});
+
+  final TrailShape shape;
+  final bool done;
+  final bool current;
+
+  @override
+  Widget build(BuildContext context) => CustomPaint(
+    size: const Size(TokenComponent.trailSocket, TokenComponent.trailSocket),
+    painter: _SocketPainter(shape: shape, done: done, current: current),
+  );
+}
+
+class _SocketPainter extends CustomPainter {
+  const _SocketPainter({required this.shape, required this.done, required this.current});
+
+  final TrailShape shape;
+  final bool done;
+  final bool current;
+
+  static final Path _spark = Path()
+    ..moveTo(10, 3.5)
+    ..quadraticBezierTo(11, 9, 16.5, 10)
+    ..quadraticBezierTo(11, 11, 10, 16.5)
+    ..quadraticBezierTo(9, 11, 3.5, 10)
+    ..quadraticBezierTo(9, 9, 10, 3.5)
+    ..close();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Path outline = shape.path;
+    canvas.save();
+    canvas.scale(size.width / 20, size.height / 20);
+    canvas.drawPath(
+      outline,
+      Paint()
+        ..color = done
+            ? TokenColors.sparkTint
+            : current
+            ? TokenColors.paper
+            : TokenColors.mist,
+    );
+    if (done || current) {
+      canvas.drawPath(
+        outline,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeJoin = StrokeJoin.round
+          ..strokeWidth = done ? 1.2 : 2.2
+          ..color = done ? TokenColors.sparkDeep : TokenColors.ink,
+      );
+    }
+    if (done) {
+      canvas.translate(2, 2);
+      canvas.scale(0.8, 0.8);
+      canvas.drawPath(_spark, Paint()..color = TokenColors.spark);
+    }
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(_SocketPainter old) => old.shape != shape || old.done != done || old.current != current;
 }
 
 class _Socket extends StatelessWidget {

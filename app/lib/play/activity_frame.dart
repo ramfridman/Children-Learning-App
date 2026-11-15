@@ -10,7 +10,16 @@ import '../design/course_text.dart';
 import '../design/layout.dart';
 import '../design/stage_spec.dart';
 import '../design/tokens.g.dart';
+import '../design/trail_shape.dart';
 import '../rewards/sticker_design.dart';
+import '../rooms/host_pair.dart';
+import '../rooms/host_places.dart';
+import '../rooms/room_backdrop.dart';
+import '../rooms/room_celebration.dart';
+import '../rooms/room_layout.dart';
+import '../rooms/room_scene.dart';
+import '../rooms/room_spec.dart';
+import '../rooms/stage_reaction.dart';
 import '../strings/he.dart';
 import 'math_run.dart';
 import 'math_signs.dart';
@@ -46,7 +55,12 @@ class ActivityFrame extends StatelessWidget {
     this.boardLayer,
     this.promptRing = false,
     this.idleHand,
+    this.scene,
   });
+
+  /// The lesson's room (M11): its screen, rim and backdrop, the landmark that reacts, its trail's shape, and the host standing beside the
+  /// companion in a host beat. Null for the default frame (the cream screen, the meadow, the guide alone).
+  final RoomScene? scene;
 
   /// The idle prompt's first step rings the place the question is said from (the speaker bubble, or the caption bubble) once, in the sky
   /// colour, and (B-29 D5) the hand of the idle prompt points into the stage: a layer over the stage that takes no touch, or null.
@@ -224,7 +238,16 @@ class ActivityFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BoardClass board = AppLayout.of(context).board;
-    final ActivitySpec s = spec ?? ActivitySpec.of(board);
+    final RoomScene? sc = scene;
+    final ActivitySpec base = spec ?? ActivitySpec.of(board);
+    // In a host beat the pair stands in the corner and the bubble is a little narrower (docs/design/m11-rooms.md section 2.2).
+    final HostPlaces places = HostPlaces.of(board);
+    final ActivitySpec s = sc != null && sc.hostBeat ? base.forHostBeat(places) : base;
+    // The bubble's tail points at the speaker's mouth: the host's in a host beat, else the guide's (when the layout asks for it).
+    final bool tailAtMouth = s.tailAtMouth || (sc != null && sc.hostBeat);
+    final double mouthY = sc != null && sc.hostBeat
+        ? places.front.top + sc.hostMouth.dy * places.front.height
+        : s.mouthY;
     final StageScope? look = StageScope.maybeOf(context);
     final SizeClass sizeClass = AppLayout.of(context).sizeClass;
     // With captions hidden (B-29 D2) the Hebrew words of the question are not drawn: a speaker stands in their place. A number sentence or a
@@ -279,12 +302,13 @@ class ActivityFrame extends StatelessWidget {
     final Size room = s.stageIsCard ? Size(s.stage.width - 32, s.stage.height - 32) : s.stage.size;
     return Scaffold(
       body: BoardCanvas(
-        background: TokenColors.cream,
+        background: sc?.room.screen ?? TokenColors.cream,
         board: board,
         children: <Widget>[
           if (mic != null) Positioned(left: s.micLeft, top: s.micTop, child: mic!),
           if (mic != null && onConfirmYes != null && onConfirmAgain != null) ..._confirmButtons(board, s),
-          _stage(s, room),
+          _stage(s, room, board, sc),
+          if (sc != null && s.stageDrawn) _landmarkLayer(s, room, board, sc),
           // The bubble and the guide are drawn after the stage, so a hint's hand that reaches over the stage's edge goes under
           // them (the bubble first, so that the guide stands in front of its tail).
           // The celebration says its own line; the bubble stays quiet behind it.
@@ -310,7 +334,7 @@ class ActivityFrame extends StatelessWidget {
                     math: run == null
                         ? null
                         : MathRun(run, size: scaler.scale(s.bubbleFont), division: MathSigns.of(context)),
-                    pointerAt: s.tailAtMouth ? (s.mouthY - s.bubbleTop).clamp(24.0, 200.0) : null,
+                    pointerAt: tailAtMouth ? (mouthY - s.bubbleTop).clamp(24.0, 200.0) : null,
                   ),
                 ),
               ),
@@ -350,28 +374,39 @@ class ActivityFrame extends StatelessWidget {
                     ? null
                     : MathRun(run, size: scaler.scale(s.bubbleFont), division: MathSigns.of(context)),
                 // A bubble that stands off its board's place points at the guide's mouth: the tail meets it from the top.
-                pointerAt: s.tailAtMouth
-                    ? (s.mouthY - bubbleTop).clamp(24.0, math.max(24.0, fit.height - 24))
+                pointerAt: tailAtMouth
+                    ? (mouthY - bubbleTop).clamp(24.0, math.max(24.0, fit.height - 24))
                     : null,
               ),
             ),
           ],
-          Positioned(
-            left: s.nitziLeft,
-            top: s.nitziTop,
-            width: s.nitziSize,
-            height: s.nitziSize,
-            child: Semantics(
-              button: true,
-              label: He.replaySemantics.text,
-              child: GestureDetector(
-                key: const Key('lesson-replay'),
-                behavior: HitTestBehavior.opaque,
-                onTap: onReplay,
-                child: SizedBox(key: const Key('activity-nitzi'), child: guide),
+          if (sc != null)
+            Positioned.fill(
+              child: HostPair(
+                present: sc.hostBeat,
+                alone: Rect.fromLTWH(s.nitziLeft, s.nitziTop, s.nitziSize, s.nitziSize),
+                host: sc.hostView,
+                companion: guide ?? const SizedBox.shrink(),
+                onReplay: onReplay,
+              ),
+            )
+          else
+            Positioned(
+              left: s.nitziLeft,
+              top: s.nitziTop,
+              width: s.nitziSize,
+              height: s.nitziSize,
+              child: Semantics(
+                button: true,
+                label: He.replaySemantics.text,
+                child: GestureDetector(
+                  key: const Key('lesson-replay'),
+                  behavior: HitTestBehavior.opaque,
+                  onTap: onReplay,
+                  child: SizedBox(key: const Key('activity-nitzi'), child: guide),
+                ),
               ),
             ),
-          ),
           if (tiles != null)
             // The row starts the tile's slop above where the tiles are drawn.
             Positioned(left: s.tilesLeft, top: s.tilesTop - s.tileSlop, width: s.tilesWidth, child: tiles!),
@@ -384,7 +419,11 @@ class ActivityFrame extends StatelessWidget {
             top: s.trailTop,
             width: s.trailWidth,
             child: Center(
-              child: ProgressTrail(total: trailTotal, done: trailDone),
+              child: ProgressTrail(
+                total: trailTotal,
+                done: trailDone,
+                shape: sc?.room.trail ?? TrailShape.circle,
+              ),
             ),
           ),
           boardAt(
@@ -486,27 +525,91 @@ class ActivityFrame extends StatelessWidget {
     );
   }
 
-  Widget _stage(ActivitySpec s, Size room) {
+  Widget _stage(ActivitySpec s, Size room, BoardClass board, RoomScene? sc) {
     final Widget content = SizedBox(
       key: const Key('lesson-stage'),
       width: room.width,
       height: room.height,
       child: stage(room),
     );
-    if (!s.stageIsCard) return Positioned.fromRect(rect: s.stage, child: content);
+    final RoomSpec? place = s.stageDrawn ? sc?.room : null;
+    // A land's landmark stands outside the card on a landscape tablet; everywhere else it is part of the backdrop.
+    final Widget? scenery = place == null
+        ? null
+        : RoomBackdrop(
+            room: place,
+            size: room,
+            radius: s.stageIsCard ? 16 : TokenRadius.lg,
+            landmark: !RoomLayout.landmarkOutside(place, board),
+          );
+    final Widget inside = scenery == null ? content : Stack(children: <Widget>[scenery, content]);
+    if (!s.stageIsCard) {
+      if (place == null) return Positioned.fromRect(rect: s.stage, child: content);
+      // The room's 4 point rim around the phone's stage.
+      return Positioned.fromRect(
+        rect: s.stage.inflate(4),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: place.rim,
+            borderRadius: BorderRadius.circular(TokenRadius.lg + 4),
+            boxShadow: const <BoxShadow>[
+              BoxShadow(color: Color.fromRGBO(43, 35, 80, 0.10), blurRadius: 6, offset: Offset(0, 2)),
+            ],
+          ),
+          child: Padding(padding: const EdgeInsets.all(4), child: inside),
+        ),
+      );
+    }
     return Positioned.fromRect(
       rect: s.stage,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        // The card's 4 point rim is part of its 16 point margin, so the stage inside it keeps the room it has always had.
+        padding: EdgeInsets.all(place == null ? 16 : 12),
         // A board whose stage is not drawn (the tiles took its room) keeps the box, and its margin, for what a hint draws in it: no card.
         decoration: s.stageDrawn
             ? BoxDecoration(
                 color: TokenColors.paper,
                 borderRadius: BorderRadius.circular(TokenRadius.xl),
-                boxShadow: clayShadows(TokenColors.cardLip, soft16: true),
+                border: place == null ? null : Border.all(color: place.rim, width: 4),
+                boxShadow: clayShadows(place?.lip ?? TokenColors.cardLip, soft16: true),
               )
             : null,
-        child: content,
+        child: inside,
+      ),
+    );
+  }
+
+  /// The landmark of the room, above the stage's content: it shows only when the stage reacts (or, outside the card, always, standing on the
+  /// ground). It takes no touch.
+  Widget _landmarkLayer(ActivitySpec s, Size room, BoardClass board, RoomScene sc) {
+    final RoomSpec place = sc.room;
+    final bool outside = RoomLayout.landmarkOutside(place, board);
+    final Rect inner = s.stageIsCard ? s.stage.deflate(16) : s.stage;
+    final Rect box = outside
+        ? RoomLayout.outsideBox(s.stage)
+        : RoomLayout.landmarkBox(place, room).shift(inner.topLeft);
+    return Positioned.fromRect(
+      rect: box,
+      child: Stack(
+        clipBehavior: Clip.none,
+        fit: StackFit.expand,
+        children: <Widget>[
+          if (outside)
+            Positioned(
+              left: 10,
+              right: 10,
+              bottom: -4,
+              height: 18,
+              child: const DecoratedBox(
+                decoration: BoxDecoration(
+                  color: TokenColors.worldShadow,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.elliptical(70, 9)),
+                ),
+              ),
+            ),
+          StageReaction(key: const Key('stage-reaction'), room: place, solved: sc.solved, showBase: outside),
+        ],
       ),
     );
   }
@@ -514,7 +617,24 @@ class ActivityFrame extends StatelessWidget {
 
 /// The calm end of a lesson: the line that praises what the child did, a spark, and one way home.
 class LessonCelebration extends StatelessWidget {
-  const LessonCelebration({super.key, required this.text, required this.onDone, this.cameo, this.sticker});
+  const LessonCelebration({
+    super.key,
+    required this.text,
+    required this.onDone,
+    this.cameo,
+    this.sticker,
+    this.room,
+    this.host,
+    this.cheer,
+    this.finished = true,
+  });
+
+  /// In a room (M11): the card is the room's window, with its landmark gaining a piece, the [host] and the companion ([cameo]) side by side
+  /// and the host's [cheer] under the praise line. Null for the plain card. A lesson that [finished] not (a rest) gets no piece and no cheer.
+  final RoomSpec? room;
+  final Widget? host;
+  final String? cheer;
+  final bool finished;
 
   final String text;
 
@@ -529,50 +649,62 @@ class LessonCelebration extends StatelessWidget {
   Widget build(BuildContext context) {
     final BoardClass board = AppLayout.of(context).board;
     final double w = math.min(board.size.width - 80, 520);
+    final RoomSpec? place = room;
     return Positioned.fill(
       child: ColoredBox(
         key: const Key('lesson-celebration'),
         color: TokenColors.scrim,
         child: Center(
-          child: Container(
-            width: w,
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: TokenColors.paper,
-              borderRadius: BorderRadius.circular(TokenRadius.xl),
-              boxShadow: clayShadows(TokenColors.cardLip, soft16: true),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    if (cameo != null)
-                      SizedBox(key: const Key('lesson-cameo'), width: 112, height: 112, child: cameo)
-                    else
-                      const BoardSvg('assets/art/ui/spark.svg', width: 64, height: 64),
-                    if (sticker != null) ...<Widget>[
-                      const SizedBox(width: 16),
-                      _StickerPop(stickerKey: sticker!),
+          child: place != null && host != null && cameo != null
+              ? RoomCelebrationCard(
+                  room: place,
+                  host: host!,
+                  companion: cameo!,
+                  praise: text,
+                  cheer: finished ? cheer : null,
+                  sticker: sticker == null ? null : _StickerPop(stickerKey: sticker!),
+                  finished: finished,
+                  onDone: onDone,
+                )
+              : Container(
+                  width: w,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: TokenColors.paper,
+                    borderRadius: BorderRadius.circular(TokenRadius.xl),
+                    boxShadow: clayShadows(TokenColors.cardLip, soft16: true),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          if (cameo != null)
+                            SizedBox(key: const Key('lesson-cameo'), width: 112, height: 112, child: cameo)
+                          else
+                            const BoardSvg('assets/art/ui/spark.svg', width: 64, height: 64),
+                          if (sticker != null) ...<Widget>[
+                            const SizedBox(width: 16),
+                            _StickerPop(stickerKey: sticker!),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(text, textAlign: TextAlign.center, style: AppText.fixed(size: 26, weight: 600)),
+                      const SizedBox(height: 12),
+                      PebbleButton(
+                        key: const Key('lesson-done'),
+                        semanticLabel: He.lessonDoneSemantics.text,
+                        size: 80,
+                        fill: TokenColors.spark,
+                        lip: TokenColors.sparkDeep,
+                        onPressed: onDone,
+                        child: const BoardSvg('assets/art/ui/home_palm.svg', width: 36, height: 36),
+                      ),
                     ],
-                  ],
+                  ),
                 ),
-                const SizedBox(height: 8),
-                Text(text, textAlign: TextAlign.center, style: AppText.fixed(size: 26, weight: 600)),
-                const SizedBox(height: 12),
-                PebbleButton(
-                  key: const Key('lesson-done'),
-                  semanticLabel: He.lessonDoneSemantics.text,
-                  size: 80,
-                  fill: TokenColors.spark,
-                  lip: TokenColors.sparkDeep,
-                  onPressed: onDone,
-                  child: const BoardSvg('assets/art/ui/home_palm.svg', width: 36, height: 36),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );

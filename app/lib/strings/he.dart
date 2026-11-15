@@ -912,3 +912,51 @@ abstract final class He {
   static const Str ageBirthYearSemantics = Str('שנת לידה {year}');
   static const Str ageStageSemantics = Str('שלב הלימודים: {stage}');
 }
+
+// ---- the nine hosts of the rooms (M11, docs/design/m11-rooms.md) ----
+// A greeting when a lesson opens and a cheer when it ends, and each host's name for screen readers. Drafts of the developer, written to fit
+// two lines in the phone's host bubble (about six words), for the hebrew-text-editor to replace; all `review: needs-editor`. Each line has a
+// clip id that is still pending (nothing is voiced yet): the line shows as text until the owner voices it. Clip ids: `vo:host.<host>.<line>`.
+abstract final class HostHe {
+  /// The name of a host, read by screen readers once at the greeting (adult text, no niqqud).
+  static const Map<String, Str> names = <String, Str>{
+    'nekudi': Str('נקודי'),
+    'goni': Str('גוני'),
+    'kubi': Str('קובי'),
+    'timi': Str('טימי'),
+    'tzaadon': Str('צעדון'),
+    'pnina': Str('סבתא פנינה'),
+    'host_eng': Str('פיפ'),
+    'host_heb': Str('שפן הסלע'),
+    'host_rus': Str('הג׳ירפה'),
+  };
+
+  /// What a host says when a lesson in its room opens.
+  static const Map<String, Str> greetings = <String, Str>{
+    'nekudi': Str('שָׁלוֹם! אֲנִי נְקוּדִי. נִסְפֹּר יַחַד?', nikud: true),
+    'goni': Str('הֵי! אֲנִי גּוֹנִי. נִרְאֶה צְבָעִים יַחַד?', nikud: true),
+    'kubi': Str('שָׁלוֹם! אֲנִי קוּבִּי. נִבְנֶה צוּרוֹת?', nikud: true),
+    'tzaadon': Str('בִּיפּ בּוּפּ! אֲנִי צַעֲדוֹן. בּוֹאוּ נַתְחִיל!', nikud: true),
+    'timi': Str('הֵי! אֲנִי טִימִי. נִפְתֹּר חִידָה?', nikud: true),
+    'pnina': Str('שָׁלוֹם, יְלָדִים! אֲנִי סַבְתָּא פְּנִינָה.', nikud: true),
+    'host_eng': Str('הֵי! אֲנִי פִּיפּ. נְדַבֵּר אַנְגְּלִית?', nikud: true),
+    'host_heb': Str('שָׁלוֹם! אֲנִי שְׁפַן הַסֶּלַע. נִכְתֹּב?', nikud: true),
+    'host_rus': Str('שָׁלוֹם! אֲנִי הַגִּ׳ירָפָה. נְדַבֵּר רוּסִית?', nikud: true),
+  };
+
+  /// What a host says when the lesson ends, after the companion's praise.
+  static const Map<String, Str> cheers = <String, Str>{
+    'nekudi': Str('כָּל הַכָּבוֹד! סְפַרְתֶּם הַכֹּל.', nikud: true),
+    'goni': Str('יָפֶה מְאֹד! רְאִיתֶם הֵיטֵב.', nikud: true),
+    'kubi': Str('כָּל הַכָּבוֹד! בְּנִיתֶם יָפֶה.', nikud: true),
+    'tzaadon': Str('כָּל הַכָּבוֹד! הָרוֹבּוֹט הִגִּיעַ.', nikud: true),
+    'timi': Str('יָפֶה! פְּתַרְתֶּם אֶת הַחִידָה.', nikud: true),
+    'pnina': Str('יָפֶה מְאֹד! הַכֹּל מְסֻדָּר בַּשּׁוּק.', nikud: true),
+    'host_eng': Str('כָּל הַכָּבוֹד! אֲמַרְתֶּם יָפֶה.', nikud: true),
+    'host_heb': Str('יָפֶה מְאֹד! כְּתַבְתֶּם נֶהְדָּר.', nikud: true),
+    'host_rus': Str('כָּל הַכָּבוֹד! שְׁמַעְתֶּם יָפֶה.', nikud: true),
+  };
+
+  /// The pending clip of a host's line (`greeting` or `cheer`).
+  static String clip(String hostId, String line) => 'vo:host.$hostId.$line';
+}

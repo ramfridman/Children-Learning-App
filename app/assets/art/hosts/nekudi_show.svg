@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Nekudi, pose "show" (M11 step 1.2 sample): the worked-example hand held out toward the task (the end side, left), her eyes on it.
+     Original drawing in plain shapes, in the style and palette of design/assets/nekudi.svg (tokens color.character.nekudi).
+     Pose sheet: docs/design/m11-rooms.md section 7. Artboard 512, baseline y 472, faces left. The group id="hand" is the pointer the
+     stage uses in her Show (its tip, the `hand` anchor, is the centre of the ball, about x 46, y 310 after the lean).
+     References looked at (2026-11-14), nothing traced: Wikipedia "Coccinella septempunctata" and "Coccinellidae" (short jointed legs,
+     femur then tibia with a knee, the leg ends in a small foot); macro photographs of walking seven-spot ladybirds reaching a leg forward
+     onto a grass blade (Bing image search "seven spot ladybird walking side view legs macro"). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="נְקוּדִי מַרְאָה">
+  <ellipse cx="250" cy="466" rx="120" ry="11" fill="rgba(43,35,80,0.14)"/>
+  <g id="body" transform="rotate(-3 256 466)">
+    <g id="antennae">
+      <path d="M226 158 Q204 112 176 104" fill="none" stroke="#3F3A7A" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="173" cy="101" r="15" fill="#FFC83D"/>
+      <path d="M284 156 Q296 108 314 90" fill="none" stroke="#3F3A7A" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="316" cy="86" r="15" fill="#FFC83D"/>
+    </g>
+    <g id="feet">
+      <ellipse cx="212" cy="462" rx="25" ry="10" fill="#3F3A7A"/>
+      <ellipse cx="298" cy="462" rx="24" ry="10" fill="#3F3A7A"/>
+    </g>
+    <!-- the worked-example hand: held out level toward the task, knee a little low, the ball tip is the pointer -->
+    <g id="hand">
+      <path d="M168 330 L110 308 L60 300" fill="none" stroke="#3F3A7A" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="54" cy="299" r="15" fill="#3F3A7A"/>
+      <circle cx="49" cy="294" r="4" fill="#FFFFFF" opacity="0.35"/>
+    </g>
+    <!-- the other hand rests low on the shell, inside her outline, so it never reaches a friend standing beside her -->
+    <g id="arm-start">
+      <path d="M354 372 L382 398 L370 424" fill="none" stroke="#3F3A7A" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="368" cy="428" r="13" fill="#3F3A7A"/>
+    </g>
+    <g id="shell">
+      <circle cx="248" cy="356" r="112" fill="#D94E44"/>
+      <circle cx="258" cy="348" r="110" fill="#F46A5E"/>
+      <path d="M256 250 L256 452" stroke="#3F3A7A" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <circle cx="198" cy="316" r="17" fill="#3F3A7A"/>
+      <circle cx="178" cy="372" r="15" fill="#3F3A7A"/>
+      <circle cx="216" cy="414" r="16" fill="#3F3A7A"/>
+      <circle cx="314" cy="316" r="17" fill="#3F3A7A"/>
+      <circle cx="334" cy="372" r="15" fill="#3F3A7A"/>
+      <circle cx="296" cy="414" r="16" fill="#3F3A7A"/>
+      <ellipse cx="300" cy="286" rx="22" ry="10" fill="#FFFFFF" opacity="0.35" transform="rotate(-30 300 286)"/>
+    </g>
+    <g id="head" transform="rotate(-9 256 232)">
+      <circle cx="256" cy="218" r="76" fill="#3F3A7A"/>
+      <ellipse cx="222" cy="212" rx="24" ry="28" fill="#FFFFFF"/>
+      <ellipse cx="290" cy="212" rx="24" ry="28" fill="#FFFFFF"/>
+      <circle cx="208" cy="218" r="13" fill="#2B2350"/>
+      <circle cx="276" cy="218" r="13" fill="#2B2350"/>
+      <circle cx="203" cy="212" r="5" fill="#FFFFFF"/>
+      <circle cx="271" cy="212" r="5" fill="#FFFFFF"/>
+      <ellipse cx="196" cy="254" rx="13" ry="8" fill="#F4A7B4" opacity="0.9"/>
+      <ellipse cx="316" cy="254" rx="13" ry="8" fill="#F4A7B4" opacity="0.9"/>
+      <g id="mouth">
+        <path d="M236 251 Q256 253 276 251 Q272 278 256 280 Q240 278 236 251 Z" fill="#F4A7B4"/>
+        <path d="M243 257 Q256 258 269 257 Q266 272 256 273 Q246 272 243 257 Z" fill="#2B2350"/>
+      </g>
+    </g>
+  </g>
+</svg>

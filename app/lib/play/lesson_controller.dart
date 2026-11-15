@@ -7,6 +7,7 @@ import '../content/models.dart';
 import '../content/pack_validation.dart' show languageTemplates;
 import '../core/clock.dart';
 import '../core/log.dart';
+import '../rooms/moments.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
 import 'name_options.dart';
@@ -160,6 +161,7 @@ class LessonController extends ChangeNotifier {
     this.echoOnly,
     this.captionsShown,
     this.fastHints = false,
+    this.hostGreeting,
     Activity Function(Activity)? personalise,
     Clock clock = const SystemClock(),
   }) : _personalise = personalise ?? _ownNameWithoutAName,
@@ -173,6 +175,12 @@ class LessonController extends ChangeNotifier {
        _record = record,
        _clock = clock {
     _begin();
+    final Spoken? greeting = hostGreeting;
+    if (greeting != null) {
+      // The host of the room greets before the first item: the item is made, but nothing of it is asked or said until the greeting ends.
+      _greeting = true;
+      _say(greeting);
+    }
   }
 
   /// Whether the Hebrew words of the question are drawn (the captions setting of B-29), which also decides whether the tutor's live line has a
@@ -182,6 +190,29 @@ class LessonController extends ChangeNotifier {
   /// The youngest look's pace of help (B-29): the first mistake already shows the second picture, and the worked example comes after two
   /// tries, as it does on a two-choice item. The other looks keep the author's ladder.
   final bool fastHints;
+
+  /// What the host of the lesson's room says when the lesson opens (docs/design/m11-rooms.md section 2.1), or null for a lesson with no host (a
+  /// room-less lesson, the placement game): then the first item is the first screen, as before M11.
+  final Spoken? hostGreeting;
+  bool _greeting = false;
+
+  /// What moment of the lesson this is, and so who speaks: the host's greeting before the first item, the child's turns (the companion's) and the
+  /// cheer at the end. The screen draws the pair and the bubble's tail from it (Stage 2 adds the Show and the lead-in here).
+  Moment get moment => finished
+      ? Moment.cheer
+      : _greeting
+      ? Moment.greeting
+      : Moment.turn;
+
+  /// The greeting is over (its line ended, or the child touched the screen): the first item begins, its question is said, and the time the child
+  /// takes on it counts from now.
+  void endGreeting() {
+    if (!_greeting) return;
+    _greeting = false;
+    _say(_promptOf(current));
+    _markMs = _clock.nowMs();
+    notifyListeners();
+  }
 
   /// An adaptive visit: the next activity is chosen by this after each one (see [ItemFlow]); null for every ordinary lesson.
   final ItemFlow? flow;
@@ -210,7 +241,7 @@ class LessonController extends ChangeNotifier {
   /// No lamp and no "show me": a probe of the placement game (one answer, one neutral line, frame section 3.2) and a step that is never
   /// scored (a personal turn, a story only heard, a chant, the embodied "done"), where "show me" would write an attempt that no such
   /// step may leave behind (SEC-L4-1).
-  bool get noHelp => !finished && (current.purpose == 'probe' || current.unscored);
+  bool get noHelp => !finished && (_greeting || current.purpose == 'probe' || current.unscored);
 
   final PackContent content;
   final Lesson lesson;
@@ -304,7 +335,7 @@ class LessonController extends ChangeNotifier {
     _tutorToken++;
     tutorThinking = false;
     bubble = line.caption;
-    bubbleMath = solved || finished ? null : current.promptMath;
+    bubbleMath = solved || finished || _greeting ? null : current.promptMath;
     voice = line.vo;
     voiceTarget = line.target;
     voiceTarget2 = line.target2;
@@ -464,7 +495,7 @@ class LessonController extends ChangeNotifier {
 
   /// The replay button: the question again, without any help.
   void replayPrompt() {
-    if (finished) return;
+    if (finished || _greeting) return;
     actionNonce++;
     if (!replayQuiet) {
       _say(askedLine ?? _promptOf(current));

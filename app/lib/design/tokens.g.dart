@@ -58,6 +58,15 @@ abstract final class TokenColors {
   static const Color domainMathFill = Color(0xFFF59E1B);
   static const Color domainMathDeep = Color(0xFFA35A00);
   static const Color domainMathTint = Color(0xFFFEEFD6);
+  static const Color courseEngFill = Color(0xFF2C6FB8);
+  static const Color courseEngDeep = Color(0xFF1F5590);
+  static const Color courseEngTint = Color(0xFFE1ECF8);
+  static const Color courseHebFill = Color(0xFFD25E4E);
+  static const Color courseHebDeep = Color(0xFFA63A2C);
+  static const Color courseHebTint = Color(0xFFFBE4DF);
+  static const Color courseRusFill = Color(0xFF6D49B3);
+  static const Color courseRusDeep = Color(0xFF55358F);
+  static const Color courseRusTint = Color(0xFFEBE3F7);
   static const Color teachRed = Color(0xFFD62F2F);
   static const Color teachRedLip = Color(0xFFA82020);
   static const Color teachOrange = Color(0xFFFF8A1F);
