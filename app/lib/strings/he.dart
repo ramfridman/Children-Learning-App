@@ -1024,6 +1024,6 @@ abstract final class HostHe {
     'host_rus': 'בואו נֹאמַר יחד, בקול ברור.',
   };
 
-  /// The pending clip of a host's line (`greeting`, `cheer` or `together`).
+  /// The pending clip of a host's line (`greeting`, `cheer`, `together`, or `hello`, the greeting word of a foreign-language course host, `host_hello.dart`).
   static String clip(String hostId, String line) => 'vo:host.$hostId.$line';
 }

@@ -71,6 +71,7 @@ Future<L7Rig> openEnglishLesson(
   bool lettersOpen = false,
   bool pastOpener = true,
   bool rooms = false,
+  Set<String> extraRefs = const <String>{},
 }) => openCourseLesson(
   t,
   'eng',
@@ -84,10 +85,12 @@ Future<L7Rig> openEnglishLesson(
   lettersOpen: lettersOpen,
   pastOpener: pastOpener,
   rooms: rooms,
+  extraRefs: extraRefs,
 );
 
 /// Opens lesson [lesson] of the pack of [course] for a child whose look is [band] (0 youngest), with the parent's voice switch as [voice] says.
-/// A lesson that begins with a Meet set is returned at the first word's first beat, the opener said ([pastOpener]).
+/// A lesson that begins with a Meet set is returned at the first word's first beat, the opener said ([pastOpener]). [extraRefs] are clips the fake
+/// voice has besides the course's own (the host's lines, which are not in any pack yet).
 Future<L7Rig> openCourseLesson(
   WidgetTester t,
   String course,
@@ -101,11 +104,12 @@ Future<L7Rig> openCourseLesson(
   bool lettersOpen = false,
   bool pastOpener = true,
   bool rooms = false,
+  Set<String> extraRefs = const <String>{},
 }) async {
   final FakePlayer player = FakePlayer()..endsAfter = const Duration(milliseconds: 150);
   final AppRig rig = AppRig(
     rooms: rooms,
-    characters: await languageVoiceSource(courseRefs(course)),
+    characters: await languageVoiceSource(<String>{...courseRefs(course), ...extraRefs}),
     player: player,
     speech: FakeSpeechEngine(script)..installed = true,
     sayReleased: voice ? <String>{course} : const <String>{},
@@ -120,9 +124,14 @@ Future<L7Rig> openCourseLesson(
         .withSwitches(langKid, course, LanguageSwitches(on: true, voice: voice, band: band))!
         .encode(),
   );
-  await rig.pump(t, size: size, reduceMotion: reduceMotion);
+  // The characters of the map breathe for ever, so the app opens with reduce motion on; motion is let in once the lesson is about to open.
+  await rig.pump(t, size: size);
   await t.tap(find.text('נֹעָה'));
   await t.pumpAndSettle();
+  if (!reduceMotion) {
+    t.platformDispatcher.accessibilityFeaturesTestValue = const FakeAccessibilityFeatures();
+    await t.pump(const Duration(milliseconds: 100));
+  }
   t
       .state<NavigatorState>(find.byType(Navigator).first)
       .push(

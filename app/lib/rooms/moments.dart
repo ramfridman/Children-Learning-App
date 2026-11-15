@@ -18,12 +18,16 @@ String _words(String text) =>
 /// asks, helps and answers.
 enum Speaker { host, companion }
 
-/// The moments of a lesson that have a speaker of their own. Stage 1 has the greeting, the child's turns and the cheer; Stage 2 adds the Show and
-/// the lead-in of a Together item, which are the host's too, by adding them here and to [speaker]: nothing else about "who speaks" is decided
-/// anywhere else.
+/// The moments of a lesson that have a speaker of their own: the greeting, the Meet screens of a language course (the course host introduces
+/// the new words), the child's turns and the cheer. Stage 2 adds the Show and the lead-in of a Together item, which are the host's too, by adding
+/// them here and to [speaker]: nothing else about "who speaks" is decided anywhere else.
 enum Moment {
   /// The first screen of a lesson, before its first item: the host greets, the companion listens.
   greeting,
+
+  /// A Meet screen of a language course in its room (docs/design/m11-rooms.md section 6): the course host teaches the word, the companion
+  /// listens behind it. The companion's own lines inside a Meet (the microphone's feedback) are the session's to mark, not another moment.
+  meet,
 
   /// Every item the child answers, with its hints and its feedback: the companion's.
   turn,
@@ -32,7 +36,7 @@ enum Moment {
   cheer;
 
   Speaker get speaker => switch (this) {
-    greeting || cheer => Speaker.host,
+    greeting || meet || cheer => Speaker.host,
     turn => Speaker.companion,
   };
 }

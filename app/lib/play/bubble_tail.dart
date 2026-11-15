@@ -31,14 +31,17 @@ class BubbleTail {
   static const double leastLength = 24;
 
   /// The tail of [bubble] (its box on the board) towards the speaker standing in [speaker], whose mouth is at [mouth].
-  /// [pointerAt] is what the pointer would say (null for the board's own place); the wedge replaces it only when the mouth is out of reach.
+  /// [pointerAt] is what the pointer would say (null for the board's own place); the wedge replaces it only when the mouth is out of reach, or
+  /// always when [behind] is true (the speaker stands behind another figure: a pointer on the bubble's edge would point at that figure, so the
+  /// wedge reaches past it to the speaker's mouth).
   static BubbleTail toward({
     required Rect bubble,
     required Rect speaker,
     required Offset mouth,
     required double? pointerAt,
+    bool behind = false,
   }) {
-    if (mouth.dy <= bubble.bottom + reach) return BubbleTail.pointer(pointerAt);
+    if (!behind && mouth.dy <= bubble.bottom + reach) return BubbleTail.pointer(pointerAt);
     final Offset corner = bubble.bottomRight;
     final Offset away = mouth - corner;
     final double length = math.max(leastLength, away.distance - stopShort * speaker.width);

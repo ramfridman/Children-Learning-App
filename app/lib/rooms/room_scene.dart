@@ -11,6 +11,8 @@ class RoomScene {
     required this.hostView,
     required this.hostMouth,
     this.hostBeat = false,
+    this.companionSpeaks = false,
+    this.hostStays = false,
     this.solved = false,
   });
 
@@ -24,6 +26,13 @@ class RoomScene {
 
   /// The host stands in front and speaks; the companion stands back in `listen`.
   final bool hostBeat;
+
+  /// Inside a host beat the companion has a line of its own (the microphone's "I heard you" on a Meet screen): the bubble's tail moves to the
+  /// companion in the back place, and nobody moves (docs/design/m11-rooms.md section 2.1, rule 3).
+  final bool companionSpeaks;
+
+  /// The host is already in front when this frame is first drawn (it greeted the child a moment ago): it does not walk in again.
+  final bool hostStays;
 
   /// The item is solved: the landmark reacts (see `StageReaction`).
   final bool solved;

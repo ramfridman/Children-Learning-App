@@ -452,6 +452,7 @@ void main() {
         <Moment, Speaker>{for (final Moment m in Moment.values) m: m.speaker},
         <Moment, Speaker>{
           Moment.greeting: Speaker.host,
+          Moment.meet: Speaker.host,
           Moment.turn: Speaker.companion,
           Moment.cheer: Speaker.host,
         },

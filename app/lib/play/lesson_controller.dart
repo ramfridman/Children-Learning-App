@@ -210,13 +210,15 @@ class LessonController extends ChangeNotifier {
   final Spoken? hostCheer;
   bool _greeting = false;
 
-  /// What moment of the lesson this is, and so who speaks: the host's greeting before the first item, the child's turns (the companion's) and the
-  /// cheer at the end. The screen draws the pair and the bubble's tail from it (Stage 2 adds the Show and the lead-in here).
-  Moment get moment => finished
-      ? Moment.cheer
-      : _greeting
-      ? Moment.greeting
-      : Moment.turn;
+  /// What moment of the lesson this is, and so who speaks: the host's greeting before the first item, a Meet screen in a room (the course host
+  /// introduces the word), the child's turns (the companion's) and the cheer at the end. The screen draws the pair and the bubble's tail from it
+  /// (Stage 2 adds the Show and the lead-in here). A lesson with no host (no room) has no host moment but its end.
+  Moment get moment {
+    if (finished) return Moment.cheer;
+    if (_greeting) return Moment.greeting;
+    final Activity now = current;
+    return hostGreeting != null && now is SayItActivity && now.meetScreen ? Moment.meet : Moment.turn;
+  }
 
   /// The greeting is over (its line ended, or the child touched the screen): the first item begins, its question is said, and the time the child
   /// takes on it counts from now.

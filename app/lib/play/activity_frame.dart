@@ -254,10 +254,16 @@ class ActivityFrame extends StatelessWidget {
     // The bubble's tail points at the speaker's mouth: the host's in a host beat, else the guide's.
     final bool hostBeat = sc != null && sc.hostBeat;
     final bool tailAtMouth = s.tailAtMouth || hostBeat;
-    final Rect speaker = hostBeat
+    // A companion line inside a host beat (the microphone's feedback in a Meet) is said from the back place; the tail reaches past the host.
+    final bool behind = hostBeat && sc.companionSpeaks;
+    final Rect speaker = behind
+        ? places.back
+        : hostBeat
         ? places.front
         : Rect.fromLTWH(s.nitziLeft, s.nitziTop, s.nitziSize, s.nitziSize);
-    final Offset mouth = hostBeat
+    final Offset mouth = behind
+        ? Offset(speaker.center.dx, speaker.top + ActivitySpec.mouthShare * speaker.height)
+        : hostBeat
         ? speaker.topLeft + Offset(sc.hostMouth.dx * speaker.width, sc.hostMouth.dy * speaker.height)
         : Offset(speaker.center.dx, s.mouthY);
     final double mouthY = mouth.dy;
@@ -340,6 +346,7 @@ class ActivityFrame extends StatelessWidget {
             speaker: speaker,
             mouth: mouth,
             pointerAt: pointerAt,
+            behind: behind,
           );
     final double pebble = look == null ? 0 : look.stage.speaker(sizeClass);
     final double? speakerPointerAt = tailAtMouth ? (mouthY - s.bubbleTop).clamp(24.0, 200.0) : null;
@@ -350,6 +357,7 @@ class ActivityFrame extends StatelessWidget {
             speaker: speaker,
             mouth: mouth,
             pointerAt: speakerPointerAt,
+            behind: behind,
           );
     final TrailLayout trail = TrailLayout.fit(
       total: trailTotal,
@@ -439,8 +447,12 @@ class ActivityFrame extends StatelessWidget {
           ],
           if (sc != null)
             Positioned.fill(
+              // Keyed: the children before it come and go (the microphone, the bubble), and the pair must keep its state (where the host
+              // stands, and the move that brings it in) across the screens of a set.
+              key: const Key('room-pair'),
               child: HostPair(
                 present: sc.hostBeat,
+                settled: sc.hostStays,
                 alone: Rect.fromLTWH(s.nitziLeft, s.nitziTop, s.nitziSize, s.nitziSize),
                 host: sc.hostView,
                 companion: guide ?? const SizedBox.shrink(),

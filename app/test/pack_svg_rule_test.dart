@@ -153,10 +153,12 @@ void main() {
   });
 
   test('every bundled pack (the starter and the language packs) follows the rule in every picture', () {
+    // The starter and the language packs, by their whole names: the folder also holds voice packs, which carry no pictures.
+    final RegExp name = RegExp(r'^(starter|lang-(eng|heb|rus))-\d+\.\d+\.\d+\.nnpack$');
     final List<File> packs = Directory('assets/packs')
         .listSync()
         .whereType<File>()
-        .where((File f) => f.path.endsWith('.nnpack'))
+        .where((File f) => name.hasMatch(f.uri.pathSegments.last))
         .toList();
     expect(packs, isNotEmpty);
     for (final File p in packs) {

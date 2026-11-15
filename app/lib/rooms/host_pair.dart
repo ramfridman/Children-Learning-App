@@ -23,9 +23,14 @@ class HostPair extends StatefulWidget {
     required this.host,
     required this.companion,
     this.onReplay,
+    this.settled = false,
   });
 
   final bool present;
+
+  /// The host is already in front when the pair is first drawn (a Meet screen right after the host's greeting): it is there at once, and walks
+  /// in only if it was not.
+  final bool settled;
 
   /// The companion's own place when it stands alone (the board's guide box).
   final Rect alone;
@@ -47,8 +52,14 @@ class _HostPairState extends State<HostPair> with SingleTickerProviderStateMixin
     _reduced = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
     final int ms = StageScope.maybeOf(context)?.stage.token.transitionMs ?? 350;
     _c.duration = _reduced ? const Duration(milliseconds: 120) : Duration(milliseconds: ms);
-    // The first build starts the move that brings the host in.
-    if (!_c.isAnimating && _c.value == 0 && widget.present) _go();
+    // The first build starts the move that brings the host in, unless the host is there already.
+    if (!_c.isAnimating && _c.value == 0 && widget.present) {
+      if (widget.settled) {
+        _c.value = 1;
+      } else {
+        _go();
+      }
+    }
   }
 
   @override
