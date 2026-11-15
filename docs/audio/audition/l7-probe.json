@@ -1,0 +1,28 @@
+{
+  "schema": "audition/v1",
+  "title": "L7 probe: the Hebrew frame lines and word clips of the re-cut language courses (docs/voice/l7-voice-plan.md section 2). 14 short clips, said before the three course runs, so that a changed carrier text is found before the counts are typed.",
+  "review": "needs-editor",
+  "note": "Voice director, 2026-11-15. Texts are the voice texts of content/languages/<course>/voice-plan.json as the course run will send them (the first clip of each group), plus the carrier variants. Nitzi says every Hebrew clip; the male Russian puppet voice says the last one. Settings are the course settings (v4, stability 0.5, similarity 0.75). No clip has a ! . The listener marks each clip heard-ok or heard-wrong; see the tests column.",
+  "defaults": {
+    "character": "nitzi",
+    "model": "eleven_v4",
+    "format": "mp3_44100_64",
+    "settings": { "stability": 0.5, "similarity_boost": 0.75, "use_speaker_boost": true }
+  },
+  "clips": [
+    { "id": "L01-where-plain", "text": "ואיפה", "tests": "the carrier as the courses send it today: must hang open, not fall; אֵיפֹה not 'im po'; the last vowel not stretched" },
+    { "id": "L02-where-comma", "text": "ואיפה,", "tests": "the same with a comma: does it hold open better than L01?" },
+    { "id": "L03-where-pointed", "text": "וְאֵיפֹה", "tests": "the pointed form: the last resort if L01 and L02 fall" },
+    { "id": "L04-hebrew-plain", "text": "בעברית:", "tests": "the carrier as sent today: 'be-ivrit', one word, not 'ba' then a pause then 'ivrit'; the colon holds" },
+    { "id": "L05-hebrew-pointed", "text": "בְּעִבְרִית:", "tests": "the pointed form, to compare with L04" },
+    { "id": "L06-opener", "text": "בואו נלמד מילים חדשות.", "tests": "the Meet opener: warm, unhurried, about 1.6 s, falls gently at the end" },
+    { "id": "L07-its-book", "text": "זה סֵפֶר.", "tests": "a masculine phrase gloss: 'ze sefer', a falling statement, not an announcement" },
+    { "id": "L08-its-car", "text": "זו מְכוֹנִית.", "tests": "a feminine phrase gloss: 'zo mekhonit' (zo, not ze); the pointed noun after the plain pronoun" },
+    { "id": "L09-gloss-mom", "text": "אִמָּא", "tests": "a Russian-course gloss, one calm word: 'ima', lower energy, no trailing breath" },
+    { "id": "L10-gloss-milk", "text": "חָלָב", "tests": "a gloss with a pointed word: 'khalav' (milk), not 'khelev' (fat)" },
+    { "id": "L11-count-four-drums", "text": "אַרְבָּעָה תופים", "tests": "a Hebrew-course word clip: the number in its masculine form, no odd stress on the number, 'tofim'; falls and stops" },
+    { "id": "L12-two-drums", "text": "שְׁנֵי תופים", "tests": "the construct form 'shney': two syllables, not 'sheney' with a stress on the end" },
+    { "id": "L13-hear-to-the-end", "text": "שִׁמְעוּ עד הסוף.", "tests": "the blend-item line (heb fb-soundalike): 'shim'u' (listen), not 'sham'u'; ends level, a short breath" },
+    { "id": "L14-gosha", "character": "lang-ru-male", "language": "ru", "text": "Меня́ зову́т Го́ша.", "tests": "the Russian puppet in the male voice: stress on я, у and Го; the name 'Gosha'; friendly, a little lighter than the narrator" }
+  ]
+}
