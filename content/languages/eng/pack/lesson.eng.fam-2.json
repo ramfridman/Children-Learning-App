@@ -15,10 +15,15 @@
     "ENG-A-07"
   ],
   "items": [
-    "eng.a07.i04",
-    "eng.a07.i05",
+    "eng.a07.n05",
+    "eng.a07.n06",
+    "eng.a07.n07",
+    "eng.a07.n08",
     "eng.a07.i06",
-    "eng.a07.i09"
+    "eng.a07.n09",
+    "eng.a07.h02",
+    "eng.a07.s03",
+    "eng.a07.s06"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +35,18 @@
       }
     ]
   },
-  "sequence": 18
+  "sequence": 23,
+  "teach": [
+    {
+      "items": [
+        "eng.a07.tc04",
+        "eng.a07.tc05"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a07.n07"
+    }
+  ]
 }

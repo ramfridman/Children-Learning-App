@@ -38,6 +38,7 @@
   "a11y": {
     "altText": "תְּמוּנָה וְחָבֵר שֶׁעוֹשֶׂה מַה שֶּׁאוֹמְרִים"
   },
+  "asks": "vo:eng.en_juice",
   "prompt": {
     "vo": "vo:eng.he_ins_give",
     "caption": [
@@ -51,11 +52,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_1",
+      "vo": "vo:eng.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "כֵּן!"
         }
       ],
       "target": "vo:eng.en_give_juice"
@@ -140,6 +141,7 @@
         "id": "o1",
         "sprite": "asset:juice",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_juice",
         "at": {
           "x": 0.02,
           "y": 0.05,
@@ -151,6 +153,7 @@
         "id": "o2",
         "sprite": "asset:milk",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_milk",
         "misconception": "eng.lis.sem",
         "at": {
           "x": 0.02,
@@ -163,6 +166,7 @@
         "id": "o3",
         "sprite": "asset:banana",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_banana",
         "misconception": "eng.lis.l1_guess",
         "at": {
           "x": 0.02,

@@ -38,6 +38,10 @@
       "file": "act_wave.svg"
     },
     {
+      "id": "ant",
+      "file": "ant.svg"
+    },
+    {
       "id": "apple",
       "file": "apple.svg"
     },
@@ -52,6 +56,10 @@
     {
       "id": "ball_blue",
       "file": "ball_blue.svg"
+    },
+    {
+      "id": "ball_green",
+      "file": "ball_green.svg"
     },
     {
       "id": "ball_lit",
@@ -88,6 +96,10 @@
     {
       "id": "banana",
       "file": "banana.svg"
+    },
+    {
+      "id": "bear",
+      "file": "bear.svg"
     },
     {
       "id": "bike",
@@ -194,6 +206,22 @@
       "file": "cat_2.svg"
     },
     {
+      "id": "col_blue",
+      "file": "col_blue.svg"
+    },
+    {
+      "id": "col_green",
+      "file": "col_green.svg"
+    },
+    {
+      "id": "col_red",
+      "file": "col_red.svg"
+    },
+    {
+      "id": "col_yellow",
+      "file": "col_yellow.svg"
+    },
+    {
       "id": "cow",
       "file": "cow.svg"
     },
@@ -216,6 +244,10 @@
     {
       "id": "dog_big",
       "file": "dog_big.svg"
+    },
+    {
+      "id": "dog_shaggy",
+      "file": "dog_shaggy.svg"
     },
     {
       "id": "drum",
@@ -338,10 +370,6 @@
       "file": "mika_cold.svg"
     },
     {
-      "id": "mika_eat",
-      "file": "mika_eat.svg"
-    },
-    {
       "id": "mika_fine",
       "file": "mika_fine.svg"
     },
@@ -362,6 +390,10 @@
       "file": "mika_leave.svg"
     },
     {
+      "id": "mika_no",
+      "file": "mika_no.svg"
+    },
+    {
       "id": "mika_present",
       "file": "mika_present.svg"
     },
@@ -378,8 +410,28 @@
       "file": "mika_walk.svg"
     },
     {
+      "id": "mika_yes",
+      "file": "mika_yes.svg"
+    },
+    {
       "id": "milk",
       "file": "milk.svg"
+    },
+    {
+      "id": "mouse",
+      "file": "mouse.svg"
+    },
+    {
+      "id": "mover_car",
+      "file": "mover_car.svg"
+    },
+    {
+      "id": "neighbour_arrive",
+      "file": "neighbour_arrive.svg"
+    },
+    {
+      "id": "neighbour_leave",
+      "file": "neighbour_leave.svg"
     },
     {
       "id": "pig",
@@ -420,6 +472,14 @@
     {
       "id": "present",
       "file": "present.svg"
+    },
+    {
+      "id": "scene_garden_family",
+      "file": "scene_garden_family.svg"
+    },
+    {
+      "id": "scene_room_ball",
+      "file": "scene_room_ball.svg"
     },
     {
       "id": "set_balls_1",
@@ -504,6 +564,10 @@
     {
       "id": "water",
       "file": "water.svg"
+    },
+    {
+      "id": "whale",
+      "file": "whale.svg"
     }
   ],
   "vo": []

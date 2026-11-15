@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_8",
+      "vo": "vo:eng.he_fb_right_3",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "יָפֶה מְאֹד!"
         }
       ],
       "target": "vo:eng.en_frog"
@@ -174,18 +174,21 @@
       {
         "id": "o1",
         "sprite": "asset:frog",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_frog"
       },
       {
         "id": "o2",
         "sprite": "asset:fish",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_fish",
         "misconception": "eng.lis.yesno"
       },
       {
         "id": "o3",
         "sprite": "asset:bird",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_bird",
         "misconception": "eng.lis.l1_guess"
       }
     ],

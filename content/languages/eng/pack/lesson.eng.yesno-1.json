@@ -12,13 +12,17 @@
     }
   ],
   "skills": [
+    "ENG-A-11",
     "ENG-A-16"
   ],
   "items": [
-    "eng.a16.i01",
-    "eng.a16.i02",
-    "eng.a16.i03",
-    "eng.a16.i04"
+    "eng.a11.u09",
+    "eng.a16.n01",
+    "eng.a16.n02",
+    "eng.a16.n03",
+    "eng.a16.n04",
+    "eng.a16.s01",
+    "eng.a16.s02"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +34,18 @@
       }
     ]
   },
-  "sequence": 38
+  "sequence": 54,
+  "teach": [
+    {
+      "items": [
+        "eng.a16.tc01",
+        "eng.a16.tc02"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a16.n01"
+    }
+  ]
 }

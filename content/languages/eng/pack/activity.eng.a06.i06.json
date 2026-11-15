@@ -38,6 +38,7 @@
   "a11y": {
     "altText": "תְּמוּנָה וְחָבֵר שֶׁעוֹשֶׂה מַה שֶּׁאוֹמְרִים"
   },
+  "asks": "vo:eng.en_hands",
   "prompt": {
     "vo": "vo:eng.he_ins_touch_body",
     "caption": [
@@ -51,11 +52,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_2",
+      "vo": "vo:eng.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:eng.en_clap_your_hands"

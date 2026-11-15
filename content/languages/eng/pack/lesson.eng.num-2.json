@@ -15,9 +15,15 @@
     "ENG-A-04"
   ],
   "items": [
+    "eng.a04.n04",
+    "eng.a04.n05",
+    "eng.a04.n06",
+    "eng.a04.n07",
     "eng.a04.i04",
     "eng.a04.i05",
-    "eng.a04.i08"
+    "eng.a04.k02",
+    "eng.a04.r01",
+    "eng.a04.s02"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,5 +35,18 @@
       }
     ]
   },
-  "sequence": 9
+  "sequence": 12,
+  "teach": [
+    {
+      "items": [
+        "eng.a04.tc04",
+        "eng.a04.tc05"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a04.n06"
+    }
+  ]
 }

@@ -12,11 +12,12 @@
     }
   ],
   "skills": [
+    "ENG-A-11",
     "ENG-A-13"
   ],
   "items": [
+    "eng.a11.u05",
     "eng.a13.c01",
-    "eng.a13.i01",
     "eng.a13.c02",
     "eng.a13.i02"
   ],
@@ -30,5 +31,5 @@
       }
     ]
   },
-  "sequence": 33
+  "sequence": 45
 }

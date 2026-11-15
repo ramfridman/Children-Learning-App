@@ -23,7 +23,9 @@
     }
   ],
   "representations": [
-    "pictorial"
+    "concrete",
+    "pictorial",
+    "embodied"
   ],
   "misconceptions": [
     "eng.lis.l1_guess",

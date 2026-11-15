@@ -1,0 +1,52 @@
+{
+  "schema": "lesson/v1",
+  "id": "eng.toy-3",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "eng",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד צַעֲצוּעִים"
+    }
+  ],
+  "skills": [
+    "ENG-A-09"
+  ],
+  "items": [
+    "eng.a09.n10",
+    "eng.a09.n11",
+    "eng.a09.n12",
+    "eng.a09.n13",
+    "eng.a09.i06",
+    "eng.a09.i07",
+    "eng.a09.s04",
+    "eng.a09.x01",
+    "eng.a09.d03"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "sequence": 32,
+  "teach": [
+    {
+      "items": [
+        "eng.a09.tc07",
+        "eng.a09.tc08"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a09.n12"
+    }
+  ]
+}

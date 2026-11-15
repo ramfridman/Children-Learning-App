@@ -8,17 +8,24 @@
   "title": [
     {
       "t": "he",
-      "v": "עוֹצְרִים וּמַקְשִׁיבִים"
+      "v": "פְּעֻלּוֹת"
     }
   ],
   "skills": [
     "ENG-A-02"
   ],
   "items": [
+    "eng.a02.n04",
+    "eng.a02.n05",
+    "eng.a02.n06",
+    "eng.a02.n07",
+    "eng.a02.n08",
+    "eng.a02.i04",
+    "eng.a02.i08",
     "eng.a02.i05",
-    "eng.a02.i06",
-    "eng.a02.i07",
-    "eng.a02.i08"
+    "eng.a02.e02",
+    "eng.a02.i09",
+    "eng.a02.s02"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +37,19 @@
       }
     ]
   },
-  "sequence": 4
+  "sequence": 5,
+  "teach": [
+    {
+      "items": [
+        "eng.a02.tc04",
+        "eng.a02.tc05",
+        "eng.a02.tc06"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a02.n06"
+    }
+  ]
 }

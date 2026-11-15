@@ -17,7 +17,7 @@
   "purpose": "learn",
   "checkType": "practice",
   "representation": "pictorial",
-  "variantGroup": "en-isit-ball",
+  "variantGroup": "en-isit-duck",
   "difficulty": {
     "authored": 0.2
   },
@@ -46,40 +46,31 @@
         "v": "כֵּן אוֹ לֹא? גְּעוּ בַּאֲגוּדָל."
       }
     ],
-    "target": "vo:eng.en_isit_ball",
+    "target": "vo:eng.en_isit_duck",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_8",
+      "vo": "vo:eng.he_fb_right_3",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "יָפֶה מְאֹד!"
         }
       ],
       "target": "vo:eng.en_no"
     },
     "incorrect": [
       {
-        "when": "misconception:eng.lis.yesno",
-        "vo": "vo:eng.he_fb_look_again",
-        "caption": [
-          {
-            "t": "he",
-            "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַתְּמוּנָה."
-          }
-        ]
-      },
-      {
         "when": "default",
-        "vo": "vo:eng.he_fb_check",
+        "vo": "vo:eng.he_fb_where",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:eng.en_isit_duck"
       }
     ],
     "unsure": {
@@ -90,7 +81,7 @@
           "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
         }
       ],
-      "target": "vo:eng.en_isit_ball"
+      "target": "vo:eng.en_isit_duck"
     }
   },
   "hints": [
@@ -104,19 +95,19 @@
           "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
         }
       ],
-      "target": "vo:eng.en_isit_ball"
+      "target": "vo:eng.en_isit_duck"
     },
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_ball",
+      "vo": "vo:eng.he_gl_isit_duck",
       "caption": [
         {
           "t": "he",
-          "v": "כַּדּוּר"
+          "v": "זֶה בַּרְוָז?"
         }
       ],
-      "target": "vo:eng.en_isit_ball"
+      "target": "vo:eng.en_isit_duck"
     },
     {
       "level": 3,
@@ -128,7 +119,7 @@
           "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
         }
       ],
-      "target": "vo:eng.en_isit_ball"
+      "target": "vo:eng.en_isit_duck"
     }
   ],
   "scene": {
@@ -143,18 +134,21 @@
       {
         "id": "o1",
         "sprite": "asset:thumb_down",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_no"
       },
       {
         "id": "o2",
         "sprite": "asset:thumb_up",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_yes",
         "misconception": "eng.lis.yesno"
       }
     ],
     "correct": "o1",
     "shuffle": true,
     "unsureAllowed": true,
-    "pole": "no"
+    "pole": "no",
+    "askWhere": true
   }
 }

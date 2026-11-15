@@ -1,0 +1,147 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a16.tc03",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "say_it",
+  "templateVersion": "1.0",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-16",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "embodied",
+  "variantGroup": "a16-tc03",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 1,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "say the word with the voice",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנָה וּמִלָּה לוֹמַר"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_fb_together",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נֹאמַר יַחַד."
+      }
+    ],
+    "target": "vo:eng.en_isit_cat",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_5",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בְּדִיּוּק!"
+        }
+      ],
+      "target": "vo:eng.en_isit_cat"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ],
+      "target": "vo:eng.en_isit_cat"
+    }
+  },
+  "hints": [],
+  "scene": {
+    "picture": {
+      "sprite": "asset:cat"
+    }
+  },
+  "say": {
+    "forms": [
+      "is it a cat"
+    ],
+    "foils": [
+      "is it a duck"
+    ],
+    "keyWords": [
+      "is",
+      "it",
+      "a",
+      "cat"
+    ],
+    "clip": "vo:eng.en_isit_cat",
+    "heard": {
+      "vo": "vo:eng.he_fb_heard",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שָׁמַעְתִּי:"
+        }
+      ],
+      "target": "vo:eng.en_isit_cat"
+    },
+    "together": {
+      "vo": "vo:eng.he_fb_together",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נֹאמַר יַחַד."
+        }
+      ],
+      "target": "vo:eng.en_isit_cat"
+    },
+    "meet": {
+      "position": 0,
+      "size": 2,
+      "meaning": {
+        "vo": "vo:eng.he_hint_hebrew",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: זֶה חָתוּל?"
+          }
+        ],
+        "target": "vo:eng.he_gl_isit_cat"
+      },
+      "written": "is it a cat"
+    }
+  },
+  "answer": {
+    "type": "say_it",
+    "scored": false,
+    "teach": true
+  }
+}

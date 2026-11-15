@@ -12,10 +12,17 @@
     {"id": "i05", "kind": "drum", "frame": "he-ins-drum", "rep": "concrete", "ladder": "HL-DRUM", "word": ["en-teddy"], "slow": ["en-teddy-slow"], "picture": "teddy", "beats": 2, "classifiers": [{"when": "one_more", "misconception": "syll"}, {"when": "one_fewer", "misconception": "weak_syll"}]},
     {"id": "i06", "kind": "drum", "frame": "he-ins-drum", "rep": "concrete", "ladder": "HL-DRUM", "word": ["en-water"], "slow": ["en-water-slow"], "picture": "water", "beats": 2, "classifiers": [{"when": "one_more", "misconception": "syll"}, {"when": "one_fewer", "misconception": "weak_syll"}]},
     {"id": "i07", "kind": "drum", "frame": "he-ins-drum", "rep": "concrete", "ladder": "HL-DRUM", "word": ["en-banana"], "slow": ["en-banana-slow"], "picture": "banana", "beats": 3, "classifiers": [{"when": "one_more", "misconception": "syll"}, {"when": "one_fewer", "misconception": "weak_syll"}]},
-    {"id": "i08", "kind": "drum", "frame": "he-ins-drum", "rep": "concrete", "ladder": "HL-DRUM", "word": ["en-elephant"], "slow": ["en-elephant-slow"], "picture": "elephant", "beats": 3, "classifiers": [{"when": "one_more", "misconception": "syll"}, {"when": "one_fewer", "misconception": "weak_syll"}]}
+    {"id": "i08", "kind": "drum", "frame": "he-ins-drum", "rep": "concrete", "ladder": "HL-DRUM", "word": ["en-elephant"], "slow": ["en-elephant-slow"], "picture": "elephant", "beats": 3, "classifiers": [{"when": "one_more", "misconception": "syll"}, {"when": "one_fewer", "misconception": "weak_syll"}]},
+    {"id": "s01", "kind": "say", "purpose": "practice", "frame": "he-ins-say", "rep": "embodied", "ladder": "HL-PIC", "picture": "apple", "clip": "en-apple-slow", "forms": ["apple"], "foils": ["able", "ample"], "heard": "he-fb-heard", "together": "he-fb-together"},
+    {"id": "s02", "kind": "say", "purpose": "practice", "frame": "he-ins-say", "rep": "embodied", "ladder": "HL-PIC", "picture": "milk", "clip": "en-milk-slow", "forms": ["milk"], "foils": ["mill", "silk", "milky"], "heard": "he-fb-heard", "together": "he-fb-together"},
+    {"id": "s03", "kind": "say", "purpose": "practice", "frame": "he-ins-say", "rep": "embodied", "ladder": "HL-PIC", "picture": "banana", "clip": "en-banana-slow", "forms": ["banana"], "foils": ["bandana", "nana"], "heard": "he-fb-heard", "together": "he-fb-together"},
+    {"id": "e01", "kind": "listen_do", "purpose": "practice", "frame": "he-ins-do-too", "mode": "embodied", "picture": "act-clap", "clips": ["en-apple-slow", "en-teddy-slow"]},
+    {"id": "x01", "kind": "sort", "frame": "he-ins-sort", "rep": "concrete", "ladder": "HL-SORT", "bins": [{"id": "one", "label": "en-one", "picture": "drum-strip-1"}, {"id": "two", "label": "en-two", "picture": "drum-strip-2"}], "cards": [{"pic": "cat", "bin": "one", "clip": "en-cat"}, {"pic": "apple", "bin": "two", "clip": "en-apple"}, {"pic": "duck", "bin": "one", "clip": "en-duck"}, {"pic": "teddy", "bin": "two", "clip": "en-teddy"}, {"pic": "milk", "bin": "one", "clip": "en-milk"}, {"pic": "water", "bin": "two", "clip": "en-water"}], "wrong": {"cat": "syll", "apple": "weak_syll", "duck": "syll", "teddy": "weak_syll", "milk": "syll", "water": "weak_syll"}}
   ],
   "lessons": [
-    {"id": "beat-1", "title": "מְתוֹפְפִים מִלִּים", "items": ["i09", "i10"]},
-    {"id": "beat-more", "title": "מְתוֹפְפִים מִלִּים", "items": ["i01", "i02", "i03", "i04", "i05", "i06", "i07", "i08"]}
+    {"id": "beat-1", "title": "מְתוֹפְפִים מִלִּים", "recall": ["a11.u06"], "use": ["i01", "i04", "s01"]},
+    {"id": "beat-2", "title": "מְתוֹפְפִים מִלִּים", "recall": ["a04.n11"], "use": ["i02", "i05", "e01"]},
+    {"id": "beat-3", "title": "מְתוֹפְפִים מִלִּים", "recall": ["a01.i19"], "use": ["i03", "x01", "s02"]},
+    {"id": "beat-more", "title": "מְתוֹפְפִים מִלִּים", "recall": ["a11.u07"], "use": ["i07", "i08", "s03"]}
   ]
 }

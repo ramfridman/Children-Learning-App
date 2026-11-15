@@ -1,0 +1,51 @@
+{
+  "schema": "lesson/v1",
+  "id": "eng.adj-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "eng",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "חַם, קַר"
+    }
+  ],
+  "skills": [
+    "ENG-A-10"
+  ],
+  "items": [
+    "eng.a10.n03",
+    "eng.a10.n04",
+    "eng.a10.n05",
+    "eng.a10.n06",
+    "eng.a10.i05",
+    "eng.a10.i06",
+    "eng.a10.s02",
+    "eng.a10.e02"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "sequence": 35,
+  "teach": [
+    {
+      "items": [
+        "eng.a10.tc03",
+        "eng.a10.tc04"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a10.n05"
+    }
+  ]
+}

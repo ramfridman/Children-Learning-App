@@ -409,6 +409,20 @@
       "review": "text-ready"
     },
     {
+      "id": "he-gl-isit-cat",
+      "vo": "vo:eng.he_gl_isit_cat",
+      "he": "זֶה חָתוּל?",
+      "voice": "זה חָתוּל?",
+      "review": "needs-editor"
+    },
+    {
+      "id": "he-gl-isit-duck",
+      "vo": "vo:eng.he_gl_isit_duck",
+      "he": "זֶה בַּרְוָז?",
+      "voice": "זה בַּרְוָז?",
+      "review": "needs-editor"
+    },
+    {
       "id": "he-gl-juice",
       "vo": "vo:eng.he_gl_juice",
       "he": "מִיץ",
@@ -463,6 +477,13 @@
       "he": "פֶּה",
       "voice": "פֶּה",
       "review": "text-ready"
+    },
+    {
+      "id": "he-gl-no",
+      "vo": "vo:eng.he_gl_no",
+      "he": "לֹא",
+      "voice": "לֹא",
+      "review": "needs-editor"
     },
     {
       "id": "he-gl-nose",
@@ -577,11 +598,25 @@
       "review": "text-ready"
     },
     {
+      "id": "he-gl-whats-this",
+      "vo": "vo:eng.he_gl_whats_this",
+      "he": "מַה זֶּה?",
+      "voice": "מה זה?",
+      "review": "needs-editor"
+    },
+    {
       "id": "he-gl-yellow",
       "vo": "vo:eng.he_gl_yellow",
       "he": "צָהֹב",
       "voice": "צָהֹב",
       "review": "text-ready"
+    },
+    {
+      "id": "he-gl-yes",
+      "vo": "vo:eng.he_gl_yes",
+      "he": "כֵּן",
+      "voice": "כֵּן",
+      "review": "needs-editor"
     },
     {
       "id": "he-hint-again",
@@ -743,6 +778,13 @@
       "he": "עַכְשָׁו תּוֹרְכֶם. אִמְרוּ גַּם אַתֶּם!",
       "voice": "עכשיו תורכם. אִמְרוּ גם אתם.",
       "review": "text-ready"
+    },
+    {
+      "id": "he-ins-sort",
+      "vo": "vo:eng.he_ins_sort",
+      "he": "שִׂימוּ כׇּל תְּמוּנָה בַּמָּקוֹם שֶׁלָּהּ.",
+      "voice": "שימו כל תמונה במקום שלה.",
+      "review": "needs-editor"
     },
     {
       "id": "he-ins-story",
@@ -1356,6 +1398,20 @@
       "ipa": "/ˈɛləfənt/"
     },
     {
+      "id": "en-eyes",
+      "vo": "vo:eng.en_eyes",
+      "shown": "eyes",
+      "say": "eyes.",
+      "ipa": "/aɪz/"
+    },
+    {
+      "id": "en-eyes-slow",
+      "vo": "vo:eng.en_eyes_slow",
+      "shown": "eyes",
+      "say": "eyes.",
+      "ipa": "/aɪz/"
+    },
+    {
       "id": "en-feet",
       "vo": "vo:eng.en_feet",
       "shown": "feet",
@@ -1510,6 +1566,20 @@
       "ipa": "/ɡɹin/"
     },
     {
+      "id": "en-hands",
+      "vo": "vo:eng.en_hands",
+      "shown": "hands",
+      "say": "hands.",
+      "ipa": "/hændz/"
+    },
+    {
+      "id": "en-hands-slow",
+      "vo": "vo:eng.en_hands_slow",
+      "shown": "hands",
+      "say": "hands.",
+      "ipa": "/hændz/"
+    },
+    {
       "id": "en-happy",
       "vo": "vo:eng.en_happy",
       "shown": "happy",
@@ -1526,6 +1596,13 @@
     {
       "id": "en-head",
       "vo": "vo:eng.en_head",
+      "shown": "head",
+      "say": "head.",
+      "ipa": "/hɛd/"
+    },
+    {
+      "id": "en-head-slow",
+      "vo": "vo:eng.en_head_slow",
       "shown": "head",
       "say": "head.",
       "ipa": "/hɛd/"
@@ -1876,6 +1953,13 @@
     {
       "id": "en-mouth",
       "vo": "vo:eng.en_mouth",
+      "shown": "mouth",
+      "say": "mouth.",
+      "ipa": "/maʊθ/"
+    },
+    {
+      "id": "en-mouth-slow",
+      "vo": "vo:eng.en_mouth_slow",
       "shown": "mouth",
       "say": "mouth.",
       "ipa": "/maʊθ/"

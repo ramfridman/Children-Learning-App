@@ -1,0 +1,52 @@
+{
+  "schema": "lesson/v1",
+  "id": "eng.feel-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "eng",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "אֵיךְ מַרְגִּישִׁים?"
+    }
+  ],
+  "skills": [
+    "ENG-A-17"
+  ],
+  "items": [
+    "eng.a17.n03",
+    "eng.a17.n04",
+    "eng.a17.n05",
+    "eng.a17.n06",
+    "eng.a17.i03",
+    "eng.a17.n09",
+    "eng.a17.u01",
+    "eng.a17.u01s",
+    "eng.a17.s01"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "sequence": 59,
+  "teach": [
+    {
+      "items": [
+        "eng.a17.tc03",
+        "eng.a17.tc04"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a17.n05"
+    }
+  ]
+}

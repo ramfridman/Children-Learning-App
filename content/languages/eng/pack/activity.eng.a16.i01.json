@@ -51,35 +51,26 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_5",
+      "vo": "vo:eng.he_fb_right_8",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "כׇּל הַכָּבוֹד!"
         }
       ],
       "target": "vo:eng.en_yes"
     },
     "incorrect": [
       {
-        "when": "misconception:eng.lis.yesno",
-        "vo": "vo:eng.he_fb_look_again",
-        "caption": [
-          {
-            "t": "he",
-            "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַתְּמוּנָה."
-          }
-        ]
-      },
-      {
         "when": "default",
-        "vo": "vo:eng.he_fb_check",
+        "vo": "vo:eng.he_fb_where",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:eng.en_isit_cat"
       }
     ],
     "unsure": {
@@ -109,11 +100,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_cat",
+      "vo": "vo:eng.he_gl_isit_cat",
       "caption": [
         {
           "t": "he",
-          "v": "חָתוּל"
+          "v": "זֶה חָתוּל?"
         }
       ],
       "target": "vo:eng.en_isit_cat"
@@ -143,18 +134,21 @@
       {
         "id": "o1",
         "sprite": "asset:thumb_up",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_yes"
       },
       {
         "id": "o2",
         "sprite": "asset:thumb_down",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_no",
         "misconception": "eng.lis.yesno"
       }
     ],
     "correct": "o1",
     "shuffle": true,
     "unsureAllowed": true,
-    "pole": "yes"
+    "pole": "yes",
+    "askWhere": true
   }
 }

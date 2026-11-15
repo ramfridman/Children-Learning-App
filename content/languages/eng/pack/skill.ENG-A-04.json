@@ -21,7 +21,8 @@
   "representations": [
     "concrete",
     "pictorial",
-    "story"
+    "story",
+    "embodied"
   ],
   "misconceptions": [
     "eng.lis.sem"

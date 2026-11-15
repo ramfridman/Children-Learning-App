@@ -1,6 +1,6 @@
 {
   "schema": "lesson/v1",
-  "id": "eng.feel-more",
+  "id": "eng.ani-more",
   "review": "needs-editor",
   "revision": 1,
   "course": "eng",
@@ -8,17 +8,18 @@
   "title": [
     {
       "t": "he",
-      "v": "אֵיךְ מַרְגִּישִׁים?"
+      "v": "חַיּוֹת בַּסַּל"
     }
   ],
   "skills": [
-    "ENG-A-17"
+    "ENG-A-05"
   ],
   "items": [
-    "eng.a17.i05",
-    "eng.a17.i05s",
-    "eng.a17.i06",
-    "eng.a17.i06s"
+    "eng.a05.n13",
+    "eng.a05.n14",
+    "eng.a05.m01",
+    "eng.a05.s04",
+    "eng.a05.s07"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +31,5 @@
       }
     ]
   },
-  "sequence": 41
+  "sequence": 17
 }

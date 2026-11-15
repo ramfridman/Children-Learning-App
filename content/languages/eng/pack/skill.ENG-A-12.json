@@ -23,7 +23,9 @@
     }
   ],
   "representations": [
+    "concrete",
     "pictorial",
+    "story",
     "embodied"
   ],
   "misconceptions": [

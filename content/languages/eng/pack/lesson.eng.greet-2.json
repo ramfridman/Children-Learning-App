@@ -1,0 +1,52 @@
+{
+  "schema": "lesson/v1",
+  "id": "eng.greet-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "eng",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "בְּרָכוֹת"
+    }
+  ],
+  "skills": [
+    "ENG-A-01"
+  ],
+  "items": [
+    "eng.a01.i13",
+    "eng.a01.i16",
+    "eng.a01.i14",
+    "eng.a01.i15",
+    "eng.a01.i09",
+    "eng.a01.i04",
+    "eng.a01.s02",
+    "eng.a01.i08",
+    "eng.a01.x01"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "sequence": 2,
+  "teach": [
+    {
+      "items": [
+        "eng.a01.tc03",
+        "eng.a01.tc04"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a01.i14"
+    }
+  ]
+}

@@ -8,18 +8,25 @@
   "title": [
     {
       "t": "he",
-      "v": "הָרֹאשׁ וְהַפָּנִים"
+      "v": "הַגּוּף"
     }
   ],
   "skills": [
+    "ENG-A-05",
     "ENG-A-06"
   ],
   "items": [
+    "eng.a05.n15",
+    "eng.a05.n16",
+    "eng.a06.n01",
+    "eng.a06.n02",
+    "eng.a06.n03",
+    "eng.a06.n04",
+    "eng.a06.i14",
+    "eng.a06.i13",
     "eng.a06.i01",
-    "eng.a06.i02",
-    "eng.a06.i04",
-    "eng.a06.i05",
-    "eng.a06.i10"
+    "eng.a06.s01",
+    "eng.a06.i07"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -31,5 +38,19 @@
       }
     ]
   },
-  "sequence": 14
+  "sequence": 18,
+  "teach": [
+    {
+      "items": [
+        "eng.a06.tc01",
+        "eng.a06.tc02",
+        "eng.a06.tc03"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a06.n01"
+    }
+  ]
 }
