@@ -9,6 +9,8 @@
 //   dart run tool/voice_gen.dart plan-lang <course> --voice <name> [--puppet-voice <name>] [--frame-voice <name>] [--model <id>] [--ffmpeg <path>] [--each-id] [--price <per 1,000 characters>] [--list] [--out <folder>]
 //   dart run tool/voice_gen.dart verify-lang <course> --voice <name> [--puppet-voice <name>] [--frame-voice <name>] [--out <folder>]
 //   dart run tool/voice_gen.dart generate-lang <course> --voice <name> [--puppet-voice <name>] [--frame-voice <name>] [--model <id>] [--ffmpeg <path>] [--each-id] [--key <key file>] [--out <folder>] [--pack-version <x.y.z>]
+//   dart run tool/voice_gen.dart normalise <character> [--pack-version <x.y.z>] [--key <key file>] [--dry-run] [--from-root <folder>] [--out-root <folder>] [--target <LUFS>] [--max-limit <dB>] [--ffmpeg <path>] [--jobs N]
+//   dart run tool/voice_gen.dart normalise-lang <course> [the same options]
 //   dart run tool/voice_gen.dart audition-batch plan <spec.json> [--out <folder>] [--price <per 1,000 characters>]
 //   dart run tool/voice_gen.dart audition-batch run <spec.json> [--out <folder>]
 //   dart run tool/voice_gen.dart audition <character> "<text>" [--model <id>] [--settings stability=0.25,similarity=0.8,boost=true] [--format <mp3_44100_...>] [--allow exclamation,ipa] [--language he|en|ru] [--out <folder>]
@@ -34,6 +36,15 @@
 // `pack` (free) builds the voice pack of a character again from the clips saved in its work folder, with no voice and no
 // ElevenLabs key (the key file is the pack-signing key): the lines with a clip go into the pack, the others are named and
 // left out. It is what finishes a run whose pack could not be built, and it pays for nothing.
+//
+// `normalise` and `normalise-lang` (free: no key, no network, nothing is voiced) make a voice level. They read the newest signed
+// voice packs of the character (all its parts) or of the course in `<from-root>/<character>` (`lang-<course>`), `~/nitznutz-voice`
+// by default, bring every clip to -16 LUFS with a true peak of at most -1 dBTP (loudness_lib.dart; ffmpeg is needed), and build the
+// same packs, with the same ids and cues, under a new version (the minor number up, or `--pack-version`) in `<out-root>/<character>`,
+// `~/nitznutz-voice-loud` by default, signed with the pack-signing key (`--key`, the one `pack` uses). The clips, the records and
+// the packs of the originals are only read. `--dry-run` measures and encodes but builds nothing and needs no key. A summary of
+// every clip is written next to each pack as `<pack>.loudness.json`. To bundle the result:
+// `tools\copy-release-voices.ps1 -Source ~\nitznutz-voice-loud`.
 //
 // `plan-lang` and `generate-lang` voice a language course from content/languages/<course>/voice-plan.json (course: eng,
 // rus or heb): the Hebrew lines with `--frame-voice` (a voice of content/voices.json, `nitzi` by default), the clips in the
@@ -65,12 +76,14 @@
 // written to a file or put on a command line.
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:nitznutz/content/pack_verify.dart' show PackRejected, sha256Hex;
 
 import 'audio_tool_lib.dart';
 import 'audition_lib.dart';
 import 'lang_voice_lib.dart';
+import 'loudness_lib.dart';
 import 'pack_builder_lib.dart';
 import 'voice_gen_lib.dart';
 import 'voice_groups_lib.dart';
@@ -113,6 +126,10 @@ Future<void> main(List<String> args) async {
         _groups(rest);
       case 'verify':
         _verify(rest);
+      case 'normalise':
+        await _normalise(rest, folder: (String c) => c, prefix: (String c) => 'voice-$c');
+      case 'normalise-lang':
+        await _normalise(rest, folder: (String c) => 'lang-$c', prefix: (String c) => 'voice-lang-$c');
       case 'plan-lang':
         await _planLang(rest);
       case 'verify-lang':
@@ -156,7 +173,7 @@ Future<void> main(List<String> args) async {
 
 void _usage() {
   stderr.writeln(
-    'usage: dart run tool/voice_gen.dart plan|groups|verify|pack|plan-lang|verify-lang|mock|generate|generate-lang|audition-batch|audition ... (see the top of this file)',
+    'usage: dart run tool/voice_gen.dart plan|groups|verify|pack|normalise|normalise-lang|plan-lang|verify-lang|mock|generate|generate-lang|audition-batch|audition ... (see the top of this file)',
   );
 }
 
@@ -166,7 +183,7 @@ String? _option(List<String> args, String name) {
 }
 
 /// The options that take no value.
-const Set<String> _flags = <String>{'--list', '--each-id', '--as-if-approved'};
+const Set<String> _flags = <String>{'--list', '--each-id', '--as-if-approved', '--dry-run'};
 
 List<String> _positional(List<String> args) {
   final List<String> out = <String>[];
@@ -638,6 +655,90 @@ void _verify(List<String> args) {
     ..write(report.describe());
   if (bytesWarning != null) stdout.writeln(bytesWarning);
   if (!report.ok) exit(1);
+}
+
+/// Free: makes the newest voice packs of one character or course level (loudness_lib.dart). Reads the packs and never changes
+/// them; builds new ones under a new version in another folder. No ElevenLabs key is read and nothing is sent anywhere.
+Future<void> _normalise(
+  List<String> args, {
+  required String Function(String name) folder,
+  required String Function(String name) prefix,
+}) async {
+  final List<String> pos = _positional(args);
+  if (pos.length != 1) {
+    throw const VoiceGenFailed('normalise needs one character id (normalise-lang: one course)');
+  }
+  final String name = pos.single;
+  final String sep = Platform.pathSeparator;
+  final Directory from = Directory('${_option(args, '--from-root') ?? _home()}$sep${folder(name)}');
+  final Directory out = Directory('${_option(args, '--out-root') ?? '${_home()}-loud'}$sep${folder(name)}');
+  checkOutputFolder(from, out);
+  final List<FoundPack> packs = newestVoicePacks(from, prefix(name));
+  final bool dry = args.contains('--dry-run');
+  final double target = double.tryParse(_option(args, '--target') ?? '') ?? targetLufs;
+  if (!(target >= -30 && target <= -10)) {
+    throw const VoiceGenFailed('--target is a loudness from -30 to -10 LUFS');
+  }
+  final double maxLimit = double.tryParse(_option(args, '--max-limit') ?? '') ?? defaultMaxLimiting;
+  if (!(maxLimit >= 0 && maxLimit <= 20)) {
+    throw const VoiceGenFailed('--max-limit is the most the limiter may take a peak down, from 0 to 20 dB');
+  }
+  final int jobs = int.tryParse(_option(args, '--jobs') ?? '') ?? 3;
+  if (jobs < 1 || jobs > 16) throw const VoiceGenFailed('--jobs is a number from 1 to 16');
+  final String version = _option(args, '--pack-version') ?? nextMinor(packs.first.version);
+  final FfmpegLoudness tool = FfmpegLoudness(executable: _option(args, '--ffmpeg') ?? 'ffmpeg', jobs: jobs);
+  final String? unavailable = await tool.unavailableReason();
+  if (unavailable != null) throw VoiceGenFailed(unavailable);
+  final Uint8List publicKey = readPublicKeyFile(
+    _option(args, '--public-key') ?? _repo(args, 'app/assets/pack_signing_public_key.txt'),
+  );
+  final PackKey? key = dry ? null : readKeyFile(_option(args, '--key') ?? defaultKeyPath());
+  for (final FoundPack p in packs) {
+    final String fileName = p.file.uri.pathSegments.last.replaceFirst(
+      '-${p.version}.nnpack',
+      '-$version.nnpack',
+    );
+    if (!dry && File('${out.path}$sep$fileName').existsSync()) {
+      throw VoiceGenFailed('${out.path}$sep$fileName exists already; it is never overwritten');
+    }
+    if (File('${p.file.path}.loudness.json').existsSync()) {
+      throw VoiceGenFailed(
+        '${p.file.path} was made level already (its .loudness.json is next to it): use the originals',
+      );
+    }
+  }
+  stdout
+    ..writeln(_repoHeading(args))
+    ..writeln(
+      '${packs.length} pack(s) of $name ${packs.first.version} in ${from.path}, to $version '
+      '${dry ? '(dry run: nothing is built)' : 'in ${out.path}'}',
+    );
+  int audio = 0;
+  for (final FoundPack p in packs) {
+    final PackLoudness result = await normalisePack(
+      source: p.file.readAsBytesSync(),
+      publicKey: publicKey,
+      tool: tool,
+      version: version,
+      key: key,
+      target: target,
+      maxLimiting: maxLimit,
+      progress: (String line) => stdout.writeln('  ${p.file.uri.pathSegments.last}: $line'),
+    );
+    audio += result.audioBytesAfter;
+    stdout.writeln(result.describe());
+    final BuiltPack? built = result.built;
+    if (built != null) {
+      out.createSync(recursive: true);
+      final File file = File('${out.path}$sep${built.fileName}');
+      file.writeAsBytesSync(built.bytes);
+      File('${file.path}.loudness.json')
+          .writeAsStringSync('${const JsonEncoder.withIndent(' ').convert(result.toJson())}\n');
+      stdout.writeln('Built ${file.path}: ${built.bytes.length} bytes');
+    }
+  }
+  final String? warning = voiceBytesWarning(name, audio);
+  if (warning != null) stdout.writeln(warning);
 }
 
 /// What `plan-lang` and `generate-lang` both need: the course's voice plan, the two voices and where the clips go.

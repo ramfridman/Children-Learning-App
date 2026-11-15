@@ -747,6 +747,12 @@ VOICE_MANUAL.update({
     canon('בּוֹאוּ נַמְשִׁיךְ בַּהַרְפַּתְקָה שֶׁל {land}.'): ('בואו נמשיך בהרפתקה של {land}.', PER_LAND),
     canon('בּוֹאוּ נְבַקֵּר אֶת {land}.'): ('בואו נְבַקֵּר את {land}.', PER_LAND),
 })
+# NUM-B-11 item 18 (owner, by ear, 2026-11-15: "H-B-plain sounds the best", docs/audio/audition/numb11-teens-probe.json): hero-son
+# said the fully pointed teen badly after the plain "מתוך"; the teen is plain here, "שמונה עשרה". The screen text is unchanged.
+# One voice_text for every voice (the tool has no per-voice text), so Nitzi is re-voiced with it too. Items 13 to 17 keep their rule.
+VOICE_MANUAL[canon('קְחוּ אַחַת מִתּוֹךְ שְׁמוֹנֶה עֶשְׂרֵה. כַּמָּה נִשְׁאֲרוּ?')] = (
+    'קְחוּ אַחַת מתוך שמונה עשרה. כמה נשארו?',
+    'voice text only (owner chose H-B-plain by ear, 2026-11-15): the teen "שמונה עשרה" is plain, as it is said; the screen text is unchanged')
 
 
 def eleven(text):
@@ -1119,6 +1125,10 @@ OWNER_APPROVED = [
     (r'^activity\.x\.mathb17\.(6|7)\.json$', r'^(חֲמִשָּׁה שְׁקָלִים, שְׁנֵי שְׁקָלִים (וְעוֹד שְׁנֵי שְׁקָלִים|וְשֶׁקֶל אֶחָד) — בְּיַחַד)',
      'Shop hint 3, owner (2026-11-08, option A): the three-coin hints drop "מַטְבֵּעַ שֶׁל" and name the values, so each fits 14 words; '
      'the other shop hints keep the Q11 form (owner-approved 2026-11-08).', r'^hints\.2\.caption'),
+    # The owner's choice by ear of 2026-11-15 (the audition numb11-teens-probe.json, clip H-B-plain): the voice text of item 18 only.
+    (r'^activity\.b\.numb11\.18\.json$', r'^קְחוּ אֶחָד מִתּוֹךְ שְׁמוֹנֶה עֶשְׂרֵה\. כַּמָּה נִשְׁאֲרוּ\?$',
+     'NUM-B-11 item 18: owner chose H-B-plain by ear, 2026-11-15; the voice text is "קְחוּ אַחַת מתוך שמונה עשרה. כמה נשארו?" '
+     '(owner-approved 2026-11-15).', r'^(prompt\.caption\.0\.v|a11y\.altText)$'),
     # The owner's approval of 2026-11-15 (in chat, relayed by the orchestrator): only the prompt and its alt text of NUM-B-11 items 13 to 18.
     (r'^activity\.b\.numb11\.1[3-8]\.json$', r'^קְחוּ אֶחָד מִתּוֹךְ (אַרְבַּע|שֶׁבַע|תֵּשַׁע|שְׁתֵּים עֶשְׂרֵה|חֲמֵשׁ עֶשְׂרֵה|שְׁמוֹנֶה עֶשְׂרֵה)\. כַּמָּה נִשְׁאֲרוּ\?$',
      'NUM-B-11 items 13 to 18: the prompt "קְחוּ אַחַת מִתּוֹךְ …" (a number standing alone is feminine) and its alt text; '
