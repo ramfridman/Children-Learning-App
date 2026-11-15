@@ -5,6 +5,7 @@ import '../parent/age_settings.dart' show ageSettingKeys;
 import '../parent/language_settings.dart';
 import '../parent/look_settings.dart';
 import '../rewards/ribbons.dart';
+import 'behaviour_notes.dart';
 import 'tables.dart';
 
 part 'app_database.g.dart';
@@ -213,6 +214,17 @@ class AppDatabase extends _$AppDatabase {
   // ---- attempts ----
 
   Future<void> recordAttempt(AttemptsCompanion row) => into(attempts).insert(row);
+
+  /// An answer that is no evidence (a first meeting with a word, L7-3) is noted for the parent's guessing and frustration alerts and for nothing
+  /// else (SEC-L7-1): see `behaviour_notes.dart`. The note never leaves the phone.
+  Future<void> addBehaviourNote(String profileId, BehaviourNote note) => transaction(() async {
+    final String key = behaviourNotesKey(profileId);
+    await putSetting(key, encodeBehaviourNotes(withNote(decodeBehaviourNotes(await setting(key)), note)));
+  });
+
+  /// The notes of a child, oldest first.
+  Future<List<BehaviourNote>> behaviourNotesOf(String profileId) async =>
+      decodeBehaviourNotes(await setting(behaviourNotesKey(profileId)));
 
   Future<List<Attempt>> attemptsOf(String profileId) =>
       (select(attempts)
@@ -561,6 +573,8 @@ class AppDatabase extends _$AppDatabase {
     }
     // The count of block demonstrations this child has seen (SEC-M10-9).
     await (delete(appSettings)..where((AppSettings t) => t.key.equals(blockDemoKey(profileId)))).go();
+    // The notes of the answers that were no evidence, kept for the alerts (SEC-L7-1).
+    await (delete(appSettings)..where((AppSettings t) => t.key.equals(behaviourNotesKey(profileId)))).go();
     // What the last `child-put` was for this child: the fingerprint holds the name, the stage and the birth (QA-B29-2).
     await (delete(appSettings)..where((AppSettings t) => t.key.equals(profilePushedKey(profileId)))).go();
     // The age settings kept on this device: the school year of the stage, the captions setting, the put-away card.

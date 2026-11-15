@@ -28,6 +28,7 @@ import '../engine/age.dart' show PresentationStage, SchoolStage;
 import '../engine/course.dart';
 import '../engine/presentation.dart' show maxChoicesByStage;
 import '../data/app_database.dart';
+import '../data/behaviour_notes.dart';
 import '../design/app_text.dart';
 import '../design/board.dart';
 import '../design/components.dart';
@@ -558,6 +559,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       profileId: widget.profileId,
       sessionId: _visitId,
       record: ref.read(attemptSinkProvider),
+      // An answer that is no evidence (a first meeting with a word) is noted on this phone for the parent's alerts, and nowhere else (SEC-L7-1).
+      recordNote: (BehaviourNote note) async =>
+          (await ref.read(databaseProvider.future)).addBehaviourNote(widget.profileId, note),
       clock: ref.read(clockProvider),
       tutor: _tutor,
       tutorContext: _tutor == null ? null : _tutorContext(guide, content),

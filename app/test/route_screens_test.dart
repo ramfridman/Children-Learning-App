@@ -201,8 +201,8 @@ void main() {
       await waitFor(t, 1500);
       expect(lines(rig).skip(2).take(2), <String>[
         'rus.f41',
-        'rus.mp_ljuk',
-      ], reason: 'the second word of the four');
+        'rus.w_myshka',
+      ], reason: 'the second word of the three');
       expect(await rig.db.attemptsOf(langKid), isEmpty);
       await t.pumpWidget(const SizedBox());
     });

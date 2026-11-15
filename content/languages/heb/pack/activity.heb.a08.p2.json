@@ -62,15 +62,25 @@
     },
     "incorrect": [
       {
-        "when": "default",
-        "vo": "vo:heb.fb_where",
+        "when": "misconception:heb.pa.syll",
+        "vo": "vo:heb.fb_syll",
         "caption": [
           {
             "t": "he",
-            "v": "וְאֵיפֹה"
+            "v": "בּוֹאוּ נִסְפֹּר לְאַט."
           }
         ],
         "target": "vo:heb.heb_a_w_banana"
+      },
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
       }
     ],
     "unsure": {
@@ -149,7 +159,6 @@
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true,
-    "askWhere": true
+    "unsureAllowed": true
   }
 }

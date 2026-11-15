@@ -7,6 +7,7 @@ import '../content/models.dart';
 import '../content/pack_validation.dart' show languageTemplates;
 import '../core/clock.dart';
 import '../core/log.dart';
+import '../data/behaviour_notes.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
 import 'first_meeting.dart';
@@ -90,6 +91,10 @@ class AttemptRecord {
 
 typedef AttemptSink = Future<void> Function(AttemptRecord record);
 
+/// Where the note of an answer that was no evidence goes (a first meeting with a word, L7-3): a local record for the parent's guessing and
+/// frustration alerts and for nothing else (SEC-L7-1). Null in a test that does not look at the alerts.
+typedef NoteSink = Future<void> Function(BehaviourNote note);
+
 Activity _ownNameWithoutAName(Activity a) => OwnName().apply(a);
 
 /// [made] without the own-name items that could not be made (they have no faces to draw; the validator makes sure of the house name, so
@@ -151,6 +156,7 @@ class LessonController extends ChangeNotifier {
     required this.lesson,
     required this.profileId,
     required AttemptSink record,
+    NoteSink? recordNote,
     this.sessionId,
     this.tutor,
     this.tutorContext,
@@ -173,6 +179,7 @@ class LessonController extends ChangeNotifier {
            (personalise ?? _ownNameWithoutAName)(a),
        ]),
        _record = record,
+       _recordNote = recordNote,
        _clock = clock {
     _begin();
   }
@@ -255,6 +262,7 @@ class LessonController extends ChangeNotifier {
   TutorContext? tutorContext;
   final List<Activity> items;
   final AttemptSink _record;
+  final NoteSink? _recordNote;
   final Clock _clock;
 
   /// The words whose Meet screen has played in this visit: an item that asks one of them writes nothing ([FirstMeeting]).
@@ -872,9 +880,25 @@ class LessonController extends ChangeNotifier {
     bool byVoice = false,
   }) {
     final Activity a = current;
-    // The first meeting with a word is no evidence, right or wrong (L7-3): the child sees the same help and feedback, and nothing is kept.
-    if (_meeting.asks(a)) return Future<void>.value();
     final int now = _clock.nowMs();
+    // The first meeting with a word is no evidence, right or wrong (L7-3): the child sees the same help and feedback, and no attempt is written.
+    // The answer is still the child's tap and pace, which the parent's guessing and frustration alerts watch: a note for them alone (SEC-L7-1).
+    if (_meeting.asks(a)) {
+      final int? visit = sessionId;
+      final Future<void> noted = visit == null || ResponseCode.isAlso(response) || _recordNote == null
+          ? Future<void>.value()
+          : _recordNote(
+              BehaviourNote(
+                at: DateTime.fromMillisecondsSinceEpoch(now, isUtc: true),
+                activityId: a.id,
+                result: result,
+                durationMs: math.max(0, now - _markMs),
+                sessionId: visit,
+              ),
+            );
+      _markMs = now;
+      return noted;
+    }
     final AttemptRecord rec = AttemptRecord(
       at: DateTime.fromMillisecondsSinceEpoch(now, isUtc: true),
       profileId: profileId,

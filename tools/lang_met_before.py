@@ -17,6 +17,17 @@ Warned (never fails a build):
 
     recall       a new word is not the target of a scored item in any of the next 3 lessons
 
+What is a word to meet. The words of an item are the clip it asks (`asks`, a command such as "touch your nose"), the clip its prompt ends
+with (the stem), the clip a say step says, and the clip of each option. Four kinds of clip are not words and need no Meet screen (and, in the
+Hebrew course, no `everyday` mark), and they are found from the pack, not listed by a teacher:
+
+    page         a narration clip of a story page, and the clip of an option whose picture is a story page ("which came first?")
+    count        the clip of an option whose picture is a beat strip (`drum_strip_*`: "one drum", "two drums"); such a picture names no word
+    sentence     the clip of an option whose picture is a place scene (`place_*`: "the ball is on the box")
+    carrier      a prompt that no option, no say step, no `asks` and no Meet screen of the course ever names as a word: a syllable string
+                 ("bu-ba"), a verse with a gap, a question that is never taught as a chunk. A question chunk the course does teach by a Meet
+                 screen ("what's this?") is a word and is held to the rule
+
 Two modes, set for the whole course by course.json `"metBefore"`:
 
     "report"     (the default) a lesson written in the old form (`items`) is only reported: its violations are listed, and the build does
@@ -53,8 +64,13 @@ def text_face(doc):
     return bool(answer.get('face')) or any('text' in o for o in answer.get('options', []) if isinstance(o, dict))
 
 
+# The pictures that depict no word: a beat strip (its clip says the count) and a place scene (its clip says a sentence).
+NON_WORD_PICTURES = ('asset:drum_strip_', 'asset:place_')
+
+
 def asked(doc):
-    """(scored, the item's target word or None, [(option id, the option's word or None, has a picture)]) of an activity document."""
+    """(scored, the item's target word or None, [(option id, the option's word or None, the option's picture or None)]) of an activity
+    document. The target is what the item names: its `asks` (a command's word), else its prompt's clip, else the clip of the right option."""
     template = doc.get('template')
     answer = doc.get('answer') or {}
     options = [o for o in answer.get('options', []) if isinstance(o, dict)]
@@ -64,12 +80,25 @@ def asked(doc):
     if answer.get('type') != 'choice' or not options or text_face(doc):
         return False, None, []
     right = [o for o in options if o.get('id') == answer.get('correct')]
-    target = word_of(doc.get('word'))
+    target = word_of(doc.get('asks'))
     if target is None and template == 'tap_answer':
         target = word_of((doc.get('prompt') or {}).get('target'))
     if target is None and template in ('tap_answer', 'puppet_talk') and right:
         target = word_of(right[0].get('clip'))
-    return True, target, [(o.get('id'), word_of(o.get('clip')), 'sprite' in o) for o in options]
+    return True, target, [(o.get('id'), word_of(o.get('clip')), o.get('sprite')) for o in options]
+
+
+def story_pages(docs):
+    """(the narration clips, the pictures) of the pages of the stories among [docs] (activity documents)."""
+    clips, pictures = set(), set()
+    for doc in docs:
+        if doc.get('template') != 'story':
+            continue
+        for page in (doc.get('scene') or {}).get('pages', []):
+            clips.update(word_of(c) for c in page.get('clips', []))
+            if page.get('picture'):
+                pictures.add(page['picture'])
+    return clips, pictures
 
 
 class Walk:
@@ -80,7 +109,41 @@ class Walk:
         self.findings = []
         self.met = set()
         self.everyday = {word_of(course.vo(c)) for c in course.spec.get('everyday', []) if isinstance(c, str)}
+        docs = [info['doc'] for info in course.items.values()]
+        self.page_clips, self.page_pictures = story_pages(docs)
+        self.not_words = self._not_words(docs)
+        self.vocabulary = self._vocabulary(docs)
         self.lessons = self._lessons()
+
+    def _not_words(self, docs):
+        """The clips that are pages, counts or sentences: the narration of a story page, and the clip of any option that depicts no word
+        (wherever else the course uses the clip, a say step of a place sentence for one, it stays no word)."""
+        clips = set(self.page_clips)
+        for doc in docs:
+            clips.update(word for _, word, picture in asked(doc)[2] if word is not None and self.depicts_no_word(picture))
+        return clips
+
+    def _vocabulary(self, docs):
+        """Every clip the course names as a word somewhere: the clip of an option that depicts a word, an `asks`, what a say step or a Meet
+        screen says. A prompt that is none of these is a carrier (see the module's note)."""
+        words = set()
+        for doc in docs:
+            scored, target, options = asked(doc)
+            words.update(word for _, word, picture in options if word is not None and not self.depicts_no_word(picture))
+            if doc.get('asks'):
+                words.add(word_of(doc['asks']))
+            if doc.get('template') == 'say_it':
+                words.add(target)
+        words.discard(None)
+        return words - self.not_words
+
+    def depicts_no_word(self, picture):
+        """Is [picture] a beat strip, a place scene or the page of a story: a picture whose clip is a count, a sentence or a page?"""
+        return isinstance(picture, str) and (picture.startswith(NON_WORD_PICTURES) or picture in self.page_pictures)
+
+    def is_word(self, clip):
+        """Is [clip], the target of an item, a word to meet (and not a story page or a carrier)?"""
+        return clip in self.vocabulary
 
     def _lessons(self):
         """[(sequence, id, document)] of the course in `sequence` order (file order for equal numbers)."""
@@ -178,11 +241,11 @@ class Walk:
         return True if parts is None else parts.get(aid) == 'use'
 
     def _check_item(self, full, aid, target, options):
-        words = [target] if target is not None else []
-        unnamed = [oid for oid, word, picture in options if word is None and picture]
+        unnamed = [oid for oid, word, picture in options if word is None and picture and not self.depicts_no_word(picture)]
         if unnamed:
             self.add('unnamed', full, aid, '%s: the picture option(s) %s name no word clip, so a touch cannot say them' % (aid, ', '.join(unnamed)))
-        words += [word for _, word, _ in options if word is not None]
+        words = [target] if target is not None and self.is_word(target) else []
+        words += [word for _, word, picture in options if word is not None and not self.depicts_no_word(picture)]
         for word in sorted(set(words)):
             if word not in self.met and word not in self.everyday:
                 self.add('not-met', full, aid, '%s asks the word "%s" before any Meet screen has taught it' % (aid, word))

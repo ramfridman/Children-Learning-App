@@ -1,10 +1,12 @@
-// Goldens of the Meet screen and the Find (L7-4, docs/design/l7-meet-find.md section 12), on English lesson 1 and lesson act-1 of the real course.
-// Pictures are the course's own; the voice is a fake recording.
+// Goldens of the Meet screen and the Find (L7-4, docs/design/l7-meet-find.md section 12), on English lesson 1 and lesson act-1 of the real course,
+// the Russian family lesson (golden 3: the Hebrew meaning in the bubble) and the Hebrew words lesson (golden 5: the page with its focus ring and
+// its explaining sentence). Pictures are the course's own; the voice is a fake recording.
 //
 // Regenerate after a deliberate visual change:  flutter test --update-goldens test/golden_l7_meet_find_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/design/course_text.dart' show TargetChip;
 
 import 'support/golden_comparator.dart';
 import 'support/harness.dart';
@@ -34,13 +36,50 @@ Future<void> _toFind(WidgetTester t) async {
   await l7Wait(t, 2500);
 }
 
+/// Waits (at most 12 s) until [text] is in the bubble, then a little more for what comes with it.
+Future<void> _untilBubble(WidgetTester t, String text) async {
+  for (int i = 0; i < 120 && find.text(text).evaluate().isEmpty; i++) {
+    await t.pump(const Duration(milliseconds: 100));
+  }
+  expect(find.text(text), findsOneWidget, reason: 'the bubble says: $text');
+  await t.pump(const Duration(milliseconds: 400));
+}
+
+/// A Meet screen heard through: "I said it" is tapped as soon as it arrives, and the next screen is on.
+Future<void> _passMeet(WidgetTester t) async {
+  for (int i = 0; i < 120; i++) {
+    final Finder tile = find.ancestor(
+      of: find.byKey(const Key('say-done')),
+      matching: find.byType(AnimatedOpacity),
+    );
+    if (tile.evaluate().isNotEmpty && t.widget<AnimatedOpacity>(tile.first).opacity == 1) break;
+    await t.pump(const Duration(milliseconds: 100));
+  }
+  await t.tap(find.byKey(const Key('say-done')));
+  await l7Wait(t, 1500);
+}
+
+/// The story of the Hebrew lesson, heard page by page to its tick (the page is turned as soon as it is there).
+Future<void> _passStory(WidgetTester t) async {
+  await l7Wait(t, 600);
+  for (int i = 0; i < 5; i++) {
+    await t.tap(find.byKey(const Key('story-turn')));
+    await l7Wait(t, 300);
+  }
+  await l7Wait(t, 2500);
+}
+
 void main() {
   late PackContent eng;
+  late PackContent rus;
+  late PackContent heb;
 
   setUpAll(() async {
     await loadAppFonts();
     useTolerantGoldens(0.03);
     eng = await buildEnglish();
+    rus = await buildCourse('rus');
+    heb = await buildCourse('heb');
   });
 
   for (final MapEntry<String, Size> b in boards.entries) {
@@ -127,4 +166,35 @@ void main() {
     await l7Wait(t, 2500);
     await _shot(t, 'find_first_text13', 'phoneSE');
   });
+
+  // Golden 3: the third word of a Russian set, look B: the Hebrew meaning in the bubble, two words in the strip, no chip, no tile.
+  for (final String board in <String>['phone', 'phoneSE', 'tabletPortrait']) {
+    testWidgets(
+      'Russian Meet, word 3 of 3, look B: the meaning in the bubble, two thumbnails, no chip, no tile ($board)',
+      (WidgetTester t) async {
+        await openCourseLesson(t, 'rus', rus, lesson: 'rus.family-1', size: boards[board]!, band: 1);
+        await _passMeet(t);
+        await _passMeet(t);
+        await _untilBubble(t, 'בְּעִבְרִית: אַבָּא.');
+        expect(find.byKey(const Key('meet-thumb-0')), findsOneWidget);
+        expect(find.byKey(const Key('meet-thumb-1')), findsOneWidget);
+        expect(find.byType(TargetChip), findsNothing, reason: 'no chip at the meaning');
+        await _shot(t, 'meet_rus_m2_lookB', board);
+      },
+    );
+  }
+
+  // Golden 5: the first page of the Hebrew words lesson, after story 1: the word's part of the picture ringed, the explaining sentence in the bubble.
+  for (final String board in <String>['phone', 'phoneSE']) {
+    testWidgets(
+      'Hebrew Meet page, word 1 of 3, at its explaining sentence: the focus ring on the story page ($board)',
+      (WidgetTester t) async {
+        await openCourseLesson(t, 'heb', heb, lesson: 'heb.words-1', size: boards[board]!, band: 1);
+        await _passStory(t);
+        await _untilBubble(t, 'שִׂיחַ הוּא כְּמוֹ עֵץ קָטָן וְנָמוּךְ, עִם הַרְבֵּה עָלִים.');
+        expect(find.byKey(const Key('meet-focus')), findsOneWidget);
+        await _shot(t, 'meet_heb_page_h2', board);
+      },
+    );
+  }
 }

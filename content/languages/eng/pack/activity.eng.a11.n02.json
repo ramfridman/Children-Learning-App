@@ -63,14 +63,13 @@
     "incorrect": [
       {
         "when": "default",
-        "vo": "vo:eng.he_fb_where",
+        "vo": "vo:eng.he_fb_check",
         "caption": [
           {
             "t": "he",
-            "v": "וְאֵיפֹה"
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
           }
-        ],
-        "target": "vo:eng.en_its_ball"
+        ]
       }
     ],
     "unsure": {
@@ -149,7 +148,6 @@
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true,
-    "askWhere": true
+    "unsureAllowed": true
   }
 }

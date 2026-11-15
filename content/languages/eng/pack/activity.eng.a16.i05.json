@@ -62,15 +62,24 @@
     },
     "incorrect": [
       {
-        "when": "default",
-        "vo": "vo:eng.he_fb_where",
+        "when": "misconception:eng.lis.yesno",
+        "vo": "vo:eng.he_fb_look_again",
         "caption": [
           {
             "t": "he",
-            "v": "וְאֵיפֹה"
+            "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַתְּמוּנָה."
           }
-        ],
-        "target": "vo:eng.en_isit_cake"
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
       }
     ],
     "unsure": {
@@ -149,7 +158,6 @@
     "shuffle": true,
     "unsureAllowed": true,
     "pole": "yes",
-    "pairWith": "eng.a16.i06",
-    "askWhere": true
+    "pairWith": "eng.a16.i06"
   }
 }

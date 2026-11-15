@@ -343,11 +343,11 @@ def english_maps():
                                {i: {'parts': ['big', 'small'], 'show': 'body'} for i in ('ENG-A-10 i01', 'ENG-A-10 i02')})
     out['ball-pair'] = share_map('ball-pair', {'big': [[16, 88, 144, 148]], 'small': [[164, 156, 84, 84]]}, 256, 256, HIT,
                                  BIG_SMALL_NOTE, {i: {'parts': ['big', 'small'], 'show': 'body'} for i in ('ENG-A-10 i03', 'ENG-A-10 i04')})
-    pages = {   # measured from the drawn pages (the bounding boxes of the placed drawings), padded to at least 96 units
-        'story-bounce-2': {'cat': [[132, 88, 102, 120]], 'ball': [[34, 24, 98, 100]]},
+    pages = {   # measured from the drawn pages (the bounding boxes of the placed drawings), padded to at least 96 units (108 where a listen-and-do item touches them: the Band A floor, 0.2812 of the width)
+        'story-bounce-2': {'cat': [[132, 88, 108, 120]], 'ball': [[24, 24, 108, 100]]},
         'story-bounce-3': {'duck': [[150, 104, 108, 104]], 'ball': [[30, 36, 100, 100]]},
         'story-bounce-4': {'frog': [[144, 104, 116, 108]], 'ball': [[150, 0, 100, 100]]},
-        'story-bounce-5': {'dog': [[122, 60, 136, 134]], 'ball': [[24, 46, 98, 100]]},
+        'story-bounce-5': {'dog': [[122, 60, 136, 134]], 'ball': [[14, 46, 108, 100]]},
     }
     for pid, areas in pages.items():
         out[pid] = share_map(pid, areas, 384, 216, STORY_HIT, STORY_NOTE)

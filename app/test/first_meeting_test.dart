@@ -75,11 +75,14 @@ void main() {
       expect(meeting.asks(rus.activities['rus.a20.01']!), isFalse);
     });
 
-    test('a command that names a body part only by its picture is told by that picture', () {
+    test('a command whose prompt is a phrase names its word with `asks`, and is told by that word', () {
       final FirstMeeting meeting = FirstMeeting();
-      meeting.met(screen('rus.a03.tc01')); // the nose
-      expect(meeting.asks(rus.activities['rus.a03.01']!), isTrue, reason: 'show me the nose');
-      expect(meeting.asks(rus.activities['rus.a03.02']!), isFalse, reason: 'show me the mouth');
+      meeting.met(screen('rus.a03.tc06')); // the hands
+      expect(askedWords(rus.activities['rus.a03.05']!), <String>{
+        'vo:rus.w_ruki',
+      }, reason: 'only the word, not the phrase');
+      expect(meeting.asks(rus.activities['rus.a03.05']!), isTrue, reason: 'show me the hands');
+      expect(meeting.asks(rus.activities['rus.a03.06']!), isFalse, reason: 'show me the legs');
     });
   });
 
@@ -96,7 +99,8 @@ void main() {
         expect(written, isEmpty, reason: 'no incorrect and no misconception tag');
         expect(c.feedback, FeedbackKind.notYet);
         expect(c.errors, 1, reason: 'the visit goes on as before');
-        expect(c.hintShown, greaterThan(0), reason: 'the help is the same');
+        // The first help of a Find is the question "and where is ...?" (it shows no hint picture, L7-4): it is asked again by the replay button.
+        expect(c.askedLine, isNotNull, reason: 'the help is the same');
         expect(c.bubble, isNotEmpty);
         c.dispose();
       },

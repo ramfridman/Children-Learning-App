@@ -302,9 +302,114 @@ void main() {
     });
 
     test('an item whose pictures do not all name their words keeps the old first help', () {
-      for (final String id in <String>['i04', 'i09']) {
-        expect((eng.activities['eng.a01.$id']! as TapAnswerActivity).askWhere, isFalse, reason: id);
+      // The beat strips of the English course (eng.a14.i09 to i12) name no word clip: a strip is a count, not a word.
+      for (final String id in <String>['i09', 'i10', 'i11', 'i12']) {
+        final TapAnswerActivity a = eng.activities['eng.a14.$id']! as TapAnswerActivity;
+        expect(a.options.any((ChoiceOption o) => o.clip == null), isTrue, reason: id);
+        expect(a.askWhere, isFalse, reason: id);
       }
     });
+
+    test('the pictures of the body items name their words: i04 and i09 ask where, and the close-up cards say theirs', () {
+      for (final String id in <String>['i04', 'i09']) {
+        final TapAnswerActivity a = eng.activities['eng.a01.$id']! as TapAnswerActivity;
+        expect(a.options.every((ChoiceOption o) => o.clip != null), isTrue, reason: id);
+        expect(a.askWhere, isTrue, reason: id);
+      }
+      // A close-up card of a command names its word when it is touched.
+      for (final String id in <String>['i02', 'i03', 'i05']) {
+        final ListenDoActivity a = eng.activities['eng.a06.$id']! as ListenDoActivity;
+        expect(a.mode, 'cards', reason: id);
+        expect(a.options.every((ChoiceOption o) => o.clip != null), isTrue, reason: id);
+      }
+    });
+  });
+
+  group('"and where is ...?" only after a word: an item whose target is a question, a sentence or a page keeps the earlier help', () {
+    // English questions, Hebrew strip counts and story pages, Russian questions and probes.
+    const Map<String, List<String>> keeps = <String, List<String>>{
+      'eng': <String>['a16.i01', 'a16.i02', 'a16.pr1', 'a11.i01', 'a11.n01', 'a11.pr1'],
+      'heb': <String>['a08.07', 'a08.10', 'a08.12', 'a08.p1', 'a01.05', 'a01.06', 'a09.01'],
+      'rus': <String>['a12.05', 'a12.f01', 'a12.r01', 'a13.f01', 'a13.r01', 'a03.p01', 'a17.p01', 'a19.p02'],
+    };
+    const Map<String, List<String>> asks = <String, List<String>>{
+      'eng': <String>['a06.n01', 'a01.i01'],
+      'heb': <String>['a02.01', 'a02.02'],
+      'rus': <String>['a01.01', 'a02.01'],
+    };
+    late Map<String, PackContent> packs;
+
+    setUpAll(() async {
+      packs = <String, PackContent>{'eng': eng};
+      for (final String c in <String>['heb', 'rus']) {
+        final Uint8List bytes = (await buildPack(languageSource(c, _languages), key)).bytes;
+        packs[c] = PackContent.fromPack(await verifyPack(bytes, publicKey: key.publicKey));
+      }
+    });
+
+    test('the listed items of each course do not ask where, and an ordinary Find does', () {
+      for (final MapEntry<String, List<String>> e in keeps.entries) {
+        for (final String id in e.value) {
+          final Activity a = packs[e.key]!.activities['${e.key}.$id']!;
+          expect(a is TapAnswerActivity && a.askWhere, isFalse, reason: '${e.key}.$id');
+        }
+      }
+      for (final MapEntry<String, List<String>> e in asks.entries) {
+        for (final String id in e.value) {
+          expect(
+            (packs[e.key]!.activities['${e.key}.$id']! as TapAnswerActivity).askWhere,
+            isTrue,
+            reason: '${e.key}.$id',
+          );
+        }
+      }
+    });
+
+    test('in every course the target of an item that asks where is the clip of its right picture', () {
+      int asked = 0;
+      for (final MapEntry<String, PackContent> e in packs.entries) {
+        for (final Activity a in e.value.activities.values) {
+          if (a is! TapAnswerActivity || !a.askWhere) continue;
+          asked++;
+          final String right = a.options.firstWhere((ChoiceOption o) => o.id == a.correctId).clip!;
+          expect(
+            a.promptLine.target!.replaceAll(RegExp(r'_slow$'), ''),
+            right.replaceAll(RegExp(r'_slow$'), ''),
+            reason: a.id,
+          );
+          expect(
+            a.feedback.incorrect.single.say.target,
+            a.promptLine.target,
+            reason: '${a.id}: "and where is" plus the target',
+          );
+        }
+      }
+      expect(asked, greaterThan(500));
+    });
+
+    test(
+      'a wrong tap on "is it a cat?" says the line of its mistake and shows the hint picture, as before',
+      () async {
+        final PackContent pack = packs['eng']!;
+        final LessonController c = LessonController(
+          content: pack,
+          lesson: Lesson.mission(
+            id: 'one',
+            itemIds: <String>['eng.a16.i01'],
+            skillIds: <String>['ENG-A-16'],
+            celebration: pack.lessons['eng.greet-1']!.celebration,
+          ),
+          profileId: 'kid',
+          record: (AttemptRecord r) async {},
+          route: 'heritage',
+        );
+        expect(c.current.promptLine.target, 'vo:eng.en_isit_cat');
+        await c.chooseOption(wrongOf(c.current));
+        expect(c.voice, isNot('vo:eng.he_fb_where'));
+        expect(c.askedLine, isNull);
+        expect(c.hintShown, greaterThan(0), reason: 'the first help brings its picture');
+        c.dispose();
+      },
+    );
   });
 }

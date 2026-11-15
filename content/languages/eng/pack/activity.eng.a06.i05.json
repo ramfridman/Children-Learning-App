@@ -133,6 +133,7 @@
         "id": "o1",
         "sprite": "asset:body_mouth",
         "label": "mouth",
+        "clip": "vo:eng.en_mouth",
         "at": {
           "x": 0.3594,
           "y": 0.175,
@@ -144,6 +145,7 @@
         "id": "o2",
         "sprite": "asset:body_nose",
         "label": "nose",
+        "clip": "vo:eng.en_nose",
         "at": {
           "x": 0.3594,
           "y": 0.1414,
@@ -156,6 +158,7 @@
         "id": "o3",
         "sprite": "asset:body_head",
         "label": "head",
+        "clip": "vo:eng.en_head",
         "at": {
           "x": 0.3516,
           "y": 0.0641,

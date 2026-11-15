@@ -11,6 +11,7 @@
 * report mode lists what a lesson in the old form breaks and does not fail the build; `"metBefore": "enforce"` makes every lesson refuse.
 Standard library only.
 """
+import glob
 import io
 import json
 import os
@@ -20,6 +21,7 @@ from contextlib import redirect_stdout
 
 TOOLS = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, TOOLS)
+import lang_met_before  # noqa: E402
 import lang_pack  # noqa: E402
 import test_lang_pack as base  # noqa: E402
 
@@ -300,6 +302,209 @@ class ModeTest(Case):
         self.sb.course['metBefore'] = 'enforce'
         self.sb.course['everyday'] = ['en-cat']
         self.assertNotIn('lesson eng.old-1 (not-met)', self.sb.problems())
+
+
+class WhereTest(Case):
+    """When a wrong tap says "and where is ...?" (the target must be the right option's own word clip)."""
+
+    def question(self, target):
+        """A tap item whose prompt ends with [target] and whose right picture is hello's."""
+        item = self.sb.tap('q1', target, 'a', 'b')
+        self.sb.unit['items'].append(item)
+        self.sb.course['defaults']['where'] = 'he-hear'
+
+    def incorrect(self):
+        doc = json.loads(self.sb.build()['activity.eng.a01.q1.json'])
+        return doc, doc['feedback']['incorrect']
+
+    def test_an_item_whose_target_is_a_question_keeps_the_lines_of_its_tags_and_its_hint_picture(self):
+        self.question('en-cat')
+        doc, rules = self.incorrect()
+        self.assertNotIn('askWhere', doc['answer'])
+        self.assertEqual(['default'], [r['when'] for r in rules])
+        self.assertEqual('vo:eng.he_check', rules[0]['vo'])  # the course's own wrong line, not "and where is"
+        self.assertNotIn('target', rules[0])
+
+    def test_an_item_whose_target_is_the_right_pictures_word_asks_where(self):
+        self.question('en-hello')
+        doc, rules = self.incorrect()
+        self.assertTrue(doc['answer']['askWhere'])
+        self.assertEqual([('default', 'vo:eng.en_hello')], [(r['when'], r['target']) for r in rules])
+
+    def test_a_slow_version_is_the_same_word(self):
+        self.assertTrue(lang_pack.Course.same_word('en-hello-slow', 'en-hello'))
+        self.assertTrue(lang_pack.Course.same_word('en-hello', 'en-hello'))
+        self.assertFalse(lang_pack.Course.same_word('en-hello', 'en-bye'))
+
+    def test_the_target_is_compared_with_the_right_picture_not_with_another_one(self):
+        self.question('en-bye')  # bye is the clip of the wrong picture
+        self.assertNotIn('askWhere', self.incorrect()[0]['answer'])
+
+
+class RealCoursesTest(unittest.TestCase):
+    """The committed packs: every "and where is ...?" names the right picture's word, and the items whose target is a question, a sentence,
+    a page or a syllable string do not ask it."""
+
+    ROOT = os.path.normpath(os.path.join(TOOLS, '..'))
+    # From the three courses: English questions and statements, Hebrew strip counts and story pages, Russian questions and probes.
+    NOT_WHERE = {'eng': ['a16.i01', 'a16.i02', 'a16.pr1', 'a11.i01', 'a11.n01', 'a11.pr1'],
+                 'heb': ['a08.07', 'a08.10', 'a08.12', 'a08.p1', 'a01.05', 'a01.06'],
+                 'rus': ['a12.05', 'a12.f01', 'a12.r01', 'a13.f01', 'a13.r01', 'a03.p01', 'a17.p01', 'a19.p02']}
+    WHERE = {'eng': ['a06.n01', 'a01.i01'], 'heb': ['a02.01', 'a02.02'], 'rus': ['a01.01', 'a02.01']}
+
+    def doc(self, course, short):
+        path = os.path.join(self.ROOT, 'content', 'languages', course, 'pack', 'activity.%s.%s.json' % (course, short))
+        with open(path, encoding='utf-8') as fh:
+            return json.load(fh)
+
+    def test_the_items_with_a_question_or_a_sentence_for_a_target_keep_their_hint_picture(self):
+        for course, ids in self.NOT_WHERE.items():
+            for short in ids:
+                doc = self.doc(course, short)
+                self.assertNotIn('askWhere', doc['answer'], '%s.%s asks "and where is"' % (course, short))
+                self.assertNotEqual('vo:%s.he_fb_where' % course, doc['feedback']['incorrect'][-1].get('vo'))
+
+    def test_an_ordinary_find_says_and_where_is_and_the_target(self):
+        for course, ids in self.WHERE.items():
+            for short in ids:
+                doc = self.doc(course, short)
+                self.assertTrue(doc['answer'].get('askWhere'), '%s.%s' % (course, short))
+                self.assertEqual(doc['prompt']['target'], doc['feedback']['incorrect'][-1]['target'])
+
+    def test_every_and_where_is_names_the_right_pictures_own_clip(self):
+        seen = 0
+        for course in ('eng', 'heb', 'rus'):
+            for path in glob.glob(os.path.join(self.ROOT, 'content', 'languages', course, 'pack', 'activity.*.json')):
+                with open(path, encoding='utf-8') as fh:
+                    doc = json.load(fh)
+                answer = doc.get('answer') or {}
+                if not answer.get('askWhere'):
+                    continue
+                seen += 1
+                right = next(o for o in answer['options'] if o['id'] == answer['correct'])
+                self.assertTrue(lang_pack.Course.same_word(doc['prompt']['target'], right['clip']), doc['id'])
+        self.assertGreater(seen, 500)
+
+
+class CardClipTest(Case):
+    """A close-up card of a listen-and-do item names its word when touched."""
+
+    def build(self, clips):
+        self.sb.pictures += ['body', 'card-a', 'card-b']
+        item = {'id': 'k1', 'kind': 'listen_do', 'mode': 'cards', 'frame': 'he-tap', 'picture': 'body', 'target': 'en-hello',
+                'asks': 'en-hello', 'options': ['a', 'b'], 'right': 'a', 'wrong': {'b': 'sem'}}
+        if clips is not None:
+            item['partClips'] = clips
+        self.sb.unit['items'].append(item)
+        self.sb.write()
+        areas = {'pictures': {'body': {'a': [0.1, 0.1, 0.3, 0.3], 'b': [0.5, 0.5, 0.3, 0.3]}}}
+        with open(os.path.join(self.sb.root, 'content', 'languages', 'pictures', 'scenes.areas.json'), 'w', encoding='utf-8') as fh:
+            json.dump(areas, fh)
+        with open(os.path.join(self.sb.root, 'content', 'languages', 'pictures', 'body.hotspots.json'), 'w', encoding='utf-8') as fh:
+            json.dump({'picture': 'body', 'parts': {}, 'cards': {'a': 'card-a', 'b': 'card-b'}, 'items': {}}, fh)
+        course = lang_pack.Course('eng', self.sb.root)
+        try:
+            files = course.build()
+        except lang_pack.SpecError as e:
+            return None, '\n'.join(e.problems)
+        return json.loads(files['activity.eng.a01.k1.json']), ''
+
+    def test_a_card_carries_the_clip_of_its_part(self):
+        doc, _ = self.build({'a': 'en-hello', 'b': 'en-bye'})
+        self.assertEqual('cards', doc['answer']['mode'])
+        self.assertEqual(['vo:eng.en_hello', 'vo:eng.en_bye'], [o['clip'] for o in doc['answer']['options']])
+
+    def test_a_card_with_no_clip_in_the_item_stays_silent(self):
+        doc, _ = self.build(None)
+        self.assertTrue(all('clip' not in o for o in doc['answer']['options']))
+
+    def test_a_clip_for_a_part_that_is_no_option_is_named(self):
+        _, problems = self.build({'a': 'en-hello', 'zz': 'en-bye'})
+        self.assertIn('"partClips" names "zz"', problems)
+
+
+class NonWordTest(Case):
+    """What is no word to meet: a story page, a count, a place sentence and a carrier (module note of tools/lang_met_before.py)."""
+
+    def setUp(self):
+        super().setUp()
+        Fixture.CLIPS = dict(Fixture.CLIPS, f='en-owl', s='en-pig')
+        self.addCleanup(Fixture.CLIPS.pop, 'f')
+        self.addCleanup(Fixture.CLIPS.pop, 's')
+        self.sb.pictures += ['f', 's', 'drum-strip-1', 'drum-strip-2', 'place-cat-on-box']
+        # The owl is named as a word by an item that no lesson plays, so only its role in the lesson decides whether it is asked.
+        self.sb.unit['items'].append(self.sb.tap('x1', 'en-hello', 'a', 'f'))
+
+    def play(self, *items, meet=None):
+        """Adds [items] to the unit and to the Find part of the lesson."""
+        self.sb.unit['items'] += list(items)
+        self.sb.unit['lessons'][0]['find'] += [i['id'] for i in items]
+        if meet:
+            self.sb.unit['lessons'][0]['meet'] = meet
+
+    def not_met(self):
+        return sorted(f.where for f in self.sb.findings() if f.rule == 'not-met')
+
+    def test_the_control_a_word_asked_before_its_meet_screen_is_refused(self):
+        self.play(self.sb.tap('q1', 'en-owl', 'a', 'b'))
+        self.assertEqual(['eng.a01.q1'], self.not_met())
+
+    def test_the_narration_of_a_story_page_is_no_word(self):
+        story = {'id': 's1', 'kind': 'story', 'mode': 'listen', 'frame': 'he-tap', 'rep': 'story',
+                 'pages': [{'picture': 'c', 'clips': ['en-owl']}, {'picture': 'd', 'clips': ['en-cat']}]}
+        self.sb.unit['items'].append(story)
+        self.play(self.sb.tap('q1', 'en-owl', 'a', 'b'))
+        self.assertEqual([], self.not_met())
+
+    def test_the_clip_of_an_option_whose_picture_is_a_story_page_is_no_word(self):
+        story = {'id': 's1', 'kind': 'story', 'mode': 'listen', 'frame': 'he-tap', 'rep': 'story',
+                 'pages': [{'picture': 'f', 'clips': ['en-cat']}, {'picture': 's', 'clips': ['en-dog']}]}
+        self.sb.unit['items'].append(story)
+        self.play(self.sb.tap('q1', 'en-hello', 'f', 's'))  # which page came first? (the pictures are the pages)
+        self.assertEqual([], self.not_met())
+
+    def test_the_count_of_a_beat_strip_is_no_word_and_a_strip_needs_no_clip(self):
+        strips = {'id': 'q1', 'kind': 'tap', 'target': 'en-hello',
+                  'options': [{'pic': 'drum-strip-2', 'clip': 'en-owl'}, {'pic': 'drum-strip-1', 'clip': 'en-pig'}],
+                  'right': 'drum-strip-2', 'wrong': {'drum-strip-1': 'sem'}}
+        silent = {'id': 'q2', 'kind': 'tap', 'target': 'en-bye', 'options': ['drum-strip-1', 'drum-strip-2'], 'right': 'drum-strip-1',
+                  'wrong': {'drum-strip-2': 'sem'}}
+        self.play(strips, silent)
+        self.assertEqual([], self.not_met())
+        self.assertNotIn('unnamed', self.sb.rules())
+
+    def test_the_clip_of_a_place_scene_is_no_word_wherever_else_it_is_used(self):
+        scene = {'id': 'q1', 'kind': 'tap', 'target': 'en-owl',
+                 'options': [{'pic': 'place-cat-on-box', 'clip': 'en-owl'}, {'pic': 'a', 'clip': 'en-hello'}],
+                 'right': 'place-cat-on-box', 'wrong': {'a': 'sem'}}
+        self.play(scene)
+        self.assertEqual([], self.not_met())
+
+    def test_a_prompt_that_no_option_says_and_no_meet_screen_teaches_is_a_carrier(self):
+        self.play(self.sb.tap('q1', 'en-dog', 'a', 'b'))  # en-dog is named nowhere in the course
+        self.assertEqual([], self.not_met())
+
+    def test_a_chunk_that_a_meet_screen_teaches_is_a_word_and_is_held_to_the_rule(self):
+        # The Meet screen of en-dog stands after the item that asks it: the question is no carrier any more.
+        self.sb.unit['items'] += [self.sb.tap('d1', 'en-dog', 'd', 'a'), self.sb.tap('d2', 'en-dog', 'd', 'a')]
+        self.play(self.sb.tap('q1', 'en-dog', 'a', 'b'), meet=[['en-hello', 'en-bye'], {'words': ['en-dog', 'en-pig'], 'before': 'd1'}])
+        self.sb.unit['lessons'][0]['find'] += ['d1', 'd2']
+        self.assertIn('eng.a01.q1', self.not_met())
+
+    def test_a_command_names_its_word_with_asks_and_counts_as_a_find(self):
+        command = {'id': 'd1', 'kind': 'listen_do', 'mode': 'buttons', 'frame': 'he-tap', 'picture': 'a', 'target': 'en-bye',
+                   'asks': 'en-hello', 'options': [{'pic': 'a', 'clip': 'en-hello'}, {'pic': 'b', 'clip': 'en-bye'}], 'right': 'a',
+                   'wrong': {'b': 'sem'}}
+        self.sb.unit['lessons'][0]['find'] = ['f1', 'f2', 'f4']  # hello has one Find: f1
+        self.assertIn('find-count', self.sb.rules())
+        self.play(command)  # the command adds the second Find of hello
+        self.assertNotIn('find-count', self.sb.rules())
+
+    def test_asked_reads_asks_before_the_prompt_and_the_right_option(self):
+        doc = {'template': 'listen_do', 'asks': 'vo:eng.en_eyes', 'prompt': {'target': 'vo:eng.en_touch_eyes'},
+               'answer': {'type': 'choice', 'correct': 'o1', 'options': [{'id': 'o1', 'sprite': 'asset:body_eyes'}]}}
+        scored, target, options = lang_met_before.asked(doc)
+        self.assertEqual((True, 'vo:eng.en_eyes', [('o1', None, 'asset:body_eyes')]), (scored, target, options))
 
 
 if __name__ == '__main__':

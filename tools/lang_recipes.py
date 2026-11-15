@@ -251,11 +251,22 @@ class Recipes(Talk, More, Print):
             return None
         return options, (correct if len(correct) > 1 or item.get('letters') else correct[0]), [f for _, f in parsed], names
 
-    def asks_where(self, item, faces):
+    def asks_where(self, item, faces, correct):
         """Does a wrong tap on this picture choice say "and where is ...?" (frame section 2.3, LS01 "what a tap says")? The course has the
-        line (`defaults.where`), the item names its word and is no reverse check, and every option is a picture that names its own word."""
-        return bool(self.defaults.get('where') and item.get('target') and item.get('check') != 'reverse' and not item.get('letters')
-                    and faces and all('pic' in f and 'clip' in f for f in faces))
+        line (`defaults.where`), the item is no reverse check, every option is a picture that names its own word, and the item's `target` is
+        the clip of the right option itself: "and where is" plus the target must say the word the child has to find. A question ("is it a
+        cat?", "what is this?", "who is this?"), a sentence or a syllable clip as the target would put the wrong words after "where is", so
+        such an item keeps the first-error lines of its tags and its hint picture."""
+        if not (self.defaults.get('where') and item.get('target') and item.get('check') != 'reverse' and not item.get('letters')
+                and faces and all('pic' in f and 'clip' in f for f in faces)):
+            return False
+        right = faces[int(correct[1:]) - 1] if isinstance(correct, str) and re.fullmatch(r'o\d+', correct) else None
+        return right is not None and self.same_word(item['target'], right['clip'])
+
+    @staticmethod
+    def same_word(a, b):
+        """Are two clip names one word (the slow version of a clip says the same word)?"""
+        return re.sub(r'[-_]slow$', '', a) == re.sub(r'[-_]slow$', '', b)
 
     def tag_ids(self, options):
         out = []
@@ -305,7 +316,7 @@ class Recipes(Talk, More, Print):
                 alt_text = {2: 'שְׁתֵּי אֶפְשָׁרֻיּוֹת', 3: 'שָׁלוֹשׁ אֶפְשָׁרֻיּוֹת'}.get(len(options), alt_text)
         doc = self.head(sk, sid, aid, item, where, 'tap_answer', version='1.4' if item.get('letters') else None, alt=alt_text,
                         choices=len(options))
-        ask_where = self.asks_where(item, faces)
+        ask_where = self.asks_where(item, faces, correct)
         if ask_where:
             # The first wrong tap says "and where is ...?" and shows no hint picture (frame section 2.3).
             answer['askWhere'] = True
@@ -411,11 +422,17 @@ class Recipes(Talk, More, Print):
         return rect(rects[0]) if len(rects) == 1 else [rect(r) for r in rects]
 
     def hot_options(self, item, sid, where, picture, mode, raw, right, wrong):
-        """Hotspots (or cards of the parts) of a picture: options named by their part; a part's place is read from the picture's map."""
+        """Hotspots (or cards of the parts) of a picture: options named by their part; a part's place is read from the picture's map. A card
+        names its word when touched if the item's `partClips` gives the part's clip ({"eyes": "en-eyes"}): a close-up card is a picture of a word
+        like any picture of a Find, and the rule "met before asked" wants every picture to say its word."""
         if not 2 <= len(raw) <= 3:
             self.problem(where, 'a Band A command has 2 or 3 options (it has %d)' % len(raw))
             return None
         right = right or raw[0]
+        clips = item.get('partClips') or {}
+        for key in clips:
+            if key not in raw:
+                self.problem(where, '"partClips" names "%s", which is not an option of this item' % key)
         options, correct = [], None
         shown = self.hot_show(item, picture, raw)
         mode_cards = shown == 'cards'
@@ -437,6 +454,8 @@ class Recipes(Talk, More, Print):
                     card = key
                 entry['sprite'] = self.asset(card, where)
             entry['label'] = self.part_label(picture, key)
+            if key in clips:
+                entry['clip'] = self.clip(clips[key], where)
             entry['at'] = self.at_of(rects)
             if tag:
                 entry['misconception'] = tag

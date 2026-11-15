@@ -62,15 +62,36 @@
     },
     "incorrect": [
       {
-        "when": "default",
-        "vo": "vo:heb.fb_where",
+        "when": "misconception:heb.ol.story_seen",
+        "vo": "vo:heb.fb_story_seen",
         "caption": [
           {
             "t": "he",
-            "v": "וְאֵיפֹה"
+            "v": "מַה שָּׁאַלְנוּ?"
           }
         ],
         "target": "vo:heb.heb_a_s2_p2"
+      },
+      {
+        "when": "misconception:heb.ol.story_world",
+        "vo": "vo:heb.fb_story_world",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִרְאֶה מַה קָּרָה בַּסִּפּוּר שֶׁלָּנוּ."
+          }
+        ],
+        "target": "vo:heb.heb_a_s2_p2"
+      },
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
       }
     ],
     "unsure": {
@@ -148,7 +169,6 @@
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true,
-    "askWhere": true
+    "unsureAllowed": true
   }
 }

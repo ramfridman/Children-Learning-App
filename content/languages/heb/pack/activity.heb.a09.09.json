@@ -62,15 +62,36 @@
     },
     "incorrect": [
       {
-        "when": "default",
-        "vo": "vo:heb.fb_where",
+        "when": "misconception:heb.pa.blend_first",
+        "vo": "vo:heb.fb_soundalike",
         "caption": [
           {
             "t": "he",
-            "v": "וְאֵיפֹה"
+            "v": "שִׁמְעוּ עַד הַסּוֹף."
           }
         ],
         "target": "vo:heb.heb_a_u_atalef"
+      },
+      {
+        "when": "misconception:heb.ol.sem",
+        "vo": "vo:heb.fb_sem",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה דּוֹמֶה. בּוֹאוּ נִשְׁמַע שׁוּב."
+          }
+        ],
+        "target": "vo:heb.heb_a_u_atalef"
+      },
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
       }
     ],
     "unsure": {
@@ -149,7 +170,6 @@
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true,
-    "askWhere": true
+    "unsureAllowed": true
   }
 }

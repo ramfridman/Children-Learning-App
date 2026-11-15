@@ -264,8 +264,11 @@ void main() {
         profileId: 'kid',
         record: (AttemptRecord r) async {},
       );
-      for (final Activity a in c.items) {
-        expect((a as TapAnswerActivity).ownName, isFalse);
+      // The lesson opens and closes with a thing to do (a step that is never scored); its choices are the own-name items.
+      final List<TapAnswerActivity> choices = c.items.whereType<TapAnswerActivity>().toList();
+      expect(choices, hasLength(2));
+      for (final TapAnswerActivity a in choices) {
+        expect(a.ownName, isFalse);
         expect(a.options.every((ChoiceOption o) => o.text != null), isTrue);
       }
       c.dispose();
@@ -282,6 +285,9 @@ void main() {
         record: (AttemptRecord r) async => rows.add(r),
         personalise: OwnName(childName: 'נועה', companionName: 'ניצי').apply,
       );
+      while (c.current is! TapAnswerActivity) {
+        c.next(); // the thing to do that opens the lesson
+      }
       final TapAnswerActivity a = c.current as TapAnswerActivity;
       final String wrong = a.options.firstWhere((ChoiceOption o) => o.id != a.correctId).id;
       await c.chooseOption(wrong);
@@ -497,7 +503,11 @@ void main() {
         await waitFor(t, 2200);
         expect(find.byType(LessonScreen), findsOneWidget);
         expect(t.takeException(), isNull);
-        // the first item is the guided step: the child's name, printed without nikud, and one other name
+        // the lesson opens with a thing to do ("done"); the first choice after it is the guided step
+        await t.tap(find.byKey(const Key('do-done')));
+        await waitFor(t, 2200);
+        expect(t.takeException(), isNull);
+        // the first choice is the guided step: the child's name, printed without nikud, and one other name
         expect(find.text('נעה'), findsOneWidget);
         expect(find.text('נֹעָה'), findsNothing, reason: 'the name on a tile is printed with no nikud');
         await t.pumpWidget(const SizedBox());

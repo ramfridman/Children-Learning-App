@@ -94,6 +94,13 @@
       "review": "text-ready"
     },
     {
+      "id": "fb-blend-last",
+      "vo": "vo:heb.fb_blend_last",
+      "he": "שִׁמְעוּ מֵהַהַתְחָלָה.",
+      "voice": "שמעו מההתחלה.",
+      "review": "text-ready"
+    },
+    {
       "id": "fb-prep",
       "vo": "vo:heb.fb_prep",
       "he": "שִׁמְעוּ אֵיפֹה:",

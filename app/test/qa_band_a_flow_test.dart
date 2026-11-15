@@ -16,7 +16,7 @@ import 'package:nitznutz/parent/language_settings.dart';
 import 'package:nitznutz/play/lesson_screen.dart';
 
 import '../tool/pack_builder_lib.dart';
-import 'language_pilot_test.dart' show passTeachScreens, playPlacement, playUse;
+import 'language_pilot_test.dart' show passToChoice, playLesson, playPlacement;
 import 'support/app_harness.dart';
 import 'support/course_flow.dart';
 import 'support/course_history.dart';
@@ -40,12 +40,6 @@ class _Shots extends GoldenFileComparator {
   @override
   Future<void> update(Uri golden, Uint8List imageBytes) => compare(imageBytes, golden);
 }
-
-const Map<String, ({int items, int teach})> _first = <String, ({int items, int teach})>{
-  'eng': (items: 4, teach: 2),
-  'heb': (items: 4, teach: 0),
-  'rus': (items: 3, teach: 4),
-};
 
 void main() {
   final String? shots = Platform.environment['NN_SHOTS'];
@@ -103,25 +97,21 @@ void main() {
           await tester.tap(find.byKey(const Key('course-play')));
           await settle(tester);
           expect(find.byType(LessonScreen), findsOneWidget);
-          final ({int items, int teach}) f = _first[course]!;
-          if (shots != null && f.teach > 0) {
+          if (shots != null) {
+            // The first screen of the lesson: a Meet screen (English, Russian) or a story (Hebrew).
             await expectLater(
               find.byType(MaterialApp),
               matchesGoldenFile('flow_${course}_${b.key}_3teach.png'),
             );
           }
-          await passTeachScreens(tester, f.teach);
-          for (int i = 0; i < f.items; i++) {
-            expect(find.byKey(const Key('option-o1')), findsOneWidget, reason: 'item ${i + 1} is on screen');
-            if (i == 0 && shots != null) {
-              await expectLater(
-                find.byType(MaterialApp),
-                matchesGoldenFile('flow_${course}_${b.key}_4first.png'),
-              );
-            }
-            await answer(tester);
+          await passToChoice(tester);
+          if (shots != null) {
+            await expectLater(
+              find.byType(MaterialApp),
+              matchesGoldenFile('flow_${course}_${b.key}_4first.png'),
+            );
           }
-          await playUse(tester, course);
+          await playLesson(tester);
           expect(find.byKey(const Key('lesson-celebration')), findsOneWidget);
           if (shots != null) {
             await expectLater(

@@ -37,6 +37,7 @@ import { spec as pushToken } from "./push-token-register/handler.ts";
 import { spec as pushTokenRemove } from "./push-token-remove/handler.ts";
 import { spec as settingsGet } from "./settings-get/handler.ts";
 import {
+  checkRules,
   LANGUAGE_COURSES,
   LANGUAGE_QUESTIONNAIRE,
   LANGUAGE_SWITCHES,
@@ -775,12 +776,29 @@ Deno.test("settings-put: the document is bounded in bytes, so what the gateway t
     }
   }
   const full = {
-    eng: { on: true, voice: true, personal: false, oralOnly: true, band: 2, q: { knowsLetters: "some" } },
-    heb: { on: true, voice: true, personal: false, readCheck: true, band: 0 },
+    eng: {
+      on: true,
+      voice: true,
+      personal: false,
+      placement: true,
+      oralOnly: true,
+      band: 2,
+      q: { understands: "most", knowsLetters: "some" },
+    },
+    heb: {
+      on: true,
+      voice: true,
+      personal: false,
+      placement: true,
+      readCheck: true,
+      band: 0,
+      q: { knowsLetters: "reads" },
+    },
     rus: {
       on: true,
       voice: true,
       personal: false,
+      placement: true,
       lettersBefore5: true,
       stress: "off",
       route: "heritage",
@@ -804,6 +822,41 @@ Deno.test("settings-put: the document is bounded in bytes, so what the gateway t
   const both = await put({ ribbons, languages });
   assert.equal(both.status, 400);
   assert.equal(MAX_RULES_BYTES, 10_000);
+});
+
+Deno.test("settings-put: the pgTAP worst-case document is accepted by the gateway and is still the largest it takes (SEC-L7-2)", async () => {
+  const sql = await Deno.readTextFile(
+    new URL("../../supabase/tests/database/10_language_settings.test.sql", import.meta.url),
+  );
+  const literal = sql.match(/\$doc\$(\{.*\})\$doc\$::jsonb/s);
+  if (!literal) throw new Error("the document is in the pgTAP file between $doc$ marks");
+  const rules = JSON.parse(literal[1]) as Record<
+    string,
+    Record<string, Record<string, Record<string, unknown>>>
+  >;
+  const bytes = new TextEncoder().encode(JSON.stringify(rules)).length;
+  assert.deepEqual(checkRules(rules), rules, "the gateway takes it");
+  assert.ok(
+    bytes <= MAX_RULES_BYTES && bytes >= MAX_RULES_BYTES - 300,
+    `the largest document: ${bytes} bytes of ${MAX_RULES_BYTES}`,
+  );
+  // Every field the settings have at its maximum: six children, three courses, each switch of the table, each answer of the questionnaire.
+  const children = Object.keys(rules.languages);
+  assert.equal(children.length, MAX_LANGUAGE_CHILDREN);
+  assert.deepEqual(Object.keys(rules.looks).sort(), [...children].sort());
+  for (const id of children) {
+    for (const course of LANGUAGE_COURSES) {
+      const set = rules.languages[id][course];
+      for (const [name, sw] of Object.entries(LANGUAGE_SWITCHES)) {
+        if (sw.courses.includes(course)) assert.ok(name in set, `${id} ${course} has ${name}`);
+      }
+      assert.deepEqual(
+        Object.keys(set.q as Record<string, unknown>).sort(),
+        Object.keys(LANGUAGE_QUESTIONNAIRE[course]).sort(),
+        `${id} ${course} answers every question`,
+      );
+    }
+  }
 });
 
 Deno.test("settings-put: the look letter of each child travels in the rules as A, B or C, equal to testvectors/profile-sync.json", async () => {

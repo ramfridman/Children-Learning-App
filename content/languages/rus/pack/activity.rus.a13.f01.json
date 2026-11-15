@@ -63,14 +63,13 @@
     "incorrect": [
       {
         "when": "default",
-        "vo": "vo:rus.f43",
+        "vo": "vo:rus.he_fb_check",
         "caption": [
           {
             "t": "he",
-            "v": "וְאֵיפֹה"
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
           }
-        ],
-        "target": "vo:rus.ch_gde_mjach"
+        ]
       }
     ],
     "unsure": {
@@ -142,7 +141,6 @@
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true,
-    "askWhere": true
+    "unsureAllowed": true
   }
 }
