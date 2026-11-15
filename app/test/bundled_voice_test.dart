@@ -46,7 +46,7 @@ void main() {
           'assets/characters/voice-nitzi-2-2.0.0.nnpack',
           'assets/characters/voice-nitzi-9-2.0.0.nnpack',
           'assets/characters/char-nitzi-1.0.0.nnpack',
-          'assets/packs/starter-0.11.0.nnpack',
+          'assets/packs/starter-0.12.0.nnpack',
         ]);
         expect(found.map((BundledVoicePack v) => v.packId), <String>[
           'voice-nitzi',

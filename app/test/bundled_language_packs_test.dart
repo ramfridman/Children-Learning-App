@@ -22,6 +22,12 @@ import '../tool/pack_builder_lib.dart';
 import 'support/pack_fixtures.dart';
 
 const String _languages = '../content/languages';
+
+/// The version the language sources say (every course has the same), so a pack bump does not touch this test.
+final String _v =
+    (jsonDecode(File('$_languages/eng/pack/pack.json').readAsStringSync())
+            as Map<String, Object?>)['version']!
+        as String;
 const String _kid = 'child-bundle-0001';
 
 /// The bundle as a test sees it: the files by asset path, and how often each was read.
@@ -63,7 +69,7 @@ void main() {
     key = await newTestKey();
     built = <String, Uint8List>{
       for (final String c in Course.languages)
-        'assets/packs/lang-$c-0.1.0.nnpack': (await buildPack(languageSource(c, _languages), key)).bytes,
+        'assets/packs/lang-$c-$_v.nnpack': (await buildPack(languageSource(c, _languages), key)).bytes,
     };
   });
 
@@ -127,7 +133,7 @@ void main() {
       final Map<String, PackContent> packs = await load(b, <String>['eng']);
       expect(packs.keys, <String>['eng']);
       expect(packs['eng']!.packId, 'lang-eng');
-      expect(b.reads, <String>['assets/packs/lang-eng-0.1.0.nnpack']);
+      expect(b.reads, <String>['assets/packs/lang-eng-$_v.nnpack']);
       expect(await repo.installedLanguages(), <String>['eng']);
     });
 
@@ -156,21 +162,21 @@ void main() {
         if (e is File) e.copySync('${src.path}${Platform.pathSeparator}${e.uri.pathSegments.last}');
       }
       final File pack = File('${src.path}${Platform.pathSeparator}pack.json');
-      pack.writeAsStringSync(pack.readAsStringSync().replaceFirst('"0.1.0"', '"0.2.0"'));
+      pack.writeAsStringSync(pack.readAsStringSync().replaceFirst('"$_v"', '"98.0.0"'));
       await installer.install((await buildPack(src, key)).bytes);
 
       final _Bundle old = _Bundle(built);
       final Map<String, PackContent> packs = await load(old, <String>['eng']);
-      expect(old.reads, isEmpty, reason: 'the installed 0.2.0 is newer than the bundled 0.1.0');
+      expect(old.reads, isEmpty, reason: 'the installed 98.0.0 is newer than the bundled $_v');
       expect(packs['eng'], isNotNull);
-      expect((await installer.registry.find('lang-eng'))!.version, '0.2.0');
+      expect((await installer.registry.find('lang-eng'))!.version, '98.0.0');
 
-      pack.writeAsStringSync(pack.readAsStringSync().replaceFirst('"0.2.0"', '"0.3.0"'));
+      pack.writeAsStringSync(pack.readAsStringSync().replaceFirst('"98.0.0"', '"99.0.0"'));
       final _Bundle newer = _Bundle(<String, Uint8List>{
-        'assets/packs/lang-eng-0.3.0.nnpack': (await buildPack(src, key)).bytes,
+        'assets/packs/lang-eng-99.0.0.nnpack': (await buildPack(src, key)).bytes,
       });
       await load(newer, <String>['eng']);
-      expect((await installer.registry.find('lang-eng'))!.version, '0.3.0');
+      expect((await installer.registry.find('lang-eng'))!.version, '99.0.0');
       expect(Directory('${installer.root.path}${Platform.pathSeparator}lang-eng').listSync().length, 1);
     });
 
@@ -178,20 +184,20 @@ void main() {
       final _Bundle b = _Bundle(built);
       await load(b, <String>['eng']);
       final File skill = File(
-        '${installer.packDir('lang-eng', '0.1.0').path}${Platform.pathSeparator}skill.ENG-A-01.json',
+        '${installer.packDir('lang-eng', _v).path}${Platform.pathSeparator}skill.ENG-A-01.json',
       );
       skill.writeAsStringSync('${skill.readAsStringSync()} ');
       b.reads.clear();
       final Map<String, PackContent> packs = await load(b, <String>['eng']);
       expect(packs.keys, <String>['eng'], reason: 'repaired');
-      expect(b.reads, <String>['assets/packs/lang-eng-0.1.0.nnpack']);
+      expect(b.reads, <String>['assets/packs/lang-eng-$_v.nnpack']);
     });
 
     test('a bundled pack signed by a stranger is left out, and the other courses are not hurt', () async {
       final PackKey stranger = await newTestKey();
       final _Bundle b = _Bundle(<String, Uint8List>{
         ...built,
-        'assets/packs/lang-eng-0.1.0.nnpack': (await buildPack(
+        'assets/packs/lang-eng-$_v.nnpack': (await buildPack(
           languageSource('eng', _languages),
           stranger,
         )).bytes,
@@ -203,7 +209,7 @@ void main() {
 
     test('a bundled file that is not a pack at all changes nothing', () async {
       final _Bundle b = _Bundle(<String, Uint8List>{
-        'assets/packs/lang-rus-0.1.0.nnpack': Uint8List.fromList(<int>[1, 2, 3]),
+        'assets/packs/lang-rus-$_v.nnpack': Uint8List.fromList(<int>[1, 2, 3]),
       });
       expect(await load(b, <String>['rus']), isEmpty);
     });
@@ -227,7 +233,7 @@ void main() {
     test('an installed copy that cannot be read back, and a bundle that cannot be read to repair it, leave the other course (SEC-BA-4)', () async {
       final _Bundle b = _Bundle(built);
       await load(b, <String>['eng', 'heb']);
-      File('${installer.packDir('lang-eng', '0.1.0').path}${Platform.pathSeparator}skill.ENG-A-01.json')
+      File('${installer.packDir('lang-eng', _v).path}${Platform.pathSeparator}skill.ENG-A-01.json')
           .deleteSync();
       Future<Uint8List> read(String asset) async => throw StateError('the asset cannot be read');
       final Map<String, PackContent> packs = await repo.languagePacks(
@@ -241,7 +247,7 @@ void main() {
     test('a pack under the wrong name cannot stand for another course', () async {
       // The file says rus, the pack says eng: the installer installs the pack it proved (lang-eng), and the rus slot stays empty.
       final _Bundle b = _Bundle(<String, Uint8List>{
-        'assets/packs/lang-rus-0.1.0.nnpack': built['assets/packs/lang-eng-0.1.0.nnpack']!,
+        'assets/packs/lang-rus-$_v.nnpack': built['assets/packs/lang-eng-$_v.nnpack']!,
       });
       final Map<String, PackContent> packs = await load(b, <String>['rus']);
       expect(packs.containsKey('rus'), isFalse);
@@ -280,7 +286,7 @@ void main() {
       final Map<String, PackContent> packs = await c.read(languagePacksProvider.future);
       expect(packs.keys, <String>['eng']);
       expect(c.read(languagesAvailableProvider(_kid)), <String>['eng']);
-      expect(bundle.reads, <String>['assets/packs/lang-eng-0.1.0.nnpack']);
+      expect(bundle.reads, <String>['assets/packs/lang-eng-$_v.nnpack']);
     });
 
     test('another switch of a language does not read the packs again', () async {

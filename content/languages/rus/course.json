@@ -1,7 +1,7 @@
 {
   "course": "rus",
   "pack": {
-    "version": "0.1.0",
+    "version": "1.0.0",
     "minAppVersion": "0.5.0"
   },
   "note": "RUS-1 Band A (docs/languages/russian/band-a-content.md): the skills, items and lessons the generator can express (LS01 tap) are in units/; the items that wait for a recipe (LS08, LS09, LS10, LS11, LS12, LS03 drum, count_tap, audio options, yes / no, same / different) are kept as data in each unit's \"waiting\" list, and the three skills that have no expressible item (A-11, A-15, A-16) in pending/. The lines f01 to f40 are those of section 2, text-ready from the hebrew-text-editor (2026-11-03); new lines are needs-editor. Text only: every clip is pending.",

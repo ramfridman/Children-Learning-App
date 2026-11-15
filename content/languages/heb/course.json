@@ -1,7 +1,7 @@
 {
   "course": "heb",
   "pack": {
-    "version": "0.1.0",
+    "version": "1.0.0",
     "minAppVersion": "0.5.0"
   },
   "note": "HEB-1 Band A (docs/languages/hebrew/band-a-content.md): every item the generator can express today (LS01 tap), the placement, the tags. Items that wait for a template recipe or a picture are in units/pending/ (not read by the generator). Text only: every clip is pending. Lines copied from pronunciation.csv keep its review mark; new lines and joined lines are needs-editor. L7-6 (2026-11-14): `everyday` lists the words a Hebrew-speaking child of 3 knows (frame 3.5.1) and the forms of a taught word (the plural סִירוֹת, an everyday word's own form). A story page (replayed after the story was heard), a place sentence, a drum strip's count and a syllable string are no words: tools/lang_met_before.py knows them from the pack, so they are not listed. The eleven new words (story words and verbs) are taught by Meet pages and are not in the list.",

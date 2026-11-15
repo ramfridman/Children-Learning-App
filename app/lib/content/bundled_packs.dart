@@ -3,7 +3,7 @@ import 'capabilities.dart' show compareSemver;
 
 /// The version of the starter pack that ships in the app: the one line to change at a pack bump (with `version` in
 /// `content/starter/pack.json`, which a test compares it to). The file is `assets/packs/starter-<version>.nnpack`.
-const String bundledStarterVersion = '0.11.0';
+const String bundledStarterVersion = '0.12.0';
 
 /// The asset path of the bundled starter pack.
 const String bundledStarterAsset = 'assets/packs/starter-$bundledStarterVersion.nnpack';

@@ -1,6 +1,6 @@
 {
   "course": "eng",
-  "pack": {"version": "0.1.0", "minAppVersion": "0.5.0"},
+  "pack": {"version": "1.0.0", "minAppVersion": "0.5.0"},
   "metBefore": "enforce",
   "puppetPrefixes": ["en-pip-", "en-whats-your-", "en-how-", "en-i-like-", "en-im-", "en-this-is-", "en-who-"],
   "note": "ENG-1 Band A (ENG-A-01 to A-17), text only (every clip pending). The lines are those of docs/languages/english/band-a-content.md section 2 (text-ready, by the hebrew-text-editor) and the teacher's new lines (needs-editor); the English clips are rows of docs/languages/english/pronunciation.csv. Items of templates that have no recipe yet are written in each unit's \"waiting\" list and in waiting/ (not in the pack).",
