@@ -72,8 +72,14 @@ void main() {
         ]..sort(),
         <String>['heb.print-1', 'heb.print-2'],
       );
-      expect(heb.lessons['heb.print-1']!.itemIds, <String>['heb.a12.01', 'heb.a12.02', 'heb.a12.03']);
-      expect(heb.lessons['heb.print-2']!.itemIds, <String>['heb.a12.04', 'heb.a12.05']);
+      // Each lesson ends with the child saying a page they have followed (the Use part, L7-6): the zone items and the follow items come first.
+      expect(heb.lessons['heb.print-1']!.itemIds, <String>[
+        'heb.a12.01',
+        'heb.a12.02',
+        'heb.a12.03',
+        'heb.a12.say-pr2',
+      ]);
+      expect(heb.lessons['heb.print-2']!.itemIds, <String>['heb.a12.04', 'heb.a12.05', 'heb.a12.say-pr1']);
       for (final String id in <String>['01', '02', '03', '06']) {
         expect(item(id).mode, 'zones', reason: id);
       }

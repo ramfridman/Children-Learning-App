@@ -15,8 +15,9 @@
     "RUS-A-17"
   ],
   "items": [
-    "rus.a17.c04",
-    "rus.a17.c05"
+    "rus.a17.c03",
+    "rus.a17.01",
+    "rus.a17.02"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -28,5 +29,5 @@
       }
     ]
   },
-  "sequence": 59
+  "sequence": 80
 }

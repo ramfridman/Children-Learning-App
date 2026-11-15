@@ -140,6 +140,7 @@
         "id": "o1",
         "sprite": "asset:apple",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_yabloko",
         "at": {
           "x": 0.02,
           "y": 0.05,
@@ -149,9 +150,10 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:pear",
+        "sprite": "asset:milk",
         "label": "תְּמוּנָה",
-        "misconception": "rus.lis.sem",
+        "clip": "vo:rus.w_moloko",
+        "misconception": "rus.voc.sound",
         "at": {
           "x": 0.02,
           "y": 0.355,
@@ -161,9 +163,10 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:milk",
+        "sprite": "asset:banana",
         "label": "תְּמוּנָה",
-        "misconception": "rus.voc.sound",
+        "clip": "vo:rus.w_banan",
+        "misconception": "rus.lis.sem",
         "at": {
           "x": 0.02,
           "y": 0.66,

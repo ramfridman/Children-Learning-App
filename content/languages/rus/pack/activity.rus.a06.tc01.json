@@ -94,8 +94,8 @@
       "красный"
     ],
     "foils": [
-      "синий",
-      "жёлтый"
+      "жёлтый",
+      "синий"
     ],
     "clip": "vo:rus.w_krasnyj",
     "heard": {
@@ -117,6 +117,30 @@
         }
       ],
       "target": "vo:rus.w_krasnyj"
+    },
+    "meet": {
+      "position": 0,
+      "size": 3,
+      "opener": {
+        "vo": "vo:rus.f44",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת."
+          }
+        ]
+      },
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: אָדֹם"
+          }
+        ],
+        "target": "vo:rus.gl_adom"
+      },
+      "written": "красный"
     }
   },
   "answer": {

@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_banan"
@@ -94,8 +94,8 @@
       "банан"
     ],
     "foils": [
-      "яблоко",
-      "груша"
+      "печенье",
+      "яблоко"
     ],
     "clip": "vo:rus.w_banan",
     "heard": {
@@ -117,6 +117,31 @@
         }
       ],
       "target": "vo:rus.w_banan"
+    },
+    "meet": {
+      "position": 2,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:cookie",
+          "clip": "vo:rus.w_pechenje"
+        },
+        {
+          "sprite": "asset:apple",
+          "clip": "vo:rus.w_yabloko"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: בָּנָנָה"
+          }
+        ],
+        "target": "vo:rus.gl_banana"
+      },
+      "written": "банан"
     }
   },
   "answer": {

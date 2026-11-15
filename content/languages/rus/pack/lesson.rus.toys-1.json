@@ -15,11 +15,15 @@
     "RUS-A-08"
   ],
   "items": [
+    "rus.a08.f01",
+    "rus.a08.f02",
+    "rus.a08.f03",
     "rus.a08.01",
     "rus.a08.02",
     "rus.a08.03",
-    "rus.a08.04",
-    "rus.a08.05"
+    "rus.a08.11",
+    "rus.a08.s01",
+    "rus.a08.s06"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -31,15 +35,13 @@
       }
     ]
   },
-  "sequence": 31,
+  "sequence": 41,
   "teach": [
     {
       "items": [
         "rus.a08.tc01",
         "rus.a08.tc02",
-        "rus.a08.tc03",
-        "rus.a08.tc04",
-        "rus.a08.tc05"
+        "rus.a08.tc03"
       ],
       "routes": [
         "new"

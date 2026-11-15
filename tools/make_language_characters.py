@@ -7,7 +7,7 @@ Writes docs/design/languages/characters_model_sheet.png (rendered by headless Ch
 folder; nothing else is written). The sheet shows:
   Mika, the friend of the English and Russian courses: front, side, happy, thinking, a soft frown (no tear).
   Pip, the English puppet and host (the budgerigar of host_eng.svg): front (the door host), side, three expressions.
-  Sasha (Са́ша), the Russian puppet and host (the giraffe of host_rus.svg): front (the door host), side, three expressions.
+  Gosha (Го́ша), the Russian puppet and host (the giraffe of host_rus.svg): front (the door host), side, three expressions.
   The one family of all three courses: everyone in a row from the front and from the side, each face in the three
   expressions, and how the same people make the many family shapes of the personal turns (frame.md 5.2: two parents,
   one parent, grandparents, siblings; pets and "someone else" are their own cards).
@@ -15,7 +15,7 @@ folder; nothing else is written). The sheet shows:
 
 Style: the project's cast (design/assets: the avatars and the Hero Squad) for the people: flat shapes, big dark eyes with a
 white spark, pink cheeks, a small smile, round soft limbs; with the thin ink outline of the approved Languages objects,
-because the people stand next to those objects in the same activities. Pip and Sasha keep the look of their door art
+because the people stand next to those objects in the same activities. Pip and Gosha keep the look of their door art
 (no outline, big ringed eyes). No text in any picture, no franchise look, no real person.
 
 Mika: about 5, gender-neutral (short dark curls, a plain yellow T-shirt and teal shorts, bare feet so feet and toes read,
@@ -29,7 +29,7 @@ References looked at on 2026-11-03 (proportions and poses; the people are our ow
 5 is about 110 cm, of 9 about 133 cm, an adult about 165 to 175 cm, a toddler about 85 cm; the head is about a fifth of
 a 5-year-old's height and an eighth of an adult's, here exaggerated to the cast's big-head proportions);
 the cast's own boards (design/assets/avatar-*.svg, hero-*.svg) for faces and limbs; the hosts (tools/make_languages_art.py
-and its references: Wikipedia Budgerigar and Giraffe, with their lead photographs) for Pip and Sasha; for a budgerigar
+and its references: Wikipedia Budgerigar and Giraffe, with their lead photographs) for Pip and Gosha; for a budgerigar
 in profile, the Wikipedia Budgerigar photographs (the long tail, the round head, the hooked beak with the cere above).
 """
 import os
@@ -352,7 +352,7 @@ def shadow(rx, ry=7):
     return '<ellipse cx="0" cy="0" rx="%s" ry="%s" fill="%s" opacity="0.12"/>' % (f(rx), f(ry), INK)
 
 
-# ---- Pip (the budgerigar) and Sasha (the giraffe), in the look of their door art -----------------------------------
+# ---- Pip (the budgerigar) and Gosha (the giraffe), in the look of their door art -----------------------------------
 
 PIP = dict(green='#6CC24A', green_d='#4E9F33', belly='#93D96B', yellow='#FFD93D', face='#E9C22C', cheek='#5B6FD6',
            cere='#4F8FE8', beak='#9A9C86', tail='#3E6FD9', wing='#3C7F2A', feet='#8EA3C4')
@@ -462,7 +462,7 @@ GIR = dict(base='#F8D9A0', patch='#D9823B', line='#FCEBC8', mane='#B8612A', tuft
            ear_in='#F4C2B4', eye='#3B2C85')
 
 
-def sasha_side():
+def gosha_side():
     c = GIR
     out = ['<ellipse cx="270" cy="470" rx="140" ry="12" fill="%s" opacity="0.12"/>' % INK]
     out.append('<path d="M 400 330 Q 432 352 428 392" fill="none" stroke="%s" stroke-width="8" stroke-linecap="round"/>' % c['body'])
@@ -492,7 +492,7 @@ def sasha_side():
     return out
 
 
-def sasha_head(expr):
+def gosha_head(expr):
     c = GIR
     out = ['<path d="M 214 512 L 226 300 Q 256 280 286 300 L 298 512 Z" fill="%s"/>' % c['body']]
     out += ['<ellipse cx="%d" cy="%d" rx="12" ry="10" fill="%s"/>' % (x, y, c['patch']) for x, y in ((246, 380), (268, 440), (244, 490))]
@@ -592,11 +592,11 @@ def build(tmp):
     put('pip-side', svg(pip_side(), (0, 0, 512, 512)))
     for e in ('happy', 'think', 'frown'):
         put('pip-' + e, svg(pip_head(e), (16, 0, 496, 512)))
-    shutil.copy(os.path.join(LANG, 'host_rus.svg'), os.path.join(tmp, 'sasha-front.svg'))
-    pieces['sasha-front'] = os.path.join(tmp, 'sasha-front.svg')
-    put('sasha-side', svg(sasha_side(), (0, 0, 512, 512)))
+    shutil.copy(os.path.join(LANG, 'host_rus.svg'), os.path.join(tmp, 'gosha-front.svg'))
+    pieces['gosha-front'] = os.path.join(tmp, 'gosha-front.svg')
+    put('gosha-side', svg(gosha_side(), (0, 0, 512, 512)))
     for e in ('happy', 'think', 'frown'):
-        put('sasha-' + e, svg(sasha_head(e), (40, 0, 480, 512)))
+        put('gosha-' + e, svg(gosha_head(e), (40, 0, 480, 512)))
     put('family-front', lineup('front'))
     put('family-side', lineup('side'))
     for sp in FAMILY:
@@ -624,7 +624,7 @@ def html(pieces, cards):
                 ['mika-front', 'mika-side', 'mika-happy', 'mika-think', 'mika-frown'], ['front', 'side'] + exprs)
     body += row('Pip, the English puppet and host (a budgerigar)', ['pip-front', 'pip-side', 'pip-happy', 'pip-think', 'pip-frown'],
                 ['front (the door host)', 'side'] + exprs)
-    body += row('Sasha (Са́ша), the Russian puppet and host (a giraffe)', ['sasha-front', 'sasha-side', 'sasha-happy', 'sasha-think', 'sasha-frown'],
+    body += row('Gosha (Го́ша), the Russian puppet and host (a giraffe)', ['gosha-front', 'gosha-side', 'gosha-happy', 'gosha-think', 'gosha-frown'],
                 ['front (the door host)', 'side'] + exprs)
     body += '<h2>The family of all three courses, front and side (grandfather, grandmother, father, mother, sister, brother, Mika, the baby)</h2>'
     body += '<div class="row">%s</div><div class="row">%s</div>' % (img('family-front', 1180, 250, 'w'), img('family-side', 1180, 250, 'w'))
@@ -638,7 +638,7 @@ def html(pieces, cards):
     body += '<h2>The same people make the family shapes of the personal turns (frame 5.2; pets and "someone else" are their own cards)</h2>'
     body += '<div class="row">%s</div>' % ''.join('<div class="cell">%s<span>%s</span></div>' % (img(c, 270, 230, 'k'), c.replace('card-', '').replace('-', ' '))
                                                   for c in cards)
-    small = ['mika-front', 'pip-front', 'pip-happy', 'pip-think', 'pip-frown', 'sasha-front'] + [sp['id'] + '-small' for sp in FAMILY if sp['id'] != 'mika']
+    small = ['mika-front', 'pip-front', 'pip-happy', 'pip-think', 'pip-frown', 'gosha-front'] + [sp['id'] + '-small' for sp in FAMILY if sp['id'] != 'mika']
     body += '<h2>At 64 px</h2><div class="row">%s</div>' % ''.join(img(n, 64, cls='s') for n in small)
     return ('<html><body style="margin:0;padding:16px;background:#FFF6E8;width:1240px;font:14px sans-serif;color:#2B2350">'
             '<style>h1{font-size:22px;margin:4px 0 8px}h2{font-size:15px;margin:18px 0 6px}.row{display:flex;flex-wrap:wrap;gap:10px}'

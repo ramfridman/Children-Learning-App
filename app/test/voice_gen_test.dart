@@ -535,7 +535,7 @@ void main() {
 
     final int total = _lines.fold<int>(0, (int s, SpokenLine l) => s + l.text.runes.length);
 
-    Future<BuiltPack> run(Keyboard kb) => generateGated(
+    Future<List<BuiltPack>> run(Keyboard kb) => generateGated(
       characterId: 'nitzi',
       lines: _lines,
       profile: _v4,
@@ -576,10 +576,10 @@ void main() {
     });
 
     test('goes ahead with the right number, and a second run with nothing new asks for nothing', () async {
-      final BuiltPack built = await run(FakeKeyboard(typed: <String>['$total']));
+      final List<BuiltPack> built = await run(FakeKeyboard(typed: <String>['$total']));
       expect(server.requests.length, 3);
       expect(synths, 1);
-      await verifyPack(built.bytes, publicKey: key.publicKey);
+      await verifyPack(built.single.bytes, publicKey: key.publicKey);
       final FakeKeyboard again = FakeKeyboard();
       await run(again);
       expect(again.reads, 0, reason: 'nothing to pay for, nothing to type');
@@ -976,8 +976,20 @@ void main() {
       'no paid path takes the count from the command line, and the voice is made only after the typed count',
       () {
         expect(cli, isNot(contains("_option(args, '--confirm-chars')")));
-        final String gated = lib.substring(lib.indexOf('Future<BuiltPack> generateGated('));
+        final int start = lib.indexOf('Future<List<BuiltPack>> generateGated(');
+        expect(
+          start,
+          isNot(-1),
+          reason: 'the guard must find the gate; if the signature changed, change it here',
+        );
+        final String gated = lib.substring(
+          start,
+          lib.indexOf('/// The voice ids of each part, from the part of each voice id.', start),
+        );
+        expect(gated.indexOf('requireTyped('), isNot(-1));
         expect(gated.indexOf('requireTyped('), lessThan(gated.indexOf('synth()')));
+        expect(gated.indexOf('requireTyped('), lessThan(gated.indexOf('generateVoiceParts(')));
+        expect(gated.indexOf('requireTyped('), lessThan(gated.indexOf('generateVoicePack(')));
         final String run = audition.substring(audition.indexOf('Future<List<File>> runAudition('));
         expect(run.indexOf('requireTerminal('), lessThan(run.indexOf('write(plan.describe')));
         expect(run.indexOf('requireTyped('), lessThan(run.indexOf('synth()')));

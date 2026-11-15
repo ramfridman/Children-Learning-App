@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_3",
+      "vo": "vo:eng.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "יָפֶה מְאֹד!"
+          "v": "כֵּן!"
         }
       ]
     },
@@ -122,18 +122,21 @@
       {
         "id": "o1",
         "sprite": "asset:cat",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_cat"
       },
       {
         "id": "o2",
         "sprite": "asset:duck",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_duck",
         "misconception": "eng.lis.story_recall"
       },
       {
         "id": "o3",
         "sprite": "asset:dog",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_dog",
         "misconception": "eng.lis.story_recall"
       }
     ],

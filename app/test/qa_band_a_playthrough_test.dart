@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/content/pack_verify.dart';
 import 'package:nitznutz/engine/course.dart';
+import 'package:nitznutz/play/first_meeting.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
 
 import '../tool/pack_builder_lib.dart';
@@ -156,8 +157,12 @@ void main() {
               final LessonController unsure = start(lesson, route, i);
               final int before = written.length;
               await unsure.unsure();
-              if (written.length != before + 1 || written.last.result != 'unsure') {
-                problems.add('$where: not sure writes ${written.length - before} rows');
+              // The first meeting with a word is no evidence (L7-3): after its Meet screen even "not sure" leaves nothing.
+              final FirstMeeting met = FirstMeeting();
+              probe.items.take(i).forEach(met.met);
+              final int rows = met.asks(a) ? 0 : 1;
+              if (written.length != before + rows || (rows == 1 && written.last.result != 'unsure')) {
+                problems.add('$where: not sure writes ${written.length - before} rows, want $rows');
               }
               if (unsure.errors != 0) problems.add('$where: not sure counted as a mistake');
             } catch (e, st) {

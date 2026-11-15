@@ -15,10 +15,11 @@
     "HEB-A-04"
   ],
   "items": [
+    "heb.a04.say-p6",
     "heb.a04.05",
-    "heb.a04.06",
     "heb.a04.07",
-    "heb.a04.08"
+    "heb.a04.01",
+    "heb.a04.02"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +31,5 @@
       }
     ]
   },
-  "sequence": 10
+  "sequence": 70
 }

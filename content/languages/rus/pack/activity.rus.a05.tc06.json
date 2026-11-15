@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_5",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_korova"
@@ -94,8 +94,8 @@
       "корова"
     ],
     "foils": [
-      "лошадь",
-      "свинья"
+      "мышь",
+      "птица"
     ],
     "clip": "vo:rus.w_korova",
     "heard": {
@@ -117,6 +117,31 @@
         }
       ],
       "target": "vo:rus.w_korova"
+    },
+    "meet": {
+      "position": 2,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:mouse",
+          "clip": "vo:rus.w_mysh"
+        },
+        {
+          "sprite": "asset:bird",
+          "clip": "vo:rus.w_ptitsa"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: פָּרָה"
+          }
+        ],
+        "target": "vo:rus.gl_para"
+      },
+      "written": "корова"
     }
   },
   "answer": {

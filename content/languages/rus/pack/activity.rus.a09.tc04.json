@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_futbolka",
+    "target": "vo:rus.w_kurtka",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
-      "target": "vo:rus.w_futbolka"
+      "target": "vo:rus.w_kurtka"
     },
     "incorrect": [
       {
@@ -80,24 +80,24 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_futbolka"
+      "target": "vo:rus.w_kurtka"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:shirt"
+      "sprite": "asset:jacket"
     }
   },
   "say": {
     "forms": [
-      "футболка"
-    ],
-    "foils": [
-      "шапка",
       "куртка"
     ],
-    "clip": "vo:rus.w_futbolka",
+    "foils": [
+      "штаны",
+      "ботинки"
+    ],
+    "clip": "vo:rus.w_kurtka",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_futbolka"
+      "target": "vo:rus.w_kurtka"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +116,31 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_futbolka"
+      "target": "vo:rus.w_kurtka"
+    },
+    "meet": {
+      "position": 0,
+      "size": 3,
+      "opener": {
+        "vo": "vo:rus.f44",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת."
+          }
+        ]
+      },
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: מְעִיל"
+          }
+        ],
+        "target": "vo:rus.gl_meil"
+      },
+      "written": "куртка"
     }
   },
   "answer": {

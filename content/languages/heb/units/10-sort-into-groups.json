@@ -2,7 +2,7 @@
   "skill": {
     "id": "HEB-A-03",
     "strand": "ol",
-    "title": "ממיין תמונות לקבוצות פשוטות (בעלי חיים, אוכל, בגדים)",
+    "title": "ממיינים תמונות לקבוצות פשוטות (בעלי חיים, אוכל, בגדים)",
     "prerequisites": [
       {
         "skill": "HEB-A-02"
@@ -181,9 +181,18 @@
         "front": "elephant"
       },
       "options": [
-        "ball-yellow",
-        "dog",
-        "chick"
+        {
+          "pic": "ball-yellow",
+          "clip": "heb-a-w-kadur"
+        },
+        {
+          "pic": "dog",
+          "clip": "heb-a-w-kelev"
+        },
+        {
+          "pic": "chick",
+          "clip": "heb-a-w-efroach"
+        }
       ],
       "wrong": {
         "dog": "cat_look",
@@ -208,9 +217,18 @@
         "front": "banana"
       },
       "options": [
-        "plate",
-        "pizza",
-        "pita"
+        {
+          "pic": "plate",
+          "clip": "heb-a-w-tsalachat"
+        },
+        {
+          "pic": "pizza",
+          "clip": "heb-a-w-pitsa"
+        },
+        {
+          "pic": "pita",
+          "clip": "heb-a-w-pita"
+        }
       ],
       "wrong": {
         "pizza": "cat_look",
@@ -235,9 +253,18 @@
         "front": "shirt"
       },
       "options": [
-        "towel-striped",
-        "swimsuit",
-        "shirt-striped"
+        {
+          "pic": "towel-striped",
+          "clip": "heb-a-w-magevet"
+        },
+        {
+          "pic": "swimsuit",
+          "clip": "heb-a-w-beged-yam"
+        },
+        {
+          "pic": "shirt-striped",
+          "clip": "heb-a-w-chultsa"
+        }
       ],
       "wrong": {
         "swimsuit": "cat_look",
@@ -262,9 +289,18 @@
         "front": "elephant"
       },
       "options": [
-        "wool",
-        "cat",
-        "sheep"
+        {
+          "pic": "wool",
+          "clip": "heb-a-w-kadur-tsemer"
+        },
+        {
+          "pic": "cat",
+          "clip": "heb-a-w-chatul"
+        },
+        {
+          "pic": "sheep",
+          "clip": "heb-a-w-kivsa"
+        }
       ],
       "wrong": {
         "cat": "cat_look",
@@ -339,9 +375,18 @@
         "front": "elephant"
       },
       "options": [
-        "kite-butterfly",
-        "horse",
-        "butterfly"
+        {
+          "pic": "kite-butterfly",
+          "clip": "heb-a-w-afifon"
+        },
+        {
+          "pic": "horse",
+          "clip": "heb-a-w-sus"
+        },
+        {
+          "pic": "butterfly",
+          "clip": "heb-a-w-parpar"
+        }
       ],
       "wrong": {
         "horse": "cat_look",
@@ -354,25 +399,153 @@
         }
       },
       "ladder": "HL-WORD"
+    },
+    {
+      "id": "ch-g1",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-bin-animals",
+        "heb-a-w-pil",
+        "heb-a-w-chatul",
+        "heb-a-bin-food",
+        "heb-a-w-banana",
+        "heb-a-w-lechem"
+      ],
+      "pictures": [
+        {
+          "pic": "elephant",
+          "clip": "heb-a-w-pil"
+        },
+        {
+          "pic": "cat",
+          "clip": "heb-a-w-chatul"
+        },
+        {
+          "pic": "banana",
+          "clip": "heb-a-w-banana"
+        },
+        {
+          "pic": "bread",
+          "clip": "heb-a-w-lechem"
+        }
+      ]
+    },
+    {
+      "id": "ch-g2",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-bin-clothes",
+        "heb-a-w-chultsa",
+        "heb-a-w-kova",
+        "heb-a-w-sandal"
+      ],
+      "pictures": [
+        {
+          "pic": "shirt",
+          "clip": "heb-a-w-chultsa"
+        },
+        {
+          "pic": "hat",
+          "clip": "heb-a-w-kova"
+        },
+        {
+          "pic": "sandal",
+          "clip": "heb-a-w-sandal"
+        }
+      ]
+    },
+    {
+      "id": "ch-g3",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-bin-animals",
+        "heb-a-w-sus",
+        "heb-a-w-tarnegol",
+        "heb-a-bin-food",
+        "heb-a-w-uga",
+        "heb-a-w-tut"
+      ],
+      "pictures": [
+        {
+          "pic": "horse",
+          "clip": "heb-a-w-sus"
+        },
+        {
+          "pic": "rooster",
+          "clip": "heb-a-w-tarnegol"
+        },
+        {
+          "pic": "cake",
+          "clip": "heb-a-w-uga"
+        },
+        {
+          "pic": "strawberry",
+          "clip": "heb-a-w-tut"
+        }
+      ]
+    },
+    {
+      "id": "ch-g4",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-bin-clothes",
+        "heb-a-w-simla",
+        "heb-a-w-sinar",
+        "heb-a-bin-food",
+        "heb-a-w-pita",
+        "heb-a-w-gezer"
+      ],
+      "pictures": [
+        {
+          "pic": "dress",
+          "clip": "heb-a-w-simla"
+        },
+        {
+          "pic": "apron",
+          "clip": "heb-a-w-sinar"
+        },
+        {
+          "pic": "pita",
+          "clip": "heb-a-w-pita"
+        },
+        {
+          "pic": "carrot",
+          "clip": "heb-a-w-gezer"
+        }
+      ]
     }
   ],
   "lessons": [
     {
       "id": "groups-1",
       "title": "כׇּל דָּבָר בַּמָּקוֹם שֶׁלּוֹ",
+      "sequence": 210,
       "items": [
+        "ch-g1",
         "01",
         "02",
-        "03"
+        "03",
+        "ch-g2"
       ]
     },
     {
       "id": "groups-2",
       "title": "מָה הִגִּיעַ בְּטָעוּת?",
+      "sequence": 220,
       "items": [
+        "ch-g3",
         "04",
         "05",
-        "06"
+        "06",
+        "ch-g4"
       ]
     }
   ]

@@ -15,9 +15,14 @@
     "RUS-A-04"
   ],
   "items": [
+    "rus.a04.f01",
+    "rus.a04.f02",
+    "rus.a04.f03",
     "rus.a04.01",
-    "rus.a04.02",
-    "rus.a04.03"
+    "rus.a04.03",
+    "rus.a04.05",
+    "rus.a04.08",
+    "rus.a04.e02"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,7 +34,7 @@
       }
     ]
   },
-  "sequence": 11,
+  "sequence": 15,
   "teach": [
     {
       "items": [

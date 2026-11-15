@@ -897,7 +897,107 @@ Every row is `text-ready`, waiting for the owner, except 18 rows held by the old
    - `חָבֵר בָּנָה קֶשֶׁת, וְיֵשׁ בָּהּ טָעוּת` (COL-B-06) → `בַּקֶּשֶׁת יֵשׁ טָעוּת` (`בּוֹנִים` would sound like the instruction of the build items).
    The answers, the cells and the hints are untouched, so nothing these items check changes. Generators: `tools/band_b.py`, `tools/band_b2.py`; the hand-edited `content/units/counting-hills.json`.
 
-## 14. B-29 steps 5 to 9: the age and school-stage texts (editor's pass, 2026-11-08)
+## 14. The full sweep before the children try the app (hebrew-text-editor, 2026-11-08)
+
+Owner's request (2026-11-08): a full read of every text for grammar and vocabulary. Nothing was voiced or paid. Sources were changed, `tools/regen_content.py`
+and `tools/lang_pack.py all` run, both review tables refreshed, `hebrew_voice_review` run last (the voice director's `VOICE_SWEEP_KEEP` and `COURSE_KEEP` reach `voice_text`).
+
+### 14.1 What was read, and how
+
+| Area | Read | How |
+|---|---|---|
+| Starter pack, all lands, Bands A, B, C1 | 4,624 distinct Hebrew strings (about 25,700 places; 14,408 table rows); 3,418 of them pointed child text | machine scans of all of them (vav, מָה/מַה, article after ב, written words, repeated words, final letters, missing nikud, end marks, the 24-word limit, noun and adjective agreement), then **every one of the 1,891 shapes** (numbers, nouns and colours folded) read as a sentence, grouped by activity; all 449 words that occur once; all lesson titles and celebrations; all 111 skill titles; all 51 tag parent texts and home activities |
+| `he.dart` | 551 strings | all read; the 17 NOT READ rows (L5 screens: box, wheel, strip, slide, merge, change, division) are `text-ready` |
+| Core lines 27, tutor lines 66 (57 distinct) | all | read; no change |
+| Language courses | heb 107 lines, eng 242, rus 130 (`course.json`); the 31 + 6 + 12 tag parent texts and home activities; all Hebrew strings of the three packs (361, 181 and 119 distinct); the 12 new Russian gloss lines, `f41`, the Band A frames, the skill and lesson titles | all read |
+| Lexicon 118 words, alert lists 649 | spelling only (as before) | no change |
+
+### 14.2 What was changed
+
+Starter pack and app (rows `text-ready`, waiting for the owner; the generator or the unit was fixed, never the pack by hand):
+
+| Was | Now | Why |
+|---|---|---|
+| `יֵשׁ אַרְבַּע צְפַרְדְּעִים. לוֹקְחִים אֶחָד.` (b15.matha02.1) | `…לוֹקְחִים אַחַת.` | the number agrees with the noun just named (`k_mtake` in `author.py` now takes the noun's gender) |
+| `חָבֵר כָּתַב מִסְפָּרִים מֵאוֹתוֹ טוּר…` (numc09.9, .10) | `כָּתוּבִים כָּאן מִסְפָּרִים…` | the owner's rule of 2026-11-07: no unnamed friend who does something (C1 had missed it) |
+| `אֵיזֶה מִסְפָּר בָּנוּ מֵהַקֻּבִּיּוֹת?` (numc03.20) | `אֵיזֶה מִסְפָּר הַקֻּבִּיּוֹת מַרְאוֹת?` | `בָּנוּ` with no subject reads "they built" |
+| `יְדַעְתֶּם מִי בַּתּוֹר, וְיְדַעְתֶּם מָה זֶה אֶפֶס.` | `…וִידַעְתֶּם מַה זֶּה אֶפֶס.` | vav before yod-shva is `וִי`; `מַה` takes the dagesh before ז |
+| `מַה הָיָה לִפְנֵי שֶׁהוֹרַדְנוּ?` (mathc02.6 to .10) | `מָה הָיָה…` | `מָה` before ה |
+| `…וְהַכַּדּוּר מִתַּחְתָּיו.` (shpa08.2, shp.where.under) | `…מִתַּחַת לוֹ.` | the spoken form |
+| `כַּמָּה שֶׁבִּקְשׁוּ` (skill NUM-A-06 and two celebrations) and `שֶׁבִּקַּשְׁנוּ` | skill: `כַּמָּה שֶׁמְּבַקְשִׁים` (as NUM-B-05); celebrations: `כַּמָּה שֶׁבִּקַּשְׁתִּי` (as the items) | "they asked" had no subject; one voice for the request |
+| `הַרְבֵּה חֲפָצִים` (lessons many-things and many-things-more, the celebration, skill NUM-B-04) | `הַרְבֵּה דְּבָרִים`, `עֶשְׂרִים דְּבָרִים` | `חֲפָצִים` is adult register (the rule of 2.5 had caught only `הַחֲפָצִים`) |
+| parent text M-CNT-DECADE `אחרי תשע בכל עשרת` | `אחרי התשע בכל עשרה` | `עשרת` is the construct form |
+| `he.dart` `medalExplainerHow`, `medalBugFixerHow` | `בְּקָרוֹב יִהְיֶה אֶפְשָׁר לִזְכּוֹת בָּהּ` | word order |
+| `he.dart` `tutorLogHelp` `ובמקומו נשמעה` | `נשמעת` | tense |
+| `he.dart` `divisionHelp` `איך מצויר חילוק` | `איך מוצג החילוק` | "drawn" is not "shown" |
+
+Two voice ids carried more than one text (the director's blockers); each now says one text. `vo:fb.num_rev.first` is Band A's `הַסִּפְרָה הָרִאשׁוֹנָה אוֹמֶרֶת…`; Band B and C keep `vo:fb.num_rev` with "from the left" (without it the first digit of a number is ambiguous for a reader of Hebrew); the table is `TAG_ID_BY_BAND` in `author.py`. `vo:fb.size` is split into `.pairs` (NUM-A-11, `בּוֹאוּ נַעֲשֶׂה זוּגוֹת: לְכֻלָּם יֵשׁ זוּג?`) and `.count` (NUM-A-07, `בּוֹאוּ נִסְפֹּר כַּמָּה יֵשׁ בְּכׇל קְבוּצָה.`). The two Q2 drafts are now in the pack and `text-ready` (they were `proposed`); the owner still confirms the wording.
+
+Language courses (no master table; `course.json`, the units and `tools/lang_recipes_base.py`):
+- `בַּאֲגוּדָל` became `בָּאֲגוּדָל` (the article takes `בָּ` before א); the alt text `תּוֹף וְתְמוּנָה` became `וּתְמוּנָה` (all three courses).
+- `מָה זֶה?` became `מַה זֶּה?` (the frame `he-ins-its-a`; the English titles `מַה זֶּה?`, `וּמַה זֶּה?`, `מַה יֵּשׁ בַּקֻּפְסָה?`).
+- The Russian glosses `זֹאת אִמָּא` and `זֹאת חֲתוּלָה` became `זוֹ …` (screen and voice).
+- The 13 skill titles of the Hebrew course are in the plural impersonal like every other skill title (`מקשיבים`, `ממיינים`, `מזהים את השם הכתוב של הילד`, `יודעים שקוראים מימין לשמאל, ואיפה נמצאות המילים`; the old `יודע שכתוב קוראים` was garbled).
+- Voice texts of `pass` (`זה בסדר.`, no `!`), `plc-thanks` and `plc-bye` end with a full stop.
+- The director's **48 voice texts** (`docs/audio/release-pronunciation-fixes.csv`, status `to-apply`: `הַקְשִׁיבוּ`, `גְּעוּ`/`וּגְעוּ`, `מִצְאוּ`, `שִׁמְעוּ`, `תּוֹפְפוּ`, `חַבְּרוּ`, `שָׁרָה`, `נִמְחָא`, `לְפִיפּ`) are in `course.json`; the screen texts did not change.
+
+### 14.3 Rules learned (to fold into sections 2 and 3)
+
+1. A conjunctive vav before a letter with a shva is `וּ`, before a yod with a shva `וִי`, before a labial `וּ`.
+2. `בָּ` (not `בַּ`) before א ע ר when the article is there: `בָּאֲגוּדָל`, `בָּאֶמְצַע`; `בַּעֲשָׂרוֹת` (no article) keeps the patah.
+3. `מָה` only before א ה ח ע ר, else `מַה` and the dagesh.
+4. A number that names the noun just said agrees with it, also `אֶחָד / אַחַת` after a list of feminine things.
+5. A request in the past has a subject: `שֶׁבִּקַּשְׁתִּי` (the friend) or the impersonal present.
+6. One voice id says one text (the pack check refuses otherwise); a band that says a tag line differently gets its own id (`TAG_ID_BY_BAND`).
+7. `זֹאת` alone is written Hebrew; the spoken feminine is `זוֹ` (`הַזֹּאת` after a noun is fine).
+The scan of these classes is `SweepGuardsTest` in `tools/test_hebrew_sources.py`.
+
+### 14.4 For the owner (numbered; nothing here was guessed)
+
+1. **The two Q2 drafts** (pairing line, counting line) are now in the pack so that the voice ids are clean. Please confirm or reword (14.2).
+2. **Band A "not" in a skill line**: `S.CS-A-05` child line `מוֹצְאִים אֶת הַשָּׁלָב שֶׁלֹּא שַׁיָּךְ` still has `לֹא` (the approved question says `מָה הִגִּיעַ לְכָאן בְּטָעוּת?`). Proposed: `מוֹצְאִים אֶת הַשָּׁלָב שֶׁבָּא בְּטָעוּת`. Not changed.
+3. **Square and rectangle**: the lesson `rectangle-again` celebration says `הִבְדַּלְתֶּם בֵּין מַלְבֵּן לְרִבּוּעַ` and the adult skill SHP-A-04 says `מבדילים אותו מריבוע`, against your decision that a square is a rectangle. For the curriculum-expert; not changed.
+4. **Left and right in place value**: Band B and C hints say `הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל` and `כּוֹתְבִים … מִשְּׂמֹאל`, while Band B hears no right and left before SHP-B-12. Kept (without it "first" is ambiguous); for the curriculum-expert.
+5. **The balance item `b.mathb13.10`** still says `הַמֹּאזְנַיִם שָׁווֹת` (want `שְׁנֵי הַצְּדָדִים שָׁוִים`) and names the sides right and left: the table already holds the fix (rows `proposed`, D12), waiting for your OK on the sides.
+6. **Spoken idiom kept**: `מַתְחִיל / נִגְמָר אוֹתוֹ דָּבָר` ("starts / ends the same") is colloquial but what gan teachers say (7 places); `נִשְׁאָר עוֹד שָׁלוֹשׁ` (singular verb, bare number) in the "make ten" hints. Say if you want the formal `נִשְׁאֲרוּ`.
+7. The medal name `מְתַקְּנֵי בָּאגִים` and the word `נְדַמְיֵן` (shpb08.9) are adult-ish for ages 3 to 8; kept, your call.
+8. The director's five `open` rows (`המממ…`, `עכשיו תורכם`, `אחר`, `נְנַסֶּה`, em dash against comma) wait for its listening probe; if one fails I reword (`רגע… בואו נבדוק.`). Nothing is changed now.
+
+Pins: `tools/test_hebrew_sources.py` changed-and-proposed rows 18 (was 29: the 11 Q2 drafts are in the pack); rows 15,823 and done-and-changed 1,221 unchanged; `SweepGuardsTest` added (5 tests).
+
+### 14.5 The owner's answers of 2026-11-08 (applied; `owner-approved`)
+
+1. **Probe 09c, no prefixed `בְּעֶשֶׂר`**: the three lines now use `וְכׇל פַּעַם מוֹסִיפִים עֶשֶׂר`. Band B hint 3 (`numb17.1-.6`, shared with the step of two): `הַמִּסְפָּרִים גְּדֵלִים, וְכׇל פַּעַם מוֹסִיפִים עֶשֶׂר. עַכְשָׁו תּוֹרְכֶם.` (the same line with `שְׁתַּיִם` for the step of two, so the two stay alike). Band C hint 2 (`numc09.6-.8`): `בְּטוּר שֶׁל לוּחַ הַמֵּאָה הַמִּסְפָּרִים גְּדֵלִים, וְכׇל פַּעַם מוֹסִיפִים עֶשֶׂר. סִפְרַת הַיְּחִידוֹת לֹא מִשְׁתַּנָּה.` Band C hint 3 (`numc09.9-.10`, 13 words): `כׇּל פַּעַם מוֹסִיפִים עֶשֶׂר, וְסִפְרַת הַיְּחִידוֹת נִשְׁאֶרֶת. אֶחָד מֵהַמִּסְפָּרִים לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם.`
+2. **Probe 10b**: the voice text of the chant `נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִמְחָא כַּפַּיִם עִם כׇּל אֶחָד.` is `נגיד יחד את הסדר בקול, וְנִמְחָא כפיים עם כל אֶחָד.` (`VOICE_SUBS`, this line only; the screen keeps `נֹאמַר`).
+3. **Probe 11a**: `עֲשָׂרוֹת`, `הָעֲשָׂרוֹת`, `בַּעֲשָׂרוֹת`, `לַעֲשָׂרוֹת` stay pointed in the voice text (`VOICE_SWEEP_KEEP`). The 340 spoken rows with them are `owner-approved` for their voice text (`VOICE_APPROVED` in the script: a row that waits for something else keeps its status).
+4. **Q2 lines** `בּוֹאוּ נַעֲשֶׂה זוּגוֹת: לְכֻלָּם יֵשׁ זוּג?` and `בּוֹאוּ נִסְפֹּר כַּמָּה יֵשׁ בְּכׇל קְבוּצָה.` approved as written. `CS-A-05` `שֶׁלֹּא שַׁיָּךְ` stays. **D12 applied**: the balance item `b.mathb13.7-.10` says `הַצַּד שֶׁלְּמַעְלָה קַל יוֹתֵר … עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים` and `בַּצַּד שֶׁלְּמַטָּה … וּבַצַּד שֶׁלְּמַעְלָה` (12 rows).
+5. **The formal forms** (answer to 14.4 item 6 and 7): `מַתְחִיל / נִגְמָר אוֹתוֹ דָּבָר` became `מַתְחִיל / מַתְחִילָה / מַתְחִילוֹת / נִגְמֶרֶת / שֶׁנִּגְמָרוֹת בְּאוֹתוֹ צְלִיל` in the Hebrew course (the sound-rhyme question, the allit feedback, the pairing instruction), the Russian course (3 frames) and the Russian parent text (screen and voice; `אוֹתוֹ דָּבָר, אוֹ לֹא?` "same or not" stays, it is not about a sound). `נִשְׁאָר עוֹד …` became `נִשְׁאֲרוּ עוֹד …` in the 8 make-ten hints. `מְתַקְּנֵי בָּאגִים` became `מְתַקְּנֵי תַּקָּלוֹת`. `בּוֹאוּ נְדַמְיֵן אֶת זֶה` became `בּוֹאוּ נְתָאֵר לְעַצְמֵנוּ אֶת הַצּוּרָה` (7 rows: `shpb08.9`, `x.shpb09.1-.6`).
+
+Pins: `test_hebrew_sources`: done-and-changed rows 1,215 (was 1,221: six rows whose old text needed a correction are now written right by their source), changed-and-proposed 6 (was 18: D12). Rows 15,823. Table: 14,325 text-ready, 740 owner-approved, 109 proposed.
+
+
+### 14.6 The last frame lines of the three language courses, and the Russian puppet (hebrew-text-editor, 2026-11-08)
+
+Nothing was voiced or paid. Sources changed: `docs/languages/russian/pronunciation.csv`, the three `course.json`, `docs/languages/hebrew/pronunciation.csv`
+and `band-a-content.md`, `tools/hebrew_voice_review.py`; then `tools/lang_pack.py all`.
+
+- **The Russian puppet.** `ch-menja-zovut` had `{puppet}`; a clip is voiced once and the voice tool refuses a placeholder. The puppet is a fixed character
+  (Са́ша, the owner, 2026-11-03), so its name is written in the line: shown `Меня зовут Саша.`, said `Меня́ зову́т Са́ша.`, ipa `[mʲɪˈnʲa zɐˈvut ˈsaʂə]`.
+  **2026-11-15:** the owner renamed the puppet Го́ша (גּוֹשָׁה); the line is now shown `Меня зовут Гоша.`, said `Меня́ зову́т Го́ша.`, ipa `[mʲɪˈnʲa zɐˈvut ˈɡoʂə]`.
+  The clip id is unchanged and the pack activity `rus.a01.08` only names the id, so **the Russian pack did not change**. English and Hebrew have no placeholder
+  in any voice-plan text (a test now checks all three plans: `test_course_voice_plans_have_no_placeholder`).
+- **The 45 frame lines that were `needs-editor`** (English 5, Russian 15, Hebrew 25) are read and `text-ready`. Grammar, vocabulary and agreement were right in
+  all of them except one: `וְהַחָתוּל` in the verse `v2-play` is `וְהֶחָתוּל` (the article before ח with a qamats; `pl-3` already had it). That one changes the screen
+  text, so the **Hebrew pack changed (one activity, `activity.heb.a06.02`, two captions) and needs a new owner signature**; the clips `heb-a-v2-open` and `heb-a-v2-full` were written the same.
+- **Voice texts changed (6 Hebrew, 6 Russian):** plain `לשחק` has no sin dot (`plc-bye` is `לְשַׂחֵק`, as the English `he-bye`); the verses keep `בַּסַּל`, `תּוּת`, `עָף`, `לַדֻּבִּי`, `כַּף`,
+  `שָׁטָה`, `תַּק` pointed (rhyme words and words a voice reads another way); Russian `f37` was missing from the director's 48 (`הַקְשִׁיבוּ`). A line that is one bare word
+  (the Russian glosses `בָּצָל.`, `דֻּבִּי.`, `שָׁלוֹם.`, `כּוֹבַע.`, `לְהִתְרָאוֹת.`) keeps its nikud and its end mark, as every English `he-gl-*` does (plain `בצל` is also "in the shade of",
+  plain `דובי` is also the name Dovi). The word that opens a rhyme question (`דָּג. אֵיזוֹ מִלָּה…`) keeps its nikud. These rules are in `course_voice_text()`
+  (`COURSE_LINE_KEEP` is for course lines only; the app's table is untouched: `hebrew_voice_review.py` gives the same 15,823 rows and statuses).
+- **Left as written:** the carrier `הַקְשִׁיבוּ, וְגִרְרוּ לְפִיפּ:` (no object: the colon hands over to the English word, like `בּוֹאוּ נִמְצָא:`); `זו אמא` (the tool's ktiv is `אימא`; both are standard).
+- **The tag rows** (`tags.*.review` in the Hebrew `course.json`, 31 parent texts) still say `needs-editor`; they were read in the sweep of 14.1 and are not frame lines.
+
+## 15. B-29 steps 5 to 9: the age and school-stage texts (editor's pass, 2026-11-08)
 
 The design-director's drafts (`docs/design/b29-steps5-6.md` section 5) and the two the app-developer added (`ageBirthYearSemantics`, `ageStageSemantics`), in `app/lib/strings/he.dart` (commit `b27bb4b8`). All are parent-area, adult, screen-only texts (no nikud, not voiced) except `idleOffer`, which a child sees and, later, hears. The placeholders are unchanged (`stage`, `suggested`, `current`, `next`, `range`, `year`, `child`). Every row is still `needs-editor` (the `Str.review` rule).
 
@@ -925,3 +1025,32 @@ The design-director's drafts (`docs/design/b29-steps5-6.md` section 5) and the t
 2. `septYes` gets `{next}` as the plain stage name (`כן, כיתה ג׳ ומעלה` from grade 2) while the question above says `לכיתה ג׳`. If the code passes `He.stageNamesTo[...]` instead, the button reads `כן, לכיתה ג׳`, which matches the question. Not blocking.
 3. `ageBirthOptional` `(לא חובה)` sits in a form with `גן חובה`; understandable, kept (`(רשות)` is the other choice).
 4. `areaChildSettings` is just `הגדרות` on each child row; a screen reader should add the child's name (semantic label, `ההגדרות של {child}`).
+
+## 15. L7-7: the texts of the re-cut language courses (editor's pass, 2026-11-15)
+
+Scope: every Hebrew line of `content/languages/{eng,heb,rus}/course.json` (all `text-ready` now: 0 `needs-editor` left in the three files), the 14 new rows of `docs/languages/hebrew/pronunciation.csv`, and the lesson titles. The language-course lines are not rows of `hebrew-master.csv` (that table holds the app and the maths, logic and word lands); their record is the `review` field in `course.json` and this section. Nothing voiced or paid. `tools/hebrew_voice_review.py` was **not** edited (the brief of this step forbade it): the words and rule below are for the next person who edits it.
+
+**The Meet carriers, one wording per job in all three courses.** Meaning: `בְּעִבְרִית:` (English `he-hint-hebrew`, Russian `f42`). "And where is": `וְאֵיפֹה` + the target clip (English `he-fb-where`, Russian `f43`, Hebrew `fb-where`; the voice text is `ואיפה`, no colon and no full stop, because the question goes on in the next clip; if the pilot shows the voice falling on it, `ואיפה,` is the first alternative). Together: `בּוֹאוּ נֹאמַר יַחַד.`. Heard: `שָׁמַעְתִּי:`. Hear carrier before a word: the Hebrew course has `מִלָּה חֲדָשָׁה:` (a Hebrew child meets a word new to the course); the Russian `f41` `הַקְשִׁיבוּ:` is the heritage hearing screen's carrier, English has none (L7 §3.1). No course has a Meet **opener** line (`teach.opener` is unset everywhere); if the developer wires one, a proposal: `בּוֹאוּ נַכִּיר מִלִּים חֲדָשׁוֹת.`
+
+**Changes of wording (not only nikud).**
+| Line | Old | New | Why |
+|---|---|---|---|
+| `he-gl-clap` (eng), `gl-michu` (rus) | `מְחִיאַת כַּפַּיִם` / `מִחְאוּ כַּפַּיִם` | `מַחֲאוּ כַּפַּיִם` | the teacher asked: a command, like the other action meanings (`קִפְצוּ`, `שְׁבוּ`). The plural imperative of מחא is `מַחֲאוּ` (pealim.com: מְחָא, מַחֲאִי, **מַחֲאוּ**; the earlier note could not confirm it, and the Russian draft `מִחְאוּ` was wrong). **One English clip is re-voiced** (if the old gloss was voiced). |
+| `name-clap` (heb) | `מַחְאוּ כַּף לְכׇל חֵלֶק…` | `מַחֲאוּ כַּפַּיִם לְכׇל חֵלֶק שֶׁל הַשֵּׁם שֶׁלָּכֶם.` | the pointing (above) and `כַּפַּיִם`, the word a child of 5 knows, not the construct `כַּף` |
+| `name-show` (heb) | `לְכׇל אֶחָד וְאַחַת יֵשׁ שֵׁם…` | `לְכֻלָּנוּ יֵשׁ שֵׁם, וְאֶת הַשֵּׁם כּוֹתְבִים בְּאוֹתִיּוֹת.` | `אֶחָד וְאַחַת` is an adult form; `לְכֻלָּנוּ` is what a child says |
+| `v2-play`, `heb-a-v2-open`, `heb-a-v2-full` (and `band-a-content.md`) | `וְהַחָתוּל` | `וְהֶחָתוּל` | the article before ח with a qamats is `הֶ` (as in `הֶחָתוּל` in `pl-3`) |
+| `gl-zot-ima`, `gl-zot-chatula` (rus) | `זֹאת` | `זוֹ` | the demonstrative the Hebrew course uses (`זוֹ תְּמוּנָה`) |
+| `gl-savta`, `gl-saba` (rus) | `סָבְתָא`, `סַבָּא` | `סַבְתָּא`, `סָבָא` | the same spelling as the English `he-gl-grandma`, `he-gl-grandpa` |
+| `gl-shunar` (rus) | `שונר.` (no nikud) | `שׁוּנָר` | lynx; pointed (last-syllable stress) |
+| `he-ins-its-a`, titles of eng units 11 and 16 | `מָה זֶה?`, `מָה יֵשׁ בַּקֻּפְסָה?` | `מַה זֶּה?`, `מַה יֵּשׁ בַּקֻּפְסָה?` | `מַה` + dagesh before a non-guttural (section 3, line 82) |
+| every Russian gloss that is a word or a short phrase | `אִמָּא.` | `אִמָּא` (no final stop) | the same as the English `he-gl-*`; a sentence (`זוֹ אִמָּא.`), a question (`מִי זֶה?`) and `הִנֵּה הַכַּדּוּר!` keep their mark |
+
+**Voice text.** A single word or short phrase said alone (every gloss) is sent **fully pointed, no full stop**, as the English glosses are: with nothing around it the voice cannot tell `פֶּה` from `פֹּה`, `חָלָב` from `חֵלֶב`, `סֵפֶר` from `סַפָּר`, `גֶּרֶב` from `גַּרְב`; the number words keep their nikud by the standing rule. The 116 Russian glosses had plain voice text; they are now pointed (`gl-sear` `שֵׂעָר`, `gl-simla` `שִׂמְלָה`, `gl-bai` `בַּיי`, `gl-jirafa` `גִ׳ירָפָה`, `gl-migdal-tabaot`, `gl-mikhse`). A gloss that is a sentence goes through `course_voice_text` (`זו אימא.`). Sin-dot words keep their nikud in the Hebrew lines (`שִׂימוּ`, `חַפְּשׂוּ`, `נַעֲשֶׂה`, `לְשַׂחֵק`, which the old voice text had plain). To add to `COURSE_KEEP` in the tool: `מַחֲאוּ`, `סַפְּרוּ` (plain `ספרו` is also "their book" and "they counted"), `קְחוּ`; and a `gloss_voice_text` rule (no final mark means a fragment: fully pointed).
+
+**Read and kept.** The 11 Meet explanations (`m-siach` to `m-soche`: 5 to 12 words, the longest two are two short sentences; the design asks "about 8", so these are in range, none shortened because they are `text-ready` since 2026-11-03 and may be voiced); the 14 clip rows (the drum counts: a bare noun after the number, `שְׁנֵי תֻּפִּים` in the construct, `שְׁלוֹשָׁה`, `אַרְבָּעָה` masculine with `תֻּפִּים`; the place sentences, all pointed correctly, the silly ones (a box on a ball) are the foils of the picture); `say-pr1` `forms`: `הָאַרְנָב וְהַחֲתוּלָה מְשַׂחֲקִים יַחַד` is correct Hebrew and what a child says; the clip keeps `עַכְשָׁו` (the 40-character limit is why the form drops it; a child who echoes the whole clip is matched on the rest). Numbers in the Russian glosses are the feminine counting forms (`שְׁתַּיִם`), as in the English course. Commands are plural (`לְכוּ`, `רוּצוּ`). "Do not over-sanitise": no word was removed (`טִיל`, `לִוְיָתָן`, `שׁוּנָר` stay).
+
+**`Я хочу …` (the three `ch-hochu-*` clips, not glossed, not wired).** The first-person present has a gender (`אֲנִי רוֹצֶה` / `רוֹצָה`), and section 9.1 forbids it. The form to use if the owner wants them glossed: **`בָּא לִי גְּבִינָה`, `בָּא לִי תַּפּוּז`, `בָּא לִי חָלָב`** ("I feel like ..."): no gender, what children say. These clips are not Meet words (no `teachPictures`), so a gloss would only add a hint-2 meaning; left to the teacher and the owner.
+
+**Not changed, questions.** (1) English `en-its-ball`, `en-its-duck`, `en-its-apple` (the Meet chunks "It's a ball") say only the noun (`כַּדּוּר`): `זֶה כַּדּוּר` is what it means, as the Russian `Это мяч.` says; three new lines, about 40 characters. The teacher decides. (2) Not in this brief: the parent texts of L7-2 and L7-8 (`placement.json`, `he.dart`).
+
+**15.1 Follow-up (2026-11-15), the three questions answered yes.** (1) English `en-its-*` (all nine, not only ball, duck, apple) now gloss to a phrase: new lines `he-gl-its-ball` `זֶה כַּדּוּר.`, `-book` `זֶה סֵפֶר.`, `-kite` `זֶה עֲפִיפוֹן.`, `-duck` `זֶה בַּרְוָז.`, `-apple` `זֶה תַּפּוּחַ.`, `-egg` `זוֹ בֵּיצָה.`, `-car` `זוֹ מְכוֹנִית.`, `-boat` `זוֹ סִירָה.`, `-frog` `זוֹ צְפַרְדֵּעַ.` (the pronoun follows the noun's gender; voice text plain except `סֵפֶר`, `בַּרְוָז`). (2) Russian `ch-hochu-*` are glossed: `gl-bali-gvina` `בָּא לִי גְּבִינָה`, `gl-bali-tapuz` `בָּא לִי תַּפּוּז`, `gl-bali-chalav` `בָּא לִי חָלָב` (a fragment: fully pointed, no full stop). (3) The Meet opener: `בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת.` (voice `בואו נלמד מילים חדשות.`; plural "words", because a set has two or three; the orchestrator's "here is a new word" would be wrong for the second and third word), set as `teach.opener` in the three `course.json` (`he-meet-open`, `f44`, `meet-open`). The generator (`lang_meet.py`) and the app (`MeetData.opener`, `meet_session.dart`) already carry it: no code is needed. The four parent strings of L7-8 in `he.dart` are final (the comment says so).

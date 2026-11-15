@@ -131,18 +131,21 @@
       {
         "id": "o1",
         "sprite": "asset:act_clap",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_hlopaj"
       },
       {
         "id": "o2",
         "sprite": "asset:act_jump",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_prygaj",
         "misconception": "rus.voc.sound"
       },
       {
         "id": "o3",
         "sprite": "asset:act_stand",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_vstan",
         "misconception": "rus.lis.sem"
       }
     ],

@@ -122,10 +122,23 @@ TURN = 'עַכְשָׁו תּוֹרְכֶם.'
 HINT_WORDS = 14  # QA-C1-3 (2026-11-07): a hint longer than this covers the answer tiles on a phone
 
 
-def fit(*options):
-    """The first option of at most HINT_WORDS words (a dash is no word); the last must fit."""
+HINT_LETTERS = 56  # B-29 bubble audit (phone SE, text size 1.3): a hint 3 of 56 Hebrew letters fits over the blocks, one of 57 spills
+
+
+def _words(o):
+    return len(o.replace('—', ' ').split())
+
+
+def fit(*options, letters=None):
+    """The first option of at most HINT_WORDS words (a dash is no word); the last must fit. With `letters` (the blocks items,
+    where the bubble stands close over the stage) the first option that also has at most that many Hebrew letters; when none has,
+    the first of at most HINT_WORDS words, as before."""
+    if letters is not None:
+        for o in options:
+            if _words(o) <= HINT_WORDS and sum('א' <= c <= 'ת' for c in o) <= letters:
+                return o
     for o in options:
-        if len(o.replace('—', ' ').split()) <= HINT_WORDS:
+        if _words(o) <= HINT_WORDS:
             return o
     raise AssertionError('no hint of %d words or fewer: %r' % (HINT_WORDS, options[-1]))
 
@@ -565,14 +578,14 @@ def numbers_c1(u):
         ans = col[gap]
         choose(u, 'NUM-C-09', 'אֵלֶּה מִסְפָּרִים מֵאוֹתוֹ טוּר שֶׁל לוּחַ הַמֵּאָה. אֵיזֶה מִסְפָּר חָסֵר?', ans,
                {col[gap - 1] + 1: 'M-HC-ROW', int(str(ans)[::-1]): 'M-NUM-REV'}, i, row=['?' if k == gap else v for k, v in enumerate(col)],
-               h2='בְּטוּר שֶׁל לוּחַ הַמֵּאָה כׇּל מִסְפָּר גָּדוֹל בְּעֶשֶׂר מֵהַמִּסְפָּר שֶׁמֵּעָלָיו. סִפְרַת הַיְּחִידוֹת לֹא מִשְׁתַּנָּה.',
+               h2='בְּטוּר שֶׁל לוּחַ הַמֵּאָה הַמִּסְפָּרִים גְּדֵלִים, וְכׇל פַּעַם מוֹסִיפִים עֶשֶׂר. סִפְרַת הַיְּחִידוֹת לֹא מִשְׁתַּנָּה.',
                h3=fit('%s. %s' % (', '.join(F[v] for v in col), NOW % F[ans]), '%s. %s' % (', '.join(F[v] for v in col), TURN)),
                ok='%s! עֶשֶׂר יוֹתֵר, שׁוּרָה לְמַטָּה.' % F[ans])
     for cells, w in (([5, 15, 25, 36, 45], 3), ([33, 43, 52, 63, 73], 2)):  # read left to right, growing (QA-C1-8)
         right = cells[w - 1] + (cells[1] - cells[0])
         u.act('NUM-C-09', 'spot', cells=['n:%d' % v for v in cells], wrong=w, tag='M-HC-ROW', check='error_spotting', difficulty=0.6,
-              prompt='חָבֵר כָּתַב מִסְפָּרִים מֵאוֹתוֹ טוּר שֶׁל לוּחַ הַמֵּאָה, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?',
-              h3='מִשּׁוּרָה לְשׁוּרָה הַמִּסְפָּר גָּדֵל בְּעֶשֶׂר, וְסִפְרַת הַיְּחִידוֹת נִשְׁאֶרֶת. אֶחָד מֵהַמִּסְפָּרִים לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם.',
+              prompt='כָּתוּבִים כָּאן מִסְפָּרִים מֵאוֹתוֹ טוּר שֶׁל לוּחַ הַמֵּאָה, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?',
+              h3='כׇּל פַּעַם מוֹסִיפִים עֶשֶׂר, וְסִפְרַת הַיְּחִידוֹת נִשְׁאֶרֶת. אֶחָד מֵהַמִּסְפָּרִים לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! כָּאן הָיָה צָרִיךְ לִהְיוֹת %s.' % F[right])
     jump(u, 'NUM-C-09', 20, 40, 23, 10, labels=[20, 30, 40])
     jump(u, 'NUM-C-09', 30, 50, 47, -10, labels=[30, 40, 50])
@@ -665,7 +678,7 @@ def numbers_c1_waiting(u):
         for i, (t, o, wrong, prompt, check) in enumerate([
                 (3, 4, {7: 'M-PV-FACE', 43: 'M-NUM-REV', 304: 'M-PV-ZERO'}, 'כַּמָּה קֻבִּיּוֹת יֵשׁ כָּאן?', 'practice'),
                 (5, 0, {5: 'M-PV-FACE', 500: 'M-PV-ZERO'}, 'כַּמָּה קֻבִּיּוֹת יֵשׁ כָּאן?', 'practice'),
-                (6, 2, {26: 'M-NUM-REV', 602: 'M-PV-ZERO', 8: 'M-PV-FACE'}, 'אֵיזֶה מִסְפָּר בָּנוּ מֵהַקֻּבִּיּוֹת?', 'transfer')]):
+                (6, 2, {26: 'M-NUM-REV', 602: 'M-PV-ZERO', 8: 'M-PV-FACE'}, 'אֵיזֶה מִסְפָּר הַקֻּבִּיּוֹת מַרְאוֹת?', 'transfer')]):
             n = 10 * t + o
             blocks.append(choose(
                 u, 'NUM-C-03', prompt, n, wrong, i, picture={'kind': 'base_ten', 'tens': t, 'ones': o}, tag_lines=RODS,
@@ -761,7 +774,7 @@ def numbers_c1_waiting(u):
                 tags={'b%d' % (10 * a + b): tag for (a, b), tag in wrong}, tag_lines=BLOCK_TILES,
                 **({'check': check, 'difficulty': 0.6} if check else {}),
                 h2='כׇּל מוֹט הוּא עֶשֶׂר, וְכׇל קֻבִּיָּה הִיא אַחַת. סוֹפְרִים קֹדֶם אֶת הַמּוֹטוֹת בַּעֲשָׂרוֹת.',
-                h3=fit('%s: %s. %s' % (F[n], said, NOW % F[n]), '%s: %s. %s' % (F[n], said, TURN)),
+                h3=fit('%s: %s. %s' % (F[n], said, NOW % F[n]), '%s: %s. %s' % (F[n], said, TURN), letters=HINT_LETTERS),
                 correct_text='כֵּן! זֶה %s.' % F[n]))
         # Concrete (the third representation of the core skill): pay with ten-shekel and one-shekel coins. The purse cannot pay the price
         # with fewer tens, so the tens and ones of the price are the only way; counting the coins as one each is M-MONEY-COUNT.
@@ -901,7 +914,7 @@ def math_c1(u):
     for i, (b, a) in enumerate([(6, 9), (4, 8), (5, 9), (3, 8), (2, 9)]):  # ? − b = a
         s = a + b
         choose(u, 'MATH-C-02', 'אֵיזֶה מִסְפָּר חָסֵר?', s, {a - b: 'M-OP-SWAP', a: 'M-EQ-OPER'}, i, row=['?', '-', b, '=', a], check='reverse',
-               h2='מַה הָיָה לִפְנֵי שֶׁהוֹרַדְנוּ? מְחַבְּרִים אֶת מַה שֶּׁנִּשְׁאַר וְאֶת מַה שֶּׁהוֹרַדְנוּ.',
+               h2='מָה הָיָה לִפְנֵי שֶׁהוֹרַדְנוּ? מְחַבְּרִים אֶת מַה שֶּׁנִּשְׁאַר וְאֶת מַה שֶּׁהוֹרַדְנוּ.',
                h3='%s וְעוֹד %s שָׁוֶה %s. %s' % (F[a], F[b], F[s], NOW % F[s]), ok='%s! %s פָּחוֹת %s שָׁוֶה %s.' % (F[s], F[s], F[b], F[a]))
     for (la, lb, r) in [(9, 6, 7), (8, 5, 6)]:  # the balance: 9 + 6 on the left, 7 on the right; add blocks until level (15 − 7)
         u.act('MATH-C-02', 'scale', mode='balance', left=[('block', la, 1), ('block', lb, 1)], right=[('block', r, 1)], block='block',
@@ -1083,7 +1096,7 @@ def math_c1_waiting(u):
                     'נִשְׁאֲרוּ %s: %s. %s') % ((count, NOW % F[ans]) if op == '+' else (rods(ans // 10), count, NOW % F[ans])),
                    ('סוֹפְרִים אֶת כׇּל הַמּוֹטוֹת בַּעֲשָׂרוֹת: %s. %s' if op == '+' else
                     'נִשְׁאֲרוּ %s: %s. %s') % ((count, TURN) if op == '+' else (rods(ans // 10), count, TURN)),
-                   'סוֹפְרִים בַּעֲשָׂרוֹת: %s. %s' % (count, TURN)),
+                   'סוֹפְרִים בַּעֲשָׂרוֹת: %s. %s' % (count, TURN), letters=HINT_LETTERS),
             ok='%s! %s %s %s שָׁוֶה %s.' % (F[ans], F[a], word(op), F[b], F[ans])))
     drawn_tens = [x['id'] for x in u.d['activities'] if x['skill'] == 'MATH-C-03' and x['kind'] != 'number' and x['id'] not in pictured]
     u.lesson('whole-tens-more', 'עֲשָׂרוֹת בְּמוֹטוֹת', ['MATH-C-03'], drawn_tens[8:] + pictured,

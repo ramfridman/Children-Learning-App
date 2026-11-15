@@ -63,13 +63,14 @@
     "incorrect": [
       {
         "when": "default",
-        "vo": "vo:eng.he_fb_check",
+        "vo": "vo:eng.he_fb_where",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:eng.en_hello"
       }
     ],
     "unsure": {
@@ -128,17 +129,20 @@
       {
         "id": "o1",
         "sprite": "asset:pip_arrive",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_hello"
       },
       {
         "id": "o2",
         "sprite": "asset:pip_leave",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_goodbye",
         "misconception": "eng.lis.sem"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true
+    "unsureAllowed": true,
+    "askWhere": true
   }
 }

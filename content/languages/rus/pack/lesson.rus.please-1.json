@@ -15,9 +15,13 @@
     "RUS-A-14"
   ],
   "items": [
+    "rus.a14.f01",
+    "rus.a14.f02",
+    "rus.a14.10",
+    "rus.a14.10s",
+    "rus.a14.f04",
     "rus.a14.01",
-    "rus.a14.02",
-    "rus.a14.03"
+    "rus.a14.s01"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,5 +33,17 @@
       }
     ]
   },
-  "sequence": 46
+  "sequence": 65,
+  "teach": [
+    {
+      "items": [
+        "rus.a14.tc01",
+        "rus.a14.tc02"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach"
+    }
+  ]
 }

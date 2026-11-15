@@ -8,6 +8,9 @@ import 'schema.dart';
 
 abstract final class Patterns {
   static const String packId = r'[a-z0-9][a-z0-9-]{2,40}';
+  // A character id never ends in `-2` to `-9`: `voice-<id>-N` is part N of a voice, so it must never also be the voice pack
+  // of a character called `<id>-N` (SEC-VP-2).
+  static const String characterId = r'(?!.*-[2-9]$)[a-z0-9][a-z0-9-]{2,40}';
   static const String semver = r'\d{1,3}\.\d{1,3}\.\d{1,3}';
   static const String templateVersion = r'\d{1,2}\.\d{1,2}';
   static const String activityId = r'[a-z0-9][a-z0-9._-]{2,80}';
@@ -129,7 +132,7 @@ const List<String> bands = <String>['A', 'B', 'C'];
 const List<String> lessonDemos = <String>['ten_is_rod'];
 
 /// The parent switches a gate may name (docs/languages/frame.md section 1.4): the English "oral only" keeps its gate closed,
-/// the Russian "letters before 5" opens its gate.
+/// the Russian "letters before 5" opens its gate. ("Letters together with words" is not named: any gate with an `early` set takes it.)
 const List<String> gateSwitchNames = <String>['oralOnly', 'lettersBefore5'];
 
 /// The routes of a Russian child (docs/languages/frame.md section 3.3.7).
@@ -188,7 +191,7 @@ const SString _id = SString(minLength: 3, maxLength: 81, pattern: Patterns.activ
 
 /// Every answer carries its lesson id, and `sync-push` takes at most 40 characters (SEC-12).
 const SString _lessonId = SString(minLength: 3, maxLength: 40, pattern: Patterns.activityId);
-const SString _characterId = SString(minLength: 3, maxLength: 41, pattern: Patterns.packId);
+const SString _characterId = SString(minLength: 3, maxLength: 41, pattern: Patterns.characterId);
 const SString _tag = SString(minLength: 5, maxLength: 36, pattern: Patterns.tag);
 const SString _skill = SString(minLength: 6, maxLength: 14, pattern: Patterns.skillId);
 
@@ -248,6 +251,30 @@ const SObject _spoken = SObject(<String, SField>{
   'vo': SField(_vo),
   'caption': SField(_caption),
   ..._lineExtras,
+});
+
+/// The data of a Meet screen beyond a teach screen (L7-4). `earlier` are the words of the same set met before this one, for the strip at the
+/// side of the card; `opener` is said before the first word of a set only; `hear` is the carrier said before the word; `meaning` is the Hebrew
+/// meaning said once (English and Russian: the carrier "in Hebrew:", then the gloss as the clip after it); `explain` is the Hebrew sentence
+/// that explains the word (the Hebrew course); `focus` is the part of a story picture the word names, as shares of the picture; `written` is
+/// the word as it is printed in the chip once the child's letters are open (the app shows it by its own rule, never the screen itself).
+const SObject _meet = SObject(<String, SField>{
+  'position': SField(SInt(min: 0, max: 2)),
+  'size': SField(SInt(min: 1, max: 6)),
+  'earlier': SField(
+    SArray(
+      SObject(<String, SField>{'sprite': SField(_asset), 'clip': SField(_vo)}),
+      minItems: 1,
+      maxItems: 5,
+    ),
+    required: false,
+  ),
+  'opener': SField(_spoken, required: false),
+  'hear': SField(_spoken, required: false),
+  'meaning': SField(_spoken, required: false),
+  'explain': SField(_spoken, required: false),
+  'focus': SField(SArray(SNum(min: 0, max: 1), minItems: 4, maxItems: 4), required: false),
+  'written': SField(SString(minLength: 1, maxLength: 40), required: false),
 });
 
 // ---- manifest ----
@@ -491,9 +518,28 @@ const SObject gateSchema = SObject(<String, SField>{
   ),
   // The skills held back until the gate is open.
   'holds': SField(SArray(_skill, minItems: 1, maxItems: 200)),
+  // The gate reads the child's age (in months when known, else the bracket), never the presentation band (L7-8).
   'minAge': SField(SInt(min: 3, max: 8), required: false),
-  'neverUnderBand': SField(SInt(min: 0, max: 2), required: false),
-  'durableBelowBand': SField(SInt(min: 1, max: 2), required: false),
+  // Durable mastery is needed below this age in years; from it on, fresh is enough (the English oral gate: 7).
+  'durableBelowAge': SField(SInt(min: 4, max: 8), required: false),
+  // The early set: what "letters together with words" asks instead of the full lists, and what the child's level and the Russian
+  // "letters before 5" switch still ask (never letters before any words).
+  'early': SField(
+    SObject(<String, SField>{
+      'requires': SField(SArray(_skill, maxItems: 60), required: false),
+      'requireAtLeast': SField(
+        SArray(
+          SObject(<String, SField>{
+            'skills': SField(SArray(_skill, minItems: 2, maxItems: 40)),
+            'count': SField(SInt(min: 1, max: 40)),
+          }),
+          maxItems: 6,
+        ),
+        required: false,
+      ),
+    }),
+    required: false,
+  ),
   'parentSwitch': SField(
     SObject(<String, SField>{
       'name': SField(SEnum(gateSwitchNames)),
@@ -525,12 +571,20 @@ const SObject placementSchema = SObject(<String, SField>{
     SArray(
       SObject(<String, SField>{
         'id': SField(SString(minLength: 1, maxLength: 4, pattern: r'[a-z0-9]{1,4}')),
-        // The strand is offered only when the questionnaire says so and the presentation band is at least `minBand` (eng literacy).
+        // The strand is offered only when the questionnaire says so.
         'offer': SField(
           SObject(<String, SField>{
             'answer': SField(_answerKey, required: false),
             'equals': SField(_answerKey, required: false),
-            'minBand': SField(SInt(min: 0, max: 2), required: false),
+          }),
+          required: false,
+        ),
+        // A strand of letters: when the parent says the child knows letters or reads, and a level from `fromLevel` up is passed at two
+        // thirds or more (before the "minus one"), the gate is marked open: level comes before age (L7-8).
+        'opens': SField(
+          SObject(<String, SField>{
+            'gate': SField(SString(minLength: 5, maxLength: 24, pattern: Patterns.gateId)),
+            'fromLevel': SField(SInt(min: 0, max: 7)),
           }),
           required: false,
         ),
@@ -621,6 +675,8 @@ const SObject lessonSchema = SObject(<String, SField>{
         'items': SField(SArray(_id, minItems: 1, maxItems: 8)),
         'routes': SField(SArray(SEnum(teachRoutes), minItems: 1, maxItems: 2)),
         'mode': SField(SEnum(teachModes), required: false),
+        // The lesson item this set stands in front of (L7-4: a Meet set may stand anywhere in a lesson); none: before the first item.
+        'before': SField(_id, required: false),
       }),
       minItems: 1,
       maxItems: 6,
@@ -1063,6 +1119,9 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
   'purpose': const SField(SEnum(<String>['learn', 'practice', 'probe', 'repair', 'check'])),
   // The misconception this item is built to expose (used by the session builder after a repair).
   'contradicts': const SField(_tag, required: false),
+  // The word the item asks, when its prompt is a phrase and not the word (a command "show me the arms"): the clip of the word, so that
+  // the lesson knows which word the item is about (docs/languages/frame.md section 3.3.10, a word's first meeting is no evidence).
+  'asks': const SField(_vo, required: false),
   'checkType': const SField(
     SEnum(<String>['practice', 'transfer', 'reverse', 'error_spotting', 'explain_back', 'predict']),
   ),
@@ -1284,6 +1343,9 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
             // Which side of a two-way skill this item is, and the item it is paired with in a check (frame section 2.3).
             'pole': const SField(SEnum(poles), required: false),
             'pairWith': const SField(_id, required: false),
+            // A picture choice of a language course whose every picture names its word (L7-4, frame section 2.3): the first wrong tap says the
+            // tapped word, then "and where is ...?" and the target, and the ladder shows no hint picture with it.
+            'askWhere': const SField(SBool(), required: false),
             // What the text tiles are: `letter` (square, large, bold) or `word` (Medium, as wide as the row allows). The text never
             // decides: an item whose options are all one or two letters must say which it is (the validator). Missing is `word`.
             'face': const SField(SEnum(<String>['letter', 'word']), required: false),
@@ -1983,6 +2045,9 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
             required: false,
           ),
           'pictureFirst': SField(_spoken, required: false),
+          // A Meet screen of the four-part lesson (L7-4, docs/design/l7-meet-find.md section 10.1): where it stands in its set, the words of
+          // the set met before it (the strip), the lines of its beats, and the part of the picture the word names.
+          'meet': SField(_meet, required: false),
         }),
       ),
       'answer': const SField(

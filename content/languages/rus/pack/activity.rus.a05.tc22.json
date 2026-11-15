@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_5",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_kit"
@@ -94,7 +94,7 @@
       "кит"
     ],
     "foils": [
-      "кот"
+      "жираф"
     ],
     "clip": "vo:rus.w_kit",
     "heard": {
@@ -116,6 +116,27 @@
         }
       ],
       "target": "vo:rus.w_kit"
+    },
+    "meet": {
+      "position": 1,
+      "size": 2,
+      "earlier": [
+        {
+          "sprite": "asset:giraffe",
+          "clip": "vo:rus.w_zhiraf"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: לִוְיָתָן"
+          }
+        ],
+        "target": "vo:rus.gl_livjatan"
+      },
+      "written": "кит"
     }
   },
   "answer": {

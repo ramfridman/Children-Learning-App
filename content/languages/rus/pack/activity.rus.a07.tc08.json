@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_kasha"
@@ -94,8 +94,8 @@
       "каша"
     ],
     "foils": [
-      "хлеб",
-      "сыр"
+      "суп",
+      "яйцо"
     ],
     "clip": "vo:rus.w_kasha",
     "heard": {
@@ -117,6 +117,27 @@
         }
       ],
       "target": "vo:rus.w_kasha"
+    },
+    "meet": {
+      "position": 1,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:soup",
+          "clip": "vo:rus.w_sup"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: דַּיְסָה"
+          }
+        ],
+        "target": "vo:rus.gl_daysa"
+      },
+      "written": "каша"
     }
   },
   "answer": {

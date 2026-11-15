@@ -15,10 +15,11 @@
     "ENG-A-06"
   ],
   "items": [
-    "eng.a06.i03",
-    "eng.a06.i13",
-    "eng.a06.i14",
-    "eng.a06.e01"
+    "eng.a06.i09",
+    "eng.a06.n18",
+    "eng.a06.e01",
+    "eng.a06.i08",
+    "eng.a06.s03"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +31,5 @@
       }
     ]
   },
-  "sequence": 16
+  "sequence": 21
 }

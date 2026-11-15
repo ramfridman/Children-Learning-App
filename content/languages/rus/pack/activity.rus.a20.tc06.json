@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_2",
+      "vo": "vo:rus.he_fb_right_3",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן!"
+          "v": "יָפֶה מְאֹד!"
         }
       ],
       "target": "vo:rus.w_ris"
@@ -94,8 +94,8 @@
       "рис"
     ],
     "foils": [
-      "лук",
-      "люк"
+      "рысь",
+      "мишка"
     ],
     "clip": "vo:rus.w_ris",
     "heard": {

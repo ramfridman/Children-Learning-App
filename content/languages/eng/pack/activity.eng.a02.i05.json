@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_3",
+      "vo": "vo:eng.he_fb_right_5",
       "caption": [
         {
           "t": "he",
-          "v": "יָפֶה מְאֹד!"
+          "v": "בְּדִיּוּק!"
         }
       ],
       "target": "vo:eng.en_stop"
@@ -63,13 +63,14 @@
     "incorrect": [
       {
         "when": "default",
-        "vo": "vo:eng.he_fb_check",
+        "vo": "vo:eng.he_fb_where",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:eng.en_stop"
       }
     ],
     "unsure": {
@@ -128,23 +129,27 @@
       {
         "id": "o1",
         "sprite": "asset:act_stop",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_stop"
       },
       {
         "id": "o2",
         "sprite": "asset:act_jump",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_jump",
         "misconception": "eng.lis.sem"
       },
       {
         "id": "o3",
         "sprite": "asset:act_wave",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_wave",
         "misconception": "eng.lis.l1_guess"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true
+    "unsureAllowed": true,
+    "askWhere": true
   }
 }

@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_4",
+      "vo": "vo:rus.he_fb_right_5",
       "caption": [
         {
           "t": "he",
-          "v": "מְצָאתֶם!"
+          "v": "בְּדִיּוּק!"
         }
       ],
       "target": "vo:rus.w_spasibo"
@@ -140,6 +140,7 @@
         "id": "o1",
         "sprite": "asset:pencil",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_karandash",
         "at": {
           "x": 0.02,
           "y": 0.05,
@@ -151,6 +152,7 @@
         "id": "o2",
         "sprite": "asset:book",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_kniga",
         "misconception": "rus.lis.sem",
         "at": {
           "x": 0.02,
@@ -163,6 +165,7 @@
         "id": "o3",
         "sprite": "asset:ball",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_mjach",
         "misconception": "rus.lis.sem",
         "at": {
           "x": 0.02,

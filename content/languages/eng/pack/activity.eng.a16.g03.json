@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_7",
+      "vo": "vo:eng.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "הִקְשַׁבְתֶּם יָפֶה!"
+          "v": "כֵּן!"
         }
       ],
       "target": "vo:eng.en_egg"
@@ -182,18 +182,21 @@
       {
         "id": "o1",
         "sprite": "asset:egg",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_egg"
       },
       {
         "id": "o2",
         "sprite": "asset:apple",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_apple",
         "misconception": "eng.lis.yesno"
       },
       {
         "id": "o3",
         "sprite": "asset:cake",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_cake",
         "misconception": "eng.lis.yesno"
       }
     ],

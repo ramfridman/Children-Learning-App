@@ -1,10 +1,10 @@
 {
   "course": "heb",
   "pack": {
-    "version": "0.1.0",
+    "version": "1.0.0",
     "minAppVersion": "0.5.0"
   },
-  "note": "HEB-1 Band A (docs/languages/hebrew/band-a-content.md): every item the generator can express today (LS01 tap), the placement, the tags. Items that wait for a template recipe or a picture are in units/pending/ (not read by the generator). Text only: every clip is pending. Lines copied from pronunciation.csv keep its review mark; new lines and joined lines are needs-editor.",
+  "note": "HEB-1 Band A (docs/languages/hebrew/band-a-content.md): every item the generator can express today (LS01 tap), the placement, the tags. Items that wait for a template recipe or a picture are in units/pending/ (not read by the generator). Text only: every clip is pending. Lines copied from pronunciation.csv keep its review mark; new lines and joined lines are needs-editor. L7-6 (2026-11-14): `everyday` lists the words a Hebrew-speaking child of 3 knows (frame 3.5.1) and the forms of a taught word (the plural סִירוֹת, an everyday word's own form). A story page (replayed after the story was heard), a place sentence, a drum strip's count and a syllable string are no words: tools/lang_met_before.py knows them from the pack, so they are not listed. The eleven new words (story words and verbs) are taught by Meet pages and are not in the list.",
   "defaults": {
     "frame": "i-find",
     "ladder": "HL-WORD",
@@ -13,7 +13,16 @@
     "minutes": 4,
     "pass": "pass",
     "heard": "heard",
-    "together": "say-together"
+    "together": "say-together",
+    "teach": {
+      "opener": "meet-open",
+      "frame": "say-together",
+      "heard": "heard",
+      "together": "say-together",
+      "hear": "meet-new",
+      "explain": true
+    },
+    "where": "fb-where"
   },
   "feedback": {
     "right": [
@@ -335,7 +344,11 @@
     "heb-a-w-tanur": "m-tanur",
     "heb-a-w-sira": "m-sira",
     "heb-a-w-kova": "m-kova",
-    "heb-a-w-ruach": "m-ruach"
+    "heb-a-w-ruach": "m-ruach",
+    "heb-a-w-boet": "m-boet",
+    "heb-a-w-mechapeset": "m-mechapeset",
+    "heb-a-w-meurbevet": "m-meurbevet",
+    "heb-a-w-soche": "m-soche"
   },
   "tags": {
     "sem": {
@@ -731,54 +744,67 @@
     },
     "ok-1": {
       "he": "נָכוֹן!",
+      "voice": "נכון.",
       "review": "text-ready"
     },
     "ok-2": {
       "he": "כֵּן, זֶהוּ זֶה!",
+      "voice": "כן, זהו זה.",
       "review": "text-ready"
     },
     "ok-3": {
       "he": "שְׁמַעְתֶּם טוֹב!",
+      "voice": "שמעתם טוב.",
       "review": "text-ready"
     },
     "ok-4": {
       "he": "הִקְשַׁבְתֶּם עַד הַסּוֹף!",
+      "voice": "הקשבתם עד הסוף.",
       "review": "text-ready"
     },
     "ok-5": {
       "he": "מְצָאתֶם!",
+      "voice": "מצאתם.",
       "review": "text-ready"
     },
     "ok-6": {
       "he": "יוֹפִי שֶׁל הַקְשָׁבָה!",
+      "voice": "יופי של הקשבה.",
       "review": "text-ready"
     },
     "ok-7": {
       "he": "בְּדִיּוּק!",
+      "voice": "בדיוק.",
       "review": "text-ready"
     },
     "ok-8": {
       "he": "כׇּל הַכָּבוֹד!",
+      "voice": "כל הכבוד.",
       "review": "text-ready"
     },
     "try-1": {
       "he": "הַמְּמ… בּוֹאוּ נִבְדֹּק.",
+      "voice": "המממ… בואו נבדוק.",
       "review": "text-ready"
     },
     "try-2": {
       "he": "בּוֹאוּ נִשְׁמַע שׁוּב.",
+      "voice": "בואו נשמע שוב.",
       "review": "text-ready"
     },
     "show": {
       "he": "בּוֹאוּ נַעֲשֶׂה אֶת זֶה יַחַד.",
+      "voice": "בואו נַעֲשֶׂה את זה יחד.",
       "review": "text-ready"
     },
     "fb-sem": {
       "he": "זֶה דּוֹמֶה. בּוֹאוּ נִשְׁמַע שׁוּב.",
+      "voice": "זה דומה. בואו נשמע שוב.",
       "review": "text-ready"
     },
     "fb-soundalike": {
       "he": "שִׁמְעוּ עַד הַסּוֹף.",
+      "voice": "שִׁמְעוּ עד הסוף.",
       "review": "text-ready"
     },
     "m-siach": {
@@ -823,7 +849,7 @@
     },
     "i-drum": {
       "he": "תּוֹפְפוּ פַּעַם לְכׇל חֵלֶק שֶׁל הַמִּלָּה.",
-      "voice": "תופפו פעם לכל חלק של המילה.",
+      "voice": "תּוֹפְפוּ פעם לכל חלק של המילה.",
       "review": "text-ready"
     },
     "say-together": {
@@ -893,7 +919,7 @@
     },
     "fb-prep": {
       "he": "שִׁמְעוּ אֵיפֹה:",
-      "voice": "שמעו איפה:",
+      "voice": "שִׁמְעוּ איפה:",
       "review": "text-ready"
     },
     "fb-role-swap": {
@@ -902,8 +928,8 @@
       "review": "text-ready"
     },
     "fb-allit": {
-      "he": "זֶה מַתְחִיל אוֹתוֹ דָּבָר. בּוֹאוּ נַקְשִׁיב לַסּוֹף.",
-      "voice": "זה מתחיל אותו דבר. בואו נקשיב לסוף.",
+      "he": "זֶה מַתְחִיל בְּאוֹתוֹ צְלִיל. בּוֹאוּ נַקְשִׁיב לַסּוֹף.",
+      "voice": "זה מתחיל באותו צליל. בואו נקשיב לסוף.",
       "review": "text-ready"
     },
     "fb-syll": {
@@ -913,7 +939,7 @@
     },
     "fb-blend-last": {
       "he": "שִׁמְעוּ מֵהַהַתְחָלָה.",
-      "voice": "שמעו מההתחלה.",
+      "voice": "שִׁמְעוּ מההתחלה.",
       "review": "text-ready"
     },
     "fb-print-num": {
@@ -934,151 +960,151 @@
     "v1-play": {
       "he": "בַּשָּׁמַיִם יֵשׁ כּוֹכָב, וּבַגִּנָּה קוֹפֵץ אַרְנָב. בַּשָּׁמַיִם יֵשׁ כּוֹכָב, וּבַגִּנָּה קוֹפֵץ…",
       "voice": "בַּשָּׁמַיִם יש כוכב, ובגינה קופץ ארנב. בַּשָּׁמַיִם יש כוכב, ובגינה קופץ…",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-v1-full then heb-a-v1-open, one clip (the verse twice: whole, then to the pause)"
     },
     "v2-play": {
-      "he": "תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהַחָתוּל יוֹשֵׁב בַּחַלּוֹן. תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהַחָתוּל יוֹשֵׁב…",
-      "voice": "תיק תק עוֹשֶׂה השעון, והחתול יושב בחלון. תיק תק עוֹשֶׂה השעון, והחתול יושב…",
-      "review": "needs-editor",
+      "he": "תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהֶחָתוּל יוֹשֵׁב בַּחַלּוֹן. תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהֶחָתוּל יוֹשֵׁב…",
+      "voice": "תיק תַּק עוֹשֶׂה השעון, והחתול יושב בחלון. תיק תַּק עוֹשֶׂה השעון, והחתול יושב…",
+      "review": "text-ready",
       "note": "heb-a-v2-full then heb-a-v2-open, one clip (the verse twice: whole, then to the pause)"
     },
     "v3-play": {
       "he": "זוֹרְקִים לְמַעְלָה כַּדּוּר, אוֹפִים עוּגָה בַּתַּנּוּר. זוֹרְקִים לְמַעְלָה כַּדּוּר, אוֹפִים עוּגָה…",
       "voice": "זורקים למעלה כדור, אופים עוגה בתנור. זורקים למעלה כדור, אופים עוגה…",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "heb-a-v3-full then heb-a-v3-open, one clip (the verse twice: whole, then to the pause)"
     },
     "v5-play": {
       "he": "בַּסַּל יֵשׁ תּוּת, וּבַיָּד שֶׁל סַבְתָּא חוּט. בַּסַּל יֵשׁ תּוּת, וּבַיָּד שֶׁל סַבְתָּא…",
-      "voice": "בסל יש תות, וביד של סבתא חוט. בסל יש תות, וביד של סבתא…",
-      "review": "needs-editor",
+      "voice": "בַּסַּל יש תּוּת, וביד של סבתא חוט. בַּסַּל יש תּוּת, וביד של סבתא…",
+      "review": "text-ready",
       "note": "heb-a-v5-full then heb-a-v5-open, one clip (the verse twice: whole, then to the pause)"
     },
     "v6-play": {
       "he": "בַּשָּׁמַיִם עָף מָטוֹס, וְעַל הַשֻּׁלְחָן יֵשׁ כּוֹס. בַּשָּׁמַיִם עָף מָטוֹס, וְעַל הַשֻּׁלְחָן יֵשׁ…",
-      "voice": "בַּשָּׁמַיִם עף מטוס, ועל השולחן יש כוס. בַּשָּׁמַיִם עף מטוס, ועל השולחן יש…",
-      "review": "needs-editor",
+      "voice": "בַּשָּׁמַיִם עָף מטוס, ועל השולחן יש כוס. בַּשָּׁמַיִם עָף מטוס, ועל השולחן יש…",
+      "review": "text-ready",
       "note": "heb-a-v6-full then heb-a-v6-open, one clip (the verse twice: whole, then to the pause)"
     },
     "v7-play": {
       "he": "יֵשׁ לַדֻּבִּי אַף, וּבַמָּרָק יֵשׁ כַּף. יֵשׁ לַדֻּבִּי אַף, וּבַמָּרָק יֵשׁ…",
-      "voice": "יש לדובי אף, ובמרק יש כף. יש לדובי אף, ובמרק יש…",
-      "review": "needs-editor",
+      "voice": "יש לַדֻּבִּי אף, ובמרק יש כַּף. יש לַדֻּבִּי אף, ובמרק יש…",
+      "review": "text-ready",
       "note": "heb-a-v7-full then heb-a-v7-open, one clip (the verse twice: whole, then to the pause)"
     },
     "v8-play": {
       "he": "עַל הַמַּיִם שָׁטָה סִירָה, וּבַגַּן שָׁרָה הַמּוֹרָה. עַל הַמַּיִם שָׁטָה סִירָה, וּבַגַּן שָׁרָה…",
-      "voice": "על המים שטה סירה, ובגן שרה המורה. על המים שטה סירה, ובגן שרה…",
-      "review": "needs-editor",
+      "voice": "על המים שָׁטָה סירה, ובגן שָׁרָה המורה. על המים שָׁטָה סירה, ובגן שָׁרָה…",
+      "review": "text-ready",
       "note": "heb-a-v8-full then heb-a-v8-open, one clip (the verse twice: whole, then to the pause)"
     },
     "r-dag": {
-      "he": "דָּג. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
-      "voice": "דָּג. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor",
+      "he": "דָּג. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
+      "voice": "דָּג. איזו מילה נגמרת באותו צליל?",
+      "review": "text-ready",
       "note": "heb-a-w-dag then heb-a-i-rhyme, one clip"
     },
     "r-pil": {
-      "he": "פִּיל. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
-      "voice": "פִּיל. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor",
+      "he": "פִּיל. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
+      "voice": "פִּיל. איזו מילה נגמרת באותו צליל?",
+      "review": "text-ready",
       "note": "heb-a-w-pil then heb-a-i-rhyme, one clip"
     },
     "r-kaf": {
-      "he": "כַּף. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
-      "voice": "כַּף. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor",
+      "he": "כַּף. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
+      "voice": "כַּף. איזו מילה נגמרת באותו צליל?",
+      "review": "text-ready",
       "note": "heb-a-w-kaf then heb-a-i-rhyme, one clip"
     },
     "r-kochav": {
-      "he": "כּוֹכָב. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
-      "voice": "כּוֹכָב. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor",
+      "he": "כּוֹכָב. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
+      "voice": "כּוֹכָב. איזו מילה נגמרת באותו צליל?",
+      "review": "text-ready",
       "note": "heb-a-w-kochav then heb-a-i-rhyme, one clip"
     },
     "r-balon": {
-      "he": "בָּלוֹן. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
-      "voice": "בָּלוֹן. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor",
+      "he": "בָּלוֹן. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
+      "voice": "בָּלוֹן. איזו מילה נגמרת באותו צליל?",
+      "review": "text-ready",
       "note": "heb-a-w-balon then heb-a-i-rhyme, one clip"
     },
     "r-tut": {
-      "he": "תּוּת. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
-      "voice": "תּוּת. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor",
+      "he": "תּוּת. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
+      "voice": "תּוּת. איזו מילה נגמרת באותו צליל?",
+      "review": "text-ready",
       "note": "heb-a-w-tut then heb-a-i-rhyme, one clip"
     },
     "r-bayit": {
-      "he": "בַּיִת. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
-      "voice": "בַּיִת. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor",
+      "he": "בַּיִת. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
+      "voice": "בַּיִת. איזו מילה נגמרת באותו צליל?",
+      "review": "text-ready",
       "note": "heb-a-w-bayit then heb-a-i-rhyme, one clip"
     },
     "r-tanur": {
-      "he": "תַּנּוּר. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
-      "voice": "תַּנּוּר. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor",
+      "he": "תַּנּוּר. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
+      "voice": "תַּנּוּר. איזו מילה נגמרת באותו צליל?",
+      "review": "text-ready",
       "note": "heb-a-w-tanur then heb-a-i-rhyme, one clip"
     },
     "r-sira": {
-      "he": "סִירָה. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
-      "voice": "סִירָה. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor",
+      "he": "סִירָה. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
+      "voice": "סִירָה. איזו מילה נגמרת באותו צליל?",
+      "review": "text-ready",
       "note": "heb-a-w-sira then heb-a-i-rhyme, one clip"
     },
     "r-matos": {
-      "he": "מָטוֹס. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
-      "voice": "מָטוֹס. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor",
+      "he": "מָטוֹס. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
+      "voice": "מָטוֹס. איזו מילה נגמרת באותו צליל?",
+      "review": "text-ready",
       "note": "heb-a-w-matos then heb-a-i-rhyme, one clip"
     },
     "r-til": {
-      "he": "טִיל. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
-      "voice": "טִיל. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor",
+      "he": "טִיל. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
+      "voice": "טִיל. איזו מילה נגמרת באותו צליל?",
+      "review": "text-ready",
       "note": "heb-a-w-til then heb-a-i-rhyme, one clip"
     },
     "r-chalon": {
-      "he": "חַלּוֹן. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
-      "voice": "חַלּוֹן. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor",
+      "he": "חַלּוֹן. אֵיזוֹ מִלָּה נִגְמֶרֶת בְּאוֹתוֹ צְלִיל?",
+      "voice": "חַלּוֹן. איזו מילה נגמרת באותו צליל?",
+      "review": "text-ready",
       "note": "heb-a-w-chalon then heb-a-i-rhyme, one clip"
     },
     "h-end": {
       "he": "בּוֹאוּ נַקְשִׁיב לַסּוֹף.",
       "voice": "בואו נקשיב לסוף.",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "hint 2 of the rhyme items; the end of the text-ready heb-a-d-allit"
     },
     "h-look": {
       "he": "בּוֹאוּ נִסְתַּכֵּל שׁוּב.",
       "voice": "בואו נסתכל שוב.",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "hint 2 of the letter items (A-10)"
     },
     "i-letter": {
       "he": "אֵיפֹה הָאוֹת?",
       "voice": "איפה האות?",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "A-10 one-tap form of heb-a-i-letters (the tap-all mode has no recipe yet)"
     },
     "m-kadur": {
       "he": "כַּדּוּר הוּא עָגֹל. אֶפְשָׁר לִזְרֹק אוֹתוֹ וְלִבְעֹט בּוֹ.",
       "voice": "כדור הוא עגול. אפשר לזרוק אותו ולבעוט בו.",
-      "review": "needs-editor",
+      "review": "text-ready",
       "note": "word card of כַּדּוּר for hint 2 of A-02.8 (the batch gives it no card: a known word)"
     },
     "plc-thanks": {
       "he": "תּוֹדָה רַבָּה!",
-      "voice": "תודה רבה",
-      "review": "needs-editor",
+      "voice": "תודה רבה.",
+      "review": "text-ready",
       "note": "placement: after each probe (no result is shown)"
     },
     "plc-bye": {
       "he": "הָיָה כֵּיף לְשַׂחֵק יַחַד!",
-      "voice": "היה כיף לשחק יחד",
-      "review": "needs-editor",
+      "voice": "היה כיף לְשַׂחֵק יחד.",
+      "review": "text-ready",
       "note": "placement: the end of a placement visit"
     },
     "s1-title": {
@@ -1182,13 +1208,13 @@
       "review": "text-ready"
     },
     "i-pairs": {
-      "he": "חַבְּרוּ מִלִּים שֶׁנִּגְמָרוֹת אוֹתוֹ דָּבָר.",
-      "voice": "חברו מילים שנגמרות אותו דבר.",
+      "he": "חַבְּרוּ מִלִּים שֶׁנִּגְמָרוֹת בְּאוֹתוֹ צְלִיל.",
+      "voice": "חַבְּרוּ מילים שנגמרות באותו צליל.",
       "review": "text-ready"
     },
     "i-letters": {
       "he": "אֵיפֹה הָאוֹתִיּוֹת? גְּעוּ בְּכׇל הָאוֹתִיּוֹת.",
-      "voice": "איפה האותיות? געו בכל האותיות.",
+      "voice": "איפה האותיות? גְּעוּ בכל האותיות.",
       "review": "text-ready"
     },
     "i-order": {
@@ -1203,8 +1229,8 @@
     },
     "pass": {
       "he": "זֶה בְּסֵדֶר!",
-      "voice": "זה בסדר!",
-      "review": "needs-editor"
+      "voice": "זה בסדר.",
+      "review": "text-ready"
     },
     "d-start": {
       "he": "מַתְחִילִים כָּאן.",
@@ -1228,7 +1254,7 @@
     },
     "d-plural": {
       "he": "שִׁמְעוּ אֶת הַסּוֹף:",
-      "voice": "שמעו את הסוף:",
+      "voice": "שִׁמְעוּ את הסוף:",
       "review": "text-ready"
     },
     "i-name": {
@@ -1248,7 +1274,7 @@
     },
     "i-follow": {
       "he": "הַקְשִׁיבוּ לְכׇל מִלָּה, וּגְעוּ בָּהּ.",
-      "voice": "הקשיבו לכל מילה, וגעו בה.",
+      "voice": "הַקְשִׁיבוּ לכל מילה, וּגְעוּ בה.",
       "review": "text-ready"
     },
     "d-print-picture": {
@@ -1270,6 +1296,161 @@
       "he": "הַשֵּׁם שֶׁלָּכֶם מַתְחִיל בָּאוֹת הַזֹּאת.",
       "voice": "השם שלכם מתחיל באות הזאת.",
       "review": "text-ready"
+    },
+    "meet-open": {
+      "he": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת.",
+      "voice": "בואו נלמד מילים חדשות.",
+      "review": "text-ready"
+    },
+    "meet-new": {
+      "he": "מִלָּה חֲדָשָׁה:",
+      "voice": "מילה חדשה:",
+      "review": "text-ready"
+    },
+    "fb-where": {
+      "he": "וְאֵיפֹה",
+      "voice": "ואיפה",
+      "review": "text-ready"
+    },
+    "do-like": {
+      "he": "בּוֹאוּ נַעֲשֶׂה כְּמוֹ בַּתְּמוּנָה:",
+      "voice": "בואו נַעֲשֶׂה כמו בתמונה:",
+      "review": "text-ready"
+    },
+    "i-sort-rhyme": {
+      "he": "שִׂימוּ כׇּל תְּמוּנָה אֵצֶל הַמִּלָּה שֶׁנִּגְמֶרֶת אוֹתוֹ דָּבָר.",
+      "voice": "שִׂימוּ כל תמונה אצל המילה שנגמרת אותו דבר.",
+      "review": "text-ready"
+    },
+    "look-letters": {
+      "he": "חַפְּשׂוּ אוֹתִיּוֹת מִסָּבִיב: עַל סְפָרִים, עַל קֻפְסָאוֹת וּבָרְחוֹב.",
+      "voice": "חַפְּשׂוּ אותיות מסביב: על ספרים, על קופסאות וברחוב.",
+      "review": "text-ready"
+    },
+    "name-show": {
+      "he": "לְכֻלָּנוּ יֵשׁ שֵׁם, וְאֶת הַשֵּׁם כּוֹתְבִים בְּאוֹתִיּוֹת.",
+      "voice": "לכולנו יש שם, ואת השם כותבים באותיות.",
+      "review": "text-ready"
+    },
+    "name-clap": {
+      "he": "מַחֲאוּ כַּפַּיִם לְכׇל חֵלֶק שֶׁל הַשֵּׁם שֶׁלָּכֶם.",
+      "voice": "מַחֲאוּ כפיים לכל חלק של השם שלכם.",
+      "review": "text-ready"
+    },
+    "name-first": {
+      "he": "לְכׇל שֵׁם יֵשׁ אוֹת רִאשׁוֹנָה. הִיא בַּהַתְחָלָה, בַּצַּד הַיְּמָנִי.",
+      "voice": "לכל שם יש אות ראשונה. היא בהתחלה, בצד הימני.",
+      "review": "text-ready"
+    },
+    "name-home": {
+      "he": "חַפְּשׂוּ בַּבַּיִת אֶת הָאוֹת הָרִאשׁוֹנָה שֶׁל הַשֵּׁם שֶׁלָּכֶם.",
+      "voice": "חַפְּשׂוּ בבית את האות הראשונה של השם שלכם.",
+      "review": "text-ready"
+    },
+    "retell": {
+      "he": "סַפְּרוּ אֶת הַסִּפּוּר לְמִישֶׁהוּ בַּבַּיִת: מַה קָּרָה קֹדֶם?",
+      "voice": "סַפְּרוּ את הסיפור למישהו בבית: מה קרה קודם?",
+      "review": "text-ready"
+    },
+    "air": {
+      "he": "קֹדֶם מְצַיְּרִים בָּאֲוִיר, עִם כׇּל הַיָּד!",
+      "voice": "קודם מציירים באוויר, עם כל היד.",
+      "review": "text-ready"
+    },
+    "paper": {
+      "he": "עַכְשָׁו מְצַיְּרִים אֶת זֶה עַל דַּף, בְּעִפָּרוֹן.",
+      "voice": "עכשיו מציירים את זה על דף, בעיפרון.",
+      "review": "text-ready"
     }
-  }
+  },
+  "teachPictures": {
+    "heb-a-w-siach": "bush",
+    "heb-a-w-kemach": "flour",
+    "heb-a-w-keara": "bowl",
+    "heb-a-w-tanur": "oven",
+    "heb-a-w-sira": "boat",
+    "heb-a-w-kova": "hat",
+    "heb-a-w-ruach": "wind",
+    "heb-a-w-kadur": "ball"
+  },
+  "metBefore": "enforce",
+  "everyday": [
+    "heb-a-w-aba",
+    "heb-a-w-af",
+    "heb-a-w-agala",
+    "heb-a-w-ananim",
+    "heb-a-w-arnav",
+    "heb-a-w-aron",
+    "heb-a-w-banana",
+    "heb-a-w-bayit",
+    "heb-a-w-beged-yam",
+    "heb-a-w-beitsa",
+    "heb-a-w-boreach",
+    "heb-a-w-bua",
+    "heb-a-w-buba",
+    "heb-a-w-bubot",
+    "heb-a-w-chalav",
+    "heb-a-w-chalon",
+    "heb-a-w-chamorim",
+    "heb-a-w-chatul",
+    "heb-a-w-chatula",
+    "heb-a-w-chatulim",
+    "heb-a-w-chultsa",
+    "heb-a-w-chut",
+    "heb-a-w-dubi",
+    "heb-a-w-dubim",
+    "heb-a-w-efroach",
+    "heb-a-w-ets",
+    "heb-a-w-gag",
+    "heb-a-w-gamal",
+    "heb-a-w-geshem",
+    "heb-a-w-kadur",
+    "heb-a-w-kadurim",
+    "heb-a-w-kaf",
+    "heb-a-w-kelev",
+    "heb-a-w-keshet",
+    "heb-a-w-klavim",
+    "heb-a-w-kochav",
+    "heb-a-w-kofets",
+    "heb-a-w-kos",
+    "heb-a-w-kufsa",
+    "heb-a-w-machat",
+    "heb-a-w-magevet",
+    "heb-a-w-matana",
+    "heb-a-w-matos",
+    "heb-a-w-mazleg",
+    "heb-a-w-mechabeket",
+    "heb-a-w-medaberet",
+    "heb-a-w-mekarer",
+    "heb-a-w-metosim",
+    "heb-a-w-mitriya",
+    "heb-a-w-motset",
+    "heb-a-w-ofa",
+    "heb-a-w-ohel",
+    "heb-a-w-pil",
+    "heb-a-w-pita",
+    "heb-a-w-pitsa",
+    "heb-a-w-pitsot",
+    "heb-a-w-saba",
+    "heb-a-w-sal",
+    "heb-a-w-shemesh",
+    "heb-a-w-shote",
+    "heb-a-w-sir",
+    "heb-a-w-sukar",
+    "heb-a-w-sus",
+    "heb-a-w-susim",
+    "heb-a-w-tabaat",
+    "heb-a-w-tapuach",
+    "heb-a-w-tarnegol",
+    "heb-a-w-til",
+    "heb-a-w-tsalachat",
+    "heb-a-w-uga",
+    "heb-a-w-ugot",
+    "heb-a-w-yam",
+    "heb-a-w-yareach",
+    "heb-a-w-zanav",
+    "heb-a-w-zayit",
+    "heb-a-w-zorek",
+    "heb-a-w-sirot"
+  ]
 }

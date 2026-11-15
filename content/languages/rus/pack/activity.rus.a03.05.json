@@ -38,6 +38,7 @@
   "a11y": {
     "altText": "תְּמוּנָה וְחָבֵר שֶׁעוֹשֶׂה מַה שֶּׁאוֹמְרִים"
   },
+  "asks": "vo:rus.w_ruki",
   "prompt": {
     "vo": "vo:rus.f08",
     "caption": [
@@ -51,11 +52,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_5",
+      "vo": "vo:rus.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "כֵּן!"
         }
       ],
       "target": "vo:rus.ch_pokazhi_ruki"

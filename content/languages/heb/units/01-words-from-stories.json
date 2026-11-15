@@ -10,9 +10,18 @@
       "kind": "tap",
       "target": "heb-a-w-siach",
       "options": [
-        "bush",
-        "tree",
-        "pot"
+        {
+          "pic": "bush",
+          "clip": "heb-a-w-siach"
+        },
+        {
+          "pic": "tree",
+          "clip": "heb-a-w-ets"
+        },
+        {
+          "pic": "pot",
+          "clip": "heb-a-w-sir"
+        }
       ],
       "wrong": {
         "tree": "sem",
@@ -24,9 +33,18 @@
       "kind": "tap",
       "target": "heb-a-w-kemach",
       "options": [
-        "flour",
-        "sugar",
-        "rainbow"
+        {
+          "pic": "flour",
+          "clip": "heb-a-w-kemach"
+        },
+        {
+          "pic": "sugar",
+          "clip": "heb-a-w-sukar"
+        },
+        {
+          "pic": "rainbow",
+          "clip": "heb-a-w-keshet"
+        }
       ],
       "wrong": {
         "sugar": "sem",
@@ -38,13 +56,22 @@
       "kind": "tap",
       "target": "heb-a-w-keara",
       "options": [
-        "bowl",
-        "plate",
-        "cave"
+        {
+          "pic": "bowl",
+          "clip": "heb-a-w-keara"
+        },
+        {
+          "pic": "plate",
+          "clip": "heb-a-w-tsalachat"
+        },
+        {
+          "pic": "box",
+          "clip": "heb-a-w-kufsa"
+        }
       ],
       "wrong": {
         "plate": "sem",
-        "cave": "soundalike"
+        "box": "soundalike"
       }
     },
     {
@@ -52,9 +79,18 @@
       "kind": "tap",
       "target": "heb-a-w-tanur",
       "options": [
-        "oven",
-        "fridge",
-        "ball"
+        {
+          "pic": "oven",
+          "clip": "heb-a-w-tanur"
+        },
+        {
+          "pic": "fridge",
+          "clip": "heb-a-w-mekarer"
+        },
+        {
+          "pic": "ball",
+          "clip": "heb-a-w-kadur"
+        }
       ],
       "wrong": {
         "fridge": "sem",
@@ -66,13 +102,22 @@
       "kind": "tap",
       "target": "heb-a-w-sira",
       "options": [
-        "boat",
-        "plane",
-        "teacher-sing"
+        {
+          "pic": "boat",
+          "clip": "heb-a-w-sira"
+        },
+        {
+          "pic": "plane",
+          "clip": "heb-a-w-matos"
+        },
+        {
+          "pic": "pot",
+          "clip": "heb-a-w-sir"
+        }
       ],
       "wrong": {
         "plane": "sem",
-        "teacher-sing": "soundalike"
+        "pot": "soundalike"
       }
     },
     {
@@ -80,9 +125,18 @@
       "kind": "tap",
       "target": "heb-a-w-kova",
       "options": [
-        "hat",
-        "shirt",
-        "star"
+        {
+          "pic": "hat",
+          "clip": "heb-a-w-kova"
+        },
+        {
+          "pic": "shirt",
+          "clip": "heb-a-w-chultsa"
+        },
+        {
+          "pic": "star",
+          "clip": "heb-a-w-kochav"
+        }
       ],
       "wrong": {
         "shirt": "sem",
@@ -94,29 +148,23 @@
       "kind": "tap",
       "target": "heb-a-w-ruach",
       "options": [
-        "wind",
-        "rain",
-        "apple"
+        {
+          "pic": "wind",
+          "clip": "heb-a-w-ruach"
+        },
+        {
+          "pic": "rain",
+          "clip": "heb-a-w-geshem"
+        },
+        {
+          "pic": "apple",
+          "clip": "heb-a-w-tapuach"
+        }
       ],
       "wrong": {
         "rain": "sem",
         "apple": "soundalike"
       }
-    },
-    {
-      "id": "08",
-      "kind": "tap",
-      "target": "heb-a-w-kadur",
-      "options": [
-        "ball",
-        "doll",
-        "oven"
-      ],
-      "wrong": {
-        "doll": "sem",
-        "oven": "soundalike"
-      },
-      "h2": "m-kadur"
     },
     {
       "id": "13",
@@ -141,11 +189,11 @@
       "options": [
         "soup",
         "cup",
-        "cave"
+        "plate"
       ],
       "wrong": {
         "cup": "sem",
-        "cave": "soundalike"
+        "plate": "sem"
       },
       "purpose": "check",
       "difficulty": 0.4
@@ -438,70 +486,879 @@
       "frame": "say-together"
     },
     {
-      "id": "say-kadur",
+      "id": "f-siach",
+      "kind": "tap",
+      "target": "heb-a-w-siach",
+      "options": [
+        {
+          "pic": "bush",
+          "clip": "heb-a-w-siach"
+        },
+        {
+          "pic": "tree",
+          "clip": "heb-a-w-ets"
+        }
+      ],
+      "wrong": {
+        "tree": "sem"
+      }
+    },
+    {
+      "id": "f-kemach",
+      "kind": "tap",
+      "target": "heb-a-w-kemach",
+      "options": [
+        {
+          "pic": "flour",
+          "clip": "heb-a-w-kemach"
+        },
+        {
+          "pic": "sugar",
+          "clip": "heb-a-w-sukar"
+        }
+      ],
+      "wrong": {
+        "sugar": "sem"
+      }
+    },
+    {
+      "id": "f-keara",
+      "kind": "tap",
+      "target": "heb-a-w-keara",
+      "options": [
+        {
+          "pic": "bowl",
+          "clip": "heb-a-w-keara"
+        },
+        {
+          "pic": "plate",
+          "clip": "heb-a-w-tsalachat"
+        }
+      ],
+      "wrong": {
+        "plate": "sem"
+      }
+    },
+    {
+      "id": "f-tanur",
+      "kind": "tap",
+      "target": "heb-a-w-tanur",
+      "options": [
+        {
+          "pic": "oven",
+          "clip": "heb-a-w-tanur"
+        },
+        {
+          "pic": "fridge",
+          "clip": "heb-a-w-mekarer"
+        }
+      ],
+      "wrong": {
+        "fridge": "sem"
+      }
+    },
+    {
+      "id": "f-sira",
+      "kind": "tap",
+      "target": "heb-a-w-sira",
+      "options": [
+        {
+          "pic": "boat",
+          "clip": "heb-a-w-sira"
+        },
+        {
+          "pic": "plane",
+          "clip": "heb-a-w-matos"
+        }
+      ],
+      "wrong": {
+        "plane": "sem"
+      }
+    },
+    {
+      "id": "f-kova",
+      "kind": "tap",
+      "target": "heb-a-w-kova",
+      "options": [
+        {
+          "pic": "hat",
+          "clip": "heb-a-w-kova"
+        },
+        {
+          "pic": "shirt",
+          "clip": "heb-a-w-chultsa"
+        }
+      ],
+      "wrong": {
+        "shirt": "sem"
+      }
+    },
+    {
+      "id": "f-ruach",
+      "kind": "tap",
+      "target": "heb-a-w-ruach",
+      "options": [
+        {
+          "pic": "wind",
+          "clip": "heb-a-w-ruach"
+        },
+        {
+          "pic": "rain",
+          "clip": "heb-a-w-geshem"
+        }
+      ],
+      "wrong": {
+        "rain": "sem"
+      }
+    },
+    {
+      "id": "f-boet",
+      "kind": "tap",
+      "frame": "i-what-he",
+      "purpose": "learn",
+      "rep": "story",
+      "stage": "act-he-kick-rabbit-b",
+      "options": [
+        {
+          "clip": "heb-a-w-boet"
+        },
+        {
+          "clip": "heb-a-w-zorek"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-zorek": "sem"
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "f-mechapeset",
+      "kind": "tap",
+      "frame": "i-what-she",
+      "purpose": "learn",
+      "rep": "story",
+      "stage": "act-he-search-cat-b",
+      "options": [
+        {
+          "clip": "heb-a-w-mechapeset"
+        },
+        {
+          "clip": "heb-a-w-motset"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-motset": "sem"
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "f-meurbevet",
+      "kind": "tap",
+      "frame": "i-what-she",
+      "purpose": "learn",
+      "rep": "story",
+      "stage": "act-he-stir-nitzi-b",
+      "options": [
+        {
+          "clip": "heb-a-w-meurbevet"
+        },
+        {
+          "clip": "heb-a-w-ofa"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-ofa": "sem"
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "f-soche",
+      "kind": "tap",
+      "frame": "i-what-he",
+      "purpose": "learn",
+      "rep": "story",
+      "stage": "act-he-swim-fish-b",
+      "options": [
+        {
+          "clip": "heb-a-w-soche"
+        },
+        {
+          "clip": "heb-a-w-kofets"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-kofets": "sem"
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "r-siach",
+      "kind": "tap",
+      "target": "heb-a-w-siach",
+      "options": [
+        {
+          "pic": "bush",
+          "clip": "heb-a-w-siach"
+        },
+        {
+          "pic": "tree",
+          "clip": "heb-a-w-ets"
+        },
+        {
+          "pic": "pot",
+          "clip": "heb-a-w-sir"
+        }
+      ],
+      "wrong": {
+        "tree": "sem",
+        "pot": "soundalike"
+      }
+    },
+    {
+      "id": "r-boet",
+      "kind": "tap",
+      "frame": "i-what-he",
+      "purpose": "learn",
+      "rep": "story",
+      "stage": "act-he-kick-rabbit-b",
+      "options": [
+        {
+          "clip": "heb-a-w-boet"
+        },
+        {
+          "clip": "heb-a-w-mechapeset"
+        },
+        {
+          "clip": "heb-a-w-boreach"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-mechapeset": "sem",
+        "heb-a-w-boreach": "soundalike"
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "r-mechapeset",
+      "kind": "tap",
+      "frame": "i-what-she",
+      "purpose": "learn",
+      "rep": "story",
+      "stage": "act-he-search-cat-b",
+      "options": [
+        {
+          "clip": "heb-a-w-mechapeset"
+        },
+        {
+          "clip": "heb-a-w-boet"
+        },
+        {
+          "clip": "heb-a-w-mechabeket"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-boet": "sem",
+        "heb-a-w-mechabeket": "soundalike"
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "r-kemach",
+      "kind": "tap",
+      "target": "heb-a-w-kemach",
+      "options": [
+        {
+          "pic": "flour",
+          "clip": "heb-a-w-kemach"
+        },
+        {
+          "pic": "bowl",
+          "clip": "heb-a-w-keara"
+        },
+        {
+          "pic": "rainbow",
+          "clip": "heb-a-w-keshet"
+        }
+      ],
+      "wrong": {
+        "bowl": "sem",
+        "rainbow": "soundalike"
+      }
+    },
+    {
+      "id": "r-keara",
+      "kind": "tap",
+      "target": "heb-a-w-keara",
+      "options": [
+        {
+          "pic": "bowl",
+          "clip": "heb-a-w-keara"
+        },
+        {
+          "pic": "flour",
+          "clip": "heb-a-w-kemach"
+        },
+        {
+          "pic": "box",
+          "clip": "heb-a-w-kufsa"
+        }
+      ],
+      "wrong": {
+        "flour": "sem",
+        "box": "soundalike"
+      }
+    },
+    {
+      "id": "r-meurbevet",
+      "kind": "tap",
+      "frame": "i-what-she",
+      "purpose": "learn",
+      "rep": "story",
+      "stage": "act-he-stir-nitzi-b",
+      "options": [
+        {
+          "clip": "heb-a-w-meurbevet"
+        },
+        {
+          "clip": "heb-a-w-mechapeset"
+        },
+        {
+          "clip": "heb-a-w-medaberet"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-mechapeset": "sem",
+        "heb-a-w-medaberet": "soundalike"
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "r-tanur",
+      "kind": "tap",
+      "target": "heb-a-w-tanur",
+      "options": [
+        {
+          "pic": "oven",
+          "clip": "heb-a-w-tanur"
+        },
+        {
+          "pic": "bowl",
+          "clip": "heb-a-w-keara"
+        },
+        {
+          "pic": "ball",
+          "clip": "heb-a-w-kadur"
+        }
+      ],
+      "wrong": {
+        "bowl": "sem",
+        "ball": "soundalike"
+      }
+    },
+    {
+      "id": "r-sira",
+      "kind": "tap",
+      "target": "heb-a-w-sira",
+      "options": [
+        {
+          "pic": "boat",
+          "clip": "heb-a-w-sira"
+        },
+        {
+          "pic": "hat",
+          "clip": "heb-a-w-kova"
+        },
+        {
+          "pic": "pot",
+          "clip": "heb-a-w-sir"
+        }
+      ],
+      "wrong": {
+        "hat": "sem",
+        "pot": "soundalike"
+      }
+    },
+    {
+      "id": "r-kova",
+      "kind": "tap",
+      "target": "heb-a-w-kova",
+      "options": [
+        {
+          "pic": "hat",
+          "clip": "heb-a-w-kova"
+        },
+        {
+          "pic": "boat",
+          "clip": "heb-a-w-sira"
+        },
+        {
+          "pic": "star",
+          "clip": "heb-a-w-kochav"
+        }
+      ],
+      "wrong": {
+        "boat": "sem",
+        "star": "soundalike"
+      }
+    },
+    {
+      "id": "r-ruach",
+      "kind": "tap",
+      "target": "heb-a-w-ruach",
+      "options": [
+        {
+          "pic": "wind",
+          "clip": "heb-a-w-ruach"
+        },
+        {
+          "pic": "clouds",
+          "clip": "heb-a-w-ananim"
+        },
+        {
+          "pic": "apple",
+          "clip": "heb-a-w-tapuach"
+        }
+      ],
+      "wrong": {
+        "clouds": "sem",
+        "apple": "soundalike"
+      }
+    },
+    {
+      "id": "r-soche",
+      "kind": "tap",
+      "frame": "i-what-he",
+      "purpose": "learn",
+      "rep": "story",
+      "stage": "act-he-swim-fish-b",
+      "options": [
+        {
+          "clip": "heb-a-w-soche"
+        },
+        {
+          "clip": "heb-a-w-meurbevet"
+        },
+        {
+          "clip": "heb-a-w-shote"
+        }
+      ],
+      "wrong": {
+        "heb-a-w-meurbevet": "sem",
+        "heb-a-w-shote": "soundalike"
+      },
+      "ladder": "HL-WORD"
+    },
+    {
+      "id": "say-boet",
       "kind": "say",
       "purpose": "practice",
-      "picture": "ball",
-      "clip": "heb-a-w-kadur",
+      "picture": "act-he-kick-rabbit-b",
+      "clip": "heb-a-w-boet",
       "foils": [
-        "שִׂיחַ",
-        "קֶמַח"
+        "זוֹרֵק",
+        "בּוֹרֵחַ"
       ],
       "heard": "heard",
       "together": "say-together",
       "rep": "embodied",
       "frame": "say-together"
+    },
+    {
+      "id": "do-boet",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "do-like",
+      "picture": "act-he-kick-rabbit-b",
+      "clips": [
+        "heb-a-w-boet"
+      ]
+    },
+    {
+      "id": "say-mechapeset",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "act-he-search-cat-b",
+      "clip": "heb-a-w-mechapeset",
+      "foils": [
+        "מוֹצֵאת",
+        "מְחַבֶּקֶת"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
+    },
+    {
+      "id": "do-mechapeset",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "do-like",
+      "picture": "act-he-search-cat-b",
+      "clips": [
+        "heb-a-w-mechapeset"
+      ]
+    },
+    {
+      "id": "say-meurbevet",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "act-he-stir-nitzi-b",
+      "clip": "heb-a-w-meurbevet",
+      "foils": [
+        "אוֹפָה",
+        "מְדַבֶּרֶת"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
+    },
+    {
+      "id": "do-meurbevet",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "do-like",
+      "picture": "act-he-stir-nitzi-b",
+      "clips": [
+        "heb-a-w-meurbevet"
+      ]
+    },
+    {
+      "id": "say-soche",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "act-he-swim-fish-b",
+      "clip": "heb-a-w-soche",
+      "foils": [
+        "קוֹפֵץ",
+        "שׁוֹתֶה"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
+    },
+    {
+      "id": "do-soche",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "do-like",
+      "picture": "act-he-swim-fish-b",
+      "clips": [
+        "heb-a-w-soche"
+      ]
+    },
+    {
+      "id": "ch-s1",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-w-siach",
+        "heb-a-w-boet",
+        "heb-a-w-mechapeset"
+      ],
+      "pictures": [
+        {
+          "pic": "bush",
+          "clip": "heb-a-w-siach"
+        },
+        {
+          "pic": "act-he-kick-rabbit-b",
+          "clip": "heb-a-w-boet"
+        },
+        {
+          "pic": "act-he-search-cat-b",
+          "clip": "heb-a-w-mechapeset"
+        }
+      ]
+    },
+    {
+      "id": "ch-s2",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-w-kemach",
+        "heb-a-w-keara",
+        "heb-a-w-meurbevet",
+        "heb-a-w-tanur"
+      ],
+      "pictures": [
+        {
+          "pic": "flour",
+          "clip": "heb-a-w-kemach"
+        },
+        {
+          "pic": "bowl",
+          "clip": "heb-a-w-keara"
+        },
+        {
+          "pic": "act-he-stir-nitzi-b",
+          "clip": "heb-a-w-meurbevet"
+        },
+        {
+          "pic": "oven",
+          "clip": "heb-a-w-tanur"
+        }
+      ]
+    },
+    {
+      "id": "ch-s3",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-w-sira",
+        "heb-a-w-kova",
+        "heb-a-w-ruach",
+        "heb-a-w-soche"
+      ],
+      "pictures": [
+        {
+          "pic": "boat",
+          "clip": "heb-a-w-sira"
+        },
+        {
+          "pic": "hat",
+          "clip": "heb-a-w-kova"
+        },
+        {
+          "pic": "wind",
+          "clip": "heb-a-w-ruach"
+        },
+        {
+          "pic": "act-he-swim-fish-b",
+          "clip": "heb-a-w-soche"
+        }
+      ]
     }
   ],
   "lessons": [
     {
       "id": "words-1",
-      "title": "מִלִּים מֵהַסִּפּוּר",
-      "items": [
+      "title": "הַכַּדּוּר שֶׁל הָאַרְנָב: מִלִּים חֲדָשׁוֹת",
+      "sequence": 10,
+      "recall": [
+        "a01.l1"
+      ],
+      "meet": [
+        [
+          {
+            "clip": "heb-a-w-siach",
+            "picture": "s1-p3",
+            "explain": "m-siach",
+            "focus": [
+              0.66,
+              0.46,
+              0.34,
+              0.4
+            ]
+          },
+          {
+            "clip": "heb-a-w-boet",
+            "picture": "s1-p2",
+            "explain": "m-boet",
+            "focus": [
+              0.28,
+              0.4,
+              0.36,
+              0.58
+            ]
+          },
+          {
+            "clip": "heb-a-w-mechapeset",
+            "picture": "s1-p4",
+            "explain": "m-mechapeset",
+            "focus": [
+              0.58,
+              0.44,
+              0.32,
+              0.54
+            ]
+          }
+        ]
+      ],
+      "find": [
+        "f-siach",
+        "f-boet",
+        "f-mechapeset",
         "01",
-        "02",
-        "03",
-        "04"
+        "09",
+        "10"
+      ],
+      "use": [
+        "say-siach",
+        "do-boet",
+        "do-mechapeset"
       ]
     },
     {
       "id": "words-2",
-      "title": "עוֹד מִלִּים מֵהַסִּפּוּר",
-      "items": [
-        "05",
-        "06",
-        "07",
-        "08"
-      ]
-    },
-    {
-      "id": "verbs-1",
-      "title": "מָה הֵם עוֹשִׂים?",
-      "items": [
-        "09",
-        "10",
-        "11",
-        "12"
-      ]
-    },
-    {
-      "id": "say-1",
-      "title": "מִלִּים חֲדָשׁוֹת",
-      "items": [
-        "say-siach",
+      "title": "נִיצִי אוֹפָה עוּגָה: מִלִּים חֲדָשׁוֹת",
+      "sequence": 40,
+      "recall": [
+        "r-mechapeset",
+        "a01.l2"
+      ],
+      "meet": [
+        [
+          {
+            "clip": "heb-a-w-kemach",
+            "picture": "s2-p2",
+            "explain": "m-kemach",
+            "focus": [
+              0.5,
+              0.14,
+              0.2,
+              0.34
+            ]
+          },
+          {
+            "clip": "heb-a-w-keara",
+            "picture": "s2-p2",
+            "explain": "m-keara",
+            "focus": [
+              0.34,
+              0.4,
+              0.3,
+              0.42
+            ]
+          }
+        ]
+      ],
+      "find": [
+        "f-kemach",
+        "f-keara",
+        "02",
+        "03"
+      ],
+      "use": [
         "say-kemach",
-        "say-keara",
+        "say-keara"
+      ]
+    },
+    {
+      "id": "words-3",
+      "title": "עוֹד מִלִּים מֵהָעוּגָה",
+      "sequence": 50,
+      "recall": [
+        "r-kemach",
+        "r-keara"
+      ],
+      "meet": [
+        [
+          {
+            "clip": "heb-a-w-meurbevet",
+            "picture": "s2-p3",
+            "explain": "m-meurbevet",
+            "focus": [
+              0.33,
+              0.38,
+              0.38,
+              0.47
+            ]
+          },
+          {
+            "clip": "heb-a-w-tanur",
+            "picture": "s2-p4",
+            "explain": "m-tanur",
+            "focus": [
+              0.48,
+              0.22,
+              0.34,
+              0.54
+            ]
+          }
+        ]
+      ],
+      "find": [
+        "f-meurbevet",
+        "f-tanur",
+        "11",
+        "04"
+      ],
+      "use": [
+        "do-meurbevet",
         "say-tanur"
       ]
     },
     {
-      "id": "say-2",
-      "title": "עוֹד מִלִּים חֲדָשׁוֹת",
-      "items": [
+      "id": "words-4",
+      "title": "מִלִּים שֶׁל מַיִם",
+      "sequence": 80,
+      "recall": [
+        "r-tanur"
+      ],
+      "meet": [
+        [
+          {
+            "clip": "heb-a-w-sira",
+            "picture": "boat",
+            "explain": "m-sira"
+          },
+          {
+            "clip": "heb-a-w-kova",
+            "picture": "hat",
+            "explain": "m-kova"
+          }
+        ]
+      ],
+      "find": [
+        "f-sira",
+        "f-kova",
+        "05",
+        "06"
+      ],
+      "use": [
         "say-sira",
-        "say-kova",
+        "say-kova"
+      ]
+    },
+    {
+      "id": "words-5",
+      "title": "מִלִּים שֶׁל רוּחַ וּמַיִם",
+      "sequence": 100,
+      "recall": [
+        "r-sira",
+        "r-kova"
+      ],
+      "meet": [
+        [
+          {
+            "clip": "heb-a-w-ruach",
+            "picture": "wind",
+            "explain": "m-ruach"
+          },
+          {
+            "clip": "heb-a-w-soche",
+            "picture": "act-he-swim-fish-b",
+            "explain": "m-soche"
+          }
+        ]
+      ],
+      "find": [
+        "f-ruach",
+        "f-soche",
+        "07",
+        "12"
+      ],
+      "use": [
         "say-ruach",
-        "say-kadur"
+        "do-soche"
+      ]
+    },
+    {
+      "id": "words-review",
+      "title": "זוֹכְרִים אֶת הַמִּלִּים?",
+      "sequence": 115,
+      "recall": [
+        "r-ruach",
+        "r-soche"
+      ],
+      "use": [
+        "ch-s3",
+        "say-soche"
       ]
     }
   ]

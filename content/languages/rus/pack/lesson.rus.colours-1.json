@@ -15,9 +15,15 @@
     "RUS-A-06"
   ],
   "items": [
+    "rus.a06.f01",
+    "rus.a06.f02",
+    "rus.a06.f03",
     "rus.a06.01",
+    "rus.a06.03",
     "rus.a06.02",
-    "rus.a06.03"
+    "rus.a06.d01",
+    "rus.a06.s01",
+    "rus.a06.s04"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,7 +35,7 @@
       }
     ]
   },
-  "sequence": 20,
+  "sequence": 28,
   "teach": [
     {
       "items": [

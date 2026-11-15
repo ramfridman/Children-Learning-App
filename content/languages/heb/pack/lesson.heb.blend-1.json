@@ -15,10 +15,12 @@
     "HEB-A-09"
   ],
   "items": [
+    "heb.a09.ch-b1",
     "heb.a09.01",
     "heb.a09.02",
     "heb.a09.03",
-    "heb.a09.04"
+    "heb.a09.04",
+    "heb.a09.ch-b2"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +32,5 @@
       }
     ]
   },
-  "sequence": 17
+  "sequence": 170
 }

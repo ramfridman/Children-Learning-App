@@ -494,8 +494,8 @@ class SessionBuilder {
 }
 
 /// What one visit may serve (docs/languages/frame.md sections 3.1, 3.3.6 and 3.5): the skills and items of its course only,
-/// and for a new skill also not a roll-up (it has no items), not one a closed gate holds back, and not letter work under the
-/// youngest presentation band.
+/// and for a new skill also not a roll-up (it has no items) and not one a closed gate holds back (letters are held by the gates, by age and
+/// level, never by the presentation band).
 class _Scope {
   const _Scope(this.c, this.catalog);
 
@@ -508,11 +508,7 @@ class _Scope {
   /// May [skillId] be offered as something new or in focus?
   bool offered(String skillId) {
     final SkillNode? n = catalog.skills[skillId];
-    return n != null &&
-        n.course == c.course &&
-        !catalog.isRollUp(skillId) &&
-        !c.held.contains(skillId) &&
-        offeredUnder(c.band, n);
+    return n != null && n.course == c.course && !catalog.isRollUp(skillId) && !c.held.contains(skillId);
   }
 
   bool item(ItemMeta i) => i.course == c.course;

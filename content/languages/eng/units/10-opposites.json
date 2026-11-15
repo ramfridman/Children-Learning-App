@@ -1,19 +1,43 @@
 {
   "skill": {"id": "ENG-A-10", "strand": "lis", "title": "הֲפָכִים", "prerequisites": [{"skill": "ENG-A-03"}, {"skill": "ENG-A-05"}], "setCoverage": true},
   "items": [
-    {"id": "i05", "kind": "tap", "target": "en-hot", "options": ["tea", "cup-cold", "mika-sad"], "wrong": {"cup-cold": "sem", "mika-sad": "l1_guess"}},
-    {"id": "i06", "kind": "tap", "target": "en-cold", "options": ["mika-cold", "mika-hot", "pip-happy"], "wrong": {"mika-hot": "sem", "pip-happy": "l1_guess"}},
-    {"id": "i07", "kind": "tap", "target": "en-happy", "options": ["mika-happy", "mika-sad", "tea"], "wrong": {"mika-sad": "sem", "tea": "l1_guess"}},
-    {"id": "i08", "kind": "tap", "target": "en-sad", "options": ["pip-sad", "pip-happy", "cup-cold"], "wrong": {"pip-happy": "sem", "cup-cold": "l1_guess"}},
-    {"id": "i09", "kind": "tap", "purpose": "check", "target": "en-hot", "options": ["mika-hot", "mika-cold", "cup-cold"], "wrong": {"mika-cold": "sem", "cup-cold": "l1_guess"}},
-    {"id": "i10", "kind": "tap", "purpose": "check", "target": "en-cold", "options": ["cup-cold", "tea", "mika-happy"], "wrong": {"tea": "sem", "mika-happy": "l1_guess"}},
+    {"id": "i05", "kind": "tap", "target": "en-hot", "options": [{"pic": "tea", "clip": "en-hot"}, {"pic": "cup-cold", "clip": "en-cold"}, {"pic": "mika-sad", "clip": "en-sad"}], "wrong": {"cup-cold": "sem", "mika-sad": "l1_guess"}},
+    {"id": "i06", "kind": "tap", "target": "en-cold", "options": [{"pic": "mika-cold", "clip": "en-cold"}, {"pic": "mika-hot", "clip": "en-hot"}, {"pic": "pip-happy", "clip": "en-happy"}], "wrong": {"mika-hot": "sem", "pip-happy": "l1_guess"}},
+    {"id": "i07", "kind": "tap", "target": "en-happy", "options": [{"pic": "pip-happy", "clip": "en-happy"}, {"pic": "pip-sad", "clip": "en-sad"}, {"pic": "mika-sad", "clip": "en-sad"}], "wrong": {"pip-sad": "sem", "mika-sad": "sem"}},
+    {"id": "i08", "kind": "tap", "target": "en-sad", "options": [{"pic": "mika-sad", "clip": "en-sad"}, {"pic": "mika-happy", "clip": "en-happy"}, {"pic": "pip-happy", "clip": "en-happy"}], "wrong": {"mika-happy": "sem", "pip-happy": "sem"}},
+    {"id": "i09", "kind": "tap", "purpose": "check", "target": "en-hot", "options": [{"pic": "mika-hot", "clip": "en-hot"}, {"pic": "mika-cold", "clip": "en-cold"}, {"pic": "cup-cold", "clip": "en-cold"}], "wrong": {"mika-cold": "sem", "cup-cold": "l1_guess"}},
+    {"id": "i10", "kind": "tap", "purpose": "check", "target": "en-cold", "options": [{"pic": "cup-cold", "clip": "en-cold"}, {"pic": "tea", "clip": "en-hot"}, {"pic": "mika-happy", "clip": "en-happy"}], "wrong": {"tea": "sem", "mika-happy": "l1_guess"}},
     {"id": "i01", "kind": "listen_do", "rep": "pictorial", "ladder": "HL-PIC", "mode": "hotspots", "picture": "dog-big", "target": "en-big", "options": ["big", "small"], "wrong": {"small": "sem"}},
     {"id": "i02", "kind": "listen_do", "rep": "pictorial", "ladder": "HL-PIC", "mode": "hotspots", "picture": "dog-big", "target": "en-small", "options": ["small", "big"], "wrong": {"big": "sem"}},
     {"id": "i03", "kind": "listen_do", "rep": "pictorial", "ladder": "HL-PIC", "mode": "hotspots", "picture": "ball-pair", "target": "en-big", "options": ["big", "small"], "wrong": {"small": "sem"}},
-    {"id": "i04", "kind": "listen_do", "rep": "pictorial", "ladder": "HL-PIC", "mode": "hotspots", "picture": "ball-pair", "target": "en-small", "options": ["small", "big"], "wrong": {"big": "sem"}}
+    {"id": "i04", "kind": "listen_do", "rep": "pictorial", "ladder": "HL-PIC", "mode": "hotspots", "picture": "ball-pair", "target": "en-small", "options": ["small", "big"], "wrong": {"big": "sem"}},
+    {"id": "n01", "kind": "tap", "target": "en-happy", "options": [{"pic": "mika-happy", "clip": "en-happy"}, {"pic": "mika-sad", "clip": "en-sad"}], "wrong": {"mika-sad": "sem"}},
+    {"id": "n02", "kind": "tap", "target": "en-sad", "options": [{"pic": "pip-sad", "clip": "en-sad"}, {"pic": "pip-happy", "clip": "en-happy"}], "wrong": {"pip-happy": "sem"}},
+    {"id": "n03", "kind": "tap", "target": "en-happy", "options": [{"pic": "mika-happy", "clip": "en-happy"}, {"pic": "pip-sad", "clip": "en-sad"}, {"pic": "mika-sad", "clip": "en-sad"}], "wrong": {"pip-sad": "sem", "mika-sad": "sem"}},
+    {"id": "n04", "kind": "tap", "target": "en-sad", "options": [{"pic": "pip-sad", "clip": "en-sad"}, {"pic": "mika-happy", "clip": "en-happy"}, {"pic": "pip-happy", "clip": "en-happy"}], "wrong": {"mika-happy": "sem", "pip-happy": "sem"}},
+    {"id": "n05", "kind": "tap", "target": "en-hot", "options": [{"pic": "mika-hot", "clip": "en-hot"}, {"pic": "mika-cold", "clip": "en-cold"}], "wrong": {"mika-cold": "sem"}},
+    {"id": "n06", "kind": "tap", "target": "en-cold", "options": [{"pic": "cup-cold", "clip": "en-cold"}, {"pic": "tea", "clip": "en-hot"}], "wrong": {"tea": "sem"}},
+    {"id": "n07", "kind": "tap", "target": "en-hot", "options": [{"pic": "mika-hot", "clip": "en-hot"}, {"pic": "pip-cold", "clip": "en-cold"}, {"pic": "pip-sad", "clip": "en-sad"}], "wrong": {"pip-cold": "sem", "pip-sad": "l1_guess"}},
+    {"id": "n08", "kind": "tap", "target": "en-cold", "options": [{"pic": "pip-cold", "clip": "en-cold"}, {"pic": "tea", "clip": "en-hot"}, {"pic": "mika-happy", "clip": "en-happy"}], "wrong": {"tea": "sem", "mika-happy": "l1_guess"}},
+    {"id": "n09", "kind": "tap", "target": "en-big", "options": [{"pic": "whale", "clip": "en-big"}, {"pic": "mouse", "clip": "en-small"}], "wrong": {"mouse": "sem"}},
+    {"id": "n10", "kind": "tap", "target": "en-small", "options": [{"pic": "mouse", "clip": "en-small"}, {"pic": "whale", "clip": "en-big"}], "wrong": {"whale": "sem"}},
+    {"id": "n11", "kind": "tap", "target": "en-big", "options": [{"pic": "bear", "clip": "en-big"}, {"pic": "ant", "clip": "en-small"}, {"pic": "mouse", "clip": "en-small"}], "wrong": {"ant": "sem", "mouse": "sem"}},
+    {"id": "n12", "kind": "tap", "target": "en-small", "options": [{"pic": "ant", "clip": "en-small"}, {"pic": "bear", "clip": "en-big"}, {"pic": "whale", "clip": "en-big"}], "wrong": {"bear": "sem", "whale": "sem"}},
+    {"id": "n13", "kind": "tap", "target": "en-big", "options": [{"pic": "whale", "clip": "en-big"}, {"pic": "ant", "clip": "en-small"}, {"pic": "mouse", "clip": "en-small"}], "wrong": {"ant": "sem", "mouse": "sem"}},
+    {"id": "n14", "kind": "tap", "target": "en-small", "options": [{"pic": "mouse", "clip": "en-small"}, {"pic": "bear", "clip": "en-big"}, {"pic": "whale", "clip": "en-big"}], "wrong": {"bear": "sem", "whale": "sem"}},
+    {"id": "n15", "kind": "tap", "target": "en-sad", "options": [{"pic": "mika-sad", "clip": "en-sad"}, {"pic": "tea", "clip": "en-hot"}, {"pic": "mika-happy", "clip": "en-happy"}], "wrong": {"tea": "l1_guess", "mika-happy": "sem"}},
+    {"id": "s01", "kind": "say", "purpose": "practice", "frame": "he-ins-say", "rep": "embodied", "ladder": "HL-PIC", "picture": "mika-happy", "clip": "en-happy", "forms": ["happy"], "foils": ["hippie", "puppy", "heavy"], "heard": "he-fb-heard", "together": "he-fb-together"},
+    {"id": "s02", "kind": "say", "purpose": "practice", "frame": "he-ins-say", "rep": "embodied", "ladder": "HL-PIC", "picture": "mika-cold", "clip": "en-cold", "forms": ["cold"], "foils": ["gold", "old", "coat"], "heard": "he-fb-heard", "together": "he-fb-together"},
+    {"id": "s03", "kind": "say", "purpose": "practice", "frame": "he-ins-say", "rep": "embodied", "ladder": "HL-PIC", "picture": "whale", "clip": "en-big", "forms": ["big"], "foils": ["pig", "bag", "dig"], "heard": "he-fb-heard", "together": "he-fb-together"},
+    {"id": "s04", "kind": "say", "purpose": "practice", "frame": "he-ins-say", "rep": "embodied", "ladder": "HL-PIC", "picture": "mouse", "clip": "en-small", "forms": ["small"], "foils": ["smell", "mall", "snail"], "heard": "he-fb-heard", "together": "he-fb-together"},
+    {"id": "e01", "kind": "listen_do", "purpose": "practice", "frame": "he-ins-do-too", "mode": "embodied", "picture": "mika-body", "clips": ["en-happy", "en-sad"]},
+    {"id": "e02", "kind": "listen_do", "purpose": "practice", "frame": "he-ins-do-too", "mode": "embodied", "picture": "mika-body", "clips": ["en-hot", "en-cold"]},
+    {"id": "x01", "kind": "sort", "frame": "he-ins-sort", "rep": "concrete", "ladder": "HL-SORT", "bins": [{"id": "happy", "label": "en-happy", "picture": "mika-happy"}, {"id": "sad", "label": "en-sad", "picture": "mika-sad"}], "cards": [{"pic": "pip-happy", "bin": "happy"}, {"pic": "mika-icecream", "bin": "sad"}, {"pic": "pip-sad", "bin": "sad"}, {"pic": "mika-present", "bin": "happy"}], "wrong": {"pip-happy": "sem", "mika-icecream": "sem", "pip-sad": "sem", "mika-present": "sem"}}
   ],
   "lessons": [
-    {"id": "adj-1", "title": "חַם, קַר, שָׂמֵחַ, עָצוּב", "items": ["i05", "i06", "i07", "i08"]},
-    {"id": "adj-more", "title": "חַם, קַר, שָׂמֵחַ, עָצוּב", "items": ["i01", "i02", "i03", "i04"]}
+    {"id": "adj-1", "title": "שָׂמֵחַ, עָצוּב", "recall": ["a09.n16", "a09.n17"], "meet": [["en-happy", "en-sad"]], "find": ["n01", "n02", "i07", "i08"], "use": ["s01", "e01", "x01"]},
+    {"id": "adj-2", "title": "חַם, קַר", "recall": ["n03", "n04"], "meet": [["en-hot", "en-cold"]], "find": ["n05", "n06", "i05", "i06"], "use": ["s02", "e02"]},
+    {"id": "adj-3", "title": "גָּדוֹל, קָטָן", "recall": ["n07", "n08"], "meet": [[{"clip": "en-big", "picture": "dog-big", "focus": [0.0156, 0.3281, 0.625, 0.6094]}, {"clip": "en-small", "picture": "dog-big", "focus": [0.6406, 0.5859, 0.3438, 0.3438]}]], "find": ["n09", "n10", "n11", "n12"], "use": ["i01", "i04", "s03"]},
+    {"id": "adj-more", "title": "הֲפָכִים", "recall": ["n13", "n14"], "use": ["i02", "i03", "s04"]}
   ]
 }

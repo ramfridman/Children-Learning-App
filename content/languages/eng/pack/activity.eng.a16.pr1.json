@@ -43,7 +43,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "כֵּן אוֹ לֹא? גְּעוּ בַּאֲגוּדָל."
+        "v": "כֵּן אוֹ לֹא? גְּעוּ בָּאֲגוּדָל."
       }
     ],
     "target": "vo:eng.en_isit_dog",
@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_3",
+      "vo": "vo:eng.he_fb_right_6",
       "caption": [
         {
           "t": "he",
-          "v": "יָפֶה מְאֹד!"
+          "v": "שְׁמַעְתֶּם טוֹב!"
         }
       ],
       "target": "vo:eng.en_yes"
@@ -143,12 +143,14 @@
       {
         "id": "o1",
         "sprite": "asset:thumb_up",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_yes"
       },
       {
         "id": "o2",
         "sprite": "asset:thumb_down",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_no",
         "misconception": "eng.lis.yesno"
       }
     ],

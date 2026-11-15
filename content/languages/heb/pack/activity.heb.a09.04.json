@@ -51,14 +51,14 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_6",
+      "vo": "vo:heb.ok_4",
       "caption": [
         {
           "t": "he",
-          "v": "יוֹפִי שֶׁל הַקְשָׁבָה!"
+          "v": "הִקְשַׁבְתֶּם עַד הַסּוֹף!"
         }
       ],
-      "target": "vo:heb.heb_a_u_aba"
+      "target": "vo:heb.heb_a_w_aba"
     },
     "incorrect": [
       {
@@ -150,18 +150,21 @@
       {
         "id": "o1",
         "sprite": "asset:fam_father",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_aba"
       },
       {
         "id": "o2",
         "sprite": "asset:teddy_nose",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_af",
         "misconception": "heb.pa.blend_first"
       },
       {
         "id": "o3",
         "sprite": "asset:fam_grandfather",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_saba",
         "misconception": "heb.pa.blend_last"
       }
     ],

@@ -1,0 +1,153 @@
+{
+  "schema": "activity/v1",
+  "id": "eng.a10.tc06",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "say_it",
+  "templateVersion": "1.0",
+  "course": "eng",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "ENG-A-10",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "embodied",
+  "variantGroup": "a10-tc06",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 1,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "say the word with the voice",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנָה וּמִלָּה לוֹמַר"
+  },
+  "prompt": {
+    "vo": "vo:eng.he_fb_together",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נֹאמַר יַחַד."
+      }
+    ],
+    "target": "vo:eng.en_small",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:eng.he_fb_right_1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נָכוֹן!"
+        }
+      ],
+      "target": "vo:eng.en_small"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:eng.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:eng.he_fb_listen_again",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
+        }
+      ],
+      "target": "vo:eng.en_small"
+    }
+  },
+  "hints": [],
+  "scene": {
+    "picture": {
+      "sprite": "asset:dog_big"
+    }
+  },
+  "say": {
+    "forms": [
+      "small"
+    ],
+    "foils": [
+      "big"
+    ],
+    "clip": "vo:eng.en_small",
+    "heard": {
+      "vo": "vo:eng.he_fb_heard",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שָׁמַעְתִּי:"
+        }
+      ],
+      "target": "vo:eng.en_small"
+    },
+    "together": {
+      "vo": "vo:eng.he_fb_together",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נֹאמַר יַחַד."
+        }
+      ],
+      "target": "vo:eng.en_small"
+    },
+    "meet": {
+      "position": 1,
+      "size": 2,
+      "earlier": [
+        {
+          "sprite": "asset:dog_big",
+          "clip": "vo:eng.en_big"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:eng.he_hint_hebrew",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: קָטָן"
+          }
+        ],
+        "target": "vo:eng.he_gl_small"
+      },
+      "focus": [
+        0.6406,
+        0.5859,
+        0.3438,
+        0.3438
+      ],
+      "written": "small"
+    }
+  },
+  "answer": {
+    "type": "say_it",
+    "scored": false,
+    "teach": true
+  }
+}

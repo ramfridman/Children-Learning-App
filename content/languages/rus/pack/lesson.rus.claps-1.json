@@ -18,7 +18,9 @@
     "rus.a18.14",
     "rus.a18.15",
     "rus.a18.16",
-    "rus.a18.17"
+    "rus.a18.17",
+    "rus.a18.e03",
+    "rus.a18.b03"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +32,5 @@
       }
     ]
   },
-  "sequence": 60
+  "sequence": 86
 }

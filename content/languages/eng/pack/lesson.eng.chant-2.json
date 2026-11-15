@@ -15,10 +15,10 @@
     "ENG-A-13"
   ],
   "items": [
+    "eng.a13.i01",
     "eng.a13.c03",
     "eng.a13.c04",
-    "eng.a13.i04",
-    "eng.a13.c05"
+    "eng.a13.i04"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +30,5 @@
       }
     ]
   },
-  "sequence": 34
+  "sequence": 46
 }

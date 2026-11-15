@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_2",
+      "vo": "vo:heb.ok_3",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן, זֶהוּ זֶה!"
+          "v": "שְׁמַעְתֶּם טוֹב!"
         }
       ],
       "target": "vo:heb.heb_a_s3_r1"
@@ -192,18 +192,21 @@
       {
         "id": "o1",
         "sprite": "asset:hat",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_kova"
       },
       {
         "id": "o2",
         "sprite": "asset:boat",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_sira",
         "misconception": "heb.ol.story_seen"
       },
       {
         "id": "o3",
         "sprite": "asset:kite",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_afifon",
         "misconception": "heb.ol.story_world"
       }
     ],

@@ -54,3 +54,7 @@ regexes = [
 description = "Content file names in the Hebrew review tables (tools/hebrew_voice_review.py): 'activity.log.pair.key.json' followed by a row path reads as a generic key; a file name, not a key"
 regexTarget = "match"
 regexes = ['''activity\.log\.pair\.key\.json''']
+
+[[allowlists]]
+description = "The owner's approval snapshots (tools/owner_approval.py): each row is source,id,sha256 of the row's text; a string id such as 'alertAddSecret' next to a text hash reads as a generic key; hashes of Hebrew text, not keys"
+paths = ['''^docs/review/owner-approval-\d{4}-\d{2}-\d{2}\.csv$''']

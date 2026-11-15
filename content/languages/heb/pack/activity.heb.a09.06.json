@@ -51,14 +51,14 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_8",
+      "vo": "vo:heb.ok_6",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "יוֹפִי שֶׁל הַקְשָׁבָה!"
         }
       ],
-      "target": "vo:heb.heb_a_u_matana"
+      "target": "vo:heb.heb_a_w_matana"
     },
     "incorrect": [
       {
@@ -150,18 +150,21 @@
       {
         "id": "o1",
         "sprite": "asset:present",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_matana"
       },
       {
         "id": "o2",
         "sprite": "asset:plane",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_matos",
         "misconception": "heb.pa.blend_first"
       },
       {
         "id": "o3",
         "sprite": "asset:banana",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_banana",
         "misconception": "heb.pa.blend_last"
       }
     ],

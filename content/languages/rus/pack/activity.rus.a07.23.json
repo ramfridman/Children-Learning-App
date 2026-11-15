@@ -140,6 +140,7 @@
         "id": "o1",
         "sprite": "asset:cheese",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_syr",
         "at": {
           "x": 0.02,
           "y": 0.05,
@@ -149,9 +150,10 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:soup",
+        "sprite": "asset:bread",
         "label": "תְּמוּנָה",
-        "misconception": "rus.voc.sound",
+        "clip": "vo:rus.w_hleb",
+        "misconception": "rus.lis.sem",
         "at": {
           "x": 0.02,
           "y": 0.355,
@@ -161,8 +163,9 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:bread",
+        "sprite": "asset:tea",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_chaj",
         "misconception": "rus.lis.sem",
         "at": {
           "x": 0.02,

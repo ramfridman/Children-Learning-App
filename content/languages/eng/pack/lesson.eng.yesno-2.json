@@ -8,18 +8,21 @@
   "title": [
     {
       "t": "he",
-      "v": "מָה יֵשׁ בַּקֻּפְסָה?"
+      "v": "כֵּן אוֹ לֹא"
     }
   ],
   "skills": [
     "ENG-A-16"
   ],
   "items": [
+    "eng.a16.n05",
+    "eng.a16.n06",
+    "eng.a16.i01",
+    "eng.a16.i02",
+    "eng.a16.i03",
+    "eng.a16.i04",
     "eng.a16.g01",
-    "eng.a16.g02",
-    "eng.a16.g03",
-    "eng.a16.g04",
-    "eng.a16.g05"
+    "eng.a16.e01"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -31,5 +34,18 @@
       }
     ]
   },
-  "sequence": 39
+  "sequence": 55,
+  "teach": [
+    {
+      "items": [
+        "eng.a16.tc03",
+        "eng.a16.tc04"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a16.i01"
+    }
+  ]
 }

@@ -14,11 +14,12 @@
   "strand": "lis",
   "prerequisites": [],
   "representations": [
+    "concrete",
     "pictorial",
-    "story"
+    "story",
+    "embodied"
   ],
   "misconceptions": [
-    "eng.lis.l1_guess",
     "eng.lis.sem"
   ],
   "retention": {

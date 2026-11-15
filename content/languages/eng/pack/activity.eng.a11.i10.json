@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_2",
+      "vo": "vo:eng.he_fb_right_8",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן!"
+          "v": "כׇּל הַכָּבוֹד!"
         }
       ],
       "target": "vo:eng.en_its_egg"
@@ -99,11 +99,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_egg",
+      "vo": "vo:eng.he_gl_its_egg",
       "caption": [
         {
           "t": "he",
-          "v": "בֵּיצָה"
+          "v": "זוֹ בֵּיצָה."
         }
       ],
       "target": "vo:eng.en_its_egg"

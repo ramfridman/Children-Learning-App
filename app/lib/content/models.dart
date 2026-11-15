@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' show Offset, Rect;
 
@@ -130,6 +131,7 @@ sealed class Activity {
       variantGroup = json['variantGroup']! as String,
       difficulty = (_map(json['difficulty'])['authored']! as num).toDouble(),
       contradicts = json['contradicts'] as String?,
+      asksClip = json['asks'] as String?,
       voiceAnswer = json['voiceAnswer'] == true,
       promptLine = Spoken.fromJson(json['prompt']),
       promptMath = _tokens(_map(json['prompt'])['math']),
@@ -202,6 +204,10 @@ sealed class Activity {
 
   /// The activity that forms a balanced pair with this one (a yes and a no: `answer.pairWith`), or null.
   String? get pairWith => _map(json['answer'])['pairWith'] as String?;
+
+  /// The clip of the word the item asks when its prompt is a phrase and not the word (`asks`, a command "show me the arms"), or null: the
+  /// item then asks the word its prompt or its right answer says ([FirstMeeting]).
+  final String? asksClip;
 
   /// A teach screen: shown before a lesson to a route that needs the words, never an item of the engine's catalogue.
   bool get teachScreen => false;
@@ -442,6 +448,7 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
       correctIds = _correctIds(_map(json['answer'])['correct']),
       correctId = _correctIds(_map(json['answer'])['correct']).firstOrNull ?? '',
       all = _map(json['answer'])['all'] == true,
+      askWhere = _map(json['answer'])['askWhere'] == true,
       numberAnswer = _map(json['answer'])['type'] == 'number'
           ? NumberAnswer.fromJson(_map(json['answer']))
           : null,
@@ -474,6 +481,10 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
           (sprite: c['sprite']! as String, count: c['count']! as int),
       ],
       super._();
+
+  /// A picture choice of a language course whose every picture names its word (`answer.askWhere`): a picture says its own word when it is
+  /// touched; the first wrong tap says the tapped word, then "and where is ...?" and the target, and shows no hint picture with it.
+  final bool askWhere;
 
   /// The columns of a chart to read (1.2): each a picture and how many of it; empty when the scene has none.
   final List<({String sprite, int count})> chart;
@@ -1917,7 +1928,12 @@ class SayItActivity extends Activity {
       pictureFirstLine = _map(json['say'])['pictureFirst'] == null
           ? null
           : Spoken.fromJson(_map(json['say'])['pictureFirst']),
+      meet = _map(json['say'])['meet'] == null ? null : MeetData.fromJson(_map(_map(json['say'])['meet'])),
       super._();
+
+  /// What a Meet screen of the four-part lesson has beyond a teach screen (its place in its set, the strip, the beats' lines), or null for
+  /// a teach screen of the old kind (a set of the unit's own `teach`) and for every other say step.
+  final MeetData? meet;
 
   /// A teach screen (`answer.teach`): the word is shown and said twice, the child may say it with the voice. It is never scored, writes no
   /// attempt, has no microphone and no help (nothing can be got wrong), and the engine does not see it.
@@ -1957,6 +1973,18 @@ class SayItActivity extends Activity {
   /// The tap on the picture is a scored listening answer.
   final bool scored;
 
+  /// A Meet screen: the screen that introduces one word to a new learner (a teach screen that is not a hearing screen).
+  bool get meetScreen => teach && !hear;
+
+  /// What the guide says first on a Meet screen: the opener of a set (its first screen), else the carrier and the word, else the word alone;
+  /// a teach screen of the old kind (no `say.meet`) says its prompt, "let's say it together" and the word.
+  Spoken get firstBeat {
+    final MeetData? m = meet;
+    if (m == null) return promptLine;
+    if (m.first && m.opener != null) return m.opener!;
+    return m.hear ?? Spoken(vo: wordClip, caption: '');
+  }
+
   @override
   bool get unscored => teach;
 
@@ -1968,6 +1996,62 @@ class SayItActivity extends Activity {
 
   @override
   Set<String> get engineTags => const <String>{};
+}
+
+/// The data of a Meet screen (docs/design/l7-meet-find.md section 10.1; `say.meet` of the say_it schema).
+class MeetData {
+  MeetData.fromJson(Map<String, Object?> json)
+    : position = json['position']! as int,
+      size = json['size']! as int,
+      earlier = <MeetWord>[
+        for (final Map<String, Object?> w in _maps(json['earlier']))
+          MeetWord(sprite: w['sprite']! as String, clip: w['clip']! as String),
+      ],
+      opener = json['opener'] == null ? null : Spoken.fromJson(json['opener']),
+      hear = json['hear'] == null ? null : Spoken.fromJson(json['hear']),
+      meaning = json['meaning'] == null ? null : Spoken.fromJson(json['meaning']),
+      explain = json['explain'] == null ? null : Spoken.fromJson(json['explain']),
+      focus = json['focus'] == null
+          ? null
+          : Rect.fromLTWH(
+              ((json['focus']! as List<Object?>)[0]! as num).toDouble(),
+              ((json['focus']! as List<Object?>)[1]! as num).toDouble(),
+              ((json['focus']! as List<Object?>)[2]! as num).toDouble(),
+              ((json['focus']! as List<Object?>)[3]! as num).toDouble(),
+            ),
+      written = json['written'] as String?;
+
+  /// 0 for the first screen of its set, which says the opener.
+  final int position;
+
+  /// How many words the set has.
+  final int size;
+
+  /// The words of the set met before this one, in the order met: the strip at the side of the card.
+  final List<MeetWord> earlier;
+
+  /// The opener (first screen of a set only), the carrier said before the word, the Hebrew meaning said once (English, Russian: "in
+  /// Hebrew:" then the gloss) and the Hebrew sentence that explains the word (the Hebrew course); each may be absent.
+  final Spoken? opener;
+  final Spoken? hear;
+  final Spoken? meaning;
+  final Spoken? explain;
+
+  /// The part of a story picture the word names, as shares of the picture, or null.
+  final Rect? focus;
+
+  /// The word as the chip prints it once the child's letters are open, or null.
+  final String? written;
+
+  bool get first => position == 0;
+}
+
+/// A word met earlier in a Meet set: its picture and its clip (the strip's thumbnail says the word when touched).
+class MeetWord {
+  const MeetWord({required this.sprite, required this.clip});
+
+  final String sprite;
+  final String clip;
 }
 
 List<String> _strings(Object? o) => <String>[
@@ -2080,6 +2164,7 @@ class Lesson {
             itemIds: <String>[for (final Object? i in t['items']! as List<Object?>) i! as String],
             routes: <String>{for (final Object? r in t['routes']! as List<Object?>) r! as String},
             hear: t['mode'] == 'hear',
+            before: t['before'] as String?,
           ),
       ],
       stopAfterStruggles = 0,
@@ -2127,10 +2212,14 @@ class Lesson {
 /// teach screens of new words (LS09, echo) for a new learner, or, when [hear], the hearing screens of words a heritage speaker is to hear
 /// once before they are asked. A heritage speaker already knows the words and is never shown a teach screen.
 class TeachSet {
-  const TeachSet({required this.itemIds, required this.routes, this.hear = false});
+  const TeachSet({required this.itemIds, required this.routes, this.hear = false, this.before});
 
   final List<String> itemIds;
   final Set<String> routes;
+
+  /// The id of the lesson item the screens of the set stand in front of (L7-4: a Meet set may stand anywhere in a lesson), or null: before
+  /// the first item.
+  final String? before;
 
   /// A set of hearing screens (`mode` `hear`), not of teach screens.
   final bool hear;
@@ -2225,8 +2314,19 @@ class GateDoc {
       ],
       holds = <String>{for (final Object? s in json['holds']! as List<Object?>) s! as String},
       minAge = json['minAge'] as int?,
-      neverUnderBand = json['neverUnderBand'] as int?,
-      durableBelowBand = json['durableBelowBand'] as int?,
+      durableBelowAge = json['durableBelowAge'] as int?,
+      earlyRequires = <String>{
+        for (final Object? s in (_maybe(json['early'])['requires'] as List<Object?>?) ?? const <Object?>[])
+          s! as String,
+      },
+      earlyRequireAtLeast = <({Set<String> skills, int count})>[
+        for (final Map<String, Object?> q in _maps(_maybe(json['early'])['requireAtLeast']))
+          (
+            skills: <String>{for (final Object? s in q['skills']! as List<Object?>) s! as String},
+            count: q['count']! as int,
+          ),
+      ],
+      hasEarly = json['early'] != null,
       switchName = (json['parentSwitch'] as Map<String, Object?>?)?['name'] as String?,
       switchEffect = (json['parentSwitch'] as Map<String, Object?>?)?['effect'] as String?,
       routeBypass = <String>{
@@ -2239,8 +2339,12 @@ class GateDoc {
   final List<({Set<String> skills, int count})> requireAtLeast;
   final Set<String> holds;
   final int? minAge;
-  final int? neverUnderBand;
-  final int? durableBelowBand;
+  final int? durableBelowAge;
+
+  /// The early set ("letters together with words"; the words floor of every way into letters): present only when [hasEarly].
+  final bool hasEarly;
+  final Set<String> earlyRequires;
+  final List<({Set<String> skills, int count})> earlyRequireAtLeast;
   final String? switchName;
   final String? switchEffect;
   final Set<String> routeBypass;
@@ -2253,7 +2357,8 @@ class PlacementStrandDoc {
     : id = json['id']! as String,
       offerAnswer = _maybe(json['offer'])['answer'] as String?,
       offerEquals = _maybe(json['offer'])['equals'] as String?,
-      offerMinBand = (_maybe(json['offer'])['minBand'] as int?) ?? 0,
+      opensGate = _maybe(json['opens'])['gate'] as String?,
+      opensFromLevel = _maybe(json['opens'])['fromLevel'] as int?,
       start = <({String answer, String equals, int level})>[
         for (final Map<String, Object?> s in _maps(json['start']))
           (answer: s['answer']! as String, equals: s['equals']! as String, level: s['level']! as int),
@@ -2270,11 +2375,15 @@ class PlacementStrandDoc {
 
   final String id;
 
-  /// The strand is offered only when the questionnaire answered [offerAnswer] with [offerEquals] (both null: always) and the child's
-  /// presentation band is at least [offerMinBand].
+  /// The strand is offered only when the questionnaire answered [offerAnswer] with [offerEquals] (both null: always). Never by age or
+  /// by the presentation band: a start does not read age (L7-8).
   final String? offerAnswer;
   final String? offerEquals;
-  final int offerMinBand;
+
+  /// A strand of letters names the gate it can open: a level from [opensFromLevel] up passed at two thirds or more marks [opensGate]
+  /// open, for a child whose parent says they know letters or read (level comes before age). Both null for a strand that opens nothing.
+  final String? opensGate;
+  final int? opensFromLevel;
   final List<({String answer, String equals, int level})> start;
   final List<({List<String> items, List<String> assumes})> levels;
 }
@@ -2436,6 +2545,11 @@ class PackContent {
   /// The gates of the course (none in the lands that exist today).
   final Map<String, GateDoc> gates;
 
+  /// Does a gate of the course hold letter skills (`letters: true`)? Until the letter lessons are in a pack none does, and the parent switches
+  /// that only act on such a gate ("letters before 5", "letters together with words") have nothing to do.
+  bool get hasLettersGate =>
+      gates.values.any((GateDoc g) => g.holds.any((String id) => skills[id]?.letters ?? false));
+
   /// The stroke sets of the course's scripts by name (`latin`, `hebrew-print` ...); none in the lands.
   final Map<String, StrokeSet> strokeSets;
 
@@ -2457,12 +2571,23 @@ class PackContent {
   /// served as a new learner, the side that shows more. A route never removes, adds or reorders a lesson's items.
   List<Activity> itemsFor(Lesson lesson, {String? route}) {
     final bool heritage = route == 'heritage';
+    final List<Activity> items = itemsOf(lesson);
+    // The screens of each set that the route is shown, by the place they stand at: the index of the item `before` names (0: before the first
+    // item, which is also where a set that names nothing, or an item that is not there, stands). Sets with the same place keep their order.
+    final Map<int, List<Activity>> screens = <int, List<Activity>>{};
+    for (final TeachSet set in lesson.teach) {
+      if (!set.routes.contains(heritage ? 'heritage' : 'new') || set.hear != heritage) continue;
+      final int at = set.before == null
+          ? 0
+          : math.max(0, items.indexWhere((Activity a) => a.id == set.before));
+      screens.putIfAbsent(at, () => <Activity>[]).addAll(<Activity>[
+        for (final String id in set.itemIds)
+          if (activities[id] case final SayItActivity a when a.teach && a.hear == heritage) a,
+      ]);
+    }
+    if (items.isEmpty) return <Activity>[...?screens[0]];
     return <Activity>[
-      for (final TeachSet set in lesson.teach)
-        if (set.routes.contains(heritage ? 'heritage' : 'new') && set.hear == heritage)
-          for (final String id in set.itemIds)
-            if (activities[id] case final SayItActivity a when a.teach && a.hear == heritage) a,
-      ...itemsOf(lesson),
+      for (final (int i, Activity item) in items.indexed) ...<Activity>[...?screens[i], item],
     ];
   }
 }

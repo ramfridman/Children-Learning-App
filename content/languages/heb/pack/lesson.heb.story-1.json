@@ -12,12 +12,18 @@
     }
   ],
   "skills": [
+    "HEB-A-02",
     "HEB-A-01"
   ],
   "items": [
+    "heb.a02.r-siach",
+    "heb.a02.r-boet",
     "heb.a01.02",
     "heb.a01.01",
-    "heb.a01.05"
+    "heb.a01.05",
+    "heb.a02.say-boet",
+    "heb.a02.say-mechapeset",
+    "heb.a02.ch-s1"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,5 +35,5 @@
       }
     ]
   },
-  "sequence": 6
+  "sequence": 20
 }

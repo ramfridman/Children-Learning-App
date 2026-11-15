@@ -140,6 +140,7 @@
         "id": "o1",
         "sprite": "asset:balloon_red",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_red",
         "at": {
           "x": 0.02,
           "y": 0.05,
@@ -151,6 +152,7 @@
         "id": "o2",
         "sprite": "asset:balloon_blue",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_blue",
         "misconception": "eng.lis.sem",
         "at": {
           "x": 0.02,
@@ -161,8 +163,9 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:balloon_yellow",
+        "sprite": "asset:boat_blue",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_blue",
         "misconception": "eng.lis.sem",
         "at": {
           "x": 0.02,

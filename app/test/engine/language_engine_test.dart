@@ -86,26 +86,6 @@ void main() {
       expect(presentationSpec(0, course: Course.eng, params: const EngineParams()).sessionMinutes, 7);
     });
 
-    test('letter work is never offered under Band A, except Hebrew A-10 to A-12', () {
-      final SkillNode letter = _eng('ENG-B-16', letters: true);
-      final SkillNode oral = _eng('ENG-B-01');
-      expect(offeredUnder(0, letter), isFalse);
-      expect(offeredUnder(1, letter), isTrue);
-      expect(
-        offeredUnder(0, oral),
-        isTrue,
-        reason: 'a level B skill that is not letters is fine under Band A',
-      );
-      for (final String id in <String>['HEB-A-10', 'HEB-A-11', 'HEB-A-12']) {
-        expect(
-          offeredUnder(0, SkillNode(id: id, course: Course.heb, letters: true)),
-          isTrue,
-          reason: id,
-        );
-      }
-      expect(offeredUnder(0, const SkillNode(id: 'HEB-B-14', course: Course.heb, letters: true)), isFalse);
-    });
-
     test('a 7-year-old new to English starts at the first skill with the oldest band\'s pace', () {
       final Engine e = engineOf(
         catalogOf(<SkillNode>[
@@ -526,8 +506,8 @@ void main() {
         SkillQuota(skills: <String>{'ENG-B-12', 'ENG-B-13', 'ENG-B-14'}, count: 3),
       ],
       holds: <String>{'ENG-B-16', 'ENG-B-17'},
-      neverUnderBand: 0,
-      durableBelowBand: 2,
+      minAge: 5,
+      durableBelowAge: 7,
       switchName: 'oralOnly',
       switchEffect: SwitchEffect.closes,
     );
@@ -550,13 +530,11 @@ void main() {
       MasteryLevel level = MasteryLevel.durable,
       Set<String> skills = engSkills,
       int ageBand = 1,
-      int presentationBand = 1,
       Set<String> switchesOn = const <String>{},
       Set<String> placedOpen = const <String>{},
     }) => GateInput(
       mastery: <String, MasteryLevel>{for (final String s in skills) s: level},
       ageBand: ageBand,
-      presentationBand: presentationBand,
       switchesOn: switchesOn,
       placedOpen: placedOpen,
     );
@@ -572,16 +550,15 @@ void main() {
       expect(r.missing, <String>['ENG-A-02', 'ENG-B-14']);
     });
 
-    test('English: Band C may use fresh mastery, Band B needs durable', () {
-      expect(gateResult(oral, engInput(level: MasteryLevel.fresh, presentationBand: 2)).open, isTrue);
-      expect(gateResult(oral, engInput(level: MasteryLevel.fresh, presentationBand: 1)).open, isFalse);
+    test('English: from age 7 fresh mastery is enough, from 5 to 6 it needs durable', () {
+      expect(gateResult(oral, engInput(level: MasteryLevel.fresh, ageBand: 2)).open, isTrue);
+      expect(gateResult(oral, engInput(level: MasteryLevel.fresh, ageBand: 1)).open, isFalse);
     });
 
-    test('English: Band A never opens it', () {
-      final GateResult r = gateResult(oral, engInput(presentationBand: 0));
+    test('English: a child under 5 is held by the age, whatever else is true (no band is read)', () {
+      final GateResult r = gateResult(oral, engInput(ageBand: 0));
       expect(r.open, isFalse);
-      expect(r.reasons, <GateReason>[GateReason.bandTooYoung]);
-      expect(gateResult(oral, engInput(presentationBand: 0, placedOpen: <String>{'eng.oral'})).open, isFalse);
+      expect(r.reasons, <GateReason>[GateReason.tooYoung]);
     });
 
     test('English: the parent\'s "oral only" keeps it closed, even for a child placed above it', () {
@@ -606,7 +583,6 @@ void main() {
     }) => GateInput(
       mastery: <String, MasteryLevel>{for (final String s in skills) s: MasteryLevel.fresh},
       ageBand: ageBand,
-      presentationBand: ageBand,
       switchesOn: switchesOn,
       route: route,
     );

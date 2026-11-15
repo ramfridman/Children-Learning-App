@@ -17,7 +17,8 @@
   "items": [
     "heb.a12.01",
     "heb.a12.02",
-    "heb.a12.03"
+    "heb.a12.03",
+    "heb.a12.say-pr2"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,5 +30,5 @@
       }
     ]
   },
-  "sequence": 23
+  "sequence": 300
 }

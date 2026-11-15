@@ -104,6 +104,7 @@ def extra_numbers():
     for ns, obj, order in sets:
         o = OBJECTS[obj]
         u.act('NUM-A-07', 'match', band='A', domain='numbers', pairs=[['n:%d' % n, '%s*%d' % (obj, n)] for n in ns], order=order, tag='M-CNT-SIZE',
+              tag_lines={'M-CNT-SIZE': ('vo:fb.size.count', 'בּוֹאוּ נִסְפֹּר כַּמָּה יֵשׁ בְּכׇל קְבוּצָה.')},
               prompt='מַתְאִימִים כׇּל מִסְפָּר לַקְּבוּצָה שֶׁלּוֹ.', h3='סוֹפְרִים אֶת הַדְּבָרִים בְּכׇל קְבוּצָה, וּמוֹצְאִים אֶת הַמִּסְפָּר. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! כׇּל מִסְפָּר עִם הַקְּבוּצָה שֶׁלּוֹ.')
     ids = lambda s, a=0, b=None: lesson_ids(u, s, a, b)
@@ -245,7 +246,7 @@ def extra_shapes():
              assets=['shape_circle', 'shape_square', 'shape_triangle', 'shape_rect', 'solid_cylinder', 'solid_cone', 'solid_pyramid', 'solid_box', 'solid_sphere'], prefix='x')
     u.tag('M-SHP-FACE', ['SHP-B-09'], 'הילד לא רואה איזו צורה שטוחה יש על הגוף: את העיגול על הגליל, את המשולש על הפירמידה.',
           'להטביע בפלסטלינה בסיס של כוס, של קופסה ושל קונוס, ולראות איזו צורה נשארת.', ['concrete', 'pictorial'],
-          'כְּשֶׁמַּטְבִּיעִים אֶת הַגּוּף בַּחוֹל, נִשְׁאֶרֶת צוּרָה. בּוֹאוּ נְדַמְיֵן אֶת זֶה.')
+          'כְּשֶׁמַּטְבִּיעִים אֶת הַגּוּף בַּחוֹל, נִשְׁאֶרֶת צוּרָה. בּוֹאוּ נְתָאֵר לְעַצְמֵנוּ אֶת הַצּוּרָה.')
     for guide in ('full', 'start'):
         for g, name in (('circle', 'הָעִגּוּל'), ('square', 'הָרִבּוּעַ'), ('triangle', 'הַמְּשֻׁלָּשׁ')):
             u.act('SHP-A-02', 'trace', band='A', glyph=g, guide=guide, tol=12, domain='shapes',

@@ -672,11 +672,16 @@ const Set<String> birthFiles = <String>{
   'parent/child_form.dart',
 };
 
-/// Also allowed to name an age in months or a look stage: the files that choose the look and the pace of a screen.
+/// Also allowed to name an age in months or a look stage: the files that choose the look and the pace of a screen, and (L7-8) the ones that
+/// read the age for the letters gates and the "letters together with words" switch: the age is an argument worked out on the phone for the
+/// check, and goes nowhere (the switch that travels is a boolean the parent chose, never an age).
 const Set<String> lookFiles = <String>{
   'design/stage_spec.dart',
   'engine/gates.dart',
+  'parent/language_pages.dart',
   'parent/language_progress.dart',
+  'parent/language_settings.dart',
+  'world/language_gates.dart',
   'parent/screens_card.dart',
   'parent/age_cards.dart',
   'app/language_providers.dart',

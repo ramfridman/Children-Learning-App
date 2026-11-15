@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_mishka",
+    "target": "vo:rus.w_rys",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_2",
+      "vo": "vo:rus.he_fb_right_3",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן!"
+          "v": "יָפֶה מְאֹד!"
         }
       ],
-      "target": "vo:rus.w_mishka"
+      "target": "vo:rus.w_rys"
     },
     "incorrect": [
       {
@@ -80,24 +80,24 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_mishka"
+      "target": "vo:rus.w_rys"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:teddy"
+      "sprite": "asset:lynx"
     }
   },
   "say": {
     "forms": [
-      "мишка"
+      "рысь"
     ],
     "foils": [
-      "лук",
-      "люк"
+      "мишка",
+      "рис"
     ],
-    "clip": "vo:rus.w_mishka",
+    "clip": "vo:rus.w_rys",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_mishka"
+      "target": "vo:rus.w_rys"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +116,7 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_mishka"
+      "target": "vo:rus.w_rys"
     }
   },
   "answer": {

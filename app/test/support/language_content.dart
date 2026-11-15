@@ -638,9 +638,11 @@ Map<String, Object?> strandJson(
   List<List<String>>? assumes,
   List<Map<String, Object?>>? start,
   Map<String, Object?>? offer,
+  Map<String, Object?>? opens,
 }) => <String, Object?>{
   'id': id,
   'offer': ?offer,
+  'opens': ?opens,
   'start': ?start,
   'levels': <Object?>[
     for (final (int i, List<String> items) in levels.indexed)

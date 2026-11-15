@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_vinograd"
@@ -94,8 +94,8 @@
       "виноград"
     ],
     "foils": [
-      "клубника",
-      "арбуз"
+      "арбуз",
+      "морковь"
     ],
     "clip": "vo:rus.w_vinograd",
     "heard": {
@@ -117,6 +117,30 @@
         }
       ],
       "target": "vo:rus.w_vinograd"
+    },
+    "meet": {
+      "position": 0,
+      "size": 3,
+      "opener": {
+        "vo": "vo:rus.f44",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת."
+          }
+        ]
+      },
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: עֲנָבִים"
+          }
+        ],
+        "target": "vo:rus.gl_anavim"
+      },
+      "written": "виноград"
     }
   },
   "answer": {

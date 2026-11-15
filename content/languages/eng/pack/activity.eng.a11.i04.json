@@ -52,11 +52,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_6",
+      "vo": "vo:eng.he_fb_right_4",
       "caption": [
         {
           "t": "he",
-          "v": "שְׁמַעְתֶּם טוֹב!"
+          "v": "מְצָאתֶם!"
         }
       ],
       "target": "vo:eng.en_its_duck"
@@ -100,11 +100,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_duck",
+      "vo": "vo:eng.he_gl_its_duck",
       "caption": [
         {
           "t": "he",
-          "v": "בַּרְוָז"
+          "v": "זֶה בַּרְוָז."
         }
       ],
       "target": "vo:eng.en_its_duck"
@@ -129,18 +129,21 @@
       {
         "id": "o1",
         "sprite": "asset:duck",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_duck"
       },
       {
         "id": "o2",
         "sprite": "asset:bird",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_bird",
         "misconception": "eng.lis.sem"
       },
       {
         "id": "o3",
         "sprite": "asset:cat",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_cat",
         "misconception": "eng.lis.l1_guess"
       }
     ],

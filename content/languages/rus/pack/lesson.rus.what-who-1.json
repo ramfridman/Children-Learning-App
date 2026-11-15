@@ -15,8 +15,15 @@
     "RUS-A-12"
   ],
   "items": [
+    "rus.a12.f01",
+    "rus.a12.f04",
+    "rus.a12.f02",
     "rus.a12.05",
-    "rus.a12.06"
+    "rus.a12.f05",
+    "rus.a12.f03",
+    "rus.a12.s01",
+    "rus.a12.s02",
+    "rus.a12.s05"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -28,5 +35,18 @@
       }
     ]
   },
-  "sequence": 41
+  "sequence": 57,
+  "teach": [
+    {
+      "items": [
+        "rus.a12.tc01",
+        "rus.a12.tc02",
+        "rus.a12.tc03"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach"
+    }
+  ]
 }

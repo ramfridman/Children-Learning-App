@@ -15,10 +15,14 @@
     "HEB-A-07"
   ],
   "items": [
+    "heb.a07.c-r1",
+    "heb.a07.em-r1",
+    "heb.a07.03",
     "heb.a07.01",
     "heb.a07.02",
-    "heb.a07.03",
-    "heb.a07.04"
+    "heb.a07.04",
+    "heb.a07.so-r1",
+    "heb.a07.u-r1"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +34,5 @@
       }
     ]
   },
-  "sequence": 15
+  "sequence": 130
 }

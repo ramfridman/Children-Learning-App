@@ -34,7 +34,7 @@ void main() {
     testWidgets(
       'the pebble starts it while the host invites: probes without help, from the staircase, under the placement lesson',
       (WidgetTester tester) async {
-        final AppRig rig = await courseApp(tester, <String>['eng']);
+        final AppRig rig = await courseApp(tester, <String>['eng'], switches: knowsALittle('eng'));
         await openCourse(tester, 'eng');
         expect(find.byKey(const Key('course-invite')), findsOneWidget);
         await tester.tap(find.byKey(const Key('course-play')));
@@ -72,7 +72,7 @@ void main() {
     testWidgets(
       'a visit left in the middle leaves the host inviting, and the next visit goes on from the answers given',
       (WidgetTester tester) async {
-        final AppRig rig = await courseApp(tester, <String>['eng']);
+        final AppRig rig = await courseApp(tester, <String>['eng'], switches: knowsALittle('eng'));
         await openCourse(tester, 'eng');
         await tester.tap(find.byKey(const Key('course-play')));
         await settle(tester);

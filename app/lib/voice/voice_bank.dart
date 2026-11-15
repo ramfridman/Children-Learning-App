@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import '../characters/lip_sync.dart';
 import '../content/pack_verify.dart';
+import '../content/zip_store.dart' show ZipLimits;
 
 /// One recorded line: the sound and when the mouth is open in it.
 class VoiceClip {
@@ -10,6 +11,21 @@ class VoiceClip {
   final Uint8List mp3;
   final String mime;
   final MouthTrack mouth;
+}
+
+/// The most clip bytes one voice may hold across all its parts: twice what one pack may hold (SEC-VP-4). A part that would
+/// take the voice over it is left out, so the audio of a guide in memory is bounded however many parts are installed.
+const int maxVoiceBytes = 2 * ZipLimits.maxTotalBytes;
+
+/// The last part of a voice (`voice-<id>-9`): a voice is at most nine packs, so a pack named with a number outside 2 to 9
+/// is never read as a part of anything.
+const int lastVoicePart = 9;
+
+/// The id of part [part] (1 to [lastVoicePart]) of the voice of [characterId]: `voice-<id>` for the first, `voice-<id>-N`
+/// for the others. The only place that makes these ids, for the app that reads them and the tool that builds them.
+String voicePackId(String characterId, int part) {
+  if (part < 1 || part > lastVoicePart) throw RangeError.range(part, 1, lastVoicePart, 'part');
+  return part == 1 ? 'voice-$characterId' : 'voice-$characterId-$part';
 }
 
 /// The recorded lines of one character's voice pack, by `vo:` id. A line with no recording is simply absent.
@@ -55,7 +71,31 @@ class VoiceBank {
 
   int get length => _clips.length;
 
+  /// The bytes of the sounds of this bank, each sound once: lines that say the same thing share one buffer (`voice_gen`
+  /// voices a text once), and a buffer held by four lines is four lines of one sound, not four sounds. Parts never share
+  /// a buffer (a copy whose sound is in another part has its own file), so the sum over the parts is exact.
+  int get clipBytes {
+    final Set<Uint8List> seen = Set<Uint8List>.identity();
+    int bytes = 0;
+    for (final VoiceClip c in _clips.values) {
+      if (seen.add(c.mp3)) bytes += c.mp3.length;
+    }
+    return bytes;
+  }
+
   Iterable<String> get ids => _clips.keys;
+
+  /// This bank with the lines of [part] added: the voice of one character is in several packs when it is more than one
+  /// pack may hold ([voicePackId]). A line that is in both is refused, so a pack can never replace the recording of a
+  /// line in another pack. The clips are shared, not copied.
+  VoiceBank withPart(VoiceBank part) {
+    for (final String id in part._clips.keys) {
+      if (_clips.containsKey(id)) {
+        throw PackRejected('rules', 'the voice line "$id" is in two packs of the voice of $characterId');
+      }
+    }
+    return VoiceBank._(characterId, <String, VoiceClip>{..._clips, ...part._clips});
+  }
 
   bool has(String voId) => _clips.containsKey(voId) || (fallback?.has(voId) ?? false);
 

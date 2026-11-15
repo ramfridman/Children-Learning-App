@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/age_providers.dart' show childAgeProvider;
 import '../app/language_providers.dart';
 import '../app/state.dart' show appStateProvider;
 import '../app/sync_providers.dart';
@@ -204,8 +205,8 @@ class _LanguageRow extends ConsumerWidget {
                   value: on,
                   onChanged: (bool v) async {
                     await _save(ref, profile.id, course, now.copyWith(on: v));
-                    // Turning Russian on for the first time asks the home-language questions.
-                    if (v && course == Course.rus && now.questionnaire.isEmpty && context.mounted) {
+                    // Turning a language on for the first time asks what the child already knows (Russian: the home-language questions).
+                    if (v && now.questionnaire.isEmpty && context.mounted) {
                       await Navigator.of(context).push(
                         MaterialPageRoute<void>(
                           builder: (BuildContext c) => QuestionnairePage(profile: profile, course: course),
@@ -257,6 +258,17 @@ class LanguagePage extends ConsumerWidget {
         ref.watch(languagesProvider).value?.of(profile.id, course) ?? const LanguageSwitches();
     void set(LanguageSwitches next) => unawaited(_save(ref, profile.id, course, next));
     final Map<String, String> byLang = <String, String>{'lang': name};
+    // "Letters together with words" is shown from 6;0 by the age in months when a birth month was given, else by the bracket.
+    final int? ageMonths = ref.watch(childAgeProvider(profile.id)).value?.months;
+    // The two letters switches act only on a letters gate: a course whose installed pack has none (no letter lessons yet) shows neither.
+    final bool lettersGate = ref.watch(languagePacksProvider).value?[course]?.hasLettersGate ?? false;
+    final Widget lettersTogether = _LettersTogetherRow(
+      lettersGate: lettersGate,
+      switches: s,
+      ageBand: profile.ageBand,
+      ageMonths: ageMonths,
+      onChanged: set,
+    );
     return _page(context, '$name · ${displayChildName(profile.name)}', () => Navigator.pop(context), <Widget>[
       _card(name, <Widget>[
         _SwitchRow(
@@ -306,16 +318,29 @@ class LanguagePage extends ConsumerWidget {
             value: s.oralOnly,
             onChanged: (bool v) => set(s.copyWith(oralOnly: v)),
           ),
+          lettersTogether,
         ],
         if (course == Course.rus) ...<Widget>[
-          const Divider(height: 1, color: TokenColors.hairline),
-          _SwitchRow(
-            key: const Key('page-letters5'),
-            title: He.areaLangLetters.text,
-            help: s.lettersBefore5 ? He.areaLangLettersOn.text : He.areaLangLettersOff.text,
-            value: s.lettersBefore5,
-            onChanged: (bool v) => set(s.copyWith(lettersBefore5: v)),
-          ),
+          if (lettersGate) ...<Widget>[
+            const Divider(height: 1, color: TokenColors.hairline),
+            _SwitchRow(
+              key: const Key('page-letters5'),
+              title: He.areaLangLetters.text,
+              help: s.lettersBefore5 ? He.areaLangLettersOn.text : He.areaLangLettersOff.text,
+              value: s.lettersBefore5,
+              onChanged: (bool v) => set(s.copyWith(lettersBefore5: v)),
+            ),
+            if (s.lettersBefore5)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  He.areaLangLettersFirstWords.text,
+                  key: const Key('page-letters5-words'),
+                  style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+                ),
+              ),
+          ],
+          lettersTogether,
           const Divider(height: 1, color: TokenColors.hairline),
           _StressRow(switches: s, onChanged: set),
         ],
@@ -332,21 +357,38 @@ class LanguagePage extends ConsumerWidget {
         const Divider(height: 1, color: TokenColors.hairline),
         _BandRow(switches: s, ageBand: profile.ageBand, onChanged: set),
       ]),
-      if (course == Course.rus)
-        _card(He.areaLangQuestTitle.text, <Widget>[
-          Text(He.areaLangQuestHelp.text, style: AppText.parent(TokenType.parentSmall)),
-          const SizedBox(height: 8),
-          ParentButton(
-            key: const Key('open-questionnaire'),
-            label: He.areaLangQuestButton.text,
-            quiet: true,
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (BuildContext c) => QuestionnairePage(profile: profile, course: course),
-              ),
+      _card(QuestionnairePage.titleOf(course).text, <Widget>[
+        Text(QuestionnairePage.helpOf(course).text, style: AppText.parent(TokenType.parentSmall)),
+        const SizedBox(height: 8),
+        ParentButton(
+          key: const Key('open-questionnaire'),
+          label: He.areaLangQuestButton.text,
+          quiet: true,
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (BuildContext c) => QuestionnairePage(profile: profile, course: course),
             ),
           ),
-        ]),
+        ),
+      ]),
+      _card(He.areaLangPlacementTitle.text, <Widget>[
+        Text(He.areaLangPlacementHelp.text, style: AppText.parent(TokenType.parentSmall)),
+        const SizedBox(height: 8),
+        // The placement is asked for once; a child whose answers already call for it (or who has played it) needs no button.
+        if (s.wantsPlacement(course))
+          Text(
+            s.placementAsked ? He.areaLangPlacementAsked.text : He.areaLangPlacementByAnswers.text,
+            key: const Key('placement-state'),
+            style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+          )
+        else
+          ParentButton(
+            key: const Key('ask-placement'),
+            label: He.areaLangPlacementButton.text,
+            quiet: true,
+            onPressed: () => set(s.copyWith(placementAsked: true)),
+          ),
+      ]),
       _card('', <Widget>[
         ParentButton(
           key: const Key('open-language-progress'),
@@ -360,6 +402,45 @@ class LanguagePage extends ConsumerWidget {
         ),
       ]),
     ]);
+  }
+}
+
+/// "Letters together with words" (English and Russian): hidden under 6;0, shown from 6, on by default from 7 (a parent's own choice stands).
+/// It lowers the letters gate to its early set; letters never open before it. Hidden too while the course's installed pack has no letters gate
+/// ([lettersGate] false): the switch would do nothing.
+class _LettersTogetherRow extends StatelessWidget {
+  const _LettersTogetherRow({
+    required this.lettersGate,
+    required this.switches,
+    required this.ageBand,
+    required this.ageMonths,
+    required this.onChanged,
+  });
+
+  final bool lettersGate;
+  final LanguageSwitches switches;
+  final int ageBand;
+  final int? ageMonths;
+  final ValueChanged<LanguageSwitches> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!lettersGate || !LanguageSwitches.lettersWithWordsShown(ageBand: ageBand, ageMonths: ageMonths)) {
+      return const SizedBox.shrink();
+    }
+    final bool on = switches.lettersWithWordsOn(ageBand: ageBand, ageMonths: ageMonths);
+    return Column(
+      children: <Widget>[
+        const Divider(height: 1, color: TokenColors.hairline),
+        _SwitchRow(
+          key: const Key('page-letters-together'),
+          title: He.areaLangLettersTogether.text,
+          help: on ? He.areaLangLettersTogetherOn.text : He.areaLangLettersTogetherOff.text,
+          value: on,
+          onChanged: (bool v) => onChanged(switches.copyWith(lettersWithWords: v)),
+        ),
+      ],
+    );
   }
 }
 
@@ -476,26 +557,35 @@ class _BandRow extends StatelessWidget {
   );
 }
 
-/// The home-language questionnaire (Russian) and the one question of English: enums only, answered by a tap, saved at once. An
-/// answer sets where a placement staircase starts, never where it ends.
+/// What the parent says the child already knows, for each course: the home-language questions of Russian, two questions of English and
+/// one of Hebrew. Enums only, answered by a tap, saved at once. An answer sets where a placement staircase starts, never where it ends; a
+/// child with no answer, or only "no", starts at lesson 1 with no placement game (L7-2).
 class QuestionnairePage extends ConsumerWidget {
   const QuestionnairePage({super.key, required this.profile, required this.course});
 
   final Profile profile;
   final String course;
 
-  static const Map<String, Str> _questions = <String, Str>{
-    'knowsLetters': He.qKnowsLetters,
-    'home': He.qHome,
-    'understands': He.qUnderstands,
-    'speaks': He.qSpeaks,
-    'letters': He.qLetters,
-    'reads': He.qReads,
+  /// The title and the help of a course's questionnaire: Russian asks about the home language, the others about what the child knows.
+  static Str titleOf(String course) => course == Course.rus ? He.areaLangQuestTitle : He.areaLangKnowsTitle;
+  static Str helpOf(String course) => course == Course.rus ? He.areaLangQuestHelp : He.areaLangKnowsHelp;
+
+  /// The question's words: the same question key reads differently in each course (English and Hebrew both ask `knowsLetters`).
+  static Str _question(String course, String key) => switch ((course, key)) {
+    (Course.eng, 'understands') => He.qUnderstandsEng,
+    (Course.heb, 'knowsLetters') => He.qKnowsLettersHeb,
+    (_, 'knowsLetters') => He.qKnowsLetters,
+    (_, 'home') => He.qHome,
+    (_, 'understands') => He.qUnderstands,
+    (_, 'speaks') => He.qSpeaks,
+    (_, 'letters') => He.qLetters,
+    _ => He.qReads,
   };
   static const Map<String, Str> _answers = <String, Str>{
     'no': He.aNo,
     'some': He.aSome,
     'most': He.aMost,
+    'reads': He.aReads,
     'none': He.aNone,
     'oneParent': He.aOneParent,
     'bothParents': He.aBothParents,
@@ -510,12 +600,12 @@ class QuestionnairePage extends ConsumerWidget {
     final LanguageSwitches s =
         ref.watch(languagesProvider).value?.of(profile.id, course) ?? const LanguageSwitches();
     final Map<String, List<String>> asks = languageQuestionnaire[course] ?? const <String, List<String>>{};
-    return _page(context, He.areaLangQuestTitle.text, () => Navigator.pop(context), <Widget>[
+    return _page(context, titleOf(course).text, () => Navigator.pop(context), <Widget>[
       _card('', <Widget>[
-        Text(He.areaLangQuestHelp.text, style: AppText.parent(TokenType.parentSmall)),
+        Text(helpOf(course).text, style: AppText.parent(TokenType.parentSmall)),
         for (final MapEntry<String, List<String>> q in asks.entries) ...<Widget>[
           const SizedBox(height: 16),
-          Text(_questions[q.key]!.text, style: AppText.parent(TokenType.parentH3)),
+          Text(_question(course, q.key).text, style: AppText.parent(TokenType.parentH3)),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -538,7 +628,11 @@ class QuestionnairePage extends ConsumerWidget {
           ),
         ],
         const SizedBox(height: 16),
-        ParentButton(label: He.langQuestionnaireDone.text, onPressed: () => Navigator.pop(context)),
+        ParentButton(
+          key: const Key('questionnaire-done'),
+          label: He.langQuestionnaireDone.text,
+          onPressed: () => Navigator.pop(context),
+        ),
       ]),
     ]);
   }

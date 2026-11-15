@@ -8,6 +8,7 @@ import 'layout.dart';
 import 'stage_spec.dart';
 import 'token_types.dart';
 import 'tokens.g.dart';
+import 'trail_layout.dart';
 
 // Every number in this file is taken from the CSS of the design boards (05, 10, 13, 22, 23): sizes,
 // radii, the clay lip under a button, shadows and font sizes.
@@ -529,61 +530,76 @@ Color answerBorderColor(AnswerState state) => switch (state) {
 
 /// The progress trail (board 13): a white pill, 36 high, 20 px sockets 8 apart. Done sockets hold a
 /// spark on a pale yellow disc, the next one is ringed, the rest are empty wells. It fills from the
-/// start side (the right in Hebrew).
+/// start side (the right in Hebrew). In a [maxWidth] that is too small for the sockets it tightens, shrinks and then shows a window
+/// around the current socket (see [TrailLayout]).
 class ProgressTrail extends StatelessWidget {
-  const ProgressTrail({super.key, required this.total, required this.done});
+  const ProgressTrail({super.key, required this.total, required this.done, this.maxWidth});
 
   final int total;
   final int done;
+  final double? maxWidth;
 
   @override
-  Widget build(BuildContext context) => Semantics(
-    label: '$done / $total',
-    child: Container(
-      height: TokenComponent.trailHeight,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: TokenColors.paper,
-        borderRadius: BorderRadius.circular(36),
-        boxShadow: const <BoxShadow>[
-          BoxShadow(color: Color.fromRGBO(43, 35, 80, 0.10), blurRadius: 6, offset: Offset(0, 2)),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          for (int i = 0; i < total; i++) ...<Widget>[
-            if (i > 0) const SizedBox(width: TokenComponent.trailGap),
-            _Socket(done: i < done, current: i == done),
+  Widget build(BuildContext context) {
+    final TrailLayout layout = TrailLayout.fit(total: total, done: done, maxWidth: maxWidth);
+    return Semantics(
+      label: '$done / $total',
+      child: Container(
+        height: TokenComponent.trailHeight,
+        padding: EdgeInsets.symmetric(horizontal: layout.padding),
+        decoration: BoxDecoration(
+          color: TokenColors.paper,
+          borderRadius: BorderRadius.circular(36),
+          boxShadow: const <BoxShadow>[
+            BoxShadow(color: Color.fromRGBO(43, 35, 80, 0.10), blurRadius: 6, offset: Offset(0, 2)),
           ],
-        ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            for (final int i in layout.shown) ...<Widget>[
+              if (i > layout.first) SizedBox(width: layout.gap),
+              _Socket(size: layout.socket, done: i < done, current: i == done, faded: layout.faded(i)),
+            ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class _Socket extends StatelessWidget {
-  const _Socket({required this.done, required this.current});
+  const _Socket({required this.size, required this.done, required this.current, required this.faded});
 
+  final double size;
   final bool done;
   final bool current;
 
+  /// The last socket shown at the end of a window that goes on: smaller and pale, "there are more".
+  final bool faded;
+
   @override
-  Widget build(BuildContext context) => Container(
-    width: TokenComponent.trailSocket,
-    height: TokenComponent.trailSocket,
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      color: done
-          ? TokenColors.sparkTint
-          : current
-          ? TokenColors.paper
-          : TokenColors.mist,
-      border: current ? Border.all(color: TokenColors.ink, width: 2) : null,
-    ),
-    child: done ? const BoardSvg('assets/art/ui/spark.svg', width: 20, height: 20) : null,
-  );
+  Widget build(BuildContext context) {
+    final double side = faded ? size * 0.7 : size;
+    return Opacity(
+      opacity: faded ? 0.45 : 1,
+      child: Container(
+        width: side,
+        height: side,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: done
+              ? TokenColors.sparkTint
+              : current
+              ? TokenColors.paper
+              : TokenColors.mist,
+          border: current ? Border.all(color: TokenColors.ink, width: 2) : null,
+        ),
+        child: done ? BoardSvg('assets/art/ui/spark.svg', width: side, height: side) : null,
+      ),
+    );
+  }
 }
 
 /// What the microphone button looks like (board 28, "voice states").

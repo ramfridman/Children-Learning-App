@@ -8,16 +8,23 @@
   "title": [
     {
       "t": "he",
-      "v": "וּמָה זֶה?"
+      "v": "וּמַה זֶּה?"
     }
   ],
   "skills": [
     "ENG-A-11"
   ],
   "items": [
+    "eng.a11.i03",
+    "eng.a11.n04",
+    "eng.a11.n05",
+    "eng.a11.n06",
     "eng.a11.i04",
+    "eng.a11.n07",
+    "eng.a11.n08",
     "eng.a11.i05",
-    "eng.a11.i06"
+    "eng.a11.u02",
+    "eng.a11.s02"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,5 +36,18 @@
       }
     ]
   },
-  "sequence": 28
+  "sequence": 39,
+  "teach": [
+    {
+      "items": [
+        "eng.a11.tc03",
+        "eng.a11.tc04"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a11.n05"
+    }
+  ]
 }

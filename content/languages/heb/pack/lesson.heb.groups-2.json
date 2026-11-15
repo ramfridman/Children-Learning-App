@@ -15,9 +15,11 @@
     "HEB-A-03"
   ],
   "items": [
+    "heb.a03.ch-g3",
     "heb.a03.04",
     "heb.a03.05",
-    "heb.a03.06"
+    "heb.a03.06",
+    "heb.a03.ch-g4"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,5 +31,5 @@
       }
     ]
   },
-  "sequence": 28
+  "sequence": 220
 }

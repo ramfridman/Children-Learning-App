@@ -8,7 +8,7 @@
   "title": [
     {
       "t": "he",
-      "v": "מבין אחד והרבה (חתול, חתולים)"
+      "v": "מבינים אחד והרבה (חתול, חתולים)"
     }
   ],
   "strand": "ol",
@@ -20,7 +20,9 @@
   ],
   "representations": [
     "concrete",
-    "pictorial"
+    "pictorial",
+    "story",
+    "embodied"
   ],
   "misconceptions": [
     "heb.ol.plural",

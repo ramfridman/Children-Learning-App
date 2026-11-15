@@ -38,6 +38,7 @@
   "a11y": {
     "altText": "תְּמוּנָה וְחָבֵר שֶׁעוֹשֶׂה מַה שֶּׁאוֹמְרִים"
   },
+  "asks": "vo:eng.en_apple",
   "prompt": {
     "vo": "vo:eng.he_ins_give",
     "caption": [
@@ -51,11 +52,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_3",
+      "vo": "vo:eng.he_fb_right_4",
       "caption": [
         {
           "t": "he",
-          "v": "יָפֶה מְאֹד!"
+          "v": "מְצָאתֶם!"
         }
       ],
       "target": "vo:eng.en_give_apple"
@@ -140,6 +141,7 @@
         "id": "o1",
         "sprite": "asset:apple",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_apple",
         "at": {
           "x": 0.02,
           "y": 0.05,
@@ -149,8 +151,9 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:banana",
+        "sprite": "asset:milk",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_milk",
         "misconception": "eng.lis.sem",
         "at": {
           "x": 0.02,
@@ -163,6 +166,7 @@
         "id": "o3",
         "sprite": "asset:bread",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_bread",
         "misconception": "eng.lis.l1_guess",
         "at": {
           "x": 0.02,

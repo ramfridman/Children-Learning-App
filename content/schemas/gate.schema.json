@@ -87,15 +87,59 @@
       "minimum": 3,
       "maximum": 8
     },
-    "neverUnderBand": {
+    "durableBelowAge": {
       "type": "integer",
-      "minimum": 0,
-      "maximum": 2
+      "minimum": 4,
+      "maximum": 8
     },
-    "durableBelowBand": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 2
+    "early": {
+      "type": "object",
+      "properties": {
+        "requires": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 14,
+            "pattern": "^(?:[A-Z]{2,5}-[ABC]-\\d{2}(?:\\.[A-Z][0-9]{1,2})?)$"
+          },
+          "minItems": 0,
+          "maxItems": 60
+        },
+        "requireAtLeast": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "skills": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 6,
+                  "maxLength": 14,
+                  "pattern": "^(?:[A-Z]{2,5}-[ABC]-\\d{2}(?:\\.[A-Z][0-9]{1,2})?)$"
+                },
+                "minItems": 2,
+                "maxItems": 40
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 40
+              }
+            },
+            "required": [
+              "skills",
+              "count"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "maxItems": 6
+        }
+      },
+      "required": [],
+      "additionalProperties": false
     },
     "parentSwitch": {
       "type": "object",

@@ -17,7 +17,7 @@
   "purpose": "learn",
   "checkType": "practice",
   "representation": "pictorial",
-  "variantGroup": "en-isit-dog",
+  "variantGroup": "en-isit-cat",
   "difficulty": {
     "authored": 0.2
   },
@@ -43,19 +43,19 @@
     "caption": [
       {
         "t": "he",
-        "v": "כֵּן אוֹ לֹא? גְּעוּ בַּאֲגוּדָל."
+        "v": "כֵּן אוֹ לֹא? גְּעוּ בָּאֲגוּדָל."
       }
     ],
-    "target": "vo:eng.en_isit_dog",
+    "target": "vo:eng.en_isit_cat",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_6",
+      "vo": "vo:eng.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "שְׁמַעְתֶּם טוֹב!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:eng.en_no"
@@ -90,7 +90,7 @@
           "v": "בּוֹאוּ נַקְשִׁיב שׁוּב:"
         }
       ],
-      "target": "vo:eng.en_isit_dog"
+      "target": "vo:eng.en_isit_cat"
     }
   },
   "hints": [
@@ -104,19 +104,19 @@
           "v": "הַקְשִׁיבוּ שׁוּב, לְאַט."
         }
       ],
-      "target": "vo:eng.en_isit_dog"
+      "target": "vo:eng.en_isit_cat"
     },
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_dog",
+      "vo": "vo:eng.he_gl_isit_cat",
       "caption": [
         {
           "t": "he",
-          "v": "כֶּלֶב"
+          "v": "זֶה חָתוּל?"
         }
       ],
-      "target": "vo:eng.en_isit_dog"
+      "target": "vo:eng.en_isit_cat"
     },
     {
       "level": 3,
@@ -128,12 +128,12 @@
           "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
         }
       ],
-      "target": "vo:eng.en_isit_dog"
+      "target": "vo:eng.en_isit_cat"
     }
   ],
   "scene": {
     "group": {
-      "sprite": "asset:cat",
+      "sprite": "asset:dog",
       "count": 1
     }
   },
@@ -143,12 +143,14 @@
       {
         "id": "o1",
         "sprite": "asset:thumb_down",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_no"
       },
       {
         "id": "o2",
         "sprite": "asset:thumb_up",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_yes",
         "misconception": "eng.lis.yesno"
       }
     ],

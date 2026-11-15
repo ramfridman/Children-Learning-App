@@ -36,7 +36,7 @@
     "mustNotRevealBeforeHint": 2
   },
   "a11y": {
-    "altText": "תּוֹף וְתְמוּנָה שֶׁל מִלָּה"
+    "altText": "תּוֹף וּתְמוּנָה שֶׁל מִלָּה"
   },
   "prompt": {
     "vo": "vo:rus.f28",
@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_7",
+      "vo": "vo:rus.he_fb_right_6",
       "caption": [
         {
           "t": "he",
-          "v": "הִקְשַׁבְתֶּם יָפֶה!"
+          "v": "שְׁמַעְתֶּם טוֹב!"
         }
       ],
       "target": "vo:rus.w_moloko"

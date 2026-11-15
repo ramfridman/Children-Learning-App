@@ -2,6 +2,9 @@
 // the server's own character table, and the history item is deleted right after use.
 const BASE = "https://api.elevenlabs.io";
 
+/** MP3, 44.1 kHz, 64 kbps: the format of every voice pack (the old 22.05 kHz / 32 kbps dulled ש, ס and צ). */
+export const OUTPUT_FORMAT = "mp3_44100_64";
+
 export interface VoiceRequest {
   voiceId: string;
   modelId: string;
@@ -46,7 +49,7 @@ export function elevenLabsClient(apiKey: string, fetchFn: typeof fetch = fetch):
       const timer = setTimeout(() => ctl.abort(), req.timeoutMs);
       try {
         const res = await fetchFn(
-          `${BASE}/v1/text-to-speech/${encodeURIComponent(req.voiceId)}?output_format=mp3_22050_32`,
+          `${BASE}/v1/text-to-speech/${encodeURIComponent(req.voiceId)}?output_format=${OUTPUT_FORMAT}`,
           {
             method: "POST",
             signal: ctl.signal,

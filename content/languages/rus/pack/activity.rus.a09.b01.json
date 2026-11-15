@@ -1,0 +1,152 @@
+{
+  "schema": "activity/v1",
+  "id": "rus.a09.b01",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "puppet_talk",
+  "templateVersion": "1.0",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "RUS-A-09",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "w-sharf",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "answer the puppet",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "בֻּבָּה שֶׁמְּדַבֶּרֶת"
+  },
+  "prompt": {
+    "vo": "vo:rus.f38",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיזוֹ מִלָּה מַתְאִימָה לַתְּמוּנָה?"
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:rus.he_fb_right_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן!"
+        }
+      ],
+      "target": "vo:rus.w_sharf"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:rus.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ],
+      "target": "vo:rus.w_sharf"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ],
+      "target": "vo:rus.w_sharf"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:rus.f38",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֵיזוֹ מִלָּה מַתְאִימָה לַתְּמוּנָה?"
+        }
+      ],
+      "target": "vo:rus.w_sharf"
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:rus.he_hint_showme",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
+        }
+      ],
+      "target": "vo:rus.w_sharf"
+    }
+  ],
+  "scene": {
+    "picture": "asset:scarf"
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "bubble",
+    "options": [
+      {
+        "id": "o1",
+        "label": "צְלִיל",
+        "clip": "vo:rus.w_sharf"
+      },
+      {
+        "id": "o2",
+        "label": "צְלִיל",
+        "clip": "vo:rus.w_shapka",
+        "misconception": "rus.voc.sound"
+      },
+      {
+        "id": "o3",
+        "label": "צְלִיל",
+        "clip": "vo:rus.w_varezhki",
+        "misconception": "rus.lis.sem"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

@@ -22,7 +22,7 @@
 **Coverage** (frame §3.3.4). A word-set skill is mastered only when each of its words has been answered right once without a hint. Items rotate the words until coverage is met.
 
 **Routes** (syllabus §7.1, frame §3.3.7). The items are the same for every route; the routes change the order, the support and the pace:
-- **New learner (N):** every new word first has a **teach screen** (LS09: the picture, the word clip, F05 the pause, the word again), in sets of 4 to 5 words; then the items of at most two sets at a time; say-it is echo first. Items marked `N` only (the listen-first story readings) are for this route.
+- **New learner (N):** every new word first has a **teach screen** (LS09: the picture, the word clip, F05 the pause, the word again), in sets of 4 to 5 words; then the items of at most two sets at a time; say-it is echo first. Items marked `N` only (the listen-first story readings) are for this route. **Re-cut 2026-11-14 (L7-6): every lesson is now Recall, Meet (2 to 3 words, with the Hebrew meaning once), Find, Use; see §7.**
 - **Heritage (H):** strand 1 of placement usually marks much of Band A as "assumed" (checked later by interleaved retrieval); a skill that is served starts at its second representation with no teach screens; say-it is picture first (the child tries alone, then hears the model); A-15 extends to every word of A-02 to A-09; speaking and the grammar points (A-01 grown-up forms, A-12 кто / что) are weighted up.
 - **Reader (R):** the oral strands follow strand 1 of placement, as heritage or as new. With Band B or C presentation, the word may appear under its picture **after** the answer (print exposure, no demand, no stress mark: the reader default of syllabus §7.1). The design-director and the curriculum-expert decide whether this caption is built in wave 1.
 
@@ -139,7 +139,7 @@ Kinds, families and engine ids as the shared catalogue (frame §4.2, settled 202
 | `rus.a01.05` | LS10 bubbles | F07 → `w-poka` | пока́ `pic.rus.leave` | приве́т `pic.rus.arrive` (M-RUS-SEM) · здра́вствуйте `w-zdravstvujte` (M-RUS-SEM) | NHR | the child friend leaves |
 | `rus.a01.06` | LS10 bubbles | F07 → `w-zdravstvuj` | здра́вствуйте `w-zdravstvujte` | приве́т `pic.rus.arrive` (M-RUS-TYVY) · пока́ `pic.rus.leave` (M-RUS-SEM) | NHR | a grown-up neighbour (not family) arrives and greets the child with Здра́вствуй!; the child answers a grown-up with Здра́вствуйте |
 | `rus.a01.07` C | LS10 bubbles | F07 → `w-do-svidanija` | до свида́ния `w-do-svidanija` | пока́ `pic.rus.leave` (M-RUS-TYVY) · приве́т `pic.rus.arrive` (M-RUS-SEM) | NHR | the neighbour leaves with До свида́ния! |
-| `rus.a01.08` | LS10 personal | — → `ch-menja-zovut` + `ch-kak-tebja-zovut` | (not checked) | — | NHR | optional, never scored (frame §5.2): the puppet says its own name first; the child says a name (voice on) or taps "pass"; the puppet answers ch-ochen-prijatno, or ch-horosho after a pass. The name is never matched, kept or repeated |
+| `rus.a01.08` | LS10 personal | — → `ch-menja-zovut` + `ch-kak-tebja-zovut` | (not checked) | — | NHR | optional, never scored (frame §5.2): the puppet says its own name first (`ch-menja-zovut`: shown `Меня зовут Гоша.`, said `Меня́ зову́т Го́ша.`; the puppet is Го́ша (the owner, 2026-11-15; it replaces Са́ша), a fixed character, so the name is written in the line and no placeholder is sent to a voice); the child says a name (voice on) or taps "pass"; the puppet answers ch-ochen-prijatno, or ch-horosho after a pass. The name is never matched, kept or repeated |
 
 **Hint ladder.** 1: the line again, slower, with the friend's hand already waving in or out (F02). 2: the scene is acted (story): the door opens and the friend walks in, or out, while the voice says the word. 3: show me: the right picture or bubble glows, the voice says the word, the friend waves; the child taps it to go on (no credit), and the word comes back later in a fresh item.
 
@@ -912,3 +912,36 @@ Every Russian word met in Band A, its clip and its picture. Picture ids are prop
   - Hebrew frame lines: **979 characters** of voice text for the 40 final lines (965 without F03, already approved), counted by the hebrew-text-editor on 2026-11-03 after the final wording (938 for F01 to F39, and 41 for F40; the drafts counted 877). The voice text has partial nikud (number words, sin-dot words and a few ambiguous words keep theirs). F40 is the same line as the English `he-ins-how-many`: if the two courses share a voice, one clip of 41 characters serves both.
   - The owner runs and pays for every generation, after the voice-and-sound-director shows the count and the cost.
 - **Clip check (by script):** clips referenced but missing from the CSV: []; batch rows referenced nowhere: [].
+
+## 7. The L7 re-cut (2026-11-14, step L7-6 of `docs/milestones/L7.md`)
+
+Every lesson of the new-learner route is now **Recall** (1 to 2 scored items on words of earlier lessons of the same skill; a skill's first lesson has none, so that a lesson keeps one skill), **Meet** (2 to 3 new words, one Meet screen each, with the Hebrew meaning said once: `f42` «בְּעִבְרִית:» and the word's gloss), **Find** (at least two scored picture Finds a word, the first with two pictures, every picture a word already met and naming its word), **Use** (1 to 3 items, at least one of them not a pick: say it, act it out, give or find it in a scene, a chant; across a skill at least three kinds). The skills, word sets, prerequisites and checks are unchanged; the heritage route sees no Meet screen (the hearing screens of A-20 stay), and the reader is served as before. The unit files are the source; `python tools/lang_pack.py rus --met-before` is empty and course.json says `"metBefore": "enforce"`.
+
+| Skill | Lessons | Lessons and the words each one meets |
+|---|---|---|
+| RUS-A-01 | 3 | greet-1 (приве́т, пока́); greet-2 (здра́вствуйте, до свида́ния); greetings-more |
+| RUS-A-02 | 5 | family-1 (ма́ма, ба́бушка, па́па); family-2 (де́душка, сестра́); family-3 (брат, малы́ш); family-4 (ма́льчик, семья́, де́вочка); family-more |
+| RUS-A-03 | 6 | body-1 (нос, глаза́, рот); body-2 (у́ши, живо́т, ру́ки); body-3 (но́ги, голова́, па́льцы); body-4 (зу́бы, во́лосы); body-more; body-more2 |
+| RUS-A-04 | 4 | actions-1 (иди́, пры́гай, сядь); actions-2 (беги́, встань); actions-3 (хло́пай, возьми́ мяч); commands-more |
+| RUS-A-05 | 9 | animals-1 (ко́шка, соба́ка, ры́ба); animals-2 (мышь, пти́ца, коро́ва); animals-3 (ло́шадь, свинья́, коза́); animals-4 (ку́рица, у́тка, пету́х); animals-5 (за́яц, медве́дь, волк); animals-6 (лиса́, ёж, бе́лка); animals-7 (слон, кот); animals-8 (жира́ф, кит); animals-more |
+| RUS-A-06 | 4 | colours-1 (кра́сный, жёлтый, си́ний); colours-2 (чёрный, зелёный, бе́лый); colours-3; colours-4 (the balls) |
+| RUS-A-07 | 9 | food-1 (молоко́, вода́, сок); food-2 (хлеб, сыр, чай); food-3 (суп, ка́ша, яйцо́); food-4 (пече́нье, я́блоко, бана́н); food-5 (гру́ша, апельси́н, клубни́ка); food-6 (виногра́д, арбу́з, морко́вь); food-7 (огуре́ц, помидо́р, карто́шка); food-more; food-picnic |
+| RUS-A-08 | 5 | toys-1 (мяч, ку́кла, маши́на); toys-2 (ми́шка, ку́бики, ша́рик); toys-3 (кни́га, каранда́ш); toys-4 (пирами́дка, юла́); toys-more |
+| RUS-A-09 | 5 | clothes-1 (ша́пка, пла́тье, носки́); clothes-2 (ку́ртка, штаны́, боти́нки); clothes-3 (футбо́лка, сапоги́); clothes-4 (шарф, ва́режки); clothes-more |
+| RUS-A-10 | 3 | numbers-1 (оди́н, два, три); numbers-1b (четы́ре, пять); numbers-1-5-more |
+| RUS-A-11 | 3 | numbers-2 (шесть, во́семь, де́сять); numbers-2b (семь, де́вять); numbers-6-10-more |
+| RUS-A-12 | 4 | what-who-1 (Кто э́то?, Э́то ма́ма., Что э́то?); what-who-2 (Э́то мяч., Э́то ко́шка.); what-who-3 (да, нет); what-who-more |
+| RUS-A-13 | 4 | where-1 (Где мяч?, Вот мяч!); where-2; where-3; where-more |
+| RUS-A-14 | 5 | please-1 (спаси́бо, пожа́луйста); please-2 to please-4; please-more |
+| RUS-A-15 | 6 | say-it-more1 to say-it-more6 (no new word) |
+| RUS-A-16 | 3 | story-1 to story-3 (no new word) |
+| RUS-A-17 | 4 | rhyme-1; rhyme-2; rhyme-3 (носо́к, кни́жка); rhyme-more |
+| RUS-A-18 | 4 | syllables-1 to syllables-3 (the drum); claps-1 |
+| RUS-A-19 | 3 | first-sound-1; first-sound-2; first-sound-more |
+| RUS-A-20 | 4 | pairs-1 (лук, мы́шка, люк); pairs-2 (рысь, ми́шка, рис); hard-soft-more1; hard-soft-more2 |
+
+**Close pairs.** Never met back to back and never each other's first partner: ма́ма / па́па, ба́бушка / де́душка, кот / кит, нос / рот, сок / суп / сыр, ша́пка / шарф, жёлтый / зелёный, бе́лый / чёрный, кра́сный / чёрный, шесть / семь / во́семь, де́вять / де́сять, лук / люк, мы́шка / ми́шка, рысь / рис, иди́ / беги́, сядь / встань, пры́гай / хло́пай, ку́кла / ку́бики / ку́ртка, мяч / ша́рик, носки́ / нос, я́блоко / молоко́, апельси́н / арбу́з, коза́ / коро́ва, кто / что, носо́к / нос, кни́жка / ку́кла, боти́нки / сапоги́ (checked by script). брат and ма́льчик, сестра́ and де́вочка are still never options of one item.
+
+**What changed in the items.** Every picture of a scored screen names its word (a touch says it). The yes / no items (A-12 09 to 12, A-13 07 to 10) and the same / different items (A-19 06 to 11, A-20 07 to 16) are the friend's turn (LS10): the friend says the line, the child answers да or нет (nodding or shaking friend), so the answer is a word the child has met (A-12 teaches да and нет). The rhyme gaps (A-17 01 to 05) and the first-sound items (A-19 01 to 05, 12) are the friend's turn too: the friend says the rhyme or the word with its first sound held, the child gives the word. The scenes of "what happens next?" (A-16 02, 05, 08) say the word of what they show. Distractors that are never taught in Band A (дом, шар, жук) or not yet met where they stood (the gift picture in A-01, a word of a later lesson) were replaced by met words with the same tag. The first wrong tap's "and where is …?" (`f43`) misfires on 19 taps whose prompt is a question, not a picture's word (A-12 05 to 08, f01 to f03, r01, p01, p02; A-13 f01, f03, r01, p01; A-03 p01; probes A-17 p01, p02, A-19 p01, p02): listed for the developer, not worked around. The close-up card items of A-03 (01 to 04, 08, 09, 12) were removed: a card cannot name its word yet, and the new picture Finds show the same close-ups; "show it on yourself" (embodied) and the body-mode items carry the body. A-14 item 10's say step is now спаси́бо (the word the child just chose), not на.
+
+**Not yet as planned.** The Meet screens of A-20 are still the unit's teach screens (sets of three, no Hebrew meaning said): the heritage route's hearing screens are made only from the unit's `teach` sets, and a unit with both `teach` and lessons' `meet` would show a new learner each word twice. The glosses of the six words are written (`gl-batsal`, `gl-mikhse`, `gl-achbar`, `gl-dubi`, `gl-shunar`, `gl-orez`) for when the generator allows it.

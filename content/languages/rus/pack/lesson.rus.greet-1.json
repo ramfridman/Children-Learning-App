@@ -17,7 +17,11 @@
   "items": [
     "rus.a01.01",
     "rus.a01.02",
-    "rus.a01.11"
+    "rus.a01.04",
+    "rus.a01.04s",
+    "rus.a01.05",
+    "rus.a01.05s",
+    "rus.a01.e01"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -34,9 +38,7 @@
     {
       "items": [
         "rus.a01.tc01",
-        "rus.a01.tc02",
-        "rus.a01.tc03",
-        "rus.a01.tc04"
+        "rus.a01.tc02"
       ],
       "routes": [
         "new"

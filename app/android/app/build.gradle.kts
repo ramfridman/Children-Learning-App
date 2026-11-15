@@ -43,6 +43,12 @@ android {
         versionName = flutter.versionName
     }
 
+    androidResources {
+        // The packs are signed zips of audio and pictures that the app proves itself: storing them as they are saves the time
+        // of unpacking a hundred megabytes on the first start (the sound does not compress).
+        noCompress += "nnpack"
+    }
+
     flavorDimensions += "env"
     productFlavors {
         // `dev` is the only flavour that may ever enrol through the dev allowlist (server side),

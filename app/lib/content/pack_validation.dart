@@ -292,6 +292,7 @@ List<Problem> validatePack({
     }
     final Map<String, Object?> prompt = a['prompt']! as Map<String, Object?>;
     checkVo(file, 'prompt.vo', prompt['vo']);
+    checkVo(file, 'asks', a['asks']);
     checkTag(file, 'contradicts', a['contradicts']);
     final Map<String, Object?> fb = a['feedback']! as Map<String, Object?>;
     checkVo(file, 'feedback.correct.vo', (fb['correct']! as Map<String, Object?>)['vo']);
@@ -860,6 +861,7 @@ List<Problem> validatePack({
         checkVo(file, 'say.together.vo', (speak['together']! as Map<String, Object?>)['vo']);
         _sayWords(file, a['course'] as String? ?? course, speak, say);
         _sayRoutes(file, a, speak, say, course: a['course'] as String? ?? course);
+        _meetData(file, a, speak, say, checkAsset: checkAsset, checkVo: checkVo);
       case 'give_n':
         checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> source = scene['source']! as Map<String, Object?>;
@@ -950,6 +952,14 @@ List<Problem> validatePack({
               : 'a set of teach screens is for the new route only: a heritage speaker is never shown one',
         );
       }
+      final Object? before = set['before'];
+      if (before != null && !(l['items']! as List<Object?>).contains(before)) {
+        say(
+          file,
+          'teach[$i].before',
+          '"$before" is not an item of the lesson: a set stands in front of one of them',
+        );
+      }
       for (final (int j, Object? item) in (set['items']! as List<Object?>).indexed) {
         final Map<String, Object?>? doc = activities[item];
         if (doc == null) {
@@ -1025,6 +1035,7 @@ List<Problem> validatePack({
       course: course,
       activities: activities,
       skillIds: skillIds,
+      gateIds: gates.keys.toSet(),
       say: say,
       checkVo: checkVo,
     );
@@ -1290,6 +1301,55 @@ void _sayRoutes(
       (speak['pictureFirst'] as Map<String, Object?>?) ?? const <String, Object?>{};
   if (first.containsKey('target') || first.containsKey('target2')) {
     say(file, 'say.pictureFirst', 'asks for the word before it is heard: no clip may follow the line');
+  }
+}
+
+/// The data of a Meet screen (`say.meet`, L7-4): only a teach screen of the new learner has it (a hearing screen is for a heritage speaker, who is
+/// never shown a Meet screen), and its place in its set, the words before it and every line and picture it names are the pack's own.
+void _meetData(
+  String file,
+  Map<String, Object?> a,
+  Map<String, Object?> speak,
+  Say say, {
+  required void Function(String, String, Object?) checkAsset,
+  required void Function(String, String, Object?) checkVo,
+}) {
+  final Object? meet = speak['meet'];
+  if (meet is! Map<String, Object?>) return;
+  final Map<String, Object?> answer = a['answer']! as Map<String, Object?>;
+  if (answer['teach'] != true || answer['hear'] == true) {
+    say(
+      file,
+      'say.meet',
+      'only a teach screen of the new learner is a Meet screen (answer.teach, not answer.hear)',
+    );
+  }
+  final int position = meet['position']! as int;
+  final int size = meet['size']! as int;
+  final List<Map<String, Object?>> earlier = _maps(meet['earlier']);
+  if (position >= size) say(file, 'say.meet.position', 'is a place in a set of $size words');
+  if (earlier.length != position) {
+    say(
+      file,
+      'say.meet.earlier',
+      'a screen at place $position has the $position words before it in its set, not ${earlier.length}',
+    );
+  }
+  if (position > 0 && meet['opener'] != null) {
+    say(file, 'say.meet.opener', 'only the first screen of a set says the opener');
+  }
+  for (final (int i, Map<String, Object?> w) in earlier.indexed) {
+    checkAsset(file, 'say.meet.earlier[$i].sprite', w['sprite']);
+    checkVo(file, 'say.meet.earlier[$i].clip', w['clip']);
+  }
+  for (final String line in <String>['opener', 'hear', 'meaning', 'explain']) {
+    final Object? spoken = meet[line];
+    if (spoken is! Map<String, Object?>) continue;
+    checkVo(file, 'say.meet.$line.vo', spoken['vo']);
+    checkVo(file, 'say.meet.$line.target', spoken['target']);
+  }
+  if (meet['meaning'] != null && meet['explain'] != null) {
+    say(file, 'say.meet', 'a Meet screen says the Hebrew meaning or the Hebrew explanation, not both');
   }
 }
 
@@ -1773,7 +1833,17 @@ void _languageFieldsInLands(String file, Map<String, Object?> a, void Function(S
         final String here = path.isEmpty ? k : '$path.$k';
         final bool option = RegExp(r'^answer\.options\[\d+\]$').hasMatch(path);
         final bool own =
-            const <String>{'show', 'clips', 'pole', 'pairWith', 'teach', 'hear'}.contains(k) ||
+            const <String>{
+              'show',
+              'clips',
+              'pole',
+              'pairWith',
+              'teach',
+              'hear',
+              'meet',
+              'askWhere',
+              'asks',
+            }.contains(k) ||
             ((k == 'target' || k == 'target2') && v is String) ||
             (option && const <String>{'text', 'clip', 'reveal'}.contains(k));
         if (own) {
@@ -1918,6 +1988,7 @@ void _placement(
   required String course,
   required Map<String, Map<String, Object?>> activities,
   required Set<String> skillIds,
+  required Set<String> gateIds,
   required void Function(String, String, String) say,
   required void Function(String, String, Object?) checkVo,
 }) {
@@ -1943,6 +2014,15 @@ void _placement(
         'strands[$s].offer',
         'names a questionnaire question and the answer that offers the strand, both or neither',
       );
+    }
+    final Object? opens = strand['opens'];
+    if (opens is Map<String, Object?>) {
+      if (!gateIds.contains(opens['gate'])) {
+        say(file, 'strands[$s].opens.gate', 'there is no gate "${opens['gate']}" in this pack');
+      }
+      if ((opens['fromLevel']! as int) >= levels.length) {
+        say(file, 'strands[$s].opens.fromLevel', 'is not a level of the strand (0 to ${levels.length - 1})');
+      }
     }
     for (final (int r, Map<String, Object?> rule) in _maps(strand['start']).indexed) {
       if ((rule['level']! as int) >= levels.length) {
@@ -2695,8 +2775,25 @@ void _bundlesAndGates({
       for (final Object? s in g['requires']! as List<Object?>) s! as String,
     };
     final Set<String> holds = <String>{for (final Object? s in g['holds']! as List<Object?>) s! as String};
-    final Set<String> named = <String>{...requires, ...holds};
-    for (final Map<String, Object?> q in _maps(g['requireAtLeast'])) {
+    final Map<String, Object?> early = _mapOf(g['early']);
+    if (g['early'] != null &&
+        ((early['requires'] as List<Object?>?) ?? const <Object?>[]).isEmpty &&
+        _maps(early['requireAtLeast']).isEmpty) {
+      say(
+        file,
+        'early',
+        'asks for no skill: the early set is the words floor, so it names the words the child must have met',
+      );
+    }
+    final Set<String> named = <String>{
+      ...requires,
+      ...holds,
+      for (final Object? s in (early['requires'] as List<Object?>?) ?? const <Object?>[]) s! as String,
+    };
+    for (final Map<String, Object?> q in <Map<String, Object?>>[
+      ..._maps(g['requireAtLeast']),
+      ..._maps(early['requireAtLeast']),
+    ]) {
       final List<Object?> quota = q['skills']! as List<Object?>;
       named.addAll(<String>[for (final Object? s in quota) s! as String]);
       if ((q['count']! as int) > quota.length) {
@@ -2723,7 +2820,11 @@ void _bundlesAndGates({
     // A gate can never open if what it asks for needs something it holds back.
     final Set<String> asked = <String>{
       ...requires,
-      for (final Map<String, Object?> q in _maps(g['requireAtLeast']))
+      for (final Object? s in (early['requires'] as List<Object?>?) ?? const <Object?>[]) s! as String,
+      for (final Map<String, Object?> q in <Map<String, Object?>>[
+        ..._maps(g['requireAtLeast']),
+        ..._maps(early['requireAtLeast']),
+      ])
         for (final Object? s in q['skills']! as List<Object?>) s! as String,
     };
     final Set<String> needed = <String>{...asked, ...skillsBelow(asked, skills)};

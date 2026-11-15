@@ -101,7 +101,12 @@ CourseHomeModel buildCourseHome({
   final Set<String> placed = placedLanguageLessons(content, course.assumed);
   final List<Lesson> path = landPath(content, Course.languagesDomain);
   final Map<String, int> seen = withPlaced(finished, <LanguageCourse>[course]);
-  final String? nextId = nextOnPath(<String>[for (final Lesson l in path) l.id], seen);
+  // A lesson a closed letters gate holds back is not the next one (and no stone shows it as a lock: it is simply not offered yet).
+  final String? nextId = nextOnPath(
+    <String>[for (final Lesson l in path) l.id],
+    seen,
+    locked: course.heldLessons,
+  );
   final List<PathStone> stones = <PathStone>[
     for (final (int i, Lesson l) in path.indexed)
       PathStone(

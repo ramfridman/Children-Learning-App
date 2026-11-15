@@ -152,15 +152,19 @@ class Routes:
                     if heard is not None:
                         sk['hear'].append((heard, set_number))
             sk['teach'].append(ids)
+        sk['screen_count'] = number
 
-    def _screen(self, sk, sid, kind, item_id, clip, others, where):
-        """One teach screen or hearing screen: the activity id, or None (the problem is said)."""
+    def _screen(self, sk, sid, kind, item_id, clip, others, where, *, picture=None, meet=None):
+        """One teach screen or hearing screen: the activity id, or None (the problem is said). [picture] overrides the word's picture of
+        course.json `teachPictures`; [meet] is the data of a Meet screen of the lesson's four parts (tools/lang_meet.py)."""
+        if kind == 'teach':
+            self.taught_clips.add(clip)
         aid = '%s.%s.%s' % (self.id, sk['slug'], item_id)
         settings = dict(self.defaults.get('teach') or {})
         if kind == 'hear':
             settings.update(self.defaults.get('hear') or {})
         row = self.clip_row(clip, where)
-        picture = (self.spec.get('teachPictures') or {}).get(clip)
+        picture = picture or (self.spec.get('teachPictures') or {}).get(clip)
         if row is None:
             return None
         if not picture:
@@ -180,6 +184,8 @@ class Routes:
         doc['answer']['teach'] = True
         if kind == 'hear':
             doc['answer']['hear'] = True
+        if meet:
+            doc['say']['meet'] = meet
         # A screen is not evidence of anything (the child is shown the word, not asked it): its representation is not counted for the
         # skill, and the engine never sees it.
         self.items[aid] = {'doc': doc, 'skill': sid, 'purpose': 'practice', 'short': '%s.%s' % (sk['slug'], item_id), 'teach': True}
@@ -210,6 +216,7 @@ class Routes:
         for number, ids in enumerate(sk.get('teach', [])):
             if routes and ids and self._lesson_for(ids, number, lessons_ids) == lesson_index:
                 entries.append({'items': ids, 'routes': routes, 'mode': 'teach'})
+        entries += self.meet_entries(sk, lesson_index, lessons_ids)
         heard = [aid for aid, number in sk.get('hear', []) if self._lesson_for([aid], number, lessons_ids) == lesson_index]
         if heard:
             entries.append({'items': heard, 'routes': ['heritage'], 'mode': 'hear'})

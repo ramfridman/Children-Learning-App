@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_6",
+      "vo": "vo:rus.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "שְׁמַעְתֶּם טוֹב!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:rus.n_6"
@@ -94,8 +94,8 @@
       "шесть"
     ],
     "foils": [
-      "семь",
-      "восемь"
+      "восемь",
+      "десять"
     ],
     "clip": "vo:rus.n_6",
     "heard": {
@@ -117,6 +117,30 @@
         }
       ],
       "target": "vo:rus.n_6"
+    },
+    "meet": {
+      "position": 0,
+      "size": 3,
+      "opener": {
+        "vo": "vo:rus.f44",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת."
+          }
+        ]
+      },
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: שֵׁשׁ"
+          }
+        ],
+        "target": "vo:rus.gl_shesh"
+      },
+      "written": "шесть"
     }
   },
   "answer": {

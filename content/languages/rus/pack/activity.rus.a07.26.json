@@ -140,6 +140,7 @@
         "id": "o1",
         "sprite": "asset:carrot",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_morkov",
         "at": {
           "x": 0.02,
           "y": 0.05,
@@ -151,6 +152,7 @@
         "id": "o2",
         "sprite": "asset:cucumber",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_ogurets",
         "misconception": "rus.lis.sem",
         "at": {
           "x": 0.02,
@@ -163,6 +165,7 @@
         "id": "o3",
         "sprite": "asset:potato",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_kartoshka",
         "misconception": "rus.lis.sem",
         "at": {
           "x": 0.02,

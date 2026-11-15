@@ -1,4 +1,5 @@
 import '../content/models.dart';
+import '../engine/course.dart';
 import 'placement.dart' show landPath;
 
 // The path gate (M10, E0; audit F6). The lesson path used to walk every lesson of a land by `sequence`, so a child who had finished
@@ -50,4 +51,15 @@ Set<String> lockedLessons(
 bool _isOpen(PackContent content, Lesson lesson, bool Function(String, Set<String>) unlocked) {
   final Set<String> together = lesson.skillIds.toSet();
   return lesson.skillIds.every((String s) => !content.skills.containsKey(s) || unlocked(s, together));
+}
+
+/// The lessons of a language course that teach a skill in [held], the skills a closed gate holds back (docs/languages/frame.md section 3.3.6).
+/// Unlike [lockedLessons] these never open by the "nothing else to play" exit: a letter lesson is never served to a child whose gate is
+/// closed, and the path goes on with the course's other lessons.
+Set<String> heldLessonIds(PackContent content, Set<String> held) {
+  if (held.isEmpty) return const <String>{};
+  return <String>{
+    for (final Lesson l in landPath(content, Course.languagesDomain))
+      if (l.skillIds.any(held.contains)) l.id,
+  };
 }

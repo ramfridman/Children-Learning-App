@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_sapogi"
@@ -94,8 +94,7 @@
       "сапоги"
     ],
     "foils": [
-      "носки",
-      "ботинки"
+      "футболка"
     ],
     "clip": "vo:rus.w_sapogi",
     "heard": {
@@ -117,6 +116,27 @@
         }
       ],
       "target": "vo:rus.w_sapogi"
+    },
+    "meet": {
+      "position": 1,
+      "size": 2,
+      "earlier": [
+        {
+          "sprite": "asset:shirt",
+          "clip": "vo:rus.w_futbolka"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: מַגָּפַיִם"
+          }
+        ],
+        "target": "vo:rus.gl_magafayim"
+      },
+      "written": "сапоги"
     }
   },
   "answer": {

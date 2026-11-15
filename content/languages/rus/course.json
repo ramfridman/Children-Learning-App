@@ -1,7 +1,7 @@
 {
   "course": "rus",
   "pack": {
-    "version": "0.1.0",
+    "version": "1.0.0",
     "minAppVersion": "0.5.0"
   },
   "note": "RUS-1 Band A (docs/languages/russian/band-a-content.md): the skills, items and lessons the generator can express (LS01 tap) are in units/; the items that wait for a recipe (LS08, LS09, LS10, LS11, LS12, LS03 drum, count_tap, audio options, yes / no, same / different) are kept as data in each unit's \"waiting\" list, and the three skills that have no expressible item (A-11, A-15, A-16) in pending/. The lines f01 to f40 are those of section 2, text-ready from the hebrew-text-editor (2026-11-03); new lines are needs-editor. Text only: every clip is pending.",
@@ -16,9 +16,11 @@
     "together": "f03",
     "answerPrompt": "f40",
     "teach": {
+      "opener": "f44",
       "frame": "f03",
       "heard": "f04",
-      "together": "f03"
+      "together": "f03",
+      "meaning": "f42"
     },
     "sayOrder": {
       "new": "echo",
@@ -28,7 +30,8 @@
     "afterBubble": "f07",
     "hear": {
       "frame": "f41"
-    }
+    },
+    "where": "f43"
   },
   "feedback": {
     "right": [
@@ -170,7 +173,128 @@
     "ch-eto-mjach": "gl-ze-kadur",
     "ch-eto-koshka": "gl-zot-chatula",
     "ch-eto-jabloko": "gl-ze-tapuach",
-    "w-kit": "gl-livjatan"
+    "ch-hochu-moloko": "gl-bali-chalav",
+    "ch-hochu-apelsin": "gl-bali-tapuz",
+    "ch-hochu-syr": "gl-bali-gvina",
+    "w-kit": "gl-livjatan",
+    "w-poka": "gl-bai",
+    "w-zdravstvujte": "gl-shalom",
+    "w-mama": "gl-ima",
+    "w-papa": "gl-aba",
+    "w-babushka": "gl-savta",
+    "w-dedushka": "gl-saba",
+    "w-brat": "gl-ach",
+    "w-sestra": "gl-achot",
+    "w-malysh": "gl-tinok",
+    "w-semja": "gl-mishpacha",
+    "w-malchik": "gl-yeled",
+    "w-devochka": "gl-yalda",
+    "w-nos": "gl-af",
+    "w-rot": "gl-pe",
+    "w-glaza": "gl-einayim",
+    "w-ushi": "gl-oznayim",
+    "w-ruki": "gl-yadayim",
+    "w-nogi": "gl-raglayim",
+    "w-zhivot": "gl-beten",
+    "w-golova": "gl-rosh",
+    "w-paltsy": "gl-etsbaot",
+    "w-zuby": "gl-shinayim",
+    "w-volosy": "gl-sear",
+    "w-idi": "gl-lechu",
+    "w-begi": "gl-rutsu",
+    "w-vstan": "gl-kumu",
+    "w-hlopaj": "gl-michu",
+    "ch-vozmi-mjach": "gl-kchu-kadur",
+    "w-koshka": "gl-chatula",
+    "w-kot": "gl-chatul",
+    "w-sobaka": "gl-kelev",
+    "w-mysh": "gl-achbar",
+    "w-ryba": "gl-dag",
+    "w-ptitsa": "gl-tsipor",
+    "w-korova": "gl-para",
+    "w-loshad": "gl-sus",
+    "w-svinja": "gl-chazir",
+    "w-koza": "gl-ez",
+    "w-utka": "gl-barvaz",
+    "w-kuritsa": "gl-tarnegolet",
+    "w-petuh": "gl-tarnegol",
+    "w-zajats": "gl-arnav",
+    "w-medved": "gl-dov",
+    "w-volk": "gl-zeev",
+    "w-lisa": "gl-shual",
+    "w-yozh": "gl-kipod",
+    "w-belka": "gl-snai",
+    "w-slon": "gl-pil",
+    "w-zhiraf": "gl-jirafa",
+    "w-krasnyj": "gl-adom",
+    "w-sinij": "gl-kachol",
+    "w-zholtyj": "gl-tsahov",
+    "w-zeljonyj": "gl-yarok",
+    "w-belyj": "gl-lavan",
+    "w-chornyj": "gl-shachor",
+    "w-moloko": "gl-chalav",
+    "w-voda": "gl-mayim",
+    "w-sok": "gl-mits",
+    "w-chaj": "gl-te",
+    "w-hleb": "gl-lechem",
+    "w-syr": "gl-gvina",
+    "w-sup": "gl-marak",
+    "w-kasha": "gl-daysa",
+    "w-jajtso": "gl-beitsa",
+    "w-pechenje": "gl-ugiya",
+    "w-yabloko": "gl-tapuach",
+    "w-banan": "gl-banana",
+    "w-grusha": "gl-agas",
+    "w-apelsin": "gl-tapuz",
+    "w-klubnika": "gl-tut",
+    "w-vinograd": "gl-anavim",
+    "w-arbuz": "gl-avatiach",
+    "w-morkov": "gl-gezer",
+    "w-ogurets": "gl-melafefon",
+    "w-pomidor": "gl-agvaniya",
+    "w-kartoshka": "gl-tapuach-adama",
+    "w-mjach": "gl-kadur",
+    "w-kukla": "gl-buba",
+    "w-mashina": "gl-mechonit",
+    "w-kubiki": "gl-kubiyot",
+    "w-sharik": "gl-balon",
+    "w-piramidka": "gl-migdal-tabaot",
+    "w-kniga": "gl-sefer",
+    "w-karandash": "gl-iparon",
+    "w-jula": "gl-svivon",
+    "w-kurtka": "gl-meil",
+    "w-platje": "gl-simla",
+    "w-futbolka": "gl-chultsa",
+    "w-shtany": "gl-michnasayim",
+    "w-noski": "gl-garbayim",
+    "w-botinki": "gl-naalayim",
+    "w-sapogi": "gl-magafayim",
+    "w-sharf": "gl-tsaif",
+    "w-varezhki": "gl-kfafot",
+    "n-1": "gl-achat",
+    "n-2": "gl-shtayim",
+    "n-3": "gl-shalosh",
+    "n-4": "gl-arba",
+    "n-5": "gl-chamesh",
+    "n-6": "gl-shesh",
+    "n-7": "gl-sheva",
+    "n-8": "gl-shmone",
+    "n-9": "gl-tesha",
+    "n-10": "gl-eser",
+    "ch-kto-eto": "gl-mi-ze",
+    "ch-chto-eto": "gl-ma-ze",
+    "w-da": "gl-ken",
+    "w-net": "gl-lo",
+    "ch-gde-mjach": "gl-eifo-kadur",
+    "ch-vot-mjach": "gl-hine-kadur",
+    "w-spasibo": "gl-toda",
+    "w-pozhalujsta": "gl-bevakasha",
+    "w-nosok": "gl-gerev",
+    "w-knizhka": "gl-sefer-katan",
+    "mp-ljuk": "gl-mikhse",
+    "w-myshka": "gl-achbar",
+    "w-rys": "gl-shunar",
+    "w-ris": "gl-orez"
   },
   "tags": {
     "sem": {
@@ -244,7 +368,7 @@
       "tag": "M-RUS-RHYME-ONSET",
       "kind": "diagnostic",
       "family": "RHYME",
-      "parentText": "כשמחפשים חרוז, ילדים בוחרים לפעמים מילה שמתחילה אותו דבר (нос ו־ноги) במקום מילה שנגמרת אותו דבר.",
+      "parentText": "כשמחפשים חרוז, ילדים בוחרים לפעמים מילה שמתחילה באותו צליל (нос ו־ноги) במקום מילה שנגמרת באותו צליל.",
       "homeActivity": "אמרו שתי מילים מתחרזות ברוסית (кот – рот) ושאלו: נשמע דומה בסוף?",
       "preferredRepresentations": [
         "pictorial"
@@ -309,12 +433,12 @@
   "lines": {
     "f01": {
       "he": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה.",
-      "voice": "הקשיבו, וגעו בתמונה.",
+      "voice": "הַקְשִׁיבוּ, וּגְעוּ בתמונה.",
       "review": "text-ready"
     },
     "f02": {
       "he": "הַקְשִׁיבוּ שׁוּב.",
-      "voice": "הקשיבו שוב.",
+      "voice": "הַקְשִׁיבוּ שוב.",
       "review": "text-ready"
     },
     "f03": {
@@ -344,37 +468,37 @@
     },
     "f08": {
       "he": "הַקְשִׁיבוּ, וּמִצְאוּ אֶת זֶה אֵצֶל הֶחָבֵר.",
-      "voice": "הקשיבו, ומצאו את זה אצל החבר.",
+      "voice": "הַקְשִׁיבוּ, וּמִצְאוּ את זה אצל החבר.",
       "review": "text-ready"
     },
     "f09": {
       "he": "הַקְשִׁיבוּ, וְעִזְרוּ לֶחָבֵר לַעֲשׂוֹת אֶת זֶה.",
-      "voice": "הקשיבו, ועזרו לֶחָבֵר לַעֲשׂוֹת את זה.",
+      "voice": "הַקְשִׁיבוּ, וְעִזְרוּ לֶחָבֵר לַעֲשׂוֹת את זה.",
       "review": "text-ready"
     },
     "f10": {
       "he": "עַכְשָׁו אַתֶּם! עֲשׂוּ אֶת זֶה, וְאָז גְּעוּ בַּכַּפְתּוֹר.",
-      "voice": "עכשיו אתם, עֲשׂוּ את זה, ואז געו בכפתור.",
+      "voice": "עכשיו אתם, עֲשׂוּ את זה, ואז גְּעוּ בכפתור.",
       "review": "text-ready"
     },
     "f11": {
       "he": "הַקְשִׁיבוּ, וְשִׂימוּ אֶת זֶה בַּצַּלַּחַת שֶׁל הֶחָבֵר.",
-      "voice": "הקשיבו, וְשִׂימוּ את זה בצלחת של החבר.",
+      "voice": "הַקְשִׁיבוּ, וְשִׂימוּ את זה בצלחת של החבר.",
       "review": "text-ready"
     },
     "f12": {
       "he": "הַקְשִׁיבוּ, וְשִׂימוּ אֶת זֶה בַּקֻּפְסָה.",
-      "voice": "הקשיבו, וְשִׂימוּ את זה בקופסה.",
+      "voice": "הַקְשִׁיבוּ, וְשִׂימוּ את זה בקופסה.",
       "review": "text-ready"
     },
     "f13": {
       "he": "הַקְשִׁיבוּ, וְהַלְבִּישׁוּ אֶת הֶחָבֵר.",
-      "voice": "הקשיבו, והלבישו את החבר.",
+      "voice": "הַקְשִׁיבוּ, והלבישו את החבר.",
       "review": "text-ready"
     },
     "f14": {
       "he": "הַקְשִׁיבוּ, וּגְעוּ בַּצֶּבַע.",
-      "voice": "הקשיבו, וגעו בצבע.",
+      "voice": "הַקְשִׁיבוּ, וּגְעוּ בצבע.",
       "review": "text-ready"
     },
     "f15": {
@@ -384,12 +508,12 @@
     },
     "f16": {
       "he": "הַקְשִׁיבוּ לַמִּסְפָּר, וּגְעוּ בַּתְּמוּנָה.",
-      "voice": "הקשיבו למספר, וגעו בתמונה.",
+      "voice": "הַקְשִׁיבוּ למספר, וּגְעוּ בתמונה.",
       "review": "text-ready"
     },
     "f17": {
       "he": "הַקְשִׁיבוּ לַשְּׁאֵלָה, וּגְעוּ בַּתְּשׁוּבָה.",
-      "voice": "הקשיבו לשאלה, וגעו בתשובה.",
+      "voice": "הַקְשִׁיבוּ לשאלה, וּגְעוּ בתשובה.",
       "review": "text-ready"
     },
     "f18": {
@@ -399,12 +523,12 @@
     },
     "f19": {
       "he": "הַקְשִׁיבוּ, וּמִצְאוּ אֶת זֶה בַּחֶדֶר.",
-      "voice": "הקשיבו, ומצאו את זה בחדר.",
+      "voice": "הַקְשִׁיבוּ, וּמִצְאוּ את זה בחדר.",
       "review": "text-ready"
     },
     "f20": {
       "he": "הַקְשִׁיבוּ לַבַּקָּשָׁה, וּתְנוּ לֶחָבֵר אֶת מַה שֶּׁמְּבַקְשִׁים.",
-      "voice": "הקשיבו לבקשה, ותנו לֶחָבֵר את מה שמבקשים.",
+      "voice": "הַקְשִׁיבוּ לבקשה, ותנו לֶחָבֵר את מה שמבקשים.",
       "review": "text-ready"
     },
     "f21": {
@@ -434,7 +558,7 @@
     },
     "f26": {
       "he": "הַקְשִׁיבוּ לַשִּׁיר.",
-      "voice": "הקשיבו לשיר.",
+      "voice": "הַקְשִׁיבוּ לשיר.",
       "review": "text-ready"
     },
     "f27": {
@@ -444,7 +568,7 @@
     },
     "f28": {
       "he": "תּוֹפְפוּ עַל הַתֹּף: פַּעַם אַחַת לְכׇל חֵלֶק בַּמִּלָּה.",
-      "voice": "תופפו על התוף: פעם אַחַת לכל חלק במילה.",
+      "voice": "תּוֹפְפוּ על התוף: פעם אַחַת לכל חלק במילה.",
       "review": "text-ready"
     },
     "f29": {
@@ -463,18 +587,18 @@
       "review": "text-ready"
     },
     "f32": {
-      "he": "בְּאֵיזוֹ תְּמוּנָה הַמִּלָּה מַתְחִילָה אוֹתוֹ דָּבָר?",
-      "voice": "באיזו תמונה המילה מתחילה אותו דבר?",
+      "he": "בְּאֵיזוֹ תְּמוּנָה הַמִּלָּה מַתְחִילָה בְּאוֹתוֹ צְלִיל?",
+      "voice": "באיזו תמונה המילה מתחילה באותו צליל?",
       "review": "text-ready"
     },
     "f33": {
-      "he": "הַמִּלִּים מַתְחִילוֹת אוֹתוֹ דָּבָר?",
-      "voice": "המילים מתחילות אותו דבר?",
+      "he": "הַמִּלִּים מַתְחִילוֹת בְּאוֹתוֹ צְלִיל?",
+      "voice": "המילים מתחילות באותו צליל?",
       "review": "text-ready"
     },
     "f34": {
       "he": "הַקְשִׁיבוּ לִשְׁתֵּי הַמִּלִּים. אוֹתוֹ דָּבָר, אוֹ לֹא?",
-      "voice": "הקשיבו לִשְׁתֵּי המילים. אותו דבר, או לא?",
+      "voice": "הַקְשִׁיבוּ לִשְׁתֵּי המילים. אותו דבר, או לא?",
       "review": "text-ready"
     },
     "f35": {
@@ -489,7 +613,7 @@
     },
     "f37": {
       "he": "מִי עוֹשֶׂה אֶת הַקּוֹל הַזֶּה? הַקְשִׁיבוּ לִשְׁתֵּי הַמִּלִּים.",
-      "voice": "מי עוֹשֶׂה את הקול הזה? הקשיבו לִשְׁתֵּי המילים.",
+      "voice": "מי עוֹשֶׂה את הקול הזה? הַקְשִׁיבוּ לִשְׁתֵּי המילים.",
       "review": "text-ready"
     },
     "f38": {
@@ -504,13 +628,13 @@
     },
     "f40": {
       "he": "כַּמָּה יֵשׁ? הַקְשִׁיבוּ לַכַּפְתּוֹרִים, וּגְעוּ בַּמִּסְפָּר הַנָּכוֹן.",
-      "voice": "כמה יש? הקשיבו לכפתורים, וגעו במספר הנכון.",
+      "voice": "כמה יש? הַקְשִׁיבוּ לכפתורים, וּגְעוּ במספר הנכון.",
       "review": "text-ready"
     },
     "he-pl-thanks": {
       "he": "תּוֹדָה!",
       "voice": "תודה.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     "he-hint-showme": {
       "he": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים.",
@@ -564,8 +688,8 @@
     },
     "pass": {
       "he": "זֶה בְּסֵדֶר!",
-      "voice": "זה בסדר!",
-      "review": "needs-editor"
+      "voice": "זה בסדר.",
+      "review": "text-ready"
     },
     "personal": {
       "he": "אֶפְשָׁר לַעֲנוֹת בִּתְמוּנָה, אוֹ בְּקוֹל. אֶפְשָׁר גַּם לְדַלֵּג.",
@@ -574,68 +698,678 @@
     },
     "f41": {
       "he": "הַקְשִׁיבוּ:",
-      "voice": "הקשיבו:",
-      "review": "needs-editor"
+      "voice": "הַקְשִׁיבוּ:",
+      "review": "text-ready"
     },
     "gl-lehitraot": {
-      "he": "לְהִתְרָאוֹת.",
-      "voice": "להתראות.",
-      "review": "needs-editor"
+      "he": "לְהִתְרָאוֹת",
+      "voice": "לְהִתְרָאוֹת",
+      "review": "text-ready"
     },
     "gl-shalom": {
-      "he": "שָׁלוֹם.",
-      "voice": "שלום.",
-      "review": "needs-editor"
+      "he": "שָׁלוֹם",
+      "voice": "שָׁלוֹם",
+      "review": "text-ready"
     },
     "gl-kiftsu": {
-      "he": "קִפְצוּ.",
-      "voice": "קִפְצוּ.",
-      "review": "needs-editor"
+      "he": "קִפְצוּ",
+      "voice": "קִפְצוּ",
+      "review": "text-ready"
     },
     "gl-shvu": {
-      "he": "שְׁבוּ.",
-      "voice": "שְׁבוּ.",
-      "review": "needs-editor"
+      "he": "שְׁבוּ",
+      "voice": "שְׁבוּ",
+      "review": "text-ready"
     },
     "gl-dubi": {
-      "he": "דֻּבִּי.",
-      "voice": "דובי.",
-      "review": "needs-editor"
+      "he": "דֻּבִּי",
+      "voice": "דֻּבִּי",
+      "review": "text-ready"
     },
     "gl-kova": {
-      "he": "כּוֹבַע.",
-      "voice": "כובע.",
-      "review": "needs-editor"
+      "he": "כּוֹבַע",
+      "voice": "כּוֹבַע",
+      "review": "text-ready"
     },
     "gl-batsal": {
-      "he": "בָּצָל.",
-      "voice": "בצל.",
-      "review": "needs-editor"
+      "he": "בָּצָל",
+      "voice": "בָּצָל",
+      "review": "text-ready"
     },
     "gl-zot-ima": {
-      "he": "זֹאת אִמָּא.",
-      "voice": "זאת אמא.",
-      "review": "needs-editor"
+      "he": "זוֹ אִמָּא.",
+      "voice": "זו אימא.",
+      "review": "text-ready"
     },
     "gl-ze-kadur": {
       "he": "זֶה כַּדּוּר.",
       "voice": "זה כדור.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     "gl-zot-chatula": {
-      "he": "זֹאת חֲתוּלָה.",
-      "voice": "זאת חתולה.",
-      "review": "needs-editor"
+      "he": "זוֹ חֲתוּלָה.",
+      "voice": "זו חתולה.",
+      "review": "text-ready"
     },
     "gl-ze-tapuach": {
       "he": "זֶה תַּפּוּחַ.",
       "voice": "זה תפוח.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     "gl-livjatan": {
-      "he": "לִוְיָתָן.",
-      "voice": "לִוְיָתָן.",
-      "review": "needs-editor"
+      "he": "לִוְיָתָן",
+      "voice": "לִוְיָתָן",
+      "review": "text-ready"
+    },
+    "f42": {
+      "he": "בְּעִבְרִית:",
+      "voice": "בעברית:",
+      "review": "text-ready"
+    },
+    "gl-bali-gvina": {
+      "he": "בָּא לִי גְּבִינָה",
+      "voice": "בָּא לִי גְּבִינָה",
+      "review": "text-ready"
+    },
+    "gl-bali-tapuz": {
+      "he": "בָּא לִי תַּפּוּז",
+      "voice": "בָּא לִי תַּפּוּז",
+      "review": "text-ready"
+    },
+    "gl-bali-chalav": {
+      "he": "בָּא לִי חָלָב",
+      "voice": "בָּא לִי חָלָב",
+      "review": "text-ready"
+    },
+    "f44": {
+      "he": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת.",
+      "voice": "בואו נלמד מילים חדשות.",
+      "review": "text-ready"
+    },
+    "f43": {
+      "he": "וְאֵיפֹה",
+      "voice": "ואיפה",
+      "review": "text-ready"
+    },
+    "gl-bai": {
+      "he": "בַּיי",
+      "voice": "בַּיי",
+      "review": "text-ready"
+    },
+    "gl-ima": {
+      "he": "אִמָּא",
+      "voice": "אִמָּא",
+      "review": "text-ready"
+    },
+    "gl-aba": {
+      "he": "אַבָּא",
+      "voice": "אַבָּא",
+      "review": "text-ready"
+    },
+    "gl-savta": {
+      "he": "סַבְתָּא",
+      "voice": "סַבְתָּא",
+      "review": "text-ready"
+    },
+    "gl-saba": {
+      "he": "סָבָא",
+      "voice": "סָבָא",
+      "review": "text-ready"
+    },
+    "gl-ach": {
+      "he": "אָח",
+      "voice": "אָח",
+      "review": "text-ready"
+    },
+    "gl-achot": {
+      "he": "אָחוֹת",
+      "voice": "אָחוֹת",
+      "review": "text-ready"
+    },
+    "gl-tinok": {
+      "he": "תִּינוֹק",
+      "voice": "תִּינוֹק",
+      "review": "text-ready"
+    },
+    "gl-mishpacha": {
+      "he": "מִשְׁפָּחָה",
+      "voice": "מִשְׁפָּחָה",
+      "review": "text-ready"
+    },
+    "gl-yeled": {
+      "he": "יֶלֶד",
+      "voice": "יֶלֶד",
+      "review": "text-ready"
+    },
+    "gl-yalda": {
+      "he": "יַלְדָּה",
+      "voice": "יַלְדָּה",
+      "review": "text-ready"
+    },
+    "gl-af": {
+      "he": "אַף",
+      "voice": "אַף",
+      "review": "text-ready"
+    },
+    "gl-pe": {
+      "he": "פֶּה",
+      "voice": "פֶּה",
+      "review": "text-ready"
+    },
+    "gl-einayim": {
+      "he": "עֵינַיִם",
+      "voice": "עֵינַיִם",
+      "review": "text-ready"
+    },
+    "gl-oznayim": {
+      "he": "אָזְנַיִם",
+      "voice": "אָזְנַיִם",
+      "review": "text-ready"
+    },
+    "gl-yadayim": {
+      "he": "יָדַיִם",
+      "voice": "יָדַיִם",
+      "review": "text-ready"
+    },
+    "gl-raglayim": {
+      "he": "רַגְלַיִם",
+      "voice": "רַגְלַיִם",
+      "review": "text-ready"
+    },
+    "gl-beten": {
+      "he": "בֶּטֶן",
+      "voice": "בֶּטֶן",
+      "review": "text-ready"
+    },
+    "gl-rosh": {
+      "he": "רֹאשׁ",
+      "voice": "רֹאשׁ",
+      "review": "text-ready"
+    },
+    "gl-etsbaot": {
+      "he": "אֶצְבָּעוֹת",
+      "voice": "אֶצְבָּעוֹת",
+      "review": "text-ready"
+    },
+    "gl-shinayim": {
+      "he": "שִׁנַּיִם",
+      "voice": "שִׁנַּיִם",
+      "review": "text-ready"
+    },
+    "gl-sear": {
+      "he": "שֵׂעָר",
+      "voice": "שֵׂעָר",
+      "review": "text-ready"
+    },
+    "gl-lechu": {
+      "he": "לְכוּ",
+      "voice": "לְכוּ",
+      "review": "text-ready"
+    },
+    "gl-rutsu": {
+      "he": "רוּצוּ",
+      "voice": "רוּצוּ",
+      "review": "text-ready"
+    },
+    "gl-kumu": {
+      "he": "קוּמוּ",
+      "voice": "קוּמוּ",
+      "review": "text-ready"
+    },
+    "gl-michu": {
+      "he": "מַחֲאוּ כַּפַּיִם",
+      "voice": "מַחֲאוּ כַּפַּיִם",
+      "review": "text-ready"
+    },
+    "gl-kchu-kadur": {
+      "he": "קְחוּ אֶת הַכַּדּוּר.",
+      "voice": "קְחוּ את הכדור.",
+      "review": "text-ready"
+    },
+    "gl-chatula": {
+      "he": "חֲתוּלָה",
+      "voice": "חֲתוּלָה",
+      "review": "text-ready"
+    },
+    "gl-chatul": {
+      "he": "חָתוּל",
+      "voice": "חָתוּל",
+      "review": "text-ready"
+    },
+    "gl-kelev": {
+      "he": "כֶּלֶב",
+      "voice": "כֶּלֶב",
+      "review": "text-ready"
+    },
+    "gl-achbar": {
+      "he": "עַכְבָּר",
+      "voice": "עַכְבָּר",
+      "review": "text-ready"
+    },
+    "gl-dag": {
+      "he": "דָּג",
+      "voice": "דָּג",
+      "review": "text-ready"
+    },
+    "gl-tsipor": {
+      "he": "צִפּוֹר",
+      "voice": "צִפּוֹר",
+      "review": "text-ready"
+    },
+    "gl-para": {
+      "he": "פָּרָה",
+      "voice": "פָּרָה",
+      "review": "text-ready"
+    },
+    "gl-sus": {
+      "he": "סוּס",
+      "voice": "סוּס",
+      "review": "text-ready"
+    },
+    "gl-chazir": {
+      "he": "חֲזִיר",
+      "voice": "חֲזִיר",
+      "review": "text-ready"
+    },
+    "gl-ez": {
+      "he": "עֵז",
+      "voice": "עֵז",
+      "review": "text-ready"
+    },
+    "gl-barvaz": {
+      "he": "בַּרְוָז",
+      "voice": "בַּרְוָז",
+      "review": "text-ready"
+    },
+    "gl-tarnegolet": {
+      "he": "תַּרְנְגֹלֶת",
+      "voice": "תַּרְנְגֹלֶת",
+      "review": "text-ready"
+    },
+    "gl-tarnegol": {
+      "he": "תַּרְנְגוֹל",
+      "voice": "תַּרְנְגוֹל",
+      "review": "text-ready"
+    },
+    "gl-arnav": {
+      "he": "אַרְנָב",
+      "voice": "אַרְנָב",
+      "review": "text-ready"
+    },
+    "gl-dov": {
+      "he": "דֹּב",
+      "voice": "דֹּב",
+      "review": "text-ready"
+    },
+    "gl-zeev": {
+      "he": "זְאֵב",
+      "voice": "זְאֵב",
+      "review": "text-ready"
+    },
+    "gl-shual": {
+      "he": "שׁוּעָל",
+      "voice": "שׁוּעָל",
+      "review": "text-ready"
+    },
+    "gl-kipod": {
+      "he": "קִפּוֹד",
+      "voice": "קִפּוֹד",
+      "review": "text-ready"
+    },
+    "gl-snai": {
+      "he": "סְנָאִי",
+      "voice": "סְנָאִי",
+      "review": "text-ready"
+    },
+    "gl-pil": {
+      "he": "פִּיל",
+      "voice": "פִּיל",
+      "review": "text-ready"
+    },
+    "gl-jirafa": {
+      "he": "גִ׳ירָפָה",
+      "voice": "גִ׳ירָפָה",
+      "review": "text-ready"
+    },
+    "gl-adom": {
+      "he": "אָדֹם",
+      "voice": "אָדֹם",
+      "review": "text-ready"
+    },
+    "gl-kachol": {
+      "he": "כָּחֹל",
+      "voice": "כָּחֹל",
+      "review": "text-ready"
+    },
+    "gl-tsahov": {
+      "he": "צָהֹב",
+      "voice": "צָהֹב",
+      "review": "text-ready"
+    },
+    "gl-yarok": {
+      "he": "יָרֹק",
+      "voice": "יָרֹק",
+      "review": "text-ready"
+    },
+    "gl-lavan": {
+      "he": "לָבָן",
+      "voice": "לָבָן",
+      "review": "text-ready"
+    },
+    "gl-shachor": {
+      "he": "שָׁחֹר",
+      "voice": "שָׁחֹר",
+      "review": "text-ready"
+    },
+    "gl-chalav": {
+      "he": "חָלָב",
+      "voice": "חָלָב",
+      "review": "text-ready"
+    },
+    "gl-mayim": {
+      "he": "מַיִם",
+      "voice": "מַיִם",
+      "review": "text-ready"
+    },
+    "gl-mits": {
+      "he": "מִיץ",
+      "voice": "מִיץ",
+      "review": "text-ready"
+    },
+    "gl-te": {
+      "he": "תֵּה",
+      "voice": "תֵּה",
+      "review": "text-ready"
+    },
+    "gl-lechem": {
+      "he": "לֶחֶם",
+      "voice": "לֶחֶם",
+      "review": "text-ready"
+    },
+    "gl-gvina": {
+      "he": "גְּבִינָה",
+      "voice": "גְּבִינָה",
+      "review": "text-ready"
+    },
+    "gl-marak": {
+      "he": "מָרָק",
+      "voice": "מָרָק",
+      "review": "text-ready"
+    },
+    "gl-daysa": {
+      "he": "דַּיְסָה",
+      "voice": "דַּיְסָה",
+      "review": "text-ready"
+    },
+    "gl-beitsa": {
+      "he": "בֵּיצָה",
+      "voice": "בֵּיצָה",
+      "review": "text-ready"
+    },
+    "gl-ugiya": {
+      "he": "עוּגִיָּה",
+      "voice": "עוּגִיָּה",
+      "review": "text-ready"
+    },
+    "gl-tapuach": {
+      "he": "תַּפּוּחַ",
+      "voice": "תַּפּוּחַ",
+      "review": "text-ready"
+    },
+    "gl-banana": {
+      "he": "בָּנָנָה",
+      "voice": "בָּנָנָה",
+      "review": "text-ready"
+    },
+    "gl-agas": {
+      "he": "אַגָּס",
+      "voice": "אַגָּס",
+      "review": "text-ready"
+    },
+    "gl-tapuz": {
+      "he": "תַּפּוּז",
+      "voice": "תַּפּוּז",
+      "review": "text-ready"
+    },
+    "gl-tut": {
+      "he": "תּוּת",
+      "voice": "תּוּת",
+      "review": "text-ready"
+    },
+    "gl-anavim": {
+      "he": "עֲנָבִים",
+      "voice": "עֲנָבִים",
+      "review": "text-ready"
+    },
+    "gl-avatiach": {
+      "he": "אֲבַטִּיחַ",
+      "voice": "אֲבַטִּיחַ",
+      "review": "text-ready"
+    },
+    "gl-gezer": {
+      "he": "גֶּזֶר",
+      "voice": "גֶּזֶר",
+      "review": "text-ready"
+    },
+    "gl-melafefon": {
+      "he": "מְלָפְפוֹן",
+      "voice": "מְלָפְפוֹן",
+      "review": "text-ready"
+    },
+    "gl-agvaniya": {
+      "he": "עַגְבָנִיָּה",
+      "voice": "עַגְבָנִיָּה",
+      "review": "text-ready"
+    },
+    "gl-tapuach-adama": {
+      "he": "תַּפּוּחַ אֲדָמָה",
+      "voice": "תַּפּוּחַ אֲדָמָה",
+      "review": "text-ready"
+    },
+    "gl-kadur": {
+      "he": "כַּדּוּר",
+      "voice": "כַּדּוּר",
+      "review": "text-ready"
+    },
+    "gl-buba": {
+      "he": "בֻּבָּה",
+      "voice": "בֻּבָּה",
+      "review": "text-ready"
+    },
+    "gl-mechonit": {
+      "he": "מְכוֹנִית",
+      "voice": "מְכוֹנִית",
+      "review": "text-ready"
+    },
+    "gl-kubiyot": {
+      "he": "קֻבִּיּוֹת",
+      "voice": "קֻבִּיּוֹת",
+      "review": "text-ready"
+    },
+    "gl-balon": {
+      "he": "בָּלוֹן",
+      "voice": "בָּלוֹן",
+      "review": "text-ready"
+    },
+    "gl-migdal-tabaot": {
+      "he": "מִגְדַּל טַבָּעוֹת",
+      "voice": "מִגְדַּל טַבָּעוֹת",
+      "review": "text-ready"
+    },
+    "gl-sefer": {
+      "he": "סֵפֶר",
+      "voice": "סֵפֶר",
+      "review": "text-ready"
+    },
+    "gl-iparon": {
+      "he": "עִפָּרוֹן",
+      "voice": "עִפָּרוֹן",
+      "review": "text-ready"
+    },
+    "gl-svivon": {
+      "he": "סְבִיבוֹן",
+      "voice": "סְבִיבוֹן",
+      "review": "text-ready"
+    },
+    "gl-meil": {
+      "he": "מְעִיל",
+      "voice": "מְעִיל",
+      "review": "text-ready"
+    },
+    "gl-simla": {
+      "he": "שִׂמְלָה",
+      "voice": "שִׂמְלָה",
+      "review": "text-ready"
+    },
+    "gl-chultsa": {
+      "he": "חֻלְצָה",
+      "voice": "חֻלְצָה",
+      "review": "text-ready"
+    },
+    "gl-michnasayim": {
+      "he": "מִכְנָסַיִם",
+      "voice": "מִכְנָסַיִם",
+      "review": "text-ready"
+    },
+    "gl-garbayim": {
+      "he": "גַּרְבַּיִם",
+      "voice": "גַּרְבַּיִם",
+      "review": "text-ready"
+    },
+    "gl-naalayim": {
+      "he": "נַעֲלַיִם",
+      "voice": "נַעֲלַיִם",
+      "review": "text-ready"
+    },
+    "gl-magafayim": {
+      "he": "מַגָּפַיִם",
+      "voice": "מַגָּפַיִם",
+      "review": "text-ready"
+    },
+    "gl-tsaif": {
+      "he": "צָעִיף",
+      "voice": "צָעִיף",
+      "review": "text-ready"
+    },
+    "gl-kfafot": {
+      "he": "כְּפָפוֹת",
+      "voice": "כְּפָפוֹת",
+      "review": "text-ready"
+    },
+    "gl-achat": {
+      "he": "אַחַת",
+      "voice": "אַחַת",
+      "review": "text-ready"
+    },
+    "gl-shtayim": {
+      "he": "שְׁתַּיִם",
+      "voice": "שְׁתַּיִם",
+      "review": "text-ready"
+    },
+    "gl-shalosh": {
+      "he": "שָׁלוֹשׁ",
+      "voice": "שָׁלוֹשׁ",
+      "review": "text-ready"
+    },
+    "gl-arba": {
+      "he": "אַרְבַּע",
+      "voice": "אַרְבַּע",
+      "review": "text-ready"
+    },
+    "gl-chamesh": {
+      "he": "חָמֵשׁ",
+      "voice": "חָמֵשׁ",
+      "review": "text-ready"
+    },
+    "gl-shesh": {
+      "he": "שֵׁשׁ",
+      "voice": "שֵׁשׁ",
+      "review": "text-ready"
+    },
+    "gl-sheva": {
+      "he": "שֶׁבַע",
+      "voice": "שֶׁבַע",
+      "review": "text-ready"
+    },
+    "gl-shmone": {
+      "he": "שְׁמוֹנֶה",
+      "voice": "שְׁמוֹנֶה",
+      "review": "text-ready"
+    },
+    "gl-tesha": {
+      "he": "תֵּשַׁע",
+      "voice": "תֵּשַׁע",
+      "review": "text-ready"
+    },
+    "gl-eser": {
+      "he": "עֶשֶׂר",
+      "voice": "עֶשֶׂר",
+      "review": "text-ready"
+    },
+    "gl-mi-ze": {
+      "he": "מִי זֶה?",
+      "voice": "מי זה?",
+      "review": "text-ready"
+    },
+    "gl-ma-ze": {
+      "he": "מַה זֶּה?",
+      "voice": "מה זה?",
+      "review": "text-ready"
+    },
+    "gl-ken": {
+      "he": "כֵּן",
+      "voice": "כֵּן",
+      "review": "text-ready"
+    },
+    "gl-lo": {
+      "he": "לֹא",
+      "voice": "לֹא",
+      "review": "text-ready"
+    },
+    "gl-eifo-kadur": {
+      "he": "אֵיפֹה הַכַּדּוּר?",
+      "voice": "איפה הכדור?",
+      "review": "text-ready"
+    },
+    "gl-hine-kadur": {
+      "he": "הִנֵּה הַכַּדּוּר!",
+      "voice": "הנה הכדור.",
+      "review": "text-ready"
+    },
+    "gl-toda": {
+      "he": "תּוֹדָה",
+      "voice": "תּוֹדָה",
+      "review": "text-ready"
+    },
+    "gl-bevakasha": {
+      "he": "בְּבַקָּשָׁה",
+      "voice": "בְּבַקָּשָׁה",
+      "review": "text-ready"
+    },
+    "gl-gerev": {
+      "he": "גֶּרֶב",
+      "voice": "גֶּרֶב",
+      "review": "text-ready"
+    },
+    "gl-sefer-katan": {
+      "he": "סֵפֶר קָטָן",
+      "voice": "סֵפֶר קָטָן",
+      "review": "text-ready"
+    },
+    "gl-mikhse": {
+      "he": "מִכְסֶה בַּכְּבִישׁ",
+      "voice": "מִכְסֶה בַּכְּבִישׁ",
+      "review": "text-ready"
+    },
+    "gl-shunar": {
+      "he": "שׁוּנָר",
+      "voice": "שׁוּנָר",
+      "review": "text-ready"
+    },
+    "gl-orez": {
+      "he": "אֹרֶז",
+      "voice": "אֹרֶז",
+      "review": "text-ready"
     }
   },
   "teachPictures": {
@@ -754,6 +1488,21 @@
     "mp-ljuk": "manhole",
     "w-myshka": "mouse",
     "w-rys": "lynx",
-    "w-ris": "rice"
-  }
+    "w-ris": "rice",
+    "ch-kto-eto": "cat",
+    "ch-chto-eto": "ball",
+    "ch-eto-mama": "fam-mother",
+    "ch-eto-mjach": "ball",
+    "ch-eto-koshka": "cat",
+    "w-da": "mika-yes",
+    "w-net": "mika-no",
+    "ch-gde-mjach": "scene-room-ball",
+    "ch-vot-mjach": "ball",
+    "w-spasibo": "mika-gift",
+    "w-pozhalujsta": "mika-present",
+    "w-nosok": "sock",
+    "w-knizhka": "book"
+  },
+  "metBefore": "enforce",
+  "puppetPrefixes": ["ch-"]
 }

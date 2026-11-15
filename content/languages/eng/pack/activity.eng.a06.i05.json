@@ -38,6 +38,7 @@
   "a11y": {
     "altText": "תְּמוּנָה וְחָבֵר שֶׁעוֹשֶׂה מַה שֶּׁאוֹמְרִים"
   },
+  "asks": "vo:eng.en_mouth",
   "prompt": {
     "vo": "vo:eng.he_ins_touch_body",
     "caption": [
@@ -51,11 +52,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_1",
+      "vo": "vo:eng.he_fb_right_8",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "כׇּל הַכָּבוֹד!"
         }
       ],
       "target": "vo:eng.en_touch_mouth"
@@ -132,6 +133,7 @@
         "id": "o1",
         "sprite": "asset:body_mouth",
         "label": "mouth",
+        "clip": "vo:eng.en_mouth",
         "at": {
           "x": 0.3594,
           "y": 0.175,
@@ -143,6 +145,7 @@
         "id": "o2",
         "sprite": "asset:body_nose",
         "label": "nose",
+        "clip": "vo:eng.en_nose",
         "at": {
           "x": 0.3594,
           "y": 0.1414,
@@ -155,6 +158,7 @@
         "id": "o3",
         "sprite": "asset:body_head",
         "label": "head",
+        "clip": "vo:eng.en_head",
         "at": {
           "x": 0.3516,
           "y": 0.0641,

@@ -15,10 +15,17 @@
     "ENG-A-09"
   ],
   "items": [
+    "eng.a09.n04",
+    "eng.a09.n05",
+    "eng.a09.n06",
+    "eng.a09.n07",
+    "eng.a09.n08",
+    "eng.a09.i04",
     "eng.a09.i05",
-    "eng.a09.i06",
-    "eng.a09.i07",
-    "eng.a09.i08"
+    "eng.a09.n09",
+    "eng.a09.s02",
+    "eng.a09.d02",
+    "eng.a09.s03"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +37,19 @@
       }
     ]
   },
-  "sequence": 24
+  "sequence": 31,
+  "teach": [
+    {
+      "items": [
+        "eng.a09.tc04",
+        "eng.a09.tc05",
+        "eng.a09.tc06"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a09.n06"
+    }
+  ]
 }

@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_1",
+      "vo": "vo:rus.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "כֵּן!"
         }
       ],
       "target": "vo:rus.w_mama"
@@ -94,8 +94,8 @@
       "мама"
     ],
     "foils": [
-      "папа",
-      "бабушка"
+      "бабушка",
+      "папа"
     ],
     "clip": "vo:rus.w_mama",
     "heard": {
@@ -117,6 +117,30 @@
         }
       ],
       "target": "vo:rus.w_mama"
+    },
+    "meet": {
+      "position": 0,
+      "size": 3,
+      "opener": {
+        "vo": "vo:rus.f44",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת."
+          }
+        ]
+      },
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: אִמָּא"
+          }
+        ],
+        "target": "vo:rus.gl_ima"
+      },
+      "written": "мама"
     }
   },
   "answer": {

@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_7",
+      "vo": "vo:rus.he_fb_right_8",
       "caption": [
         {
           "t": "he",
-          "v": "הִקְשַׁבְתֶּם יָפֶה!"
+          "v": "כׇּל הַכָּבוֹד!"
         }
       ],
       "target": "vo:rus.st3_3"
@@ -158,18 +158,21 @@
       {
         "id": "o1",
         "sprite": "asset:st3_p3",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_shapka"
       },
       {
         "id": "o2",
         "sprite": "asset:st3_beach",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_devochka",
         "misconception": "rus.lis.seq"
       },
       {
         "id": "o3",
         "sprite": "asset:st3_boy",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_malchik",
         "misconception": "rus.lis.seq"
       }
     ],

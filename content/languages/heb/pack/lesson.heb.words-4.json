@@ -1,0 +1,50 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.words-4",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִלִּים שֶׁל מַיִם"
+    }
+  ],
+  "skills": [
+    "HEB-A-02"
+  ],
+  "items": [
+    "heb.a02.r-tanur",
+    "heb.a02.f-sira",
+    "heb.a02.f-kova",
+    "heb.a02.05",
+    "heb.a02.06",
+    "heb.a02.say-sira",
+    "heb.a02.say-kova"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 80,
+  "teach": [
+    {
+      "items": [
+        "heb.a02.tc08",
+        "heb.a02.tc09"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "heb.a02.f-sira"
+    }
+  ]
+}

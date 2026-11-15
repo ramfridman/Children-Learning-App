@@ -15,10 +15,9 @@
     "ENG-A-01"
   ],
   "items": [
-    "eng.a01.i07",
-    "eng.a01.i08",
+    "eng.a01.i17",
     "eng.a01.p01",
-    "eng.a01.r01"
+    "eng.a01.e01"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +29,5 @@
       }
     ]
   },
-  "sequence": 2
+  "sequence": 3
 }

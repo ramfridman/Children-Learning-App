@@ -8,17 +8,22 @@
   "title": [
     {
       "t": "he",
-      "v": "צִבְעֵי הַסִּירוֹת"
+      "v": "צְבָעִים"
     }
   ],
   "skills": [
     "ENG-A-03"
   ],
   "items": [
-    "eng.a03.i05",
-    "eng.a03.i06",
-    "eng.a03.i09",
-    "eng.a03.i10"
+    "eng.a03.i01",
+    "eng.a03.i02",
+    "eng.a03.n06",
+    "eng.a03.n07",
+    "eng.a03.i03",
+    "eng.a03.i04",
+    "eng.a03.s02",
+    "eng.a03.x01",
+    "eng.a03.d01"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +35,18 @@
       }
     ]
   },
-  "sequence": 7
+  "sequence": 9,
+  "teach": [
+    {
+      "items": [
+        "eng.a03.tc03",
+        "eng.a03.tc04"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a03.n06"
+    }
+  ]
 }

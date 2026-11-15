@@ -8,14 +8,17 @@
   "title": [
     {
       "t": "he",
-      "v": "הַמִּשְׁפָּחָה הַגְּדוֹלָה"
+      "v": "הַמִּשְׁפָּחָה"
     }
   ],
   "skills": [
     "ENG-A-07"
   ],
   "items": [
-    "eng.a07.p01"
+    "eng.a07.i04",
+    "eng.a07.n14",
+    "eng.a07.h03",
+    "eng.a07.s05"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -27,5 +30,5 @@
       }
     ]
   },
-  "sequence": 19
+  "sequence": 25
 }

@@ -22,7 +22,7 @@
     "authored": 0.2
   },
   "scoring": {
-    "maxAttempts": 3,
+    "maxAttempts": 2,
     "creditByHintLevel": [
       1,
       0.75,
@@ -57,7 +57,8 @@
           "t": "he",
           "v": "שְׁמַעְתֶּם טוֹב!"
         }
-      ]
+      ],
+      "target": "vo:rus.w_privet"
     },
     "incorrect": [
       {
@@ -78,7 +79,8 @@
           "t": "he",
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
-      ]
+      ],
+      "target": "vo:rus.w_privet"
     }
   },
   "hints": [
@@ -91,7 +93,8 @@
           "t": "he",
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
-      ]
+      ],
+      "target": "vo:rus.w_privet"
     },
     {
       "level": 2,
@@ -102,7 +105,8 @@
           "t": "he",
           "v": "מָה עוֹנִים לֶחָבֵר?"
         }
-      ]
+      ],
+      "target": "vo:rus.w_privet"
     },
     {
       "level": 3,
@@ -113,7 +117,8 @@
           "t": "he",
           "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
         }
-      ]
+      ],
+      "target": "vo:rus.w_privet"
     }
   ],
   "scene": {
@@ -126,18 +131,14 @@
       {
         "id": "o1",
         "sprite": "asset:mika_arrive",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_privet"
       },
       {
         "id": "o2",
         "sprite": "asset:mika_leave",
         "label": "תְּמוּנָה",
-        "misconception": "rus.lis.sem"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:mika_gift",
-        "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_poka",
         "misconception": "rus.lis.sem"
       }
     ],

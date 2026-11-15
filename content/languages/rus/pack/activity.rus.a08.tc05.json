@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_mishka",
+    "target": "vo:rus.w_kubiki",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
-      "target": "vo:rus.w_mishka"
+      "target": "vo:rus.w_kubiki"
     },
     "incorrect": [
       {
@@ -80,24 +80,24 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_mishka"
+      "target": "vo:rus.w_kubiki"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:teddy"
+      "sprite": "asset:blocks"
     }
   },
   "say": {
     "forms": [
-      "мишка"
+      "кубики"
     ],
     "foils": [
-      "мяч",
-      "кукла"
+      "мишка",
+      "шарик"
     ],
-    "clip": "vo:rus.w_mishka",
+    "clip": "vo:rus.w_kubiki",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_mishka"
+      "target": "vo:rus.w_kubiki"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +116,28 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_mishka"
+      "target": "vo:rus.w_kubiki"
+    },
+    "meet": {
+      "position": 1,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:teddy",
+          "clip": "vo:rus.w_mishka"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: קֻבִּיּוֹת"
+          }
+        ],
+        "target": "vo:rus.gl_kubiyot"
+      },
+      "written": "кубики"
     }
   },
   "answer": {
