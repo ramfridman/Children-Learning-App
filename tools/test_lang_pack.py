@@ -614,7 +614,8 @@ class WriteTest(Base):
 
 EXTRA_CSV = ('en-cat,cat,cat.,/k/\nen-dog,dog,dog.,/d/\nen-one,one,one.,/w/\nen-two,two,two.,/t/\nen-three,three,three.,/t/\n'
              'en-whats-this,What\'s this?,What is this?,/w/\nen-its-cat,It\'s a cat.,It is a cat.,/i/\nen-yes,yes,yes.,/j/\n'
-             'en-ch-1,Hello cat,Hello cat.,/h/\nen-ch-2,Bye dog,Bye dog.,/b/\nen-cat-slow,cat,cat.,/k/\nen-thats-ok,That\'s OK!,That is OK.,/o/\n')
+             'en-ch-1,Hello cat,Hello cat.,/h/\nen-ch-2,Bye dog,Bye dog.,/b/\nen-cat-slow,cat,cat.,/k/\nen-thats-ok,That\'s OK!,That is OK.,/o/\n'
+             'en-cat-syl,ca t,ca t.,[ka | t]\n')
 EXTRA_LINES = {'he-q': 'מִי זֶה?', 'he-pass': 'זֶה בְּסֵדֶר!', 'he-heard': 'שָׁמַעְתִּי:', 'he-together': 'נֹאמַר יַחַד.', 'he-bin': 'קֻפְסָה'}
 
 
@@ -652,6 +653,20 @@ class RecipesTest(RecipeBase):
         self.assertEqual((doc['prompt']['target'], doc['prompt']['target2']), ('vo:eng.en_whats_this', 'vo:eng.en_its_cat'))
         self.assertEqual(doc['feedback']['correct']['target'], 'vo:eng.en_yes')
         self.assertEqual(doc['answer']['pole'], 'yes')
+
+    def test_a_blend_praise_ends_on_the_right_pictures_whole_word_not_on_the_syllables(self):
+        # The prompt is a syllable string (its IPA has syllable bars): a right answer is praised on the whole word (ruled 2026-11-15).
+        _, doc = self.one({'id': 'i01', 'kind': 'tap', 'target': 'en-cat-syl', 'options': [{'pic': 'a', 'clip': 'en-cat'},
+                                                                                         {'pic': 'b', 'clip': 'en-dog'}],
+                           'wrong': {'b': 'sem'}})
+        self.assertEqual(doc['prompt']['target'], 'vo:eng.en_cat_syl')
+        self.assertEqual(doc['feedback']['correct']['target'], 'vo:eng.en_cat')
+        # An item that names its own clip after the right answer keeps it; a prompt that is a whole word keeps its word.
+        _, doc = self.one({'id': 'i01', 'kind': 'tap', 'target': 'en-cat-syl', 'after': 'en-yes',
+                           'options': [{'pic': 'a', 'clip': 'en-cat'}, {'pic': 'b', 'clip': 'en-dog'}], 'wrong': {'b': 'sem'}})
+        self.assertEqual(doc['feedback']['correct']['target'], 'vo:eng.en_yes')
+        _, doc = self.one({'id': 'i01', 'kind': 'tap', 'target': 'en-cat', 'options': ['a', 'b'], 'wrong': {'b': 'sem'}})
+        self.assertEqual(doc['feedback']['correct']['target'], 'vo:eng.en_cat')
 
     def test_sound_only_options_are_buttons_and_a_wrong_one_is_named_by_its_clip(self):
         _, doc = self.one({'id': 'i01', 'kind': 'tap', 'options': [{'clip': 'en-cat'}, {'clip': 'en-dog'}], 'wrong': {'en-dog': 'sem'}})

@@ -260,7 +260,10 @@ class LanguagePage extends ConsumerWidget {
     final Map<String, String> byLang = <String, String>{'lang': name};
     // "Letters together with words" is shown from 6;0 by the age in months when a birth month was given, else by the bracket.
     final int? ageMonths = ref.watch(childAgeProvider(profile.id)).value?.months;
+    // The two letters switches act only on a letters gate: a course whose installed pack has none (no letter lessons yet) shows neither.
+    final bool lettersGate = ref.watch(languagePacksProvider).value?[course]?.hasLettersGate ?? false;
     final Widget lettersTogether = _LettersTogetherRow(
+      lettersGate: lettersGate,
       switches: s,
       ageBand: profile.ageBand,
       ageMonths: ageMonths,
@@ -318,23 +321,25 @@ class LanguagePage extends ConsumerWidget {
           lettersTogether,
         ],
         if (course == Course.rus) ...<Widget>[
-          const Divider(height: 1, color: TokenColors.hairline),
-          _SwitchRow(
-            key: const Key('page-letters5'),
-            title: He.areaLangLetters.text,
-            help: s.lettersBefore5 ? He.areaLangLettersOn.text : He.areaLangLettersOff.text,
-            value: s.lettersBefore5,
-            onChanged: (bool v) => set(s.copyWith(lettersBefore5: v)),
-          ),
-          if (s.lettersBefore5)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Text(
-                He.areaLangLettersFirstWords.text,
-                key: const Key('page-letters5-words'),
-                style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
-              ),
+          if (lettersGate) ...<Widget>[
+            const Divider(height: 1, color: TokenColors.hairline),
+            _SwitchRow(
+              key: const Key('page-letters5'),
+              title: He.areaLangLetters.text,
+              help: s.lettersBefore5 ? He.areaLangLettersOn.text : He.areaLangLettersOff.text,
+              value: s.lettersBefore5,
+              onChanged: (bool v) => set(s.copyWith(lettersBefore5: v)),
             ),
+            if (s.lettersBefore5)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  He.areaLangLettersFirstWords.text,
+                  key: const Key('page-letters5-words'),
+                  style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+                ),
+              ),
+          ],
           lettersTogether,
           const Divider(height: 1, color: TokenColors.hairline),
           _StressRow(switches: s, onChanged: set),
@@ -401,15 +406,18 @@ class LanguagePage extends ConsumerWidget {
 }
 
 /// "Letters together with words" (English and Russian): hidden under 6;0, shown from 6, on by default from 7 (a parent's own choice stands).
-/// It lowers the letters gate to its early set; letters never open before it.
+/// It lowers the letters gate to its early set; letters never open before it. Hidden too while the course's installed pack has no letters gate
+/// ([lettersGate] false): the switch would do nothing.
 class _LettersTogetherRow extends StatelessWidget {
   const _LettersTogetherRow({
+    required this.lettersGate,
     required this.switches,
     required this.ageBand,
     required this.ageMonths,
     required this.onChanged,
   });
 
+  final bool lettersGate;
   final LanguageSwitches switches;
   final int ageBand;
   final int? ageMonths;
@@ -417,7 +425,7 @@ class _LettersTogetherRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!LanguageSwitches.lettersWithWordsShown(ageBand: ageBand, ageMonths: ageMonths)) {
+    if (!lettersGate || !LanguageSwitches.lettersWithWordsShown(ageBand: ageBand, ageMonths: ageMonths)) {
       return const SizedBox.shrink();
     }
     final bool on = switches.lettersWithWordsOn(ageBand: ageBand, ageMonths: ageMonths);

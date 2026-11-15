@@ -263,6 +263,19 @@ class Recipes(Talk, More, Print):
         right = faces[int(correct[1:]) - 1] if isinstance(correct, str) and re.fullmatch(r'o\d+', correct) else None
         return right is not None and self.same_word(item['target'], right['clip'])
 
+    def blend_whole(self, item, faces, correct):
+        """The clip a right answer's praise ends on in a blend item (frame section 2.3, ruled 2026-11-15): when the prompt is a syllable
+        string ("bu ... ba": the pronunciation row's IPA has syllable bars) and the right option is a picture with its whole-word clip,
+        that clip. The payoff of blending is the whole word, so the praise does not replay the split syllables. None for every other
+        item, and for an item that names its own `after`."""
+        if item.get('after') or item.get('letters'):
+            return None
+        row = self.pronunciation.get(item.get('target') or '')
+        if not row or '|' not in (row.get('ipa') or ''):
+            return None
+        right = faces[int(correct[1:]) - 1] if isinstance(correct, str) and re.fullmatch(r'o\d+', correct) else None
+        return right.get('clip') if right is not None and 'pic' in right else None
+
     @staticmethod
     def same_word(a, b):
         """Are two clip names one word (the slow version of a clip says the same word)?"""
@@ -320,6 +333,9 @@ class Recipes(Talk, More, Print):
         if ask_where:
             # The first wrong tap says "and where is ...?" and shows no hint picture (frame section 2.3).
             answer['askWhere'] = True
+        whole = self.blend_whole(item, faces, correct)
+        if whole:
+            item = dict(item, after=whole)
         if not self.lines_of(doc, item, where, self.tag_ids(options), ask_where=ask_where):
             return None
         doc['scene'] = scene

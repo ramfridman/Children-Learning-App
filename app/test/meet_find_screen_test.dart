@@ -8,8 +8,9 @@ import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/design/course_text.dart' show TargetChip;
 import 'package:nitznutz/play/speaking_badge.dart';
 
-import 'support/l7_rig.dart';
 import 'support/harness.dart';
+import 'support/l7_rig.dart';
+import 'support/meet_opener.dart';
 
 const Key _picture = Key('say-picture');
 const Key _tile = Key('say-done');
@@ -36,7 +37,7 @@ void main() {
       final L7Rig r = await openEnglishLesson(t, eng);
       await l7Wait(t, 9500);
       expect(
-        r.said.take(7).toList(),
+        r.said.skip(1).take(7).toList(),
         <String>[
           'eng.en_hello',
           'eng.he_hint_hebrew',
@@ -53,6 +54,34 @@ void main() {
         1,
         reason: 'the Hebrew meaning is said exactly once on its screen',
       );
+    },
+  );
+
+  testWidgets(
+    'the opener is said once, before the first new word of the lesson, and not again before the next word of the set',
+    (WidgetTester t) async {
+      final L7Rig r = await openEnglishLesson(t, eng, pastOpener: false);
+      await l7Wait(t, 400);
+      expect(badgeLit, findsNothing, reason: 'the opener lights no badge: no word is being said yet');
+      await untilWordBeat(t);
+      expect(r.said, <String>[
+        'eng.he_meet_open',
+        'eng.en_hello',
+      ], reason: 'the opener comes first, then the first word');
+      await l7Wait(t, 5400);
+      await t.tap(find.byKey(_tile));
+      await l7Wait(t, 7000);
+      expect(
+        find.byKey(const Key('meet-thumb-0')),
+        findsOneWidget,
+        reason: 'the second word of the set is on screen',
+      );
+      expect(
+        count(r.said, 'eng.he_meet_open'),
+        1,
+        reason: 'the second screen of the set does not say the opener again',
+      );
+      expect(count(r.said, 'eng.en_goodbye'), greaterThan(0), reason: 'and its own word was said');
     },
   );
 

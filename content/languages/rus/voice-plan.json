@@ -290,6 +290,13 @@
       "review": "text-ready"
     },
     {
+      "id": "f44",
+      "vo": "vo:rus.f44",
+      "he": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת.",
+      "voice": "בואו נלמד מילים חדשות.",
+      "review": "text-ready"
+    },
+    {
       "id": "gl-aba",
       "vo": "vo:rus.gl_aba",
       "he": "אַבָּא",

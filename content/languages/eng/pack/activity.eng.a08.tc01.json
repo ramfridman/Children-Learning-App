@@ -121,6 +121,15 @@
     "meet": {
       "position": 0,
       "size": 3,
+      "opener": {
+        "vo": "vo:eng.he_meet_open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת."
+          }
+        ]
+      },
       "meaning": {
         "vo": "vo:eng.he_hint_hebrew",
         "caption": [

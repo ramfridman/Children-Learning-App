@@ -2545,6 +2545,11 @@ class PackContent {
   /// The gates of the course (none in the lands that exist today).
   final Map<String, GateDoc> gates;
 
+  /// Does a gate of the course hold letter skills (`letters: true`)? Until the letter lessons are in a pack none does, and the parent switches
+  /// that only act on such a gate ("letters before 5", "letters together with words") have nothing to do.
+  bool get hasLettersGate =>
+      gates.values.any((GateDoc g) => g.holds.any((String id) => skills[id]?.letters ?? false));
+
   /// The stroke sets of the course's scripts by name (`latin`, `hebrew-print` ...); none in the lands.
   final Map<String, StrokeSet> strokeSets;
 

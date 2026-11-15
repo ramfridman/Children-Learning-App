@@ -18,6 +18,7 @@ import 'app_harness.dart';
 import 'fake_speech.dart';
 import 'language_screens.dart' show langKid;
 import 'language_voice.dart';
+import 'meet_opener.dart';
 import 'pack_fixtures.dart';
 import 'voice_fixtures.dart';
 
@@ -68,6 +69,7 @@ Future<L7Rig> openEnglishLesson(
   List<Scripted> script = const <Scripted>[],
   bool reduceMotion = true,
   bool lettersOpen = false,
+  bool pastOpener = true,
 }) => openCourseLesson(
   t,
   'eng',
@@ -79,9 +81,11 @@ Future<L7Rig> openEnglishLesson(
   script: script,
   reduceMotion: reduceMotion,
   lettersOpen: lettersOpen,
+  pastOpener: pastOpener,
 );
 
 /// Opens lesson [lesson] of the pack of [course] for a child whose look is [band] (0 youngest), with the parent's voice switch as [voice] says.
+/// A lesson that begins with a Meet set is returned at the first word's first beat, the opener said ([pastOpener]).
 Future<L7Rig> openCourseLesson(
   WidgetTester t,
   String course,
@@ -93,6 +97,7 @@ Future<L7Rig> openCourseLesson(
   List<Scripted> script = const <Scripted>[],
   bool reduceMotion = true,
   bool lettersOpen = false,
+  bool pastOpener = true,
 }) async {
   final FakePlayer player = FakePlayer()..endsAfter = const Duration(milliseconds: 150);
   final AppRig rig = AppRig(
@@ -122,6 +127,8 @@ Future<L7Rig> openCourseLesson(
         ),
       );
   await t.pump(const Duration(milliseconds: 600));
+  // A lesson that opens on a Meet set says its opener first; the tests below count from the word's first beat (pastOpener: false keeps the opener).
+  if (pastOpener && openerScreenOf(pack, lesson) != null) await untilWordBeat(t);
   return L7Rig(rig, player);
 }
 

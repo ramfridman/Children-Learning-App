@@ -15,6 +15,7 @@
     "heard": "heard",
     "together": "say-together",
     "teach": {
+      "opener": "meet-open",
       "frame": "say-together",
       "heard": "heard",
       "together": "say-together",
@@ -1281,6 +1282,11 @@
     "d-name-start": {
       "he": "הַשֵּׁם שֶׁלָּכֶם מַתְחִיל בָּאוֹת הַזֹּאת.",
       "voice": "השם שלכם מתחיל באות הזאת.",
+      "review": "text-ready"
+    },
+    "meet-open": {
+      "he": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת.",
+      "voice": "בואו נלמד מילים חדשות.",
       "review": "text-ready"
     },
     "meet-new": {

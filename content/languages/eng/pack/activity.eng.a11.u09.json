@@ -99,11 +99,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_apple",
+      "vo": "vo:eng.he_gl_its_apple",
       "caption": [
         {
           "t": "he",
-          "v": "תַּפּוּחַ"
+          "v": "זֶה תַּפּוּחַ."
         }
       ],
       "target": "vo:eng.en_its_apple"

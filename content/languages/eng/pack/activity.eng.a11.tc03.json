@@ -125,15 +125,24 @@
     "meet": {
       "position": 0,
       "size": 2,
+      "opener": {
+        "vo": "vo:eng.he_meet_open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת."
+          }
+        ]
+      },
       "meaning": {
         "vo": "vo:eng.he_hint_hebrew",
         "caption": [
           {
             "t": "he",
-            "v": "בְּעִבְרִית: בַּרְוָז"
+            "v": "בְּעִבְרִית: זֶה בַּרְוָז."
           }
         ],
-        "target": "vo:eng.he_gl_duck"
+        "target": "vo:eng.he_gl_its_duck"
       },
       "written": "it's a duck"
     }

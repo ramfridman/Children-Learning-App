@@ -100,11 +100,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_kite",
+      "vo": "vo:eng.he_gl_its_kite",
       "caption": [
         {
           "t": "he",
-          "v": "עֲפִיפוֹן"
+          "v": "זֶה עֲפִיפוֹן."
         }
       ],
       "target": "vo:eng.en_its_kite"

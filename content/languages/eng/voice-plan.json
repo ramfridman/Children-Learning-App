@@ -423,6 +423,55 @@
       "review": "text-ready"
     },
     {
+      "id": "he-gl-its-apple",
+      "vo": "vo:eng.he_gl_its_apple",
+      "he": "זֶה תַּפּוּחַ.",
+      "voice": "זה תפוח.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-its-ball",
+      "vo": "vo:eng.he_gl_its_ball",
+      "he": "זֶה כַּדּוּר.",
+      "voice": "זה כדור.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-its-book",
+      "vo": "vo:eng.he_gl_its_book",
+      "he": "זֶה סֵפֶר.",
+      "voice": "זה סֵפֶר.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-its-car",
+      "vo": "vo:eng.he_gl_its_car",
+      "he": "זוֹ מְכוֹנִית.",
+      "voice": "זו מכונית.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-its-duck",
+      "vo": "vo:eng.he_gl_its_duck",
+      "he": "זֶה בַּרְוָז.",
+      "voice": "זה בַּרְוָז.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-its-egg",
+      "vo": "vo:eng.he_gl_its_egg",
+      "he": "זוֹ בֵּיצָה.",
+      "voice": "זו ביצה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-its-kite",
+      "vo": "vo:eng.he_gl_its_kite",
+      "he": "זֶה עֲפִיפוֹן.",
+      "voice": "זה עפיפון.",
+      "review": "text-ready"
+    },
+    {
       "id": "he-gl-juice",
       "vo": "vo:eng.he_gl_juice",
       "he": "מִיץ",
@@ -833,6 +882,13 @@
       "vo": "vo:eng.he_ins_who_doing",
       "he": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה שֶׁל הַפְּעֻלָּה.",
       "voice": "הקשיבו, וגעו בתמונה של הפעולה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-meet-open",
+      "vo": "vo:eng.he_meet_open",
+      "he": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת.",
+      "voice": "בואו נלמד מילים חדשות.",
       "review": "text-ready"
     },
     {

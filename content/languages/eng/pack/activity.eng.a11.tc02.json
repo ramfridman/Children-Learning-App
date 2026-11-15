@@ -136,10 +136,10 @@
         "caption": [
           {
             "t": "he",
-            "v": "בְּעִבְרִית: כַּדּוּר"
+            "v": "בְּעִבְרִית: זֶה כַּדּוּר."
           }
         ],
-        "target": "vo:eng.he_gl_ball"
+        "target": "vo:eng.he_gl_its_ball"
       },
       "written": "it's a ball"
     }

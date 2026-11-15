@@ -99,11 +99,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_ball",
+      "vo": "vo:eng.he_gl_its_ball",
       "caption": [
         {
           "t": "he",
-          "v": "כַּדּוּר"
+          "v": "זֶה כַּדּוּר."
         }
       ],
       "target": "vo:eng.en_its_ball"

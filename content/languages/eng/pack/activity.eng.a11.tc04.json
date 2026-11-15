@@ -136,10 +136,10 @@
         "caption": [
           {
             "t": "he",
-            "v": "בְּעִבְרִית: תַּפּוּחַ"
+            "v": "בְּעִבְרִית: זֶה תַּפּוּחַ."
           }
         ],
-        "target": "vo:eng.he_gl_apple"
+        "target": "vo:eng.he_gl_its_apple"
       },
       "written": "it's an apple"
     }

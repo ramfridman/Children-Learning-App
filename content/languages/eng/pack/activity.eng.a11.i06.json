@@ -100,11 +100,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_egg",
+      "vo": "vo:eng.he_gl_its_egg",
       "caption": [
         {
           "t": "he",
-          "v": "בֵּיצָה"
+          "v": "זוֹ בֵּיצָה."
         }
       ],
       "target": "vo:eng.en_its_egg"

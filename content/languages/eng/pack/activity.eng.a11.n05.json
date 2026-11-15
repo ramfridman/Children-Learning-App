@@ -99,11 +99,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_duck",
+      "vo": "vo:eng.he_gl_its_duck",
       "caption": [
         {
           "t": "he",
-          "v": "בַּרְוָז"
+          "v": "זֶה בַּרְוָז."
         }
       ],
       "target": "vo:eng.en_its_duck"

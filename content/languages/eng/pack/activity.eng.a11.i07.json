@@ -99,11 +99,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_car",
+      "vo": "vo:eng.he_gl_its_car",
       "caption": [
         {
           "t": "he",
-          "v": "מְכוֹנִית"
+          "v": "זוֹ מְכוֹנִית."
         }
       ],
       "target": "vo:eng.en_its_car"

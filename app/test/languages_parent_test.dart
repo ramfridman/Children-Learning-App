@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/app/language_providers.dart';
+import 'package:nitznutz/content/models.dart' show PackContent;
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/engine/age.dart' show BirthMonth;
 import 'package:nitznutz/engine/types.dart';
@@ -18,6 +19,8 @@ import 'package:nitznutz/strings/he.dart';
 import 'support/app_harness.dart';
 import 'support/harness.dart';
 import 'support/language_screens.dart';
+import 'support/letter_gates.dart';
+import 'support/sample_pack.dart';
 
 Future<FamilyLanguages> stored(AppRig rig) async =>
     FamilyLanguages.decode(await rig.db.setting(languagesSettingKey));
@@ -194,11 +197,19 @@ void main() {
   });
 
   group('a language page', () {
-    Future<AppRig> page(WidgetTester tester, String course, {LanguageSwitches? switches}) async {
+    // With [lettersGate] the course's installed pack carries a letters gate (the fixture of support/letter_gates.dart); without it no pack is
+    // on this phone (as the progress test below expects), which has no letters gate either.
+    Future<AppRig> page(
+      WidgetTester tester,
+      String course, {
+      LanguageSwitches? switches,
+      bool lettersGate = false,
+    }) async {
       final AppRig rig = await langRig(
         languages: <String, LanguageSwitches>{course: switches ?? const LanguageSwitches(on: true)},
-        installed: const <String>[], // no course pack is on this phone, as the progress test below expects
+        installed: const <String>[],
       );
+      if (lettersGate) rig.languagePacks = <String, PackContent>{course: LetterGatePack(course).content};
       await pumpParentScreen(tester, rig, LanguagePage(profile: await langProfile(rig), course: course));
       return rig;
     }
@@ -224,7 +235,7 @@ void main() {
     testWidgets('Russian: letters before 5, stress marks with the route, the questionnaire', (
       WidgetTester tester,
     ) async {
-      await page(tester, 'rus');
+      await page(tester, 'rus', lettersGate: true);
       expect(find.byKey(const Key('page-letters5')), findsOneWidget);
       expect(find.byKey(const Key('stress-route')), findsOneWidget);
       expect(find.byKey(const Key('route-heritage')), findsOneWidget);
@@ -251,11 +262,13 @@ void main() {
       int? year,
       int? month,
       LanguageSwitches? switches,
+      bool lettersGate = true,
     }) async {
       final AppRig rig = await langRig(
         languages: <String, LanguageSwitches>{course: switches ?? const LanguageSwitches(on: true)},
         installed: const <String>[],
       );
+      if (lettersGate) rig.languagePacks = <String, PackContent>{course: LetterGatePack(course).content};
       if (year != null) await rig.db.setBirth(langKid, BirthMonth(year, month!));
       await pumpParentScreen(tester, rig, LanguagePage(profile: await langProfile(rig), course: course));
       return rig;
@@ -321,6 +334,57 @@ void main() {
       });
     }
 
+    // The two letters switches act only on a letters gate: a course whose installed pack has none (no letter lessons yet) shows neither,
+    // at any age; one whose pack has the gate shows them as above.
+    for (final String course in <String>['eng', 'rus']) {
+      testWidgets('$course: a pack with no letters gate hides "letters together with words" even at 7;0', (
+        WidgetTester tester,
+      ) async {
+        await pageAged(tester, course, year: 2019, month: 10, lettersGate: false);
+        expect(find.byKey(const Key('page-letters-together')), findsNothing);
+        expect(find.text(He.areaLangLettersTogether.text), findsNothing);
+        expect(find.byKey(const Key('page-voice')), findsOneWidget, reason: 'the rest of the page is there');
+      });
+
+      testWidgets('$course: a pack with a letters gate shows "letters together with words" from 6;0', (
+        WidgetTester tester,
+      ) async {
+        await pageAged(tester, course, year: 2019, month: 10, lettersGate: true);
+        expect(find.byKey(const Key('page-letters-together')), findsOneWidget);
+      });
+
+      test('$course: the gate fixture has a letters gate, the course fixture without one has none', () {
+        expect(
+          LetterGatePack(course).content.hasLettersGate,
+          isTrue,
+          reason: 'its gate holds skills with letters: true',
+        );
+        expect(PackContent.fromPack(SamplePack.language(course).verified()).hasLettersGate, isFalse);
+      });
+    }
+
+    testWidgets(
+      'Russian: with no letters gate in the pack "letters before 5" is not shown, whatever it was set to',
+      (WidgetTester tester) async {
+        await pageAged(
+          tester,
+          'rus',
+          year: 2019,
+          month: 10,
+          switches: const LanguageSwitches(on: true, lettersBefore5: true),
+          lettersGate: false,
+        );
+        expect(find.byKey(const Key('page-letters5')), findsNothing);
+        expect(find.byKey(const Key('page-letters5-words')), findsNothing);
+        expect(find.text(He.areaLangLetters.text), findsNothing);
+        expect(
+          find.byKey(const Key('stress-route')),
+          findsOneWidget,
+          reason: 'the Russian page keeps its other rows',
+        );
+      },
+    );
+
     testWidgets('Hebrew has no "letters together with words", at any age', (WidgetTester tester) async {
       await pageAged(tester, 'heb', year: 2018, month: 3);
       expect(find.byKey(const Key('page-letters-together')), findsNothing);
@@ -375,7 +439,7 @@ void main() {
     testWidgets(
       'every switch is saved as the parent set it, and the voice is off, the personal questions on, until then',
       (WidgetTester tester) async {
-        final AppRig rig = await page(tester, 'rus');
+        final AppRig rig = await page(tester, 'rus', lettersGate: true);
         expect(
           tester
               .widget<Switch>(

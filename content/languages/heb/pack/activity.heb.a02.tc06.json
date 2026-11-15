@@ -120,6 +120,15 @@
     "meet": {
       "position": 0,
       "size": 2,
+      "opener": {
+        "vo": "vo:heb.meet_open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת."
+          }
+        ]
+      },
       "hear": {
         "vo": "vo:heb.meet_new",
         "caption": [

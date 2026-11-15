@@ -430,6 +430,13 @@
       "review": "text-ready"
     },
     {
+      "id": "meet-open",
+      "vo": "vo:heb.meet_open",
+      "he": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת.",
+      "voice": "בואו נלמד מילים חדשות.",
+      "review": "text-ready"
+    },
+    {
       "id": "name-clap",
       "vo": "vo:heb.name_clap",
       "he": "מַחֲאוּ כַּפַּיִם לְכׇל חֵלֶק שֶׁל הַשֵּׁם שֶׁלָּכֶם.",

@@ -94,9 +94,16 @@ void main() {
       expect(first.meet!.meaning!.vo, 'vo:eng.he_hint_hebrew');
       expect(first.meet!.meaning!.target, 'vo:eng.he_gl_hello');
       expect(first.meet!.meaning!.caption, 'בְּעִבְרִית: שָׁלוֹם');
+      expect(first.meet!.opener!.vo, 'vo:eng.he_meet_open');
       expect(
         first.firstBeat.vo,
-        'vo:eng.en_hello',
+        'vo:eng.he_meet_open',
+        reason: 'the first screen of a set opens on the opener',
+      );
+      expect(second.meet!.opener, isNull, reason: 'only the first screen of a set says it');
+      expect(
+        second.firstBeat.vo,
+        'vo:eng.en_goodbye',
         reason: 'with no opener the screen opens on the word alone',
       );
       expect(first.promptLine.show, isNull, reason: 'a Band A skill prints no word');
@@ -119,7 +126,7 @@ void main() {
 
     test('a Meet screen opens on its first beat and the replay button says nothing of its own', () {
       final LessonController c = open('eng.greet-1', <AttemptRecord>[]);
-      expect(c.voice, 'vo:eng.en_hello');
+      expect(c.voice, 'vo:eng.he_meet_open', reason: 'the opener of the set is the first thing said');
       expect(c.noHelp, isTrue, reason: 'no lamp, no "show me" on a Meet screen');
       c.dispose();
     });

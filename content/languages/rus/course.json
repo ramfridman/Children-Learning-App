@@ -16,6 +16,7 @@
     "together": "f03",
     "answerPrompt": "f40",
     "teach": {
+      "opener": "f44",
       "frame": "f03",
       "heard": "f04",
       "together": "f03",
@@ -172,6 +173,9 @@
     "ch-eto-mjach": "gl-ze-kadur",
     "ch-eto-koshka": "gl-zot-chatula",
     "ch-eto-jabloko": "gl-ze-tapuach",
+    "ch-hochu-moloko": "gl-bali-chalav",
+    "ch-hochu-apelsin": "gl-bali-tapuz",
+    "ch-hochu-syr": "gl-bali-gvina",
     "w-kit": "gl-livjatan",
     "w-poka": "gl-bai",
     "w-zdravstvujte": "gl-shalom",
@@ -760,6 +764,26 @@
     "f42": {
       "he": "בְּעִבְרִית:",
       "voice": "בעברית:",
+      "review": "text-ready"
+    },
+    "gl-bali-gvina": {
+      "he": "בָּא לִי גְּבִינָה",
+      "voice": "בָּא לִי גְּבִינָה",
+      "review": "text-ready"
+    },
+    "gl-bali-tapuz": {
+      "he": "בָּא לִי תַּפּוּז",
+      "voice": "בָּא לִי תַּפּוּז",
+      "review": "text-ready"
+    },
+    "gl-bali-chalav": {
+      "he": "בָּא לִי חָלָב",
+      "voice": "בָּא לִי חָלָב",
+      "review": "text-ready"
+    },
+    "f44": {
+      "he": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת.",
+      "voice": "בואו נלמד מילים חדשות.",
       "review": "text-ready"
     },
     "f43": {

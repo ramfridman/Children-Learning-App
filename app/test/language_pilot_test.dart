@@ -23,6 +23,7 @@ import 'support/course_history.dart';
 import 'support/golden_comparator.dart';
 import 'support/harness.dart' show loadAppFonts;
 import 'support/l4_golden.dart' show boards;
+import 'support/meet_opener.dart';
 import 'support/pack_fixtures.dart';
 
 const String _languages = '../content/languages';
@@ -275,7 +276,10 @@ void main() {
           await openCourse(tester, course);
           await playPlacement(tester);
           await tester.tap(find.byKey(const Key('course-play')));
-          await settle(tester);
+          await settle(tester, ms: 300);
+          // A lesson that opens on a Meet set says its opener first; the picture is taken at the first word, as it was before the opener.
+          if (openerScreenOf(packs[course]!, _first[course]!.lesson) != null) await untilWordBeat(tester);
+          await settle(tester, ms: 2700);
           expect(find.byType(LessonScreen), findsOneWidget);
           await expectLater(
             find.byType(MaterialApp),

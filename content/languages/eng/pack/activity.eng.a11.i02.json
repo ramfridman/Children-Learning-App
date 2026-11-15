@@ -100,11 +100,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_book",
+      "vo": "vo:eng.he_gl_its_book",
       "caption": [
         {
           "t": "he",
-          "v": "סֵפֶר"
+          "v": "זֶה סֵפֶר."
         }
       ],
       "target": "vo:eng.en_its_book"

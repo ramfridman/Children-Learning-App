@@ -120,6 +120,15 @@
     "meet": {
       "position": 0,
       "size": 2,
+      "opener": {
+        "vo": "vo:rus.f44",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת."
+          }
+        ]
+      },
       "meaning": {
         "vo": "vo:rus.f42",
         "caption": [
