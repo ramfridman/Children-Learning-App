@@ -25,7 +25,7 @@ const String ffmpegMissing =
     '--ffmpeg <path to ffmpeg.exe>. Nothing is paid for this step.';
 
 /// The output of every clip this tool makes: MP3, mono, 44.1 kHz, 64 kbps, like the voice's own clips.
-const List<String> _mp3Output = <String>['-codec:a', 'libmp3lame', '-b:a', '64k', '-ar', '44100', '-ac', '1'];
+const List<String> mp3Output = <String>['-codec:a', 'libmp3lame', '-b:a', '64k', '-ar', '44100', '-ac', '1'];
 
 /// The ffmpeg arguments that make [output] from [input] at [tempo] times the speed.
 List<String> slowArguments(String input, String output, double tempo) {
@@ -40,7 +40,7 @@ List<String> slowArguments(String input, String output, double tempo) {
     input,
     '-filter:a',
     'atempo=$tempo',
-    ..._mp3Output,
+    ...mp3Output,
     output,
   ];
 }
@@ -61,7 +61,7 @@ List<String> cutArguments(String input, String output, double fromSeconds, doubl
     fromSeconds.toStringAsFixed(3),
     '-to',
     toSeconds.toStringAsFixed(3),
-    ..._mp3Output,
+    ...mp3Output,
     output,
   ];
 }
