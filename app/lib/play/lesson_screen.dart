@@ -565,6 +565,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       hostGreeting: host == null
           ? null
           : Spoken(vo: HostHe.clip(host.id, 'greeting'), caption: HostHe.greetings[host.id]!.text),
+      hostCheer: host == null
+          ? null
+          : Spoken(vo: HostHe.clip(host.id, 'cheer'), caption: HostHe.cheers[host.id]!.text),
     );
     made.addListener(_speak);
     _startIdle(made);

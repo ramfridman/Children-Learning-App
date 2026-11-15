@@ -1,3 +1,19 @@
+import '../strings/niqqud.dart';
+
+/// Whether the companion's [praise] at the end of a lesson only says again what the host's [cheer] already said (the words of the praise,
+/// without niqqud and punctuation, are inside the cheer). The child then hears and sees the host's cheer once, and not the same line twice.
+bool cheerRepeatsPraise(String praise, String cheer) {
+  final String said = _words(praise);
+  return said.isNotEmpty && _words(cheer).contains(said);
+}
+
+String _words(String text) =>
+    withoutNiqqud(text)
+        .replaceAll(RegExp(r'[^א-תa-zA-Z0-9 ]'), ' ')
+        .split(' ')
+        .where((String w) => w.isNotEmpty)
+        .join(' ');
+
 /// Who is talking in a moment of a lesson (docs/design/m11-rooms.md section 2.1): the host of the room teaches, the child's own companion
 /// asks, helps and answers.
 enum Speaker { host, companion }

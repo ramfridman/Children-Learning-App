@@ -925,3 +925,48 @@ The design-director's drafts (`docs/design/b29-steps5-6.md` section 5) and the t
 2. `septYes` gets `{next}` as the plain stage name (`כן, כיתה ג׳ ומעלה` from grade 2) while the question above says `לכיתה ג׳`. If the code passes `He.stageNamesTo[...]` instead, the button reads `כן, לכיתה ג׳`, which matches the question. Not blocking.
 3. `ageBirthOptional` `(לא חובה)` sits in a form with `גן חובה`; understandable, kept (`(רשות)` is the other choice).
 4. `areaChildSettings` is just `הגדרות` on each child row; a screen reader should add the child's name (semantic label, `ההגדרות של {child}`).
+
+## 15. The course hosts: names to choose, greeting clips, "say it together" lines (2026-11-15, hebrew-text-editor; owner's answers of 2026-11-15)
+
+Nothing below changes a string except section 15.3 (`HostHe.togethers`, `HostHe.togetherVoice`, `needs-editor`). The host names in `HostHe.names` and in the greetings stay as they are until the owner picks.
+
+### 15.1 Names (the owner picks; each with a one-line reason; first choice marked)
+
+All original, short (two syllables), easy to say at three, no franchise, no real person. Pointed here, unpointed in the adult label.
+
+| Host | Name | Reason |
+|---|---|---|
+| Hebrew course, the rock hyrax (calm, round, draws practice lines with a coral pencil) | **שְׁפִי** (first) | from שפן; soft and slow to say, like the host |
+| | קַוִּי | from קו, the line it draws; a happy sound |
+| | סַלְעוֹן | from סלע, the rocks it lives on; the same family as צעדון |
+| Russian course, the giraffe (sees from above) | **יָשָׁה** (first) | Yasha, a common loving Russian name, round and easy; reads in Hebrew exactly as said |
+| | דִּימָה | Dima, short Russian name; a Hebrew reader says it the same |
+| | פָּשָׁה | Pasha, bouncy for a three-year-old; also reads the same |
+
+Notes. (1) The giraffe's Hebrew noun is feminine (הג׳ירפה) and יָשָׁה is a boy's name; a name need not match the noun, and the greeting says only `אֲנִי יָשָׁה`. If the owner wants a name that does not point to a gender, none of the three is unisex (Sasha and Zhenya are, but Sasha is also a doll brand's character, so I left it out). (2) I left out Gena, Misha and Sasha (franchise or mascot), Zhora (the ז׳ is hard at three) and Gosha (too close to Goni). (3) When the owner picks, the greetings become `אֲנִי שְׁפִי` and `אֲנִי יָשָׁה` (no "הַ"), voice `אני שפי` and `אני ישה`; the labels in `HostHe.names` become the name. The cheers do not name the host.
+
+### 15.2 The greeting word in the course's language (target-language clips, for the language teachers and the app-developer)
+
+| Clip id | Text | Voice | Plays |
+|---|---|---|---|
+| `vo:host.host_eng.hello` | `Hello!` | the English course's teaching voice (the one that voices ENG items, frame section 1.3) | once, at the host's greeting, **before** the Hebrew greeting line; on screen the bubble shows the same word above the Hebrew line |
+| `vo:host.host_rus.hello` | `Привет!` | the Russian course's teaching voice | the same |
+| (the Hebrew course) | none | | none |
+
+Why none for Hebrew: the course's language is Hebrew, so the host's whole greeting is already in it (`שלום` is its first word); a separate clip would repeat the greeting. The Hebrew course teaches letters and reading, not hello.
+
+Rules for the clips: the text is in the target language only (Latin and Cyrillic go to the target voice, never into Hebrew voice text, and no Hebrew word is inside these clips); a clip belongs to the host, not to a unit (it plays at every lesson's greeting, so it is voiced once); `target:` is the clip itself; no name of a child. For the voice director: `!` is kept here on purpose because it is a one-word greeting; if it shouts, change it to `.` (the director's call). Characters: `Hello!` 6 plus `Привет!` 7 = 13.
+
+### 15.3 "Let's say it together" (design doc section 6, point 2), `needs-editor`
+
+In `HostHe.togethers` and `HostHe.togetherVoice`; clip `vo:host.<host>.together` (`HostHe.clip(host, 'together')`). Same sentence as the companion's f03 (`בּוֹאוּ נֹאמַר יַחַד.`), plus the host's own habit (Pip chirps, the hyrax is calm, the giraffe asks for a clear voice). At most six words (three at most on the second line), so two lines at size 1.3.
+
+| Host | Screen (with niqqud) | Voice text | Words | Voice characters |
+|---|---|---|---|---|
+| host_eng (Pip) | צִיץ צִיץ! בּוֹאוּ נֹאמַר יַחַד. | צִיץ צִיץ, בואו נֹאמַר יחד. | 5 | 27 |
+| host_heb (hyrax) | לְאַט לְאַט. בּוֹאוּ נֹאמַר יַחַד. | לאט לאט, בואו נֹאמַר יחד. | 5 | 25 |
+| host_rus (giraffe) | בּוֹאוּ נֹאמַר יַחַד, בְּקוֹל בָּרוּר. | בואו נֹאמַר יחד, בקול ברור. | 6 | 27 |
+
+Total 79 characters. `נֹאמַר` keeps its niqqud (otherwise `נֶאֱמַר`). The line is also the idle prompt of a Meet (the design doc re-voices it). The word to say follows as the item's own target clip. Bubble fit is by word count only; the developer should check it at size 1.3 on the SE.
+
+Total new voice characters from this section: 79 (Hebrew) + 13 (target) = 92.

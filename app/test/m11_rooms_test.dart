@@ -11,6 +11,7 @@ import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/design/trail_shape.dart';
 import 'package:nitznutz/play/lesson_screen.dart';
+import 'package:nitznutz/rooms/moments.dart' show cheerRepeatsPraise;
 import 'package:nitznutz/rooms/room_spec.dart';
 import 'package:nitznutz/strings/he.dart' show HostHe;
 
@@ -131,12 +132,12 @@ void main() {
           findsOneWidget,
           reason: 'the companion celebrates beside the host',
         );
+        expect(find.text(HostHe.cheers['tzaadon']!.text), findsOneWidget, reason: 'the host\'s cheer');
         expect(
-          find.text(l.celebration.caption),
-          findsOneWidget,
-          reason: 'the companion\'s praise, as before',
+          find.byKey(const Key('room-celebration-praise')).evaluate().isNotEmpty,
+          !cheerRepeatsPraise(l.celebration.caption, HostHe.cheers['tzaadon']!.text),
+          reason: 'the companion\'s praise follows the cheer, unless it only says the same words again',
         );
-        expect(find.text(HostHe.cheers['tzaadon']!.text), findsOneWidget, reason: 'then the host\'s cheer');
         expect(
           find.byKey(const Key('room-celebration-piece')),
           findsOneWidget,
@@ -145,6 +146,59 @@ void main() {
         expect(find.byKey(const Key('lesson-done')), findsOneWidget);
       },
     );
+
+    /// The lesson of [room] with a celebration line made from the host's cheer by [caption], played to its end on the phone.
+    Future<void> endWith(WidgetTester tester, RoomId room, String Function(String cheer) caption) async {
+      final (PackContent c, Lesson l) = await roomLesson(room);
+      final Lesson mine = Lesson.mission(
+        id: l.id,
+        itemIds: l.itemIds,
+        skillIds: l.skillIds,
+        celebration: Spoken(
+          vo: l.celebration.vo,
+          caption: caption(HostHe.cheers[RoomSpec.byId(room).hostId]!.text),
+        ),
+      );
+      await openRoomLesson(tester, c, mine, _phone);
+      await _endGreeting(tester);
+      for (int i = 0; i < mine.itemIds.length; i++) {
+        await tester.tap(_tile(rightOption(c, mine, i)));
+        await waitFor(tester, 2600);
+      }
+      expect(find.byKey(const Key('lesson-celebration')), findsOneWidget);
+    }
+
+    // The first sentence of the cheer: the praise a lesson says on its own, which the host has just said.
+    String firstSentence(String cheer) => cheer.split(RegExp(r'(?<=[!.?]) ')).first;
+
+    for (final RoomId room in RoomId.values) {
+      testWidgets('${room.name}: a praise the host\'s cheer already says is not said twice at the end', (
+        WidgetTester tester,
+      ) async {
+        await endWith(tester, room, firstSentence);
+        expect(find.byKey(const Key('room-celebration-cheer')), findsOneWidget);
+        expect(
+          find.byKey(const Key('room-celebration-praise')),
+          findsNothing,
+          reason: 'the companion does not repeat the words of the host\'s cheer',
+        );
+      });
+    }
+
+    testWidgets('a praise that says something else follows the host\'s cheer, under it', (
+      WidgetTester tester,
+    ) async {
+      await endWith(tester, RoomId.numbers, (String _) => 'מְצֻיָּן, סִיַּמְתֶּם הַכֹּל!');
+      final Finder cheer = find.byKey(const Key('room-celebration-cheer'));
+      final Finder praise = find.byKey(const Key('room-celebration-praise'));
+      expect(cheer, findsOneWidget);
+      expect(praise, findsOneWidget);
+      expect(
+        tester.getTopLeft(cheer).dy,
+        lessThan(tester.getTopLeft(praise).dy),
+        reason: 'the host cheers first',
+      );
+    });
 
     testWidgets(
       'with the rooms off the lesson is as before: no host, the question first, the meadow behind the stage',

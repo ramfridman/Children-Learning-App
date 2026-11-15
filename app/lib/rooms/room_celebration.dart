@@ -9,12 +9,13 @@ import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
 import '../strings/he.dart';
+import 'moments.dart';
 import 'room_backdrop.dart';
 import 'room_spec.dart';
 
 /// The card of the calm end of a lesson in a room (docs/design/m11-rooms.md section 4): the room's window at the top of the card (its backdrop,
 /// its landmark gaining one new piece, the host and the companion celebrating side by side and the sticker if one was earned), then the
-/// companion's praise line, the host's cheer and one way home.
+/// host's cheer, the companion's praise line (only when it adds words the cheer does not say) and one way home.
 ///
 /// A lesson that ends because it is time to rest has no new piece, no cheer and calm characters ([ended] false): nothing was finished.
 class RoomCelebrationCard extends StatelessWidget {
@@ -36,7 +37,7 @@ class RoomCelebrationCard extends StatelessWidget {
   final Widget host;
   final Widget companion;
 
-  /// The companion's praise line, and the host's cheer under it (null: none).
+  /// The host's cheer, shown first (null: none), and the companion's praise line under it.
   final String praise;
   final String? cheer;
   final Widget? sticker;
@@ -76,17 +77,22 @@ class RoomCelebrationCard extends StatelessWidget {
             child: _window(window, k, tablet),
           ),
           const SizedBox(height: 12),
-          Text(
-            praise,
-            textAlign: TextAlign.center,
-            style: AppText.fixed(size: tablet ? 32 : 26, weight: 600),
-          ),
+          // The host's cheer comes first; the companion's praise follows it, unless it only says the same words again.
           if (cheer != null)
             Text(
               cheer!,
               key: const Key('room-celebration-cheer'),
               textAlign: TextAlign.center,
-              style: AppText.fixed(size: tablet ? 24 : 20, weight: 500),
+              style: AppText.fixed(size: tablet ? 32 : 26, weight: 600),
+            ),
+          if (cheer == null || !cheerRepeatsPraise(praise, cheer!))
+            Text(
+              praise,
+              key: const Key('room-celebration-praise'),
+              textAlign: TextAlign.center,
+              style: cheer == null
+                  ? AppText.fixed(size: tablet ? 32 : 26, weight: 600)
+                  : AppText.fixed(size: tablet ? 24 : 20, weight: 500),
             ),
           const SizedBox(height: 10),
           PebbleButton(

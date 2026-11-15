@@ -931,32 +931,79 @@ abstract final class HostHe {
     'host_rus': Str('הג׳ירפה'),
   };
 
-  /// What a host says when a lesson in its room opens.
+  /// What a host says when a lesson in its room opens. The hosts address the children as "we" or in the plural, ask nothing personal,
+  /// and each has a small habit of its own: Nekudi counts, Goni sees, Kubi is slow and steady, Tza'adon beeps, Timi wonders, Grandma Pnina
+  /// is warm, Pip chirps, the hyrax is calm, the giraffe sees from above. Final text of the hebrew-text-editor (2026-11-15), still
+  /// `needs-editor` until the owner approves.
   static const Map<String, Str> greetings = <String, Str>{
     'nekudi': Str('שָׁלוֹם! אֲנִי נְקוּדִי. נִסְפֹּר יַחַד?', nikud: true),
     'goni': Str('הֵי! אֲנִי גּוֹנִי. נִרְאֶה צְבָעִים יַחַד?', nikud: true),
     'kubi': Str('שָׁלוֹם! אֲנִי קוּבִּי. נִבְנֶה צוּרוֹת?', nikud: true),
     'tzaadon': Str('בִּיפּ בּוּפּ! אֲנִי צַעֲדוֹן. בּוֹאוּ נַתְחִיל!', nikud: true),
     'timi': Str('הֵי! אֲנִי טִימִי. נִפְתֹּר חִידָה?', nikud: true),
-    'pnina': Str('שָׁלוֹם, יְלָדִים! אֲנִי סַבְתָּא פְּנִינָה.', nikud: true),
-    'host_eng': Str('הֵי! אֲנִי פִּיפּ. נְדַבֵּר אַנְגְּלִית?', nikud: true),
-    'host_heb': Str('שָׁלוֹם! אֲנִי שְׁפַן הַסֶּלַע. נִכְתֹּב?', nikud: true),
+    'pnina': Str('שָׁלוֹם לָכֶם! אֲנִי סַבְתָּא פְּנִינָה. בּוֹאוּ לַשּׁוּק!', nikud: true),
+    'host_eng': Str('צִיץ צִיץ! אֲנִי פִּיפּ. נְדַבֵּר אַנְגְּלִית?', nikud: true),
+    'host_heb': Str('שָׁלוֹם. אֲנִי שְׁפַן הַסֶּלַע. נִלְמַד אוֹתִיּוֹת?', nikud: true),
     'host_rus': Str('שָׁלוֹם! אֲנִי הַגִּ׳ירָפָה. נְדַבֵּר רוּסִית?', nikud: true),
   };
 
-  /// What a host says when the lesson ends, after the companion's praise.
+  /// What a host says when the lesson ends, after the companion's praise. None repeats the companion's "כל הכבוד" or "יפה מאוד", none
+  /// claims that everything was right (it says what we did together), and none has a name or a number.
   static const Map<String, Str> cheers = <String, Str>{
-    'nekudi': Str('כָּל הַכָּבוֹד! סְפַרְתֶּם הַכֹּל.', nikud: true),
-    'goni': Str('יָפֶה מְאֹד! רְאִיתֶם הֵיטֵב.', nikud: true),
-    'kubi': Str('כָּל הַכָּבוֹד! בְּנִיתֶם יָפֶה.', nikud: true),
-    'tzaadon': Str('כָּל הַכָּבוֹד! הָרוֹבּוֹט הִגִּיעַ.', nikud: true),
-    'timi': Str('יָפֶה! פְּתַרְתֶּם אֶת הַחִידָה.', nikud: true),
-    'pnina': Str('יָפֶה מְאֹד! הַכֹּל מְסֻדָּר בַּשּׁוּק.', nikud: true),
-    'host_eng': Str('כָּל הַכָּבוֹד! אֲמַרְתֶּם יָפֶה.', nikud: true),
-    'host_heb': Str('יָפֶה מְאֹד! כְּתַבְתֶּם נֶהְדָּר.', nikud: true),
-    'host_rus': Str('כָּל הַכָּבוֹד! שְׁמַעְתֶּם יָפֶה.', nikud: true),
+    'nekudi': Str('הַגְּבָעוֹת שְׂמֵחוֹת! סָפַרְנוּ יַחַד.', nikud: true),
+    'goni': Str('כֵּיף שֶׁרָאִינוּ צְבָעִים יַחַד.', nikud: true),
+    'kubi': Str('לְאַט לְאַט, וּבָנִינוּ יַחַד.', nikud: true),
+    'tzaadon': Str('בִּיפּ בּוּפּ! הִגַּעְנוּ יַחַד.', nikud: true),
+    'timi': Str('אֵיזוֹ חִידָה יָפָה! חָשַׁבְנוּ יַחַד.', nikud: true),
+    'pnina': Str('תּוֹדָה לָכֶם! עֲזַרְתֶּם לִי בַּשּׁוּק.', nikud: true),
+    'host_eng': Str('צִיץ צִיץ! דִּבַּרְנוּ אַנְגְּלִית יַחַד.', nikud: true),
+    'host_heb': Str('אוֹתִיּוֹת יָפוֹת! עָבַדְנוּ יַחַד.', nikud: true),
+    'host_rus': Str('שָׁמַעְנוּ רוּסִית יַחַד. עוֹלִים גָּבוֹהַּ!', nikud: true),
   };
 
-  /// The pending clip of a host's line (`greeting` or `cheer`).
+  /// The voice text of each greeting (for the later voice plan; not shown): the repo's convention, partial niqqud, no `!`, no digits.
+  static const Map<String, String> greetingVoice = <String, String>{
+    'nekudi': 'שלום, אני נקודי. נספור יחד?',
+    'goni': 'הי, אני גוני. נראה צבעים יחד?',
+    'kubi': 'שלום, אני קובי. נבנה צורות?',
+    'tzaadon': 'ביפ בופ, אני צעדון. בואו נתחיל.',
+    'timi': 'הי, אני טימי. נפתור חידה?',
+    'pnina': 'שלום לכם, אני סבתא פנינה. בואו לשוק.',
+    'host_eng': 'צִיץ צִיץ, אני פיפ. נדבר אנגלית?',
+    'host_heb': 'שלום, אני שפן הסלע. נלמד אותיות?',
+    'host_rus': 'שלום, אני הַגִּ׳ירָפָה. נדבר רוסית?',
+  };
+
+  /// The voice text of each cheer (same convention).
+  static const Map<String, String> cheerVoice = <String, String>{
+    'nekudi': 'הגבעות שמחות, סָפַרְנוּ יחד.',
+    'goni': 'כיף שראינו צבעים יחד.',
+    'kubi': 'לאט לאט, וּבָנִינוּ יחד.',
+    'tzaadon': 'ביפ בופ, הגענו יחד.',
+    'timi': 'איזו חידה יפה, חשבנו יחד.',
+    'pnina': 'תודה לכם, עזרתם לי בשוק.',
+    'host_eng': 'צִיץ צִיץ, דיברנו אנגלית יחד.',
+    'host_heb': 'אותיות יפות, עבדנו יחד.',
+    'host_rus': 'שמענו רוסית יחד, עולים גבוה.',
+  };
+
+  /// The host's "let's say it together" line of a course's Meet (design doc section 6, point 2): the beat where the child says the word
+  /// after the host. Three lines, one per course host, each at most six words so that it holds two lines in the phone's host bubble at text
+  /// size 1.3. Plural, nothing personal. The idle prompt of a Meet re-voices this line. Clip: `vo:host.<host>.together`; the word itself
+  /// plays after it as the item's own target clip. `needs-editor` until the owner sees it.
+  static const Map<String, Str> togethers = <String, Str>{
+    'host_eng': Str('צִיץ צִיץ! בּוֹאוּ נֹאמַר יַחַד.', nikud: true),
+    'host_heb': Str('לְאַט לְאַט. בּוֹאוּ נֹאמַר יַחַד.', nikud: true),
+    'host_rus': Str('בּוֹאוּ נֹאמַר יַחַד, בְּקוֹל בָּרוּר.', nikud: true),
+  };
+
+  /// The voice text of each "together" line (same convention: partial niqqud, no `!`). `נֹאמַר` keeps its niqqud (it can read as `נֶאֱמַר`).
+  static const Map<String, String> togetherVoice = <String, String>{
+    'host_eng': 'צִיץ צִיץ, בואו נֹאמַר יחד.',
+    'host_heb': 'לאט לאט, בואו נֹאמַר יחד.',
+    'host_rus': 'בואו נֹאמַר יחד, בקול ברור.',
+  };
+
+  /// The pending clip of a host's line (`greeting`, `cheer` or `together`).
   static String clip(String hostId, String line) => 'vo:host.$hostId.$line';
 }

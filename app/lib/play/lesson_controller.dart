@@ -162,6 +162,7 @@ class LessonController extends ChangeNotifier {
     this.captionsShown,
     this.fastHints = false,
     this.hostGreeting,
+    this.hostCheer,
     Activity Function(Activity)? personalise,
     Clock clock = const SystemClock(),
   }) : _personalise = personalise ?? _ownNameWithoutAName,
@@ -194,6 +195,10 @@ class LessonController extends ChangeNotifier {
   /// What the host of the lesson's room says when the lesson opens (docs/design/m11-rooms.md section 2.1), or null for a lesson with no host (a
   /// room-less lesson, the placement game): then the first item is the first screen, as before M11.
   final Spoken? hostGreeting;
+
+  /// What the host says when the lesson ends. When it already says what the lesson's own celebration line says ([cheerRepeatsPraise]), the
+  /// host's cheer is the one line said and shown at the end, and the companion does not repeat it. Null: no host, the celebration as before.
+  final Spoken? hostCheer;
   bool _greeting = false;
 
   /// What moment of the lesson this is, and so who speaks: the host's greeting before the first item, the child's turns (the companion's) and the
@@ -822,7 +827,9 @@ class LessonController extends ChangeNotifier {
     if (f != null ? following == null || struggled : index + 1 >= items.length || struggled) {
       finished = true;
       feedback = FeedbackKind.none;
-      _say(f?.celebration ?? lesson.celebration);
+      final Spoken ending = f?.celebration ?? lesson.celebration;
+      final Spoken? cheer = hostCheer;
+      _say(cheer != null && cheerRepeatsPraise(ending.caption, cheer.caption) ? cheer : ending);
       notifyListeners();
       return;
     }

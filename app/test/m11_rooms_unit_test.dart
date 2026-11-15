@@ -423,6 +423,50 @@ void main() {
       },
     );
 
+    Future<LessonController> finish({Spoken? cheer}) async {
+      final LessonController c = LessonController(
+        content: starter,
+        lesson: lesson,
+        profileId: 'p-1',
+        clock: clock,
+        record: (AttemptRecord r) async => written.add(r),
+        hostGreeting: hi,
+        hostCheer: cheer,
+      );
+      c.endGreeting();
+      for (int i = 0; i < lesson.itemIds.length; i++) {
+        await c.chooseOption(rightOption(starter, lesson, i));
+        c.next();
+      }
+      expect(c.finished, isTrue);
+      return c;
+    }
+
+    test('at the end the host cheer is the one line said when it already says the lesson praise (not the same words twice)', () async {
+      // The lesson's praise is the first words of the cheer, so the two are the same words.
+      const Spoken cheer = Spoken(vo: 'vo:host.nekudi.cheer', caption: 'כל הכבוד! ספרתם הכל.');
+      final LessonController c = await finish(cheer: cheer);
+      expect(lesson.celebration.caption, 'כָּל הַכָּבוֹד!');
+      expect(c.voice, 'vo:host.nekudi.cheer');
+      expect(c.bubble, cheer.caption);
+    });
+
+    test('a praise that says something else is still the companion line, and with no host the celebration is as before', () async {
+      const Spoken other = Spoken(vo: 'vo:host.nekudi.cheer', caption: 'יפה מאד! ראיתם היטב.');
+      final LessonController c = await finish(cheer: other);
+      expect(c.voice, lesson.celebration.vo);
+      expect(c.bubble, lesson.celebration.caption);
+      final LessonController plain = await finish();
+      expect(plain.voice, lesson.celebration.vo);
+    });
+
+    test('cheerRepeatsPraise compares the words, not the niqqud or the punctuation', () {
+      expect(cheerRepeatsPraise('כָּל הַכָּבוֹד!', 'כל הכבוד, ספרתם הכל.'), isTrue);
+      expect(cheerRepeatsPraise('כׇּל הַכָּבוֹד!', 'כָּל הַכָּבוֹד! בְּנִיתֶם.'), isTrue);
+      expect(cheerRepeatsPraise('מצוין', 'כל הכבוד!'), isFalse);
+      expect(cheerRepeatsPraise('', 'כל הכבוד!'), isFalse);
+    });
+
     test('each moment has one speaker (the seam Stage 2 adds its Show and lead-in to)', () {
       expect(
         <Moment, Speaker>{for (final Moment m in Moment.values) m: m.speaker},

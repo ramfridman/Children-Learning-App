@@ -630,7 +630,7 @@ class LessonCelebration extends StatelessWidget {
   });
 
   /// In a room (M11): the card is the room's window, with its landmark gaining a piece, the [host] and the companion ([cameo]) side by side
-  /// and the host's [cheer] under the praise line. Null for the plain card. A lesson that [finished] not (a rest) gets no piece and no cheer.
+  /// and the host's [cheer] above the praise line (which is left out when it only repeats the cheer). Null for the plain card. A lesson that [finished] not (a rest) gets no piece and no cheer.
   final RoomSpec? room;
   final Widget? host;
   final String? cheer;
