@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../design/app_text.dart';
@@ -5,6 +7,7 @@ import '../design/board.dart';
 import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
+import '../design/trail_layout.dart';
 import '../strings/he.dart';
 
 /// Positions of one board of the activity frame, in the board's own coordinates (the `left`, `top`,
@@ -110,6 +113,28 @@ class ActivitySpec {
   /// True when the bubble's tail points at the guide's mouth wherever the bubble stands and however tall it is, not at the place the board's
   /// own bubble has it (a bubble that stands higher or has a number sentence under its line has its tail somewhere else: QA-C1c-3).
   final bool tailAtMouth;
+
+  /// The room the progress trail has on a board [boardWidth] wide (QA-L7-2): between the header's buttons (home at the start, "show me" and
+  /// the lamp at the end), each with its tap margin, and [trailClear] from them. The same on every lesson, whether the buttons are shown or not,
+  /// so the trail does not jump when a step has none.
+  ({double left, double right}) trailRoom(double boardWidth) => (
+    left: math.max(eyeLeft, hintLeft) + _pebble + _slop + trailClear,
+    right: boardWidth - homeRight - _pebble - _slop - trailClear,
+  );
+
+  /// Where the trail's pill [trail] starts: centred where the board puts it, moved only as far as it must be to stay in [trailRoom].
+  double trailPillLeft(TrailLayout trail, double boardWidth) {
+    final ({double left, double right}) room = trailRoom(boardWidth);
+    final double centred = trailLeft + (trailWidth - trail.width) / 2;
+    return math.max(room.left, math.min(centred, room.right - trail.width));
+  }
+
+  /// The disc of a header button, and the tap margin around it (see [boardAt]).
+  static const double _pebble = 64;
+  static const double _slop = 12;
+
+  /// The least gap between the trail and a header button's tap area.
+  static const double trailClear = 8;
 
   /// How far down the guide's picture its mouth is, as a share of its height (Nitzi's: the svg's mouth at 295 of 512).
   static const double mouthShare = 0.576;

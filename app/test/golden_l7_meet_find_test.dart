@@ -150,9 +150,34 @@ void main() {
     await openEnglishLesson(t, eng);
     await _toFind(t);
     await t.tap(find.byKey(const Key('option-o1')));
-    await l7Wait(t, 150);
+    // The word is said first (the lilac ring and the badge, about 700 ms); the picture is then in the gold ring and the guide cheers, which
+    // is the settled moment of a right tap (QA-L7-4: at 150 ms the shot showed neither), before the next line begins.
+    await l7Wait(t, 1150);
     await _shot(t, 'find_right_2', 'phone');
   });
+
+  // QA-L7-4: a Russian word in its chip (left to right, Cyrillic, Nitznutz Letters) on the phone, look C with the letters gate open, at "let's say it
+  // together". The Russian Find authors no chip (the pack's `show` steps are only on the Meet beats), so this is the chip's golden.
+  testWidgets(
+    'Russian Meet, "together" for a look C child whose letters are open: the Cyrillic word in its chip (phone)',
+    (WidgetTester t) async {
+      await openCourseLesson(
+        t,
+        'rus',
+        rus,
+        lesson: 'rus.family-1',
+        size: boards['phone']!,
+        band: 2,
+        lettersOpen: true,
+      );
+      for (int i = 0; i < 120 && find.byType(TargetChip).evaluate().isEmpty; i++) {
+        await t.pump(const Duration(milliseconds: 100));
+      }
+      expect(find.byType(TargetChip), findsOneWidget, reason: 'the word is in its chip');
+      await t.pump(const Duration(milliseconds: 400));
+      await _shot(t, 'meet_rus_chip_lookC_letters', 'phone');
+    },
+  );
 
   testWidgets('text size 1.3 on the small phone: the bubble and the tile clear, a Meet screen and a Find', (
     WidgetTester t,
