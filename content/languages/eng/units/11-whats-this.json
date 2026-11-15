@@ -1,5 +1,5 @@
 {
-  "skill": {"id": "ENG-A-11", "strand": "lis", "title": "מָה זֶה?", "prerequisites": [{"skill": "ENG-A-05", "weight": 0.5}, {"skill": "ENG-A-09", "weight": 0.5}], "setCoverage": true},
+  "skill": {"id": "ENG-A-11", "strand": "lis", "title": "מַה זֶּה?", "prerequisites": [{"skill": "ENG-A-05", "weight": 0.5}, {"skill": "ENG-A-09", "weight": 0.5}], "setCoverage": true},
   "items": [
     {"id": "i01", "kind": "tap", "frame": "he-ins-whats-this", "target": "en-whats-this", "target2": "en-its-ball", "options": [{"pic": "ball", "clip": "en-ball"}, {"pic": "drum", "clip": "en-drum"}], "wrong": {"drum": "sem"}, "hintWord": "en-its-ball"},
     {"id": "i02", "kind": "tap", "frame": "he-ins-whats-this", "target": "en-whats-this", "target2": "en-its-book", "options": [{"pic": "book", "clip": "en-book"}, {"pic": "teddy", "clip": "en-teddy"}, {"pic": "car", "clip": "en-car"}], "wrong": {"teddy": "sem", "car": "l1_guess"}, "hintWord": "en-its-book"},
@@ -38,8 +38,8 @@
     {"id": "h01", "kind": "listen_do", "frame": "he-ins-whats-this", "rep": "embodied", "ladder": "HL-PIC", "mode": "hotspots", "picture": "scene-room-ball", "target": "en-whats-this", "target2": "en-its-ball", "options": ["ball", "balloon", "doll"], "wrong": {"balloon": "sem", "doll": "l1_guess"}, "hintWord": "en-its-ball"}
   ],
   "lessons": [
-    {"id": "what-1", "title": "מָה זֶה?", "recall": ["a09.n18"], "meet": [["en-whats-this", "en-its-ball"]], "find": ["i01", "n01", "i02", "n02"], "use": ["s01", "u01"]},
-    {"id": "what-2", "title": "וּמָה זֶה?", "recall": ["i03", "n04"], "meet": [["en-its-duck", "en-its-apple"]], "find": ["n05", "n06", "i04", "n07", "n08", "i05"], "use": ["u02", "s02"]},
-    {"id": "what-more", "title": "וּמָה זֶה?", "recall": ["n09", "n10"], "use": ["u03", "h01", "s03"]}
+    {"id": "what-1", "title": "מַה זֶּה?", "recall": ["a09.n18"], "meet": [["en-whats-this", "en-its-ball"]], "find": ["i01", "n01", "i02", "n02"], "use": ["s01", "u01"]},
+    {"id": "what-2", "title": "וּמַה זֶּה?", "recall": ["i03", "n04"], "meet": [["en-its-duck", "en-its-apple"]], "find": ["n05", "n06", "i04", "n07", "n08", "i05"], "use": ["u02", "s02"]},
+    {"id": "what-more", "title": "וּמַה זֶּה?", "recall": ["n09", "n10"], "use": ["u03", "h01", "s03"]}
   ]
 }

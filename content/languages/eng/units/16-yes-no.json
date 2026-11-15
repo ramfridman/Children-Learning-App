@@ -34,7 +34,7 @@
   "lessons": [
     {"id": "yesno-1", "title": "כֵּן אוֹ לֹא", "recall": ["a11.u09"], "meet": [["en-yes", "en-no"]], "find": ["n01", "n02", "n03", "n04"], "use": ["s01", "s02"]},
     {"id": "yesno-2", "title": "כֵּן אוֹ לֹא", "recall": ["n05", "n06"], "meet": [["en-isit-cat", "en-isit-duck"]], "find": ["i01", "i02", "i03", "i04"], "use": ["g01", "e01"]},
-    {"id": "yesno-3", "title": "מָה יֵשׁ בַּקֻּפְסָה?", "recall": ["n07", "n08"], "use": ["g02", "u01", "s03"]},
-    {"id": "yesno-more", "title": "מָה יֵשׁ בַּקֻּפְסָה?", "recall": ["a11.u10"], "use": ["g03", "u02", "e02"]}
+    {"id": "yesno-3", "title": "מַה יֵּשׁ בַּקֻּפְסָה?", "recall": ["n07", "n08"], "use": ["g02", "u01", "s03"]},
+    {"id": "yesno-more", "title": "מַה יֵּשׁ בַּקֻּפְסָה?", "recall": ["a11.u10"], "use": ["g03", "u02", "e02"]}
   ]
 }

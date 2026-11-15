@@ -112,7 +112,7 @@
       "vo": "vo:eng.he_fb_where",
       "he": "וְאֵיפֹה",
       "voice": "ואיפה",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-gl-apple",
@@ -229,8 +229,8 @@
     {
       "id": "he-gl-clap",
       "vo": "vo:eng.he_gl_clap",
-      "he": "מְחִיאַת כַּפַּיִם",
-      "voice": "מְחִיאַת כַּפַּיִם",
+      "he": "מַחֲאוּ כַּפַּיִם",
+      "voice": "מַחֲאוּ כַּפַּיִם",
       "review": "text-ready"
     },
     {
@@ -413,14 +413,14 @@
       "vo": "vo:eng.he_gl_isit_cat",
       "he": "זֶה חָתוּל?",
       "voice": "זה חָתוּל?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-gl-isit-duck",
       "vo": "vo:eng.he_gl_isit_duck",
       "he": "זֶה בַּרְוָז?",
       "voice": "זה בַּרְוָז?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-gl-juice",
@@ -483,7 +483,7 @@
       "vo": "vo:eng.he_gl_no",
       "he": "לֹא",
       "voice": "לֹא",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-gl-nose",
@@ -602,7 +602,7 @@
       "vo": "vo:eng.he_gl_whats_this",
       "he": "מַה זֶּה?",
       "voice": "מה זה?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-gl-yellow",
@@ -616,7 +616,7 @@
       "vo": "vo:eng.he_gl_yes",
       "he": "כֵּן",
       "voice": "כֵּן",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-hint-again",
@@ -728,7 +728,7 @@
       "vo": "vo:eng.he_ins_give_it",
       "he": "הַקְשִׁיבוּ, וְגִרְרוּ לְפִיפּ:",
       "voice": "הקשיבו, וגררו לפיפ:",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-ins-how-many",
@@ -740,9 +740,9 @@
     {
       "id": "he-ins-its-a",
       "vo": "vo:eng.he_ins_its_a",
-      "he": "מָה זֶה? הַקְשִׁיבוּ לַתְּשׁוּבָה, וּגְעוּ בַּתְּמוּנָה.",
+      "he": "מַה זֶּה? הַקְשִׁיבוּ לַתְּשׁוּבָה, וּגְעוּ בַּתְּמוּנָה.",
       "voice": "מה זה? הקשיבו לתשובה, וגעו בתמונה.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-ins-listen-tap",
@@ -783,8 +783,8 @@
       "id": "he-ins-sort",
       "vo": "vo:eng.he_ins_sort",
       "he": "שִׂימוּ כׇּל תְּמוּנָה בַּמָּקוֹם שֶׁלָּהּ.",
-      "voice": "שימו כל תמונה במקום שלה.",
-      "review": "needs-editor"
+      "voice": "שִׂימוּ כל תמונה במקום שלה.",
+      "review": "text-ready"
     },
     {
       "id": "he-ins-story",
@@ -826,7 +826,7 @@
       "vo": "vo:eng.he_ins_which_word",
       "he": "אֵיזוֹ מִלָּה מַתְאִימָה לַתְּמוּנָה?",
       "voice": "איזו מילה מתאימה לתמונה?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-ins-who-doing",
@@ -840,7 +840,7 @@
       "vo": "vo:eng.he_pl_thanks",
       "he": "תּוֹדָה! מַמְשִׁיכִים.",
       "voice": "תודה, ממשיכים.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-q-ball-end",
@@ -874,8 +874,8 @@
       "id": "pass",
       "vo": "vo:eng.pass",
       "he": "זֶה בְּסֵדֶר!",
-      "voice": "זה בסדר!",
-      "review": "needs-editor"
+      "voice": "זה בסדר.",
+      "review": "text-ready"
     }
   ],
   "targetClips": [

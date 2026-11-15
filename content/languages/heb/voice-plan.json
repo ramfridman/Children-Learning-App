@@ -6,8 +6,8 @@
       "id": "air",
       "vo": "vo:heb.air",
       "he": "קֹדֶם מְצַיְּרִים בָּאֲוִיר, עִם כׇּל הַיָּד!",
-      "voice": "קודם מציירים באוויר, עם כל היד!",
-      "review": "needs-editor"
+      "voice": "קודם מציירים באוויר, עם כל היד.",
+      "review": "text-ready"
     },
     {
       "id": "d-cat-atypical",
@@ -83,8 +83,8 @@
       "id": "do-like",
       "vo": "vo:heb.do_like",
       "he": "בּוֹאוּ נַעֲשֶׂה כְּמוֹ בַּתְּמוּנָה:",
-      "voice": "בואו נעשה כמו בתמונה:",
-      "review": "needs-editor"
+      "voice": "בואו נַעֲשֶׂה כמו בתמונה:",
+      "review": "text-ready"
     },
     {
       "id": "fb-allit",
@@ -168,21 +168,21 @@
       "vo": "vo:heb.fb_where",
       "he": "וְאֵיפֹה",
       "voice": "ואיפה",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "h-end",
       "vo": "vo:heb.h_end",
       "he": "בּוֹאוּ נַקְשִׁיב לַסּוֹף.",
       "voice": "בואו נקשיב לסוף.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "h-look",
       "vo": "vo:heb.h_look",
       "he": "בּוֹאוּ נִסְתַּכֵּל שׁוּב.",
       "voice": "בואו נסתכל שוב.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "heard",
@@ -231,7 +231,7 @@
       "vo": "vo:heb.i_letter",
       "he": "אֵיפֹה הָאוֹת?",
       "voice": "איפה האות?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "i-letters",
@@ -300,8 +300,8 @@
       "id": "i-sort-rhyme",
       "vo": "vo:heb.i_sort_rhyme",
       "he": "שִׂימוּ כׇּל תְּמוּנָה אֵצֶל הַמִּלָּה שֶׁנִּגְמֶרֶת אוֹתוֹ דָּבָר.",
-      "voice": "שימו כל תמונה אצל המילה שנגמרת אותו דבר.",
-      "review": "needs-editor"
+      "voice": "שִׂימוּ כל תמונה אצל המילה שנגמרת אותו דבר.",
+      "review": "text-ready"
     },
     {
       "id": "i-start",
@@ -342,8 +342,8 @@
       "id": "look-letters",
       "vo": "vo:heb.look_letters",
       "he": "חַפְּשׂוּ אוֹתִיּוֹת מִסָּבִיב: עַל סְפָרִים, עַל קֻפְסָאוֹת וּבָרְחוֹב.",
-      "voice": "חפשו אותיות מסביב: על ספרים, על קופסאות וברחוב.",
-      "review": "needs-editor"
+      "voice": "חַפְּשׂוּ אותיות מסביב: על ספרים, על קופסאות וברחוב.",
+      "review": "text-ready"
     },
     {
       "id": "m-boet",
@@ -427,35 +427,35 @@
       "vo": "vo:heb.meet_new",
       "he": "מִלָּה חֲדָשָׁה:",
       "voice": "מילה חדשה:",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "name-clap",
       "vo": "vo:heb.name_clap",
-      "he": "מַחְאוּ כַּף לְכׇל חֵלֶק שֶׁל הַשֵּׁם שֶׁלָּכֶם.",
-      "voice": "מחאו כף לכל חלק של השם שלכם.",
-      "review": "needs-editor"
+      "he": "מַחֲאוּ כַּפַּיִם לְכׇל חֵלֶק שֶׁל הַשֵּׁם שֶׁלָּכֶם.",
+      "voice": "מַחֲאוּ כפיים לכל חלק של השם שלכם.",
+      "review": "text-ready"
     },
     {
       "id": "name-first",
       "vo": "vo:heb.name_first",
       "he": "לְכׇל שֵׁם יֵשׁ אוֹת רִאשׁוֹנָה. הִיא בַּהַתְחָלָה, בַּצַּד הַיְּמָנִי.",
       "voice": "לכל שם יש אות ראשונה. היא בהתחלה, בצד הימני.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "name-home",
       "vo": "vo:heb.name_home",
       "he": "חַפְּשׂוּ בַּבַּיִת אֶת הָאוֹת הָרִאשׁוֹנָה שֶׁל הַשֵּׁם שֶׁלָּכֶם.",
-      "voice": "חפשו בבית את האות הראשונה של השם שלכם.",
-      "review": "needs-editor"
+      "voice": "חַפְּשׂוּ בבית את האות הראשונה של השם שלכם.",
+      "review": "text-ready"
     },
     {
       "id": "name-show",
       "vo": "vo:heb.name_show",
-      "he": "לְכׇל אֶחָד וְאַחַת יֵשׁ שֵׁם, וְאֶת הַשֵּׁם כּוֹתְבִים בְּאוֹתִיּוֹת.",
-      "voice": "לכל אחד ואחת יש שם, ואת השם כותבים באותיות.",
-      "review": "needs-editor"
+      "he": "לְכֻלָּנוּ יֵשׁ שֵׁם, וְאֶת הַשֵּׁם כּוֹתְבִים בְּאוֹתִיּוֹת.",
+      "voice": "לכולנו יש שם, ואת השם כותבים באותיות.",
+      "review": "text-ready"
     },
     {
       "id": "ok-1",
@@ -518,7 +518,7 @@
       "vo": "vo:heb.paper",
       "he": "עַכְשָׁו מְצַיְּרִים אֶת זֶה עַל דַּף, בְּעִפָּרוֹן.",
       "voice": "עכשיו מציירים את זה על דף, בעיפרון.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "pl-1",
@@ -559,106 +559,106 @@
       "id": "plc-bye",
       "vo": "vo:heb.plc_bye",
       "he": "הָיָה כֵּיף לְשַׂחֵק יַחַד!",
-      "voice": "היה כיף לשחק יחד",
-      "review": "needs-editor"
+      "voice": "היה כיף לְשַׂחֵק יחד.",
+      "review": "text-ready"
     },
     {
       "id": "plc-thanks",
       "vo": "vo:heb.plc_thanks",
       "he": "תּוֹדָה רַבָּה!",
-      "voice": "תודה רבה",
-      "review": "needs-editor"
+      "voice": "תודה רבה.",
+      "review": "text-ready"
     },
     {
       "id": "r-balon",
       "vo": "vo:heb.r_balon",
       "he": "בָּלוֹן. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
       "voice": "בָּלוֹן. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "r-bayit",
       "vo": "vo:heb.r_bayit",
       "he": "בַּיִת. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
       "voice": "בַּיִת. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "r-chalon",
       "vo": "vo:heb.r_chalon",
       "he": "חַלּוֹן. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
       "voice": "חַלּוֹן. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "r-dag",
       "vo": "vo:heb.r_dag",
       "he": "דָּג. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
       "voice": "דָּג. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "r-kaf",
       "vo": "vo:heb.r_kaf",
       "he": "כַּף. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
       "voice": "כַּף. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "r-kochav",
       "vo": "vo:heb.r_kochav",
       "he": "כּוֹכָב. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
       "voice": "כּוֹכָב. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "r-matos",
       "vo": "vo:heb.r_matos",
       "he": "מָטוֹס. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
       "voice": "מָטוֹס. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "r-pil",
       "vo": "vo:heb.r_pil",
       "he": "פִּיל. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
       "voice": "פִּיל. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "r-sira",
       "vo": "vo:heb.r_sira",
       "he": "סִירָה. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
       "voice": "סִירָה. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "r-tanur",
       "vo": "vo:heb.r_tanur",
       "he": "תַּנּוּר. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
       "voice": "תַּנּוּר. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "r-til",
       "vo": "vo:heb.r_til",
       "he": "טִיל. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
       "voice": "טִיל. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "r-tut",
       "vo": "vo:heb.r_tut",
       "he": "תּוּת. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?",
       "voice": "תּוּת. איזו מילה נגמרת אותו דבר?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "retell",
       "vo": "vo:heb.retell",
       "he": "סַפְּרוּ אֶת הַסִּפּוּר לְמִישֶׁהוּ בַּבַּיִת: מַה קָּרָה קֹדֶם?",
-      "voice": "ספרו את הסיפור למישהו בבית: מה קרה קודם?",
-      "review": "needs-editor"
+      "voice": "סַפְּרוּ את הסיפור למישהו בבית: מה קרה קודם?",
+      "review": "text-ready"
     },
     {
       "id": "s1-q1",
@@ -756,21 +756,21 @@
       "vo": "vo:heb.v1_play",
       "he": "בַּשָּׁמַיִם יֵשׁ כּוֹכָב, וּבַגִּנָּה קוֹפֵץ אַרְנָב. בַּשָּׁמַיִם יֵשׁ כּוֹכָב, וּבַגִּנָּה קוֹפֵץ…",
       "voice": "בַּשָּׁמַיִם יש כוכב, ובגינה קופץ ארנב. בַּשָּׁמַיִם יש כוכב, ובגינה קופץ…",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "v2-play",
       "vo": "vo:heb.v2_play",
-      "he": "תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהַחָתוּל יוֹשֵׁב בַּחַלּוֹן. תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהַחָתוּל יוֹשֵׁב…",
+      "he": "תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהֶחָתוּל יוֹשֵׁב בַּחַלּוֹן. תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהֶחָתוּל יוֹשֵׁב…",
       "voice": "תיק תק עוֹשֶׂה השעון, והחתול יושב בחלון. תיק תק עוֹשֶׂה השעון, והחתול יושב…",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "v3-play",
       "vo": "vo:heb.v3_play",
       "he": "זוֹרְקִים לְמַעְלָה כַּדּוּר, אוֹפִים עוּגָה בַּתַּנּוּר. זוֹרְקִים לְמַעְלָה כַּדּוּר, אוֹפִים עוּגָה…",
       "voice": "זורקים למעלה כדור, אופים עוגה בתנור. זורקים למעלה כדור, אופים עוגה…",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "v4-open",
@@ -784,28 +784,28 @@
       "vo": "vo:heb.v5_play",
       "he": "בַּסַּל יֵשׁ תּוּת, וּבַיָּד שֶׁל סַבְתָּא חוּט. בַּסַּל יֵשׁ תּוּת, וּבַיָּד שֶׁל סַבְתָּא…",
       "voice": "בסל יש תות, וביד של סבתא חוט. בסל יש תות, וביד של סבתא…",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "v6-play",
       "vo": "vo:heb.v6_play",
       "he": "בַּשָּׁמַיִם עָף מָטוֹס, וְעַל הַשֻּׁלְחָן יֵשׁ כּוֹס. בַּשָּׁמַיִם עָף מָטוֹס, וְעַל הַשֻּׁלְחָן יֵשׁ…",
       "voice": "בַּשָּׁמַיִם עף מטוס, ועל השולחן יש כוס. בַּשָּׁמַיִם עף מטוס, ועל השולחן יש…",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "v7-play",
       "vo": "vo:heb.v7_play",
       "he": "יֵשׁ לַדֻּבִּי אַף, וּבַמָּרָק יֵשׁ כַּף. יֵשׁ לַדֻּבִּי אַף, וּבַמָּרָק יֵשׁ…",
       "voice": "יש לדובי אף, ובמרק יש כף. יש לדובי אף, ובמרק יש…",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "v8-play",
       "vo": "vo:heb.v8_play",
       "he": "עַל הַמַּיִם שָׁטָה סִירָה, וּבַגַּן שָׁרָה הַמּוֹרָה. עַל הַמַּיִם שָׁטָה סִירָה, וּבַגַּן שָׁרָה…",
       "voice": "על המים שטה סירה, ובגן שרה המורה. על המים שטה סירה, ובגן שרה…",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "why",
@@ -855,28 +855,28 @@
       "id": "heb-a-drums-1",
       "vo": "vo:heb.heb_a_drums_1",
       "shown": "תֹּף אֶחָד",
-      "say": "תוף אחד",
+      "say": "תוף אֶחָד",
       "ipa": "[tof eˈχad]"
     },
     {
       "id": "heb-a-drums-2",
       "vo": "vo:heb.heb_a_drums_2",
       "shown": "שְׁנֵי תֻּפִּים",
-      "say": "שני תופים",
+      "say": "שְׁנֵי תופים",
       "ipa": "[ʃne tuˈpim]"
     },
     {
       "id": "heb-a-drums-3",
       "vo": "vo:heb.heb_a_drums_3",
       "shown": "שְׁלוֹשָׁה תֻּפִּים",
-      "say": "שלושה תופים",
+      "say": "שְׁלוֹשָׁה תופים",
       "ipa": "[ʃloˈʃa tuˈpim]"
     },
     {
       "id": "heb-a-drums-4",
       "vo": "vo:heb.heb_a_drums_4",
       "shown": "אַרְבָּעָה תֻּפִּים",
-      "say": "ארבעה תופים",
+      "say": "אַרְבָּעָה תופים",
       "ipa": "[aʁbaˈʔa tuˈpim]"
     },
     {
@@ -1260,9 +1260,9 @@
     {
       "id": "heb-a-v2-full",
       "vo": "vo:heb.heb_a_v2_full",
-      "shown": "תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהַחָתוּל יוֹשֵׁב בַּחַלּוֹן.",
+      "shown": "תִּיק־תַּק עוֹשֶׂה הַשָּׁעוֹן, וְהֶחָתוּל יוֹשֵׁב בַּחַלּוֹן.",
       "say": "תיק תק עוֹשֶׂה השעון, והחתול יושב בחלון.",
-      "ipa": "[tik-ˈtak oˈse haʃaˈon vehaχaˈtul joˈʃev baχaˈlon]"
+      "ipa": "[tik-ˈtak oˈse haʃaˈon veheχaˈtul joˈʃev baχaˈlon]"
     },
     {
       "id": "heb-a-v3-full",
