@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "shp.name.square.yellow",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "shapes",
@@ -50,8 +50,9 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:shape_triangle_yellow",
-        "label": "מְשֻׁלָּשׁ"
+        "sprite": "asset:shape_rect_blue",
+        "label": "מַלְבֵּן",
+        "misconception": "M-SHP-SQRECT"
       }
     ],
     "correct": "o1",

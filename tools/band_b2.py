@@ -6,6 +6,133 @@ SHAPE_ONE = {'circle': 'עִגּוּל', 'square': 'רִבּוּעַ', 'triangle
 SIDES_DEF = {'triangle': 'הַמְּשֻׁלָּשׁ', 'quad': 'הַמְּרֻבָּע', 'pentagon': 'הַמְּחֻמָּשׁ', 'hexagon': 'הַמְּשֻׁשֶּׁה'}
 SIDES_N = {'triangle': 3, 'quad': 4, 'pentagon': 5, 'hexagon': 6}
 
+# ---------------------------------------------------------------- M11 Stage 2 pilot (docs/milestones/M11-stage2.md §4): the Band B
+# taps of Shape Forest that move to hands-on sorts. Keyed by the loop index of the item they replace, so every id stays where it was.
+# An item is [sprite, bin, tag]: the tag a wrong bin shows for that picture (a thin triangle kept out of the triangles is M-SHP-PROTO,
+# a quadrilateral put with the five-sided shapes counted a side twice). A bin of sticks shows the number of sides as sticks (the
+# picture of SHP-B-03's second hint). Hebrew is a draft by Claude, needs-editor.
+_STICKS = {3: 'שָׁלוֹשׁ צְלָעוֹת', 4: 'אַרְבַּע צְלָעוֹת', 5: 'חָמֵשׁ צְלָעוֹת', 6: 'שֵׁשׁ צְלָעוֹת'}
+
+
+def _sticks(n, label=None):
+    return {'sprite': 'stick_long', 'count': n, 'label': label or _STICKS[n]}
+
+
+_POLY = dict(h2='נַעֲבֹר בָּאֶצְבַּע עַל הַצְּלָעוֹת, אַחַת אַחַת, וְנִסְפֹּר.', h2_shared='shp_sides',
+             h3='סוֹפְרִים צֶלַע אַחַר צֶלַע, וְכׇל צֶלַע פַּעַם אַחַת. עַכְשָׁו תּוֹרְכֶם.')
+B01_SORTS = {
+    0: dict(_POLY, bins=[{'sprite': 'shape_triangle', 'label': 'מְשֻׁלָּשׁ'}, {'sprite': 'shape_quad', 'label': 'מְרֻבָּע'}], tag='M-SHP-PROTO',
+            items=[['shape_triangle_thin', 1, 'M-SHP-PROTO'], ['shape_square_tilt', 2, 'M-SHP-ORIENT'], ['shape_triangle_down', 1, 'M-SHP-ORIENT'],
+                   ['shape_rect', 2], ['shape_triangle_yellow', 1], ['shape_square_red', 2]],
+            prompt='מְמַיְּנִים: מְשֻׁלָּשִׁים לְכָאן, מְרֻבָּעִים לְכָאן.', correct_text='כֵּן! שָׁלוֹשׁ צְלָעוֹת — מְשֻׁלָּשׁ. אַרְבַּע — מְרֻבָּע.'),
+    2: dict(_POLY, bins=[{'sprite': 'shape_triangle', 'label': 'מְשֻׁלָּשׁ'}, {'sprite': 'clue_not_triangle', 'label': 'לֹא מְשֻׁלָּשׁ'}], tag='M-SHP-CLOSED',
+            items=[['shape_triangle_thin', 1, 'M-SHP-PROTO'], ['shape_open', 2, 'M-SHP-CLOSED'], ['shape_triangle_down', 1, 'M-SHP-ORIENT'],
+                   ['shape_curved', 2, 'M-SHP-CLOSED'], ['shape_triangle_blue', 1], ['shape_pentagon', 2]],
+            prompt='מְשֻׁלָּשִׁים לְכָאן, וּמַה שֶּׁלֹּא מְשֻׁלָּשׁ — לְכָאן.',
+            h2='לִמְשֻׁלָּשׁ שָׁלוֹשׁ צְלָעוֹת יְשָׁרוֹת, וְאֵין בּוֹ פֶּתַח.', h2_shared='shp_triangle',
+            h3='מְשֻׁלָּשׁ סָגוּר, וְיֵשׁ לוֹ שָׁלוֹשׁ צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם.', correct_text='כֵּן! רַק מְשֻׁלָּשִׁים בְּיַחַד.'),
+    4: dict(_POLY, bins=[_sticks(5, 'מְחֻמָּשׁ'), _sticks(6, 'מְשֻׁשֶּׁה')], tag=None,
+            items=[['shape_pentagon', 1, 'M-CNT-DOUBLE'], ['shape_hexagon', 2, 'M-CNT-SKIP'], ['shape_hexagon', 2, 'M-CNT-SKIP'],
+                   ['shape_pentagon', 1, 'M-CNT-DOUBLE']],
+            prompt='סוֹפְרִים צְלָעוֹת: מְחֻמָּשׁ לְכָאן, מְשֻׁשֶּׁה לְכָאן.', correct_text='כֵּן! לַמְחֻמָּשׁ חָמֵשׁ צְלָעוֹת, וְלַמְשֻׁשֶּׁה שֵׁשׁ.'),
+    6: dict(_POLY, bins=[_sticks(4, 'מְרֻבָּע'), _sticks(5, 'מְחֻמָּשׁ')], tag=None,
+            items=[['shape_square_tilt', 1, 'M-CNT-DOUBLE'], ['shape_pentagon', 2, 'M-CNT-SKIP'], ['shape_rect', 1, 'M-CNT-DOUBLE'],
+                   ['shape_quad', 1, 'M-CNT-DOUBLE'], ['shape_pentagon', 2, 'M-CNT-SKIP']],
+            prompt='סוֹפְרִים צְלָעוֹת: מְרֻבָּע לְכָאן, מְחֻמָּשׁ לְכָאן.', correct_text='כֵּן! לַמְרֻבָּע אַרְבַּע צְלָעוֹת, וְלַמְחֻמָּשׁ חָמֵשׁ.'),
+}
+# a count sort goes wrong both ways (a side twice, a side missed): until a picture's own tag is written it records none rather than
+# half of them wrong
+_SIDES = dict(_POLY, tag=None, correct_text='כֵּן! סְפַרְתֶּם אֶת הַצְּלָעוֹת שֶׁל כֻּלָּן.')
+B02_SORTS = {
+    1: dict(_SIDES, bins=[_sticks(3), _sticks(4)], prompt='סוֹפְרִים צְלָעוֹת: שָׁלוֹשׁ לְכָאן, אַרְבַּע לְכָאן.',
+            items=[['shape_triangle_thin', 1, 'M-CNT-DOUBLE'], ['shape_square_tilt', 2, 'M-CNT-SKIP'], ['shape_triangle_down', 1, 'M-CNT-DOUBLE'],
+                   ['shape_rect', 2, 'M-CNT-SKIP'], ['shape_triangle_red', 1, 'M-CNT-DOUBLE'], ['shape_quad', 2, 'M-CNT-SKIP']]),
+    3: dict(_SIDES, bins=[_sticks(5), _sticks(6)], prompt='סוֹפְרִים צְלָעוֹת: חָמֵשׁ לְכָאן, שֵׁשׁ לְכָאן.',
+            items=[['shape_hexagon', 2, 'M-CNT-SKIP'], ['shape_pentagon', 1, 'M-CNT-DOUBLE'], ['shape_pentagon', 1, 'M-CNT-DOUBLE'],
+                   ['shape_hexagon', 2, 'M-CNT-SKIP']]),
+    5: dict(_SIDES, bins=[_sticks(3), _sticks(4)], prompt='סוֹפְרִים צְלָעוֹת: שָׁלוֹשׁ לְכָאן, אַרְבַּע לְכָאן.',
+            items=[['shape_square_blue', 2, 'M-CNT-SKIP'], ['shape_triangle_green', 1, 'M-CNT-DOUBLE'], ['shape_rect_green', 2, 'M-CNT-SKIP'],
+                   ['shape_triangle_thin', 1, 'M-CNT-DOUBLE'], ['shape_square_tilt', 2, 'M-CNT-SKIP']]),
+    7: dict(_SIDES, bins=[_sticks(4), _sticks(5)], prompt='סוֹפְרִים צְלָעוֹת: אַרְבַּע לְכָאן, חָמֵשׁ לְכָאן.',
+            items=[['shape_quad', 1, 'M-CNT-DOUBLE'], ['shape_pentagon', 2, 'M-CNT-SKIP'], ['shape_rect_blue', 1, 'M-CNT-DOUBLE'],
+                   ['shape_pentagon', 2, 'M-CNT-SKIP'], ['shape_square_tilt', 1, 'M-CNT-DOUBLE']]),
+}
+_EQUAL = dict(bins=[{'sprite': 'shape_quad', 'label': 'כׇּל הַצְּלָעוֹת שָׁווֹת'}, {'sprite': 'shape_rect', 'label': 'לֹא כֻּלָּן שָׁווֹת'}],
+              tag='M-SHP-SQRECT', prompt='בּוֹדְקִים אֶת הַצְּלָעוֹת: כֻּלָּן שָׁווֹת — לְכָאן. לֹא כֻּלָּן שָׁווֹת — לְכָאן.',
+              h2='נָנִיחַ מַקֵּל עַל כׇּל צֶלַע, וְנַשְׁוֶה אֶת הָאֹרֶךְ.', h2_shared='shp_equal',
+              h3='בָּרִבּוּעַ אַרְבַּע צְלָעוֹת שָׁווֹת, גַּם כְּשֶׁהוּא מְסֻבָּב. עַכְשָׁו תּוֹרְכֶם.',
+              correct_text='כֵּן! בָּרִבּוּעִים כׇּל הַצְּלָעוֹת שָׁווֹת.')
+B03_SORTS = [
+    dict(_EQUAL, items=[['shape_square_red', 1], ['shape_rect_blue', 2, 'M-SHP-SQRECT'], ['shape_square_tilt', 1, 'M-SHP-ORIENT'],
+                        ['shape_rect', 2, 'M-SHP-SQRECT'], ['shape_triangle_thin', 2]]),
+    dict(_EQUAL, items=[['shape_rect_green', 2, 'M-SHP-SQRECT'], ['shape_square_yellow', 1], ['shape_square_tilt', 1, 'M-SHP-ORIENT'],
+                        ['shape_rect_orange', 2, 'M-SHP-SQRECT'], ['shape_square_blue', 1]]),
+    dict(_EQUAL, items=[['shape_square_tilt', 1, 'M-SHP-ORIENT'], ['shape_rect', 2, 'M-SHP-SQRECT'], ['shape_square_green', 1],
+                        ['shape_rect_red', 2, 'M-SHP-SQRECT'], ['shape_triangle_thin', 2]]),
+]
+_CLOSED = dict(bins=[{'sprite': 'tick', 'label': 'כֵּן'}, {'sprite': 'cross', 'label': 'לֹא'}], tag='M-SHP-CLOSED',
+               prompt='סְגוּרָה, וְכׇל הַצְּלָעוֹת יְשָׁרוֹת? כֵּן — לְכָאן. לֹא — לְכָאן.',
+               h2='נֵלֵךְ בָּאֶצְבַּע מִסָּבִיב: חוֹזְרִים לַהַתְחָלָה בְּלִי לָצֵאת, וּבְלִי קַו עָקֹם?', h2_shared='shp_closed',
+               h3='נִסְתַּכֵּל עַל הַקַּוִּים: אֶפְשָׁר לָלֶכֶת מִסָּבִיב וְלַחֲזֹר לַהַתְחָלָה? עַכְשָׁו תּוֹרְכֶם.',
+               correct_text='כֵּן! הַסְּגוּרוֹת עִם הַצְּלָעוֹת הַיְשָׁרוֹת בְּיַחַד.')
+B04_SORTS = {
+    0: dict(_CLOSED, items=[['shape_triangle', 1], ['shape_open', 2, 'M-SHP-CLOSED'], ['shape_pentagon', 1], ['shape_curved', 2, 'M-SHP-CLOSED'],
+                            ['shape_triangle_thin', 1, 'M-SHP-PROTO'], ['shape_hexagon', 1]]),
+    2: dict(_CLOSED, items=[['shape_quad', 1], ['shape_curved', 2, 'M-SHP-CLOSED'], ['shape_square_tilt', 1, 'M-SHP-ORIENT'],
+                            ['shape_open', 2, 'M-SHP-CLOSED'], ['shape_pentagon', 1]]),
+    4: dict(_CLOSED, items=[['shape_hexagon', 1], ['shape_open', 2, 'M-SHP-CLOSED'], ['shape_triangle_down', 1, 'M-SHP-ORIENT'],
+                            ['shape_curved', 2, 'M-SHP-CLOSED'], ['shape_rect', 1]]),
+    5: dict(_CLOSED, items=[['shape_curved', 2, 'M-SHP-CLOSED'], ['shape_triangle', 1], ['shape_open', 2, 'M-SHP-CLOSED'],
+                            ['shape_triangle_thin', 1, 'M-SHP-PROTO'], ['shape_quad', 1], ['shape_circle', 2, 'M-SHP-CLOSED']]),
+}
+# SHP-B-05 and SHP-B-06 (M11 Stage 2): pictures whose pieces touch and never overlap, [sprite, centre x, centre y, size, turn] as in
+# author.py `k_shapebuild`. The visible part of a sprite in its square: a square 0.14 to 0.86, a rectangle 0.06 to 0.94 wide and 0.28
+# to 0.72 high, a triangle 0.10 to 0.90 wide and 0.12 to 0.84 high, a circle 0.12 to 0.88; the numbers below make the edges meet.
+B05_PICTURES = [
+    ('בַּיִת', [['shape_square_blue', 50, 70, 40, 0], ['shape_triangle_red', 50, 42, 40, 0], ['shape_square_blue', 75.2, 73.6, 30, 0]],
+     ['shape_circle_yellow', 'shape_rect_green']),
+    ('סִירָה', [['shape_rect_blue', 50, 75, 60, 0], ['shape_triangle_red', 42, 49.56, 36, 0], ['shape_triangle_red', 66.8, 52.96, 26, 0]],
+     ['shape_square_yellow', 'shape_circle_green']),
+    ('מְכוֹנִית', [['shape_rect_red', 50, 60, 60, 0], ['shape_square_blue', 50, 36.72, 28, 0], ['shape_circle_yellow', 36, 80.8, 20, 0],
+                  ['shape_circle_yellow', 64, 80.8, 20, 0]], ['shape_triangle_green']),
+    ('חֲלָלִית', [['shape_rect_orange', 50, 55, 60, 90], ['shape_triangle_red', 50, 17.38, 33, 0], ['shape_triangle_red', 27.2, 73.24, 24, 0],
+                 ['shape_triangle_red', 72.8, 73.24, 24, 0]], ['shape_circle_blue', 'shape_square_green']),
+]
+# (the shape built, the pieces, "from the pieces", places, decoys). Two right triangles that make a square wait for the
+# design-director's half-square triangle (`shape_triangle_half`); two of today's triangles, one turned over, make a four-sided shape.
+B06_SUBSTITUTIONS = [
+    ('מַלְבֵּן', 'שְׁנֵי רִבּוּעִים', 'מִשְּׁנֵי רִבּוּעִים', [['shape_square_blue', 30, 50, 40, 0], ['shape_square_blue', 58.8, 50, 40, 0]],
+     ['shape_triangle_green', 'shape_circle_red']),
+    ('רִבּוּעַ', 'שְׁנֵי מַלְבֵּנִים', 'מִשְּׁנֵי מַלְבֵּנִים', [['shape_rect_green', 50, 50, 50, 0], ['shape_rect_green', 50, 72, 50, 0]],
+     ['shape_triangle_blue', 'shape_circle_yellow']),
+    ('מְרֻבָּע', 'שְׁנֵי מְשֻׁלָּשִׁים', 'מִשְּׁנֵי מְשֻׁלָּשִׁים', [['shape_triangle_orange', 50, 40, 50, 0], ['shape_triangle_orange', 50, 74, 50, 180]],
+     ['shape_square_blue', 'shape_circle_green']),
+    ('רִבּוּעַ גָּדוֹל', 'אַרְבָּעָה רִבּוּעִים', 'מֵאַרְבָּעָה רִבּוּעִים',
+     [['shape_square_yellow', 40, 40, 30, 0], ['shape_square_yellow', 61.6, 40, 30, 0], ['shape_square_yellow', 40, 61.6, 30, 0],
+      ['shape_square_yellow', 61.6, 61.6, 30, 0]], ['shape_triangle_red', 'shape_circle_blue']),
+]
+# SHP-B-08 watches no catalogue misconception, so its sorts carry none (E2 of the B-15 spec: a naming tag waits for the owner).
+# Two sort what rolls (a curved side) from what does not; two sort by name, where the balls carry the name to a real thing (the
+# design-director's real-object solids, a can, a party hat, a gift box, replace the solids that are the same picture as their bin).
+_ROLLS = dict(bins=[{'sprite': 'ball_red', 'label': 'מִתְגַּלְגֵּל'}, {'sprite': 'block', 'label': 'לֹא מִתְגַּלְגֵּל'}], tag=None,
+              prompt='אֵיזֶה גּוּף מִתְגַּלְגֵּל? לְכָאן. וּמִי לֹא — לְכָאן.',
+              h2='נְדַמְיֵן שֶׁדּוֹחֲפִים כׇּל גּוּף: יֵשׁ לוֹ צַד עָגֹל?', h2_shared='shp_solid_roll',
+              h3='גָּלִיל, חָרוּט וְכַדּוּר מִתְגַּלְגְּלִים, כִּי יֵשׁ לָהֶם צַד עָגֹל. עַכְשָׁו תּוֹרְכֶם.',
+              correct_text='כֵּן! מַה שֶּׁיֵּשׁ לוֹ צַד עָגֹל מִתְגַּלְגֵּל.')
+_NAMED = dict(bins=[{'sprite': 'solid_cylinder', 'label': 'גָּלִיל'}, {'sprite': 'solid_cone', 'label': 'חָרוּט'},
+                    {'sprite': 'solid_sphere', 'label': 'כַּדּוּר'}], tag=None,
+              prompt='כׇּל גּוּף לַשֵּׁם שֶׁלּוֹ: גָּלִיל, חָרוּט, כַּדּוּר.',
+              h2='נִסְתַּכֵּל לְמַעְלָה: יֵשׁ חֹד? וּלְמַטָּה: יֵשׁ עִגּוּל שָׁטוּחַ?', h2_shared='shp_solid_name',
+              h3='לֶחָרוּט יֵשׁ חֹד, לַגָּלִיל שְׁנֵי עִגּוּלִים, וְהַכַּדּוּר עָגֹל כֻּלּוֹ. עַכְשָׁו תּוֹרְכֶם.',
+              correct_text='כֵּן! כׇּל גּוּף עִם הַשֵּׁם שֶׁלּוֹ.')
+# (the box item, i = 4, stays a tap: its lines carry the owner's "תֵּבָה, like a shoe box" bridge, hebrew-notes D6)
+B08_SORTS = {
+    1: dict(_ROLLS, items=[['solid_sphere', 1], ['solid_box', 2], ['solid_cylinder', 1], ['solid_pyramid', 2], ['solid_cone', 1]]),
+    3: dict(_NAMED, items=[['ball_blue', 3], ['solid_cone', 2], ['solid_cylinder', 1], ['ball_yellow', 3], ['solid_sphere', 3]]),
+    5: dict(_ROLLS, items=[['solid_pyramid', 2], ['ball_green', 1], ['solid_cylinder', 1], ['solid_box', 2], ['solid_cone', 1]]),
+    6: dict(_NAMED, items=[['solid_cylinder', 1], ['ball_red', 3], ['solid_cone', 2], ['solid_sphere', 3], ['ball_green', 3]]),
+}
+
 
 def lesson_ids(u, skill, a=0, b=None):
     return [x['id'] for x in u.d['activities'] if x['skill'] == skill][a:b]
@@ -148,20 +275,28 @@ def shapes():
              'Hebrew is a draft by Claude, needs-editor.',
              30, assets=['shape_pentagon', 'shape_hexagon', 'shape_quad', 'shape_open', 'shape_curved', 'solid_cylinder', 'solid_cone',
                          'solid_sphere', 'solid_pyramid', 'solid_box', 'shape_triangle', 'shape_square', 'shape_rect', 'shape_circle',
-                         'shape_triangle_thin', 'shape_triangle_down', 'shape_square_tilt', 'tick', 'cross'])
+                         'shape_triangle_thin', 'shape_triangle_down', 'shape_square_tilt', 'tick', 'cross',
+                         'stick_long', 'clue_not_triangle', 'block', 'ball_red', 'ball_blue', 'ball_green', 'ball_yellow'])
     u.tag('M-SHP-CLOSED', ['SHP-B-01', 'SHP-B-04'], 'הילד מכנה צורה פתוחה או עם צלע עקומה "משולש" או "מרובע", כי היא נראית דומה.',
           'לצייר בעיפרון משולש, ואז לצייר אחד שלא סגור בפינה, ולשאול: האם נמלה יכולה ללכת מסביב בלי לצאת?',
           ['pictorial', 'concrete'], 'לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק.')
 
     u.skill('SHP-B-01', 'מכירים מצולעים', 'מַכִּירִים מְשֻׁלָּשׁ, מְרֻבָּע, מְחֻמָּשׁ וּמְשֻׁשֶּׁה', 'cone-tree', ['SHP-A-03', 'NUM-A-09'],
-            ['pictorial'], ['M-SHP-CLOSED'])
+            ['pictorial'], ['M-SHP-CLOSED', 'M-SHP-PROTO'])
     order = ['pentagon', 'hexagon', 'quad', 'triangle', 'pentagon', 'hexagon', 'quad', 'triangle']
     for i, sh in enumerate(order):
+        if i in B01_SORTS:  # M11 Stage 2 pilot: the item is re-cut to a sort (same id, revision 2)
+            u.act('SHP-B-01', 'sort', revision=2, domain='shapes', **B01_SORTS[i])
+            continue
         pool = [x for x in ('triangle', 'quad', 'pentagon', 'hexagon') if x != sh]
         wrong = ['shape_' + pool[i % 3], 'shape_open' if i % 2 == 0 else 'shape_curved']
+        tags = {wrong[1]: 'M-SHP-CLOSED'}
+        if sh == 'triangle':  # M11 Stage 2: for "the triangle" the open three-line figure is the second honest lure (revision 2)
+            wrong[0] = 'shape_open'
+            tags = {'shape_open': 'M-SHP-CLOSED', wrong[1]: 'M-SHP-CLOSED'}
         n = SIDES_N[sh]
         u.act('SHP-B-01', 'pick', prompt='אֵיפֹה %s?' % SIDES_DEF[sh], options=place('shape_' + sh, wrong, i % 3), correct='shape_' + sh,
-              tags={wrong[1]: 'M-SHP-CLOSED'}, domain='shapes',
+              tags=tags, domain='shapes', **({'revision': 2} if sh == 'triangle' else {}),
               correct_text='כֵּן! %s יֵשׁ %s צְלָעוֹת.' % ('לַ' + SIDES_DEF[sh][2:], F[n]),
               h3='%s הוּא צוּרָה סְגוּרָה עִם %s צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם.' % (SIDES_DEF[sh], F[n]))
 
@@ -174,6 +309,9 @@ def shapes():
     u.skill('SHP-B-02', 'סופרים צלעות', 'סוֹפְרִים צְלָעוֹת', 'cone-tree', ['SHP-B-01'], ['pictorial'], ['M-CNT-DOUBLE', 'M-CNT-SKIP'])
     for i, (sp, n) in enumerate([('shape_triangle', 3), ('shape_quad', 4), ('shape_pentagon', 5), ('shape_hexagon', 6), ('shape_square', 4),
                                  ('shape_rect', 4), ('shape_pentagon', 5), ('shape_hexagon', 6)]):
+        if i in B02_SORTS:  # M11 Stage 2 pilot: sorted by the number of sides (same id, revision 2)
+            u.act('SHP-B-02', 'sort', revision=2, domain='shapes', **B02_SORTS[i])
+            continue
         numpick(u, 'SHP-B-02', 'כַּמָּה צְלָעוֹת יֵשׁ לַצּוּרָה הַזֹּאת?', n, [n + 1, n - 1], i, tags={n + 1: 'M-CNT-DOUBLE', n - 1: 'M-CNT-SKIP'},
                 domain='shapes', group={'sprite': sp, 'count': 1}, text='%s! %s צְלָעוֹת.' % (F[n], F[n]),
                 h3=hint_fit(*['נִסְפֹּר צֶלַע אַחַר צֶלַע, וְלֹא נִסְפֹּר אוֹתָהּ פַּעֲמַיִם: %s. %s' % (c, end) for end in (
@@ -192,6 +330,11 @@ def shapes():
         u.act('SHP-B-03', 'pick', prompt='לְאֵיזוֹ צוּרָה כׇּל הַצְּלָעוֹת שָׁווֹת?', options=place('shape_square', ['shape_rect', 'shape_triangle_thin'], i),
               correct='shape_square', tags={'shape_rect': 'M-SHP-SQRECT'}, domain='shapes', voice=True,
               correct_text='כֵּן! בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת.', h3='בְּרִבּוּעַ כׇּל אַרְבַּע הַצְּלָעוֹת שָׁווֹת. עַכְשָׁו תּוֹרְכֶם.')
+        # M11 Stage 2 pilot: "where is the rectangle whose sides are not all equal?" had no honest second tag (W3 keeps the
+        # square untagged), so it is the item re-cut to a sort by equal sides (same id, revision 2); no square is "not a rectangle"
+        if B03_SORTS:
+            u.act('SHP-B-03', 'sort', revision=2, domain='shapes', **B03_SORTS[i])
+            continue
         # A square is a rectangle (owner, W3 of check-2026-11-06): here the question asks for a rectangle whose sides are not
         # all equal, so the square is wrong, but it is not tagged M-SHP-SQRECT (that tag is "a square is not a rectangle"),
         # and the lines speak of this rectangle, not of every rectangle
@@ -210,6 +353,9 @@ def shapes():
     u.skill('SHP-B-04', 'צורה סגורה', 'צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת', 'cone-tree', ['SHP-B-01', 'SHP-A-10'], ['pictorial'], ['M-SHP-CLOSED'])
     for i, (sp, closed) in enumerate([('shape_triangle', True), ('shape_open', False), ('shape_pentagon', True), ('shape_curved', False),
                                       ('shape_hexagon', True), ('shape_quad', True), ('shape_open', False), ('shape_curved', False)]):
+        if i in B04_SORTS:  # M11 Stage 2 pilot: the closed shapes' items (their "no" had no tag) become sorts (same id, revision 2)
+            u.act('SHP-B-04', 'sort', revision=2, domain='shapes', **B04_SORTS[i])
+            continue
         u.act('SHP-B-04', 'pick', prompt='זוֹ צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת?', group={'sprite': sp, 'count': 1},
               options=['cross', 'tick'] if i % 2 else ['tick', 'cross'], correct='tick' if closed else 'cross',
               tags={} if closed else {'tick': 'M-SHP-CLOSED'}, domain='shapes',
@@ -224,6 +370,9 @@ def shapes():
               ('solid_box', 'הַתֵּבָה')]
     bridge = {'solid_box': ('כֵּן! זוֹ הַתֵּבָה — כְּמוֹ קֻפְסָה שֶׁל נַעֲלַיִם.', 'הַתֵּבָה דּוֹמָה לְקֻפְסָה שֶׁל נַעֲלַיִם. עַכְשָׁו תּוֹרְכֶם.')}
     for i in range(8):
+        if i in B08_SORTS:  # M11 Stage 2 pilot: sorts of the solids (same id, revision 2)
+            u.act('SHP-B-08', 'sort', revision=2, domain='shapes', **B08_SORTS[i])
+            continue
         sp, nm = solids[i % 5]
         others = [x for x, _ in solids if x != sp]
         pair = [others[(i * 2) % 4], others[(i * 2 + 1) % 4]]
@@ -235,6 +384,27 @@ def shapes():
     u.act('SHP-B-08', 'spot', cells=['solid_cylinder', 'solid_cylinder', 'solid_cone', 'solid_cylinder'], wrong=2, tag='M-SHP-FACE', domain='shapes',
           check='error_spotting', difficulty=0.6, prompt='אוֹסְפִים רַק גְּלִילִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?')
 
+    # M11 Stage 2 (owner Q4, 2026-11-14): SHP-B-05 and SHP-B-06 join the path. The pieces touch and never overlap, so the picture on
+    # the stage is one grey shadow with no lines inside (the template draws every place in one grey, M11-stage2 §7.4); one shape of a
+    # kind is one sprite in an item, so any piece of that kind fits any of its places. A decoy is never the whole picture (a rectangle
+    # piece would fill the rectangle that two squares make, and the template would call it wrong).
+    u.skill('SHP-B-05', 'בונים תמונה מצורות בלי קווים בפנים', 'בּוֹנִים תְּמוּנָה מִצּוּרוֹת', 'cone-tree', ['SHP-A-06'], ['concrete'], [])
+    # the last picture of each skill is its understanding check (transfer: turned pieces, a new picture), as fresh mastery needs one
+    for k, (what, slots, decoys) in enumerate(B05_PICTURES):
+        u.act('SHP-B-05', 'shapebuild', domain='shapes', what=what, slots=slots, decoys=decoys,
+              **({'check': 'transfer', 'difficulty': 0.6} if k == len(B05_PICTURES) - 1 else {}),
+              h2='נְחַפֵּשׂ פִּנּוֹת וְקַוִּים יְשָׁרִים בַּצֵּל: אֵיפֹה מִסְתַּתֵּר מְשֻׁלָּשׁ?', h2_shared='shp_shadow',
+              h3='מַתְחִילִים מֵהַחֲתִיכָה הַגְּדוֹלָה, וְאַחַר כָּךְ הַקְּטַנּוֹת. עַכְשָׁו תּוֹרְכֶם.',
+              goal='child finds the shapes hidden in one shadow and puts each in its place')
+    u.skill('SHP-B-06', 'שתי צורות עושות צורה אחת', 'שְׁתֵּי צוּרוֹת עוֹשׂוֹת צוּרָה', 'cone-tree', ['SHP-B-05'], ['concrete'], [])
+    for k, (what, of, of_from, slots, decoys) in enumerate(B06_SUBSTITUTIONS):
+        u.act('SHP-B-06', 'shapebuild', domain='shapes', what=what, slots=slots, decoys=decoys,
+              **({'check': 'transfer', 'difficulty': 0.6} if k == len(B06_SUBSTITUTIONS) - 1 else {}),
+              prompt='בּוֹנִים %s %s.' % (what, of_from), correct_text='כֵּן! %s עוֹשִׂים %s.' % (of, what),
+              h2='אֵיזוֹ צוּרָה קְטַנָּה נִכְנֶסֶת פַּעֲמַיִם בַּצֵּל?', h2_shared='shp_twice',
+              h3='%s עוֹשִׂים %s. שָׂמִים אֶחָד, וְעוֹד אֶחָד לְיָדוֹ. עַכְשָׁו תּוֹרְכֶם.' % (of, what),
+              goal='child fills a shape with two or more smaller shapes')
+
     ids = lambda skill, a=0, b=None: lesson_ids(u, skill, a, b)
     u.lesson('polygon-detectives', 'בַּלָּשֵׁי צוּרוֹת', ['SHP-B-01'], ids('SHP-B-01', 0, 4), 'כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים צוּרוֹת חֲדָשׁוֹת.')
     u.lesson('polygon-detectives-more', 'עוֹד צוּרוֹת', ['SHP-B-01'], ids('SHP-B-01', 4), 'מְצֻיָּן! עוֹד צוּרוֹת בָּרְשִׁימָה.')
@@ -245,6 +415,8 @@ def shapes():
     u.lesson('closed-shapes-more', 'עוֹד צוּרוֹת סְגוּרוֹת', ['SHP-B-04'], ids('SHP-B-04', 4), 'מְצֻיָּן! שַׂמְתֶּם לֵב לִצְלָעוֹת הַיְשָׁרוֹת.')
     u.lesson('solids', 'גּוּפִים', ['SHP-B-08'], ids('SHP-B-08', 0, 5), 'כׇּל הַכָּבוֹד! הִכַּרְתֶּם גּוּפִים.')
     u.lesson('solids-more', 'עוֹד גּוּפִים', ['SHP-B-08'], ids('SHP-B-08', 5), 'יָפֶה מְאֹד! גּוּפִים בְּכׇל מָקוֹם.')
+    u.lesson('one-shadow', 'צֵל אֶחָד, הַרְבֵּה צוּרוֹת', ['SHP-B-05'], ids('SHP-B-05'), 'כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַצּוּרוֹת בַּצֵּל.')
+    u.lesson('shapes-make-shapes', 'צוּרוֹת עוֹשׂוֹת צוּרוֹת', ['SHP-B-06'], ids('SHP-B-06'), 'נִפְלָא! מִשְּׁתֵּי צוּרוֹת בְּנִיתֶם צוּרָה.')
     u.save()
 
 

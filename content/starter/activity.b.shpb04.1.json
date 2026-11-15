@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.shpb04.1",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "shapes",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.37
   },
@@ -25,39 +25,64 @@
     "caption": [
       {
         "t": "he",
-        "v": "זוֹ צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת?"
+        "v": "סְגוּרָה, וְכׇל הַצְּלָעוֹת יְשָׁרוֹת? כֵּן — לְכָאן. לֹא — לְכָאן."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "group": {
-      "sprite": "asset:shape_triangle",
-      "count": 1,
-      "arrangement": "line",
-      "seed": 3,
-      "scale": 1
-    }
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
+        "id": "b1",
         "sprite": "asset:tick",
+        "count": 1,
         "label": "כֵּן"
       },
       {
-        "id": "o2",
+        "id": "b2",
         "sprite": "asset:cross",
+        "count": 1,
         "label": "לֹא"
       }
     ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:shape_triangle",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:shape_open",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:shape_pentagon",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:shape_curved",
+        "bin": "b2"
+      },
+      {
+        "id": "i5",
+        "sprite": "asset:shape_triangle_thin",
+        "bin": "b1"
+      },
+      {
+        "id": "i6",
+        "sprite": "asset:shape_hexagon",
+        "bin": "b1"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-SHP-CLOSED"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -66,11 +91,21 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן, הִיא סְגוּרָה וְיֵשׁ לָהּ צְלָעוֹת יְשָׁרוֹת."
+          "v": "כֵּן! הַסְּגוּרוֹת עִם הַצְּלָעוֹת הַיְשָׁרוֹת בְּיַחַד."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-CLOSED",
+        "vo": "vo:fb.shp_closed",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -107,11 +142,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.shp_closed.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נֵלֵךְ בָּאֶצְבַּע מִסָּבִיב: חוֹזְרִים לַהַתְחָלָה בְּלִי לָצֵאת, וּבְלִי קַו עָקֹם?"
         }
       ]
     },
@@ -138,10 +173,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "זוֹ צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת?"
+    "altText": "סְגוּרָה, וְכׇל הַצְּלָעוֹת יְשָׁרוֹת? כֵּן — לְכָאן. לֹא — לְכָאן."
   }
 }

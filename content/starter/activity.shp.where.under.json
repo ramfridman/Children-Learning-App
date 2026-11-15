@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "shp.where.under",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "shapes",
@@ -51,7 +51,8 @@
       {
         "id": "o3",
         "sprite": "asset:pos_above",
-        "label": "מֵעַל"
+        "label": "מֵעַל",
+        "misconception": "M-SPACE-WORD"
       }
     ],
     "correct": "o2",

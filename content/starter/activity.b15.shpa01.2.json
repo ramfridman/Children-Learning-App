@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "b15.shpa01.2",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "shapes",
@@ -46,9 +46,9 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:shape_circle_red",
+        "sprite": "asset:shape_circle_blue",
         "label": "עִגּוּל",
-        "misconception": "M-SHP-ORIENT"
+        "misconception": "M-COL-ONEATTR"
       },
       {
         "id": "o2",
@@ -79,12 +79,12 @@
     },
     "incorrect": [
       {
-        "when": "misconception:M-SHP-ORIENT",
-        "vo": "vo:fb.shp_orient",
+        "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.col_oneattr",
         "caption": [
           {
             "t": "he",
-            "v": "צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה גַּם כְּשֶׁמְּסֹבְבִים אוֹתָהּ. בּוֹאוּ נִבְדֹּק."
+            "v": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע."
           }
         ]
       },

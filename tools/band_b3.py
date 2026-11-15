@@ -240,10 +240,34 @@ def extra_math():
 
 
 # ======================================================================================== shapes
+# M11 Stage 2 pilot (docs/milestones/M11-stage2.md §4): SHP-B-09 sorts. A wrong bin is M-SHP-FACE for every solid. The pyramid
+# has triangles on its sides and a square under it, so it is only in the sort that asks for "the flat shape on it", never in a
+# stamp sort. Hebrew is a draft by Claude, needs-editor.
+_FACE = dict(tag='M-SHP-FACE', h2='נַהֲפֹךְ אֶת הַגּוּף, וְנִסְתַּכֵּל עַל הַצַּד הַשָּׁטוּחַ שֶׁלּוֹ.', h2_shared='shp_face',
+             correct_text='כֵּן! כׇּל גּוּף עִם הַצּוּרָה הַשְּׁטוּחָה שֶׁלּוֹ.')
+B09_SORTS = {
+    1: dict(_FACE, bins=[{'sprite': 'shape_circle', 'label': 'עִגּוּל'}, {'sprite': 'shape_rect', 'label': 'מַלְבֵּן'}],
+            items=[['solid_cone', 1, 'M-SHP-FACE'], ['solid_box', 2, 'M-SHP-FACE'], ['solid_cylinder', 1, 'M-SHP-FACE']],
+            prompt='מַטְבִּיעִים כׇּל גּוּף בַּחוֹל. אֵיזוֹ צוּרָה נִשְׁאֶרֶת? מְמַיְּנִים.',
+            h3='הַגָּלִיל וְהֶחָרוּט מַשְׁאִירִים עִגּוּל, וְהַתֵּבָה מַלְבֵּן. עַכְשָׁו תּוֹרְכֶם.'),
+    2: dict(_FACE, bins=[{'sprite': 'shape_circle', 'label': 'עִגּוּל'}, {'sprite': 'shape_rect', 'label': 'מַלְבֵּן'},
+                         {'sprite': 'shape_triangle', 'label': 'מְשֻׁלָּשׁ'}],
+            items=[['solid_box', 2, 'M-SHP-FACE'], ['solid_pyramid', 3, 'M-SHP-FACE'], ['solid_cylinder', 1, 'M-SHP-FACE']],
+            prompt='אֵיזוֹ צוּרָה שְׁטוּחָה יֵשׁ עַל כׇּל גּוּף? מְמַיְּנִים.',
+            h3='עַל הַגָּלִיל עִגּוּל, עַל הַתֵּבָה מַלְבֵּן, וְעַל הַפִּירָמִידָה מְשֻׁלָּשׁ. עַכְשָׁו תּוֹרְכֶם.'),
+}
+B09_CIRCLE = dict(_FACE, bins=[{'sprite': 'shape_circle', 'label': 'מַשְׁאִיר עִגּוּל'}, {'sprite': 'clue_not_circle', 'label': 'לֹא עִגּוּל'}],
+                  items=[['solid_cone', 1, 'M-SHP-FACE'], ['solid_box', 2, 'M-SHP-FACE'], ['solid_cylinder', 1, 'M-SHP-FACE'],
+                         ['solid_pyramid', 2, 'M-SHP-FACE']],
+                  prompt='אֵיזֶה גּוּף מַשְׁאִיר עִגּוּל בַּחוֹל? לְכָאן. וּמִי לֹא — לְכָאן.',
+                  h3='הַגָּלִיל וְהֶחָרוּט מַשְׁאִירִים עִגּוּל. הַתֵּבָה וְהַפִּירָמִידָה — לֹא. עַכְשָׁו תּוֹרְכֶם.')
+
+
 def extra_shapes():
     u = Unit('band-b-extra-shapes', 'shapes',
              'Tracing the first shapes (T04) and matching a solid to its face (T16). Hebrew is a draft by Claude, needs-editor.', 60,
-             assets=['shape_circle', 'shape_square', 'shape_triangle', 'shape_rect', 'solid_cylinder', 'solid_cone', 'solid_pyramid', 'solid_box', 'solid_sphere'], prefix='x')
+             assets=['shape_circle', 'shape_square', 'shape_triangle', 'shape_rect', 'solid_cylinder', 'solid_cone', 'solid_pyramid', 'solid_box', 'solid_sphere',
+                     'clue_not_circle'], prefix='x')
     u.tag('M-SHP-FACE', ['SHP-B-09'], 'הילד לא רואה איזו צורה שטוחה יש על הגוף: את העיגול על הגליל, את המשולש על הפירמידה.',
           'להטביע בפלסטלינה בסיס של כוס, של קופסה ושל קונוס, ולראות איזו צורה נשארת.', ['concrete', 'pictorial'],
           'כְּשֶׁמַּטְבִּיעִים אֶת הַגּוּף בַּחוֹל, נִשְׁאֶרֶת צוּרָה. בּוֹאוּ נְתָאֵר לְעַצְמֵנוּ אֶת הַצּוּרָה.')
@@ -259,6 +283,9 @@ def extra_shapes():
              [('solid_cylinder', 'shape_circle'), ('solid_box', 'shape_rect')],
              [('solid_cone', 'shape_circle'), ('solid_pyramid', 'shape_triangle'), ('solid_box', 'shape_rect')]]
     for i, ps in enumerate(pairs):
+        if i in B09_SORTS:  # M11 Stage 2 pilot: the solids sorted by their face (same id, revision 2)
+            u.act('SHP-B-09', 'sort', revision=2, domain='shapes', **B09_SORTS[i])
+            continue
         order = list(range(len(ps)))
         order = order[1:] + order[:1] if i % 2 == 0 else order[::-1]
         u.act('SHP-B-09', 'match', domain='shapes', pairs=[[l, r] for l, r in ps], order=order, tag='M-SHP-FACE',
@@ -266,6 +293,9 @@ def extra_shapes():
               correct_text='כֵּן! כׇּל גּוּף עִם הַצּוּרָה שֶׁלּוֹ.')
     # B-15 addendum A2: which solid leaves a circle in the sand? The box leaves a square, and no sphere is offered
     for i, right in enumerate(['solid_cylinder', 'solid_cone']):
+        if i == 1:  # M11 Stage 2 pilot: "which solid leaves a circle?" as a sort (same id, revision 2; the reverse check stays)
+            u.act('SHP-B-09', 'sort', revision=2, domain='shapes', check='reverse', difficulty=0.6, **B09_CIRCLE)
+            continue
         u.act('SHP-B-09', 'pick', domain='shapes', prompt='מַטְבִּיעִים בַּחוֹל, כְּמוֹ חוֹתֶמֶת. אֵיזֶה גּוּף מַשְׁאִיר עִגּוּל?',
               options=place(right, ['solid_box'], i), correct=right, tags={'solid_box': 'M-SHP-FACE'}, check='reverse', difficulty=0.6,
               h3='מַטְבִּיעִים אֶת הַגּוּף וְרוֹאִים אֶת הַצּוּרָה שֶׁנִּשְׁאֶרֶת. עַכְשָׁו תּוֹרְכֶם.')

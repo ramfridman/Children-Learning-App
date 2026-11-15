@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "shp.world.rect",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "shapes",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.3
   },
@@ -25,37 +25,58 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה בְּצוּרַת מַלְבֵּן?"
+        "v": "מָה עָגֹל כְּמוֹ עִגּוּל — לְכָאן. מַה כְּמוֹ מַלְבֵּן — לְכָאן."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:plate",
-        "label": "צַלַּחַת"
+        "id": "b1",
+        "sprite": "asset:shape_circle",
+        "count": 1,
+        "label": "עִגּוּל"
       },
       {
-        "id": "o2",
-        "sprite": "asset:window",
-        "label": "חַלּוֹן"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:sign",
-        "label": "שֶׁלֶט"
+        "id": "b2",
+        "sprite": "asset:shape_rect",
+        "count": 1,
+        "label": "מַלְבֵּן"
       }
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:plate",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:window",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:coin",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:note_20",
+        "bin": "b2"
+      },
+      {
+        "id": "i5",
+        "sprite": "asset:clock_3",
+        "bin": "b1"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -64,7 +85,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה חַלּוֹן."
+          "v": "כֵּן! מְצָאתֶם עִגּוּלִים וּמַלְבֵּנִים."
         }
       ]
     },
@@ -105,11 +126,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.shp_world.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נַעֲבֹר בָּאֶצְבַּע מִסָּבִיב לַדָּבָר: אֵיזוֹ צוּרָה יוֹצֵאת?"
         }
       ]
     },
@@ -120,7 +141,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "זֶה חַלּוֹן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+          "v": "הַצַּלַּחַת עֲגֻלָּה, וְהַחַלּוֹן הוּא מַלְבֵּן. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -136,10 +157,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child sorts everyday things by the shape they have",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה בְּצוּרַת מַלְבֵּן?"
+    "altText": "מָה עָגֹל כְּמוֹ עִגּוּל — לְכָאן. מַה כְּמוֹ מַלְבֵּן — לְכָאן."
   }
 }

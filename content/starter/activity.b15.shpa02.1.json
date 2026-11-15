@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "b15.shpa02.1",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "shapes",
@@ -72,11 +72,11 @@
     "incorrect": [
       {
         "when": "misconception:M-SHP-CLOSED",
-        "vo": "vo:fb.shp_closed",
+        "vo": "vo:fb.closed.not_circle",
         "caption": [
           {
             "t": "he",
-            "v": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק."
+            "v": "עִגּוּל עָגֹל מִכׇּל הַצְּדָדִים. לַצּוּרָה הַזֹּאת יֵשׁ צַד יָשָׁר. בּוֹאוּ נִבְדֹּק."
           }
         ]
       },

@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.shpb08.2",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "shapes",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.44
   },
@@ -25,37 +25,58 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה הֶחָרוּט?"
+        "v": "אֵיזֶה גּוּף מִתְגַּלְגֵּל? לְכָאן. וּמִי לֹא — לְכָאן."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:solid_pyramid",
-        "label": "פִּירָמִידָה"
+        "id": "b1",
+        "sprite": "asset:ball_red",
+        "count": 1,
+        "label": "מִתְגַּלְגֵּל"
       },
       {
-        "id": "o2",
-        "sprite": "asset:solid_cone",
-        "label": "חָרוּט"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:solid_box",
-        "label": "תֵּבָה"
+        "id": "b2",
+        "sprite": "asset:block",
+        "count": 1,
+        "label": "לֹא מִתְגַּלְגֵּל"
       }
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:solid_sphere",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:solid_box",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:solid_cylinder",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:solid_pyramid",
+        "bin": "b2"
+      },
+      {
+        "id": "i5",
+        "sprite": "asset:solid_cone",
+        "bin": "b1"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -64,7 +85,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה הֶחָרוּט."
+          "v": "כֵּן! מַה שֶּׁיֵּשׁ לוֹ צַד עָגֹל מִתְגַּלְגֵּל."
         }
       ]
     },
@@ -105,11 +126,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.shp_solid_roll.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נְדַמְיֵן שֶׁדּוֹחֲפִים כׇּל גּוּף: יֵשׁ לוֹ צַד עָגֹל?"
         }
       ]
     },
@@ -120,7 +141,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הֶחָרוּט — נִסְתַּכֵּל עַל הַצּוּרָה שֶׁלּוֹ. עַכְשָׁו תּוֹרְכֶם."
+          "v": "גָּלִיל, חָרוּט וְכַדּוּר מִתְגַּלְגְּלִים, כִּי יֵשׁ לָהֶם צַד עָגֹל. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -136,10 +157,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה הֶחָרוּט?"
+    "altText": "אֵיזֶה גּוּף מִתְגַּלְגֵּל? לְכָאן. וּמִי לֹא — לְכָאן."
   }
 }

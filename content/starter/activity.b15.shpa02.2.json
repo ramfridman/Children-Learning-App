@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "b15.shpa02.2",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "shapes",
@@ -45,8 +45,9 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:shape_circle_orange",
-        "label": "עִגּוּל"
+        "sprite": "asset:shape_rect_green",
+        "label": "מַלְבֵּן",
+        "misconception": "M-SHP-SQRECT"
       },
       {
         "id": "o3",

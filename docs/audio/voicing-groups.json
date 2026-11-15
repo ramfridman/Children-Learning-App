@@ -147,6 +147,7 @@
     "vo:celebrate.nothing_there",
     "vo:celebrate.numbers_and_things",
     "vo:celebrate.one_more_one_less",
+    "vo:celebrate.one_shadow",
     "vo:celebrate.pairs",
     "vo:celebrate.patterns",
     "vo:celebrate.patterns_again",
@@ -188,6 +189,7 @@
     "vo:celebrate.shapes_around_us",
     "vo:celebrate.shapes_around_us_again",
     "vo:celebrate.shapes_around_us_again_1_b15",
+    "vo:celebrate.shapes_make_shapes",
     "vo:celebrate.sharing",
     "vo:celebrate.sharing_again",
     "vo:celebrate.solid_and_face",
@@ -239,7 +241,7 @@
     "vo:celebrate.write_numbers",
     "vo:celebrate.zero_sums"
    ],
-   "chars": 5678
+   "chars": 5742
   },
   {
    "name": "numbers-A",
@@ -1171,6 +1173,7 @@
     "vo:b15.shpa10.2.correct",
     "vo:b15.shpa10.2.h3",
     "vo:b15.shpa10.2.prompt",
+    "vo:fb.closed.not_circle",
     "vo:fb.shp_closed",
     "vo:fb.shp_orient",
     "vo:fb.shp_proto",
@@ -1179,6 +1182,13 @@
     "vo:fb.sort_shift.shape",
     "vo:fb.space_word",
     "vo:hint.sb.h2",
+    "vo:hint.shp_line.h2",
+    "vo:hint.shp_roll.h2",
+    "vo:hint.shp_sorter.h2",
+    "vo:hint.shp_square_rect.h2",
+    "vo:hint.shp_square_turn.h2",
+    "vo:hint.shp_triangle.h2",
+    "vo:hint.shp_world.h2",
     "vo:hint.trace.h2",
     "vo:shp.any.big.circle.correct",
     "vo:shp.any.big.circle.h3",
@@ -1358,7 +1368,7 @@
     "vo:x.shpa02.6.h3",
     "vo:x.shpa02.6.prompt"
    ],
-   "chars": 5947
+   "chars": 7496
   },
   {
    "name": "logic-A",
@@ -2706,7 +2716,7 @@
     "vo:x.numb07.9.h3",
     "vo:x.numb07.9.prompt"
    ],
-   "chars": 36814
+   "chars": 36826
   },
   {
    "name": "colors-B",
@@ -2953,6 +2963,30 @@
     "vo:b.shpb04.9.correct",
     "vo:b.shpb04.9.h3",
     "vo:b.shpb04.9.prompt",
+    "vo:b.shpb05.1.correct",
+    "vo:b.shpb05.1.h3",
+    "vo:b.shpb05.1.prompt",
+    "vo:b.shpb05.2.correct",
+    "vo:b.shpb05.2.h3",
+    "vo:b.shpb05.2.prompt",
+    "vo:b.shpb05.3.correct",
+    "vo:b.shpb05.3.h3",
+    "vo:b.shpb05.3.prompt",
+    "vo:b.shpb05.4.correct",
+    "vo:b.shpb05.4.h3",
+    "vo:b.shpb05.4.prompt",
+    "vo:b.shpb06.1.correct",
+    "vo:b.shpb06.1.h3",
+    "vo:b.shpb06.1.prompt",
+    "vo:b.shpb06.2.correct",
+    "vo:b.shpb06.2.h3",
+    "vo:b.shpb06.2.prompt",
+    "vo:b.shpb06.3.correct",
+    "vo:b.shpb06.3.h3",
+    "vo:b.shpb06.3.prompt",
+    "vo:b.shpb06.4.correct",
+    "vo:b.shpb06.4.h3",
+    "vo:b.shpb06.4.prompt",
     "vo:b.shpb08.1.correct",
     "vo:b.shpb08.1.h3",
     "vo:b.shpb08.1.prompt",
@@ -2982,6 +3016,14 @@
     "vo:b.shpb08.9.prompt",
     "vo:fb.shp_face",
     "vo:fb.sqrect.square_is_rect",
+    "vo:hint.shp_closed.h2",
+    "vo:hint.shp_equal.h2",
+    "vo:hint.shp_face.h2",
+    "vo:hint.shp_shadow.h2",
+    "vo:hint.shp_sides.h2",
+    "vo:hint.shp_solid_name.h2",
+    "vo:hint.shp_solid_roll.h2",
+    "vo:hint.shp_twice.h2",
     "vo:x.shpb09.1.correct",
     "vo:x.shpb09.1.h3",
     "vo:x.shpb09.1.prompt",
@@ -3001,7 +3043,7 @@
     "vo:x.shpb09.6.h3",
     "vo:x.shpb09.6.prompt"
    ],
-   "chars": 5722
+   "chars": 7364
   },
   {
    "name": "logic-B",
@@ -4188,7 +4230,7 @@
     "vo:fb.rod_is_ten",
     "vo:fb.sign_dir"
    ],
-   "chars": 24167
+   "chars": 24133
   },
   {
    "name": "math-C",
@@ -4377,7 +4419,7 @@
     "vo:fb.sub_order",
     "vo:fb.sub_smallbig"
    ],
-   "chars": 12456
+   "chars": 12443
   }
  ]
 }

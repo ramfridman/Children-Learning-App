@@ -28,10 +28,12 @@
     }
   ],
   "representations": [
-    "pictorial"
+    "pictorial",
+    "concrete"
   ],
   "misconceptions": [
-    "M-SHP-CLOSED"
+    "M-SHP-CLOSED",
+    "M-SHP-PROTO"
   ],
   "retention": {
     "targetRetention": 0.9,

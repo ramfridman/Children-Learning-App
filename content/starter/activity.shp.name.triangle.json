@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "shp.name.triangle",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "shapes",
@@ -39,8 +39,9 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:shape_circle",
-        "label": "עִגּוּל"
+        "sprite": "asset:shape_curved",
+        "label": "צוּרָה עֲקֻמָּה",
+        "misconception": "M-SHP-CLOSED"
       },
       {
         "id": "o2",

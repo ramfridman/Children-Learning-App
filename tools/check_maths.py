@@ -720,6 +720,95 @@ def shape_member(info, shape, inclusive):
     return False
 
 
+# M11 Stage 2 (the Shape Forest sorts): what each drawn shape, line, solid and thing is, for the sorts by a property. None is "the
+# rule cannot say" (the plain triangle's sides are 82, 82 and 80, so it is never offered for "all sides equal").
+SOLID_ROLLS = {'sphere': True, 'cylinder': True, 'cone': True, 'box': False, 'pyramid': False}
+FACE = {'cylinder': 'circle', 'cone': 'circle', 'box': 'rect', 'pyramid': 'triangle'}
+THING_SHAPE = {'plate': 'circle', 'coin': 'circle', 'clock': 'circle', 'window': 'rect', 'note': 'rect', 'sign': 'triangle'}
+
+
+def _sides(i):
+    return SIDES.get(i.get('shape'))
+
+
+def _closed_straight(i):
+    if i.get('shape') in ('open', 'curved', 'circle'):
+        return False
+    return True if i.get('shape') in SIDES else None
+
+
+def _equal_sides(i):
+    s, v = i.get('shape'), i.get('variant')
+    if s in ('square', 'quad', 'pentagon', 'hexagon'):
+        return True
+    if s == 'rect' or (s == 'triangle' and v == 'thin'):
+        return False
+    return None
+
+
+def _straight(i):
+    n = i['name']
+    if n.startswith('line_'):
+        return n.startswith('line_straight')
+    if i.get('shape') == 'circle':
+        return False
+    return True if i.get('shape') in SIDES else None
+
+
+def _rolls(i):
+    n = i['name']
+    if i.get('kind') == 'ball' or n == 'apple':
+        return True
+    if n == 'block' or n.startswith('tower_'):
+        return False
+    return SOLID_ROLLS.get(i.get('solid'))
+
+
+def _thing_shape(i):
+    if i.get('solid'):
+        return FACE.get(i['solid'])
+    return THING_SHAPE.get(i.get('kind') if i.get('kind') in ('clock', 'note') else i['name'])
+
+
+def shape_property_bins(it, bins):
+    """The rule of a Shape Forest sort by a property, read from its bins: (its name, item info -> the bin id or None), or None."""
+    if it.domain != 'shapes' or len(bins) < 2:
+        return None
+    ids = [b['id'] for b in bins]
+    names = [(b.get('sprite') or '')[6:] for b in bins]
+    first = plain(bins[0].get('label', ''))
+
+    def by(fn, values):
+        def test(i):
+            v = fn(i)
+            return None if v is None or v not in values else ids[values.index(v)]
+        return test
+    if all(n == 'stick_long' for n in names):
+        return 'sides', by(_sides, [b.get('count', 1) for b in bins])
+    if names == ['tick', 'cross']:
+        return 'closed with straight sides', by(_closed_straight, [True, False])
+    if len(bins) == 2 and names[1] == 'clue_not_' + names[0].replace('shape_', ''):
+        shape = sprite_info(names[0]).get('shape')
+        return 'is a %s' % shape, by(lambda i: shape_member(i, shape, False) if i.get('kind') == 'shape' else
+                                      (FACE.get(i.get('solid')) == shape if i.get('solid') else None), [True, False])
+    if first.startswith('כל הצלעות שוות'):
+        return 'equal sides', by(_equal_sides, [True, False])
+    if names == ['line_straight', 'line_curved']:
+        return 'straight or curved', by(_straight, [True, False])
+    if first == 'מתגלגל':
+        return 'rolls', by(_rolls, [True, False])
+    if all(n.startswith('solid_') for n in names):
+        kinds = [sprite_info(n)['solid'] for n in names]
+        return 'solid', by(lambda i: 'sphere' if i.get('kind') == 'ball' else i.get('solid'), kinds)
+    if all(sprite_info(n).get('kind') == 'shape' for n in names):
+        shapes = [sprite_info(n)['shape'] for n in names]
+        if all(sprite_info((x.get('sprite') or '')[6:]).get('kind') != 'shape' for x in it.scene.get('items') or []):
+            return 'shape of the thing', by(_thing_shape, shapes)
+        if sorted(shapes) == ['quad', 'triangle']:
+            return 'sides', by(_sides, [SIDES[s] for s in shapes])
+    return None
+
+
 def seq_value(info):
     """The place of a sprite in a series: a size, a tower's height, a shade's darkness."""
     if 'size' in info:
@@ -1864,6 +1953,17 @@ def check_sort(f, it):
             f.add('WRONG', it, 'unsolvable', '%d items do not share fairly between %d' % (len(items), len(bins)))
         return [len(items)]
     binfo = {b['id']: sprite_info(b.get('sprite')) for b in bins}
+    prop = shape_property_bins(it, bins)
+    if prop:  # M11 Stage 2: the Shape Forest sorts by a property (sides, closed, equal sides, straight, rolls, face, shape of a thing)
+        name, test = prop
+        for x in items:
+            got = test(sprite_info(x.get('sprite')))
+            if got is None:
+                f.add('UNCHECKED', it, 'sort', '%s (%s): the %s rule does not know it' % (x['id'], x.get('sprite'), name))
+            elif got != x.get('bin'):
+                f.add('WRONG', it, 'answer', '%s (%s) sorted by %s belongs in %s, the item puts it in %s' %
+                      (x['id'], sprite_info(x.get('sprite'))['name'], name, got, x.get('bin')))
+        return []
     if it.has('אם הצורה', 'כל השאר'):
         cs, ss = colours_in(it.cap), shapes_in(it.cap)
         rule = (lambda i: i.get('colour') == cs[0]) if cs else ((lambda i: shape_member(i, ss[0], True)) if ss else None)

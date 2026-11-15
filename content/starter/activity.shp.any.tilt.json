@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "shp.any.tilt",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "shapes",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.35
   },
@@ -25,39 +25,64 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה הָרִבּוּעַ?"
+        "v": "רִבּוּעִים לְכָאן, וּמַה שֶּׁלֹּא רִבּוּעַ — לְכָאן."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:shape_circle",
-        "label": "עִגּוּל",
-        "misconception": "M-SHP-ORIENT"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:shape_square_tilt",
+        "id": "b1",
+        "sprite": "asset:shape_square",
+        "count": 1,
         "label": "רִבּוּעַ"
       },
       {
-        "id": "o3",
-        "sprite": "asset:shape_rect",
-        "label": "מַלְבֵּן",
-        "misconception": "M-SHP-SQRECT"
+        "id": "b2",
+        "sprite": "asset:clue_not_square",
+        "count": 1,
+        "label": "לֹא רִבּוּעַ"
       }
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:shape_square_tilt",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:shape_rect_green",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:shape_square_red",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:shape_triangle_blue",
+        "bin": "b2"
+      },
+      {
+        "id": "i5",
+        "sprite": "asset:shape_square_yellow",
+        "bin": "b1"
+      },
+      {
+        "id": "i6",
+        "sprite": "asset:shape_rect",
+        "bin": "b2"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-SHP-ORIENT"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -66,7 +91,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה רִבּוּעַ."
+          "v": "כֵּן! כׇּל הָרִבּוּעִים בְּיַחַד."
         }
       ]
     },
@@ -78,16 +103,6 @@
           {
             "t": "he",
             "v": "צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה גַּם כְּשֶׁמְּסֹבְבִים אוֹתָהּ. בּוֹאוּ נִבְדֹּק."
-          }
-        ]
-      },
-      {
-        "when": "misconception:M-SHP-SQRECT",
-        "vo": "vo:fb.shp_sqrect",
-        "caption": [
-          {
-            "t": "he",
-            "v": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בַּמַּלְבֵּן הַזֶּה יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת."
           }
         ]
       },
@@ -127,11 +142,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.shp_square_turn.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "רִבּוּעַ מְסֻבָּב הוּא עֲדַיִן רִבּוּעַ: אַרְבַּע צְלָעוֹת שָׁווֹת."
         }
       ]
     },
@@ -142,7 +157,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "זֶה רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+          "v": "גַּם רִבּוּעַ מְסֻבָּב הוּא רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -158,10 +173,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child sorts squares in any turn from shapes that are not squares",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה הָרִבּוּעַ?"
+    "altText": "רִבּוּעִים לְכָאן, וּמַה שֶּׁלֹּא רִבּוּעַ — לְכָאן."
   }
 }

@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "b15.shpa01.1",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "shapes",
@@ -53,11 +53,12 @@
       {
         "id": "o2",
         "sprite": "asset:shape_circle_green",
-        "label": "עִגּוּל"
+        "label": "עִגּוּל",
+        "misconception": "M-COL-ONEATTR"
       },
       {
         "id": "o3",
-        "sprite": "asset:shape_triangle_green",
+        "sprite": "asset:shape_triangle_red",
         "label": "מְשֻׁלָּשׁ"
       }
     ],
@@ -77,6 +78,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.col_oneattr",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע."
+          }
+        ]
+      },
       {
         "when": "misconception:M-SHP-ORIENT",
         "vo": "vo:fb.shp_orient",

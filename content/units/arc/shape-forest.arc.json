@@ -1,0 +1,2562 @@
+{
+ "schema": "lesson-arc-source/v0",
+ "land": "shapes",
+ "host": "kubi",
+ "review": "needs-editor",
+ "status": "M11 Stage 2 pilot (step 2.4a), authored by the curriculum-expert on 2026-11-15. Data for the developer; the app does not read it yet.",
+ "spec": "docs/milestones/M11-stage2.md §2, §7.4 (the format of this file) and §8",
+ "howToRead": [
+  "shows: one Show per skill. `template` is the hands-on template the Show plays on and `scene` is its scene in pack form. `steps` are the moves in order, `by` host or child; the last step is always the child's (`handOver: last`). The key line plays at the step marked `say: key`. Other step keys (trace, count, sticks, walk, push, stack, turn, stamp) name the motion of the host hand; `picture` describes it for the design-director.",
+  "lines: at most three host lines, roles open, key (the reminder replays it, at most 8 seconds) and handover. Plain Hebrew drafts without nikud, needs-editor; the hebrew-text-editor writes the pointed text and the voice text. Until the owner voices them each shows as a bubble with a pause.",
+  "teaches: the words the Show says, as the items label them (rule W1 compares the option labels of the skill's scored items with them).",
+  "lessons: every Shape Forest lesson in parts. `recall` lists candidate ids of the prerequisite skill (served only once that skill was started); `together` reuses a pool item with `lead`, the number of steps the host does first; `alone` is the pool, rung 0 first; `use` is the check that ends the lesson. The stage caps (`caps`, spec §2.5) decide how much of the pool one visit serves.",
+  "hostLines: Kubi's lines that belong to no one skill: the Together lead-in per template, the hand-over to the companion when Alone starts, and the replies of the \"show me\" hand."
+ ],
+ "caps": {
+  "P1": {
+   "screens": 5,
+   "minutes": 3
+  },
+  "P2": {
+   "screens": 6,
+   "minutes": 4
+  },
+  "P3": {
+   "screens": 8,
+   "minutes": 5
+  },
+  "P4": {
+   "screens": 9,
+   "minutes": 6,
+   "scoredItems": 7
+  }
+ },
+ "shows": [
+  {
+   "id": "show.shp-a-01",
+   "skill": "SHP-A-01",
+   "band": "A",
+   "purpose": "show",
+   "template": "shape_builder",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "aspect": 1.091,
+    "slots": [
+     {
+      "id": "s1",
+      "sprite": "asset:shape_circle",
+      "x": 0.0,
+      "y": 0.0,
+      "w": 0.4048,
+      "h": 0.4416,
+      "rot": 0
+     },
+     {
+      "id": "s2",
+      "sprite": "asset:shape_square",
+      "x": 0.5952,
+      "y": 0.0,
+      "w": 0.4048,
+      "h": 0.4416,
+      "rot": 0
+     },
+     {
+      "id": "s3",
+      "sprite": "asset:shape_triangle",
+      "x": 0.2976,
+      "y": 0.5584,
+      "w": 0.4048,
+      "h": 0.4416,
+      "rot": 0
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "piece": "asset:shape_circle",
+     "slot": "s1",
+     "trace": "hole",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "piece": "asset:shape_square",
+     "slot": "s2"
+    },
+    {
+     "by": "child",
+     "piece": "asset:shape_triangle",
+     "slot": "s3"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_a_01.open",
+     "text": "יש לי קופסה עם חורים. כל צורה נכנסת לחור שלה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_a_01.key",
+     "text": "אני מעביר אצבע מסביב לחור. עגול? אז נכנס העיגול.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_a_01.handover",
+     "text": "נשאר משולש אחד. תכניסו אותו לחור שלו.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "עִגּוּל",
+    "רִבּוּעַ",
+    "מְשֻׁלָּשׁ"
+   ],
+   "picture": "the shape sorter of shp.match.circle: three grey holes; the host finger circles the round hole before the circle drops in",
+   "status": "buildable on today's template once 2.1 lands"
+  },
+  {
+   "id": "show.shp-a-02",
+   "skill": "SHP-A-02",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:shape_circle",
+      "label": "עִגּוּל"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:shape_square",
+      "label": "רִבּוּעַ"
+     },
+     {
+      "id": "b3",
+      "sprite": "asset:shape_triangle",
+      "label": "מְשֻׁלָּשׁ"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:shape_circle_yellow",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:shape_square_red",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:shape_triangle_blue",
+      "bin": "b3"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:shape_circle_green",
+      "bin": "b1"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b3"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b1"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_a_02.open",
+     "text": "לכל צורה יש שם. תקשיבו.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_a_02.key",
+     "text": "זה עיגול. זה ריבוע. וזה משולש.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_a_02.handover",
+     "text": "נשאר עוד עיגול. שימו אותו עם העיגולים.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "עִגּוּל",
+    "רִבּוּעַ",
+    "מְשֻׁלָּשׁ"
+   ],
+   "picture": "three named bins; each shape lands as the key line says its name (three moves, one per word)",
+   "status": "buildable on today's template once 2.1 lands"
+  },
+  {
+   "id": "show.shp-a-03",
+   "skill": "SHP-A-03",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:shape_triangle",
+      "label": "מְשֻׁלָּשׁ"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:clue_not_triangle",
+      "label": "לֹא מְשֻׁלָּשׁ"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:shape_triangle_thin",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:shape_triangle_down",
+      "bin": "b1"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:shape_open",
+      "bin": "b2"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:shape_triangle_red",
+      "bin": "b1"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "trace": "sides",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b1"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b2",
+     "trace": "gap"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b1"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_a_03.open",
+     "text": "אני בודק משולשים. לאט לאט.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_a_03.key",
+     "text": "שלוש צלעות ישרות, וסגור: משולש. גם דק, וגם הפוך. צורה פתוחה — לא.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_a_03.handover",
+     "text": "עכשיו אתם. לאן הולך המשולש האחרון?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "מְשֻׁלָּשׁ",
+    "לֹא מְשֻׁלָּשׁ",
+    "צוּרָה פְּתוּחָה"
+   ],
+   "picture": "the host hand runs along each side of the thin triangle (each side lights in turn), then stops at the gap of the open figure",
+   "status": "buildable on today's template once 2.1 lands"
+  },
+  {
+   "id": "show.shp-a-04",
+   "skill": "SHP-A-04",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:shape_square",
+      "label": "רִבּוּעַ"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:clue_not_square",
+      "label": "לֹא רִבּוּעַ"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:shape_square_tilt",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:shape_rect",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:shape_square_red",
+      "bin": "b1"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2",
+     "sticks": true
+    },
+    {
+     "by": "child",
+     "item": "i3",
+     "bin": "b1"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_a_04.open",
+     "text": "זה מלבן, וזה ריבוע. בואו נשווה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_a_04.key",
+     "text": "בריבוע כל הצלעות שוות, גם כשהוא מסובב. במלבן הארוך שתיים ארוכות ושתיים קצרות.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_a_04.handover",
+     "text": "הריבוע האחרון שלכם.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "רִבּוּעַ",
+    "מַלְבֵּן",
+    "לֹא רִבּוּעַ"
+   ],
+   "picture": "sticks laid on the sides of the long rectangle, two long and two short (the sticks picture of the SHP-B-03 hint); W3: nothing says a square is not a rectangle",
+   "status": "buildable on today's template once 2.1 lands"
+  },
+  {
+   "id": "show.shp-a-05",
+   "skill": "SHP-A-05",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:shape_circle",
+      "label": "עִגּוּל"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:shape_rect",
+      "label": "מַלְבֵּן"
+     },
+     {
+      "id": "b3",
+      "sprite": "asset:shape_triangle",
+      "label": "מְשֻׁלָּשׁ"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:plate",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:window",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:sign",
+      "bin": "b3"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "trace": "outline",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2",
+     "trace": "outline"
+    },
+    {
+     "by": "child",
+     "item": "i3",
+     "bin": "b3"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_a_05.open",
+     "text": "גם לדברים בבית יש צורה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_a_05.key",
+     "text": "אני מעביר אצבע מסביב לצלחת: עיגול! ומסביב לחלון: מלבן.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_a_05.handover",
+     "text": "ולשלט יש צורה. לאן הוא הולך?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "עִגּוּל",
+    "מַלְבֵּן",
+    "מְשֻׁלָּשׁ",
+    "צַלַּחַת",
+    "חַלּוֹן",
+    "שֶׁלֶט"
+   ],
+   "picture": "the host finger traces the rim of the plate and the frame of the window; the traced line stays as a drawn circle and rectangle beside the thing",
+   "status": "buildable on today's template once 2.1 lands"
+  },
+  {
+   "id": "show.shp-a-06",
+   "skill": "SHP-A-06",
+   "band": "A",
+   "purpose": "show",
+   "template": "shape_builder",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "aspect": 0.588,
+    "slots": [
+     {
+      "id": "s1",
+      "sprite": "asset:shape_square_blue",
+      "x": 0.0,
+      "y": 0.4118,
+      "w": 1.0,
+      "h": 0.5882,
+      "rot": 0
+     },
+     {
+      "id": "s2",
+      "sprite": "asset:shape_triangle_green",
+      "x": 0.0,
+      "y": 0.0,
+      "w": 1.0,
+      "h": 0.5882,
+      "rot": 0
+     },
+     {
+      "id": "s3",
+      "sprite": "asset:shape_rect_orange",
+      "x": 0.2571,
+      "y": 0.6471,
+      "w": 0.4857,
+      "h": 0.2857,
+      "rot": 90
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "piece": "asset:shape_square_blue",
+     "slot": "s1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "piece": "asset:shape_triangle_green",
+     "slot": "s2"
+    },
+    {
+     "by": "child",
+     "piece": "asset:shape_rect_orange",
+     "slot": "s3"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_a_06.open",
+     "text": "נבנה בית מצורות.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_a_06.key",
+     "text": "כל צורה נכנסת לצל שדומה לה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_a_06.handover",
+     "text": "נשארה הדלת. איפה הצל שלה?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "the house of shp.build.house",
+   "status": "buildable on today's template once 2.1 lands",
+   "note": "curriculum §4.4: in Band A every piece is outlined; today every place is one grey shadow (templateNeeds, outlines)."
+  },
+  {
+   "id": "show.shp-a-07",
+   "skill": "SHP-A-07",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:ball_red",
+      "label": "מִתְגַּלְגֵּל"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:solid_box",
+      "label": "נֶעֱרָם"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:ball_blue",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:block",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:ball_yellow",
+      "bin": "b1"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "push": true,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2",
+     "stack": true
+    },
+    {
+     "by": "child",
+     "item": "i3",
+     "bin": "b1"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_a_07.open",
+     "text": "אני דוחף לאט, ומסתכל.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_a_07.key",
+     "text": "הכדור עגול, והוא מתגלגל. הקופסה שטוחה, ואפשר לערום אותה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_a_07.handover",
+     "text": "עכשיו אתם. לאן הולך הכדור?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "מִתְגַּלְגֵּל",
+    "נֶעֱרָם",
+    "כַּדּוּר",
+    "קֻפְסָה"
+   ],
+   "picture": "the same push for both (as the tap hint of shp.solid.rolls): the ball rolls away, the box stays; a second box stacks on the first",
+   "status": "buildable on today's template once 2.1 lands"
+  },
+  {
+   "id": "show.shp-a-08",
+   "skill": "SHP-A-08",
+   "band": "A",
+   "purpose": "show",
+   "template": "listen_do",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "drag": true,
+    "object": "asset:ball_red",
+    "places": [
+     {
+      "id": "on",
+      "sprite": "asset:pos_on"
+     },
+     {
+      "id": "under",
+      "sprite": "asset:pos_under"
+     },
+     {
+      "id": "next",
+      "sprite": "asset:pos_next"
+     },
+     {
+      "id": "in",
+      "sprite": "asset:pos_in"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "to": "on",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "to": "under"
+    },
+    {
+     "by": "host",
+     "to": "next"
+    },
+    {
+     "by": "child",
+     "to": "in"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_a_08.open",
+     "text": "הכדור שלי הולך למקומות.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_a_08.key",
+     "text": "על הקופסה. מתחת לשולחן. ליד הקופסה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_a_08.handover",
+     "text": "ועכשיו אתם: שימו את הכדור בתוך הקופסה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "עַל",
+    "מִתַּחַת",
+    "לְיַד",
+    "בְּתוֹךְ"
+   ],
+   "picture": "a ball dragged onto a box, under a table and next to the box; the word appears by it as it lands",
+   "status": "waits for step 2.2c (the drag mode of listen_do in the lands)",
+   "note": "`scene` gives the moves only; its form is the listen_do drag mode the developer defines in 2.2c. מֵעַל is taught by a second reminder line later."
+  },
+  {
+   "id": "show.shp-a-10",
+   "skill": "SHP-A-10",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:line_straight",
+      "label": "יָשָׁר"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:line_curved",
+      "label": "עָקֹם"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:line_straight_flat",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:line_curved_wave",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:line_curved_arc",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "trace": "line",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2",
+     "trace": "line"
+    },
+    {
+     "by": "child",
+     "item": "i3",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_a_10.open",
+     "text": "אני הולך על הקו עם האצבע.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_a_10.key",
+     "text": "הקו הזה ישר. הקו הזה מתעקם: הוא עקום.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_a_10.handover",
+     "text": "ומה עם הקו האחרון?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "יָשָׁר",
+    "עָקֹם",
+    "קַו יָשָׁר",
+    "קַו עָקֹם"
+   ],
+   "picture": "the host finger walks each line: a steady glide on the straight one, a bending path on the wave",
+   "status": "buildable on today's template once 2.1 lands"
+  },
+  {
+   "id": "show.shp-b-01",
+   "skill": "SHP-B-01",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:shape_triangle",
+      "label": "מְשֻׁלָּשׁ"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:shape_quad",
+      "label": "מְרֻבָּע"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:shape_triangle_thin",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:shape_square_tilt",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:shape_rect",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "count": "sides",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2",
+     "count": "sides"
+    },
+    {
+     "by": "child",
+     "item": "i3",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_b_01.open",
+     "text": "סופרים צלעות, ויודעים את השם.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_b_01.key",
+     "text": "שלוש צלעות: משולש. ארבע: מרובע. חמש: מחומש. שש: משושה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_b_01.handover",
+     "text": "ספרו את הצלעות של האחרון.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "מְשֻׁלָּשׁ",
+    "מְרֻבָּע",
+    "מְחֻמָּשׁ",
+    "מְשֻׁשֶּׁה"
+   ],
+   "picture": "each side lights and takes a number badge as the host counts (the badge marks of B-40)",
+   "status": "buildable on today's template once 2.1 lands"
+  },
+  {
+   "id": "show.shp-b-02",
+   "skill": "SHP-B-02",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:stick_long",
+      "label": "שָׁלוֹשׁ צְלָעוֹת",
+      "count": 3
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:stick_long",
+      "label": "אַרְבַּע צְלָעוֹת",
+      "count": 4
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:shape_triangle_down",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:shape_square_tilt",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:shape_rect_green",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "count": "sides",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2",
+     "count": "sides"
+    },
+    {
+     "by": "child",
+     "item": "i3",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_b_02.open",
+     "text": "אני סופר כל צלע פעם אחת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_b_02.key",
+     "text": "אחת, שתיים, שלוש: שלוש צלעות, כמו שלושה מקלות.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_b_02.handover",
+     "text": "ספרו את הצלעות של המלבן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "צְלָעוֹת",
+    "שָׁלוֹשׁ צְלָעוֹת",
+    "אַרְבַּע צְלָעוֹת"
+   ],
+   "picture": "a counted side lifts off as a stick and lies down beside the three sticks of its bin",
+   "status": "buildable on today's template once 2.1 lands"
+  },
+  {
+   "id": "show.shp-b-03",
+   "skill": "SHP-B-03",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:shape_quad",
+      "label": "כׇּל הַצְּלָעוֹת שָׁווֹת"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:shape_rect",
+      "label": "לֹא כֻּלָּן שָׁווֹת"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:shape_square_blue",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:shape_rect_green",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:shape_square_tilt",
+      "bin": "b1"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "sticks": true,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2",
+     "sticks": true
+    },
+    {
+     "by": "child",
+     "item": "i3",
+     "bin": "b1"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_b_03.open",
+     "text": "אני שם מקל על כל צלע.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_b_03.key",
+     "text": "בריבוע כל המקלות שווים, גם כשהוא מסובב. במלבן הזה לא.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_b_03.handover",
+     "text": "ריבוע מסובב. לאן הוא הולך?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "כׇּל הַצְּלָעוֹת שָׁווֹת",
+    "רִבּוּעַ",
+    "מַלְבֵּן"
+   ],
+   "picture": "sticks laid on the sides, then lined up under the shape to compare their lengths",
+   "status": "buildable on today's template once 2.1 lands"
+  },
+  {
+   "id": "show.shp-b-04",
+   "skill": "SHP-B-04",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:tick",
+      "label": "כֵּן"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:cross",
+      "label": "לֹא"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:shape_pentagon",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:shape_open",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:shape_curved",
+      "bin": "b2"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:shape_hexagon",
+      "bin": "b1"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "walk": "around",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2",
+     "walk": "gap"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b2",
+     "walk": "curve"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b1"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_b_04.open",
+     "text": "אני הולך מסביב לצורה, כמו נמלה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_b_04.key",
+     "text": "חוזרים להתחלה, וכל הקווים ישרים: כן. יש פתח, או קו עקום: לא.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_b_04.handover",
+     "text": "המשושה האחרון. כן או לא?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "סְגוּרָה",
+    "כֵּן",
+    "לֹא",
+    "צוּרָה פְּתוּחָה",
+    "צוּרָה עֲקֻמָּה"
+   ],
+   "picture": "an ant walks round the outline: it comes home on the pentagon, walks out through the gap of the open figure, slides along the curve",
+   "status": "buildable on today's template once 2.1 lands"
+  },
+  {
+   "id": "show.shp-b-05",
+   "skill": "SHP-B-05",
+   "band": "B",
+   "purpose": "show",
+   "template": "shape_builder",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "aspect": 0.885,
+    "slots": [
+     {
+      "id": "s1",
+      "sprite": "asset:shape_square_blue",
+      "x": 0.0,
+      "y": 0.4118,
+      "w": 0.6645,
+      "h": 0.5882,
+      "rot": 0
+     },
+     {
+      "id": "s2",
+      "sprite": "asset:shape_triangle_red",
+      "x": 0.0,
+      "y": 0.0,
+      "w": 0.6645,
+      "h": 0.5882,
+      "rot": 0
+     },
+     {
+      "id": "s3",
+      "sprite": "asset:shape_square_blue",
+      "x": 0.5017,
+      "y": 0.5382,
+      "w": 0.4983,
+      "h": 0.4412,
+      "rot": 0
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "piece": "asset:shape_triangle_red",
+     "slot": "s2",
+     "trace": "corners",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "piece": "asset:shape_square_blue",
+     "slot": "s1"
+    },
+    {
+     "by": "child",
+     "piece": "asset:shape_square_blue",
+     "slot": "s3"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_b_05.open",
+     "text": "יש כאן צל אחד גדול.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_b_05.key",
+     "text": "אני מחפש פינות וקווים ישרים: פה מסתתר משולש.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_b_05.handover",
+     "text": "נשארה צורה אחת. איפה היא בצל?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "the house of b.shpb05.1 as one grey shadow; the host traces the roof line and the triangle shows in it",
+   "status": "buildable on today's template once 2.1 lands"
+  },
+  {
+   "id": "show.shp-b-06",
+   "skill": "SHP-B-06",
+   "band": "B",
+   "purpose": "show",
+   "template": "shape_builder",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "aspect": 1.72,
+    "slots": [
+     {
+      "id": "s1",
+      "sprite": "asset:shape_square_blue",
+      "x": 0.0,
+      "y": 0.0,
+      "w": 0.5814,
+      "h": 1.0,
+      "rot": 0
+     },
+     {
+      "id": "s2",
+      "sprite": "asset:shape_square_blue",
+      "x": 0.41859999999999997,
+      "y": 0.0,
+      "w": 0.5814,
+      "h": 1.0,
+      "rot": 0
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "piece": "asset:shape_square_blue",
+     "slot": "s1",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "piece": "asset:shape_square_blue",
+     "slot": "s2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_b_06.open",
+     "text": "זה מלבן. אפשר לבנות אותו משתי צורות.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_b_06.key",
+     "text": "ריבוע אחד, ועוד ריבוע לידו: מלבן!",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_b_06.handover",
+     "text": "שימו את הריבוע השני לידו.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "מַלְבֵּן",
+    "רִבּוּעַ"
+   ],
+   "picture": "the rectangle of b.shpb06.1 as one shadow; the first square slides in and half the shadow fills",
+   "status": "buildable on today's template once 2.1 lands",
+   "upgrade": "two right triangles that make a square, once the design-director has drawn shape_triangle_half"
+  },
+  {
+   "id": "show.shp-b-08",
+   "skill": "SHP-B-08",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:solid_cylinder",
+      "label": "גָּלִיל"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:solid_cone",
+      "label": "חָרוּט"
+     },
+     {
+      "id": "b3",
+      "sprite": "asset:solid_sphere",
+      "label": "כַּדּוּר"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:ball_red",
+      "bin": "b3"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:solid_cone",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:solid_cylinder",
+      "bin": "b1"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b3",
+     "turn": true,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2",
+     "turn": true
+    },
+    {
+     "by": "child",
+     "item": "i3",
+     "bin": "b1"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_b_08.open",
+     "text": "לגופים יש שמות.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_b_08.key",
+     "text": "הכדור עגול כולו. לחרוט יש חוד. לגליל שני עיגולים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_b_08.handover",
+     "text": "הגוף האחרון שלכם.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "גָּלִיל",
+    "חָרוּט",
+    "כַּדּוּר"
+   ],
+   "picture": "each solid turns slowly as it is named: the point of the cone up, the two circles of the cylinder",
+   "status": "buildable on today's template once 2.1 lands",
+   "upgrade": "real things in the items (a can, a party hat, a gift box) once the design-director has drawn them; the pyramid and the box then get their own line"
+  },
+  {
+   "id": "show.shp-b-09",
+   "skill": "SHP-B-09",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:shape_circle",
+      "label": "עִגּוּל"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:shape_rect",
+      "label": "מַלְבֵּן"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:solid_cylinder",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:solid_box",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:solid_cone",
+      "bin": "b1"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "stamp": true,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2",
+     "stamp": true
+    },
+    {
+     "by": "child",
+     "item": "i3",
+     "bin": "b1"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_b_09.open",
+     "text": "אני מטביע גוף בחול, כמו חותמת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_b_09.key",
+     "text": "הגליל משאיר עיגול. התיבה משאירה מלבן.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_b_09.handover",
+     "text": "עכשיו החרוט. מה הוא משאיר?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "עִגּוּל",
+    "מַלְבֵּן",
+    "מְשֻׁלָּשׁ"
+   ],
+   "picture": "a sand tray: the solid presses down and lifts, and its flat face stays as a print",
+   "status": "buildable on today's template once 2.1 lands"
+  }
+ ],
+ "hostLines": [
+  {
+   "role": "together_lead",
+   "template": "sort_drag",
+   "vo": "vo:host.kubi.together.sort",
+   "text": "אני שם את הראשון. אתם ממשיכים.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "shape_builder",
+   "vo": "vo:host.kubi.together.build",
+   "text": "אני שם צורה אחת. אתם משלימים.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "tap_answer",
+   "vo": "vo:host.kubi.together.tap",
+   "text": "תסתכלו איך אני בודק, ואז תבחרו.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "trace",
+   "vo": "vo:host.kubi.together.trace",
+   "text": "אני מצייר את הקו הראשון. אתם ממשיכים.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "listen_do",
+   "vo": "vo:host.kubi.together.place",
+   "text": "אני מראה את הראשון. עכשיו אתם.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.kubi.handover.1",
+   "text": "עכשיו אתם לבד. אני כאן אם צריך.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.kubi.handover.2",
+   "text": "לאט לאט ובטוח. תמשיכו.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.kubi.handover.3",
+   "text": "עבדנו יפה יחד. עכשיו תורכם.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "show_me",
+   "vo": "vo:host.kubi.showme.1",
+   "text": "בואו נראה שוב, לאט.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "show_me",
+   "vo": "vo:host.kubi.showme.2",
+   "text": "אני מראה עוד פעם, ואז אתם.",
+   "review": "needs-editor"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "shape-friends",
+   "band": "A",
+   "skills": [
+    "SHP-A-01",
+    "SHP-A-02"
+   ],
+   "recall": [],
+   "show": "show.shp-a-01",
+   "secondShow": {
+    "id": "show.shp-a-02",
+    "kind": "reminder",
+    "before": "the first item of SHP-A-02"
+   },
+   "together": [
+    {
+     "id": "shp.match.circle",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "shp.match.square",
+    "shp.match.triangle",
+    "shp.name.circle",
+    "shp.name.square",
+    "shp.name.triangle",
+    "shp.name.mix"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "any-shape",
+   "band": "A",
+   "skills": [
+    "SHP-A-03"
+   ],
+   "recall": [
+    "shp.name.circle"
+   ],
+   "show": "show.shp-a-03",
+   "together": [
+    {
+     "id": "shp.any.tilt",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "shp.any.thin",
+    "shp.any.down",
+    "shp.any.small"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "rectangle",
+   "band": "A",
+   "skills": [
+    "SHP-A-04"
+   ],
+   "recall": [
+    "shp.name.circle"
+   ],
+   "show": "show.shp-a-04",
+   "together": [
+    {
+     "id": "shp.rect.long",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "shp.rect.find",
+    "shp.rect.square"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "shapes-around-us",
+   "band": "A",
+   "skills": [
+    "SHP-A-05",
+    "SHP-A-10"
+   ],
+   "recall": [
+    "shp.any.big.circle"
+   ],
+   "show": "show.shp-a-05",
+   "secondShow": {
+    "id": "show.shp-a-10",
+    "kind": "reminder",
+    "before": "the first item of SHP-A-10"
+   },
+   "together": [
+    {
+     "id": "shp.world.rect",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "shp.world.triangle",
+    "shp.world.circle",
+    "shp.line.straight",
+    "shp.line.curved"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "roll-or-stack",
+   "band": "A",
+   "skills": [
+    "SHP-A-07"
+   ],
+   "recall": [],
+   "show": "show.shp-a-07",
+   "together": [
+    {
+     "id": "shp.solid.rolls.blue",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "shp.solid.rolls",
+    "shp.solid.stacks",
+    "shp.solid.which"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "where-is-it",
+   "band": "A",
+   "skills": [
+    "SHP-A-08"
+   ],
+   "recall": [],
+   "show": "show.shp-a-08",
+   "together": [
+    {
+     "id": "shp.where.on",
+     "lead": 0,
+     "note": "tap_answer Together: the host says the strategy and the hint-1 picture shows; no option is removed"
+    }
+   ],
+   "alone": [
+    "shp.where.under",
+    "shp.where.in",
+    "shp.where.next"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ],
+   "v7": "the skill has no rung 0 form at all (M11-stage2 §11.2 item 4; SHP-A-08 waits for 2.2c)"
+  },
+  {
+   "id": "shape-friends-again",
+   "band": "A",
+   "skills": [
+    "SHP-A-01",
+    "SHP-A-02"
+   ],
+   "recall": [],
+   "show": "show.shp-a-01",
+   "secondShow": {
+    "id": "show.shp-a-02",
+    "kind": "reminder",
+    "before": "the first item of SHP-A-02"
+   },
+   "together": [
+    {
+     "id": "shp.match.circle.blue",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "shp.match.triangle.green",
+    "shp.match.square.orange",
+    "shp.name.square.yellow",
+    "shp.name.triangle.green",
+    "b15.shpa01.1",
+    "b15.shpa01.2"
+   ],
+   "use": [
+    "b15.shpa02.1"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "any-shape-again",
+   "band": "A",
+   "skills": [
+    "SHP-A-03"
+   ],
+   "recall": [
+    "shp.name.circle"
+   ],
+   "show": "show.shp-a-03",
+   "together": [
+    {
+     "id": "shp.any.small.square",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b15.shpa03.1",
+    "b15.shpa03.2",
+    "shp.any.big.circle",
+    "b15.shpa03.3"
+   ],
+   "use": [
+    "b15.shpa03.4"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "rectangle-again",
+   "band": "A",
+   "skills": [
+    "SHP-A-04"
+   ],
+   "recall": [
+    "shp.name.circle"
+   ],
+   "show": "show.shp-a-04",
+   "together": [
+    {
+     "id": "shp.rect.blue",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "shp.rect.green",
+    "shp.square.orange",
+    "b15.shpa04.1"
+   ],
+   "use": [
+    "b15.shpa04.2"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "shapes-around-us-again",
+   "band": "A",
+   "skills": [
+    "SHP-A-05",
+    "SHP-A-10"
+   ],
+   "recall": [
+    "shp.any.big.circle"
+   ],
+   "show": "show.shp-a-05",
+   "secondShow": {
+    "id": "show.shp-a-10",
+    "kind": "reminder",
+    "before": "the first item of SHP-A-10"
+   },
+   "together": [
+    {
+     "id": "shp.world.window.shape",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "shp.line.straight2",
+    "shp.line.curved2",
+    "shp.line.straight3",
+    "shp.line.curved3",
+    "shp.world.plate.shape",
+    "shp.world.sign.shape"
+   ],
+   "use": [
+    "b15.shpa10.1"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "roll-or-stack-again",
+   "band": "A",
+   "skills": [
+    "SHP-A-07"
+   ],
+   "recall": [],
+   "show": "show.shp-a-07",
+   "together": [
+    {
+     "id": "shp.solid.rolls.blue",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "shp.solid.stacks.blue",
+    "shp.solid.which2",
+    "b15.shpa07.1"
+   ],
+   "use": [
+    "b15.shpa07.2"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "where-is-it-again",
+   "band": "A",
+   "skills": [
+    "SHP-A-08"
+   ],
+   "recall": [],
+   "show": "show.shp-a-08",
+   "together": [
+    {
+     "id": "shp.where.above",
+     "lead": 0,
+     "note": "tap_answer Together: the host says the strategy and the hint-1 picture shows; no option is removed"
+    }
+   ],
+   "alone": [
+    "shp.where.in2",
+    "b15.shpa08.1"
+   ],
+   "use": [
+    "b15.shpa08.2"
+   ],
+   "poolRungs": [
+    1
+   ],
+   "v7": "the skill has no rung 0 form at all (M11-stage2 §11.2 item 4; SHP-A-08 waits for 2.2c)"
+  },
+  {
+   "id": "build-with-shapes",
+   "band": "A",
+   "skills": [
+    "SHP-A-06"
+   ],
+   "recall": [
+    "shp.match.circle"
+   ],
+   "show": "show.shp-a-06",
+   "together": [
+    {
+     "id": "shp.build.house",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "shp.build.tree",
+    "shp.build.face",
+    "shp.build.train",
+    "shp.build.rocket",
+    "b15.shpa06.1"
+   ],
+   "use": [
+    "b15.shpa06.2"
+   ],
+   "poolRungs": [
+    0
+   ],
+   "v7": "the skill has no rung 1 form at all (M11-stage2 §11.2 item 4; SHP-A-08 waits for 2.2c)"
+  },
+  {
+   "id": "shape-friends-again-1-b15",
+   "band": "A",
+   "skills": [
+    "SHP-A-01",
+    "SHP-A-02"
+   ],
+   "recall": [],
+   "show": "show.shp-a-01",
+   "secondShow": {
+    "id": "show.shp-a-02",
+    "kind": "reminder",
+    "before": "the first item of SHP-A-02"
+   },
+   "together": [
+    {
+     "id": "shp.match.circle",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b15.shpa02.2",
+    "b15.shpa02.3"
+   ],
+   "use": [
+    "b15.shpa02.4"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "shapes-around-us-again-1-b15",
+   "band": "A",
+   "skills": [
+    "SHP-A-05",
+    "SHP-A-10"
+   ],
+   "recall": [
+    "shp.any.big.circle"
+   ],
+   "show": "show.shp-a-05",
+   "secondShow": {
+    "id": "show.shp-a-10",
+    "kind": "reminder",
+    "before": "the first item of SHP-A-10"
+   },
+   "together": [
+    {
+     "id": "shp.world.rect",
+     "lead": 1
+    }
+   ],
+   "alone": [],
+   "use": [
+    "b15.shpa10.2"
+   ],
+   "poolRungs": [
+    0
+   ],
+   "v7": "no rung 1 item in this pool: the controller takes one from the skill's other lessons (§5 rule 3)"
+  },
+  {
+   "id": "polygon-detectives",
+   "band": "B",
+   "skills": [
+    "SHP-B-01"
+   ],
+   "recall": [
+    "shp.any.big.circle"
+   ],
+   "show": "show.shp-b-01",
+   "together": [
+    {
+     "id": "b.shpb01.1",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.shpb01.3",
+    "b.shpb01.2",
+    "b.shpb01.4"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "polygon-detectives-more",
+   "band": "B",
+   "skills": [
+    "SHP-B-01"
+   ],
+   "recall": [
+    "shp.any.big.circle"
+   ],
+   "show": "show.shp-b-01",
+   "together": [
+    {
+     "id": "b.shpb01.5",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.shpb01.7",
+    "b.shpb01.6",
+    "b.shpb01.8",
+    "b.shpb01.9"
+   ],
+   "use": [
+    "b.shpb01.10"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "count-sides",
+   "band": "B",
+   "skills": [
+    "SHP-B-02"
+   ],
+   "recall": [
+    "b.shpb01.1"
+   ],
+   "show": "show.shp-b-02",
+   "together": [
+    {
+     "id": "b.shpb02.2",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.shpb02.4",
+    "b.shpb02.1",
+    "b.shpb02.3"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "count-sides-more",
+   "band": "B",
+   "skills": [
+    "SHP-B-02"
+   ],
+   "recall": [
+    "b.shpb01.1"
+   ],
+   "show": "show.shp-b-02",
+   "together": [
+    {
+     "id": "b.shpb02.6",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.shpb02.8",
+    "b.shpb02.5",
+    "b.shpb02.7",
+    "b.shpb02.9"
+   ],
+   "use": [
+    "b.shpb02.10"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "square-or-rectangle",
+   "band": "B",
+   "skills": [
+    "SHP-B-03"
+   ],
+   "recall": [
+    "shp.rect.blue",
+    "b.shpb02.1"
+   ],
+   "show": "show.shp-b-03",
+   "together": [
+    {
+     "id": "b.shpb03.2",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.shpb03.4",
+    "b.shpb03.6",
+    "b.shpb03.1",
+    "b.shpb03.3",
+    "b.shpb03.5"
+   ],
+   "use": [
+    "b.shpb03.7"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "closed-shapes",
+   "band": "B",
+   "skills": [
+    "SHP-B-04"
+   ],
+   "recall": [
+    "b.shpb01.1",
+    "shp.line.curved"
+   ],
+   "show": "show.shp-b-04",
+   "together": [
+    {
+     "id": "b.shpb04.1",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.shpb04.3",
+    "b.shpb04.2",
+    "b.shpb04.4"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "closed-shapes-more",
+   "band": "B",
+   "skills": [
+    "SHP-B-04"
+   ],
+   "recall": [
+    "b.shpb01.1",
+    "shp.line.curved"
+   ],
+   "show": "show.shp-b-04",
+   "together": [
+    {
+     "id": "b.shpb04.5",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.shpb04.6",
+    "b.shpb04.7",
+    "b.shpb04.8"
+   ],
+   "use": [
+    "b.shpb04.9"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "solids",
+   "band": "B",
+   "skills": [
+    "SHP-B-08"
+   ],
+   "recall": [
+    "shp.solid.rolls"
+   ],
+   "show": "show.shp-b-08",
+   "together": [
+    {
+     "id": "b.shpb08.2",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.shpb08.4",
+    "b.shpb08.1",
+    "b.shpb08.3",
+    "b.shpb08.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "solids-more",
+   "band": "B",
+   "skills": [
+    "SHP-B-08"
+   ],
+   "recall": [
+    "shp.solid.rolls"
+   ],
+   "show": "show.shp-b-08",
+   "together": [
+    {
+     "id": "b.shpb08.6",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.shpb08.7",
+    "b.shpb08.8"
+   ],
+   "use": [
+    "b.shpb08.9"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "one-shadow",
+   "band": "B",
+   "skills": [
+    "SHP-B-05"
+   ],
+   "recall": [
+    "shp.build.face"
+   ],
+   "show": "show.shp-b-05",
+   "together": [
+    {
+     "id": "b.shpb05.1",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.shpb05.2",
+    "b.shpb05.3"
+   ],
+   "use": [
+    "b.shpb05.4"
+   ],
+   "poolRungs": [
+    0
+   ],
+   "v7": "the skill has no rung 1 form at all (M11-stage2 §11.2 item 4; SHP-A-08 waits for 2.2c)"
+  },
+  {
+   "id": "shapes-make-shapes",
+   "band": "B",
+   "skills": [
+    "SHP-B-06"
+   ],
+   "recall": [
+    "b.shpb05.1"
+   ],
+   "show": "show.shp-b-06",
+   "together": [
+    {
+     "id": "b.shpb06.1",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.shpb06.2",
+    "b.shpb06.3"
+   ],
+   "use": [
+    "b.shpb06.4"
+   ],
+   "poolRungs": [
+    0
+   ],
+   "v7": "the skill has no rung 1 form at all (M11-stage2 §11.2 item 4; SHP-A-08 waits for 2.2c)"
+  },
+  {
+   "id": "trace-the-shapes",
+   "band": "A",
+   "skills": [
+    "SHP-A-02"
+   ],
+   "recall": [
+    "shp.match.circle"
+   ],
+   "show": "show.shp-a-02",
+   "together": [
+    {
+     "id": "x.shpa02.1",
+     "lead": 1,
+     "note": "trace: the host draws the first stroke"
+    }
+   ],
+   "alone": [
+    "x.shpa02.2",
+    "x.shpa02.3"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ],
+   "v7": "no rung 1 item in this pool: the controller takes one from the skill's other lessons (§5 rule 3)"
+  },
+  {
+   "id": "draw-the-shapes",
+   "band": "A",
+   "skills": [
+    "SHP-A-02"
+   ],
+   "recall": [
+    "shp.match.circle"
+   ],
+   "show": "show.shp-a-02",
+   "together": [
+    {
+     "id": "x.shpa02.4",
+     "lead": 1,
+     "note": "trace: the host draws the first stroke"
+    }
+   ],
+   "alone": [
+    "x.shpa02.5",
+    "x.shpa02.6"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ],
+   "v7": "no rung 1 item in this pool: the controller takes one from the skill's other lessons (§5 rule 3)"
+  },
+  {
+   "id": "solid-and-face",
+   "band": "B",
+   "skills": [
+    "SHP-B-09"
+   ],
+   "recall": [
+    "b.shpb08.1",
+    "shp.any.big.circle"
+   ],
+   "show": "show.shp-b-09",
+   "together": [
+    {
+     "id": "x.shpb09.2",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "x.shpb09.3",
+    "x.shpb09.1",
+    "x.shpb09.4",
+    "x.shpb09.5"
+   ],
+   "use": [
+    "x.shpb09.6"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  }
+ ]
+}

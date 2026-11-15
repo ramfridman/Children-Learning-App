@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "shp.solid.which2",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "shapes",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.3
   },
@@ -25,32 +25,58 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה נִּשְׁאָר עוֹמֵד בַּמָּקוֹם?"
+        "v": "מַה מִּתְגַּלְגֵּל — לְכָאן. מָה אֶפְשָׁר לַעֲרֹם — לְכָאן."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:solid_box",
-        "label": "קֻפְסָה"
+        "id": "b1",
+        "sprite": "asset:ball_red",
+        "count": 1,
+        "label": "מִתְגַּלְגֵּל"
       },
       {
-        "id": "o2",
-        "sprite": "asset:ball_blue",
-        "label": "כַּדּוּר כָּחֹל"
+        "id": "b2",
+        "sprite": "asset:solid_box",
+        "count": 1,
+        "label": "נֶעֱרָם"
       }
     ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:solid_sphere",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:tower_1",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:ball_green",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:block",
+        "bin": "b2"
+      },
+      {
+        "id": "i5",
+        "sprite": "asset:ball_blue",
+        "bin": "b1"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -59,7 +85,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זוֹ קֻפְסָה."
+          "v": "כֵּן! מַה שֶּׁעָגֹל מִתְגַּלְגֵּל, וּמַה שֶּׁשָּׁטוּחַ נֶעֱרָם."
         }
       ]
     },
@@ -100,11 +126,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.shp_roll.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נְדַמְיֵן שֶׁדּוֹחֲפִים: מִי מִתְגַּלְגֵּל, וּמִי נִשְׁאָר עוֹמֵד?"
         }
       ]
     },
@@ -115,7 +141,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "זוֹ קֻפְסָה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלֶיהָ."
+          "v": "כַּדּוּר עָגֹל וּמִתְגַּלְגֵּל. קֻבִּיָּה שְׁטוּחָה, וְאֶפְשָׁר לַעֲרֹם אוֹתָהּ. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -131,10 +157,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child sorts the things that roll from the things that stack",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה נִּשְׁאָר עוֹמֵד בַּמָּקוֹם?"
+    "altText": "מַה מִּתְגַּלְגֵּל — לְכָאן. מָה אֶפְשָׁר לַעֲרֹם — לְכָאן."
   }
 }

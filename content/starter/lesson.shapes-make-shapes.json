@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "shapes-make-shapes",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "צוּרוֹת עוֹשׂוֹת צוּרוֹת"
+    }
+  ],
+  "skills": [
+    "SHP-B-06"
+  ],
+  "items": [
+    "b.shpb06.1",
+    "b.shpb06.2",
+    "b.shpb06.3",
+    "b.shpb06.4"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 40,
+  "celebration": {
+    "vo": "vo:celebrate.shapes_make_shapes",
+    "caption": [
+      {
+        "t": "he",
+        "v": "נִפְלָא! מִשְּׁתֵּי צוּרוֹת בְּנִיתֶם צוּרָה."
+      }
+    ]
+  }
+}

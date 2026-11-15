@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.shpb02.6",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "shapes",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.72
   },
@@ -25,79 +25,71 @@
     "caption": [
       {
         "t": "he",
-        "v": "כַּמָּה צְלָעוֹת יֵשׁ לַצּוּרָה הַזֹּאת?"
+        "v": "סוֹפְרִים צְלָעוֹת: שָׁלוֹשׁ לְכָאן, אַרְבַּע לְכָאן."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "group": {
-      "sprite": "asset:shape_rect",
-      "count": 1,
-      "arrangement": "line",
-      "seed": 3,
-      "scale": 1
-    }
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "numeral": 5,
-        "label": "חָמֵשׁ",
-        "misconception": "M-CNT-DOUBLE"
+        "id": "b1",
+        "sprite": "asset:stick_long",
+        "count": 3,
+        "label": "שָׁלוֹשׁ צְלָעוֹת"
       },
       {
-        "id": "o2",
-        "numeral": 3,
-        "label": "שָׁלוֹשׁ",
-        "misconception": "M-CNT-SKIP"
-      },
-      {
-        "id": "o3",
-        "numeral": 4,
-        "label": "אַרְבַּע"
+        "id": "b2",
+        "sprite": "asset:stick_long",
+        "count": 4,
+        "label": "אַרְבַּע צְלָעוֹת"
       }
     ],
-    "correct": "o3",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:shape_square_blue",
+        "bin": "b2"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:shape_triangle_green",
+        "bin": "b1"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:shape_rect_green",
+        "bin": "b2"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:shape_triangle_thin",
+        "bin": "b1"
+      },
+      {
+        "id": "i5",
+        "sprite": "asset:shape_square_tilt",
+        "bin": "b2"
+      }
+    ]
   },
-  "voiceAnswer": true,
+  "answer": {
+    "type": "sort",
+    "mode": "sort"
+  },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.shpb02.6.correct",
       "caption": [
         {
           "t": "he",
-          "v": "אַרְבַּע! אַרְבַּע צְלָעוֹת."
+          "v": "כֵּן! סְפַרְתֶּם אֶת הַצְּלָעוֹת שֶׁל כֻּלָּן."
         }
       ]
     },
     "incorrect": [
-      {
-        "when": "misconception:M-CNT-DOUBLE",
-        "vo": "vo:fb.double_set",
-        "caption": [
-          {
-            "t": "he",
-            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
-          }
-        ]
-      },
-      {
-        "when": "misconception:M-CNT-SKIP",
-        "vo": "vo:fb.skip_set",
-        "caption": [
-          {
-            "t": "he",
-            "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
-          }
-        ]
-      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -134,11 +126,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.shp_sides.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נַעֲבֹר בָּאֶצְבַּע עַל הַצְּלָעוֹת, אַחַת אַחַת, וְנִסְפֹּר."
         }
       ]
     },
@@ -149,7 +141,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "נִסְפֹּר צֶלַע אַחַר צֶלַע, וְלֹא נִסְפֹּר אוֹתָהּ פַּעֲמַיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם."
+          "v": "סוֹפְרִים צֶלַע אַחַר צֶלַע, וְכׇל צֶלַע פַּעַם אַחַת. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -165,10 +157,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "כַּמָּה צְלָעוֹת יֵשׁ לַצּוּרָה הַזֹּאת?"
+    "altText": "סוֹפְרִים צְלָעוֹת: שָׁלוֹשׁ לְכָאן, אַרְבַּע לְכָאן."
   }
 }

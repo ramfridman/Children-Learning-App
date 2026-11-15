@@ -24,7 +24,14 @@
   "shape_triangle_down",
   "shape_square_tilt",
   "tick",
-  "cross"
+  "cross",
+  "stick_long",
+  "clue_not_triangle",
+  "block",
+  "ball_red",
+  "ball_blue",
+  "ball_green",
+  "ball_yellow"
  ],
  "objects": {
   "ladybug": {
@@ -720,7 +727,8 @@
     "pictorial"
    ],
    "tags": [
-    "M-SHP-CLOSED"
+    "M-SHP-CLOSED",
+    "M-SHP-PROTO"
    ]
   },
   {
@@ -784,27 +792,87 @@
     "concrete"
    ],
    "tags": []
+  },
+  {
+   "id": "SHP-B-05",
+   "title": "בונים תמונה מצורות בלי קווים בפנים",
+   "child": "בּוֹנִים תְּמוּנָה מִצּוּרוֹת",
+   "world": "cone-tree",
+   "needs": [
+    "SHP-A-06"
+   ],
+   "reps": [
+    "concrete"
+   ],
+   "tags": []
+  },
+  {
+   "id": "SHP-B-06",
+   "title": "שתי צורות עושות צורה אחת",
+   "child": "שְׁתֵּי צוּרוֹת עוֹשׂוֹת צוּרָה",
+   "world": "cone-tree",
+   "needs": [
+    "SHP-B-05"
+   ],
+   "reps": [
+    "concrete"
+   ],
+   "tags": []
   }
  ],
  "activities": [
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb01.1",
    "skill": "SHP-B-01",
    "difficulty": 0.37,
-   "prompt": "אֵיפֹה הַמְּחֻמָּשׁ?",
-   "options": [
-    "shape_pentagon",
-    "shape_triangle",
-    "shape_open"
-   ],
-   "correct": "shape_pentagon",
-   "tags": {
-    "shape_open": "M-SHP-CLOSED"
-   },
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן! לַמְּחֻמָּשׁ יֵשׁ חָמֵשׁ צְלָעוֹת.",
-   "h3": "הַמְּחֻמָּשׁ הוּא צוּרָה סְגוּרָה עִם חָמֵשׁ צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם."
+   "h2": "נַעֲבֹר בָּאֶצְבַּע עַל הַצְּלָעוֹת, אַחַת אַחַת, וְנִסְפֹּר.",
+   "h2_shared": "shp_sides",
+   "h3": "סוֹפְרִים צֶלַע אַחַר צֶלַע, וְכׇל צֶלַע פַּעַם אַחַת. עַכְשָׁו תּוֹרְכֶם.",
+   "bins": [
+    {
+     "sprite": "shape_triangle",
+     "label": "מְשֻׁלָּשׁ"
+    },
+    {
+     "sprite": "shape_quad",
+     "label": "מְרֻבָּע"
+    }
+   ],
+   "tag": "M-SHP-PROTO",
+   "items": [
+    [
+     "shape_triangle_thin",
+     1,
+     "M-SHP-PROTO"
+    ],
+    [
+     "shape_square_tilt",
+     2,
+     "M-SHP-ORIENT"
+    ],
+    [
+     "shape_triangle_down",
+     1,
+     "M-SHP-ORIENT"
+    ],
+    [
+     "shape_rect",
+     2
+    ],
+    [
+     "shape_triangle_yellow",
+     1
+    ],
+    [
+     "shape_square_red",
+     2
+    ]
+   ],
+   "prompt": "מְמַיְּנִים: מְשֻׁלָּשִׁים לְכָאן, מְרֻבָּעִים לְכָאן.",
+   "correct_text": "כֵּן! שָׁלוֹשׁ צְלָעוֹת — מְשֻׁלָּשׁ. אַרְבַּע — מְרֻבָּע."
   },
   {
    "kind": "pick",
@@ -826,23 +894,58 @@
    "h3": "הַמְּשֻׁשֶּׁה הוּא צוּרָה סְגוּרָה עִם שֵׁשׁ צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם."
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb01.3",
    "skill": "SHP-B-01",
    "difficulty": 0.51,
-   "prompt": "אֵיפֹה הַמְּרֻבָּע?",
-   "options": [
-    "shape_hexagon",
-    "shape_open",
-    "shape_quad"
-   ],
-   "correct": "shape_quad",
-   "tags": {
-    "shape_open": "M-SHP-CLOSED"
-   },
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן! לַמְּרֻבָּע יֵשׁ אַרְבַּע צְלָעוֹת.",
-   "h3": "הַמְּרֻבָּע הוּא צוּרָה סְגוּרָה עִם אַרְבַּע צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם."
+   "h2": "לִמְשֻׁלָּשׁ שָׁלוֹשׁ צְלָעוֹת יְשָׁרוֹת, וְאֵין בּוֹ פֶּתַח.",
+   "h2_shared": "shp_triangle",
+   "h3": "מְשֻׁלָּשׁ סָגוּר, וְיֵשׁ לוֹ שָׁלוֹשׁ צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם.",
+   "bins": [
+    {
+     "sprite": "shape_triangle",
+     "label": "מְשֻׁלָּשׁ"
+    },
+    {
+     "sprite": "clue_not_triangle",
+     "label": "לֹא מְשֻׁלָּשׁ"
+    }
+   ],
+   "tag": "M-SHP-CLOSED",
+   "items": [
+    [
+     "shape_triangle_thin",
+     1,
+     "M-SHP-PROTO"
+    ],
+    [
+     "shape_open",
+     2,
+     "M-SHP-CLOSED"
+    ],
+    [
+     "shape_triangle_down",
+     1,
+     "M-SHP-ORIENT"
+    ],
+    [
+     "shape_curved",
+     2,
+     "M-SHP-CLOSED"
+    ],
+    [
+     "shape_triangle_blue",
+     1
+    ],
+    [
+     "shape_pentagon",
+     2
+    ]
+   ],
+   "prompt": "מְשֻׁלָּשִׁים לְכָאן, וּמַה שֶּׁלֹּא מְשֻׁלָּשׁ — לְכָאן.",
+   "correct_text": "כֵּן! רַק מְשֻׁלָּשִׁים בְּיַחַד."
   },
   {
    "kind": "pick",
@@ -852,35 +955,66 @@
    "prompt": "אֵיפֹה הַמְּשֻׁלָּשׁ?",
    "options": [
     "shape_triangle",
-    "shape_quad",
+    "shape_open",
     "shape_curved"
    ],
    "correct": "shape_triangle",
    "tags": {
+    "shape_open": "M-SHP-CLOSED",
     "shape_curved": "M-SHP-CLOSED"
    },
    "domain": "shapes",
+   "revision": 2,
    "correct_text": "כֵּן! לַמְּשֻׁלָּשׁ יֵשׁ שָׁלוֹשׁ צְלָעוֹת.",
    "h3": "הַמְּשֻׁלָּשׁ הוּא צוּרָה סְגוּרָה עִם שָׁלוֹשׁ צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם."
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb01.5",
    "skill": "SHP-B-01",
    "difficulty": 0.65,
-   "prompt": "אֵיפֹה הַמְּחֻמָּשׁ?",
-   "options": [
-    "shape_quad",
-    "shape_pentagon",
-    "shape_open"
-   ],
-   "correct": "shape_pentagon",
-   "tags": {
-    "shape_open": "M-SHP-CLOSED"
-   },
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן! לַמְּחֻמָּשׁ יֵשׁ חָמֵשׁ צְלָעוֹת.",
-   "h3": "הַמְּחֻמָּשׁ הוּא צוּרָה סְגוּרָה עִם חָמֵשׁ צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם."
+   "h2": "נַעֲבֹר בָּאֶצְבַּע עַל הַצְּלָעוֹת, אַחַת אַחַת, וְנִסְפֹּר.",
+   "h2_shared": "shp_sides",
+   "h3": "סוֹפְרִים צֶלַע אַחַר צֶלַע, וְכׇל צֶלַע פַּעַם אַחַת. עַכְשָׁו תּוֹרְכֶם.",
+   "bins": [
+    {
+     "sprite": "stick_long",
+     "count": 5,
+     "label": "מְחֻמָּשׁ"
+    },
+    {
+     "sprite": "stick_long",
+     "count": 6,
+     "label": "מְשֻׁשֶּׁה"
+    }
+   ],
+   "tag": null,
+   "items": [
+    [
+     "shape_pentagon",
+     1,
+     "M-CNT-DOUBLE"
+    ],
+    [
+     "shape_hexagon",
+     2,
+     "M-CNT-SKIP"
+    ],
+    [
+     "shape_hexagon",
+     2,
+     "M-CNT-SKIP"
+    ],
+    [
+     "shape_pentagon",
+     1,
+     "M-CNT-DOUBLE"
+    ]
+   ],
+   "prompt": "סוֹפְרִים צְלָעוֹת: מְחֻמָּשׁ לְכָאן, מְשֻׁשֶּׁה לְכָאן.",
+   "correct_text": "כֵּן! לַמְחֻמָּשׁ חָמֵשׁ צְלָעוֹת, וְלַמְשֻׁשֶּׁה שֵׁשׁ."
   },
   {
    "kind": "pick",
@@ -902,23 +1036,57 @@
    "h3": "הַמְּשֻׁשֶּׁה הוּא צוּרָה סְגוּרָה עִם שֵׁשׁ צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם."
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb01.7",
    "skill": "SHP-B-01",
    "difficulty": 0.79,
-   "prompt": "אֵיפֹה הַמְּרֻבָּע?",
-   "options": [
-    "shape_quad",
-    "shape_triangle",
-    "shape_open"
-   ],
-   "correct": "shape_quad",
-   "tags": {
-    "shape_open": "M-SHP-CLOSED"
-   },
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן! לַמְּרֻבָּע יֵשׁ אַרְבַּע צְלָעוֹת.",
-   "h3": "הַמְּרֻבָּע הוּא צוּרָה סְגוּרָה עִם אַרְבַּע צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם."
+   "h2": "נַעֲבֹר בָּאֶצְבַּע עַל הַצְּלָעוֹת, אַחַת אַחַת, וְנִסְפֹּר.",
+   "h2_shared": "shp_sides",
+   "h3": "סוֹפְרִים צֶלַע אַחַר צֶלַע, וְכׇל צֶלַע פַּעַם אַחַת. עַכְשָׁו תּוֹרְכֶם.",
+   "bins": [
+    {
+     "sprite": "stick_long",
+     "count": 4,
+     "label": "מְרֻבָּע"
+    },
+    {
+     "sprite": "stick_long",
+     "count": 5,
+     "label": "מְחֻמָּשׁ"
+    }
+   ],
+   "tag": null,
+   "items": [
+    [
+     "shape_square_tilt",
+     1,
+     "M-CNT-DOUBLE"
+    ],
+    [
+     "shape_pentagon",
+     2,
+     "M-CNT-SKIP"
+    ],
+    [
+     "shape_rect",
+     1,
+     "M-CNT-DOUBLE"
+    ],
+    [
+     "shape_quad",
+     1,
+     "M-CNT-DOUBLE"
+    ],
+    [
+     "shape_pentagon",
+     2,
+     "M-CNT-SKIP"
+    ]
+   ],
+   "prompt": "סוֹפְרִים צְלָעוֹת: מְרֻבָּע לְכָאן, מְחֻמָּשׁ לְכָאן.",
+   "correct_text": "כֵּן! לַמְרֻבָּע אַרְבַּע צְלָעוֹת, וְלַמְחֻמָּשׁ חָמֵשׁ."
   },
   {
    "kind": "pick",
@@ -927,15 +1095,17 @@
    "difficulty": 0.86,
    "prompt": "אֵיפֹה הַמְּשֻׁלָּשׁ?",
    "options": [
-    "shape_pentagon",
+    "shape_open",
     "shape_triangle",
     "shape_curved"
    ],
    "correct": "shape_triangle",
    "tags": {
+    "shape_open": "M-SHP-CLOSED",
     "shape_curved": "M-SHP-CLOSED"
    },
    "domain": "shapes",
+   "revision": 2,
    "correct_text": "כֵּן! לַמְּשֻׁלָּשׁ יֵשׁ שָׁלוֹשׁ צְלָעוֹת.",
    "h3": "הַמְּשֻׁלָּשׁ הוּא צוּרָה סְגוּרָה עִם שָׁלוֹשׁ צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם."
   },
@@ -999,29 +1169,62 @@
    }
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb02.2",
    "skill": "SHP-B-02",
    "difficulty": 0.44,
-   "voice": true,
-   "prompt": "כַּמָּה צְלָעוֹת יֵשׁ לַצּוּרָה הַזֹּאת?",
-   "options": [
-    "n:5",
-    "n:4",
-    "n:3"
-   ],
-   "correct": "n:4",
-   "tags": {
-    "n:5": "M-CNT-DOUBLE",
-    "n:3": "M-CNT-SKIP"
-   },
-   "h3": "נִסְפֹּר צֶלַע אַחַר צֶלַע, וְלֹא נִסְפֹּר אוֹתָהּ פַּעֲמַיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם.",
-   "correct_text": "אַרְבַּע! אַרְבַּע צְלָעוֹת.",
+   "revision": 2,
    "domain": "shapes",
-   "group": {
-    "sprite": "shape_quad",
-    "count": 1
-   }
+   "h2": "נַעֲבֹר בָּאֶצְבַּע עַל הַצְּלָעוֹת, אַחַת אַחַת, וְנִסְפֹּר.",
+   "h2_shared": "shp_sides",
+   "h3": "סוֹפְרִים צֶלַע אַחַר צֶלַע, וְכׇל צֶלַע פַּעַם אַחַת. עַכְשָׁו תּוֹרְכֶם.",
+   "tag": null,
+   "correct_text": "כֵּן! סְפַרְתֶּם אֶת הַצְּלָעוֹת שֶׁל כֻּלָּן.",
+   "bins": [
+    {
+     "sprite": "stick_long",
+     "count": 3,
+     "label": "שָׁלוֹשׁ צְלָעוֹת"
+    },
+    {
+     "sprite": "stick_long",
+     "count": 4,
+     "label": "אַרְבַּע צְלָעוֹת"
+    }
+   ],
+   "prompt": "סוֹפְרִים צְלָעוֹת: שָׁלוֹשׁ לְכָאן, אַרְבַּע לְכָאן.",
+   "items": [
+    [
+     "shape_triangle_thin",
+     1,
+     "M-CNT-DOUBLE"
+    ],
+    [
+     "shape_square_tilt",
+     2,
+     "M-CNT-SKIP"
+    ],
+    [
+     "shape_triangle_down",
+     1,
+     "M-CNT-DOUBLE"
+    ],
+    [
+     "shape_rect",
+     2,
+     "M-CNT-SKIP"
+    ],
+    [
+     "shape_triangle_red",
+     1,
+     "M-CNT-DOUBLE"
+    ],
+    [
+     "shape_quad",
+     2,
+     "M-CNT-SKIP"
+    ]
+   ]
   },
   {
    "kind": "pick",
@@ -1049,29 +1252,52 @@
    }
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb02.4",
    "skill": "SHP-B-02",
    "difficulty": 0.58,
-   "voice": true,
-   "prompt": "כַּמָּה צְלָעוֹת יֵשׁ לַצּוּרָה הַזֹּאת?",
-   "options": [
-    "n:6",
-    "n:7",
-    "n:5"
-   ],
-   "correct": "n:6",
-   "tags": {
-    "n:7": "M-CNT-DOUBLE",
-    "n:5": "M-CNT-SKIP"
-   },
-   "h3": "נִסְפֹּר צֶלַע אַחַר צֶלַע, וְלֹא נִסְפֹּר אוֹתָהּ פַּעֲמַיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… שֵׁשׁ. עַכְשָׁו תּוֹרְכֶם.",
-   "correct_text": "שֵׁשׁ! שֵׁשׁ צְלָעוֹת.",
+   "revision": 2,
    "domain": "shapes",
-   "group": {
-    "sprite": "shape_hexagon",
-    "count": 1
-   }
+   "h2": "נַעֲבֹר בָּאֶצְבַּע עַל הַצְּלָעוֹת, אַחַת אַחַת, וְנִסְפֹּר.",
+   "h2_shared": "shp_sides",
+   "h3": "סוֹפְרִים צֶלַע אַחַר צֶלַע, וְכׇל צֶלַע פַּעַם אַחַת. עַכְשָׁו תּוֹרְכֶם.",
+   "tag": null,
+   "correct_text": "כֵּן! סְפַרְתֶּם אֶת הַצְּלָעוֹת שֶׁל כֻּלָּן.",
+   "bins": [
+    {
+     "sprite": "stick_long",
+     "count": 5,
+     "label": "חָמֵשׁ צְלָעוֹת"
+    },
+    {
+     "sprite": "stick_long",
+     "count": 6,
+     "label": "שֵׁשׁ צְלָעוֹת"
+    }
+   ],
+   "prompt": "סוֹפְרִים צְלָעוֹת: חָמֵשׁ לְכָאן, שֵׁשׁ לְכָאן.",
+   "items": [
+    [
+     "shape_hexagon",
+     2,
+     "M-CNT-SKIP"
+    ],
+    [
+     "shape_pentagon",
+     1,
+     "M-CNT-DOUBLE"
+    ],
+    [
+     "shape_pentagon",
+     1,
+     "M-CNT-DOUBLE"
+    ],
+    [
+     "shape_hexagon",
+     2,
+     "M-CNT-SKIP"
+    ]
+   ]
   },
   {
    "kind": "pick",
@@ -1099,29 +1325,57 @@
    }
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb02.6",
    "skill": "SHP-B-02",
    "difficulty": 0.72,
-   "voice": true,
-   "prompt": "כַּמָּה צְלָעוֹת יֵשׁ לַצּוּרָה הַזֹּאת?",
-   "options": [
-    "n:5",
-    "n:3",
-    "n:4"
-   ],
-   "correct": "n:4",
-   "tags": {
-    "n:5": "M-CNT-DOUBLE",
-    "n:3": "M-CNT-SKIP"
-   },
-   "h3": "נִסְפֹּר צֶלַע אַחַר צֶלַע, וְלֹא נִסְפֹּר אוֹתָהּ פַּעֲמַיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם.",
-   "correct_text": "אַרְבַּע! אַרְבַּע צְלָעוֹת.",
+   "revision": 2,
    "domain": "shapes",
-   "group": {
-    "sprite": "shape_rect",
-    "count": 1
-   }
+   "h2": "נַעֲבֹר בָּאֶצְבַּע עַל הַצְּלָעוֹת, אַחַת אַחַת, וְנִסְפֹּר.",
+   "h2_shared": "shp_sides",
+   "h3": "סוֹפְרִים צֶלַע אַחַר צֶלַע, וְכׇל צֶלַע פַּעַם אַחַת. עַכְשָׁו תּוֹרְכֶם.",
+   "tag": null,
+   "correct_text": "כֵּן! סְפַרְתֶּם אֶת הַצְּלָעוֹת שֶׁל כֻּלָּן.",
+   "bins": [
+    {
+     "sprite": "stick_long",
+     "count": 3,
+     "label": "שָׁלוֹשׁ צְלָעוֹת"
+    },
+    {
+     "sprite": "stick_long",
+     "count": 4,
+     "label": "אַרְבַּע צְלָעוֹת"
+    }
+   ],
+   "prompt": "סוֹפְרִים צְלָעוֹת: שָׁלוֹשׁ לְכָאן, אַרְבַּע לְכָאן.",
+   "items": [
+    [
+     "shape_square_blue",
+     2,
+     "M-CNT-SKIP"
+    ],
+    [
+     "shape_triangle_green",
+     1,
+     "M-CNT-DOUBLE"
+    ],
+    [
+     "shape_rect_green",
+     2,
+     "M-CNT-SKIP"
+    ],
+    [
+     "shape_triangle_thin",
+     1,
+     "M-CNT-DOUBLE"
+    ],
+    [
+     "shape_square_tilt",
+     2,
+     "M-CNT-SKIP"
+    ]
+   ]
   },
   {
    "kind": "pick",
@@ -1149,29 +1403,57 @@
    }
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb02.8",
    "skill": "SHP-B-02",
    "difficulty": 0.86,
-   "voice": true,
-   "prompt": "כַּמָּה צְלָעוֹת יֵשׁ לַצּוּרָה הַזֹּאת?",
-   "options": [
-    "n:7",
-    "n:6",
-    "n:5"
-   ],
-   "correct": "n:6",
-   "tags": {
-    "n:7": "M-CNT-DOUBLE",
-    "n:5": "M-CNT-SKIP"
-   },
-   "h3": "נִסְפֹּר צֶלַע אַחַר צֶלַע, וְלֹא נִסְפֹּר אוֹתָהּ פַּעֲמַיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… שֵׁשׁ. עַכְשָׁו תּוֹרְכֶם.",
-   "correct_text": "שֵׁשׁ! שֵׁשׁ צְלָעוֹת.",
+   "revision": 2,
    "domain": "shapes",
-   "group": {
-    "sprite": "shape_hexagon",
-    "count": 1
-   }
+   "h2": "נַעֲבֹר בָּאֶצְבַּע עַל הַצְּלָעוֹת, אַחַת אַחַת, וְנִסְפֹּר.",
+   "h2_shared": "shp_sides",
+   "h3": "סוֹפְרִים צֶלַע אַחַר צֶלַע, וְכׇל צֶלַע פַּעַם אַחַת. עַכְשָׁו תּוֹרְכֶם.",
+   "tag": null,
+   "correct_text": "כֵּן! סְפַרְתֶּם אֶת הַצְּלָעוֹת שֶׁל כֻּלָּן.",
+   "bins": [
+    {
+     "sprite": "stick_long",
+     "count": 4,
+     "label": "אַרְבַּע צְלָעוֹת"
+    },
+    {
+     "sprite": "stick_long",
+     "count": 5,
+     "label": "חָמֵשׁ צְלָעוֹת"
+    }
+   ],
+   "prompt": "סוֹפְרִים צְלָעוֹת: אַרְבַּע לְכָאן, חָמֵשׁ לְכָאן.",
+   "items": [
+    [
+     "shape_quad",
+     1,
+     "M-CNT-DOUBLE"
+    ],
+    [
+     "shape_pentagon",
+     2,
+     "M-CNT-SKIP"
+    ],
+    [
+     "shape_rect_blue",
+     1,
+     "M-CNT-DOUBLE"
+    ],
+    [
+     "shape_pentagon",
+     2,
+     "M-CNT-SKIP"
+    ],
+    [
+     "shape_square_tilt",
+     1,
+     "M-CNT-DOUBLE"
+    ]
+   ]
   },
   {
    "kind": "pick",
@@ -1246,21 +1528,53 @@
    "h3": "בְּרִבּוּעַ כׇּל אַרְבַּע הַצְּלָעוֹת שָׁווֹת. עַכְשָׁו תּוֹרְכֶם."
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb03.2",
    "skill": "SHP-B-03",
    "difficulty": 0.44,
-   "prompt": "אֵיפֹה הַמַּלְבֵּן? לֹא כׇּל הַצְּלָעוֹת שָׁווֹת.",
-   "options": [
-    "shape_rect",
-    "shape_square",
-    "shape_circle"
-   ],
-   "correct": "shape_rect",
-   "tags": {},
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן! בַּמַּלְבֵּן הַזֶּה יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּצְלָעוֹת קְצָרוֹת.",
-   "h3": "בַּמַּלְבֵּן הַזֶּה יֵשׁ שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. עַכְשָׁו תּוֹרְכֶם."
+   "bins": [
+    {
+     "sprite": "shape_quad",
+     "label": "כׇּל הַצְּלָעוֹת שָׁווֹת"
+    },
+    {
+     "sprite": "shape_rect",
+     "label": "לֹא כֻּלָּן שָׁווֹת"
+    }
+   ],
+   "tag": "M-SHP-SQRECT",
+   "prompt": "בּוֹדְקִים אֶת הַצְּלָעוֹת: כֻּלָּן שָׁווֹת — לְכָאן. לֹא כֻּלָּן שָׁווֹת — לְכָאן.",
+   "h2": "נָנִיחַ מַקֵּל עַל כׇּל צֶלַע, וְנַשְׁוֶה אֶת הָאֹרֶךְ.",
+   "h2_shared": "shp_equal",
+   "h3": "בָּרִבּוּעַ אַרְבַּע צְלָעוֹת שָׁווֹת, גַּם כְּשֶׁהוּא מְסֻבָּב. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! בָּרִבּוּעִים כׇּל הַצְּלָעוֹת שָׁווֹת.",
+   "items": [
+    [
+     "shape_square_red",
+     1
+    ],
+    [
+     "shape_rect_blue",
+     2,
+     "M-SHP-SQRECT"
+    ],
+    [
+     "shape_square_tilt",
+     1,
+     "M-SHP-ORIENT"
+    ],
+    [
+     "shape_rect",
+     2,
+     "M-SHP-SQRECT"
+    ],
+    [
+     "shape_triangle_thin",
+     2
+    ]
+   ]
   },
   {
    "kind": "pick",
@@ -1283,21 +1597,53 @@
    "h3": "בְּרִבּוּעַ כׇּל אַרְבַּע הַצְּלָעוֹת שָׁווֹת. עַכְשָׁו תּוֹרְכֶם."
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb03.4",
    "skill": "SHP-B-03",
    "difficulty": 0.58,
-   "prompt": "אֵיפֹה הַמַּלְבֵּן? לֹא כׇּל הַצְּלָעוֹת שָׁווֹת.",
-   "options": [
-    "shape_square",
-    "shape_rect",
-    "shape_circle"
-   ],
-   "correct": "shape_rect",
-   "tags": {},
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן! בַּמַּלְבֵּן הַזֶּה יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּצְלָעוֹת קְצָרוֹת.",
-   "h3": "בַּמַּלְבֵּן הַזֶּה יֵשׁ שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. עַכְשָׁו תּוֹרְכֶם."
+   "bins": [
+    {
+     "sprite": "shape_quad",
+     "label": "כׇּל הַצְּלָעוֹת שָׁווֹת"
+    },
+    {
+     "sprite": "shape_rect",
+     "label": "לֹא כֻּלָּן שָׁווֹת"
+    }
+   ],
+   "tag": "M-SHP-SQRECT",
+   "prompt": "בּוֹדְקִים אֶת הַצְּלָעוֹת: כֻּלָּן שָׁווֹת — לְכָאן. לֹא כֻּלָּן שָׁווֹת — לְכָאן.",
+   "h2": "נָנִיחַ מַקֵּל עַל כׇּל צֶלַע, וְנַשְׁוֶה אֶת הָאֹרֶךְ.",
+   "h2_shared": "shp_equal",
+   "h3": "בָּרִבּוּעַ אַרְבַּע צְלָעוֹת שָׁווֹת, גַּם כְּשֶׁהוּא מְסֻבָּב. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! בָּרִבּוּעִים כׇּל הַצְּלָעוֹת שָׁווֹת.",
+   "items": [
+    [
+     "shape_rect_green",
+     2,
+     "M-SHP-SQRECT"
+    ],
+    [
+     "shape_square_yellow",
+     1
+    ],
+    [
+     "shape_square_tilt",
+     1,
+     "M-SHP-ORIENT"
+    ],
+    [
+     "shape_rect_orange",
+     2,
+     "M-SHP-SQRECT"
+    ],
+    [
+     "shape_square_blue",
+     1
+    ]
+   ]
   },
   {
    "kind": "pick",
@@ -1320,21 +1666,53 @@
    "h3": "בְּרִבּוּעַ כׇּל אַרְבַּע הַצְּלָעוֹת שָׁווֹת. עַכְשָׁו תּוֹרְכֶם."
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb03.6",
    "skill": "SHP-B-03",
    "difficulty": 0.72,
-   "prompt": "אֵיפֹה הַמַּלְבֵּן? לֹא כׇּל הַצְּלָעוֹת שָׁווֹת.",
-   "options": [
-    "shape_square",
-    "shape_circle",
-    "shape_rect"
-   ],
-   "correct": "shape_rect",
-   "tags": {},
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן! בַּמַּלְבֵּן הַזֶּה יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּצְלָעוֹת קְצָרוֹת.",
-   "h3": "בַּמַּלְבֵּן הַזֶּה יֵשׁ שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. עַכְשָׁו תּוֹרְכֶם."
+   "bins": [
+    {
+     "sprite": "shape_quad",
+     "label": "כׇּל הַצְּלָעוֹת שָׁווֹת"
+    },
+    {
+     "sprite": "shape_rect",
+     "label": "לֹא כֻּלָּן שָׁווֹת"
+    }
+   ],
+   "tag": "M-SHP-SQRECT",
+   "prompt": "בּוֹדְקִים אֶת הַצְּלָעוֹת: כֻּלָּן שָׁווֹת — לְכָאן. לֹא כֻּלָּן שָׁווֹת — לְכָאן.",
+   "h2": "נָנִיחַ מַקֵּל עַל כׇּל צֶלַע, וְנַשְׁוֶה אֶת הָאֹרֶךְ.",
+   "h2_shared": "shp_equal",
+   "h3": "בָּרִבּוּעַ אַרְבַּע צְלָעוֹת שָׁווֹת, גַּם כְּשֶׁהוּא מְסֻבָּב. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! בָּרִבּוּעִים כׇּל הַצְּלָעוֹת שָׁווֹת.",
+   "items": [
+    [
+     "shape_square_tilt",
+     1,
+     "M-SHP-ORIENT"
+    ],
+    [
+     "shape_rect",
+     2,
+     "M-SHP-SQRECT"
+    ],
+    [
+     "shape_square_green",
+     1
+    ],
+    [
+     "shape_rect_red",
+     2,
+     "M-SHP-SQRECT"
+    ],
+    [
+     "shape_triangle_thin",
+     2
+    ]
+   ]
   },
   {
    "kind": "spot",
@@ -1360,24 +1738,57 @@
    }
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb04.1",
    "skill": "SHP-B-04",
    "difficulty": 0.37,
-   "prompt": "זוֹ צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת?",
-   "group": {
-    "sprite": "shape_triangle",
-    "count": 1
-   },
-   "options": [
-    "tick",
-    "cross"
-   ],
-   "correct": "tick",
-   "tags": {},
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן, הִיא סְגוּרָה וְיֵשׁ לָהּ צְלָעוֹת יְשָׁרוֹת.",
-   "h3": "נִסְתַּכֵּל עַל הַקַּוִּים: אֶפְשָׁר לָלֶכֶת מִסָּבִיב וְלַחֲזֹר לַהַתְחָלָה? עַכְשָׁו תּוֹרְכֶם."
+   "bins": [
+    {
+     "sprite": "tick",
+     "label": "כֵּן"
+    },
+    {
+     "sprite": "cross",
+     "label": "לֹא"
+    }
+   ],
+   "tag": "M-SHP-CLOSED",
+   "prompt": "סְגוּרָה, וְכׇל הַצְּלָעוֹת יְשָׁרוֹת? כֵּן — לְכָאן. לֹא — לְכָאן.",
+   "h2": "נֵלֵךְ בָּאֶצְבַּע מִסָּבִיב: חוֹזְרִים לַהַתְחָלָה בְּלִי לָצֵאת, וּבְלִי קַו עָקֹם?",
+   "h2_shared": "shp_closed",
+   "h3": "נִסְתַּכֵּל עַל הַקַּוִּים: אֶפְשָׁר לָלֶכֶת מִסָּבִיב וְלַחֲזֹר לַהַתְחָלָה? עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! הַסְּגוּרוֹת עִם הַצְּלָעוֹת הַיְשָׁרוֹת בְּיַחַד.",
+   "items": [
+    [
+     "shape_triangle",
+     1
+    ],
+    [
+     "shape_open",
+     2,
+     "M-SHP-CLOSED"
+    ],
+    [
+     "shape_pentagon",
+     1
+    ],
+    [
+     "shape_curved",
+     2,
+     "M-SHP-CLOSED"
+    ],
+    [
+     "shape_triangle_thin",
+     1,
+     "M-SHP-PROTO"
+    ],
+    [
+     "shape_hexagon",
+     1
+    ]
+   ]
   },
   {
    "kind": "pick",
@@ -1402,24 +1813,53 @@
    "h3": "נִסְתַּכֵּל עַל הַקַּוִּים: אֶפְשָׁר לָלֶכֶת מִסָּבִיב וְלַחֲזֹר לַהַתְחָלָה? עַכְשָׁו תּוֹרְכֶם."
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb04.3",
    "skill": "SHP-B-04",
    "difficulty": 0.51,
-   "prompt": "זוֹ צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת?",
-   "group": {
-    "sprite": "shape_pentagon",
-    "count": 1
-   },
-   "options": [
-    "tick",
-    "cross"
-   ],
-   "correct": "tick",
-   "tags": {},
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן, הִיא סְגוּרָה וְיֵשׁ לָהּ צְלָעוֹת יְשָׁרוֹת.",
-   "h3": "נִסְתַּכֵּל עַל הַקַּוִּים: אֶפְשָׁר לָלֶכֶת מִסָּבִיב וְלַחֲזֹר לַהַתְחָלָה? עַכְשָׁו תּוֹרְכֶם."
+   "bins": [
+    {
+     "sprite": "tick",
+     "label": "כֵּן"
+    },
+    {
+     "sprite": "cross",
+     "label": "לֹא"
+    }
+   ],
+   "tag": "M-SHP-CLOSED",
+   "prompt": "סְגוּרָה, וְכׇל הַצְּלָעוֹת יְשָׁרוֹת? כֵּן — לְכָאן. לֹא — לְכָאן.",
+   "h2": "נֵלֵךְ בָּאֶצְבַּע מִסָּבִיב: חוֹזְרִים לַהַתְחָלָה בְּלִי לָצֵאת, וּבְלִי קַו עָקֹם?",
+   "h2_shared": "shp_closed",
+   "h3": "נִסְתַּכֵּל עַל הַקַּוִּים: אֶפְשָׁר לָלֶכֶת מִסָּבִיב וְלַחֲזֹר לַהַתְחָלָה? עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! הַסְּגוּרוֹת עִם הַצְּלָעוֹת הַיְשָׁרוֹת בְּיַחַד.",
+   "items": [
+    [
+     "shape_quad",
+     1
+    ],
+    [
+     "shape_curved",
+     2,
+     "M-SHP-CLOSED"
+    ],
+    [
+     "shape_square_tilt",
+     1,
+     "M-SHP-ORIENT"
+    ],
+    [
+     "shape_open",
+     2,
+     "M-SHP-CLOSED"
+    ],
+    [
+     "shape_pentagon",
+     1
+    ]
+   ]
   },
   {
    "kind": "pick",
@@ -1444,44 +1884,107 @@
    "h3": "נִסְתַּכֵּל עַל הַקַּוִּים: אֶפְשָׁר לָלֶכֶת מִסָּבִיב וְלַחֲזֹר לַהַתְחָלָה? עַכְשָׁו תּוֹרְכֶם."
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb04.5",
    "skill": "SHP-B-04",
    "difficulty": 0.65,
-   "prompt": "זוֹ צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת?",
-   "group": {
-    "sprite": "shape_hexagon",
-    "count": 1
-   },
-   "options": [
-    "tick",
-    "cross"
-   ],
-   "correct": "tick",
-   "tags": {},
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן, הִיא סְגוּרָה וְיֵשׁ לָהּ צְלָעוֹת יְשָׁרוֹת.",
-   "h3": "נִסְתַּכֵּל עַל הַקַּוִּים: אֶפְשָׁר לָלֶכֶת מִסָּבִיב וְלַחֲזֹר לַהַתְחָלָה? עַכְשָׁו תּוֹרְכֶם."
+   "bins": [
+    {
+     "sprite": "tick",
+     "label": "כֵּן"
+    },
+    {
+     "sprite": "cross",
+     "label": "לֹא"
+    }
+   ],
+   "tag": "M-SHP-CLOSED",
+   "prompt": "סְגוּרָה, וְכׇל הַצְּלָעוֹת יְשָׁרוֹת? כֵּן — לְכָאן. לֹא — לְכָאן.",
+   "h2": "נֵלֵךְ בָּאֶצְבַּע מִסָּבִיב: חוֹזְרִים לַהַתְחָלָה בְּלִי לָצֵאת, וּבְלִי קַו עָקֹם?",
+   "h2_shared": "shp_closed",
+   "h3": "נִסְתַּכֵּל עַל הַקַּוִּים: אֶפְשָׁר לָלֶכֶת מִסָּבִיב וְלַחֲזֹר לַהַתְחָלָה? עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! הַסְּגוּרוֹת עִם הַצְּלָעוֹת הַיְשָׁרוֹת בְּיַחַד.",
+   "items": [
+    [
+     "shape_hexagon",
+     1
+    ],
+    [
+     "shape_open",
+     2,
+     "M-SHP-CLOSED"
+    ],
+    [
+     "shape_triangle_down",
+     1,
+     "M-SHP-ORIENT"
+    ],
+    [
+     "shape_curved",
+     2,
+     "M-SHP-CLOSED"
+    ],
+    [
+     "shape_rect",
+     1
+    ]
+   ]
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb04.6",
    "skill": "SHP-B-04",
    "difficulty": 0.72,
-   "prompt": "זוֹ צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת?",
-   "group": {
-    "sprite": "shape_quad",
-    "count": 1
-   },
-   "options": [
-    "cross",
-    "tick"
-   ],
-   "correct": "tick",
-   "tags": {},
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן, הִיא סְגוּרָה וְיֵשׁ לָהּ צְלָעוֹת יְשָׁרוֹת.",
-   "h3": "נִסְתַּכֵּל עַל הַקַּוִּים: אֶפְשָׁר לָלֶכֶת מִסָּבִיב וְלַחֲזֹר לַהַתְחָלָה? עַכְשָׁו תּוֹרְכֶם."
+   "bins": [
+    {
+     "sprite": "tick",
+     "label": "כֵּן"
+    },
+    {
+     "sprite": "cross",
+     "label": "לֹא"
+    }
+   ],
+   "tag": "M-SHP-CLOSED",
+   "prompt": "סְגוּרָה, וְכׇל הַצְּלָעוֹת יְשָׁרוֹת? כֵּן — לְכָאן. לֹא — לְכָאן.",
+   "h2": "נֵלֵךְ בָּאֶצְבַּע מִסָּבִיב: חוֹזְרִים לַהַתְחָלָה בְּלִי לָצֵאת, וּבְלִי קַו עָקֹם?",
+   "h2_shared": "shp_closed",
+   "h3": "נִסְתַּכֵּל עַל הַקַּוִּים: אֶפְשָׁר לָלֶכֶת מִסָּבִיב וְלַחֲזֹר לַהַתְחָלָה? עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! הַסְּגוּרוֹת עִם הַצְּלָעוֹת הַיְשָׁרוֹת בְּיַחַד.",
+   "items": [
+    [
+     "shape_curved",
+     2,
+     "M-SHP-CLOSED"
+    ],
+    [
+     "shape_triangle",
+     1
+    ],
+    [
+     "shape_open",
+     2,
+     "M-SHP-CLOSED"
+    ],
+    [
+     "shape_triangle_thin",
+     1,
+     "M-SHP-PROTO"
+    ],
+    [
+     "shape_quad",
+     1
+    ],
+    [
+     "shape_circle",
+     2,
+     "M-SHP-CLOSED"
+    ]
+   ]
   },
   {
    "kind": "pick",
@@ -1561,20 +2064,50 @@
    "h3": "הַגָּלִיל — נִסְתַּכֵּל עַל הַצּוּרָה שֶׁלּוֹ. עַכְשָׁו תּוֹרְכֶם."
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb08.2",
    "skill": "SHP-B-08",
    "difficulty": 0.44,
-   "prompt": "אֵיפֹה הֶחָרוּט?",
-   "options": [
-    "solid_pyramid",
-    "solid_cone",
-    "solid_box"
-   ],
-   "correct": "solid_cone",
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן! זֶה הֶחָרוּט.",
-   "h3": "הֶחָרוּט — נִסְתַּכֵּל עַל הַצּוּרָה שֶׁלּוֹ. עַכְשָׁו תּוֹרְכֶם."
+   "bins": [
+    {
+     "sprite": "ball_red",
+     "label": "מִתְגַּלְגֵּל"
+    },
+    {
+     "sprite": "block",
+     "label": "לֹא מִתְגַּלְגֵּל"
+    }
+   ],
+   "tag": null,
+   "prompt": "אֵיזֶה גּוּף מִתְגַּלְגֵּל? לְכָאן. וּמִי לֹא — לְכָאן.",
+   "h2": "נְדַמְיֵן שֶׁדּוֹחֲפִים כׇּל גּוּף: יֵשׁ לוֹ צַד עָגֹל?",
+   "h2_shared": "shp_solid_roll",
+   "h3": "גָּלִיל, חָרוּט וְכַדּוּר מִתְגַּלְגְּלִים, כִּי יֵשׁ לָהֶם צַד עָגֹל. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! מַה שֶּׁיֵּשׁ לוֹ צַד עָגֹל מִתְגַּלְגֵּל.",
+   "items": [
+    [
+     "solid_sphere",
+     1
+    ],
+    [
+     "solid_box",
+     2
+    ],
+    [
+     "solid_cylinder",
+     1
+    ],
+    [
+     "solid_pyramid",
+     2
+    ],
+    [
+     "solid_cone",
+     1
+    ]
+   ]
   },
   {
    "kind": "pick",
@@ -1593,20 +2126,54 @@
    "h3": "הַכַּדּוּר — נִסְתַּכֵּל עַל הַצּוּרָה שֶׁלּוֹ. עַכְשָׁו תּוֹרְכֶם."
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb08.4",
    "skill": "SHP-B-08",
    "difficulty": 0.58,
-   "prompt": "אֵיפֹה הַפִּירָמִידָה?",
-   "options": [
-    "solid_pyramid",
-    "solid_sphere",
-    "solid_box"
-   ],
-   "correct": "solid_pyramid",
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן! זוֹ הַפִּירָמִידָה.",
-   "h3": "הַפִּירָמִידָה — נִסְתַּכֵּל עַל הַצּוּרָה שֶׁלָּהּ. עַכְשָׁו תּוֹרְכֶם."
+   "bins": [
+    {
+     "sprite": "solid_cylinder",
+     "label": "גָּלִיל"
+    },
+    {
+     "sprite": "solid_cone",
+     "label": "חָרוּט"
+    },
+    {
+     "sprite": "solid_sphere",
+     "label": "כַּדּוּר"
+    }
+   ],
+   "tag": null,
+   "prompt": "כׇּל גּוּף לַשֵּׁם שֶׁלּוֹ: גָּלִיל, חָרוּט, כַּדּוּר.",
+   "h2": "נִסְתַּכֵּל לְמַעְלָה: יֵשׁ חֹד? וּלְמַטָּה: יֵשׁ עִגּוּל שָׁטוּחַ?",
+   "h2_shared": "shp_solid_name",
+   "h3": "לֶחָרוּט יֵשׁ חֹד, לַגָּלִיל שְׁנֵי עִגּוּלִים, וְהַכַּדּוּר עָגֹל כֻּלּוֹ. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! כׇּל גּוּף עִם הַשֵּׁם שֶׁלּוֹ.",
+   "items": [
+    [
+     "ball_blue",
+     3
+    ],
+    [
+     "solid_cone",
+     2
+    ],
+    [
+     "solid_cylinder",
+     1
+    ],
+    [
+     "ball_yellow",
+     3
+    ],
+    [
+     "solid_sphere",
+     3
+    ]
+   ]
   },
   {
    "kind": "pick",
@@ -1625,36 +2192,100 @@
    "h3": "הַתֵּבָה דּוֹמָה לְקֻפְסָה שֶׁל נַעֲלַיִם. עַכְשָׁו תּוֹרְכֶם."
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb08.6",
    "skill": "SHP-B-08",
    "difficulty": 0.72,
-   "prompt": "אֵיפֹה הַגָּלִיל?",
-   "options": [
-    "solid_pyramid",
-    "solid_box",
-    "solid_cylinder"
-   ],
-   "correct": "solid_cylinder",
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן! זֶה הַגָּלִיל.",
-   "h3": "הַגָּלִיל — נִסְתַּכֵּל עַל הַצּוּרָה שֶׁלּוֹ. עַכְשָׁו תּוֹרְכֶם."
+   "bins": [
+    {
+     "sprite": "ball_red",
+     "label": "מִתְגַּלְגֵּל"
+    },
+    {
+     "sprite": "block",
+     "label": "לֹא מִתְגַּלְגֵּל"
+    }
+   ],
+   "tag": null,
+   "prompt": "אֵיזֶה גּוּף מִתְגַּלְגֵּל? לְכָאן. וּמִי לֹא — לְכָאן.",
+   "h2": "נְדַמְיֵן שֶׁדּוֹחֲפִים כׇּל גּוּף: יֵשׁ לוֹ צַד עָגֹל?",
+   "h2_shared": "shp_solid_roll",
+   "h3": "גָּלִיל, חָרוּט וְכַדּוּר מִתְגַּלְגְּלִים, כִּי יֵשׁ לָהֶם צַד עָגֹל. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! מַה שֶּׁיֵּשׁ לוֹ צַד עָגֹל מִתְגַּלְגֵּל.",
+   "items": [
+    [
+     "solid_pyramid",
+     2
+    ],
+    [
+     "ball_green",
+     1
+    ],
+    [
+     "solid_cylinder",
+     1
+    ],
+    [
+     "solid_box",
+     2
+    ],
+    [
+     "solid_cone",
+     1
+    ]
+   ]
   },
   {
-   "kind": "pick",
+   "kind": "sort",
    "id": "b.shpb08.7",
    "skill": "SHP-B-08",
    "difficulty": 0.79,
-   "prompt": "אֵיפֹה הֶחָרוּט?",
-   "options": [
-    "solid_cone",
-    "solid_cylinder",
-    "solid_sphere"
-   ],
-   "correct": "solid_cone",
+   "revision": 2,
    "domain": "shapes",
-   "correct_text": "כֵּן! זֶה הֶחָרוּט.",
-   "h3": "הֶחָרוּט — נִסְתַּכֵּל עַל הַצּוּרָה שֶׁלּוֹ. עַכְשָׁו תּוֹרְכֶם."
+   "bins": [
+    {
+     "sprite": "solid_cylinder",
+     "label": "גָּלִיל"
+    },
+    {
+     "sprite": "solid_cone",
+     "label": "חָרוּט"
+    },
+    {
+     "sprite": "solid_sphere",
+     "label": "כַּדּוּר"
+    }
+   ],
+   "tag": null,
+   "prompt": "כׇּל גּוּף לַשֵּׁם שֶׁלּוֹ: גָּלִיל, חָרוּט, כַּדּוּר.",
+   "h2": "נִסְתַּכֵּל לְמַעְלָה: יֵשׁ חֹד? וּלְמַטָּה: יֵשׁ עִגּוּל שָׁטוּחַ?",
+   "h2_shared": "shp_solid_name",
+   "h3": "לֶחָרוּט יֵשׁ חֹד, לַגָּלִיל שְׁנֵי עִגּוּלִים, וְהַכַּדּוּר עָגֹל כֻּלּוֹ. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! כׇּל גּוּף עִם הַשֵּׁם שֶׁלּוֹ.",
+   "items": [
+    [
+     "solid_cylinder",
+     1
+    ],
+    [
+     "ball_red",
+     3
+    ],
+    [
+     "solid_cone",
+     2
+    ],
+    [
+     "solid_sphere",
+     3
+    ],
+    [
+     "ball_green",
+     3
+    ]
+   ]
   },
   {
    "kind": "pick",
@@ -1688,6 +2319,327 @@
    "domain": "shapes",
    "check": "error_spotting",
    "prompt": "אוֹסְפִים רַק גְּלִילִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?"
+  },
+  {
+   "kind": "shapebuild",
+   "id": "b.shpb05.1",
+   "skill": "SHP-B-05",
+   "difficulty": 0.37,
+   "domain": "shapes",
+   "what": "בַּיִת",
+   "slots": [
+    [
+     "shape_square_blue",
+     50,
+     70,
+     40,
+     0
+    ],
+    [
+     "shape_triangle_red",
+     50,
+     42,
+     40,
+     0
+    ],
+    [
+     "shape_square_blue",
+     75.2,
+     73.6,
+     30,
+     0
+    ]
+   ],
+   "decoys": [
+    "shape_circle_yellow",
+    "shape_rect_green"
+   ],
+   "h2": "נְחַפֵּשׂ פִּנּוֹת וְקַוִּים יְשָׁרִים בַּצֵּל: אֵיפֹה מִסְתַּתֵּר מְשֻׁלָּשׁ?",
+   "h2_shared": "shp_shadow",
+   "h3": "מַתְחִילִים מֵהַחֲתִיכָה הַגְּדוֹלָה, וְאַחַר כָּךְ הַקְּטַנּוֹת. עַכְשָׁו תּוֹרְכֶם.",
+   "goal": "child finds the shapes hidden in one shadow and puts each in its place"
+  },
+  {
+   "kind": "shapebuild",
+   "id": "b.shpb05.2",
+   "skill": "SHP-B-05",
+   "difficulty": 0.44,
+   "domain": "shapes",
+   "what": "סִירָה",
+   "slots": [
+    [
+     "shape_rect_blue",
+     50,
+     75,
+     60,
+     0
+    ],
+    [
+     "shape_triangle_red",
+     42,
+     49.56,
+     36,
+     0
+    ],
+    [
+     "shape_triangle_red",
+     66.8,
+     52.96,
+     26,
+     0
+    ]
+   ],
+   "decoys": [
+    "shape_square_yellow",
+    "shape_circle_green"
+   ],
+   "h2": "נְחַפֵּשׂ פִּנּוֹת וְקַוִּים יְשָׁרִים בַּצֵּל: אֵיפֹה מִסְתַּתֵּר מְשֻׁלָּשׁ?",
+   "h2_shared": "shp_shadow",
+   "h3": "מַתְחִילִים מֵהַחֲתִיכָה הַגְּדוֹלָה, וְאַחַר כָּךְ הַקְּטַנּוֹת. עַכְשָׁו תּוֹרְכֶם.",
+   "goal": "child finds the shapes hidden in one shadow and puts each in its place"
+  },
+  {
+   "kind": "shapebuild",
+   "id": "b.shpb05.3",
+   "skill": "SHP-B-05",
+   "difficulty": 0.51,
+   "domain": "shapes",
+   "what": "מְכוֹנִית",
+   "slots": [
+    [
+     "shape_rect_red",
+     50,
+     60,
+     60,
+     0
+    ],
+    [
+     "shape_square_blue",
+     50,
+     36.72,
+     28,
+     0
+    ],
+    [
+     "shape_circle_yellow",
+     36,
+     80.8,
+     20,
+     0
+    ],
+    [
+     "shape_circle_yellow",
+     64,
+     80.8,
+     20,
+     0
+    ]
+   ],
+   "decoys": [
+    "shape_triangle_green"
+   ],
+   "h2": "נְחַפֵּשׂ פִּנּוֹת וְקַוִּים יְשָׁרִים בַּצֵּל: אֵיפֹה מִסְתַּתֵּר מְשֻׁלָּשׁ?",
+   "h2_shared": "shp_shadow",
+   "h3": "מַתְחִילִים מֵהַחֲתִיכָה הַגְּדוֹלָה, וְאַחַר כָּךְ הַקְּטַנּוֹת. עַכְשָׁו תּוֹרְכֶם.",
+   "goal": "child finds the shapes hidden in one shadow and puts each in its place"
+  },
+  {
+   "kind": "shapebuild",
+   "id": "b.shpb05.4",
+   "skill": "SHP-B-05",
+   "difficulty": 0.6,
+   "domain": "shapes",
+   "what": "חֲלָלִית",
+   "slots": [
+    [
+     "shape_rect_orange",
+     50,
+     55,
+     60,
+     90
+    ],
+    [
+     "shape_triangle_red",
+     50,
+     17.38,
+     33,
+     0
+    ],
+    [
+     "shape_triangle_red",
+     27.2,
+     73.24,
+     24,
+     0
+    ],
+    [
+     "shape_triangle_red",
+     72.8,
+     73.24,
+     24,
+     0
+    ]
+   ],
+   "decoys": [
+    "shape_circle_blue",
+    "shape_square_green"
+   ],
+   "check": "transfer",
+   "h2": "נְחַפֵּשׂ פִּנּוֹת וְקַוִּים יְשָׁרִים בַּצֵּל: אֵיפֹה מִסְתַּתֵּר מְשֻׁלָּשׁ?",
+   "h2_shared": "shp_shadow",
+   "h3": "מַתְחִילִים מֵהַחֲתִיכָה הַגְּדוֹלָה, וְאַחַר כָּךְ הַקְּטַנּוֹת. עַכְשָׁו תּוֹרְכֶם.",
+   "goal": "child finds the shapes hidden in one shadow and puts each in its place"
+  },
+  {
+   "kind": "shapebuild",
+   "id": "b.shpb06.1",
+   "skill": "SHP-B-06",
+   "difficulty": 0.37,
+   "domain": "shapes",
+   "what": "מַלְבֵּן",
+   "slots": [
+    [
+     "shape_square_blue",
+     30,
+     50,
+     40,
+     0
+    ],
+    [
+     "shape_square_blue",
+     58.8,
+     50,
+     40,
+     0
+    ]
+   ],
+   "decoys": [
+    "shape_triangle_green",
+    "shape_circle_red"
+   ],
+   "prompt": "בּוֹנִים מַלְבֵּן מִשְּׁנֵי רִבּוּעִים.",
+   "correct_text": "כֵּן! שְׁנֵי רִבּוּעִים עוֹשִׂים מַלְבֵּן.",
+   "h2": "אֵיזוֹ צוּרָה קְטַנָּה נִכְנֶסֶת פַּעֲמַיִם בַּצֵּל?",
+   "h2_shared": "shp_twice",
+   "h3": "שְׁנֵי רִבּוּעִים עוֹשִׂים מַלְבֵּן. שָׂמִים אֶחָד, וְעוֹד אֶחָד לְיָדוֹ. עַכְשָׁו תּוֹרְכֶם.",
+   "goal": "child fills a shape with two or more smaller shapes"
+  },
+  {
+   "kind": "shapebuild",
+   "id": "b.shpb06.2",
+   "skill": "SHP-B-06",
+   "difficulty": 0.44,
+   "domain": "shapes",
+   "what": "רִבּוּעַ",
+   "slots": [
+    [
+     "shape_rect_green",
+     50,
+     50,
+     50,
+     0
+    ],
+    [
+     "shape_rect_green",
+     50,
+     72,
+     50,
+     0
+    ]
+   ],
+   "decoys": [
+    "shape_triangle_blue",
+    "shape_circle_yellow"
+   ],
+   "prompt": "בּוֹנִים רִבּוּעַ מִשְּׁנֵי מַלְבֵּנִים.",
+   "correct_text": "כֵּן! שְׁנֵי מַלְבֵּנִים עוֹשִׂים רִבּוּעַ.",
+   "h2": "אֵיזוֹ צוּרָה קְטַנָּה נִכְנֶסֶת פַּעֲמַיִם בַּצֵּל?",
+   "h2_shared": "shp_twice",
+   "h3": "שְׁנֵי מַלְבֵּנִים עוֹשִׂים רִבּוּעַ. שָׂמִים אֶחָד, וְעוֹד אֶחָד לְיָדוֹ. עַכְשָׁו תּוֹרְכֶם.",
+   "goal": "child fills a shape with two or more smaller shapes"
+  },
+  {
+   "kind": "shapebuild",
+   "id": "b.shpb06.3",
+   "skill": "SHP-B-06",
+   "difficulty": 0.51,
+   "domain": "shapes",
+   "what": "מְרֻבָּע",
+   "slots": [
+    [
+     "shape_triangle_orange",
+     50,
+     40,
+     50,
+     0
+    ],
+    [
+     "shape_triangle_orange",
+     50,
+     74,
+     50,
+     180
+    ]
+   ],
+   "decoys": [
+    "shape_square_blue",
+    "shape_circle_green"
+   ],
+   "prompt": "בּוֹנִים מְרֻבָּע מִשְּׁנֵי מְשֻׁלָּשִׁים.",
+   "correct_text": "כֵּן! שְׁנֵי מְשֻׁלָּשִׁים עוֹשִׂים מְרֻבָּע.",
+   "h2": "אֵיזוֹ צוּרָה קְטַנָּה נִכְנֶסֶת פַּעֲמַיִם בַּצֵּל?",
+   "h2_shared": "shp_twice",
+   "h3": "שְׁנֵי מְשֻׁלָּשִׁים עוֹשִׂים מְרֻבָּע. שָׂמִים אֶחָד, וְעוֹד אֶחָד לְיָדוֹ. עַכְשָׁו תּוֹרְכֶם.",
+   "goal": "child fills a shape with two or more smaller shapes"
+  },
+  {
+   "kind": "shapebuild",
+   "id": "b.shpb06.4",
+   "skill": "SHP-B-06",
+   "difficulty": 0.6,
+   "domain": "shapes",
+   "what": "רִבּוּעַ גָּדוֹל",
+   "slots": [
+    [
+     "shape_square_yellow",
+     40,
+     40,
+     30,
+     0
+    ],
+    [
+     "shape_square_yellow",
+     61.6,
+     40,
+     30,
+     0
+    ],
+    [
+     "shape_square_yellow",
+     40,
+     61.6,
+     30,
+     0
+    ],
+    [
+     "shape_square_yellow",
+     61.6,
+     61.6,
+     30,
+     0
+    ]
+   ],
+   "decoys": [
+    "shape_triangle_red",
+    "shape_circle_blue"
+   ],
+   "check": "transfer",
+   "prompt": "בּוֹנִים רִבּוּעַ גָּדוֹל מֵאַרְבָּעָה רִבּוּעִים.",
+   "correct_text": "כֵּן! אַרְבָּעָה רִבּוּעִים עוֹשִׂים רִבּוּעַ גָּדוֹל.",
+   "h2": "אֵיזוֹ צוּרָה קְטַנָּה נִכְנֶסֶת פַּעֲמַיִם בַּצֵּל?",
+   "h2_shared": "shp_twice",
+   "h3": "אַרְבָּעָה רִבּוּעִים עוֹשִׂים רִבּוּעַ גָּדוֹל. שָׂמִים אֶחָד, וְעוֹד אֶחָד לְיָדוֹ. עַכְשָׁו תּוֹרְכֶם.",
+   "goal": "child fills a shape with two or more smaller shapes"
   }
  ],
  "lessons": [
@@ -1834,6 +2786,36 @@
    ],
    "minutes": 5,
    "done": "יָפֶה מְאֹד! גּוּפִים בְּכׇל מָקוֹם."
+  },
+  {
+   "id": "one-shadow",
+   "title": "צֵל אֶחָד, הַרְבֵּה צוּרוֹת",
+   "skills": [
+    "SHP-B-05"
+   ],
+   "items": [
+    "b.shpb05.1",
+    "b.shpb05.2",
+    "b.shpb05.3",
+    "b.shpb05.4"
+   ],
+   "minutes": 5,
+   "done": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַצּוּרוֹת בַּצֵּל."
+  },
+  {
+   "id": "shapes-make-shapes",
+   "title": "צוּרוֹת עוֹשׂוֹת צוּרוֹת",
+   "skills": [
+    "SHP-B-06"
+   ],
+   "items": [
+    "b.shpb06.1",
+    "b.shpb06.2",
+    "b.shpb06.3",
+    "b.shpb06.4"
+   ],
+   "minutes": 5,
+   "done": "נִפְלָא! מִשְּׁתֵּי צוּרוֹת בְּנִיתֶם צוּרָה."
   }
  ]
 }

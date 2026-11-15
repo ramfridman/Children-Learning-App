@@ -1,7 +1,7 @@
 {
   "unit": "shapes",
   "domain": "shapes",
-  "note": "Band A of Shapes (SHP-A-01 to 05, 07, 08 and 10; SHP-A-06 needs the drag-a-piece template and SHP-A-09 more scenes, both later). Hebrew is a draft by Claude, needs-editor.",
+  "note": "Band A of Shapes (SHP-A-01 to 05, 07, 08 and 10; SHP-A-06 needs the drag-a-piece template and SHP-A-09 more scenes, both later). Hebrew is a draft by Claude, needs-editor. M11 Stage 2 pilot (2026-11-15): 23 taps re-cut to sort_drag and shape_builder, revision 2; see docs/milestones/M11-stage2.md.",
   "assetGlobs": [
     "shape_*",
     "window",
@@ -17,7 +17,18 @@
     "ball_red",
     "ball_blue",
     "solid_sphere",
-    "shape_curved"
+    "shape_curved",
+    "clue_not_triangle",
+    "clue_not_square",
+    "clue_not_circle",
+    "coin",
+    "clock_3",
+    "note_20",
+    "ball_yellow",
+    "ball_green",
+    "block",
+    "tower_1",
+    "apple"
   ],
   "things": {
     "ball": [
@@ -409,66 +420,140 @@
   ],
   "activities": [
     {
-      "kind": "pick",
+      "kind": "shapebuild",
+      "what": "קֻפְסַת צוּרוֹת",
+      "prompt": "מַכְנִיסִים כׇּל צוּרָה לַחֹר שֶׁלָּהּ.",
+      "h2": "נַעֲבֹר בָּאֶצְבַּע מִסָּבִיב לַחֹר: הוּא עָגֹל, אוֹ שֶׁיֵּשׁ לוֹ פִּנּוֹת?",
+      "h2_shared": "shp_sorter",
+      "h3": "כׇּל צוּרָה נִכְנֶסֶת לַחֹר שֶׁדּוֹמֶה לָהּ בְּדִיּוּק. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כׇּל צוּרָה בַּחֹר שֶׁלָּהּ.",
+      "goal": "child puts each shape into the hole of the same shape",
+      "slots": [
+        [
+          "shape_circle",
+          25,
+          25,
+          34,
+          0
+        ],
+        [
+          "shape_square",
+          75,
+          25,
+          34,
+          0
+        ],
+        [
+          "shape_triangle",
+          50,
+          68,
+          34,
+          0
+        ]
+      ],
+      "decoys": [
+        "shape_rect",
+        "shape_open"
+      ],
+      "decoy_tags": {
+        "shape_rect": "M-SHP-SQRECT",
+        "shape_open": "M-SHP-CLOSED"
+      },
+      "difficulty": 0.05,
       "id": "shp.match.circle",
       "skill": "SHP-A-01",
-      "prompt": "אֵיפֹה אוֹתָהּ צוּרָה?",
-      "group": {
-        "sprite": "shape_circle",
-        "count": 1
-      },
-      "options": [
-        "shape_square",
-        "shape_circle",
-        "shape_triangle"
-      ],
-      "correct": "shape_circle",
-      "difficulty": 0.05,
-      "tags": {
-        "shape_square": "M-COL-ONEATTR"
-      }
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "shapebuild",
+      "what": "קֻפְסַת צוּרוֹת",
+      "prompt": "מַכְנִיסִים כׇּל צוּרָה לַחֹר שֶׁלָּהּ.",
+      "h2": "נַעֲבֹר בָּאֶצְבַּע מִסָּבִיב לַחֹר: הוּא עָגֹל, אוֹ שֶׁיֵּשׁ לוֹ פִּנּוֹת?",
+      "h2_shared": "shp_sorter",
+      "h3": "כׇּל צוּרָה נִכְנֶסֶת לַחֹר שֶׁדּוֹמֶה לָהּ בְּדִיּוּק. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כׇּל צוּרָה בַּחֹר שֶׁלָּהּ.",
+      "goal": "child puts each shape into the hole of the same shape",
+      "slots": [
+        [
+          "shape_square_blue",
+          25,
+          25,
+          34,
+          0
+        ],
+        [
+          "shape_rect_orange",
+          75,
+          25,
+          34,
+          0
+        ],
+        [
+          "shape_circle_red",
+          50,
+          68,
+          34,
+          0
+        ]
+      ],
+      "decoys": [
+        "shape_curved"
+      ],
+      "decoy_tags": {
+        "shape_curved": "M-SHP-CLOSED"
+      },
+      "pair_tags": {
+        "shape_rect_orange>shape_square_blue": "M-SHP-SQRECT"
+      },
+      "difficulty": 0.1,
       "id": "shp.match.square",
       "skill": "SHP-A-01",
-      "prompt": "אֵיפֹה אוֹתָהּ צוּרָה?",
-      "group": {
-        "sprite": "shape_square",
-        "count": 1
-      },
-      "options": [
-        "shape_square",
-        "shape_circle",
-        "shape_rect"
-      ],
-      "correct": "shape_square",
-      "difficulty": 0.05,
-      "tags": {
-        "shape_circle": "M-COL-ONEATTR",
-        "shape_rect": "M-SHP-SQRECT"
-      }
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "shapebuild",
+      "what": "קֻפְסַת צוּרוֹת",
+      "prompt": "מַכְנִיסִים כׇּל צוּרָה לַחֹר שֶׁלָּהּ.",
+      "h2": "נַעֲבֹר בָּאֶצְבַּע מִסָּבִיב לַחֹר: הוּא עָגֹל, אוֹ שֶׁיֵּשׁ לוֹ פִּנּוֹת?",
+      "h2_shared": "shp_sorter",
+      "h3": "כׇּל צוּרָה נִכְנֶסֶת לַחֹר שֶׁדּוֹמֶה לָהּ בְּדִיּוּק. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כׇּל צוּרָה בַּחֹר שֶׁלָּהּ.",
+      "goal": "child puts each shape into the hole of the same shape",
+      "slots": [
+        [
+          "shape_triangle_green",
+          25,
+          25,
+          34,
+          0
+        ],
+        [
+          "shape_circle_yellow",
+          75,
+          25,
+          34,
+          0
+        ],
+        [
+          "shape_square_red",
+          50,
+          68,
+          34,
+          0
+        ]
+      ],
+      "decoys": [
+        "shape_open",
+        "shape_rect_blue"
+      ],
+      "decoy_tags": {
+        "shape_open": "M-SHP-CLOSED",
+        "shape_rect_blue": "M-SHP-SQRECT"
+      },
+      "difficulty": 0.1,
       "id": "shp.match.triangle",
       "skill": "SHP-A-01",
-      "prompt": "אֵיפֹה אוֹתָהּ צוּרָה?",
-      "group": {
-        "sprite": "shape_triangle",
-        "count": 1
-      },
-      "options": [
-        "shape_circle",
-        "shape_open",
-        "shape_triangle"
-      ],
-      "correct": "shape_triangle",
-      "difficulty": 0.1,
-      "tags": {
-        "shape_circle": "M-COL-ONEATTR",
-        "shape_open": "M-SHP-CLOSED"
-      }
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -491,13 +576,15 @@
       "options": [
         "shape_square",
         "shape_rect",
-        "shape_triangle"
+        "shape_rect_blue"
       ],
       "correct": "shape_square",
       "difficulty": 0.15,
       "tags": {
-        "shape_rect": "M-SHP-SQRECT"
-      }
+        "shape_rect": "M-SHP-SQRECT",
+        "shape_rect_blue": "M-SHP-SQRECT"
+      },
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -505,15 +592,17 @@
       "skill": "SHP-A-02",
       "prompt": "אֵיפֹה הַמְּשֻׁלָּשׁ?",
       "options": [
-        "shape_circle",
+        "shape_curved",
         "shape_triangle",
         "shape_open"
       ],
       "correct": "shape_triangle",
       "difficulty": 0.15,
       "tags": {
-        "shape_open": "M-SHP-CLOSED"
-      }
+        "shape_open": "M-SHP-CLOSED",
+        "shape_curved": "M-SHP-CLOSED"
+      },
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -529,55 +618,165 @@
       "difficulty": 0.2
     },
     {
-      "kind": "pick",
+      "kind": "sort",
+      "bins": [
+        {
+          "sprite": "shape_square",
+          "label": "רִבּוּעַ"
+        },
+        {
+          "sprite": "clue_not_square",
+          "label": "לֹא רִבּוּעַ"
+        }
+      ],
+      "prompt": "רִבּוּעִים לְכָאן, וּמַה שֶּׁלֹּא רִבּוּעַ — לְכָאן.",
+      "tag": "M-SHP-ORIENT",
+      "h2": "רִבּוּעַ מְסֻבָּב הוּא עֲדַיִן רִבּוּעַ: אַרְבַּע צְלָעוֹת שָׁווֹת.",
+      "h2_shared": "shp_square_turn",
+      "h3": "גַּם רִבּוּעַ מְסֻבָּב הוּא רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כׇּל הָרִבּוּעִים בְּיַחַד.",
+      "goal": "child sorts squares in any turn from shapes that are not squares",
+      "items": [
+        [
+          "shape_square_tilt",
+          1,
+          "M-SHP-ORIENT"
+        ],
+        [
+          "shape_rect_green",
+          2,
+          "M-SHP-SQRECT"
+        ],
+        [
+          "shape_square_red",
+          1
+        ],
+        [
+          "shape_triangle_blue",
+          2
+        ],
+        [
+          "shape_square_yellow",
+          1
+        ],
+        [
+          "shape_rect",
+          2,
+          "M-SHP-SQRECT"
+        ]
+      ],
+      "difficulty": 0.35,
       "id": "shp.any.tilt",
       "skill": "SHP-A-03",
-      "prompt": "אֵיפֹה הָרִבּוּעַ?",
-      "options": [
-        "shape_circle",
-        "shape_square_tilt",
-        "shape_rect"
-      ],
-      "correct": "shape_square_tilt",
-      "tags": {
-        "shape_rect": "M-SHP-SQRECT",
-        "shape_circle": "M-SHP-ORIENT"
-      },
-      "difficulty": 0.35
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "sort",
+      "bins": [
+        {
+          "sprite": "shape_triangle",
+          "label": "מְשֻׁלָּשׁ"
+        },
+        {
+          "sprite": "clue_not_triangle",
+          "label": "לֹא מְשֻׁלָּשׁ"
+        }
+      ],
+      "prompt": "מְשֻׁלָּשִׁים לְכָאן, וּמַה שֶּׁלֹּא מְשֻׁלָּשׁ — לְכָאן.",
+      "tag": "M-SHP-PROTO",
+      "h2": "לִמְשֻׁלָּשׁ שָׁלוֹשׁ צְלָעוֹת יְשָׁרוֹת, וְאֵין בּוֹ פֶּתַח.",
+      "h2_shared": "shp_triangle",
+      "h3": "גַּם מְשֻׁלָּשׁ דַּק וְגַם מְשֻׁלָּשׁ הָפוּךְ הֵם מְשֻׁלָּשִׁים. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כׇּל הַמְּשֻׁלָּשִׁים בְּיַחַד.",
+      "goal": "child sorts triangles of any shape and turn from figures that are not triangles",
+      "items": [
+        [
+          "shape_triangle_thin",
+          1,
+          "M-SHP-PROTO"
+        ],
+        [
+          "shape_open",
+          2,
+          "M-SHP-CLOSED"
+        ],
+        [
+          "shape_triangle_down",
+          1,
+          "M-SHP-ORIENT"
+        ],
+        [
+          "shape_circle",
+          2
+        ],
+        [
+          "shape_triangle_red",
+          1
+        ],
+        [
+          "shape_curved",
+          2,
+          "M-SHP-CLOSED"
+        ]
+      ],
+      "difficulty": 0.4,
       "id": "shp.any.thin",
       "skill": "SHP-A-03",
-      "prompt": "אֵיפֹה הַמְּשֻׁלָּשׁ?",
-      "options": [
-        "shape_open",
-        "shape_circle",
-        "shape_triangle_thin"
-      ],
-      "correct": "shape_triangle_thin",
-      "tags": {
-        "shape_open": "M-SHP-CLOSED",
-        "shape_circle": "M-SHP-PROTO"
-      },
-      "difficulty": 0.4
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "sort",
+      "bins": [
+        {
+          "sprite": "shape_triangle",
+          "label": "מְשֻׁלָּשׁ"
+        },
+        {
+          "sprite": "clue_not_triangle",
+          "label": "לֹא מְשֻׁלָּשׁ"
+        }
+      ],
+      "prompt": "מְשֻׁלָּשִׁים לְכָאן, וּמַה שֶּׁלֹּא מְשֻׁלָּשׁ — לְכָאן.",
+      "tag": "M-SHP-PROTO",
+      "h2": "לִמְשֻׁלָּשׁ שָׁלוֹשׁ צְלָעוֹת יְשָׁרוֹת, וְאֵין בּוֹ פֶּתַח.",
+      "h2_shared": "shp_triangle",
+      "h3": "גַּם מְשֻׁלָּשׁ דַּק וְגַם מְשֻׁלָּשׁ הָפוּךְ הֵם מְשֻׁלָּשִׁים. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כׇּל הַמְּשֻׁלָּשִׁים בְּיַחַד.",
+      "goal": "child sorts triangles of any shape and turn from figures that are not triangles",
+      "items": [
+        [
+          "shape_triangle_down",
+          1,
+          "M-SHP-ORIENT"
+        ],
+        [
+          "shape_square_blue",
+          2
+        ],
+        [
+          "shape_triangle_thin",
+          1,
+          "M-SHP-PROTO"
+        ],
+        [
+          "shape_open",
+          2,
+          "M-SHP-CLOSED"
+        ],
+        [
+          "shape_triangle_yellow",
+          1
+        ],
+        [
+          "shape_curved",
+          2,
+          "M-SHP-CLOSED"
+        ]
+      ],
+      "difficulty": 0.4,
       "id": "shp.any.down",
       "skill": "SHP-A-03",
-      "prompt": "אֵיפֹה הַמְּשֻׁלָּשׁ?",
-      "options": [
-        "shape_triangle_down",
-        "shape_open",
-        "shape_circle"
-      ],
-      "correct": "shape_triangle_down",
-      "tags": {
-        "shape_open": "M-SHP-CLOSED",
-        "shape_circle": "M-SHP-ORIENT"
-      },
-      "difficulty": 0.4
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -616,29 +815,65 @@
       "prompt": "אֵיפֹה הָרִבּוּעַ?",
       "options": [
         "shape_rect",
-        "shape_triangle",
+        "shape_rect_green",
         "shape_square"
       ],
       "correct": "shape_square",
       "tags": {
-        "shape_rect": "M-SHP-SQRECT"
+        "shape_rect": "M-SHP-SQRECT",
+        "shape_rect_green": "M-SHP-SQRECT"
       },
-      "difficulty": 0.35
+      "difficulty": 0.35,
+      "revision": 2
     },
     {
-      "kind": "pick",
-      "id": "shp.rect.long",
-      "voice": true,
-      "skill": "SHP-A-04",
-      "prompt": "אֵיזוֹ צוּרָה אֲרֻכָּה?",
-      "options": [
-        "shape_triangle",
-        "shape_circle",
-        "shape_rect"
+      "kind": "sort",
+      "bins": [
+        {
+          "sprite": "shape_square",
+          "label": "רִבּוּעַ"
+        },
+        {
+          "sprite": "clue_not_square",
+          "label": "לֹא רִבּוּעַ"
+        }
       ],
-      "correct": "shape_rect",
+      "prompt": "רִבּוּעִים לְכָאן, וּמַה שֶּׁלֹּא רִבּוּעַ — לְכָאן.",
+      "tag": "M-SHP-SQRECT",
+      "h2": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בַּמַּלְבֵּן הָאָרֹךְ — לֹא.",
+      "h2_shared": "shp_square_rect",
+      "h3": "לַמַּלְבֵּן הָאָרֹךְ שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתַּיִם קְצָרוֹת. הוּא לֹא רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כׇּל הָרִבּוּעִים בְּיַחַד.",
+      "goal": "child keeps the long rectangles out of the squares",
+      "items": [
+        [
+          "shape_rect",
+          2,
+          "M-SHP-SQRECT"
+        ],
+        [
+          "shape_square_yellow",
+          1
+        ],
+        [
+          "shape_rect_blue",
+          2,
+          "M-SHP-SQRECT"
+        ],
+        [
+          "shape_triangle_green",
+          2
+        ],
+        [
+          "shape_square_tilt",
+          1,
+          "M-SHP-ORIENT"
+        ]
+      ],
       "difficulty": 0.35,
-      "correct_text": "כֵּן! הַמַּלְבֵּן אָרֹךְ."
+      "id": "shp.rect.long",
+      "skill": "SHP-A-04",
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -654,29 +889,91 @@
       "difficulty": 0.3
     },
     {
-      "kind": "pick",
+      "kind": "sort",
+      "tag": null,
+      "h2": "נַעֲבֹר בָּאֶצְבַּע מִסָּבִיב לַדָּבָר: אֵיזוֹ צוּרָה יוֹצֵאת?",
+      "h2_shared": "shp_world",
+      "goal": "child sorts everyday things by the shape they have",
+      "bins": [
+        {
+          "sprite": "shape_circle",
+          "label": "עִגּוּל"
+        },
+        {
+          "sprite": "shape_rect",
+          "label": "מַלְבֵּן"
+        }
+      ],
+      "items": [
+        [
+          "plate",
+          1
+        ],
+        [
+          "window",
+          2
+        ],
+        [
+          "coin",
+          1
+        ],
+        [
+          "note_20",
+          2
+        ],
+        [
+          "clock_3",
+          1
+        ]
+      ],
+      "prompt": "מָה עָגֹל כְּמוֹ עִגּוּל — לְכָאן. מַה כְּמוֹ מַלְבֵּן — לְכָאן.",
+      "h3": "הַצַּלַּחַת עֲגֻלָּה, וְהַחַלּוֹן הוּא מַלְבֵּן. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! מְצָאתֶם עִגּוּלִים וּמַלְבֵּנִים.",
       "id": "shp.world.rect",
       "skill": "SHP-A-05",
-      "prompt": "מַה בְּצוּרַת מַלְבֵּן?",
-      "options": [
-        "plate",
-        "window",
-        "sign"
-      ],
-      "correct": "window",
+      "revision": 2,
       "difficulty": 0.3
     },
     {
-      "kind": "pick",
+      "kind": "sort",
+      "tag": null,
+      "h2": "נַעֲבֹר בָּאֶצְבַּע מִסָּבִיב לַדָּבָר: אֵיזוֹ צוּרָה יוֹצֵאת?",
+      "h2_shared": "shp_world",
+      "goal": "child sorts everyday things by the shape they have",
+      "bins": [
+        {
+          "sprite": "shape_triangle",
+          "label": "מְשֻׁלָּשׁ"
+        },
+        {
+          "sprite": "shape_circle",
+          "label": "עִגּוּל"
+        }
+      ],
+      "items": [
+        [
+          "sign",
+          1
+        ],
+        [
+          "plate",
+          2
+        ],
+        [
+          "coin",
+          2
+        ],
+        [
+          "clock_3",
+          2
+        ]
+      ],
+      "prompt": "מַה כְּמוֹ מְשֻׁלָּשׁ — לְכָאן. מָה עָגֹל כְּמוֹ עִגּוּל — לְכָאן.",
+      "h3": "הַשֶּׁלֶט הוּא מְשֻׁלָּשׁ, וְהַמַּטְבֵּעַ עָגֹל. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! מְצָאתֶם מְשֻׁלָּשׁ וְעִגּוּלִים.",
       "id": "shp.world.triangle",
       "skill": "SHP-A-05",
-      "prompt": "מַה בְּצוּרַת מְשֻׁלָּשׁ?",
-      "options": [
-        "sign",
-        "plate",
-        "window"
-      ],
-      "correct": "sign",
+      "revision": 2,
       "difficulty": 0.3
     },
     {
@@ -745,11 +1042,13 @@
       ],
       "correct": "pos_under",
       "tags": {
-        "pos_on": "M-SPACE-WORD"
+        "pos_on": "M-SPACE-WORD",
+        "pos_above": "M-SPACE-WORD"
       },
       "difficulty": 0.25,
       "correct_text": "כֵּן! הַכַּדּוּר מִתַּחַת לַשֻּׁלְחָן.",
-      "h3": "הַשֻּׁלְחָן לְמַעְלָה, וְהַכַּדּוּר מִתַּחַת לוֹ. עַכְשָׁו תּוֹרְכֶם."
+      "h3": "הַשֻּׁלְחָן לְמַעְלָה, וְהַכַּדּוּר מִתַּחַת לוֹ. עַכְשָׁו תּוֹרְכֶם.",
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -813,28 +1112,57 @@
       "difficulty": 0.2
     },
     {
-      "kind": "shape",
-      "id": "shp.match.circle.blue",
-      "skill": "SHP-A-01",
-      "mode": "match",
-      "shape": "circle",
-      "colour": "blue",
-      "refColour": "red",
-      "others": [
+      "kind": "shapebuild",
+      "what": "קֻפְסַת צוּרוֹת",
+      "prompt": "מַכְנִיסִים כׇּל צוּרָה לַחֹר שֶׁלָּהּ.",
+      "h2": "נַעֲבֹר בָּאֶצְבַּע מִסָּבִיב לַחֹר: הוּא עָגֹל, אוֹ שֶׁיֵּשׁ לוֹ פִּנּוֹת?",
+      "h2_shared": "shp_sorter",
+      "h3": "כׇּל צוּרָה נִכְנֶסֶת לַחֹר שֶׁדּוֹמֶה לָהּ בְּדִיּוּק. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כׇּל צוּרָה בַּחֹר שֶׁלָּהּ.",
+      "goal": "child puts each shape into the hole of the same shape",
+      "slots": [
         [
-          "square",
-          "red"
+          "shape_circle_blue",
+          25,
+          25,
+          34,
+          0
         ],
         [
-          "triangle",
-          "blue"
+          "shape_triangle_green",
+          75,
+          25,
+          34,
+          0
+        ],
+        [
+          "shape_square_red",
+          25,
+          70,
+          34,
+          0
+        ],
+        [
+          "shape_rect_orange",
+          75,
+          70,
+          34,
+          0
         ]
       ],
-      "pos": 0,
-      "difficulty": 0.1,
-      "tags": {
-        "shape_square_red": "M-COL-ONEATTR"
-      }
+      "decoys": [
+        "shape_open"
+      ],
+      "decoy_tags": {
+        "shape_open": "M-SHP-CLOSED"
+      },
+      "pair_tags": {
+        "shape_rect_orange>shape_square_red": "M-SHP-SQRECT"
+      },
+      "difficulty": 0.15,
+      "id": "shp.match.circle.blue",
+      "skill": "SHP-A-01",
+      "revision": 2
     },
     {
       "kind": "shape",
@@ -895,12 +1223,13 @@
           "yellow"
         ],
         [
-          "triangle",
-          "yellow"
+          "rect",
+          "blue"
         ]
       ],
       "pos": 0,
-      "difficulty": 0.2
+      "difficulty": 0.2,
+      "revision": 2
     },
     {
       "kind": "shape",
@@ -910,34 +1239,68 @@
       "shape": "triangle",
       "colour": "green",
       "others": [
-        [
-          "circle",
-          "green"
-        ],
+        "shape_curved",
         "shape_open"
       ],
       "pos": 2,
       "difficulty": 0.2,
       "tags": {
-        "shape_open": "M-SHP-CLOSED"
-      }
+        "shape_open": "M-SHP-CLOSED",
+        "shape_curved": "M-SHP-CLOSED"
+      },
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "sort",
+      "bins": [
+        {
+          "sprite": "shape_square",
+          "label": "רִבּוּעַ"
+        },
+        {
+          "sprite": "clue_not_square",
+          "label": "לֹא רִבּוּעַ"
+        }
+      ],
+      "prompt": "רִבּוּעִים לְכָאן, וּמַה שֶּׁלֹּא רִבּוּעַ — לְכָאן.",
+      "tag": "M-SHP-ORIENT",
+      "h2": "רִבּוּעַ מְסֻבָּב הוּא עֲדַיִן רִבּוּעַ: אַרְבַּע צְלָעוֹת שָׁווֹת.",
+      "h2_shared": "shp_square_turn",
+      "h3": "גַּם רִבּוּעַ מְסֻבָּב הוּא רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כׇּל הָרִבּוּעִים בְּיַחַד.",
+      "goal": "child sorts squares in any turn from shapes that are not squares",
+      "items": [
+        [
+          "shape_square_tilt",
+          1,
+          "M-SHP-ORIENT"
+        ],
+        [
+          "shape_circle_green",
+          2
+        ],
+        [
+          "shape_square_green",
+          1
+        ],
+        [
+          "shape_rect_blue",
+          2,
+          "M-SHP-SQRECT"
+        ],
+        [
+          "shape_square_orange",
+          1
+        ],
+        [
+          "shape_triangle_red",
+          2
+        ]
+      ],
+      "difficulty": 0.4,
       "id": "shp.any.small.square",
       "skill": "SHP-A-03",
-      "prompt": "אֵיפֹה הָרִבּוּעַ?",
-      "options": [
-        "shape_circle_red*1",
-        "shape_square_blue*1@0.55",
-        "shape_rect_green*1"
-      ],
-      "correct": "shape_square_blue*1@0.55",
-      "tags": {
-        "shape_circle_red*1": "M-SHP-SIZE",
-        "shape_rect_green*1": "M-SHP-SQRECT"
-      },
-      "difficulty": 0.35
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -956,24 +1319,53 @@
       "difficulty": 0.35
     },
     {
-      "kind": "shape",
-      "id": "shp.rect.blue",
-      "skill": "SHP-A-04",
-      "mode": "name",
-      "shape": "rect",
-      "colour": "blue",
-      "others": [
+      "kind": "sort",
+      "bins": [
+        {
+          "sprite": "shape_square",
+          "label": "רִבּוּעַ"
+        },
+        {
+          "sprite": "clue_not_square",
+          "label": "לֹא רִבּוּעַ"
+        }
+      ],
+      "prompt": "רִבּוּעִים לְכָאן, וּמַה שֶּׁלֹּא רִבּוּעַ — לְכָאן.",
+      "tag": "M-SHP-SQRECT",
+      "h2": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בַּמַּלְבֵּן הָאָרֹךְ — לֹא.",
+      "h2_shared": "shp_square_rect",
+      "h3": "לַמַּלְבֵּן הָאָרֹךְ שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתַּיִם קְצָרוֹת. הוּא לֹא רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כׇּל הָרִבּוּעִים בְּיַחַד.",
+      "goal": "child keeps the long rectangles out of the squares",
+      "items": [
         [
-          "triangle",
-          "blue"
+          "shape_rect_blue",
+          2,
+          "M-SHP-SQRECT"
         ],
         [
-          "circle",
-          "blue"
+          "shape_square_blue",
+          1
+        ],
+        [
+          "shape_triangle_blue",
+          2
+        ],
+        [
+          "shape_square_tilt",
+          1,
+          "M-SHP-ORIENT"
+        ],
+        [
+          "shape_rect",
+          2,
+          "M-SHP-SQRECT"
         ]
       ],
-      "pos": 1,
-      "difficulty": 0.3
+      "difficulty": 0.3,
+      "id": "shp.rect.blue",
+      "skill": "SHP-A-04",
+      "revision": 2
     },
     {
       "kind": "shape",
@@ -988,32 +1380,62 @@
           "orange"
         ],
         [
-          "triangle",
-          "orange"
+          "rect",
+          "blue"
         ]
       ],
       "pos": 2,
-      "difficulty": 0.35
+      "difficulty": 0.35,
+      "revision": 2
     },
     {
-      "kind": "shape",
-      "id": "shp.rect.green",
-      "skill": "SHP-A-04",
-      "mode": "name",
-      "shape": "rect",
-      "colour": "green",
-      "others": [
+      "kind": "sort",
+      "bins": [
+        {
+          "sprite": "shape_square",
+          "label": "רִבּוּעַ"
+        },
+        {
+          "sprite": "clue_not_square",
+          "label": "לֹא רִבּוּעַ"
+        }
+      ],
+      "prompt": "רִבּוּעִים לְכָאן, וּמַה שֶּׁלֹּא רִבּוּעַ — לְכָאן.",
+      "tag": "M-SHP-SQRECT",
+      "h2": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בַּמַּלְבֵּן הָאָרֹךְ — לֹא.",
+      "h2_shared": "shp_square_rect",
+      "h3": "לַמַּלְבֵּן הָאָרֹךְ שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתַּיִם קְצָרוֹת. הוּא לֹא רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כׇּל הָרִבּוּעִים בְּיַחַד.",
+      "goal": "child keeps the long rectangles out of the squares",
+      "items": [
         [
-          "triangle",
-          "green"
+          "shape_square_green",
+          1
         ],
         [
-          "circle",
-          "green"
+          "shape_rect_green",
+          2,
+          "M-SHP-SQRECT"
+        ],
+        [
+          "shape_circle_red",
+          2
+        ],
+        [
+          "shape_square_tilt",
+          1,
+          "M-SHP-ORIENT"
+        ],
+        [
+          "shape_rect_yellow",
+          2,
+          "M-SHP-SQRECT"
         ]
       ],
-      "pos": 0,
-      "difficulty": 0.35
+      "difficulty": 0.35,
+      "id": "shp.rect.green",
+      "skill": "SHP-A-04",
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -1035,21 +1457,53 @@
       "check": "reverse"
     },
     {
-      "kind": "pick",
-      "id": "shp.world.window.shape",
-      "voice": true,
-      "skill": "SHP-A-05",
-      "prompt": "אֵיזוֹ צוּרָה יֵשׁ לַחַלּוֹן?",
-      "group": {
-        "sprite": "window",
-        "count": 1
-      },
-      "options": [
-        "shape_circle_blue",
-        "shape_triangle_blue",
-        "shape_rect_blue"
+      "kind": "sort",
+      "tag": null,
+      "h2": "נַעֲבֹר בָּאֶצְבַּע מִסָּבִיב לַדָּבָר: אֵיזוֹ צוּרָה יוֹצֵאת?",
+      "h2_shared": "shp_world",
+      "goal": "child sorts everyday things by the shape they have",
+      "bins": [
+        {
+          "sprite": "shape_circle",
+          "label": "עִגּוּל"
+        },
+        {
+          "sprite": "shape_rect",
+          "label": "מַלְבֵּן"
+        },
+        {
+          "sprite": "shape_triangle",
+          "label": "מְשֻׁלָּשׁ"
+        }
       ],
-      "correct": "shape_rect_blue",
+      "items": [
+        [
+          "window",
+          2
+        ],
+        [
+          "sign",
+          3
+        ],
+        [
+          "plate",
+          1
+        ],
+        [
+          "note_20",
+          2
+        ],
+        [
+          "coin",
+          1
+        ]
+      ],
+      "prompt": "לְכׇל דָּבָר יֵשׁ צוּרָה. מְמַיְּנִים כׇּל דָּבָר לַצּוּרָה שֶׁלּוֹ.",
+      "h3": "צַלַּחַת עֲגֻלָּה, חַלּוֹן מַלְבֵּן, שֶׁלֶט מְשֻׁלָּשׁ. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כׇּל דָּבָר בַּצּוּרָה שֶׁלּוֹ.",
+      "id": "shp.world.window.shape",
+      "skill": "SHP-A-05",
+      "revision": 2,
       "difficulty": 0.3
     },
     {
@@ -1071,28 +1525,88 @@
       "difficulty": 0.3
     },
     {
-      "kind": "pick",
+      "kind": "sort",
+      "tag": null,
+      "prompt": "מַה מִּתְגַּלְגֵּל — לְכָאן. מָה אֶפְשָׁר לַעֲרֹם — לְכָאן.",
+      "h2": "נְדַמְיֵן שֶׁדּוֹחֲפִים: מִי מִתְגַּלְגֵּל, וּמִי נִשְׁאָר עוֹמֵד?",
+      "h2_shared": "shp_roll",
+      "h3": "כַּדּוּר עָגֹל וּמִתְגַּלְגֵּל. קֻבִּיָּה שְׁטוּחָה, וְאֶפְשָׁר לַעֲרֹם אוֹתָהּ. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! מַה שֶּׁעָגֹל מִתְגַּלְגֵּל, וּמַה שֶּׁשָּׁטוּחַ נֶעֱרָם.",
+      "goal": "child sorts the things that roll from the things that stack",
+      "bins": [
+        {
+          "sprite": "ball_red",
+          "label": "מִתְגַּלְגֵּל"
+        },
+        {
+          "sprite": "solid_box",
+          "label": "נֶעֱרָם"
+        }
+      ],
+      "items": [
+        [
+          "ball_blue",
+          1
+        ],
+        [
+          "block",
+          2
+        ],
+        [
+          "solid_sphere",
+          1
+        ],
+        [
+          "tower_1",
+          2
+        ]
+      ],
+      "difficulty": 0.2,
       "id": "shp.solid.rolls.blue",
       "skill": "SHP-A-07",
-      "prompt": "מַה מִּתְגַּלְגֵּל?",
-      "options": [
-        "solid_box",
-        "ball_blue"
-      ],
-      "correct": "ball_blue",
-      "difficulty": 0.2
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "sort",
+      "tag": null,
+      "prompt": "מַה מִּתְגַּלְגֵּל — לְכָאן. מָה אֶפְשָׁר לַעֲרֹם — לְכָאן.",
+      "h2": "נְדַמְיֵן שֶׁדּוֹחֲפִים: מִי מִתְגַּלְגֵּל, וּמִי נִשְׁאָר עוֹמֵד?",
+      "h2_shared": "shp_roll",
+      "h3": "כַּדּוּר עָגֹל וּמִתְגַּלְגֵּל. קֻבִּיָּה שְׁטוּחָה, וְאֶפְשָׁר לַעֲרֹם אוֹתָהּ. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! מַה שֶּׁעָגֹל מִתְגַּלְגֵּל, וּמַה שֶּׁשָּׁטוּחַ נֶעֱרָם.",
+      "goal": "child sorts the things that roll from the things that stack",
+      "bins": [
+        {
+          "sprite": "ball_red",
+          "label": "מִתְגַּלְגֵּל"
+        },
+        {
+          "sprite": "solid_box",
+          "label": "נֶעֱרָם"
+        }
+      ],
+      "items": [
+        [
+          "block",
+          2
+        ],
+        [
+          "ball_yellow",
+          1
+        ],
+        [
+          "tower_1",
+          2
+        ],
+        [
+          "apple",
+          1
+        ]
+      ],
+      "difficulty": 0.25,
       "id": "shp.solid.stacks.blue",
       "skill": "SHP-A-07",
-      "prompt": "מָה אֶפְשָׁר לַעֲרֹם?",
-      "options": [
-        "ball_blue",
-        "solid_box"
-      ],
-      "correct": "solid_box",
-      "difficulty": 0.25
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -1131,52 +1645,172 @@
       "h3": "הַכַּדּוּר בִּפְנִים, בְּתוֹךְ הַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם."
     },
     {
-      "kind": "pick",
+      "kind": "sort",
+      "tag": null,
+      "bins": [
+        {
+          "sprite": "line_straight",
+          "label": "יָשָׁר"
+        },
+        {
+          "sprite": "line_curved",
+          "label": "עָקֹם"
+        }
+      ],
+      "prompt": "מַה שֶּׁיָּשָׁר — לְכָאן. מַה שֶּׁעָקֹם — לְכָאן.",
+      "h2": "נַעֲבֹר בָּאֶצְבַּע עַל הַקַּו: הוֹלְכִים יָשָׁר, אוֹ מִתְעַקְּמִים?",
+      "h2_shared": "shp_line",
+      "h3": "קַו יָשָׁר לֹא מִתְעַקֵּם. קַו עָקֹם מִתְעַקֵּם. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! הַיְּשָׁרִים לְחוּד, וְהָעֲקֻמִּים לְחוּד.",
+      "goal": "child sorts straight lines and shapes from curved ones",
+      "items": [
+        [
+          "line_straight_flat",
+          1
+        ],
+        [
+          "line_curved_wave",
+          2
+        ],
+        [
+          "line_straight_up",
+          1
+        ],
+        [
+          "line_curved_arc",
+          2
+        ]
+      ],
+      "difficulty": 0.2,
       "id": "shp.line.straight2",
       "skill": "SHP-A-10",
-      "prompt": "אֵיפֹה הַקַּו הַיָּשָׁר?",
-      "options": [
-        "line_straight_flat",
-        "line_curved_wave"
-      ],
-      "correct": "line_straight_flat",
-      "difficulty": 0.2
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "sort",
+      "tag": null,
+      "bins": [
+        {
+          "sprite": "line_straight",
+          "label": "יָשָׁר"
+        },
+        {
+          "sprite": "line_curved",
+          "label": "עָקֹם"
+        }
+      ],
+      "prompt": "מַה שֶּׁיָּשָׁר — לְכָאן. מַה שֶּׁעָקֹם — לְכָאן.",
+      "h2": "נַעֲבֹר בָּאֶצְבַּע עַל הַקַּו: הוֹלְכִים יָשָׁר, אוֹ מִתְעַקְּמִים?",
+      "h2_shared": "shp_line",
+      "h3": "קַו יָשָׁר לֹא מִתְעַקֵּם. קַו עָקֹם מִתְעַקֵּם. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! הַיְּשָׁרִים לְחוּד, וְהָעֲקֻמִּים לְחוּד.",
+      "goal": "child sorts straight lines and shapes from curved ones",
+      "items": [
+        [
+          "line_curved_arc",
+          2
+        ],
+        [
+          "line_straight_up",
+          1
+        ],
+        [
+          "line_curved_wave",
+          2
+        ],
+        [
+          "line_straight_flat",
+          1
+        ]
+      ],
+      "difficulty": 0.25,
       "id": "shp.line.curved2",
       "skill": "SHP-A-10",
-      "prompt": "אֵיפֹה הַקַּו הָעָקֹם?",
-      "options": [
-        "line_straight_up",
-        "line_curved_arc"
-      ],
-      "correct": "line_curved_arc",
-      "difficulty": 0.25
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "sort",
+      "tag": null,
+      "bins": [
+        {
+          "sprite": "line_straight",
+          "label": "יָשָׁר"
+        },
+        {
+          "sprite": "line_curved",
+          "label": "עָקֹם"
+        }
+      ],
+      "prompt": "מַה שֶּׁיָּשָׁר — לְכָאן. מַה שֶּׁעָקֹם — לְכָאן.",
+      "h2": "נַעֲבֹר בָּאֶצְבַּע עַל הַקַּו: הוֹלְכִים יָשָׁר, אוֹ מִתְעַקְּמִים?",
+      "h2_shared": "shp_line",
+      "h3": "קַו יָשָׁר לֹא מִתְעַקֵּם. קַו עָקֹם מִתְעַקֵּם. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! הַיְּשָׁרִים לְחוּד, וְהָעֲקֻמִּים לְחוּד.",
+      "goal": "child sorts straight lines and shapes from curved ones",
+      "items": [
+        [
+          "line_straight_up",
+          1
+        ],
+        [
+          "shape_circle",
+          2
+        ],
+        [
+          "line_curved_wave",
+          2
+        ],
+        [
+          "shape_triangle",
+          1
+        ]
+      ],
+      "difficulty": 0.3,
       "id": "shp.line.straight3",
       "skill": "SHP-A-10",
-      "prompt": "אֵיפֹה הַקַּו הַיָּשָׁר?",
-      "options": [
-        "line_curved_arc",
-        "line_straight_up"
-      ],
-      "correct": "line_straight_up",
-      "difficulty": 0.25
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "sort",
+      "tag": null,
+      "bins": [
+        {
+          "sprite": "line_straight",
+          "label": "יָשָׁר"
+        },
+        {
+          "sprite": "line_curved",
+          "label": "עָקֹם"
+        }
+      ],
+      "prompt": "מַה שֶּׁיָּשָׁר — לְכָאן. מַה שֶּׁעָקֹם — לְכָאן.",
+      "h2": "נַעֲבֹר בָּאֶצְבַּע עַל הַקַּו: הוֹלְכִים יָשָׁר, אוֹ מִתְעַקְּמִים?",
+      "h2_shared": "shp_line",
+      "h3": "קַו יָשָׁר לֹא מִתְעַקֵּם. קַו עָקֹם מִתְעַקֵּם. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! הַיְּשָׁרִים לְחוּד, וְהָעֲקֻמִּים לְחוּד.",
+      "goal": "child sorts straight lines and shapes from curved ones",
+      "items": [
+        [
+          "shape_square",
+          1
+        ],
+        [
+          "line_curved_arc",
+          2
+        ],
+        [
+          "shape_circle_blue",
+          2
+        ],
+        [
+          "line_straight_flat",
+          1
+        ]
+      ],
+      "difficulty": 0.35,
       "id": "shp.line.curved3",
       "skill": "SHP-A-10",
-      "prompt": "אֵיפֹה הַקַּו הָעָקֹם?",
-      "options": [
-        "line_curved_wave",
-        "line_straight_flat"
-      ],
-      "correct": "line_curved_wave",
-      "difficulty": 0.3
+      "revision": 2
     },
     {
       "kind": "shapebuild",
@@ -1401,16 +2035,50 @@
       ]
     },
     {
-      "kind": "pick",
+      "kind": "sort",
+      "tag": null,
+      "prompt": "מַה מִּתְגַּלְגֵּל — לְכָאן. מָה אֶפְשָׁר לַעֲרֹם — לְכָאן.",
+      "h2": "נְדַמְיֵן שֶׁדּוֹחֲפִים: מִי מִתְגַּלְגֵּל, וּמִי נִשְׁאָר עוֹמֵד?",
+      "h2_shared": "shp_roll",
+      "h3": "כַּדּוּר עָגֹל וּמִתְגַּלְגֵּל. קֻבִּיָּה שְׁטוּחָה, וְאֶפְשָׁר לַעֲרֹם אוֹתָהּ. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! מַה שֶּׁעָגֹל מִתְגַּלְגֵּל, וּמַה שֶּׁשָּׁטוּחַ נֶעֱרָם.",
+      "goal": "child sorts the things that roll from the things that stack",
+      "bins": [
+        {
+          "sprite": "ball_red",
+          "label": "מִתְגַּלְגֵּל"
+        },
+        {
+          "sprite": "solid_box",
+          "label": "נֶעֱרָם"
+        }
+      ],
+      "items": [
+        [
+          "solid_sphere",
+          1
+        ],
+        [
+          "tower_1",
+          2
+        ],
+        [
+          "ball_green",
+          1
+        ],
+        [
+          "block",
+          2
+        ],
+        [
+          "ball_blue",
+          1
+        ]
+      ],
+      "difficulty": 0.3,
       "id": "shp.solid.which2",
       "skill": "SHP-A-07",
-      "prompt": "מַה נִּשְׁאָר עוֹמֵד בַּמָּקוֹם?",
-      "options": [
-        "solid_box",
-        "ball_blue"
-      ],
-      "correct": "solid_box",
-      "difficulty": 0.3
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -1425,13 +2093,15 @@
       "options": [
         "shape_square_tilt",
         "shape_circle_green",
-        "shape_triangle_green"
+        "shape_triangle_red"
       ],
-      "correct": "shape_triangle_green",
+      "correct": "shape_triangle_red",
       "tags": {
-        "shape_square_tilt": "M-SHP-ORIENT"
+        "shape_square_tilt": "M-SHP-ORIENT",
+        "shape_circle_green": "M-COL-ONEATTR"
       },
-      "difficulty": 0.45
+      "difficulty": 0.45,
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -1444,16 +2114,17 @@
         "count": 1
       },
       "options": [
-        "shape_circle_red",
+        "shape_circle_blue",
         "shape_square_red",
         "shape_rect_red"
       ],
       "correct": "shape_square_red",
       "tags": {
-        "shape_circle_red": "M-SHP-ORIENT",
+        "shape_circle_blue": "M-COL-ONEATTR",
         "shape_rect_red": "M-SHP-SQRECT"
       },
-      "difficulty": 0.5
+      "difficulty": 0.5,
+      "revision": 2
     },
     {
       "kind": "shape",
@@ -1474,7 +2145,14 @@
       "tags": {
         "shape_curved": "M-SHP-CLOSED"
       },
-      "difficulty": 0.4
+      "difficulty": 0.4,
+      "tag_lines": {
+        "M-SHP-CLOSED": [
+          "vo:fb.closed.not_circle",
+          "עִגּוּל עָגֹל מִכׇּל הַצְּדָדִים. לַצּוּרָה הַזֹּאת יֵשׁ צַד יָשָׁר. בּוֹאוּ נִבְדֹּק."
+        ]
+      },
+      "revision": 2
     },
     {
       "kind": "shape",
@@ -1490,12 +2168,13 @@
           "orange"
         ],
         [
-          "circle",
-          "orange"
+          "rect",
+          "green"
         ]
       ],
       "pos": 2,
-      "difficulty": 0.45
+      "difficulty": 0.45,
+      "revision": 2
     },
     {
       "kind": "spot",
@@ -1663,20 +2342,53 @@
       "difficulty": 0.4
     },
     {
-      "kind": "shape",
-      "id": "b15.shpa04.2",
-      "skill": "SHP-A-04",
-      "check": "transfer",
-      "mode": "name",
-      "shape": "rect",
-      "colour": "red",
-      "others": [
+      "kind": "sort",
+      "bins": [
+        {
+          "sprite": "shape_square",
+          "label": "רִבּוּעַ"
+        },
+        {
+          "sprite": "clue_not_square",
+          "label": "לֹא רִבּוּעַ"
+        }
+      ],
+      "prompt": "רִבּוּעִים לְכָאן, וּמַה שֶּׁלֹּא רִבּוּעַ — לְכָאן.",
+      "tag": "M-SHP-SQRECT",
+      "h2": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בַּמַּלְבֵּן הָאָרֹךְ — לֹא.",
+      "h2_shared": "shp_square_rect",
+      "h3": "לַמַּלְבֵּן הָאָרֹךְ שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתַּיִם קְצָרוֹת. הוּא לֹא רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כׇּל הָרִבּוּעִים בְּיַחַד.",
+      "goal": "child keeps the long rectangles out of the squares",
+      "items": [
         [
-          "triangle",
-          "red"
+          "shape_square_tilt",
+          1,
+          "M-SHP-ORIENT"
+        ],
+        [
+          "shape_rect_red",
+          2,
+          "M-SHP-SQRECT"
+        ],
+        [
+          "shape_square_blue",
+          1
+        ],
+        [
+          "shape_rect_green",
+          2,
+          "M-SHP-SQRECT"
+        ],
+        [
+          "shape_circle_yellow",
+          2
         ]
       ],
-      "pos": 1,
+      "id": "b15.shpa04.2",
+      "skill": "SHP-A-04",
+      "revision": 2,
+      "check": "transfer",
       "difficulty": 0.4
     },
     {
@@ -1775,16 +2487,46 @@
       "difficulty": 0.4
     },
     {
-      "kind": "pick",
+      "kind": "sort",
+      "tag": null,
+      "prompt": "מַה מִּתְגַּלְגֵּל — לְכָאן. מָה אֶפְשָׁר לַעֲרֹם — לְכָאן.",
+      "h2": "נְדַמְיֵן שֶׁדּוֹחֲפִים: מִי מִתְגַּלְגֵּל, וּמִי נִשְׁאָר עוֹמֵד?",
+      "h2_shared": "shp_roll",
+      "h3": "כַּדּוּר עָגֹל וּמִתְגַּלְגֵּל. קֻבִּיָּה שְׁטוּחָה, וְאֶפְשָׁר לַעֲרֹם אוֹתָהּ. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! מַה שֶּׁעָגֹל מִתְגַּלְגֵּל, וּמַה שֶּׁשָּׁטוּחַ נֶעֱרָם.",
+      "goal": "child sorts the things that roll from the things that stack",
+      "bins": [
+        {
+          "sprite": "solid_sphere",
+          "label": "מִתְגַּלְגֵּל"
+        },
+        {
+          "sprite": "block",
+          "label": "נֶעֱרָם"
+        }
+      ],
+      "items": [
+        [
+          "ball_red",
+          1
+        ],
+        [
+          "solid_box",
+          2
+        ],
+        [
+          "apple",
+          1
+        ],
+        [
+          "tower_1",
+          2
+        ]
+      ],
       "id": "b15.shpa07.2",
       "skill": "SHP-A-07",
+      "revision": 2,
       "check": "transfer",
-      "prompt": "מָה אֶפְשָׁר לַעֲרֹם?",
-      "options": [
-        "solid_sphere",
-        "solid_box"
-      ],
-      "correct": "solid_box",
       "difficulty": 0.4
     },
     {

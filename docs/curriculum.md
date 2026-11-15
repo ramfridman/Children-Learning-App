@@ -295,6 +295,29 @@ The skill becomes **`durable_mastery`** when a delayed check at least 7 days lat
 | **C4 Maps** | SHP-C-11 | Grid coordinates (letter + number, like a game board) | B-13 | — | M-DIR-RTL |
 | | SHP-C-12 | Takes the robot's or a friend's perspective for right and left | B-12, CS-B-10 | U3 | M-DIR-EGO, M-DIR-LR |
 
+**Shape Forest in the pack after the M11 Stage 2 pilot (2026-11-15, `docs/milestones/M11-stage2.md` §4 and §11).** Every lesson opens with Kubi's Show and one Together item (authored in `content/units/arc/shape-forest.arc.json` until the schema has lesson parts), then the child's own items, hands-on first.
+
+| Skill | Hands-on now (template, items) | What the hands-on form teaches | Tags a wrong move shows (per picture; until M11-stage2 §7.4 (5a) lands a sort records its one `answer.misconception`, and a count sort none) |
+|---|---|---|---|
+| SHP-A-01 | `shape_builder` shape sorter, 4 (`shp.match.circle`, `.square`, `.triangle`, `.circle.blue`) | each shape into the hole of its outline | decoys `shape_rect` (M-SHP-SQRECT) and `shape_open`/`shape_curved` (M-SHP-CLOSED), recorded once the template records a decoy's tag |
+| SHP-A-03 | `sort_drag` "triangle / not a triangle", "square / not a square", 4 | thin, upside-down and tilted shapes are still the shape; open and curved figures are not (Clements and others 1999) | M-SHP-PROTO, M-SHP-ORIENT, M-SHP-CLOSED, M-SHP-SQRECT, per picture |
+| SHP-A-04 | `sort_drag` "square / not a square", 4 | a long rectangle is not a square; nothing says a square is not a rectangle (W3) | M-SHP-SQRECT, M-SHP-ORIENT |
+| SHP-A-05 | `sort_drag` things into shape bins, 3 | a plate is a circle, a window a rectangle, a sign a triangle | none (no catalogue tag fits; E2) |
+| SHP-A-07 | `sort_drag` "rolls / stacks", 4 | a round thing rolls, a flat one stacks | none |
+| SHP-A-10 | `sort_drag` "straight / curved", 4 (lines and shapes) | a line is straight or bends; a circle is curved, a square straight | none |
+| SHP-B-01 | `sort_drag`, 4: triangle or four-sided (by sides), triangle or not, five or six sides, four or five sides | the name follows the number of sides | M-SHP-PROTO, M-SHP-ORIENT, M-SHP-CLOSED, M-CNT-DOUBLE, M-CNT-SKIP |
+| SHP-B-02 | `sort_drag` into bins of 3, 4, 5 or 6 sticks, 4 | a side is a stick: count each once | M-CNT-DOUBLE (one too many), M-CNT-SKIP (one too few) |
+| SHP-B-03 | `sort_drag` "all sides equal / not all equal", 3 | a square, turned or not, has four equal sides | M-SHP-SQRECT, M-SHP-ORIENT |
+| SHP-B-04 | `sort_drag` "closed with straight sides? yes / no", 4 | an ant walks round and comes home with no curve | M-SHP-CLOSED, M-SHP-PROTO, M-SHP-ORIENT |
+| SHP-B-05 | `shape_builder`, 4 new (`b.shpb05.1` to `.4`): house, boat, car, rocket as one shadow | find the shapes inside one outline | none (the skill watches none) |
+| SHP-B-06 | `shape_builder`, 4 new (`b.shpb06.1` to `.4`): two squares make a rectangle, two rectangles a square, two triangles a four-sided shape, four squares a big square | one shape can be made of others | none |
+| SHP-B-08 | `sort_drag`, 4: rolls or not (a curved side), and by name (cylinder, cone, ball) | the solids by what they do and what they are called | none until the owner decides a naming tag |
+| SHP-B-09 | `sort_drag`, 3: by the face a stamp leaves, by the flat shape on it, leaves a circle or not | a solid's flat face is a flat shape | M-SHP-FACE |
+
+- **Rules the pilot set for every land.** A re-cut item keeps its id and says `revision: 2`. A sort item names the tag its own wrong bin shows (the third entry of an item in the tables), so one sort can record two different tags; the pack gets these once the lands validator and the sort session take `scene.items[].misconception` (today a language-course field). A bin of sticks (`stick_long`, `count` 3 to 6) is the picture of "three sides". In a `shape_builder` item, pieces of one kind are one sprite (any square fits any square place), the pieces touch and never overlap (one shadow, no lines inside), and a decoy is never the whole picture.
+- **SHP-B-05 and SHP-B-06 are on the path** after the solids (lessons `one-shadow` and `shapes-make-shapes`, sequence 39 and 40; B-05 needs A-06, B-06 needs B-05).
+- **Taps that stay and still lack a second honest tag (30, listed in M11-stage2 §11.3):** the "where is the circle?" items wait for an oval (design-director), the Band A "where is the rectangle?" items for a four-sided shape that is not a rectangle, and the naming items of A-02, A-05, A-10, B-01 (hexagon) and B-08 for the owner's answer on a naming tag (proposal M-SHP-NAME, §5.2 note). SHP-A-07's two-option items have no catalogue tag.
+
 ### 4.5 Logic (LOG)
 
 | Band / unit | ID | Can do | Prereqs | Mastery evidence beyond SE | Watch for |
@@ -557,7 +580,10 @@ The tags of the three language courses (English, Hebrew, Russian) are not in thi
 | M-SHP-PROTO | Accepts only the typical shape (an equilateral triangle) | Rejects a long, thin triangle | SHP-A-03 | R2 the "3 straight sides, closed" checklist; many examples and non-examples |
 | M-SHP-SIZE | Thinks a big triangle and a small triangle are different shapes | Rejects scaled shapes | SHP-A-03 | R1 a resize slider |
 | M-SHP-SQRECT | Thinks a square is not a rectangle, or a long rectangle is a square | Classifies wrongly | SHP-A-04, SHP-B-03 | R1 stretch a square into a rectangle; R2 measure the sides |
-| M-SHP-CLOSED | Accepts an open figure as a triangle | Selects a three-line figure with a gap | SHP-B-01/04 | R3 "can the sheep get out?"; R1 close the gap |
+| M-SHP-CLOSED | Accepts an open figure as a triangle, or a figure with a curved side as a polygon or a circle | Selects a three-line figure with a gap, or the dome | SHP-B-01/04 | R3 "can the sheep get out?"; R1 close the gap. For "the circle" the item says its own line (`vo:fb.closed.not_circle`): the shared line speaks of straight sides |
+| M-SHP-FACE | Does not see which flat shape is on a solid | Puts a cylinder with the rectangles, a box with the circles | SHP-B-09 | R1 stamp the solid in sand or clay; R2 turn it over and look at its bottom. A sphere is never offered (it has no flat face) and the pyramid only for "the flat shape on it" (its base is a square) |
+
+*Proposal for the owner (M11 Stage 2 pilot, 2026-11-15):* **M-SHP-NAME**, "knows the shape but mixes up its word" (matches right in SHP-A-01, picks another shape when the name is said; a repeated swap). It would give the naming items of SHP-A-02, A-05, A-10, B-01 and B-08 an honest second tag (about 18 items in Shape Forest). The B-15 spec left these untagged until the owner decides (its E2); M-COL-NAME is the same idea for colours.
 | M-SYM-SHIFT | Copies the design instead of mirroring it | Completes the half by translating it | SHP-B-10, SHP-C-08 | R1 a fold-the-paper animation; a mirror tool |
 | M-DIR-EGO | Uses own viewpoint when the robot or map faces another way | Fails only when the robot faces down or toward the child | SHP-A-09, CS-B-02 | R4 "stand like the robot"; R1 rotate the board so the robot faces up |
 | M-DIR-LR | Confuses right and left | A consistent mirror path | SHP-B-12 | R4 the body anchor (§8.7); coloured wristband icons |

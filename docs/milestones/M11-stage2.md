@@ -1,6 +1,6 @@
 # M11 Stage 2: show first, then together, then alone (the teaching spec for the six lands)
 
-**Status:** draft for the owner, written by the curriculum-expert on 2026-11-15 in the worktree `D:\nitznutz-lands` (branch `lands-ux`). It makes steps 2.1 to 2.5 and 2.7 of `docs/milestones/M11.md` buildable. It does not change a skill, a prerequisite or a mastery rule. Where it adds to M11 (the swap count, the Together evidence rule, the exempt list, the two small template extensions) it says so, and §9 asks the owner.
+**Status:** **approved by the owner on 2026-11-15** (the four answers at the end). **Pilot 2.4a (Shape Forest) content done on 2026-11-15**, see §11; the developer builds 2.1 from `content/units/arc/shape-forest.arc.json` (§7.4). Written by the curriculum-expert on 2026-11-15 in the worktree `D:\nitznutz-lands` (branch `lands-ux`). It makes steps 2.1 to 2.5 and 2.7 of `docs/milestones/M11.md` buildable. It does not change a skill, a prerequisite or a mastery rule. Where it adds to M11 (the swap count, the Together evidence rule, the exempt list, the two small template extensions) it says so, and §9 asks the owner.
 
 **Binding:** M11 §2 (the arc), §6 (criteria 5 to 8) and the owner's answers of 2026-11-14 (the host teaches the Show and the Together lead-ins in its own voice, and the companion asks, hints and gives feedback; caps as written; level before age; SHP-B-05 and B-06 join the path). L7-3 (a first meeting is not evidence). No timers, streaks or guilt. No paid voicing by any agent: every new line is text with a pending clip until the owner's voicing round.
 
@@ -442,6 +442,22 @@ The correct-feedback lines are kept where they still say the fact ("yes, red and
 11. **SHP-B-05 and B-06** are on the Shapes path and each has 4 playable activities.
 12. **Nothing else moves.** The skill graph, prerequisites, mastery rules, revisit missions, warm-ups and the language courses are unchanged (existing tests stay green).
 
+### 7.4 Where the Show and the lesson parts live until the schema has them
+
+The activity schema has no `purpose: "show"` and the lesson schema has no parts, so no generator writes them yet. Each land's Shows, host lines and lesson parts are authored in **`content/units/arc/<land>.arc.json`** (`schema: "lesson-arc-source/v0"`; Shape Forest first). No tool reads it yet; `content/units/arc/` is outside the generators' lists, so a regeneration leaves it alone. Its parts:
+
+- `shows[]`: `id` (`show.<skill>`), `skill`, `band`, `template`, `representation`, `handOver: "last"`, `scene` (the template's scene in pack form), `steps[]` (`by: host|child`, then `item`+`bin` for `sort_drag`, `piece`+`slot` for `shape_builder`, `to` for the `listen_do` drag; `say: "key"` marks where the key line plays; `trace`, `count`, `sticks`, `walk`, `push`, `stack`, `turn`, `stamp` name the motion of the host's hand), `lines[]` (`role` open, key, handover; `vo` `vo:host.<host>.show.<skill>.<role>`; plain text, `needs-editor`), `predict` (null in Shape Forest), `reminder` (`line: "key"`, `maxSeconds: 8`), `teaches[]` (the words as the items label them), `picture` (for the design-director), `status`, and `upgrade` where a better form waits for a drawing.
+- `hostLines[]`: the Together lead-in per template, the hand-over to the companion, the "show me" replies (`vo:host.<host>.together.*`, `.handover.*`, `.showme.*`).
+- `lessons[]`: `recall` (candidate ids of the prerequisite skill), `show`, `secondShow` (a reminder before the second skill's first item), `together[]` (`id`, `lead`), `alone` (the pool, rung 0 first), `use`, `poolRungs`, and `v7` where the pool lacks a rung.
+- `caps`: the stage caps of §2.5.
+
+**What the developer adds to read it (2.1 and 2.3):**
+1. Schema: `purpose: "show"` and the Show fields (`show.lines`, `show.steps`, `handOver`, `teaches`, `predict`) in the activity schema, or a `show` document kind; lesson parts in the lesson schema (`recall`, `show`, `together[{id, lead}]`, `alone`, `use`), with the generator flattening them for older readers (as L7-4 (a)).
+2. A generator step that turns the arc file into pack files (Show activities, lessons in parts), and puts the host lines into the voice inventory as pending clips.
+3. Validator V1 to V7 and W1 (§7.2), reading the parts; plus the two template records below.
+4. The flow: the lead mechanism per template (the worked-example player stopped after `lead` steps; the Show stops before the last step), the evidence rules of §2.2, the Show gating of §2.3, the caps of §2.5.
+5. **Template records the pilot needs (found while building it):** (a) `sort_drag` in the lands records `answer.misconception` for every wrong drop; it must record the dropped item's own `scene.items[].misconception` when it has one (the schema and the model already carry it), else the activity's. (b) `shape_builder` records one tag for any wrong piece; a decoy needs its own tag (the arc file and `shapes.json` carry them as `decoy_tags` and `pair_tags`, which the generator does not write yet). (c) Band A `shape_builder` items should outline each place (curriculum §4.4 "each piece is outlined"); today every place is one grey shadow, which is what SHP-B-05 wants, so A-06 and B-05 now look alike.
+
 ---
 
 ## 8. Build order (small steps) and the pilot
@@ -505,3 +521,42 @@ Some citations were not re-checked online in this run (the search tool was unava
 ## Owner decisions (2026-11-15)
 
 The owner said yes to all four questions: (1) at most 7 scored items for ages 7 to 8; (2) 308 tap swaps, replacing the "about 180" of M11.md; (3) the three small template extensions (CS-B-04, LOG-B-02, SHP-A-08); (4) on a first meeting only the Show and the first Together item count for nothing, and the child's own answers are scored. Pilot land: Shape Forest. The three citations the curriculum-expert could not check online (Bobis 1996, Kang and others 2007, the patterning studies) stay unverified until checked.
+
+## 11. Build status
+
+| Step | Status (2026-11-15) |
+|---|---|
+| 2.1 Show, parts, lead, evidence, gating, caps | **next: app-developer**, from `content/units/arc/shape-forest.arc.json` (§7.4) |
+| 2.2, 2.2c template extensions | not started (2.2c frees SHP-A-08's Show) |
+| 2.3 validator V1 to V7, W1, the fade rule | not started; §11.2 corrects V6 and V7 |
+| **2.4a pilot: Shape Forest content** | **done by the curriculum-expert** (§11.1); Hebrew drafts wait for the hebrew-text-editor, drawings for the design-director |
+| 2.4b to 2.4e, 2.5, 2.7, signing | not started |
+
+### 11.1 What the pilot changed (content only, generators re-run)
+
+- **Re-cut (same id, `revision: 2`):** Band A 23 taps (`sort_drag` 19: A-03 4, A-04 4, A-05 3, A-07 4, A-10 4; `shape_builder` 4: the A-01 shape sorter). Band B 20 taps and 2 `match_pairs`, all to `sort_drag` (B-01 4, B-02 4, B-03 3, B-04 4, B-08 4, B-09 3). In all **43 taps and 2 matches** (the plan said 44 and 1: B-09 keeps its stamp tap `x.shpb09.5`, a reverse check that a golden test pins, and re-cuts a second match instead; the share is 50% either way).
+- **New:** SHP-B-05 and SHP-B-06, skill files, 8 `shape_builder` items (`b.shpb05.1` to `.4`, `b.shpb06.1` to `.4`; the last of each is a transfer check, so fresh mastery is reachable) and the lessons `one-shadow` and `shapes-make-shapes` (sequence 39 and 40, after the solids).
+- **Taps that stay, given an honest second tag (13):** `b15.shpa01.1`, `.2` (a shape in the model's colour, not the answer's: M-COL-ONEATTR), `shp.name.triangle`, `.triangle.green`, `b.shpb01.4`, `.8` (the open figure and the dome: M-SHP-CLOSED twice), `shp.name.square`, `.square.yellow`, `b15.shpa02.2`, `shp.rect.square`, `shp.square.orange` (a second long rectangle: M-SHP-SQRECT twice), `shp.where.under` (above and on: M-SPACE-WORD), `b15.shpa02.1` (its own M-SHP-CLOSED line for "the circle").
+- **Pick-only share now:** every Shape Forest skill at or under its cap (A-02 62% under the 80% recognition cap; A-08 exempt); Band A 52% (46% without A-08), Band B 49%.
+- **Which ids:** not the first ones of each skill (the throwaway plan) but the taps with the fewest honest tags, keeping the owner's box-word item `b.shpb08.5` (hebrew-notes D6) and, where the count allowed, items pinned by tests.
+- **Shows:** 17, one per skill, with 61 host lines for Kubi (1,522 letters without nikud, 1,984 characters); 16 play on today's templates once 2.1 lands, SHP-A-08's waits for 2.2c.
+- **Generator changes (for the app-developer's review):** `author.py` writes an item's `revision`, lets a sort have no tag of its own, a family `h2` line and (behind `LAND_SORT_ITEM_TAGS`, off) a picture's own tag, and lets a `shape_builder` item say its own question, hints and answer tag; `pick_spec` keeps `revision`. `check_maths.py` reads the Shape Forest property sorts (sides, closed, equal sides, straight, rolls, faces, the shape of a thing), so every re-cut item is recomputed: 0 WRONG, 0 UNCHECKED.
+
+### 11.2 What turned out wrong in this spec
+
+1. **"Every swap works on today's templates, with tags."** The swaps play, but their tags do not record: a sort of the lands records only `answer.misconception` (and the lands validator refuses a picture's own tag as a language-course field), and `shape_builder` cannot tag a decoy. Until §7.4 (5a) and (5b) land, a re-cut sort records one tag, a count sort none, and the shape sorter none. V6 cannot pass for the pilot before that.
+2. **"Taps that stay get two tagged distractors."** 30 Shape Forest taps cannot get a second honest tag: tagging them anyway is the false diagnosis the maths check removed on 2026-11-06. They wait for: an oval (`shp.name.circle`, `.mix`, `b15.shpa02.1`, `shp.any.big.circle`), a four-sided shape that is not a rectangle (`shp.rect.find`, `b15.shpa04.1`), the owner's answer on a naming tag (the proposal M-SHP-NAME in curriculum §5.2: A-05 3, A-10 4, `b.shpb01.2`, `.6`, B-08 4), or no tag at all (A-07's four two-option items; B-03 `.1`, `.3`, `.5`, whose thin triangle shows no catalogued error). A-08's four are in the exempt skill.
+3. **V6 should read** "fewer than two, or fewer than the catalogue tags that fit the item's act": A-05, A-07, A-10, B-05, B-06 and B-08 have hands-on items with no honest tag.
+4. **V7 cannot hold** for skills whose only form is hands-on (SHP-A-06, B-05, B-06: `shape_builder` is always concrete) or whose lessons are all tracing (the two A-02 trace lessons take their rung 1 from the skill's taps by rule 3). Proposal: V7 exempts a skill with no pictorial form, or the build skills get one "which shapes make this picture?" pick each.
+5. **SHP-A-06 and SHP-B-05 look alike today**: the template draws every place as one grey shadow, which is B-05's "no inner outlines"; A-06's "each piece outlined" needs an outline per place (§7.4 (5c)).
+6. **SHP-B-06's own example** ("two triangles make a square") needs a half-square triangle; the pilot uses two squares, two rectangles, two triangles that make a four-sided shape, and four squares.
+7. **SHP-B-08's hands-on form is weak until real objects are drawn**: of its named sorts only the balls carry the name to a real thing; the others match a solid to its own picture.
+8. **Host lines are about half the estimate** (61 lines, 1,522 letters, not 3,150).
+
+### 11.3 Hand-offs from the pilot
+
+- **app-developer:** §7.4 items 1 to 5, the review of the generator changes of §11.1, and the pinned tests below.
+- **design-director:** an oval; a four-sided shape that is not a rectangle; `shape_triangle_half`; real-object solids (a can, a party hat or traffic cone, a gift box, a dice, a toy pyramid); the Show motions in each Show's `picture` (the hand along the sides, sticks lifting off the sides, the ant walk, push and roll, the sand print, the finger round the sorter's hole); a golden check that a bin of 3 to 6 `stick_long` reads as "sides" at bin size. Found while checking the builds: in `shp.build.rocket` the nose (`shape_triangle_red`, 36) and the fins (`shape_triangle_green`, 34) are two sprites of nearly one size, so a red triangle dropped on a fin is "wrong" for a colour the grey shadow does not show; the fix is one sprite for all three (data, after its golden is redrawn).
+- **hebrew-text-editor:** the 61 host lines (plain drafts in the arc file) and 173 narrator clips new or re-worded (4,810 letters, 10,457 characters with nikud), all `NOT READ` rows of `docs/review/hebrew-master.csv`. Six new rows came out `owner-approved` by the dagesh-after-מִ rule (`b.shpb06.1` to `.3` prompts and alt texts) and four `text-ready` by an identical reviewed text: they are drafts. The regenerated table also lists 64 app-string rows from the branch's earlier screens (not the pilot's). `x.shpb09.1` and `.4` say "stamp the solid" for a pyramid whose stamp is its square base: "on its side" would make the triangle true.
+- **owner (via the orchestrator):** the naming tag M-SHP-NAME (curriculum §5.2).
+- **Pinned tests now red because of the pilot's content (not the signature):** `content_lints_test.dart`, three tests: the source counts become 1,214 activities and 114 skills; `b15.shpa02.2` leaves the list of explained gaps (it has two tags now); the older gaps' pin goes from 326 to 297. `tools/test_hebrew_sources.py` `test_table_counts`: 15,912 rows. `docs/audio/voicing-groups.json` was re-run (`tools/voicing_groups.py`, free) so every new clip is in a group (shapes-A 250 ids, 7,496 characters; shapes-B 187, 7,364). **Red because the bundled pack is not re-signed:** `starter_pack_test.dart` "built from the sources". **Will go red at signing** (they read the signed pack): `hint_tap_families_test.dart` (the A-07 "solids" id lists name four re-cut items), `hint_tap_golden_test.dart` and `hint_qa_test.dart` (`shp.name.triangle` now offers the dome for the circle).

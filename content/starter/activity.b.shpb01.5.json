@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.shpb01.5",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "shapes",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.65
   },
@@ -25,38 +25,53 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה הַמְּחֻמָּשׁ?"
+        "v": "סוֹפְרִים צְלָעוֹת: מְחֻמָּשׁ לְכָאן, מְשֻׁשֶּׁה לְכָאן."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:shape_quad",
-        "label": "מְרֻבָּע"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:shape_pentagon",
+        "id": "b1",
+        "sprite": "asset:stick_long",
+        "count": 5,
         "label": "מְחֻמָּשׁ"
       },
       {
-        "id": "o3",
-        "sprite": "asset:shape_open",
-        "label": "צוּרָה פְּתוּחָה",
-        "misconception": "M-SHP-CLOSED"
+        "id": "b2",
+        "sprite": "asset:stick_long",
+        "count": 6,
+        "label": "מְשֻׁשֶּׁה"
       }
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:shape_pentagon",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:shape_hexagon",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:shape_hexagon",
+        "bin": "b2"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:shape_pentagon",
+        "bin": "b1"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -65,21 +80,11 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! לַמְּחֻמָּשׁ יֵשׁ חָמֵשׁ צְלָעוֹת."
+          "v": "כֵּן! לַמְחֻמָּשׁ חָמֵשׁ צְלָעוֹת, וְלַמְשֻׁשֶּׁה שֵׁשׁ."
         }
       ]
     },
     "incorrect": [
-      {
-        "when": "misconception:M-SHP-CLOSED",
-        "vo": "vo:fb.shp_closed",
-        "caption": [
-          {
-            "t": "he",
-            "v": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק."
-          }
-        ]
-      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -116,11 +121,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.shp_sides.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נַעֲבֹר בָּאֶצְבַּע עַל הַצְּלָעוֹת, אַחַת אַחַת, וְנִסְפֹּר."
         }
       ]
     },
@@ -131,7 +136,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הַמְּחֻמָּשׁ הוּא צוּרָה סְגוּרָה עִם חָמֵשׁ צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם."
+          "v": "סוֹפְרִים צֶלַע אַחַר צֶלַע, וְכׇל צֶלַע פַּעַם אַחַת. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -147,10 +152,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה הַמְּחֻמָּשׁ?"
+    "altText": "סוֹפְרִים צְלָעוֹת: מְחֻמָּשׁ לְכָאן, מְשֻׁשֶּׁה לְכָאן."
   }
 }

@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.shpb01.3",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "shapes",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.51
   },
@@ -25,38 +25,64 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה הַמְּרֻבָּע?"
+        "v": "מְשֻׁלָּשִׁים לְכָאן, וּמַה שֶּׁלֹּא מְשֻׁלָּשׁ — לְכָאן."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:shape_hexagon",
-        "label": "מְשֻׁשֶּׁה"
+        "id": "b1",
+        "sprite": "asset:shape_triangle",
+        "count": 1,
+        "label": "מְשֻׁלָּשׁ"
       },
       {
-        "id": "o2",
-        "sprite": "asset:shape_open",
-        "label": "צוּרָה פְּתוּחָה",
-        "misconception": "M-SHP-CLOSED"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:shape_quad",
-        "label": "מְרֻבָּע"
+        "id": "b2",
+        "sprite": "asset:clue_not_triangle",
+        "count": 1,
+        "label": "לֹא מְשֻׁלָּשׁ"
       }
     ],
-    "correct": "o3",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:shape_triangle_thin",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:shape_open",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:shape_triangle_down",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:shape_curved",
+        "bin": "b2"
+      },
+      {
+        "id": "i5",
+        "sprite": "asset:shape_triangle_blue",
+        "bin": "b1"
+      },
+      {
+        "id": "i6",
+        "sprite": "asset:shape_pentagon",
+        "bin": "b2"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-SHP-CLOSED"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -65,7 +91,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! לַמְּרֻבָּע יֵשׁ אַרְבַּע צְלָעוֹת."
+          "v": "כֵּן! רַק מְשֻׁלָּשִׁים בְּיַחַד."
         }
       ]
     },
@@ -116,11 +142,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.shp_triangle.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "לִמְשֻׁלָּשׁ שָׁלוֹשׁ צְלָעוֹת יְשָׁרוֹת, וְאֵין בּוֹ פֶּתַח."
         }
       ]
     },
@@ -131,7 +157,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הַמְּרֻבָּע הוּא צוּרָה סְגוּרָה עִם אַרְבַּע צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם."
+          "v": "מְשֻׁלָּשׁ סָגוּר, וְיֵשׁ לוֹ שָׁלוֹשׁ צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -147,10 +173,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה הַמְּרֻבָּע?"
+    "altText": "מְשֻׁלָּשִׁים לְכָאן, וּמַה שֶּׁלֹּא מְשֻׁלָּשׁ — לְכָאן."
   }
 }

@@ -408,7 +408,8 @@ def activity(a, template, skills, purpose, check, scene, answer, fb_tags, h, goa
     voice = voice_answer(a)
     assert not voice or template in VOICE_TEMPLATES, '%s: a %s is never answered by voice' % (i, template)
     d = {
-        'schema': 'activity/v1', 'id': i, 'review': 'needs-editor', 'revision': 1,
+        # M11 Stage 2 §4.1: an item re-cut to another template keeps its id and says its revision (2 after one re-cut)
+        'schema': 'activity/v1', 'id': i, 'review': 'needs-editor', 'revision': a.get('revision', 1),
         'template': template, 'templateVersion': template_version(template, scene, answer),
         'domain': a.get('domain', 'numbers'), 'band': a.get('band', 'A'),
         'skills': [{'id': s, 'weight': w} for s, w in skills],
@@ -826,21 +827,40 @@ def k_number(a, ctx):
         a.get('goal', 'child types the number'), prompt=a['prompt'], correct=a['correct_text'])
 
 
+# M11 Stage 2 §7.4 (5a): a picture's own tag in a sort of the lands. The tables carry it already; the pack gets it once the validator
+# (ls01_checks.dart refuses `scene.items[].misconception` outside a language course) and the sort session of the lands take it.
+LAND_SORT_ITEM_TAGS = False
+
+
 def k_sort(a, ctx):
-    """Drag (or touch) each picture into its bin. Items are [sprite, bin number (1, 2 or 3)]."""
+    """Drag (or touch) each picture into its bin. Items are [sprite, bin number (1, 2 or 3)], or [sprite, bin, tag] where a picture
+    put in a wrong bin shows a misconception of its own (M11 Stage 2 §4.1: the item's tag, else the activity's; written while
+    LAND_SORT_ITEM_TAGS is on). `tag: null` gives the activity no tag of its own (a skill with no catalogue misconception). `h2` with
+    `h2_shared` gives the level-2 hint a line of the skill's family (one clip, `vo:hint.<h2_shared>.h2`)."""
     names = ctx['names']
     bins = [{'id': 'b%d' % k, 'sprite': 'asset:' + b['sprite'], 'count': b.get('count', 1),
              'label': b.get('label') or names[b['sprite']]['one']} for k, b in enumerate(a['bins'], start=1)]
-    items = [{'id': 'i%d' % k, 'sprite': 'asset:' + sp, 'bin': 'b%d' % n} for k, (sp, n) in enumerate(a['items'], start=1)]
+    items, own = [], set()
+    for k, it in enumerate(a['items'], start=1):
+        item = {'id': 'i%d' % k, 'sprite': 'asset:' + it[0], 'bin': 'b%d' % it[1]}
+        if len(it) > 2 and it[2] and LAND_SORT_ITEM_TAGS:
+            item['misconception'] = it[2]
+            own.add(it[2])
+        items.append(item)
     tag = a.get('tag', 'M-SORT-SHIFT')
+    answer = {'type': 'sort', 'mode': 'sort'}
+    if tag:
+        answer['misconception'] = tag
+    h2 = a.get('h2') or 'נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ.'
+    h2_shared = a.get('h2_shared') if a.get('h2') else 'sort'
     return activity(
         a, 'sort_drag', skills_of(a), 'practice', 'practice',
         {'background': 'asset:meadow', 'bins': bins, 'items': items},
-        {'type': 'sort', 'mode': 'sort', 'misconception': tag}, {tag},
-        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ.',
+        answer, ({tag} if tag else set()) | own,
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', h2,
               a.get('h3') or 'נַעֲבִיר כׇּל תְּמוּנָה אֶל הַקְּבוּצָה הַמַּתְאִימָה. עַכְשָׁו תּוֹרְכֶם.',
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
-              shared=('pick', 'sort')),
+              shared=('pick', h2_shared)),
         a.get('goal', 'child puts every picture in the group that fits the rule'),
         prompt=a['prompt'], correct=a.get('correct_text') or 'כֵּן! מִיַּנְתֶּם אֶת כֻּלָּם.')
 
@@ -908,15 +928,22 @@ def k_shapebuild(a, ctx):
     scene = {'background': 'asset:meadow', 'aspect': round(cw / ch, 3), 'slots': slots}
     if a.get('decoys'):
         scene['decoys'] = ['asset:' + d for d in a['decoys']]
+    # M11 Stage 2: a shape sorter (SHP-A-01) and a substitution (SHP-B-06) say their own question, hints and goal; `tag` is the
+    # answer's tag. The tag of each decoy (`decoy_tags`) waits for the template to record it (see docs/milestones/M11-stage2.md)
+    answer = {'type': 'shapes'}
+    if a.get('tag'):
+        answer['misconception'] = a['tag']
+    h2, h2_shared = (a['h2'], a.get('h2_shared')) if a.get('h2') else ('לְכׇל צוּרָה יֵשׁ מָקוֹם אֶחָד, כְּמוֹ הַצֵּל שֶׁלָּהּ.', 'sb')
     return activity(
         a, 'shape_builder', skills_of(a), 'practice', 'practice',
-        scene, {'type': 'shapes'}, set(),
-        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'לְכׇל צוּרָה יֵשׁ מָקוֹם אֶחָד, כְּמוֹ הַצֵּל שֶׁלָּהּ.',
-              'הַצּוּרָה הַנְּכוֹנָה דּוֹמָה בְּדִיּוּק לַצֵּל. עַכְשָׁו תּוֹרְכֶם.',
+        scene, answer, {a['tag']} if a.get('tag') else set(),
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', h2,
+              a.get('h3') or 'הַצּוּרָה הַנְּכוֹנָה דּוֹמָה בְּדִיּוּק לַצֵּל. עַכְשָׁו תּוֹרְכֶם.',
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
-              shared=('pick', 'sb')),
-        'child puts each shape in the place that has its shadow',
-        prompt='בּוֹנִים %s מִצּוּרוֹת.' % a['what'], correct='כֵּן! בְּנִיתֶם %s.' % a['what'])
+              shared=('pick', h2_shared)),
+        a.get('goal', 'child puts each shape in the place that has its shadow'),
+        prompt=a.get('prompt') or 'בּוֹנִים %s מִצּוּרוֹת.' % a['what'],
+        correct=a.get('correct_text') or 'כֵּן! בְּנִיתֶם %s.' % a['what'])
 
 
 DIR_WORDS = {'up': 'לְמַעְלָה', 'down': 'לְמַטָּה', 'left': 'שְׂמֹאלָה', 'right': 'יָמִינָה'}
@@ -980,7 +1007,7 @@ def seq_words(ctx, sprites):
 
 
 def pick_spec(a, **kw):
-    d = {k: a[k] for k in ('id', 'skill', 'also', 'weights', 'difficulty', 'rep', 'check', 'purpose', 'domain', 'band',
+    d = {k: a[k] for k in ('id', 'skill', 'also', 'weights', 'difficulty', 'rep', 'check', 'purpose', 'domain', 'band', 'revision',
                            'tag_lines', 'rule') if k in a}
     d['variantGroup'] = a['kind'].replace('_', '-')
     d['voice'] = voice_answer(a)  # decided by the kind that asked (a sum is spoken), not by the pick it becomes

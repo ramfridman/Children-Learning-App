@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "b.shpb01.4",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "shapes",
@@ -44,8 +44,9 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:shape_quad",
-        "label": "מְרֻבָּע"
+        "sprite": "asset:shape_open",
+        "label": "צוּרָה פְּתוּחָה",
+        "misconception": "M-SHP-CLOSED"
       },
       {
         "id": "o3",

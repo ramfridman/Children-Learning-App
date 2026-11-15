@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "shp.any.down",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "shapes",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.4
   },
@@ -25,39 +25,64 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה הַמְּשֻׁלָּשׁ?"
+        "v": "מְשֻׁלָּשִׁים לְכָאן, וּמַה שֶּׁלֹּא מְשֻׁלָּשׁ — לְכָאן."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:shape_triangle_down",
+        "id": "b1",
+        "sprite": "asset:shape_triangle",
+        "count": 1,
         "label": "מְשֻׁלָּשׁ"
       },
       {
-        "id": "o2",
-        "sprite": "asset:shape_open",
-        "label": "צוּרָה פְּתוּחָה",
-        "misconception": "M-SHP-CLOSED"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:shape_circle",
-        "label": "עִגּוּל",
-        "misconception": "M-SHP-ORIENT"
+        "id": "b2",
+        "sprite": "asset:clue_not_triangle",
+        "count": 1,
+        "label": "לֹא מְשֻׁלָּשׁ"
       }
     ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:shape_triangle_down",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:shape_square_blue",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:shape_triangle_thin",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:shape_open",
+        "bin": "b2"
+      },
+      {
+        "id": "i5",
+        "sprite": "asset:shape_triangle_yellow",
+        "bin": "b1"
+      },
+      {
+        "id": "i6",
+        "sprite": "asset:shape_curved",
+        "bin": "b2"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-SHP-PROTO"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -66,28 +91,18 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה מְשֻׁלָּשׁ."
+          "v": "כֵּן! כׇּל הַמְּשֻׁלָּשִׁים בְּיַחַד."
         }
       ]
     },
     "incorrect": [
       {
-        "when": "misconception:M-SHP-CLOSED",
-        "vo": "vo:fb.shp_closed",
+        "when": "misconception:M-SHP-PROTO",
+        "vo": "vo:fb.shp_proto",
         "caption": [
           {
             "t": "he",
-            "v": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק."
-          }
-        ]
-      },
-      {
-        "when": "misconception:M-SHP-ORIENT",
-        "vo": "vo:fb.shp_orient",
-        "caption": [
-          {
-            "t": "he",
-            "v": "צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה גַּם כְּשֶׁמְּסֹבְבִים אוֹתָהּ. בּוֹאוּ נִבְדֹּק."
+            "v": "אוֹתָהּ צוּרָה יְכוֹלָה לְהֵרָאוֹת קְצָת אַחֶרֶת. בּוֹאוּ נִסְפֹּר צְלָעוֹת."
           }
         ]
       },
@@ -127,11 +142,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.shp_triangle.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "לִמְשֻׁלָּשׁ שָׁלוֹשׁ צְלָעוֹת יְשָׁרוֹת, וְאֵין בּוֹ פֶּתַח."
         }
       ]
     },
@@ -142,7 +157,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "זֶה מְשֻׁלָּשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+          "v": "גַּם מְשֻׁלָּשׁ דַּק וְגַם מְשֻׁלָּשׁ הָפוּךְ הֵם מְשֻׁלָּשִׁים. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -158,10 +173,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child sorts triangles of any shape and turn from figures that are not triangles",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה הַמְּשֻׁלָּשׁ?"
+    "altText": "מְשֻׁלָּשִׁים לְכָאן, וּמַה שֶּׁלֹּא מְשֻׁלָּשׁ — לְכָאן."
   }
 }

@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "one-shadow",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "צֵל אֶחָד, הַרְבֵּה צוּרוֹת"
+    }
+  ],
+  "skills": [
+    "SHP-B-05"
+  ],
+  "items": [
+    "b.shpb05.1",
+    "b.shpb05.2",
+    "b.shpb05.3",
+    "b.shpb05.4"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 39,
+  "celebration": {
+    "vo": "vo:celebrate.one_shadow",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַצּוּרוֹת בַּצֵּל."
+      }
+    ]
+  }
+}

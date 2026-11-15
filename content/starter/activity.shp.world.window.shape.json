@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "shp.world.window.shape",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "shapes",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.3
   },
@@ -25,53 +25,73 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיזוֹ צוּרָה יֵשׁ לַחַלּוֹן?"
+        "v": "לְכׇל דָּבָר יֵשׁ צוּרָה. מְמַיְּנִים כׇּל דָּבָר לַצּוּרָה שֶׁלּוֹ."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "group": {
-      "sprite": "asset:window",
-      "count": 1,
-      "arrangement": "line",
-      "seed": 3,
-      "scale": 1
-    }
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:shape_circle_blue",
+        "id": "b1",
+        "sprite": "asset:shape_circle",
+        "count": 1,
         "label": "עִגּוּל"
       },
       {
-        "id": "o2",
-        "sprite": "asset:shape_triangle_blue",
-        "label": "מְשֻׁלָּשׁ"
+        "id": "b2",
+        "sprite": "asset:shape_rect",
+        "count": 1,
+        "label": "מַלְבֵּן"
       },
       {
-        "id": "o3",
-        "sprite": "asset:shape_rect_blue",
-        "label": "מַלְבֵּן"
+        "id": "b3",
+        "sprite": "asset:shape_triangle",
+        "count": 1,
+        "label": "מְשֻׁלָּשׁ"
       }
     ],
-    "correct": "o3",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:window",
+        "bin": "b2"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:sign",
+        "bin": "b3"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:plate",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:note_20",
+        "bin": "b2"
+      },
+      {
+        "id": "i5",
+        "sprite": "asset:coin",
+        "bin": "b1"
+      }
+    ]
   },
-  "voiceAnswer": true,
+  "answer": {
+    "type": "sort",
+    "mode": "sort"
+  },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:shp.world.window.shape.correct",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה מַלְבֵּן."
+          "v": "כֵּן! כׇּל דָּבָר בַּצּוּרָה שֶׁלּוֹ."
         }
       ]
     },
@@ -112,11 +132,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.shp_world.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נַעֲבֹר בָּאֶצְבַּע מִסָּבִיב לַדָּבָר: אֵיזוֹ צוּרָה יוֹצֵאת?"
         }
       ]
     },
@@ -127,7 +147,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "זֶה מַלְבֵּן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+          "v": "צַלַּחַת עֲגֻלָּה, חַלּוֹן מַלְבֵּן, שֶׁלֶט מְשֻׁלָּשׁ. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -143,10 +163,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child sorts everyday things by the shape they have",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיזוֹ צוּרָה יֵשׁ לַחַלּוֹן?"
+    "altText": "לְכׇל דָּבָר יֵשׁ צוּרָה. מְמַיְּנִים כׇּל דָּבָר לַצּוּרָה שֶׁלּוֹ."
   }
 }
