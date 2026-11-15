@@ -17,6 +17,7 @@ import '../parent/language_progress.dart';
 import '../parent/language_settings.dart';
 import '../world/adventure_adapter.dart' show LanguageCourse;
 import '../world/course_path.dart';
+import '../world/language_gates.dart' show GateContext;
 import '../world/language_placement.dart';
 import 'providers.dart' show clockProvider;
 import 'reward_providers.dart' show rewardsProvider;
@@ -124,24 +125,30 @@ final FutureProviderFamily<List<LanguageCourse>, String> languageCoursesProvider
       final FamilyLanguages family = await ref.watch(languagesProvider.future);
       final int ageBand =
           (await db.allProfiles()).where((Profile p) => p.id == childId).firstOrNull?.ageBand ?? 1;
+      // A letters gate reads the age in months when the parent gave a birth month (B-29); it is worked out here and goes nowhere.
+      final int? ageMonths = (await ref.watch(childAgeProvider(childId).future)).months;
       return <LanguageCourse>[
         for (final String course in Course.languages)
           if (packs[course] case final PackContent pack?)
-            languageCourseOf(pack, attempts, family.of(childId, course), ageBand),
+            languageCourseOf(pack, attempts, family.of(childId, course), ageBand, ageMonths: ageMonths),
       ];
     });
 
 /// One child's course: the skills below the entry point that the placement game found are assumed (known with a prior of 0.85, until
 /// shown otherwise) before the child's answers in this pack are replayed into the engine (docs/languages/frame.md section 3.2).
 /// [attempts] may hold every course's answers; only this pack's are read.
+///
+/// The letters gates are read here too (docs/languages/frame.md section 3.3.6): by the child's age ([ageMonths] when known, else the
+/// bracket [ageBand]) and level, never by the presentation band. The course's start reads neither.
 LanguageCourse languageCourseOf(
   PackContent pack,
   List<Attempt> attempts,
   LanguageSwitches switches,
-  int ageBand,
-) {
+  int ageBand, {
+  int? ageMonths,
+}) {
   final List<Attempt> own = attempts.where((Attempt a) => a.packId == pack.packId).toList();
-  final PlacementGame? game = placementGameOfChild(pack, own, switches, ageBand: ageBand);
+  final PlacementGame? game = placementGameOfChild(pack, own, switches);
   final Set<String> assumed = game == null ? const <String>{} : assumedSkills(pack, game);
   final Engine engine = Engine(catalog: engineCatalog(pack))..assume(assumed);
   engine.replay(own.map(eventOf).toList()..sort((AttemptEvent x, AttemptEvent y) => x.at.compareTo(y.at)));
@@ -150,6 +157,7 @@ LanguageCourse languageCourseOf(
     engine: engine,
     assumed: assumed,
     placement: game == null ? null : PlacementStatus.of(game),
+    gateContext: GateContext(switches: switches, ageBand: ageBand, ageMonths: ageMonths),
   );
 }
 
@@ -202,11 +210,18 @@ final FutureProviderFamily<LanguageProgress?, ({String childId, String course})>
       );
     });
 
-/// Whether the child's letters are open in a course (the letters gate, by level or by age), which lets a Meet screen print its word in a chip
-/// under the bubble's line (`meetShowsWord`, docs/design/l7-meet-find.md section 3.2). Closed until step L7-8 builds the gate by age and
-/// level: until then no Meet screen prints a word.
+/// Whether the child's letters are open in a course (the letters gate, by age and level), which lets a Meet screen print its word in a chip
+/// under the bubble's line (`meetShowsWord`, docs/design/l7-meet-find.md section 3.2). It follows the gate: closed until the course has a
+/// letters gate and it is open for this child, and closed while the course is not read yet.
 final Provider<bool Function(String childId, String course)> meetLettersOpenProvider =
     Provider<bool Function(String, String)>(
       (Ref ref) =>
-          (String childId, String course) => false,
+          (String childId, String course) =>
+              ref
+                  .read(languageCoursesProvider(childId))
+                  .value
+                  ?.where((LanguageCourse c) => c.course == course)
+                  .firstOrNull
+                  ?.lettersOpen ??
+              false,
     );

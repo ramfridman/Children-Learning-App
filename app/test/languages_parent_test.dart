@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/app/language_providers.dart';
 import 'package:nitznutz/data/app_database.dart';
+import 'package:nitznutz/engine/age.dart' show BirthMonth;
 import 'package:nitznutz/engine/types.dart';
 import 'package:nitznutz/parent/child_form.dart';
 import 'package:nitznutz/parent/language_pages.dart';
@@ -241,6 +242,102 @@ void main() {
         expect(find.byKey(const Key('page-oral-only')), findsNothing);
       },
     );
+
+    // "Letters together with words" (L7-8): hidden under 6;0, shown (off) from 6, on by default from 7, a parent's own choice stands. The
+    // rig's clock is on 2026-10-26, so a child born in October 2020 is 6;0 and one born in November 2020 is 5;11.
+    Future<AppRig> pageAged(
+      WidgetTester tester,
+      String course, {
+      int? year,
+      int? month,
+      LanguageSwitches? switches,
+    }) async {
+      final AppRig rig = await langRig(
+        languages: <String, LanguageSwitches>{course: switches ?? const LanguageSwitches(on: true)},
+        installed: const <String>[],
+      );
+      if (year != null) await rig.db.setBirth(langKid, BirthMonth(year, month!));
+      await pumpParentScreen(tester, rig, LanguagePage(profile: await langProfile(rig), course: course));
+      return rig;
+    }
+
+    Switch togetherSwitch(WidgetTester tester) => tester.widget<Switch>(
+      find.descendant(of: find.byKey(const Key('page-letters-together')), matching: find.byType(Switch)),
+    );
+
+    for (final String course in <String>['eng', 'rus']) {
+      testWidgets(
+        '$course: "letters together with words" is hidden at 5;11, and when no birth month is known for a 5 to 6 bracket',
+        (WidgetTester tester) async {
+          await pageAged(tester, course, year: 2020, month: 11);
+          expect(find.byKey(const Key('page-letters-together')), findsNothing);
+          expect(find.text(He.areaLangLettersTogether.text), findsNothing);
+        },
+      );
+
+      testWidgets(
+        '$course: no birth month and the 5 to 6 bracket: hidden (the bracket is read by its youngest age)',
+        (WidgetTester tester) async {
+          await pageAged(tester, course);
+          expect(find.byKey(const Key('page-letters-together')), findsNothing);
+        },
+      );
+
+      testWidgets('$course: shown, off, from 6;0, and the choice is stored as a boolean', (
+        WidgetTester tester,
+      ) async {
+        final AppRig rig = await pageAged(tester, course, year: 2020, month: 10);
+        await tester.ensureVisible(find.byKey(const Key('page-letters-together')));
+        expect(togetherSwitch(tester).value, isFalse);
+        expect(find.text(He.areaLangLettersTogetherOff.text), findsOneWidget);
+        expect(
+          (await rig.db.setting(languagesSettingKey))!,
+          isNot(contains('lettersWithWords')),
+          reason: 'nothing stored until chosen',
+        );
+        await tester.tap(
+          find.descendant(of: find.byKey(const Key('page-letters-together')), matching: find.byType(Switch)),
+        );
+        await tester.pumpAndSettle();
+        expect(togetherSwitch(tester).value, isTrue);
+        expect(find.text(He.areaLangLettersTogetherOn.text), findsOneWidget);
+        expect((await stored(rig)).of(langKid, course).lettersWithWords, isTrue);
+        expect((await rig.db.setting(languagesSettingKey))!, contains('"lettersWithWords":true'));
+      });
+
+      testWidgets('$course: on from 7;0 until the parent turns it off, and the choice stands', (
+        WidgetTester tester,
+      ) async {
+        final AppRig rig = await pageAged(tester, course, year: 2019, month: 10);
+        await tester.ensureVisible(find.byKey(const Key('page-letters-together')));
+        expect(togetherSwitch(tester).value, isTrue);
+        expect((await stored(rig)).of(langKid, course).lettersWithWords, isNull);
+        await tester.tap(
+          find.descendant(of: find.byKey(const Key('page-letters-together')), matching: find.byType(Switch)),
+        );
+        await tester.pumpAndSettle();
+        expect(togetherSwitch(tester).value, isFalse);
+        expect((await stored(rig)).of(langKid, course).lettersWithWords, isFalse);
+      });
+    }
+
+    testWidgets('Hebrew has no "letters together with words", at any age', (WidgetTester tester) async {
+      await pageAged(tester, 'heb', year: 2018, month: 3);
+      expect(find.byKey(const Key('page-letters-together')), findsNothing);
+    });
+
+    testWidgets('Russian: "letters before 5" says the letters still wait for the first words', (
+      WidgetTester tester,
+    ) async {
+      await pageAged(tester, 'rus', switches: const LanguageSwitches(on: true, lettersBefore5: true));
+      await tester.ensureVisible(find.byKey(const Key('page-letters5-words')));
+      expect(find.text(He.areaLangLettersFirstWords.text), findsOneWidget);
+    });
+
+    testWidgets('Russian: with "letters before 5" off that line is not shown', (WidgetTester tester) async {
+      await pageAged(tester, 'rus');
+      expect(find.byKey(const Key('page-letters5-words')), findsNothing);
+    });
 
     for (final String course in <String>['eng', 'heb', 'rus']) {
       testWidgets('$course: a beginner can ask for a placement game, and it is saved as a switch', (

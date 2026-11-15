@@ -37,7 +37,6 @@ Future<VisitOutcome> startCourseVisit(
           own.content,
           await db.attemptsOf(childId),
           answers: switches.placementAnswers(course),
-          presentationBand: switches.presentationBand(band),
         )
       : null;
   if (!context.mounted) return VisitOutcome.refused;

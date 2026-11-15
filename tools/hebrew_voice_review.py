@@ -749,6 +749,9 @@ COURSE_KEEP |= {canon(w) for w in (
     'נְשַׂחֵק',     # the bottle's lines for a language stop (adventureLang…): plain "נשחק" is read with [ʃ] (and means "we will defeat")
     'הָאֹכֶל',      # plain "האוכל" is read with the stress on the last syllable ("the one who eats"); here it is "ha-O-khel" (the food)
     'אִי',          # plain "אי" alone is read "ai" or "ee" (not); here it is "i" (island), as in אִי הַשָּׂפוֹת
+    'מַחֲאוּ',      # "clap" (plural imperative, the gloss of clap in eng and rus; hebrew-notes.md section 15)
+    'סַפְּרוּ',     # plain "ספרו" is also "their book" and "they counted"; here it is "tell" (section 15)
+    'קְחוּ',        # "take" (plural imperative; section 15)
 )}
 
 
@@ -766,6 +769,21 @@ def course_voice_text(text):
         t = t[:-1]
         notes = [n for n in notes if 'full stop at the end' not in n] + ['carrier: ends in a colon on purpose (the next clip is the word)']
     return t, notes
+
+
+# A gloss (the Hebrew meaning of an English or Russian word, said once on its Meet screen and again at hint 2; hebrew-notes.md section 15) is
+# a word or a short phrase said alone, with nothing around it to tell a heteronym which way to read: פֶּה / פֹּה, חָלָב / חֵלֶב, סֵפֶר / סַפָּר,
+# גֶּרֶב / גַּרְב. So a gloss with no final mark is a fragment and is sent fully pointed, with no full stop (the English glosses always were).
+# A gloss that ends in a mark is a sentence, a question or an exclamation (זוֹ אִמָּא. מִי זֶה? הִנֵּה הַכַּדּוּר!) and goes through course_voice_text.
+GLOSS_MARKS = '.?!…:'
+
+
+def gloss_voice_text(text):
+    """The voice text of a gloss line. Returns (text, notes)."""
+    src = text.replace('"', '').replace('״', '').replace('־', ' ').strip()
+    if not src or src[-1] in GLOSS_MARKS:
+        return course_voice_text(text)
+    return src, ['gloss: a word or short phrase said alone is sent fully pointed, with no full stop']
 
 
 # ---------------------------------------------------------------- main

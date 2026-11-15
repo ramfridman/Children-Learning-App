@@ -44,6 +44,8 @@ export const LANGUAGE_SWITCHES: Record<string, LanguageSwitch> = {
   oralOnly: { t: "bool", courses: ["eng"] },
   readCheck: { t: "bool", courses: ["heb"] },
   lettersBefore5: { t: "bool", courses: ["rus"] },
+  // L7-8: "letters together with words". Absent while the parent never chose it (the age decides); a stored boolean is the parent's own choice.
+  lettersWithWords: { t: "bool", courses: ["eng", "rus"] },
   stress: { t: "enum", values: ["on", "off"], courses: ["rus"] },
   route: { t: "enum", values: ["new", "heritage", "reader"], courses: ["rus"] },
 };

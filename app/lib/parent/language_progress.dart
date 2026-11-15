@@ -5,6 +5,7 @@ import '../engine/engine.dart';
 import '../engine/gates.dart';
 import '../engine/state.dart';
 import '../strings/he.dart';
+import '../world/language_gates.dart';
 import '../world/language_placement.dart' show PlacementStatus;
 import 'language_settings.dart';
 
@@ -200,13 +201,13 @@ LanguageProgress buildLanguageProgress({
   if (rest.isNotEmpty) strands.add(count(He.langStrandAll, rest));
 
   // The gates: open, not yet, or held closed by the parent's switch.
-  final GateInput input = GateInput(
-    mastery: masteryLevels(engine),
+  final GateInput input = languageGateInput(
+    content: content,
+    engine: engine,
+    switches: switches,
     ageBand: ageBand,
     ageMonths: ageMonths,
-    presentationBand: switches.presentationBand(ageBand),
-    switchesOn: switches.gateSwitchesOn,
-    route: switches.route,
+    placement: placement,
   );
   final List<GateView> gates = <GateView>[
     for (final CourseGate g in courseGates(

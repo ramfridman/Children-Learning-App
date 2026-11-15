@@ -405,6 +405,16 @@ class RawAndGateTest(Base):
         self.assertEqual((g['schema'], g['course'], g['review']), ('gate/v1', 'eng', 'needs-editor'))
 
 
+    def test_a_gate_document_carries_its_early_set_and_ages_to_the_pack_unchanged(self):
+        # L7-8: the letters gates read the age and have an early set ("letters together with words", the words floor of the level route)
+        doc = {'requires': ['ENG-A-01'], 'holds': ['ENG-B-01'], 'minAge': 5, 'durableBelowAge': 7,
+               'early': {'requires': ['ENG-A-01']}, 'parentSwitch': {'name': 'oralOnly', 'effect': 'closes'}}
+        self.sb.unit['docs'] = [{'kind': 'gate', 'id': 'eng.oral', 'doc': doc}]
+        g = self.files()['gate.eng.oral.json']
+        for key in ('minAge', 'durableBelowAge', 'early', 'parentSwitch'):
+            self.assertEqual(g[key], doc[key], key)
+
+
 class PlacementTest(Base):
     def setUp(self):
         super().setUp()
@@ -424,6 +434,11 @@ class PlacementTest(Base):
         self.assertEqual(p['strands'][0]['levels'][1], {'items': ['eng.a01.p02']})
         self.assertEqual(p['strands'][0]['start'][0]['level'], 1)
         self.assertEqual((p['thanks']['vo'], p['celebration']['vo']), ('vo:eng.he_ok', 'vo:eng.he_bye'))
+
+    def test_a_letters_strand_names_the_gate_it_opens_and_the_level_from_which(self):
+        self.sb.placement['strands'][0]['opens'] = {'gate': 'eng.oral', 'fromLevel': 1}
+        self.assertEqual(self.files()['placement.eng.placement.json']['strands'][0]['opens'],
+                         {'gate': 'eng.oral', 'fromLevel': 1})
 
     def test_a_probe_must_be_a_probe(self):
         self.sb.placement['strands'][0]['levels'][1]['items'] = ['a01.i01']

@@ -631,7 +631,7 @@ class Course(lang_recipes.Recipes, lang_routes.Routes, lang_meet.Meet):
                     entry['assumes'] = level['assumes']
                 levels.append(entry)
             strand = {'id': s.get('id')}
-            for key in ('offer', 'start'):
+            for key in ('offer', 'start', 'opens'):
                 if key in s:
                     strand[key] = s[key]
             strand['levels'] = levels

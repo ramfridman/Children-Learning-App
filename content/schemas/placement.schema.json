@@ -171,14 +171,30 @@
                 "minLength": 2,
                 "maxLength": 24,
                 "pattern": "^(?:[a-z][A-Za-z0-9]{1,23})$"
-              },
-              "minBand": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 2
               }
             },
             "required": [],
+            "additionalProperties": false
+          },
+          "opens": {
+            "type": "object",
+            "properties": {
+              "gate": {
+                "type": "string",
+                "minLength": 5,
+                "maxLength": 24,
+                "pattern": "^(?:[a-z]{3}\\.[a-z0-9_]{1,19})$"
+              },
+              "fromLevel": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 7
+              }
+            },
+            "required": [
+              "gate",
+              "fromLevel"
+            ],
             "additionalProperties": false
           },
           "start": {

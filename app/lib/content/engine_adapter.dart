@@ -111,8 +111,15 @@ List<CourseGate> courseGates(PackContent content) => <CourseGate>[
       ],
       holds: g.holds,
       minAge: g.minAge,
-      neverUnderBand: g.neverUnderBand,
-      durableBelowBand: g.durableBelowBand,
+      durableBelowAge: g.durableBelowAge,
+      early: g.hasEarly
+          ? EarlySet(
+              requires: g.earlyRequires,
+              requireAtLeast: <SkillQuota>[
+                for (final q in g.earlyRequireAtLeast) SkillQuota(skills: q.skills, count: q.count),
+              ],
+            )
+          : null,
       switchName: g.switchName,
       switchEffect: switch (g.switchEffect) {
         'closes' => SwitchEffect.closes,

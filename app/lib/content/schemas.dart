@@ -129,7 +129,7 @@ const List<String> bands = <String>['A', 'B', 'C'];
 const List<String> lessonDemos = <String>['ten_is_rod'];
 
 /// The parent switches a gate may name (docs/languages/frame.md section 1.4): the English "oral only" keeps its gate closed,
-/// the Russian "letters before 5" opens its gate.
+/// the Russian "letters before 5" opens its gate. ("Letters together with words" is not named: any gate with an `early` set takes it.)
 const List<String> gateSwitchNames = <String>['oralOnly', 'lettersBefore5'];
 
 /// The routes of a Russian child (docs/languages/frame.md section 3.3.7).
@@ -515,9 +515,28 @@ const SObject gateSchema = SObject(<String, SField>{
   ),
   // The skills held back until the gate is open.
   'holds': SField(SArray(_skill, minItems: 1, maxItems: 200)),
+  // The gate reads the child's age (in months when known, else the bracket), never the presentation band (L7-8).
   'minAge': SField(SInt(min: 3, max: 8), required: false),
-  'neverUnderBand': SField(SInt(min: 0, max: 2), required: false),
-  'durableBelowBand': SField(SInt(min: 1, max: 2), required: false),
+  // Durable mastery is needed below this age in years; from it on, fresh is enough (the English oral gate: 7).
+  'durableBelowAge': SField(SInt(min: 4, max: 8), required: false),
+  // The early set: what "letters together with words" asks instead of the full lists, and what the child's level and the Russian
+  // "letters before 5" switch still ask (never letters before any words).
+  'early': SField(
+    SObject(<String, SField>{
+      'requires': SField(SArray(_skill, maxItems: 60), required: false),
+      'requireAtLeast': SField(
+        SArray(
+          SObject(<String, SField>{
+            'skills': SField(SArray(_skill, minItems: 2, maxItems: 40)),
+            'count': SField(SInt(min: 1, max: 40)),
+          }),
+          maxItems: 6,
+        ),
+        required: false,
+      ),
+    }),
+    required: false,
+  ),
   'parentSwitch': SField(
     SObject(<String, SField>{
       'name': SField(SEnum(gateSwitchNames)),
@@ -549,12 +568,20 @@ const SObject placementSchema = SObject(<String, SField>{
     SArray(
       SObject(<String, SField>{
         'id': SField(SString(minLength: 1, maxLength: 4, pattern: r'[a-z0-9]{1,4}')),
-        // The strand is offered only when the questionnaire says so and the presentation band is at least `minBand` (eng literacy).
+        // The strand is offered only when the questionnaire says so.
         'offer': SField(
           SObject(<String, SField>{
             'answer': SField(_answerKey, required: false),
             'equals': SField(_answerKey, required: false),
-            'minBand': SField(SInt(min: 0, max: 2), required: false),
+          }),
+          required: false,
+        ),
+        // A strand of letters: when the parent says the child knows letters or reads, and a level from `fromLevel` up is passed at two
+        // thirds or more (before the "minus one"), the gate is marked open: level comes before age (L7-8).
+        'opens': SField(
+          SObject(<String, SField>{
+            'gate': SField(SString(minLength: 5, maxLength: 24, pattern: Patterns.gateId)),
+            'fromLevel': SField(SInt(min: 0, max: 7)),
           }),
           required: false,
         ),

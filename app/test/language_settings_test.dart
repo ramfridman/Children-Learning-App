@@ -152,8 +152,8 @@ void main() {
   group('what the gates and the pace read', () {
     test('the parent switches a gate may name, and the presentation band for the course', () {
       const LanguageSwitches s = LanguageSwitches(on: true, oralOnly: true, lettersBefore5: true, band: 0);
-      expect(s.gateSwitchesOn, <String>{'oralOnly', 'lettersBefore5'});
-      expect(const LanguageSwitches(on: true).gateSwitchesOn, isEmpty);
+      expect(s.gateSwitchesOn(ageBand: 1), <String>{'oralOnly', 'lettersBefore5'});
+      expect(const LanguageSwitches(on: true).gateSwitchesOn(ageBand: 1), isEmpty);
       expect(s.presentationBand(2), 0, reason: 'the parent\'s choice wins');
       expect(const LanguageSwitches(on: true).presentationBand(2), 2, reason: 'otherwise the age decides');
     });

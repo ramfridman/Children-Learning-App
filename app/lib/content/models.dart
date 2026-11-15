@@ -2314,8 +2314,19 @@ class GateDoc {
       ],
       holds = <String>{for (final Object? s in json['holds']! as List<Object?>) s! as String},
       minAge = json['minAge'] as int?,
-      neverUnderBand = json['neverUnderBand'] as int?,
-      durableBelowBand = json['durableBelowBand'] as int?,
+      durableBelowAge = json['durableBelowAge'] as int?,
+      earlyRequires = <String>{
+        for (final Object? s in (_maybe(json['early'])['requires'] as List<Object?>?) ?? const <Object?>[])
+          s! as String,
+      },
+      earlyRequireAtLeast = <({Set<String> skills, int count})>[
+        for (final Map<String, Object?> q in _maps(_maybe(json['early'])['requireAtLeast']))
+          (
+            skills: <String>{for (final Object? s in q['skills']! as List<Object?>) s! as String},
+            count: q['count']! as int,
+          ),
+      ],
+      hasEarly = json['early'] != null,
       switchName = (json['parentSwitch'] as Map<String, Object?>?)?['name'] as String?,
       switchEffect = (json['parentSwitch'] as Map<String, Object?>?)?['effect'] as String?,
       routeBypass = <String>{
@@ -2328,8 +2339,12 @@ class GateDoc {
   final List<({Set<String> skills, int count})> requireAtLeast;
   final Set<String> holds;
   final int? minAge;
-  final int? neverUnderBand;
-  final int? durableBelowBand;
+  final int? durableBelowAge;
+
+  /// The early set ("letters together with words"; the words floor of every way into letters): present only when [hasEarly].
+  final bool hasEarly;
+  final Set<String> earlyRequires;
+  final List<({Set<String> skills, int count})> earlyRequireAtLeast;
   final String? switchName;
   final String? switchEffect;
   final Set<String> routeBypass;
@@ -2342,7 +2357,8 @@ class PlacementStrandDoc {
     : id = json['id']! as String,
       offerAnswer = _maybe(json['offer'])['answer'] as String?,
       offerEquals = _maybe(json['offer'])['equals'] as String?,
-      offerMinBand = (_maybe(json['offer'])['minBand'] as int?) ?? 0,
+      opensGate = _maybe(json['opens'])['gate'] as String?,
+      opensFromLevel = _maybe(json['opens'])['fromLevel'] as int?,
       start = <({String answer, String equals, int level})>[
         for (final Map<String, Object?> s in _maps(json['start']))
           (answer: s['answer']! as String, equals: s['equals']! as String, level: s['level']! as int),
@@ -2359,11 +2375,15 @@ class PlacementStrandDoc {
 
   final String id;
 
-  /// The strand is offered only when the questionnaire answered [offerAnswer] with [offerEquals] (both null: always) and the child's
-  /// presentation band is at least [offerMinBand].
+  /// The strand is offered only when the questionnaire answered [offerAnswer] with [offerEquals] (both null: always). Never by age or
+  /// by the presentation band: a start does not read age (L7-8).
   final String? offerAnswer;
   final String? offerEquals;
-  final int offerMinBand;
+
+  /// A strand of letters names the gate it can open: a level from [opensFromLevel] up passed at two thirds or more marks [opensGate]
+  /// open, for a child whose parent says they know letters or read (level comes before age). Both null for a strand that opens nothing.
+  final String? opensGate;
+  final int? opensFromLevel;
   final List<({String answer, String equals, int level})> start;
   final List<({List<String> items, List<String> assumes})> levels;
 }

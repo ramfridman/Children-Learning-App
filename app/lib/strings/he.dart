@@ -706,6 +706,13 @@ abstract final class He {
   static const Str areaLangLetters = Str('אותיות לפני גיל 5');
   static const Str areaLangLettersOff = Str('כבוי: עד גיל 5 רק שומעים ומדברים');
   static const Str areaLangLettersOn = Str('מופעל: אפשר להתחיל באותיות גם לפני גיל 5');
+  // L7-8 (needs-editor): "letters together with words", shown from age 6, on by default from 7; and the line under "letters before 5".
+  static const Str areaLangLettersTogether = Str('אותיות יחד עם מילים');
+  static const Str areaLangLettersTogetherOn = Str('מופעל: האותיות מתחילות כבר אחרי המילים הראשונות');
+  static const Str areaLangLettersTogetherOff = Str('כבוי: האותיות מתחילות כשהילד מכיר הרבה מילים');
+  static const Str areaLangLettersFirstWords = Str(
+    'גם כשהאפשרות מופעלת, האותיות מתחילות אחרי המילים הראשונות',
+  );
   static const Str areaLangStress = Str('סימני הטעמה על המסך');
   static const Str areaLangStressHelp = Str(
     'סימן קטן שמראה על איזו אות ההטעמה במילה. בשיעורים על הטעמה הוא מופיע תמיד. ברירת המחדל במסלול של {route}: {default}.',

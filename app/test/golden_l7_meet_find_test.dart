@@ -175,7 +175,7 @@ void main() {
         await openCourseLesson(t, 'rus', rus, lesson: 'rus.family-1', size: boards[board]!, band: 1);
         await _passMeet(t);
         await _passMeet(t);
-        await _untilBubble(t, 'בְּעִבְרִית: אַבָּא.');
+        await _untilBubble(t, 'בְּעִבְרִית: אַבָּא');
         expect(find.byKey(const Key('meet-thumb-0')), findsOneWidget);
         expect(find.byKey(const Key('meet-thumb-1')), findsOneWidget);
         expect(find.byType(TargetChip), findsNothing, reason: 'no chip at the meaning');

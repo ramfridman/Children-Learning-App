@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import '../content/schemas.dart' show courseRoutes;
 import '../engine/course.dart';
+import '../engine/gates.dart'
+    show ageAtLeast, lettersWithWordsDefaultOnAge, lettersWithWordsShownAge, lettersWithWordsSwitch;
 import '../engine/presentation.dart';
 
 // The parent's settings for each language of each child (docs/languages/frame.md section 1.4): whether the language is on, and
@@ -40,9 +42,9 @@ const Map<String, Map<String, List<String>>> languageQuestionnaire = <String, Ma
 
 /// The switches that exist only for some courses (the others are for every course), as the names the document uses.
 const Map<String, Set<String>> languageOwnSwitches = <String, Set<String>>{
-  Course.eng: <String>{'oralOnly'},
+  Course.eng: <String>{'oralOnly', lettersWithWordsSwitch},
   Course.heb: <String>{'readCheck'},
-  Course.rus: <String>{'lettersBefore5', 'stress', 'route'},
+  Course.rus: <String>{'lettersBefore5', lettersWithWordsSwitch, 'stress', 'route'},
 };
 
 /// At most this many children have language settings (the family's rules document has room for no more).
@@ -56,6 +58,7 @@ class LanguageSwitches {
     this.personal = true,
     this.oralOnly = false,
     this.lettersBefore5 = false,
+    this.lettersWithWords,
     this.stress = StressMarks.route,
     this.readCheck = false,
     this.route,
@@ -78,6 +81,9 @@ class LanguageSwitches {
       personal: flag('personal', true),
       oralOnly: own.contains('oralOnly') && flag('oralOnly', false),
       lettersBefore5: own.contains('lettersBefore5') && flag('lettersBefore5', false),
+      lettersWithWords: own.contains(lettersWithWordsSwitch) && json[lettersWithWordsSwitch] is bool
+          ? json[lettersWithWordsSwitch]! as bool
+          : null,
       stress: own.contains('stress') ? _stressOf(json['stress']) : StressMarks.route,
       readCheck: own.contains('readCheck') && flag('readCheck', false),
       route: own.contains('route') && courseRoutes.contains(json['route']) ? json['route']! as String : null,
@@ -112,8 +118,12 @@ class LanguageSwitches {
   /// English: no letters yet; keeps the oral gate closed.
   final bool oralOnly;
 
-  /// Russian: letters before age 5; opens the letters gate.
+  /// Russian: letters before age 5; opens the letters gate (once the early set of words is known: never letters before any words).
   final bool lettersBefore5;
+
+  /// English and Russian: "letters together with words", which lowers the letters gate to its early set. Null while the parent never chose
+  /// it: then the age decides (on from 7;0, see [lettersWithWordsOn]); a choice stands whatever the age. Only a boolean is stored.
+  final bool? lettersWithWords;
 
   /// Russian: stress marks on screen.
   final StressMarks stress;
@@ -157,14 +167,37 @@ class LanguageSwitches {
       'soundsStrand': 'yes',
   };
 
-  /// The same, with the given fields changed. [route], [band] and [questionnaire] can be set to null or empty by passing the
-  /// matching `clear...` flag, because null alone means "keep".
+  /// The parent says the child already knows the letters of the course's language or reads it (eng `knowsLetters`; heb its one question;
+  /// rus `letters` or `reads`). With a placement that confirms it, this is how level comes before age (docs/languages/frame.md section 3.3.6).
+  bool claimsLetters(String course) {
+    bool some(String question) => (questionnaire[question] ?? 'no') != 'no';
+    return switch (course) {
+      Course.eng || Course.heb => some('knowsLetters'),
+      Course.rus => some('letters') || some('reads'),
+      _ => false,
+    };
+  }
+
+  /// "Letters together with words" is shown to the parent: from age 6;0 (the age in months when known, else the bracket's youngest age).
+  static bool lettersWithWordsShown({required int ageBand, int? ageMonths}) =>
+      ageAtLeast(months: ageMonths, ageBand: ageBand, years: lettersWithWordsShownAge);
+
+  /// Whether "letters together with words" is on for this child: never under 6;0, and from 6 the parent's own choice, else on from 7;0.
+  bool lettersWithWordsOn({required int ageBand, int? ageMonths}) =>
+      lettersWithWordsShown(ageBand: ageBand, ageMonths: ageMonths) &&
+      (lettersWithWords ??
+          ageAtLeast(months: ageMonths, ageBand: ageBand, years: lettersWithWordsDefaultOnAge));
+
+  /// The same, with the given fields changed. [route], [band], [lettersWithWords] and [questionnaire] can be set to null or empty by
+  /// passing the matching `clear...` flag, because null alone means "keep".
   LanguageSwitches copyWith({
     bool? on,
     bool? voice,
     bool? personal,
     bool? oralOnly,
     bool? lettersBefore5,
+    bool? lettersWithWords,
+    bool clearLettersWithWords = false,
     StressMarks? stress,
     bool? readCheck,
     String? route,
@@ -179,6 +212,7 @@ class LanguageSwitches {
     personal: personal ?? this.personal,
     oralOnly: oralOnly ?? this.oralOnly,
     lettersBefore5: lettersBefore5 ?? this.lettersBefore5,
+    lettersWithWords: clearLettersWithWords ? null : lettersWithWords ?? this.lettersWithWords,
     stress: stress ?? this.stress,
     readCheck: readCheck ?? this.readCheck,
     route: clearRoute ? null : route ?? this.route,
@@ -194,6 +228,7 @@ class LanguageSwitches {
     if (!personal) 'personal': false,
     if (oralOnly) 'oralOnly': true,
     if (lettersBefore5) 'lettersBefore5': true,
+    'lettersWithWords': ?lettersWithWords,
     if (stress != StressMarks.route) 'stress': stress.name,
     if (readCheck) 'readCheck': true,
     if (placementAsked) 'placement': true,
@@ -204,8 +239,13 @@ class LanguageSwitches {
 
   bool get isDefault => toJson().isEmpty;
 
-  /// The names of the parent switches that are on and that a gate may name (`oralOnly`, `lettersBefore5`).
-  Set<String> get gateSwitchesOn => <String>{if (oralOnly) 'oralOnly', if (lettersBefore5) 'lettersBefore5'};
+  /// The names of the parent switches that are on and that a gate may read (`oralOnly`, `lettersBefore5`, `lettersWithWords`). The last one
+  /// depends on the child's age, so the age is given: [ageMonths] when known, else the bracket [ageBand].
+  Set<String> gateSwitchesOn({required int ageBand, int? ageMonths}) => <String>{
+    if (oralOnly) 'oralOnly',
+    if (lettersBefore5) 'lettersBefore5',
+    if (lettersWithWordsOn(ageBand: ageBand, ageMonths: ageMonths)) lettersWithWordsSwitch,
+  };
 
   /// The presentation band for a child of the given age bracket in this course: the parent's choice, else the age's.
   int presentationBand(int ageBand) => presentationBandFor(ageBand: ageBand, override: band);

@@ -1035,6 +1035,7 @@ List<Problem> validatePack({
       course: course,
       activities: activities,
       skillIds: skillIds,
+      gateIds: gates.keys.toSet(),
       say: say,
       checkVo: checkVo,
     );
@@ -1987,6 +1988,7 @@ void _placement(
   required String course,
   required Map<String, Map<String, Object?>> activities,
   required Set<String> skillIds,
+  required Set<String> gateIds,
   required void Function(String, String, String) say,
   required void Function(String, String, Object?) checkVo,
 }) {
@@ -2012,6 +2014,15 @@ void _placement(
         'strands[$s].offer',
         'names a questionnaire question and the answer that offers the strand, both or neither',
       );
+    }
+    final Object? opens = strand['opens'];
+    if (opens is Map<String, Object?>) {
+      if (!gateIds.contains(opens['gate'])) {
+        say(file, 'strands[$s].opens.gate', 'there is no gate "${opens['gate']}" in this pack');
+      }
+      if ((opens['fromLevel']! as int) >= levels.length) {
+        say(file, 'strands[$s].opens.fromLevel', 'is not a level of the strand (0 to ${levels.length - 1})');
+      }
     }
     for (final (int r, Map<String, Object?> rule) in _maps(strand['start']).indexed) {
       if ((rule['level']! as int) >= levels.length) {
@@ -2764,8 +2775,25 @@ void _bundlesAndGates({
       for (final Object? s in g['requires']! as List<Object?>) s! as String,
     };
     final Set<String> holds = <String>{for (final Object? s in g['holds']! as List<Object?>) s! as String};
-    final Set<String> named = <String>{...requires, ...holds};
-    for (final Map<String, Object?> q in _maps(g['requireAtLeast'])) {
+    final Map<String, Object?> early = _mapOf(g['early']);
+    if (g['early'] != null &&
+        ((early['requires'] as List<Object?>?) ?? const <Object?>[]).isEmpty &&
+        _maps(early['requireAtLeast']).isEmpty) {
+      say(
+        file,
+        'early',
+        'asks for no skill: the early set is the words floor, so it names the words the child must have met',
+      );
+    }
+    final Set<String> named = <String>{
+      ...requires,
+      ...holds,
+      for (final Object? s in (early['requires'] as List<Object?>?) ?? const <Object?>[]) s! as String,
+    };
+    for (final Map<String, Object?> q in <Map<String, Object?>>[
+      ..._maps(g['requireAtLeast']),
+      ..._maps(early['requireAtLeast']),
+    ]) {
       final List<Object?> quota = q['skills']! as List<Object?>;
       named.addAll(<String>[for (final Object? s in quota) s! as String]);
       if ((q['count']! as int) > quota.length) {
@@ -2792,7 +2820,11 @@ void _bundlesAndGates({
     // A gate can never open if what it asks for needs something it holds back.
     final Set<String> asked = <String>{
       ...requires,
-      for (final Map<String, Object?> q in _maps(g['requireAtLeast']))
+      for (final Object? s in (early['requires'] as List<Object?>?) ?? const <Object?>[]) s! as String,
+      for (final Map<String, Object?> q in <Map<String, Object?>>[
+        ..._maps(g['requireAtLeast']),
+        ..._maps(early['requireAtLeast']),
+      ])
         for (final Object? s in q['skills']! as List<Object?>) s! as String,
     };
     final Set<String> needed = <String>{...asked, ...skillsBelow(asked, skills)};

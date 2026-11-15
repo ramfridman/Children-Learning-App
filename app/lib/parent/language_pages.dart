@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/age_providers.dart' show childAgeProvider;
 import '../app/language_providers.dart';
 import '../app/state.dart' show appStateProvider;
 import '../app/sync_providers.dart';
@@ -257,6 +258,14 @@ class LanguagePage extends ConsumerWidget {
         ref.watch(languagesProvider).value?.of(profile.id, course) ?? const LanguageSwitches();
     void set(LanguageSwitches next) => unawaited(_save(ref, profile.id, course, next));
     final Map<String, String> byLang = <String, String>{'lang': name};
+    // "Letters together with words" is shown from 6;0 by the age in months when a birth month was given, else by the bracket.
+    final int? ageMonths = ref.watch(childAgeProvider(profile.id)).value?.months;
+    final Widget lettersTogether = _LettersTogetherRow(
+      switches: s,
+      ageBand: profile.ageBand,
+      ageMonths: ageMonths,
+      onChanged: set,
+    );
     return _page(context, '$name · ${displayChildName(profile.name)}', () => Navigator.pop(context), <Widget>[
       _card(name, <Widget>[
         _SwitchRow(
@@ -306,6 +315,7 @@ class LanguagePage extends ConsumerWidget {
             value: s.oralOnly,
             onChanged: (bool v) => set(s.copyWith(oralOnly: v)),
           ),
+          lettersTogether,
         ],
         if (course == Course.rus) ...<Widget>[
           const Divider(height: 1, color: TokenColors.hairline),
@@ -316,6 +326,16 @@ class LanguagePage extends ConsumerWidget {
             value: s.lettersBefore5,
             onChanged: (bool v) => set(s.copyWith(lettersBefore5: v)),
           ),
+          if (s.lettersBefore5)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text(
+                He.areaLangLettersFirstWords.text,
+                key: const Key('page-letters5-words'),
+                style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+              ),
+            ),
+          lettersTogether,
           const Divider(height: 1, color: TokenColors.hairline),
           _StressRow(switches: s, onChanged: set),
         ],
@@ -377,6 +397,42 @@ class LanguagePage extends ConsumerWidget {
         ),
       ]),
     ]);
+  }
+}
+
+/// "Letters together with words" (English and Russian): hidden under 6;0, shown from 6, on by default from 7 (a parent's own choice stands).
+/// It lowers the letters gate to its early set; letters never open before it.
+class _LettersTogetherRow extends StatelessWidget {
+  const _LettersTogetherRow({
+    required this.switches,
+    required this.ageBand,
+    required this.ageMonths,
+    required this.onChanged,
+  });
+
+  final LanguageSwitches switches;
+  final int ageBand;
+  final int? ageMonths;
+  final ValueChanged<LanguageSwitches> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!LanguageSwitches.lettersWithWordsShown(ageBand: ageBand, ageMonths: ageMonths)) {
+      return const SizedBox.shrink();
+    }
+    final bool on = switches.lettersWithWordsOn(ageBand: ageBand, ageMonths: ageMonths);
+    return Column(
+      children: <Widget>[
+        const Divider(height: 1, color: TokenColors.hairline),
+        _SwitchRow(
+          key: const Key('page-letters-together'),
+          title: He.areaLangLettersTogether.text,
+          help: on ? He.areaLangLettersTogetherOn.text : He.areaLangLettersTogetherOff.text,
+          value: on,
+          onChanged: (bool v) => onChanged(switches.copyWith(lettersWithWords: v)),
+        ),
+      ],
+    );
   }
 }
 
