@@ -1,0 +1,32 @@
+{
+  "schema": "audition/v1",
+  "title": "numb11 teens probe: how should 'שמונה עשרה' be spelled so that hero-son (and Nitzi) say it well? Line b.numb11.18.prompt, four spellings, two voices.",
+  "review": "needs-editor",
+  "note": "Text editor, 2026-11-15. The owner heard vo.b.numb11.18.prompt (hero-son) and said שמונה עשרה is not pronounced well. A = the voiced text today (fully pointed teen, plain 'מתוך'). B = the teen in plain spelling. C = the teen with a maqaf. D = the same as A with 'מתוך' pointed (מִתּוֹךְ), so that the shva of שְׁמוֹנֶה does not merge with the plain word before it. Everything else is the same in all four, so one change at a time. Each voice uses its own model from content/voices.json (hero-son eleven_v4_turbo, nitzi eleven_v4) and the usual settings. No clip has a ! . The listener marks each clip heard-ok or heard-wrong. No change to the master table until the owner has picked by ear. Trimmed 2026-11-15: the owner said Nitzi is fine, so hero-son only, without the baseline.",
+  "defaults": {
+    "character": "hero-son",
+    "format": "mp3_44100_64",
+    "settings": {
+      "stability": 0.5,
+      "similarity_boost": 0.75,
+      "use_speaker_boost": true
+    }
+  },
+  "clips": [
+    {
+      "id": "H-B-plain",
+      "text": "קְחוּ אַחַת מתוך שמונה עשרה. כמה נשארו?",
+      "tests": "hero-son, the teen in plain spelling: 'shmone esre' as spoken, even rhythm"
+    },
+    {
+      "id": "H-C-maqaf",
+      "text": "קְחוּ אַחַת מתוך שְׁמוֹנֶה־עֶשְׂרֵה. כמה נשארו?",
+      "tests": "hero-son, pointed with a maqaf: does it read as one number word, with no gap between the two?"
+    },
+    {
+      "id": "H-D-pointed-mitoch",
+      "text": "קְחוּ אַחַת מִתּוֹךְ שְׁמוֹנֶה עֶשְׂרֵה. כמה נשארו?",
+      "tests": "hero-son, 'מתוך' pointed: is the problem the word before the teen, not the teen?"
+    }
+  ]
+}
