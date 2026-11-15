@@ -1,47 +1,31 @@
 # L7-9: the voice plan for the re-cut language courses
 
-Voice-and-sound-director, 2026-11-15. Worktree `D:\nitznutz-teach-first`, branch `languages-teach-first` (tip 9f2bb25a). Nothing here was paid for. I ran only `plan-lang` and `verify-lang` (free, no network, no key). I did not commit.
+Voice-and-sound-director, 2026-11-15, FINAL numbers. Worktree `D:\nitznutz-teach-first`, branch `languages-teach-first`, after the `hebrew-sweep` merge. Nothing here was paid for. I ran only `plan-lang` and `verify-lang` (free, no network, no key). I did not commit.
 
-**Read this first: the numbers below are for this branch as it stands, and the branch is behind the voicing branch.** The tool that voices a language course (`plan-lang`, `generate-lang`, `verify-lang`, file `app/tool/lang_voice_lib.dart`) and the four course voices in `content/voices.json` (`lang-en-female`, `lang-en-male`, `lang-ru-female`, `lang-ru-male`) exist only on branch `hebrew-sweep` (worktree `D:\nitznutz-hebrew-sweep`, tip 54c730ff, not merged to main). To count, I ran that tool from the sweep worktree on a scratch copy (sweep `voices.json` + this branch's `content/languages`), against the owner's real work folders `~\nitznutz-voice\lang-<course>` (read only). The 2026-11-08 voicing (what the owner paid for) was made from the sweep's texts, so every line where this branch's text differs from the sweep's counts as "changed", even when this branch is the one that lost the sweep's nikud. See section 4, blocker 1.
+## 1. Counts (free `plan-lang`, model `eleven_v4`, list price 0.08 USD per 1,000 characters)
 
-## 1. Counts (free plan, model `eleven_v4`, list price 0.08 USD per 1,000 characters)
-
-Commands used: `plan-lang <course> --voice <v> [--puppet-voice <p>] --model eleven_v4 --repo <scratch> --price 0.08 --list`. "Lines" = clips sent to the voice. The Hebrew frame lines are always nitzi. A `-slow` copy is made by ffmpeg and costs nothing. Identical texts are voiced once.
-
-### 1.1 As the branch stands today ("provisional": upper bound, see the note above)
+Commands: `plan-lang eng --voice lang-en-female --puppet-voice lang-en-male`, `plan-lang rus --voice lang-ru-female --puppet-voice lang-ru-male`, `plan-lang heb --voice nitzi`, each with `--model eleven_v4 --price 0.08`. "Clips" = clips sent to a voice. Hebrew frame lines are always nitzi. `-slow` copies and cut words are made by ffmpeg: no characters. Identical texts are voiced once. The puppet voice speaks only its own lines (`puppetClips`).
 
 | Course | Voice | New | Re-voice (changed) | Unchanged (free) | Characters |
 |---|---|---|---|---|---|
-| English | nitzi (Hebrew lines) | 16 | 23 | 94 | 833 |
-| English | lang-en-female (target) | 2 | 0 | 136 | 11 |
-| English | lang-en-male (puppet Pip) | 0 | 2 | 9 | 25 |
-| **English** | | **18** | **25** | 239 | **869** (0.07 USD) |
-| Russian (option A, the tool's default with `--puppet-voice`) | nitzi | 116 | 29 | 34 | 1,502 |
-| Russian A | lang-ru-female | 1 | 0 | 172 | 3 |
-| Russian A | lang-ru-male (puppet) | 0 | 45 | 10 | 471 |
-| **Russian A** | | **117** | **74** | 216 | **1,976** (0.16 USD) |
-| Russian (option B, no `--puppet-voice`) | nitzi | 116 | 29 | 34 | 1,502 |
-| Russian B | lang-ru-female | 1 | 11 | 216 | 153 |
-| **Russian B** | | **117** | **40** | 250 | **1,655** (0.13 USD) |
-| Hebrew | nitzi (frame and words) | 64 | 25 | 196 | 1,999 |
-| **Hebrew** | | **64** | **25** | 196 | **1,999** (0.16 USD) |
+| English | nitzi (Hebrew lines) | 16 | 1 | 116 | 196 |
+| English | lang-en-female (words) | 2 | 2 | 138 (+2 same text) | 31 |
+| English | lang-en-male (puppet Pip, 7 clips) | 0 | 0 | 7 | 0 |
+| **English** | | **18** | **3** | 261 | **227** (0.02 USD) |
+| Russian | nitzi | 116 | 9 | 54 | 936 |
+| Russian | lang-ru-female | 1 | 7 | 209 | 63 |
+| Russian | lang-ru-male (puppet Sasha, 11 clips) | 0 | 7 | 4 | 73 |
+| **Russian** | | **117** | **23** | 267 | **1,072** (0.09 USD) |
+| Hebrew | nitzi (frame and words) | 77 | 0 | 221 | 1,280 |
+| **Hebrew** | | **77** | **0** | 221 | **1,280** (0.10 USD) |
 
-Cut words (Hebrew, 12) and slow copies (English, 4 of 67) are made with ffmpeg from clips: no characters. `ffmpeg` is installed on this machine (WinGet link found).
+**Grand total: 2,579 characters, about 0.21 USD.** New 212 clips, re-voice 26 clips. Cut words (Hebrew, 12) and slow copies (English, 5) cost nothing. `ffmpeg` is installed (WinGet link).
 
-**Grand total, provisional:** option A **4,844 characters (0.39 USD)**; option B **4,523 characters (0.36 USD)**.
+Decisions closed by this run:
+- The Russian puppet question is settled: only Sasha's own 11 clips are male. The Meet words stay female.
+- Hebrew `fb-soundalike` (blend items) now has a voice text, `שִׁמְעוּ עד הסוף.` (17 characters), and is in the Hebrew plan: **voice it now.** The blend word clip follows and finishes it (section 2).
+- The nine `he-gl-its-*` and the other frame lines are in the plan. The editor's voice text stands; if the audition shows a wrong gender or stress, the editor points the text.
 
-### 1.2 What it should be after the merge (my comparison, to be confirmed by `plan-lang`)
-
-I compared every text of this branch's three `voice-plan.json` with what the ledger says was voiced, ignoring nikud-only differences (the sweep added nikud that this branch lacks). Result: English 22 of the 23 "changed" nitzi lines, Hebrew 10 of 25 and Russian 18 of 29 are nikud-only, so they stop being re-voice lines once the sweep is merged in.
-
-| Course | New clips | Chars (new) | Really changed clips | Chars (changed) | Text total |
-|---|---|---|---|---|---|
-| English | 22 | 194 | 1 (`he-gl-clap`, new wording) | 17 | **211** |
-| Russian | 117 | 870 | 12 | 149 | **1,019** |
-| Hebrew | 64 | 1,109 | 15 | 504 | **1,613** |
-| **Total** | 203 | 2,173 | 28 | 670 | **2,843** |
-
-Add to that only the clips whose voice changes (the puppet question, section 4, blocker 2): English 2 clips, 25 characters (`en-isit-cat`, `en-isit-duck` become Pip's); Russian option A about 450 characters more, option B about 0. So after the merge I expect roughly **2,870 characters (about 0.23 USD)** with option B or C, **about 3,300 (0.26 USD)** with option A. This is a calculation, not a tool output. The tool's number replaces it.
 
 ## 2. Direction per line family
 
@@ -79,41 +63,29 @@ These need `audition-batch run`, which is paid and which only the owner runs. Th
 
 ## 3. The owner's steps (PowerShell 5.1, no `&&`)
 
-Do not start before section 4 blockers 1 and 2 are cleared. The paid commands work only in the repo that holds the tool and the re-cut content, so they wait until the voicing branch and this branch are merged (the orchestrator does that and tells you the folder). Below, `<repo>` is that folder.
+`<repo>` is this worktree (or the folder it is merged into).
 
-1. Open PowerShell. Go to the app folder: `cd <repo>\app`
-2. Free check that ffmpeg is found: `ffmpeg -version`
-3. Free plans (the count the paid step will ask for; keep the three numbers):
+1. Open PowerShell and go to the app folder: `cd <repo>\app`
+2. Free: `ffmpeg -version`
+3. Free plans (they must show 227, 1,072 and 1,280 characters, unless the editor changed a text since):
    - `dart run tool/voice_gen.dart plan-lang eng --voice lang-en-female --puppet-voice lang-en-male --model eleven_v4`
-   - `dart run tool/voice_gen.dart plan-lang rus --voice lang-ru-female --model eleven_v4` (option B; add `--puppet-voice lang-ru-male` only if you choose option A)
+   - `dart run tool/voice_gen.dart plan-lang rus --voice lang-ru-female --puppet-voice lang-ru-male --model eleven_v4`
    - `dart run tool/voice_gen.dart plan-lang heb --voice nitzi --model eleven_v4`
-   Compare each "Characters of text in total" with section 1.2. If one is more than 10 percent higher, stop and send it to me: it means a text came out wrong again.
-4. Free sanity check of the first batch: `dart run tool/voice_gen.dart verify-lang eng --voice lang-en-female --puppet-voice lang-en-male --model eleven_v4` (it lists what is not voiced yet; it must list exactly the lines of the plan).
-5. Set the key in this PowerShell window only (it is never saved and never shown): `$env:ELEVENLABS_API_KEY = "<your key>"`
-6. Audition first (paid, small, see section 2); listen; if the carrier needs a comma, tell me so the editor changes the three lines, and run steps 3 and 4 again.
-7. English (type the count the tool prints; expected about 211 to 236 after the merge, 869 before it):
-   `dart run tool/voice_gen.dart generate-lang eng --voice lang-en-female --puppet-voice lang-en-male --model eleven_v4 --pack-version 1.1.0`
-8. Russian (type the count the tool prints; expected about 1,019 with option B, 1,470 with A):
-   `dart run tool/voice_gen.dart generate-lang rus --voice lang-ru-female --model eleven_v4 --pack-version 1.1.0`
-9. Hebrew (type the count the tool prints; expected about 1,613):
-   `dart run tool/voice_gen.dart generate-lang heb --voice nitzi --model eleven_v4 --pack-version 1.1.0`
-10. After each: free check, the same `verify-lang` command as step 4 for that course. It must say that every clip is made from what the plan says now. Then send me the `~\nitznutz-voice\lang-<course>` folder name so I can measure loudness and length with `ffprobe` and `ffmpeg` and write the listening sheet.
-11. Clear the key from the window: `Remove-Item Env:ELEVENLABS_API_KEY`
+   If a number is more than 10 percent higher, stop and send it to me.
+4. Set the ElevenLabs key in this window only (never saved): `$env:ELEVENLABS_API_KEY = "<your key>"`
+5. Audition first (paid, small, section 2). If the carrier needs a comma, tell me; the editor changes the three lines; redo step 3.
+6. English, type **227**: `dart run tool/voice_gen.dart generate-lang eng --voice lang-en-female --puppet-voice lang-en-male --model eleven_v4 --pack-version 1.1.0`
+7. Russian, type **1072**: `dart run tool/voice_gen.dart generate-lang rus --voice lang-ru-female --puppet-voice lang-ru-male --model eleven_v4 --pack-version 1.1.0`
+8. Hebrew, type **1280**: `dart run tool/voice_gen.dart generate-lang heb --voice nitzi --model eleven_v4 --pack-version 1.1.0`
+9. After each, free: the same command with `verify-lang` in place of `generate-lang`, and drop `--model` and `--pack-version` (verify-lang does not take them). It must list nothing missing. Then send me the `~\nitznutz-voice\lang-<course>` folder name for loudness and length checks.
+10. Clear the key: `Remove-Item Env:ELEVENLABS_API_KEY`
 
-`--pack-version` must be higher than the installed 1.0.0: an installed pack with the same version is not replaced (release-voicing-plan.md). The tool shows its own plan and asks for the character count; you type it on the keyboard. No flag skips that.
+`--pack-version` must be higher than the installed 1.0.0. The tool asks for the count; you type it; no flag skips that.
 
 ## 4. What blocks voicing
 
-1. **The two branches have diverged on the same texts.** This branch's `voice-plan.json` files are generated from an authoring state that lacks the sweep's voice-text edits (b5a1581a and later): pointed one-word glosses, `הַקְשִׁיבוּ`, `מְחִיאַת`, and others. Counted as is, English shows 23 "changed" nitzi lines of which 22 are only nikud that the sweep had added and this branch dropped, which would re-voice (and for some words un-point) lines the owner already paid for. Merge `hebrew-sweep` into `languages-teach-first`, regenerate with `python tools/lang_pack.py all`, run `--check`, then repeat the three free plans. **I cannot give final numbers before then.** Owner: orchestrator.
-2. **Russian puppet set grew from 11 to 55 clips.** In the re-cut pack the Meet and puppet items made 44 more clips (`w_mama`, `w_ryba`, the sounds `syl_*`, `sf_*`, `sy_*`, the rhyme gaps `rh*_gap`, `ch_vot_*`, `ch_eto_*_q`) the `prompt.target` of a `puppet_talk` item. The tool says "a clip that is also a puppet prompt belongs to the puppet", so with `--puppet-voice` the Meet words of Russian (`w_mama`, `w_nos`, `w_sok`...) turn male while the others stay female, and the same word would sound different on two screens. English gains only 2 (`en_isit_cat`, `en_isit_duck`, fine). Options:
-   - **A**, as the tool does: 45 Russian clips change to the male voice (471 characters).
-   - **B**, no `--puppet-voice` for Russian: everything in the female voice, the 11 old Sasha clips go to her (153 characters). Sasha is no longer a distinct voice.
-   - **C (my recommendation)**: only the `ch_*` question and answer lines are Sasha's, all word, sound and rhyme clips are the course voice. It needs a small tool change (`--puppet-prefix ch_`, app-developer). I have not made it. Until then, choose B.
-3. **`vo:rus.ch_menja_zovut` is refused** by the tool: this branch's text is `Меня́ зову́т {puppet}.` and a placeholder is never sent. The sweep's text is `Меня́ зову́т Са́ша.` (fixed 2026-11-08). It goes away with the merge in blocker 1. If it does not, the Russian run sends nothing until it is fixed.
-4. **No missing clip rows.** I checked every `vo:` id in every pack activity file against the three plans: nothing is referenced and missing, nothing is in a plan and unreferenced (eng 351, heb 297, rus 407 clips). No English beat-strip hole was found. The English `he-ins-strip` ("כמה תופים?") is in the plan and voiced by nitzi.
-5. **13 Hebrew frame lines have no voice text** (`fb-sem`, `fb-soundalike`, `ok-1` to `ok-8`, `show`, `try-1`, `try-2`) and are not voiced. They did not have one before either (the earlier plan skipped them too); I assume that is deliberate (bubble only). If any should speak, the text editor gives it a `voice_text`. Heb `fb-soundalike` is used by the blend items (`blend_first`): confirm with the editor that the blend feedback should stay silent there.
-6. **The `he-gl-its-*` voice texts are plain** (`זה תפוח.`, `זו ביצה.`) while section 15 of the editor's notes says a short phrase said alone is fully pointed (only `סֵפֶר` and `בַּרְוָז` carry nikud, "the pronoun follows the noun"). The editor wrote it so on purpose, so I do not change it. If the audition shows a wrong stress or a wrong gender, ask the editor to point the voice text: a text-editor request, not mine.
-7. **The key.** `generate-lang` needs `ELEVENLABS_API_KEY` in the owner's own window. I never set or read it.
+Nothing in the texts or the tool: no placeholder is refused, the puppet split is fixed, `fb-soundalike` is in the plan. What remains is the owner's: the audition, the key in his own window, typing the three counts. Audition first, because a changed carrier text changes the numbers.
+
 
 ## 5. After voicing (what I will check)
 
