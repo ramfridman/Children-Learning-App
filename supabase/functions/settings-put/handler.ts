@@ -39,17 +39,20 @@ export const LANGUAGE_SWITCHES: Record<string, LanguageSwitch> = {
   on: { t: "bool", courses: ["eng", "heb", "rus"] },
   voice: { t: "bool", courses: ["eng", "heb", "rus"] },
   personal: { t: "bool", courses: ["eng", "heb", "rus"] },
+  placement: { t: "bool", courses: ["eng", "heb", "rus"] },
   band: { t: "int", min: 0, max: 2, courses: ["eng", "heb", "rus"] },
   oralOnly: { t: "bool", courses: ["eng"] },
   readCheck: { t: "bool", courses: ["heb"] },
   lettersBefore5: { t: "bool", courses: ["rus"] },
+  // L7-8: "letters together with words". Absent while the parent never chose it (the age decides); a stored boolean is the parent's own choice.
+  lettersWithWords: { t: "bool", courses: ["eng", "rus"] },
   stress: { t: "enum", values: ["on", "off"], courses: ["rus"] },
   route: { t: "enum", values: ["new", "heritage", "reader"], courses: ["rus"] },
 };
 /** The questionnaire of each course: the questions and the answers they take. Enums only, nothing free-text. */
 export const LANGUAGE_QUESTIONNAIRE: Record<string, Record<string, readonly string[]>> = {
-  eng: { knowsLetters: ["no", "some"] },
-  heb: {},
+  eng: { understands: ["no", "some", "most"], knowsLetters: ["no", "some"] },
+  heb: { knowsLetters: ["no", "some", "reads"] },
   rus: {
     home: ["none", "oneParent", "bothParents", "grandparentsOthers"],
     understands: ["no", "some", "most"],

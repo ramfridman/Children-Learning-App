@@ -8,15 +8,18 @@
   "title": [
     {
       "t": "he",
-      "v": "וּמָה זֶה?"
+      "v": "וּמַה זֶּה?"
     }
   ],
   "skills": [
     "ENG-A-11"
   ],
   "items": [
-    "eng.a11.i07",
-    "eng.a11.i08"
+    "eng.a11.n09",
+    "eng.a11.n10",
+    "eng.a11.u03",
+    "eng.a11.h01",
+    "eng.a11.s03"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -28,5 +31,5 @@
       }
     ]
   },
-  "sequence": 29
+  "sequence": 40
 }

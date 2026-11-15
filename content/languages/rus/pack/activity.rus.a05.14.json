@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "כֵּן!"
         }
       ],
       "target": "vo:rus.w_zajats"
@@ -63,13 +63,14 @@
     "incorrect": [
       {
         "when": "default",
-        "vo": "vo:rus.he_fb_check",
+        "vo": "vo:rus.f43",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:rus.w_zajats"
       }
     ],
     "unsure": {
@@ -133,21 +134,22 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:squirrel",
+        "sprite": "asset:wolf",
         "label": "תְּמוּנָה",
-        "clip": "vo:rus.w_belka",
+        "clip": "vo:rus.w_volk",
         "misconception": "rus.lis.sem"
       },
       {
         "id": "o3",
-        "sprite": "asset:hedgehog",
+        "sprite": "asset:bear",
         "label": "תְּמוּנָה",
-        "clip": "vo:rus.w_yozh",
+        "clip": "vo:rus.w_medved",
         "misconception": "rus.lis.sem"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true
+    "unsureAllowed": true,
+    "askWhere": true
   }
 }

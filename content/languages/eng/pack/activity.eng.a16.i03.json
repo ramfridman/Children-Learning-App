@@ -43,7 +43,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "כֵּן אוֹ לֹא? גְּעוּ בַּאֲגוּדָל."
+        "v": "כֵּן אוֹ לֹא? גְּעוּ בָּאֲגוּדָל."
       }
     ],
     "target": "vo:eng.en_isit_duck",
@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_7",
+      "vo": "vo:eng.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "הִקְשַׁבְתֶּם יָפֶה!"
+          "v": "כֵּן!"
         }
       ],
       "target": "vo:eng.en_yes"
@@ -109,11 +109,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_duck",
+      "vo": "vo:eng.he_gl_isit_duck",
       "caption": [
         {
           "t": "he",
-          "v": "בַּרְוָז"
+          "v": "זֶה בַּרְוָז?"
         }
       ],
       "target": "vo:eng.en_isit_duck"
@@ -143,12 +143,14 @@
       {
         "id": "o1",
         "sprite": "asset:thumb_up",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_yes"
       },
       {
         "id": "o2",
         "sprite": "asset:thumb_down",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_no",
         "misconception": "eng.lis.yesno"
       }
     ],

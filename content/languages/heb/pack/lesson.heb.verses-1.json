@@ -15,10 +15,10 @@
     "HEB-A-06"
   ],
   "items": [
+    "heb.a06.c-v12",
     "heb.a06.01",
     "heb.a06.02",
-    "heb.a06.03",
-    "heb.a06.04"
+    "heb.a06.u-v46"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +30,5 @@
       }
     ]
   },
-  "sequence": 8
+  "sequence": 30
 }

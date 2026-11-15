@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_3",
+      "vo": "vo:rus.he_fb_right_6",
       "caption": [
         {
           "t": "he",
-          "v": "יָפֶה מְאֹד!"
+          "v": "שְׁמַעְתֶּם טוֹב!"
         }
       ],
       "target": "vo:rus.w_vstan"
@@ -94,8 +94,7 @@
       "встань"
     ],
     "foils": [
-      "сядь",
-      "хлопай"
+      "беги"
     ],
     "clip": "vo:rus.w_vstan",
     "heard": {
@@ -117,6 +116,27 @@
         }
       ],
       "target": "vo:rus.w_vstan"
+    },
+    "meet": {
+      "position": 1,
+      "size": 2,
+      "earlier": [
+        {
+          "sprite": "asset:act_run",
+          "clip": "vo:rus.w_begi"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: קוּמוּ"
+          }
+        ],
+        "target": "vo:rus.gl_kumu"
+      },
+      "written": "Встань"
     }
   },
   "answer": {

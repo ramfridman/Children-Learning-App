@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_4",
+      "vo": "vo:rus.he_fb_right_6",
       "caption": [
         {
           "t": "he",
-          "v": "מְצָאתֶם!"
+          "v": "שְׁמַעְתֶּם טוֹב!"
         }
       ],
       "target": "vo:rus.w_sestra"
@@ -63,13 +63,14 @@
     "incorrect": [
       {
         "when": "default",
-        "vo": "vo:rus.he_fb_check",
+        "vo": "vo:rus.f43",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:rus.w_sestra"
       }
     ],
     "unsure": {
@@ -133,21 +134,22 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:fam_brother",
+        "sprite": "asset:fam_grandmother",
         "label": "תְּמוּנָה",
-        "clip": "vo:rus.w_brat",
+        "clip": "vo:rus.w_babushka",
         "misconception": "rus.lis.sem"
       },
       {
         "id": "o3",
-        "sprite": "asset:fam_grandmother",
+        "sprite": "asset:fam_mother",
         "label": "תְּמוּנָה",
-        "clip": "vo:rus.w_babushka",
+        "clip": "vo:rus.w_mama",
         "misconception": "rus.lis.sem"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true
+    "unsureAllowed": true,
+    "askWhere": true
   }
 }

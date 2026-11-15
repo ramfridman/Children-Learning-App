@@ -1,6 +1,5 @@
 import 'course.dart';
 import 'params.dart';
-import 'types.dart';
 
 // Two bands (docs/languages/frame.md section 3.1). The presentation band comes from the child's age and says how a screen looks
 // and paces: the number of choices, the items in an activity, the length of a visit. The content level comes from mastery
@@ -13,15 +12,6 @@ int presentationBandFor({required int ageBand, int? override}) => (override ?? a
 
 /// The content level of a skill: 0, 1 or 2 for the band letter A, B or C in its id, or -1 for an id of another shape.
 int contentLevelOf(String skillId) => SkillIds.levelOf(skillId);
-
-/// Letter skills offered under the youngest presentation band all the same: Hebrew print awareness and the child's own name
-/// (docs/languages/frame.md section 3.1).
-const Set<String> lettersAllowedUnderBandA = <String>{'HEB-A-10', 'HEB-A-11', 'HEB-A-12'};
-
-/// Whether [skill] may be offered under the presentation [band]: letter work is never offered under Band A (0), except the
-/// Hebrew skills above. Every other skill is offered under every band, whatever its content level.
-bool offeredUnder(int band, SkillNode skill) =>
-    band > 0 || !skill.letters || lettersAllowedUnderBandA.contains(skill.id);
 
 /// How a screen looks and paces under one presentation band.
 class PresentationSpec {

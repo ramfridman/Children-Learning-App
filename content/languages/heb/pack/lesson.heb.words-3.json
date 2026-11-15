@@ -1,0 +1,51 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.words-3",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מִלִּים מֵהָעוּגָה"
+    }
+  ],
+  "skills": [
+    "HEB-A-02"
+  ],
+  "items": [
+    "heb.a02.r-kemach",
+    "heb.a02.r-keara",
+    "heb.a02.f-meurbevet",
+    "heb.a02.f-tanur",
+    "heb.a02.11",
+    "heb.a02.04",
+    "heb.a02.do-meurbevet",
+    "heb.a02.say-tanur"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 50,
+  "teach": [
+    {
+      "items": [
+        "heb.a02.tc06",
+        "heb.a02.tc07"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "heb.a02.f-meurbevet"
+    }
+  ]
+}

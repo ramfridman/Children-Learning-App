@@ -2,7 +2,7 @@
   "skill": {
     "id": "HEB-A-06",
     "strand": "pa",
-    "title": "משלים חרוז בשיר מוכר"
+    "title": "משלימים חרוז בשיר מוכר"
   },
   "items": [
     {
@@ -258,26 +258,236 @@
       "purpose": "probe",
       "ladder": "HL-RHYME",
       "rep": "story"
+    },
+    {
+      "id": "c-v12",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-v1-full",
+        "heb-a-v2-full"
+      ],
+      "pictures": [
+        {
+          "pic": "star",
+          "clip": "heb-a-w-kochav"
+        },
+        {
+          "pic": "rabbit",
+          "clip": "heb-a-w-arnav"
+        },
+        {
+          "pic": "clock",
+          "clip": "heb-a-w-shaon"
+        },
+        {
+          "pic": "window",
+          "clip": "heb-a-w-chalon"
+        }
+      ]
+    },
+    {
+      "id": "u-v46",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-v4-full",
+        "heb-a-v6-full"
+      ],
+      "pictures": [
+        {
+          "pic": "rocket",
+          "clip": "heb-a-w-til"
+        },
+        {
+          "pic": "elephant",
+          "clip": "heb-a-w-pil"
+        },
+        {
+          "pic": "plane",
+          "clip": "heb-a-w-matos"
+        },
+        {
+          "pic": "cup",
+          "clip": "heb-a-w-kos"
+        }
+      ]
+    },
+    {
+      "id": "c-v46",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-v4-full",
+        "heb-a-v6-full"
+      ],
+      "pictures": [
+        {
+          "pic": "rocket",
+          "clip": "heb-a-w-til"
+        },
+        {
+          "pic": "elephant",
+          "clip": "heb-a-w-pil"
+        },
+        {
+          "pic": "plane",
+          "clip": "heb-a-w-matos"
+        },
+        {
+          "pic": "cup",
+          "clip": "heb-a-w-kos"
+        }
+      ]
+    },
+    {
+      "id": "u-v357",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-v3-full",
+        "heb-a-v5-full",
+        "heb-a-v7-full"
+      ],
+      "pictures": [
+        {
+          "pic": "ball",
+          "clip": "heb-a-w-kadur"
+        },
+        {
+          "pic": "oven",
+          "clip": "heb-a-w-tanur"
+        },
+        {
+          "pic": "strawberry",
+          "clip": "heb-a-w-tut"
+        },
+        {
+          "pic": "thread",
+          "clip": "heb-a-w-chut"
+        },
+        {
+          "pic": "teddy-nose",
+          "clip": "heb-a-w-af"
+        },
+        {
+          "pic": "spoon",
+          "clip": "heb-a-w-kaf"
+        }
+      ]
+    },
+    {
+      "id": "c-v357",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-v3-full",
+        "heb-a-v5-full",
+        "heb-a-v7-full"
+      ],
+      "pictures": [
+        {
+          "pic": "ball",
+          "clip": "heb-a-w-kadur"
+        },
+        {
+          "pic": "oven",
+          "clip": "heb-a-w-tanur"
+        },
+        {
+          "pic": "strawberry",
+          "clip": "heb-a-w-tut"
+        },
+        {
+          "pic": "thread",
+          "clip": "heb-a-w-chut"
+        },
+        {
+          "pic": "teddy-nose",
+          "clip": "heb-a-w-af"
+        },
+        {
+          "pic": "spoon",
+          "clip": "heb-a-w-kaf"
+        }
+      ]
+    },
+    {
+      "id": "u-v146",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "say-together",
+      "lines": [
+        "heb-a-v1-full",
+        "heb-a-v4-full",
+        "heb-a-v6-full"
+      ],
+      "pictures": [
+        {
+          "pic": "star",
+          "clip": "heb-a-w-kochav"
+        },
+        {
+          "pic": "rabbit",
+          "clip": "heb-a-w-arnav"
+        },
+        {
+          "pic": "rocket",
+          "clip": "heb-a-w-til"
+        },
+        {
+          "pic": "elephant",
+          "clip": "heb-a-w-pil"
+        },
+        {
+          "pic": "plane",
+          "clip": "heb-a-w-matos"
+        },
+        {
+          "pic": "cup",
+          "clip": "heb-a-w-kos"
+        }
+      ]
     }
   ],
   "lessons": [
     {
       "id": "verses-1",
       "title": "מַשְׁלִימִים חֲרוּז",
+      "sequence": 30,
       "items": [
+        "c-v12",
         "01",
         "02",
-        "03",
-        "04"
+        "u-v46"
       ]
     },
     {
       "id": "verses-2",
       "title": "עוֹד חֲרוּזִים",
+      "sequence": 90,
       "items": [
-        "05",
+        "c-v46",
+        "04",
         "06",
-        "07"
+        "u-v357"
+      ]
+    },
+    {
+      "id": "verses-3",
+      "title": "חֲרוּזִים בַּמִּטְבָּח",
+      "sequence": 125,
+      "items": [
+        "c-v357",
+        "03",
+        "05",
+        "07",
+        "u-v146"
       ]
     }
   ]

@@ -15,10 +15,18 @@
     "RUS-A-07"
   ],
   "items": [
-    "rus.a07.18",
-    "rus.a07.19",
-    "rus.a07.20",
-    "rus.a07.21"
+    "rus.a07.r07",
+    "rus.a07.r08",
+    "rus.a07.f20",
+    "rus.a07.f21",
+    "rus.a07.f22",
+    "rus.a07.16",
+    "rus.a07.17",
+    "rus.a07.f23",
+    "rus.a07.d03",
+    "rus.a07.s08",
+    "rus.a07.s08t",
+    "rus.a07.s14"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,19 +38,19 @@
       }
     ]
   },
-  "sequence": 29,
+  "sequence": 37,
   "teach": [
     {
       "items": [
-        "rus.a07.tc18",
-        "rus.a07.tc19",
-        "rus.a07.tc20",
-        "rus.a07.tc21"
+        "rus.a07.tc16",
+        "rus.a07.tc17",
+        "rus.a07.tc18"
       ],
       "routes": [
         "new"
       ],
-      "mode": "teach"
+      "mode": "teach",
+      "before": "rus.a07.f20"
     }
   ]
 }

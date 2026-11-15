@@ -8,7 +8,7 @@
   "title": [
     {
       "t": "he",
-      "v": "מזהה איזו מילה מתחרזת עם מילה"
+      "v": "מזהים איזו מילה מתחרזת עם מילה"
     }
   ],
   "strand": "pa",
@@ -19,7 +19,10 @@
     }
   ],
   "representations": [
-    "pictorial"
+    "concrete",
+    "pictorial",
+    "story",
+    "embodied"
   ],
   "misconceptions": [
     "heb.pa.allit",

@@ -2,7 +2,7 @@
   "skill": {
     "id": "HEB-A-12",
     "strand": "pk",
-    "title": "יודע שכתוב קוראים מימין לשמאל, ושבו נמצאות המילים",
+    "title": "יודעים שקוראים מימין לשמאל, ואיפה נמצאות המילים",
     "prerequisites": [
       {
         "skill": "HEB-A-10"
@@ -136,24 +136,59 @@
         "right": "ok-8"
       },
       "ladder": "HL-PRINT-DIR"
+    },
+    {
+      "id": "say-pr1",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "s1-p5",
+      "clip": "heb-a-s1-p5",
+      "forms": [
+        "הָאַרְנָב וְהַחֲתוּלָה מְשַׂחֲקִים יַחַד"
+      ],
+      "foils": [
+        "הָאַרְנָב מְשַׂחֵק בַּגִּנָּה"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
+    },
+    {
+      "id": "say-pr2",
+      "kind": "say",
+      "purpose": "practice",
+      "picture": "s2-p1",
+      "clip": "heb-a-s2-p1",
+      "foils": [
+        "הָעוּגָה נִכְנֶסֶת לַתַּנּוּר"
+      ],
+      "heard": "heard",
+      "together": "say-together",
+      "rep": "embodied",
+      "frame": "say-together"
     }
   ],
   "lessons": [
     {
       "id": "print-1",
       "title": "אֵיפֹה מַתְחִילִים?",
+      "sequence": 300,
       "items": [
         "01",
         "02",
-        "03"
+        "03",
+        "say-pr2"
       ]
     },
     {
       "id": "print-2",
       "title": "מִלָּה אַחֲרֵי מִלָּה",
+      "sequence": 290,
       "items": [
         "04",
-        "05"
+        "05",
+        "say-pr1"
       ]
     }
   ]

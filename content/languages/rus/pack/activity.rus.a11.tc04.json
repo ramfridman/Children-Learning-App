@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.n_9",
+    "target": "vo:rus.n_7",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_6",
+      "vo": "vo:rus.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "שְׁמַעְתֶּם טוֹב!"
+          "v": "נָכוֹן!"
         }
       ],
-      "target": "vo:rus.n_9"
+      "target": "vo:rus.n_7"
     },
     "incorrect": [
       {
@@ -80,24 +80,23 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.n_9"
+      "target": "vo:rus.n_7"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:set_tenframe_9"
+      "sprite": "asset:set_tenframe_7"
     }
   },
   "say": {
     "forms": [
-      "девять"
-    ],
-    "foils": [
-      "шесть",
       "семь"
     ],
-    "clip": "vo:rus.n_9",
+    "foils": [
+      "девять"
+    ],
+    "clip": "vo:rus.n_7",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +105,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.n_9"
+      "target": "vo:rus.n_7"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +115,31 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.n_9"
+      "target": "vo:rus.n_7"
+    },
+    "meet": {
+      "position": 0,
+      "size": 2,
+      "opener": {
+        "vo": "vo:rus.f44",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת."
+          }
+        ]
+      },
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: שֶׁבַע"
+          }
+        ],
+        "target": "vo:rus.gl_sheva"
+      },
+      "written": "семь"
     }
   },
   "answer": {

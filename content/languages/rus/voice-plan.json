@@ -6,14 +6,14 @@
       "id": "f01",
       "vo": "vo:rus.f01",
       "he": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה.",
-      "voice": "הקשיבו, וגעו בתמונה.",
+      "voice": "הַקְשִׁיבוּ, וּגְעוּ בתמונה.",
       "review": "text-ready"
     },
     {
       "id": "f02",
       "vo": "vo:rus.f02",
       "he": "הַקְשִׁיבוּ שׁוּב.",
-      "voice": "הקשיבו שוב.",
+      "voice": "הַקְשִׁיבוּ שוב.",
       "review": "text-ready"
     },
     {
@@ -48,49 +48,49 @@
       "id": "f08",
       "vo": "vo:rus.f08",
       "he": "הַקְשִׁיבוּ, וּמִצְאוּ אֶת זֶה אֵצֶל הֶחָבֵר.",
-      "voice": "הקשיבו, ומצאו את זה אצל החבר.",
+      "voice": "הַקְשִׁיבוּ, וּמִצְאוּ את זה אצל החבר.",
       "review": "text-ready"
     },
     {
       "id": "f09",
       "vo": "vo:rus.f09",
       "he": "הַקְשִׁיבוּ, וְעִזְרוּ לֶחָבֵר לַעֲשׂוֹת אֶת זֶה.",
-      "voice": "הקשיבו, ועזרו לֶחָבֵר לַעֲשׂוֹת את זה.",
+      "voice": "הַקְשִׁיבוּ, וְעִזְרוּ לֶחָבֵר לַעֲשׂוֹת את זה.",
       "review": "text-ready"
     },
     {
       "id": "f10",
       "vo": "vo:rus.f10",
       "he": "עַכְשָׁו אַתֶּם! עֲשׂוּ אֶת זֶה, וְאָז גְּעוּ בַּכַּפְתּוֹר.",
-      "voice": "עכשיו אתם, עֲשׂוּ את זה, ואז געו בכפתור.",
+      "voice": "עכשיו אתם, עֲשׂוּ את זה, ואז גְּעוּ בכפתור.",
       "review": "text-ready"
     },
     {
       "id": "f11",
       "vo": "vo:rus.f11",
       "he": "הַקְשִׁיבוּ, וְשִׂימוּ אֶת זֶה בַּצַּלַּחַת שֶׁל הֶחָבֵר.",
-      "voice": "הקשיבו, וְשִׂימוּ את זה בצלחת של החבר.",
+      "voice": "הַקְשִׁיבוּ, וְשִׂימוּ את זה בצלחת של החבר.",
       "review": "text-ready"
     },
     {
       "id": "f12",
       "vo": "vo:rus.f12",
       "he": "הַקְשִׁיבוּ, וְשִׂימוּ אֶת זֶה בַּקֻּפְסָה.",
-      "voice": "הקשיבו, וְשִׂימוּ את זה בקופסה.",
+      "voice": "הַקְשִׁיבוּ, וְשִׂימוּ את זה בקופסה.",
       "review": "text-ready"
     },
     {
       "id": "f13",
       "vo": "vo:rus.f13",
       "he": "הַקְשִׁיבוּ, וְהַלְבִּישׁוּ אֶת הֶחָבֵר.",
-      "voice": "הקשיבו, והלבישו את החבר.",
+      "voice": "הַקְשִׁיבוּ, והלבישו את החבר.",
       "review": "text-ready"
     },
     {
       "id": "f14",
       "vo": "vo:rus.f14",
       "he": "הַקְשִׁיבוּ, וּגְעוּ בַּצֶּבַע.",
-      "voice": "הקשיבו, וגעו בצבע.",
+      "voice": "הַקְשִׁיבוּ, וּגְעוּ בצבע.",
       "review": "text-ready"
     },
     {
@@ -104,14 +104,14 @@
       "id": "f16",
       "vo": "vo:rus.f16",
       "he": "הַקְשִׁיבוּ לַמִּסְפָּר, וּגְעוּ בַּתְּמוּנָה.",
-      "voice": "הקשיבו למספר, וגעו בתמונה.",
+      "voice": "הַקְשִׁיבוּ למספר, וּגְעוּ בתמונה.",
       "review": "text-ready"
     },
     {
       "id": "f17",
       "vo": "vo:rus.f17",
       "he": "הַקְשִׁיבוּ לַשְּׁאֵלָה, וּגְעוּ בַּתְּשׁוּבָה.",
-      "voice": "הקשיבו לשאלה, וגעו בתשובה.",
+      "voice": "הַקְשִׁיבוּ לשאלה, וּגְעוּ בתשובה.",
       "review": "text-ready"
     },
     {
@@ -125,14 +125,14 @@
       "id": "f19",
       "vo": "vo:rus.f19",
       "he": "הַקְשִׁיבוּ, וּמִצְאוּ אֶת זֶה בַּחֶדֶר.",
-      "voice": "הקשיבו, ומצאו את זה בחדר.",
+      "voice": "הַקְשִׁיבוּ, וּמִצְאוּ את זה בחדר.",
       "review": "text-ready"
     },
     {
       "id": "f20",
       "vo": "vo:rus.f20",
       "he": "הַקְשִׁיבוּ לַבַּקָּשָׁה, וּתְנוּ לֶחָבֵר אֶת מַה שֶּׁמְּבַקְשִׁים.",
-      "voice": "הקשיבו לבקשה, ותנו לֶחָבֵר את מה שמבקשים.",
+      "voice": "הַקְשִׁיבוּ לבקשה, ותנו לֶחָבֵר את מה שמבקשים.",
       "review": "text-ready"
     },
     {
@@ -174,7 +174,7 @@
       "id": "f26",
       "vo": "vo:rus.f26",
       "he": "הַקְשִׁיבוּ לַשִּׁיר.",
-      "voice": "הקשיבו לשיר.",
+      "voice": "הַקְשִׁיבוּ לשיר.",
       "review": "text-ready"
     },
     {
@@ -188,7 +188,7 @@
       "id": "f28",
       "vo": "vo:rus.f28",
       "he": "תּוֹפְפוּ עַל הַתֹּף: פַּעַם אַחַת לְכׇל חֵלֶק בַּמִּלָּה.",
-      "voice": "תופפו על התוף: פעם אַחַת לכל חלק במילה.",
+      "voice": "תּוֹפְפוּ על התוף: פעם אַחַת לכל חלק במילה.",
       "review": "text-ready"
     },
     {
@@ -215,22 +215,22 @@
     {
       "id": "f32",
       "vo": "vo:rus.f32",
-      "he": "בְּאֵיזוֹ תְּמוּנָה הַמִּלָּה מַתְחִילָה אוֹתוֹ דָּבָר?",
-      "voice": "באיזו תמונה המילה מתחילה אותו דבר?",
+      "he": "בְּאֵיזוֹ תְּמוּנָה הַמִּלָּה מַתְחִילָה בְּאוֹתוֹ צְלִיל?",
+      "voice": "באיזו תמונה המילה מתחילה באותו צליל?",
       "review": "text-ready"
     },
     {
       "id": "f33",
       "vo": "vo:rus.f33",
-      "he": "הַמִּלִּים מַתְחִילוֹת אוֹתוֹ דָּבָר?",
-      "voice": "המילים מתחילות אותו דבר?",
+      "he": "הַמִּלִּים מַתְחִילוֹת בְּאוֹתוֹ צְלִיל?",
+      "voice": "המילים מתחילות באותו צליל?",
       "review": "text-ready"
     },
     {
       "id": "f34",
       "vo": "vo:rus.f34",
       "he": "הַקְשִׁיבוּ לִשְׁתֵּי הַמִּלִּים. אוֹתוֹ דָּבָר, אוֹ לֹא?",
-      "voice": "הקשיבו לִשְׁתֵּי המילים. אותו דבר, או לא?",
+      "voice": "הַקְשִׁיבוּ לִשְׁתֵּי המילים. אותו דבר, או לא?",
       "review": "text-ready"
     },
     {
@@ -265,99 +265,904 @@
       "id": "f40",
       "vo": "vo:rus.f40",
       "he": "כַּמָּה יֵשׁ? הַקְשִׁיבוּ לַכַּפְתּוֹרִים, וּגְעוּ בַּמִּסְפָּר הַנָּכוֹן.",
-      "voice": "כמה יש? הקשיבו לכפתורים, וגעו במספר הנכון.",
+      "voice": "כמה יש? הַקְשִׁיבוּ לכפתורים, וּגְעוּ במספר הנכון.",
       "review": "text-ready"
     },
     {
       "id": "f41",
       "vo": "vo:rus.f41",
       "he": "הַקְשִׁיבוּ:",
-      "voice": "הקשיבו:",
-      "review": "needs-editor"
+      "voice": "הַקְשִׁיבוּ:",
+      "review": "text-ready"
+    },
+    {
+      "id": "f42",
+      "vo": "vo:rus.f42",
+      "he": "בְּעִבְרִית:",
+      "voice": "בעברית:",
+      "review": "text-ready"
+    },
+    {
+      "id": "f43",
+      "vo": "vo:rus.f43",
+      "he": "וְאֵיפֹה",
+      "voice": "ואיפה",
+      "review": "text-ready"
+    },
+    {
+      "id": "f44",
+      "vo": "vo:rus.f44",
+      "he": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת.",
+      "voice": "בואו נלמד מילים חדשות.",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-aba",
+      "vo": "vo:rus.gl_aba",
+      "he": "אַבָּא",
+      "voice": "אַבָּא",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-ach",
+      "vo": "vo:rus.gl_ach",
+      "he": "אָח",
+      "voice": "אָח",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-achat",
+      "vo": "vo:rus.gl_achat",
+      "he": "אַחַת",
+      "voice": "אַחַת",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-achbar",
+      "vo": "vo:rus.gl_achbar",
+      "he": "עַכְבָּר",
+      "voice": "עַכְבָּר",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-achot",
+      "vo": "vo:rus.gl_achot",
+      "he": "אָחוֹת",
+      "voice": "אָחוֹת",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-adom",
+      "vo": "vo:rus.gl_adom",
+      "he": "אָדֹם",
+      "voice": "אָדֹם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-af",
+      "vo": "vo:rus.gl_af",
+      "he": "אַף",
+      "voice": "אַף",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-agas",
+      "vo": "vo:rus.gl_agas",
+      "he": "אַגָּס",
+      "voice": "אַגָּס",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-agvaniya",
+      "vo": "vo:rus.gl_agvaniya",
+      "he": "עַגְבָנִיָּה",
+      "voice": "עַגְבָנִיָּה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-anavim",
+      "vo": "vo:rus.gl_anavim",
+      "he": "עֲנָבִים",
+      "voice": "עֲנָבִים",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-arba",
+      "vo": "vo:rus.gl_arba",
+      "he": "אַרְבַּע",
+      "voice": "אַרְבַּע",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-arnav",
+      "vo": "vo:rus.gl_arnav",
+      "he": "אַרְנָב",
+      "voice": "אַרְנָב",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-avatiach",
+      "vo": "vo:rus.gl_avatiach",
+      "he": "אֲבַטִּיחַ",
+      "voice": "אֲבַטִּיחַ",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-bai",
+      "vo": "vo:rus.gl_bai",
+      "he": "בַּיי",
+      "voice": "בַּיי",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-balon",
+      "vo": "vo:rus.gl_balon",
+      "he": "בָּלוֹן",
+      "voice": "בָּלוֹן",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-banana",
+      "vo": "vo:rus.gl_banana",
+      "he": "בָּנָנָה",
+      "voice": "בָּנָנָה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-barvaz",
+      "vo": "vo:rus.gl_barvaz",
+      "he": "בַּרְוָז",
+      "voice": "בַּרְוָז",
+      "review": "text-ready"
     },
     {
       "id": "gl-batsal",
       "vo": "vo:rus.gl_batsal",
-      "he": "בָּצָל.",
-      "voice": "בצל.",
-      "review": "needs-editor"
+      "he": "בָּצָל",
+      "voice": "בָּצָל",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-beitsa",
+      "vo": "vo:rus.gl_beitsa",
+      "he": "בֵּיצָה",
+      "voice": "בֵּיצָה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-beten",
+      "vo": "vo:rus.gl_beten",
+      "he": "בֶּטֶן",
+      "voice": "בֶּטֶן",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-bevakasha",
+      "vo": "vo:rus.gl_bevakasha",
+      "he": "בְּבַקָּשָׁה",
+      "voice": "בְּבַקָּשָׁה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-buba",
+      "vo": "vo:rus.gl_buba",
+      "he": "בֻּבָּה",
+      "voice": "בֻּבָּה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-chalav",
+      "vo": "vo:rus.gl_chalav",
+      "he": "חָלָב",
+      "voice": "חָלָב",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-chamesh",
+      "vo": "vo:rus.gl_chamesh",
+      "he": "חָמֵשׁ",
+      "voice": "חָמֵשׁ",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-chatul",
+      "vo": "vo:rus.gl_chatul",
+      "he": "חָתוּל",
+      "voice": "חָתוּל",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-chatula",
+      "vo": "vo:rus.gl_chatula",
+      "he": "חֲתוּלָה",
+      "voice": "חֲתוּלָה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-chazir",
+      "vo": "vo:rus.gl_chazir",
+      "he": "חֲזִיר",
+      "voice": "חֲזִיר",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-chultsa",
+      "vo": "vo:rus.gl_chultsa",
+      "he": "חֻלְצָה",
+      "voice": "חֻלְצָה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-dag",
+      "vo": "vo:rus.gl_dag",
+      "he": "דָּג",
+      "voice": "דָּג",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-daysa",
+      "vo": "vo:rus.gl_daysa",
+      "he": "דַּיְסָה",
+      "voice": "דַּיְסָה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-dov",
+      "vo": "vo:rus.gl_dov",
+      "he": "דֹּב",
+      "voice": "דֹּב",
+      "review": "text-ready"
     },
     {
       "id": "gl-dubi",
       "vo": "vo:rus.gl_dubi",
-      "he": "דֻּבִּי.",
-      "voice": "דובי.",
-      "review": "needs-editor"
+      "he": "דֻּבִּי",
+      "voice": "דֻּבִּי",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-eifo-kadur",
+      "vo": "vo:rus.gl_eifo_kadur",
+      "he": "אֵיפֹה הַכַּדּוּר?",
+      "voice": "איפה הכדור?",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-einayim",
+      "vo": "vo:rus.gl_einayim",
+      "he": "עֵינַיִם",
+      "voice": "עֵינַיִם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-eser",
+      "vo": "vo:rus.gl_eser",
+      "he": "עֶשֶׂר",
+      "voice": "עֶשֶׂר",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-etsbaot",
+      "vo": "vo:rus.gl_etsbaot",
+      "he": "אֶצְבָּעוֹת",
+      "voice": "אֶצְבָּעוֹת",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-ez",
+      "vo": "vo:rus.gl_ez",
+      "he": "עֵז",
+      "voice": "עֵז",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-garbayim",
+      "vo": "vo:rus.gl_garbayim",
+      "he": "גַּרְבַּיִם",
+      "voice": "גַּרְבַּיִם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-gerev",
+      "vo": "vo:rus.gl_gerev",
+      "he": "גֶּרֶב",
+      "voice": "גֶּרֶב",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-gezer",
+      "vo": "vo:rus.gl_gezer",
+      "he": "גֶּזֶר",
+      "voice": "גֶּזֶר",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-gvina",
+      "vo": "vo:rus.gl_gvina",
+      "he": "גְּבִינָה",
+      "voice": "גְּבִינָה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-hine-kadur",
+      "vo": "vo:rus.gl_hine_kadur",
+      "he": "הִנֵּה הַכַּדּוּר!",
+      "voice": "הנה הכדור.",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-ima",
+      "vo": "vo:rus.gl_ima",
+      "he": "אִמָּא",
+      "voice": "אִמָּא",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-iparon",
+      "vo": "vo:rus.gl_iparon",
+      "he": "עִפָּרוֹן",
+      "voice": "עִפָּרוֹן",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-jirafa",
+      "vo": "vo:rus.gl_jirafa",
+      "he": "גִ׳ירָפָה",
+      "voice": "גִ׳ירָפָה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-kachol",
+      "vo": "vo:rus.gl_kachol",
+      "he": "כָּחֹל",
+      "voice": "כָּחֹל",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-kadur",
+      "vo": "vo:rus.gl_kadur",
+      "he": "כַּדּוּר",
+      "voice": "כַּדּוּר",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-kchu-kadur",
+      "vo": "vo:rus.gl_kchu_kadur",
+      "he": "קְחוּ אֶת הַכַּדּוּר.",
+      "voice": "קְחוּ את הכדור.",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-kelev",
+      "vo": "vo:rus.gl_kelev",
+      "he": "כֶּלֶב",
+      "voice": "כֶּלֶב",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-ken",
+      "vo": "vo:rus.gl_ken",
+      "he": "כֵּן",
+      "voice": "כֵּן",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-kfafot",
+      "vo": "vo:rus.gl_kfafot",
+      "he": "כְּפָפוֹת",
+      "voice": "כְּפָפוֹת",
+      "review": "text-ready"
     },
     {
       "id": "gl-kiftsu",
       "vo": "vo:rus.gl_kiftsu",
-      "he": "קִפְצוּ.",
-      "voice": "קִפְצוּ.",
-      "review": "needs-editor"
+      "he": "קִפְצוּ",
+      "voice": "קִפְצוּ",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-kipod",
+      "vo": "vo:rus.gl_kipod",
+      "he": "קִפּוֹד",
+      "voice": "קִפּוֹד",
+      "review": "text-ready"
     },
     {
       "id": "gl-kova",
       "vo": "vo:rus.gl_kova",
-      "he": "כּוֹבַע.",
-      "voice": "כובע.",
-      "review": "needs-editor"
+      "he": "כּוֹבַע",
+      "voice": "כּוֹבַע",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-kubiyot",
+      "vo": "vo:rus.gl_kubiyot",
+      "he": "קֻבִּיּוֹת",
+      "voice": "קֻבִּיּוֹת",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-kumu",
+      "vo": "vo:rus.gl_kumu",
+      "he": "קוּמוּ",
+      "voice": "קוּמוּ",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-lavan",
+      "vo": "vo:rus.gl_lavan",
+      "he": "לָבָן",
+      "voice": "לָבָן",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-lechem",
+      "vo": "vo:rus.gl_lechem",
+      "he": "לֶחֶם",
+      "voice": "לֶחֶם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-lechu",
+      "vo": "vo:rus.gl_lechu",
+      "he": "לְכוּ",
+      "voice": "לְכוּ",
+      "review": "text-ready"
     },
     {
       "id": "gl-lehitraot",
       "vo": "vo:rus.gl_lehitraot",
-      "he": "לְהִתְרָאוֹת.",
-      "voice": "להתראות.",
-      "review": "needs-editor"
+      "he": "לְהִתְרָאוֹת",
+      "voice": "לְהִתְרָאוֹת",
+      "review": "text-ready"
     },
     {
       "id": "gl-livjatan",
       "vo": "vo:rus.gl_livjatan",
-      "he": "לִוְיָתָן.",
-      "voice": "לִוְיָתָן.",
-      "review": "needs-editor"
+      "he": "לִוְיָתָן",
+      "voice": "לִוְיָתָן",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-lo",
+      "vo": "vo:rus.gl_lo",
+      "he": "לֹא",
+      "voice": "לֹא",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-ma-ze",
+      "vo": "vo:rus.gl_ma_ze",
+      "he": "מַה זֶּה?",
+      "voice": "מה זה?",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-magafayim",
+      "vo": "vo:rus.gl_magafayim",
+      "he": "מַגָּפַיִם",
+      "voice": "מַגָּפַיִם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-marak",
+      "vo": "vo:rus.gl_marak",
+      "he": "מָרָק",
+      "voice": "מָרָק",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-mayim",
+      "vo": "vo:rus.gl_mayim",
+      "he": "מַיִם",
+      "voice": "מַיִם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-mechonit",
+      "vo": "vo:rus.gl_mechonit",
+      "he": "מְכוֹנִית",
+      "voice": "מְכוֹנִית",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-meil",
+      "vo": "vo:rus.gl_meil",
+      "he": "מְעִיל",
+      "voice": "מְעִיל",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-melafefon",
+      "vo": "vo:rus.gl_melafefon",
+      "he": "מְלָפְפוֹן",
+      "voice": "מְלָפְפוֹן",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-mi-ze",
+      "vo": "vo:rus.gl_mi_ze",
+      "he": "מִי זֶה?",
+      "voice": "מי זה?",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-michnasayim",
+      "vo": "vo:rus.gl_michnasayim",
+      "he": "מִכְנָסַיִם",
+      "voice": "מִכְנָסַיִם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-michu",
+      "vo": "vo:rus.gl_michu",
+      "he": "מַחֲאוּ כַּפַּיִם",
+      "voice": "מַחֲאוּ כַּפַּיִם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-migdal-tabaot",
+      "vo": "vo:rus.gl_migdal_tabaot",
+      "he": "מִגְדַּל טַבָּעוֹת",
+      "voice": "מִגְדַּל טַבָּעוֹת",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-mishpacha",
+      "vo": "vo:rus.gl_mishpacha",
+      "he": "מִשְׁפָּחָה",
+      "voice": "מִשְׁפָּחָה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-mits",
+      "vo": "vo:rus.gl_mits",
+      "he": "מִיץ",
+      "voice": "מִיץ",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-naalayim",
+      "vo": "vo:rus.gl_naalayim",
+      "he": "נַעֲלַיִם",
+      "voice": "נַעֲלַיִם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-oznayim",
+      "vo": "vo:rus.gl_oznayim",
+      "he": "אָזְנַיִם",
+      "voice": "אָזְנַיִם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-para",
+      "vo": "vo:rus.gl_para",
+      "he": "פָּרָה",
+      "voice": "פָּרָה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-pe",
+      "vo": "vo:rus.gl_pe",
+      "he": "פֶּה",
+      "voice": "פֶּה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-pil",
+      "vo": "vo:rus.gl_pil",
+      "he": "פִּיל",
+      "voice": "פִּיל",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-raglayim",
+      "vo": "vo:rus.gl_raglayim",
+      "he": "רַגְלַיִם",
+      "voice": "רַגְלַיִם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-rosh",
+      "vo": "vo:rus.gl_rosh",
+      "he": "רֹאשׁ",
+      "voice": "רֹאשׁ",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-rutsu",
+      "vo": "vo:rus.gl_rutsu",
+      "he": "רוּצוּ",
+      "voice": "רוּצוּ",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-saba",
+      "vo": "vo:rus.gl_saba",
+      "he": "סָבָא",
+      "voice": "סָבָא",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-savta",
+      "vo": "vo:rus.gl_savta",
+      "he": "סַבְתָּא",
+      "voice": "סַבְתָּא",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-sear",
+      "vo": "vo:rus.gl_sear",
+      "he": "שֵׂעָר",
+      "voice": "שֵׂעָר",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-sefer",
+      "vo": "vo:rus.gl_sefer",
+      "he": "סֵפֶר",
+      "voice": "סֵפֶר",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-sefer-katan",
+      "vo": "vo:rus.gl_sefer_katan",
+      "he": "סֵפֶר קָטָן",
+      "voice": "סֵפֶר קָטָן",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-shachor",
+      "vo": "vo:rus.gl_shachor",
+      "he": "שָׁחֹר",
+      "voice": "שָׁחֹר",
+      "review": "text-ready"
     },
     {
       "id": "gl-shalom",
       "vo": "vo:rus.gl_shalom",
-      "he": "שָׁלוֹם.",
-      "voice": "שלום.",
-      "review": "needs-editor"
+      "he": "שָׁלוֹם",
+      "voice": "שָׁלוֹם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-shalosh",
+      "vo": "vo:rus.gl_shalosh",
+      "he": "שָׁלוֹשׁ",
+      "voice": "שָׁלוֹשׁ",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-shesh",
+      "vo": "vo:rus.gl_shesh",
+      "he": "שֵׁשׁ",
+      "voice": "שֵׁשׁ",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-sheva",
+      "vo": "vo:rus.gl_sheva",
+      "he": "שֶׁבַע",
+      "voice": "שֶׁבַע",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-shinayim",
+      "vo": "vo:rus.gl_shinayim",
+      "he": "שִׁנַּיִם",
+      "voice": "שִׁנַּיִם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-shmone",
+      "vo": "vo:rus.gl_shmone",
+      "he": "שְׁמוֹנֶה",
+      "voice": "שְׁמוֹנֶה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-shtayim",
+      "vo": "vo:rus.gl_shtayim",
+      "he": "שְׁתַּיִם",
+      "voice": "שְׁתַּיִם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-shual",
+      "vo": "vo:rus.gl_shual",
+      "he": "שׁוּעָל",
+      "voice": "שׁוּעָל",
+      "review": "text-ready"
     },
     {
       "id": "gl-shvu",
       "vo": "vo:rus.gl_shvu",
-      "he": "שְׁבוּ.",
-      "voice": "שְׁבוּ.",
-      "review": "needs-editor"
+      "he": "שְׁבוּ",
+      "voice": "שְׁבוּ",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-simla",
+      "vo": "vo:rus.gl_simla",
+      "he": "שִׂמְלָה",
+      "voice": "שִׂמְלָה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-snai",
+      "vo": "vo:rus.gl_snai",
+      "he": "סְנָאִי",
+      "voice": "סְנָאִי",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-sus",
+      "vo": "vo:rus.gl_sus",
+      "he": "סוּס",
+      "voice": "סוּס",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-svivon",
+      "vo": "vo:rus.gl_svivon",
+      "he": "סְבִיבוֹן",
+      "voice": "סְבִיבוֹן",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-tapuach",
+      "vo": "vo:rus.gl_tapuach",
+      "he": "תַּפּוּחַ",
+      "voice": "תַּפּוּחַ",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-tapuach-adama",
+      "vo": "vo:rus.gl_tapuach_adama",
+      "he": "תַּפּוּחַ אֲדָמָה",
+      "voice": "תַּפּוּחַ אֲדָמָה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-tapuz",
+      "vo": "vo:rus.gl_tapuz",
+      "he": "תַּפּוּז",
+      "voice": "תַּפּוּז",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-tarnegol",
+      "vo": "vo:rus.gl_tarnegol",
+      "he": "תַּרְנְגוֹל",
+      "voice": "תַּרְנְגוֹל",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-tarnegolet",
+      "vo": "vo:rus.gl_tarnegolet",
+      "he": "תַּרְנְגֹלֶת",
+      "voice": "תַּרְנְגֹלֶת",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-te",
+      "vo": "vo:rus.gl_te",
+      "he": "תֵּה",
+      "voice": "תֵּה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-tesha",
+      "vo": "vo:rus.gl_tesha",
+      "he": "תֵּשַׁע",
+      "voice": "תֵּשַׁע",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-tinok",
+      "vo": "vo:rus.gl_tinok",
+      "he": "תִּינוֹק",
+      "voice": "תִּינוֹק",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-toda",
+      "vo": "vo:rus.gl_toda",
+      "he": "תּוֹדָה",
+      "voice": "תּוֹדָה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-tsahov",
+      "vo": "vo:rus.gl_tsahov",
+      "he": "צָהֹב",
+      "voice": "צָהֹב",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-tsaif",
+      "vo": "vo:rus.gl_tsaif",
+      "he": "צָעִיף",
+      "voice": "צָעִיף",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-tsipor",
+      "vo": "vo:rus.gl_tsipor",
+      "he": "צִפּוֹר",
+      "voice": "צִפּוֹר",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-tut",
+      "vo": "vo:rus.gl_tut",
+      "he": "תּוּת",
+      "voice": "תּוּת",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-ugiya",
+      "vo": "vo:rus.gl_ugiya",
+      "he": "עוּגִיָּה",
+      "voice": "עוּגִיָּה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-yadayim",
+      "vo": "vo:rus.gl_yadayim",
+      "he": "יָדַיִם",
+      "voice": "יָדַיִם",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-yalda",
+      "vo": "vo:rus.gl_yalda",
+      "he": "יַלְדָּה",
+      "voice": "יַלְדָּה",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-yarok",
+      "vo": "vo:rus.gl_yarok",
+      "he": "יָרֹק",
+      "voice": "יָרֹק",
+      "review": "text-ready"
+    },
+    {
+      "id": "gl-yeled",
+      "vo": "vo:rus.gl_yeled",
+      "he": "יֶלֶד",
+      "voice": "יֶלֶד",
+      "review": "text-ready"
     },
     {
       "id": "gl-ze-kadur",
       "vo": "vo:rus.gl_ze_kadur",
       "he": "זֶה כַּדּוּר.",
       "voice": "זה כדור.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
-      "id": "gl-ze-tapuach",
-      "vo": "vo:rus.gl_ze_tapuach",
-      "he": "זֶה תַּפּוּחַ.",
-      "voice": "זה תפוח.",
-      "review": "needs-editor"
+      "id": "gl-zeev",
+      "vo": "vo:rus.gl_zeev",
+      "he": "זְאֵב",
+      "voice": "זְאֵב",
+      "review": "text-ready"
     },
     {
       "id": "gl-zot-chatula",
       "vo": "vo:rus.gl_zot_chatula",
-      "he": "זֹאת חֲתוּלָה.",
-      "voice": "זאת חתולה.",
-      "review": "needs-editor"
+      "he": "זוֹ חֲתוּלָה.",
+      "voice": "זו חתולה.",
+      "review": "text-ready"
     },
     {
       "id": "gl-zot-ima",
       "vo": "vo:rus.gl_zot_ima",
-      "he": "זֹאת אִמָּא.",
-      "voice": "זאת אמא.",
-      "review": "needs-editor"
+      "he": "זוֹ אִמָּא.",
+      "voice": "זו אימא.",
+      "review": "text-ready"
     },
     {
       "id": "he-fb-check",
@@ -434,14 +1239,14 @@
       "vo": "vo:rus.he_pl_thanks",
       "he": "תּוֹדָה!",
       "voice": "תודה.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "pass",
       "vo": "vo:rus.pass",
       "he": "זֶה בְּסֵדֶר!",
-      "voice": "זה בסדר!",
-      "review": "needs-editor"
+      "voice": "זה בסדר.",
+      "review": "text-ready"
     },
     {
       "id": "personal",
@@ -516,13 +1321,6 @@
       "ipa": "[ˈɛtə ˈbabʊʂkə]"
     },
     {
-      "id": "ch-eto-banan",
-      "vo": "vo:rus.ch_eto_banan",
-      "shown": "Это банан.",
-      "say": "Э́то бана́н.",
-      "ipa": "[ˈɛtə bɐˈnan]"
-    },
-    {
       "id": "ch-eto-jabloko",
       "vo": "vo:rus.ch_eto_jabloko",
       "shown": "Это яблоко.",
@@ -584,13 +1382,6 @@
       "shown": "Это мяч?",
       "say": "Э́то мяч?",
       "ipa": "[ˈɛtə ˈmʲætɕ]"
-    },
-    {
-      "id": "ch-eto-moloko",
-      "vo": "vo:rus.ch_eto_moloko",
-      "shown": "Это молоко.",
-      "say": "Э́то молоко́.",
-      "ipa": "[ˈɛtə məlɐˈko]"
     },
     {
       "id": "ch-eto-papa",
@@ -707,9 +1498,9 @@
     {
       "id": "ch-menja-zovut",
       "vo": "vo:rus.ch_menja_zovut",
-      "shown": "Меня зовут {puppet}.",
-      "say": "Меня́ зову́т {puppet}.",
-      "ipa": "[mʲɪˈnʲa zɐˈvut …]"
+      "shown": "Меня зовут Гоша.",
+      "say": "Меня́ зову́т Го́ша.",
+      "ipa": "[mʲɪˈnʲa zɐˈvut ˈɡoʂə]"
     },
     {
       "id": "ch-ochen-prijatno",
@@ -1018,13 +1809,6 @@
       "shown": "Спит в кроватке мишка, / Под подушкой — …",
       "say": "Спит в крова́тке ми́шка, под поду́шкой…",
       "ipa": "[spʲit fkrɐˈvatkʲɪ ˈmʲiʂkə ‖ pət pɐˈduʂkəj]"
-    },
-    {
-      "id": "sen-2",
-      "vo": "vo:rus.sen_2",
-      "shown": "Это кот.",
-      "say": "Э́то кот.",
-      "ipa": "[ˈɛtə kot]"
     },
     {
       "id": "sf-mama",
@@ -1375,13 +2159,6 @@
       "shown": "До свидания!",
       "say": "До свида́ния!",
       "ipa": "[də svʲɪˈdanʲɪjə]"
-    },
-    {
-      "id": "w-dom",
-      "vo": "vo:rus.w_dom",
-      "shown": "дом",
-      "say": "дом",
-      "ipa": "[dom]"
     },
     {
       "id": "w-futbolka",
@@ -1741,6 +2518,13 @@
       "ipa": "[pʲɪrɐˈmʲitkə]"
     },
     {
+      "id": "w-pjos",
+      "vo": "vo:rus.w_pjos",
+      "shown": "пёс",
+      "say": "пёс",
+      "ipa": "[pʲos]"
+    },
+    {
       "id": "w-platje",
       "vo": "vo:rus.w_platje",
       "shown": "платье",
@@ -2063,18 +2847,62 @@
       "ipa": "[ˈʐoɫtɨj]"
     },
     {
-      "id": "w-zhuk",
-      "vo": "vo:rus.w_zhuk",
-      "shown": "жук",
-      "say": "жук",
-      "ipa": "[ʐuk]"
-    },
-    {
       "id": "w-zuby",
       "vo": "vo:rus.w_zuby",
       "shown": "зубы",
       "say": "зу́бы",
       "ipa": "[ˈzubɨ]"
     }
+  ],
+  "puppetClips": [
+    "ch-daj-banan",
+    "ch-daj-hleb",
+    "ch-daj-jabloko",
+    "ch-daj-karandash",
+    "ch-daj-mjach",
+    "ch-daj-sok",
+    "ch-daj-sup",
+    "ch-eto-babushka",
+    "ch-eto-jabloko",
+    "ch-eto-kot-q",
+    "ch-eto-kukla",
+    "ch-eto-kukla-q",
+    "ch-eto-mashina",
+    "ch-eto-mjach-q",
+    "ch-eto-papa",
+    "ch-eto-ryba-q",
+    "ch-eto-sobaka",
+    "ch-gde-jabloko",
+    "ch-gde-koshka",
+    "ch-gde-mama",
+    "ch-gde-mysh",
+    "ch-gde-shapka",
+    "ch-hochu-apelsin",
+    "ch-hochu-moloko",
+    "ch-hochu-syr",
+    "ch-horosho",
+    "ch-kak-tebja-zovut",
+    "ch-kto-u-tebja-v-seme",
+    "ch-menja-zovut",
+    "ch-ochen-prijatno",
+    "ch-pokazhi-glaza",
+    "ch-pokazhi-golovu",
+    "ch-pokazhi-nogi",
+    "ch-pokazhi-nos",
+    "ch-pokazhi-paltsy",
+    "ch-pokazhi-rot",
+    "ch-pokazhi-ruki",
+    "ch-pokazhi-ushi",
+    "ch-pokazhi-volosy",
+    "ch-pokazhi-zhivot",
+    "ch-pokazhi-zuby",
+    "ch-skolko",
+    "ch-u-menja-est",
+    "ch-vot-jabloko",
+    "ch-vot-koshka",
+    "ch-vot-mama",
+    "ch-vot-mysh",
+    "ch-vot-shapka",
+    "ch-zdorovo"
   ]
 }

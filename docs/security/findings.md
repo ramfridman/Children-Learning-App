@@ -110,6 +110,10 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-BK-6 | Three earlier backup artifacts stay downloadable from the public repository until they expire | info | closed (the owner chose to delete them; all three deleted on 2026-11-08 after the first private-bucket backup, run 42486286222) | 2026-11-08 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
+| SEC-VP-1 | Voice parts: the source guard "the voice is made only after the typed count" crashes, because it looks for the old `Future<BuiltPack> generateGated(` signature | low (the gate itself holds, verified by reading and by the behavioural gate tests; but the money gate's regression guard is not running and the suite is red) | closed (`133ba3c2`: the guard finds `Future<List<BuiltPack>> generateGated(`, fails with a reason if it does not, and holds `requireTyped(` before `synth()`, `generateVoiceParts(` and `generateVoicePack(`; `voice_gen_test.dart` green, re-run 2026-11-08) | 2026-11-08 |
+| SEC-VP-2 | Voice parts: `voice-X-N` is read as part N of `X` whenever no pack `char-X-N` is installed, and a character's id is not tied to its pack id | low (every part must be signed with the owner's key; a line already in an earlier part refuses the whole part; no character id ends in `-<digit>` today) | closed (`133ba3c2`: `Patterns.characterId` refuses an id ending in `-2` to `-9` for the character document and the manifest's `entries.characters`, both JSON schemas regenerated, `packId` unchanged; `_isAnotherVoice` kept as a second layer; proof `voice_parts_test.dart` and a reviewer probe of the pattern, re-run 2026-11-08) | 2026-11-08 |
+| SEC-VP-3 | Voice parts: the parts of one voice are not tied to one build, so a stale part joins a fresh one and, being read first, can keep an old recording and refuse the fresh part | low (owner-signed packs only; worst case an old recording of a line, or text only) | closed (`133ba3c2`: the first part read sets the version and a part of another version is left out, so two builds are never joined; a stale part 1 alone still wins over fresh later parts, which are then text only: install every part of a build together; proof `voice_parts_test.dart`, re-run 2026-11-08) | 2026-11-08 |
+| SEC-VP-4 | Voice parts: one voice may now hold up to 9 x 64 MiB in memory (was 64 MiB), and each part is proven again on the UI isolate (grows SEC-7) | info; the fix makes it a release blocker (see the re-check below) | reopened (`133ba3c2`: the 128 MiB cap counts a sound shared by several lines once per line, so nitzi's real voice, 91.8 MiB of distinct sound but 130.0 MiB counted, goes over it and its part 2 would be left out; hero-son counts 126.5 MiB, 98.8% of the cap) | 2026-11-08 |
 
 ## Closed findings
 
@@ -677,3 +681,81 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   - Run by the security-engineer, in an exported copy of HEAD (the worktree's build folder was locked by another run):
     `sec_l5_3_test`, `response_contract_test`, `alerts_test` (51 passed); `ls03_boxes_test`, `test/engine`,
     `sync_engine_test`, `response_contract_test` (284 passed).
+- **Voice packs in parts, `hebrew-sweep` (`d36d7c62`; 2026-11-08): no-go until SEC-VP-1 is fixed (a one-line test fix);
+  then go. Nothing above low.** In scope: `voice_bank.dart` (`lastVoicePart`, `voicePackId`, `withPart`),
+  `InstalledCharacterSource.voice`, the tool side (`voice_gen.dart`, `voice_gen_lib.dart`, `voice_groups_lib.dart`,
+  `docs/audio/voicing-parts.json`) and the paid-voice hook. Not in scope: the gateway, the database, sync, the rest of the
+  branch.
+  - The developer's claim holds: `git diff d36d7c62^ d36d7c62` touches 10 files, none of them `schemas.dart`
+    (`Patterns.packId`), `zip_store.dart` (`ZipLimits`), `pack_limits.dart`, `pack_installer.dart`, `pack_verify.dart`
+    (`verifyPack`, `verifyEntries`) or `pack_validation.dart`; no pubspec, lock file, workflow or hook changed.
+  - Each part is a whole pack proven again by `installer.load` (signature, hashes, schema, recorded manifest hash, version
+    and id), so splitting adds no unsigned path. A hidden or failing part, and a part that repeats a line, are left out; an
+    earlier part's recording is never replaced (`withPart`).
+  - The 9-part loop cannot be driven by installed names: the loop bound is the constant `lastVoicePart`, and the ids are
+    built only from the character's id and 1 to 9. A probe with a spying registry saw exactly 17 lookups (`voice-<id>`, and
+    `char-<id>-N` and `voice-<id>-N` for N 2 to 9) with `-x`, `-22`, `-2-2` and other packs installed. The character id
+    comes from a verified character document (pattern `[a-z0-9][a-z0-9-]{2,40}`); an id of 36 or more characters makes part
+    ids longer than any pack id, which are only looked up, never found.
+  - The memory claim holds as written: `load` reads each installed file into its own buffer (not a view of one zip), and a
+    part's `VerifiedPack` (manifest, cue documents, other files) is dropped once its clips are in the bank, so at most one
+    part is held whole besides the clips already kept. All the audio of every part stays in memory while the guide is shown
+    (about 92 MiB for a narrator, plus a friend's own voice), see SEC-VP-4.
+  - The residual (SEC-VP-2) is real and bounded: with no `char-X-N` installed, a `voice-X-N` joins `X`'s bank (probe
+    passes). It needs an owner-signed pack named that way; a friend's own lines that a narrator part already has refuse the
+    whole pack. Fix proposed: the validator (or the character pack builder) refuses a character id that ends in `-[2-9]`, so
+    `voice-X-N` can only ever be a part; `_isAnotherVoice` stays as a second layer.
+  - SEC-VP-3, fix proposed: read part N only when its manifest version equals that of the first part read (the tool already
+    gives every part of a build one `--pack-version`); a part of another version is left out. Proof: a part 1 at 2.0.0 and a
+    part 2 at 1.0.0 give a bank with part 1's lines only (today both are joined).
+  - SEC-VP-4, fix proposed (info): a cap on the clip bytes of one voice across its parts (for example 2 x
+    `ZipLimits.maxTotalBytes`), the remaining parts left out; and the SEC-7 move of verification off the UI isolate.
+  - Tool side: the free `pack` uses `SilentVoice` (throws on any request) and `readKeyFile` of the pack-signing key only; the
+    ElevenLabs key's environment variable is read only in `_eleven`, which only `_generate`, `_generateLang` and the audition
+    path pass. The only HTTP code is `ElevenLabsSynthesizer`. In `generateGated` the typed count still comes before `synth()`
+    and before either `generateVoiceParts` or `generateVoicePack`; the split only decides which pack a line goes into, not
+    what is sent, and a line with no part stops the run before any request. A copy whose sound is in another part gets its
+    own file (no cross-pack reference). `voicing-parts.json` is read with every group in exactly one part, at most 9 parts.
+  - SEC-VP-1: `voice_gen_test.dart` "no paid path takes the count from the command line, and the voice is made only after
+    the typed count" throws `RangeError` at `lib.indexOf('Future<BuiltPack> generateGated(')` (now
+    `Future<List<BuiltPack>>`). It fails closed, but the guard of the money gate does not run. Fix: search for
+    `Future<List<BuiltPack>> generateGated(`, assert the index is not -1 first, and also assert that `requireTyped(` comes
+    before `generateVoiceParts(` in that function.
+  - Advisories: no dependency changed. CVE-2026-27704 (pub extraction zip slip, NVD 2026-02-25) affects Dart before 3.11
+    and Flutter before 3.41; this machine has Dart 3.13.7 and Flutter 3.47.8, and the app's own zip reader is unchanged.
+  - Run by the security-engineer: `flutter test` on `voice_parts`, `character_pack`, `character_view`, `pack_installer`,
+    `voice`, `voice_gen`, `voice_gen_batches`, `voice_gen_cli`, `voice_gen_release`, `voice_fallback`, `qa_voice_tool` and
+    `voice_text` (293 passed, 1 failed: SEC-VP-1); `python .claude/hooks/test_block_paid_voice.py` (5 passed: `generate`
+    with `--groups` and `--lines` still blocked, `pack` allowed; the hook also blocked this reviewer's own shell command
+    that merely contained the key variable's name); four probes in a temporary test file (removed; kept with the reviewer)
+    for SEC-VP-2, SEC-VP-3, the lookup set and the long id.
+- **Re-check of the fixes, `hebrew-sweep` (`133ba3c2`; 2026-11-08): no-go. SEC-VP-1, -2 and -3 closed; SEC-VP-4 reopened.**
+  - SEC-VP-1: the guard finds the new signature, fails with a reason if it changes again (and fails closed if its end
+    marker goes), and holds the typed count before `synth()` and before both pack builders.
+  - SEC-VP-2: `Patterns.characterId` (`(?!.*-[2-9]$)[a-z0-9][a-z0-9-]{2,40}`) is used for the character document's id and
+    the manifest's `entries.characters`; `packId` is unchanged. The validator anchors it as `^(?:...)$` and refuses control
+    characters, so `$` in the look-ahead is the end of the value. A probe: `abc-2`, `abc-9`, `hero-son-2` and `a-b-5` are
+    refused; `abc-1`, `abc-0`, `abc-10`, `abc-12`, `abc-2x`, `abc2`, `hero-son` and `nitzi` pass, and none of those
+    can name a part, since a part is one digit from 2 to 9. No character in `content/voices.json` ends in a digit. The id is
+    still not tied to its pack id, so a `char-X-N` pack holding another character only makes `X`'s part N text only
+    (availability only, and the schema now prevents it for well-formed packs).
+  - SEC-VP-3: two builds are never joined. The first part read decides the version: a stale part 1 with fresh later parts
+    gives part 1's build alone. Operational note: install all parts of a build together.
+  - SEC-VP-4 is reopened, because the fix breaks a real voice. `VoiceBank.clipBytes` adds `mp3.length` for each line, but
+    lines with the same text share one sound file in a pack, and `fromPack` gives them the same buffer, so a shared sound
+    is counted once per line. A probe proves it: a part whose 4 lines share one 100-byte sound counts 400 and is refused
+    under a 300-byte cap. Measured on the owner's work folders (file sizes and hashes only, 4,311 lines each, 2,848
+    distinct sounds): nitzi has 91.8 MiB of distinct sound but counts 130.0 MiB, over the 128 MiB `maxVoiceBytes`, so
+    nitzi's part 2 (`math-B`, `numbers-C`, `math-C`, `ui`) would be left out silently, as text only. hero-son counts 126.5 MiB
+    (89.5 MiB distinct), 1.5 MiB under the cap. The developer's cap test uses a separate sound per line, so it cannot see
+    this. Fix: count each buffer once (an identity set of the `mp3` buffers, which is exact: a copy whose sound is in
+    another part has its own file); then nitzi is 91.8 MiB with about 36 MiB to spare. Add a test with lines that share one
+    sound, and a free `voice_gen` check that warns when a narrator's distinct total passes 90% of `maxVoiceBytes`.
+  - The stage clean-up retry is sound: it waits 200 ms and tries once more. A stage that still cannot be removed holds
+    only copies of saved clips, cues and `pack.json`, never a key. The next build removes it before it starts, or stops,
+    so a pack is never built from a stale stage.
+  - Run by the security-engineer: `flutter test` on `voice_parts`, `voice_gen`, `character_pack`, `pack_installer` and
+    `content_schema` (131 passed); `voice_gen_cli`, `voice_gen_batches`, `voice_gen_release`, `band_c_schema`,
+    `character_view`, `voice` and `voice_fallback` (168 passed); `python .claude/hooks/test_block_paid_voice.py` (5
+    passed); two probes in a temporary test file (removed; kept with the reviewer) for the shared-sound count and the
+    character id pattern.

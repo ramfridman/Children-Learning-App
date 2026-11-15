@@ -152,8 +152,8 @@ void main() {
   group('what the gates and the pace read', () {
     test('the parent switches a gate may name, and the presentation band for the course', () {
       const LanguageSwitches s = LanguageSwitches(on: true, oralOnly: true, lettersBefore5: true, band: 0);
-      expect(s.gateSwitchesOn, <String>{'oralOnly', 'lettersBefore5'});
-      expect(const LanguageSwitches(on: true).gateSwitchesOn, isEmpty);
+      expect(s.gateSwitchesOn(ageBand: 1), <String>{'oralOnly', 'lettersBefore5'});
+      expect(const LanguageSwitches(on: true).gateSwitchesOn(ageBand: 1), isEmpty);
       expect(s.presentationBand(2), 0, reason: 'the parent\'s choice wins');
       expect(const LanguageSwitches(on: true).presentationBand(2), 2, reason: 'otherwise the age decides');
     });
@@ -261,6 +261,69 @@ void main() {
             }
           }
         }
+      }
+    });
+  });
+
+  group('SEC-L7-4: what the gateway refuses is dropped by the phone too', () {
+    test('the derived answer is never stored: soundsStrand is made when the answers are read', () {
+      final LanguageSwitches s = LanguageSwitches.fromJson('rus', <String, Object?>{
+        'on': true,
+        'q': <String, Object?>{'soundsStrand': 'yes'},
+      });
+      expect(s.questionnaire, isEmpty);
+      expect(s.toJson().toString(), isNot(contains('soundsStrand')));
+      expect(
+        s.placementAnswers('rus'),
+        isNot(contains('soundsStrand')),
+        reason: 'no "most", no heritage route: nothing derived',
+      );
+      final LanguageSwitches most = s.copyWith(questionnaire: <String, String>{'understands': 'most'});
+      expect(most.placementAnswers('rus')['soundsStrand'], 'yes', reason: 'derived at read time');
+      expect(most.toJson().toString(), isNot(contains('soundsStrand')));
+    });
+
+    test('a value of the Hebrew question on the English one is dropped', () {
+      final LanguageSwitches s = LanguageSwitches.fromJson('eng', <String, Object?>{
+        'on': true,
+        'q': <String, Object?>{'knowsLetters': 'reads'},
+      });
+      expect(s.questionnaire, isEmpty);
+      expect(
+        LanguageSwitches.fromJson('eng', <String, Object?>{
+          'q': <String, Object?>{'knowsLetters': 'some'},
+        }).questionnaire,
+        <String, String>{'knowsLetters': 'some'},
+        reason: 'the English answer "some" is taken',
+      );
+    });
+
+    test(
+      'placement is a switch of true or false and nothing else: a number or null asks for no placement',
+      () {
+        for (final Object? bad in <Object?>[1, 0, null, 'yes', <Object?>[]]) {
+          final LanguageSwitches s = LanguageSwitches.fromJson('heb', <String, Object?>{
+            'on': true,
+            'placement': bad,
+          });
+          expect(s.placementAsked, isFalse, reason: '$bad');
+          expect(s.toJson().containsKey('placement'), isFalse, reason: '$bad');
+        }
+        expect(LanguageSwitches.fromJson('heb', <String, Object?>{'placement': true}).placementAsked, isTrue);
+      },
+    );
+
+    test('the four documents of testvectors/language-settings.json are in its refused list', () {
+      final List<String> refused = <String>[
+        for (final Object? d in vector['refused']! as List<Object?>) jsonEncode(d),
+      ];
+      for (final String doc in <String>[
+        '{"child-aaaa-0001":{"rus":{"q":{"soundsStrand":"yes"}}}}',
+        '{"child-aaaa-0001":{"eng":{"q":{"knowsLetters":"reads"}}}}',
+        '{"child-aaaa-0001":{"heb":{"placement":1}}}',
+        '{"child-aaaa-0001":{"heb":{"placement":null}}}',
+      ]) {
+        expect(refused, contains(doc));
       }
     });
   });

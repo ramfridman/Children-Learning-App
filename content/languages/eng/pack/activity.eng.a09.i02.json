@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_7",
+      "vo": "vo:eng.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "הִקְשַׁבְתֶּם יָפֶה!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:eng.en_car"
@@ -63,13 +63,14 @@
     "incorrect": [
       {
         "when": "default",
-        "vo": "vo:eng.he_fb_check",
+        "vo": "vo:eng.he_fb_where",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:eng.en_car"
       }
     ],
     "unsure": {
@@ -127,24 +128,28 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:car",
-        "label": "תְּמוּנָה"
+        "sprite": "asset:car_2",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_car"
       },
       {
         "id": "o2",
-        "sprite": "asset:bike",
+        "sprite": "asset:teddy",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_teddy",
         "misconception": "eng.lis.sem"
       },
       {
         "id": "o3",
-        "sprite": "asset:teddy",
+        "sprite": "asset:ball",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_ball",
         "misconception": "eng.lis.l1_guess"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true
+    "unsureAllowed": true,
+    "askWhere": true
   }
 }

@@ -6,6 +6,7 @@ import '../engine/engine.dart';
 import '../rewards/award.dart';
 import 'adventure_land.dart';
 import 'check_visits.dart';
+import 'language_gates.dart';
 import 'language_placement.dart' show PlacementStatus, placedLanguageLessons;
 import 'path_gate.dart';
 import 'placement.dart';
@@ -20,6 +21,7 @@ class LanguageCourse {
     required this.engine,
     this.assumed = const <String>{},
     this.placement,
+    this.gateContext = const GateContext(),
   });
 
   final PackContent content;
@@ -31,6 +33,23 @@ class LanguageCourse {
 
   /// Where the placement stands, or null when the pack has no placement game.
   final PlacementStatus? placement;
+
+  /// What the letters gates read besides the engine (docs/languages/frame.md section 3.3.6): the switches, the age.
+  final GateContext gateContext;
+
+  /// The letters gates as they stand now, read from the live engine: what they hold back and whether the child's letters are open.
+  ({Set<String> held, bool lettersOpen}) get gateState =>
+      courseGateState(content: content, engine: engine, context: gateContext, placement: placement);
+
+  /// The skills a closed letters gate holds back from this child (letters by age and level). A lesson that teaches one is not offered: the
+  /// path skips it and comes back when the gate opens. Nothing shows it as a lock.
+  Set<String> get held => gateState.held;
+
+  /// The child's letters are open in this course: the Meet screen may print the word in a chip.
+  bool get lettersOpen => gateState.lettersOpen;
+
+  /// The lessons of the course's path that a closed letters gate holds back.
+  Set<String> get heldLessons => heldLessonIds(content, held);
 
   String get course => content.course;
 }
@@ -88,11 +107,7 @@ AdventureInput adventureInput({
   final Map<AdventureLand, List<PathLesson>> paths = <AdventureLand, List<PathLesson>>{
     for (final TrophyLand land in TrophyLand.values)
       land: _pathOf(content, land.domain, lockedLessons(content, land.domain, engine.isUnlocked)),
-    for (final LanguageCourse c in playable)
-      LanguageLand(c.course): <PathLesson>[
-        for (final Lesson l in landPath(c.content, Course.languagesDomain))
-          PathLesson(l.id, lessonLevel(c.content, l, Course.languagesDomain)),
-      ],
+    for (final LanguageCourse c in playable) LanguageLand(c.course): languagePathOf(c),
   };
   final Map<String, int> seen = withPlaced(finished, playable);
   final List<Visit> visits = visitsFrom(
@@ -143,6 +158,16 @@ DueSkill? _checkVisit(
   band: band,
 );
 
+/// A language course's path for the rule: its lessons in order, each with its level, and the ones a closed letters gate holds back marked
+/// [PathLesson.locked] (the path skips them and comes back when the gate opens).
+List<PathLesson> languagePathOf(LanguageCourse c) {
+  final Set<String> held = c.heldLessons;
+  return <PathLesson>[
+    for (final Lesson l in landPath(c.content, Course.languagesDomain))
+      PathLesson(l.id, lessonLevel(c.content, l, Course.languagesDomain), locked: held.contains(l.id)),
+  ];
+}
+
 /// A land's path for the rule: its lessons in order, each with its level, and the ones the path gate holds back marked [locked].
 List<PathLesson> _pathOf(PackContent content, String domain, Set<String> locked) => <PathLesson>[
   for (final Lesson l in landPath(content, domain))
@@ -174,10 +199,7 @@ TodaysAdventure courseStopFor({
 }) {
   final int today = Engine.dayKey(now);
   final LanguageLand land = LanguageLand(course.course);
-  final List<PathLesson> path = <PathLesson>[
-    for (final Lesson l in landPath(course.content, Course.languagesDomain))
-      PathLesson(l.id, lessonLevel(course.content, l, Course.languagesDomain)),
-  ];
+  final List<PathLesson> path = languagePathOf(course);
   if (path.isEmpty) return const TodaysAdventure.none();
   final Map<String, int> seen = withPlaced(finished, <LanguageCourse>[course]);
   final List<Visit> visits = <Visit>[

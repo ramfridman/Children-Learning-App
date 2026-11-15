@@ -64,12 +64,7 @@ LangPack _pack({int perVisit = 8}) {
           <String, Object?>{'answer': 'knowsLetters', 'equals': 'some', 'level': 1},
         ],
       ),
-      strandJson(
-        'l',
-        'eng',
-        lit,
-        offer: <String, Object?>{'answer': 'knowsLetters', 'equals': 'some', 'minBand': 1},
-      ),
+      strandJson('l', 'eng', lit, offer: <String, Object?>{'answer': 'knowsLetters', 'equals': 'some'}),
     ]),
   );
   return p;
@@ -124,7 +119,7 @@ void main() {
       expect(d.strands[0].levels[0].assumes, <String>['ENG-A-01']);
       expect(d.strands[0].start.single.level, 1);
       expect(d.strands[1].offerAnswer, 'knowsLetters');
-      expect(d.strands[1].offerMinBand, 1);
+      expect(d.strands[1].offerEquals, 'some');
       expect(d.thanks.vo, 'vo:eng.placement.thanks');
     });
 
@@ -243,34 +238,28 @@ void main() {
       expect(placementGameOf(LangPack().content), isNull);
     });
 
-    test('the oral strand is always played; literacy only for a child whose parent said they know letters, in Band B or C', () {
-      final PackContent c = _pack().content;
-      expect(placementGameOf(c)!.strands.map((StrandPlan s) => s.id), <String>['o']);
-      expect(
-        placementGameOf(
-          c,
-          answers: const <String, String>{'knowsLetters': 'some'},
-        )!.strands.map((StrandPlan s) => s.id),
-        <String>['o'],
-        reason: 'Band A is never offered literacy',
-      );
-      expect(
-        placementGameOf(
-          c,
-          answers: const <String, String>{'knowsLetters': 'some'},
-          presentationBand: 1,
-        )!.strands.map((StrandPlan s) => s.id),
-        <String>['o', 'l'],
-      );
-      expect(
-        placementGameOf(
-          c,
-          answers: const <String, String>{'knowsLetters': 'no'},
-          presentationBand: 2,
-        )!.strands.map((StrandPlan s) => s.id),
-        <String>['o'],
-      );
-    });
+    test(
+      'the oral strand is always played; literacy for a child of any age whose parent said they know letters',
+      () {
+        final PackContent c = _pack().content;
+        expect(placementGameOf(c)!.strands.map((StrandPlan s) => s.id), <String>['o']);
+        expect(
+          placementGameOf(
+            c,
+            answers: const <String, String>{'knowsLetters': 'some'},
+          )!.strands.map((StrandPlan s) => s.id),
+          <String>['o', 'l'],
+          reason: 'level comes before age: no band or age is read (L7-8)',
+        );
+        expect(
+          placementGameOf(
+            c,
+            answers: const <String, String>{'knowsLetters': 'no'},
+          )!.strands.map((StrandPlan s) => s.id),
+          <String>['o'],
+        );
+      },
+    );
 
     test('a questionnaire answer sets where a staircase starts, and the staircase may still end lower', () {
       final PackContent c = _pack().content;

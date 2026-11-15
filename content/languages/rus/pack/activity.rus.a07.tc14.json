@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_apelsin"
@@ -94,8 +94,8 @@
       "апельсин"
     ],
     "foils": [
-      "яблоко",
-      "банан"
+      "груша",
+      "клубника"
     ],
     "clip": "vo:rus.w_apelsin",
     "heard": {
@@ -117,6 +117,27 @@
         }
       ],
       "target": "vo:rus.w_apelsin"
+    },
+    "meet": {
+      "position": 1,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:pear",
+          "clip": "vo:rus.w_grusha"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: תַּפּוּז"
+          }
+        ],
+        "target": "vo:rus.gl_tapuz"
+      },
+      "written": "апельсин"
     }
   },
   "answer": {

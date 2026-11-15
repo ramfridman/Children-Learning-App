@@ -94,8 +94,8 @@
       "уши"
     ],
     "foils": [
-      "нос",
-      "рот"
+      "живот",
+      "руки"
     ],
     "clip": "vo:rus.w_ushi",
     "heard": {
@@ -117,6 +117,30 @@
         }
       ],
       "target": "vo:rus.w_ushi"
+    },
+    "meet": {
+      "position": 0,
+      "size": 3,
+      "opener": {
+        "vo": "vo:rus.f44",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת."
+          }
+        ]
+      },
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: אָזְנַיִם"
+          }
+        ],
+        "target": "vo:rus.gl_oznayim"
+      },
+      "written": "уши"
     }
   },
   "answer": {

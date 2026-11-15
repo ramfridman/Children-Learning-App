@@ -151,6 +151,52 @@ ActivitySpec withTallStage(ActivitySpec base) {
   );
 }
 
+/// The board of a Meet screen (docs/design/l7-meet-find.md section 4.1): one big picture and nothing to choose. The picture takes the stage
+/// column of a phone from top to bottom (a strip of the words met earlier in the set stands at its end side), and the bubble, the guide, the
+/// microphone and the "I said it" tile become one corner on the start side: the tile stands under the bubble. A tablet keeps its card (the
+/// portrait's is 120 taller: it holds one picture and nothing else) and has the answer zone under it for the tile. The frame (controls,
+/// trail, bubble, guide, microphone) does not move.
+ActivitySpec withMeetStage(ActivitySpec base) {
+  if (base.stageIsCard) {
+    final bool landscape = base.boardHeight < 1000;
+    return base.withStageAndTiles(
+      stage: landscape ? base.stage : Rect.fromLTWH(base.stage.left, base.stage.top, base.stage.width, 420),
+      tilesLeft: landscape ? 194 : 24,
+      tilesTop: landscape ? 566 : 816,
+      tilesWidth: 772,
+    );
+  }
+  if (base.boardHeight > 380) {
+    return base.withStageAndTiles(
+      stage: const Rect.fromLTWH(24, 96, 377, 260),
+      tilesLeft: 413,
+      tilesTop: 256,
+      tilesWidth: 192,
+    );
+  }
+  return base.withStageAndTiles(
+    stage: const Rect.fromLTWH(24, 86, 264, 256),
+    tilesLeft: 300,
+    tilesTop: 238,
+    tilesWidth: 208,
+  );
+}
+
+/// The board of a phone at a picture choice whose pictures stand on the stage with no answer tiles (docs/design/l7-meet-find.md section 6.4):
+/// the stage takes the whole start column, from x 24 to 401 and down to 349 (the small phone: to 288 and 331), so that two pictures are 166
+/// points wide where they were about 95. A tablet's card is unchanged.
+ActivitySpec withPictureStage(ActivitySpec base) {
+  if (base.stageIsCard) return base;
+  return base.withStageAndTiles(
+    stage: base.boardHeight > 380
+        ? const Rect.fromLTWH(24, 96, 377, 253)
+        : const Rect.fromLTWH(24, 86, 264, 245),
+    tilesLeft: base.tilesLeft,
+    tilesTop: base.tilesTop,
+    tilesWidth: base.tilesWidth,
+  );
+}
+
 /// The board of a phone whose stage is under [height] (the small phone's is 104, the phone's 128) for a template that needs the room, as
 /// the bins to sort into or the two rows of a pattern to copy: the stage grows to [height] and the tiles stand lower by what it takes,
 /// as far as the edge where no hotspot may be ([tilesBox] is the height of a tile with its tap margin). A tablet's card and a stage that

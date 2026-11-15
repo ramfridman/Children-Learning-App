@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_noski",
+    "target": "vo:rus.w_botinki",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
-      "target": "vo:rus.w_noski"
+      "target": "vo:rus.w_botinki"
     },
     "incorrect": [
       {
@@ -80,24 +80,24 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_noski"
+      "target": "vo:rus.w_botinki"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:socks"
+      "sprite": "asset:shoes"
     }
   },
   "say": {
     "forms": [
-      "носки"
+      "ботинки"
     ],
     "foils": [
-      "ботинки",
-      "сапоги"
+      "куртка",
+      "штаны"
     ],
-    "clip": "vo:rus.w_noski",
+    "clip": "vo:rus.w_botinki",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_noski"
+      "target": "vo:rus.w_botinki"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +116,32 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_noski"
+      "target": "vo:rus.w_botinki"
+    },
+    "meet": {
+      "position": 2,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:jacket",
+          "clip": "vo:rus.w_kurtka"
+        },
+        {
+          "sprite": "asset:trousers",
+          "clip": "vo:rus.w_shtany"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: נַעֲלַיִם"
+          }
+        ],
+        "target": "vo:rus.gl_naalayim"
+      },
+      "written": "ботинки"
     }
   },
   "answer": {

@@ -108,6 +108,13 @@
       "review": "text-ready"
     },
     {
+      "id": "he-fb-where",
+      "vo": "vo:eng.he_fb_where",
+      "he": "וְאֵיפֹה",
+      "voice": "ואיפה",
+      "review": "text-ready"
+    },
+    {
       "id": "he-gl-apple",
       "vo": "vo:eng.he_gl_apple",
       "he": "תַּפּוּחַ",
@@ -222,8 +229,8 @@
     {
       "id": "he-gl-clap",
       "vo": "vo:eng.he_gl_clap",
-      "he": "מְחִיאַת כַּפַּיִם",
-      "voice": "מְחִיאַת כַּפַּיִם",
+      "he": "מַחֲאוּ כַּפַּיִם",
+      "voice": "מַחֲאוּ כַּפַּיִם",
       "review": "text-ready"
     },
     {
@@ -402,6 +409,69 @@
       "review": "text-ready"
     },
     {
+      "id": "he-gl-isit-cat",
+      "vo": "vo:eng.he_gl_isit_cat",
+      "he": "זֶה חָתוּל?",
+      "voice": "זה חָתוּל?",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-isit-duck",
+      "vo": "vo:eng.he_gl_isit_duck",
+      "he": "זֶה בַּרְוָז?",
+      "voice": "זה בַּרְוָז?",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-its-apple",
+      "vo": "vo:eng.he_gl_its_apple",
+      "he": "זֶה תַּפּוּחַ.",
+      "voice": "זה תַּפּוּחַ.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-its-ball",
+      "vo": "vo:eng.he_gl_its_ball",
+      "he": "זֶה כַּדּוּר.",
+      "voice": "זה כַּדּוּר.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-its-book",
+      "vo": "vo:eng.he_gl_its_book",
+      "he": "זֶה סֵפֶר.",
+      "voice": "זה סֵפֶר.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-its-car",
+      "vo": "vo:eng.he_gl_its_car",
+      "he": "זוֹ מְכוֹנִית.",
+      "voice": "זו מְכוֹנִית.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-its-duck",
+      "vo": "vo:eng.he_gl_its_duck",
+      "he": "זֶה בַּרְוָז.",
+      "voice": "זה בַּרְוָז.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-its-egg",
+      "vo": "vo:eng.he_gl_its_egg",
+      "he": "זוֹ בֵּיצָה.",
+      "voice": "זו בֵּיצָה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-its-kite",
+      "vo": "vo:eng.he_gl_its_kite",
+      "he": "זֶה עֲפִיפוֹן.",
+      "voice": "זה עֲפִיפוֹן.",
+      "review": "text-ready"
+    },
+    {
       "id": "he-gl-juice",
       "vo": "vo:eng.he_gl_juice",
       "he": "מִיץ",
@@ -455,6 +525,13 @@
       "vo": "vo:eng.he_gl_mouth",
       "he": "פֶּה",
       "voice": "פֶּה",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-no",
+      "vo": "vo:eng.he_gl_no",
+      "he": "לֹא",
+      "voice": "לֹא",
       "review": "text-ready"
     },
     {
@@ -570,6 +647,13 @@
       "review": "text-ready"
     },
     {
+      "id": "he-gl-whats-this",
+      "vo": "vo:eng.he_gl_whats_this",
+      "he": "מַה זֶּה?",
+      "voice": "מה זה?",
+      "review": "text-ready"
+    },
+    {
       "id": "he-gl-yellow",
       "vo": "vo:eng.he_gl_yellow",
       "he": "צָהֹב",
@@ -577,17 +661,31 @@
       "review": "text-ready"
     },
     {
+      "id": "he-gl-yes",
+      "vo": "vo:eng.he_gl_yes",
+      "he": "כֵּן",
+      "voice": "כֵּן",
+      "review": "text-ready"
+    },
+    {
       "id": "he-hint-again",
       "vo": "vo:eng.he_hint_again",
       "he": "הַקְשִׁיבוּ שׁוּב, לְאַט.",
-      "voice": "הקשיבו שוב, לאט.",
+      "voice": "הַקְשִׁיבוּ שוב, לאט.",
       "review": "text-ready"
     },
     {
       "id": "he-hint-beats",
       "vo": "vo:eng.he_hint_beats",
       "he": "בּוֹאוּ נִמְחָא כַּפַּיִם לְכׇל חֵלֶק, לְאַט.",
-      "voice": "בואו נמחא כפיים לכל חלק, לאט.",
+      "voice": "בואו נִמְחָא כפיים לכל חלק, לאט.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-hint-hebrew",
+      "vo": "vo:eng.he_hint_hebrew",
+      "he": "בְּעִבְרִית:",
+      "voice": "בעברית:",
       "review": "text-ready"
     },
     {
@@ -608,21 +706,21 @@
       "id": "he-ins-box",
       "vo": "vo:eng.he_ins_box",
       "he": "מַה יֵּשׁ בַּקֻּפְסָה? הַקְשִׁיבוּ לְפִיפּ.",
-      "voice": "מה יש בקופסה? הקשיבו לפיפ.",
+      "voice": "מה יש בקופסה? הַקְשִׁיבוּ לְפִיפּ.",
       "review": "text-ready"
     },
     {
       "id": "he-ins-box-pick",
       "vo": "vo:eng.he_ins_box_pick",
       "he": "אָז מַה יֵּשׁ בַּקֻּפְסָה? גְּעוּ בַּתְּמוּנָה.",
-      "voice": "אז מה יש בקופסה? געו בתמונה.",
+      "voice": "אז מה יש בקופסה? גְּעוּ בתמונה.",
       "review": "text-ready"
     },
     {
       "id": "he-ins-bubble",
       "vo": "vo:eng.he_ins_bubble",
       "he": "מָה עוֹנִים? גְּעוּ בַּבֻּעָה.",
-      "voice": "מה עונים? געו בבועה.",
+      "voice": "מה עונים? גְּעוּ בבועה.",
       "review": "text-ready"
     },
     {
@@ -636,84 +734,84 @@
       "id": "he-ins-count",
       "vo": "vo:eng.he_ins_count",
       "he": "בּוֹאוּ נִסְפֹּר בְּאַנְגְּלִית. גְּעוּ בְּכׇל אֶחָד.",
-      "voice": "בואו נספור באנגלית. געו בכל אֶחָד.",
+      "voice": "בואו נספור באנגלית. גְּעוּ בכל אֶחָד.",
       "review": "text-ready"
     },
     {
       "id": "he-ins-do-too",
       "vo": "vo:eng.he_ins_do_too",
       "he": "עַכְשָׁו אַתֶּם! עֲשׂוּ אֶת זֶה, וְאָז גְּעוּ בַּכַּפְתּוֹר \"סִיַּמְתִּי\".",
-      "voice": "עכשיו אתם, עֲשׂוּ את זה, ואז געו בכפתור — סיימתי.",
+      "voice": "עכשיו אתם, עֲשׂוּ את זה, ואז גְּעוּ בכפתור — סיימתי.",
       "review": "text-ready"
     },
     {
       "id": "he-ins-drum",
       "vo": "vo:eng.he_ins_drum",
       "he": "הַקְשִׁיבוּ לַמִּלָּה, וְתוֹפְפוּ פַּעַם אַחַת לְכׇל חֵלֶק.",
-      "voice": "הקשיבו למילה, ותופפו פעם אַחַת לכל חלק.",
+      "voice": "הַקְשִׁיבוּ למילה, וְתוֹפְפוּ פעם אַחַת לכל חלק.",
       "review": "text-ready"
     },
     {
       "id": "he-ins-face",
       "vo": "vo:eng.he_ins_face",
       "he": "הַקְשִׁיבוּ, וּגְעוּ בַּפַּרְצוּף הַנָּכוֹן.",
-      "voice": "הקשיבו, וגעו בפרצוף הנכון.",
+      "voice": "הַקְשִׁיבוּ, וּגְעוּ בפרצוף הנכון.",
       "review": "text-ready"
     },
     {
       "id": "he-ins-find-said",
       "vo": "vo:eng.he_ins_find_said",
       "he": "וְעַכְשָׁו גְּעוּ בַּתְּמוּנָה שֶׁל הַמִּלָּה.",
-      "voice": "ועכשיו געו בתמונה של המילה.",
+      "voice": "ועכשיו גְּעוּ בתמונה של המילה.",
       "review": "text-ready"
     },
     {
       "id": "he-ins-give",
       "vo": "vo:eng.he_ins_give",
       "he": "הַקְשִׁיבוּ, וְגִרְרוּ אֶת הָאֹכֶל לְפִיפּ.",
-      "voice": "הקשיבו, וגררו את הָאֹכֶל לפיפ.",
+      "voice": "הַקְשִׁיבוּ, וְגִרְרוּ את הָאֹכֶל לְפִיפּ.",
       "review": "text-ready"
     },
     {
       "id": "he-ins-give-it",
       "vo": "vo:eng.he_ins_give_it",
       "he": "הַקְשִׁיבוּ, וְגִרְרוּ לְפִיפּ:",
-      "voice": "הקשיבו, וגררו לפיפ:",
-      "review": "needs-editor"
+      "voice": "הַקְשִׁיבוּ, וְגִרְרוּ לְפִיפּ:",
+      "review": "text-ready"
     },
     {
       "id": "he-ins-how-many",
       "vo": "vo:eng.he_ins_how_many",
       "he": "כַּמָּה יֵשׁ? הַקְשִׁיבוּ לַכַּפְתּוֹרִים, וּגְעוּ בַּמִּסְפָּר הַנָּכוֹן.",
-      "voice": "כמה יש? הקשיבו לכפתורים, וגעו במספר הנכון.",
+      "voice": "כמה יש? הַקְשִׁיבוּ לכפתורים, וּגְעוּ במספר הנכון.",
       "review": "text-ready"
     },
     {
       "id": "he-ins-its-a",
       "vo": "vo:eng.he_ins_its_a",
-      "he": "מָה זֶה? הַקְשִׁיבוּ לַתְּשׁוּבָה, וּגְעוּ בַּתְּמוּנָה.",
-      "voice": "מה זה? הקשיבו לתשובה, וגעו בתמונה.",
-      "review": "needs-editor"
+      "he": "מַה זֶּה? הַקְשִׁיבוּ לַתְּשׁוּבָה, וּגְעוּ בַּתְּמוּנָה.",
+      "voice": "מה זה? הַקְשִׁיבוּ לתשובה, וּגְעוּ בתמונה.",
+      "review": "text-ready"
     },
     {
       "id": "he-ins-listen-tap",
       "vo": "vo:eng.he_ins_listen_tap",
       "he": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה.",
-      "voice": "הקשיבו, וגעו בתמונה.",
+      "voice": "הַקְשִׁיבוּ, וּגְעוּ בתמונה.",
       "review": "text-ready"
     },
     {
       "id": "he-ins-make-do",
       "vo": "vo:eng.he_ins_make_do",
       "he": "הַקְשִׁיבוּ, וְהַרְאוּ לְמִיקָה מַה לַּעֲשׂוֹת: גְּעוּ בַּכַּפְתּוֹר.",
-      "voice": "הקשיבו, והראו למיקה מה לַעֲשׂוֹת: געו בכפתור.",
+      "voice": "הַקְשִׁיבוּ, וְהַרְאוּ למיקה מה לַעֲשׂוֹת: גְּעוּ בכפתור.",
       "review": "text-ready"
     },
     {
       "id": "he-ins-pairs",
       "vo": "vo:eng.he_ins_pairs",
       "he": "מִצְאוּ שְׁתֵּי תְּמוּנוֹת שֶׁהוֹלְכוֹת יַחַד.",
-      "voice": "מצאו שְׁתֵּי תמונות שהולכות יחד.",
+      "voice": "מִצְאוּ שְׁתֵּי תמונות שהולכות יחד.",
       "review": "text-ready"
     },
     {
@@ -731,6 +829,13 @@
       "review": "text-ready"
     },
     {
+      "id": "he-ins-sort",
+      "vo": "vo:eng.he_ins_sort",
+      "he": "שִׂימוּ כׇּל תְּמוּנָה בַּמָּקוֹם שֶׁלָּהּ.",
+      "voice": "שִׂימוּ כל תמונה במקום שלה.",
+      "review": "text-ready"
+    },
+    {
       "id": "he-ins-story",
       "vo": "vo:eng.he_ins_story",
       "he": "בּוֹאוּ נִשְׁמַע סִפּוּר. אֶפְשָׁר לָגַעַת בַּתְּמוּנוֹת.",
@@ -741,28 +846,28 @@
       "id": "he-ins-strip",
       "vo": "vo:eng.he_ins_strip",
       "he": "כַּמָּה תֻּפִּים? גְּעוּ בַּשּׁוּרָה הַנְּכוֹנָה.",
-      "voice": "כמה תופים? געו בשורה הנכונה.",
+      "voice": "כמה תופים? גְּעוּ בשורה הנכונה.",
       "review": "text-ready"
     },
     {
       "id": "he-ins-thumbs",
       "vo": "vo:eng.he_ins_thumbs",
-      "he": "כֵּן אוֹ לֹא? גְּעוּ בַּאֲגוּדָל.",
-      "voice": "כן או לא? געו באגודל.",
+      "he": "כֵּן אוֹ לֹא? גְּעוּ בָּאֲגוּדָל.",
+      "voice": "כן או לא? גְּעוּ באגודל.",
       "review": "text-ready"
     },
     {
       "id": "he-ins-touch-body",
       "vo": "vo:eng.he_ins_touch_body",
       "he": "הַקְשִׁיבוּ, וּגְעוּ בַּגּוּף שֶׁל מִיקָה.",
-      "voice": "הקשיבו, וגעו בגוף של מיקה.",
+      "voice": "הַקְשִׁיבוּ, וּגְעוּ בגוף של מיקה.",
       "review": "text-ready"
     },
     {
       "id": "he-ins-whats-this",
       "vo": "vo:eng.he_ins_whats_this",
       "he": "הַקְשִׁיבוּ לַשְּׁאֵלָה וְלַתְּשׁוּבָה, וּגְעוּ בַּתְּמוּנָה.",
-      "voice": "הקשיבו לשאלה ולתשובה, וגעו בתמונה.",
+      "voice": "הַקְשִׁיבוּ לשאלה ולתשובה, וּגְעוּ בתמונה.",
       "review": "text-ready"
     },
     {
@@ -770,13 +875,20 @@
       "vo": "vo:eng.he_ins_which_word",
       "he": "אֵיזוֹ מִלָּה מַתְאִימָה לַתְּמוּנָה?",
       "voice": "איזו מילה מתאימה לתמונה?",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-ins-who-doing",
       "vo": "vo:eng.he_ins_who_doing",
       "he": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה שֶׁל הַפְּעֻלָּה.",
-      "voice": "הקשיבו, וגעו בתמונה של הפעולה.",
+      "voice": "הַקְשִׁיבוּ, וּגְעוּ בתמונה של הפעולה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-meet-open",
+      "vo": "vo:eng.he_meet_open",
+      "he": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת.",
+      "voice": "בואו נלמד מילים חדשות.",
       "review": "text-ready"
     },
     {
@@ -784,7 +896,7 @@
       "vo": "vo:eng.he_pl_thanks",
       "he": "תּוֹדָה! מַמְשִׁיכִים.",
       "voice": "תודה, ממשיכים.",
-      "review": "needs-editor"
+      "review": "text-ready"
     },
     {
       "id": "he-q-ball-end",
@@ -818,8 +930,8 @@
       "id": "pass",
       "vo": "vo:eng.pass",
       "he": "זֶה בְּסֵדֶר!",
-      "voice": "זה בסדר!",
-      "review": "needs-editor"
+      "voice": "זה בסדר.",
+      "review": "text-ready"
     }
   ],
   "targetClips": [
@@ -1342,6 +1454,20 @@
       "ipa": "/ˈɛləfənt/"
     },
     {
+      "id": "en-eyes",
+      "vo": "vo:eng.en_eyes",
+      "shown": "eyes",
+      "say": "eyes.",
+      "ipa": "/aɪz/"
+    },
+    {
+      "id": "en-eyes-slow",
+      "vo": "vo:eng.en_eyes_slow",
+      "shown": "eyes",
+      "say": "eyes.",
+      "ipa": "/aɪz/"
+    },
+    {
       "id": "en-feet",
       "vo": "vo:eng.en_feet",
       "shown": "feet",
@@ -1496,6 +1622,20 @@
       "ipa": "/ɡɹin/"
     },
     {
+      "id": "en-hands",
+      "vo": "vo:eng.en_hands",
+      "shown": "hands",
+      "say": "hands.",
+      "ipa": "/hændz/"
+    },
+    {
+      "id": "en-hands-slow",
+      "vo": "vo:eng.en_hands_slow",
+      "shown": "hands",
+      "say": "hands.",
+      "ipa": "/hændz/"
+    },
+    {
       "id": "en-happy",
       "vo": "vo:eng.en_happy",
       "shown": "happy",
@@ -1512,6 +1652,13 @@
     {
       "id": "en-head",
       "vo": "vo:eng.en_head",
+      "shown": "head",
+      "say": "head.",
+      "ipa": "/hɛd/"
+    },
+    {
+      "id": "en-head-slow",
+      "vo": "vo:eng.en_head_slow",
       "shown": "head",
       "say": "head.",
       "ipa": "/hɛd/"
@@ -1862,6 +2009,13 @@
     {
       "id": "en-mouth",
       "vo": "vo:eng.en_mouth",
+      "shown": "mouth",
+      "say": "mouth.",
+      "ipa": "/maʊθ/"
+    },
+    {
+      "id": "en-mouth-slow",
+      "vo": "vo:eng.en_mouth_slow",
       "shown": "mouth",
       "say": "mouth.",
       "ipa": "/maʊθ/"
@@ -2307,5 +2461,14 @@
       "say": "Yum!",
       "ipa": "/jʌm/"
     }
+  ],
+  "puppetClips": [
+    "en-how-are-you",
+    "en-i-like-bananas",
+    "en-im-five-how-old",
+    "en-pip-hello",
+    "en-this-is-my-family",
+    "en-whats-your-name",
+    "en-who-in-family"
   ]
 }

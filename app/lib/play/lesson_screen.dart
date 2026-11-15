@@ -28,6 +28,7 @@ import '../engine/age.dart' show PresentationStage, SchoolStage;
 import '../engine/course.dart';
 import '../engine/presentation.dart' show maxChoicesByStage;
 import '../data/app_database.dart';
+import '../data/behaviour_notes.dart';
 import '../design/app_text.dart';
 import '../design/board.dart';
 import '../design/components.dart';
@@ -72,6 +73,8 @@ import 'lesson_controller.dart';
 import 'name_options.dart';
 import 'clock_set_session.dart';
 import 'lesson_voice.dart';
+import 'meet_rules.dart';
+import 'meet_session.dart';
 import 'math_signs.dart';
 import 'match_pairs_session.dart';
 import 'shop_pay_session.dart';
@@ -173,6 +176,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   /// mid-activity. A new look (a birthday month, a confirmed stage, a look letter) shows at the next visit.
   LookNow? _look;
   StageSpec? _stageSpec;
+
+  /// This visit introduces the lesson's words: the child has not finished this lesson before (see [LessonController.introVisit]).
+  bool _introVisit = true;
   IdleLadder? _ladder;
   IdleStep? _idleStep;
   bool _ring = false;
@@ -217,6 +223,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         widget.course == Course.core ? Future<FamilyLanguages?>.value() : ref.read(languagesProvider.future),
       ).wait;
       final int? courseBand = languages?.of(widget.profileId, widget.course).band;
+      // A lesson the child has finished before is a later visit: its Meet screens come again, but nothing is a first meeting any more.
+      _introVisit = !(await db.sessionsOf(widget.profileId))
+          .any((Session s) => s.plan == 'lesson:${widget.lessonId}' && s.endReason == 'finished');
       final LookNow look = await lookFor(
         db,
         widget.profileId,
@@ -290,6 +299,15 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     }
   }
 
+  /// The pause between two beats of a Meet screen, by the look (docs/design/l7-meet-find.md section 4.2): 400 ms for the youngest, 250 for the oldest.
+  Duration _breathOf(PresentationStage stage) => Duration(
+    milliseconds: switch (stage) {
+      PresentationStage.p1 || PresentationStage.p2 => 400,
+      PresentationStage.p3 => 300,
+      PresentationStage.p4 => 250,
+    },
+  );
+
   LessonVoice _makeVoice(LessonController controller) {
     final bool bandA = ref.read(activeProfileProvider)?.ageBand == 0;
     return LessonVoice(
@@ -323,7 +341,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     _sayStep?.removeListener(_sayChanged);
     _sayStep?.dispose();
     _sayStep = null;
-    if (!_sayOn || _quiet.echoOnly || a.teach) return null;
+    // A hearing screen has no microphone; a Meet screen has one (feedback only) when the parent turned voice on for the language.
+    if (!_sayOn || (_quiet.echoOnly && !a.teach) || a.hear) return null;
     final bool bandA = ref.read(activeProfileProvider)?.ageBand == 0;
     final SayStepController step = SayStepController(
       engine: ref.read(languageSpeechEngineProvider(a.course)),
@@ -332,7 +351,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       beforeListen: _director.stop,
       onOutcome: (String outcome) => unawaited(_recordListen('say', outcome)),
       onResult: (SayResult r) async {
-        _quiet.record(r);
+        // A Meet screen's microphone is feedback only: it never counts toward the visit's quiet fallback.
+        if (!a.teach) {
+          _quiet.record(r);
+        }
         if (r == SayResult.confident) {
           await controller.sayHeard();
         } else {
@@ -453,12 +475,20 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
 
   void _onIdle(LessonController c, IdleStep step) {
     final StageSpec? stage = _stageSpec;
-    if (!mounted || stage == null || c.finished || c.noHelp) return;
+    final bool meet = _session is MeetSession;
+    // A Meet screen has no help but is still given the ladder's prompts (it has no "not sure", so no offer).
+    if (!mounted || stage == null || c.finished || (c.noHelp && !meet)) return;
     _ladderBusy = true;
     try {
       switch (step) {
         case IdleStep.firstPrompt || IdleStep.secondPrompt:
-          // Nitzi says the question again (the item's own line, no new voice line), the place it comes from rings once, a hand points.
+          // Nitzi says the question again (the item's own line, no new voice line), the place it comes from rings once, a hand points. On a
+          // Meet screen she says "let's say it together" and the tile breathes, with no hand (docs/design/l7-meet-find.md section 3.6).
+          final TemplateSession? now = _session;
+          if (now is MeetSession) {
+            now.idlePrompt();
+            break;
+          }
           c.replayPrompt();
           _ringTimer?.cancel();
           if (!MediaQuery.disableAnimationsOf(context)) {
@@ -468,6 +498,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             });
           }
         case IdleStep.offer:
+          if (meet) break;
           c.showCaption(He.idleOffer.text);
         case IdleStep.softPause:
           break;
@@ -546,6 +577,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       profileId: widget.profileId,
       sessionId: _visitId,
       record: ref.read(attemptSinkProvider),
+      // An answer that is no evidence (a first meeting with a word) is noted on this phone for the parent's alerts, and nowhere else (SEC-L7-1).
+      recordNote: (BehaviourNote note) async =>
+          (await ref.read(databaseProvider.future)).addBehaviourNote(widget.profileId, note),
       clock: ref.read(clockProvider),
       tutor: _tutor,
       tutorContext: _tutor == null ? null : _tutorContext(guide, content),
@@ -553,6 +587,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       flow: widget.flow,
       route: served(_lessonSkill(content, widget.mission ?? content.lessons[widget.lessonId]!)),
       routeOfSkill: served,
+      introVisit: _introVisit,
       // The visit's quiet fallback turns a say step that is picture first back into echo, silently.
       echoOnly: () => _quiet.echoOnly,
       // The child's first name goes on the tiles of an own-name item on this phone and nowhere else (decision 25).
@@ -819,6 +854,16 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         TraceActivity() => TraceSession(c, a),
         LetterWriteActivity() => LetterWriteSession(c, a),
         GiveNActivity() => GiveNSession(c, a),
+        SayItActivity() when a.meetScreen => MeetSession(
+          c,
+          a,
+          say: _makeSayStep(c, a),
+          showWord: meetShowsWord(
+            look: _presentationBand(a),
+            lettersOpen: ref.read(meetLettersOpenProvider)(widget.profileId, a.course),
+          ),
+          breath: _breathOf(_stageSpec!.stage),
+        ),
         SayItActivity() => SayItSession(c, a, say: _makeSayStep(c, a)),
       };
       _session!.playClips = _playClips;
@@ -900,7 +945,12 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   /// taken away because listening went badly: a young child is often misheard, and a missing mic would only teach them
   /// that voice does not work.
   Widget? _mic(ActivitySpec spec, TemplateSession session, Activity activity) {
-    if (activity is SayItActivity && session is SayItSession) return _sayMic(spec, session);
+    if (activity is SayItActivity && session is SayItSession) {
+      return _sayMic(spec, session.say, session.hasMic);
+    }
+    if (activity is SayItActivity && session is MeetSession) {
+      return session.controlsShown && !session.acted ? _sayMic(spec, session.say, session.hasMic) : null;
+    }
     final LessonVoice? v = _voice;
     if (v == null || !activity.voiceAnswer) return null;
     final VoiceAnswerController a = v.answer;
@@ -935,9 +985,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   /// The microphone of a say-it step: there only when the step has one (a parent's switch for this language is on and its model is on
   /// the phone), and then it opens on a tap of the child, never by itself. It fades after the one more try, and is never taken away
   /// otherwise.
-  Widget? _sayMic(ActivitySpec spec, SayItSession session) {
-    final SayStepController? step = session.say;
-    if (step == null || !session.hasMic) return null;
+  Widget? _sayMic(ActivitySpec spec, SayStepController? step, bool hasMic) {
+    if (step == null || !hasMic) return null;
     final MicLook look = switch (step.state) {
       SayState.listening => MicLook.listening,
       SayState.thinking => MicLook.thinking,
@@ -1066,6 +1115,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             ? CharacterState.sleepy
             : _idleStep == IdleStep.secondPrompt
             ? CharacterState.talk
+            : session is MeetSession
+            ? session.pose
             : CharacterState.idle;
         // The font of the item's text (Secular One for a transfer check of letters in another face). Over it, a touch anywhere on the
         // screen is seen by the session first (it ends a demonstration to watch); it is no answer and goes on to what was touched.
@@ -1096,7 +1147,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
                       course: controller.current.course,
                     ),
               trailTotal: controller.trailLength,
-              trailDone: controller.finished ? controller.trailLength : controller.index,
+              trailDone: controller.trailDone,
               onHome: _home,
               showHelp: !controller.noHelp,
               // A say-it step has nothing to get wrong and so no hints: its lamp says the word again.
@@ -1105,7 +1156,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
                   : (session is SayItSession ? session.onReplay : controller.showHint),
               hintGlow: helpOffered || _idleStep == IdleStep.offer,
               promptRing: _ring,
-              idleHand: _idleStep != null && idleHandShows(stageSpec, _idleStep!) ? idleHand : null,
+              idleHand: _idleStep != null && idleHandShows(stageSpec, _idleStep!) && session is! MeetSession
+                  ? idleHand
+                  : null,
               onShowMe: controller.finished || controller.noHelp
                   ? null
                   : (controller.current is SayItActivity

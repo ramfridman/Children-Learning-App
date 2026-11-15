@@ -1,4 +1,5 @@
 import '../data/app_database.dart';
+import '../data/behaviour_notes.dart';
 import '../play/response_code.dart';
 import '../speech/alert_words.dart';
 import 'parent_rules.dart';
@@ -86,12 +87,16 @@ class ChildHistory {
     required this.ageBand,
     required this.sessions,
     required this.attempts,
+    this.notes = const <BehaviourNote>[],
   });
 
   final String profileId;
   final int ageBand;
   final List<Session> sessions;
   final List<Attempt> attempts;
+
+  /// The answers that were no evidence (a first meeting with a word), noted only for [behaviourAlerts] (SEC-L7-1).
+  final List<BehaviourNote> notes;
 }
 
 String _day(DateTime d) => '${d.year}-${d.month}-${d.day}';
@@ -166,23 +171,28 @@ List<AlertDraft> gateAlerts(List<LocalEvent> events) => <AlertDraft>[
 ///   last one, or eight answers in half a minute (rapid tapping).
 List<AlertDraft> behaviourAlerts(ChildHistory child) {
   final List<AlertDraft> out = <AlertDraft>[];
-  final Map<int, List<Attempt>> bySession = <int, List<Attempt>>{};
+  // Every answer of a visit as the alerts see it: the answers written as evidence and the answers that were no evidence (a first meeting with
+  // a word writes no attempt, but the child's pace and their taps are the same, SEC-L7-1).
+  final Map<int, List<_Answer>> bySession = <int, List<_Answer>>{};
   for (final Attempt a in child.attempts) {
     // The second tag of one move is not a second answer (SEC-L5-3).
     if (a.sessionId != null && !ResponseCode.isAlso(a.response)) {
-      (bySession[a.sessionId!] ??= <Attempt>[]).add(a);
+      (bySession[a.sessionId!] ??= <_Answer>[]).add(_Answer(a.at, a.result, a.durationMs, a.activityId));
     }
   }
+  for (final BehaviourNote n in child.notes) {
+    (bySession[n.sessionId] ??= <_Answer>[]).add(_Answer(n.at, n.result, n.durationMs, n.activityId));
+  }
   final Map<int, Session> sessions = <int, Session>{for (final Session s in child.sessions) s.id: s};
-  for (final MapEntry<int, List<Attempt>> e in bySession.entries) {
-    final List<Attempt> a = List<Attempt>.of(e.value)..sort((Attempt x, Attempt y) => x.at.compareTo(y.at));
+  for (final MapEntry<int, List<_Answer>> e in bySession.entries) {
+    final List<_Answer> a = List<_Answer>.of(e.value)..sort((_Answer x, _Answer y) => x.at.compareTo(y.at));
     // Guessing.
     bool guessing = false;
     for (int i = 0; i + 6 <= a.length && !guessing; i++) {
-      final List<Attempt> run = a.sublist(i, i + 6);
+      final List<_Answer> run = a.sublist(i, i + 6);
       guessing =
-          run.every((Attempt x) => x.durationMs > 0 && x.durationMs < 1500) &&
-          run.where((Attempt x) => x.result == 'incorrect').length >= 4;
+          run.every((_Answer x) => x.durationMs > 0 && x.durationMs < 1500) &&
+          run.where((_Answer x) => x.result == 'incorrect').length >= 4;
     }
     if (guessing) {
       out.add(
@@ -198,7 +208,7 @@ List<AlertDraft> behaviourAlerts(ChildHistory child) {
     // Frustration: wrong three in a row, then gone.
     bool upset = false;
     int wrongRun = 0;
-    for (final Attempt x in a) {
+    for (final _Answer x in a) {
       wrongRun = x.result == 'incorrect' ? wrongRun + 1 : 0;
     }
     final Session? s = sessions[e.key];
@@ -222,6 +232,16 @@ List<AlertDraft> behaviourAlerts(ChildHistory child) {
     }
   }
   return out;
+}
+
+/// One answer as [behaviourAlerts] reads it, whether it was written as evidence or only noted.
+class _Answer {
+  const _Answer(this.at, this.result, this.durationMs, this.activityId);
+
+  final DateTime at;
+  final String result;
+  final int durationMs;
+  final String activityId;
 }
 
 /// A long absence (no play for seven days after a child had played at least three times) or a sudden drop (this week's

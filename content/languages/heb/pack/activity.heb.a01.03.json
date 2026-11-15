@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_5",
+      "vo": "vo:heb.ok_6",
       "caption": [
         {
           "t": "he",
-          "v": "מְצָאתֶם!"
+          "v": "יוֹפִי שֶׁל הַקְשָׁבָה!"
         }
       ],
       "target": "vo:heb.heb_a_s2_r1"
@@ -192,18 +192,21 @@
       {
         "id": "o1",
         "sprite": "asset:egg",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_beitsa"
       },
       {
         "id": "o2",
         "sprite": "asset:spoon",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_kaf",
         "misconception": "heb.ol.story_seen"
       },
       {
         "id": "o3",
         "sprite": "asset:apple",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_tapuach",
         "misconception": "heb.ol.story_world"
       }
     ],

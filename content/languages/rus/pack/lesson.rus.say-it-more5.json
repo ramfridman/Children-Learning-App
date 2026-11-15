@@ -22,7 +22,8 @@
     "rus.a15.23",
     "rus.a15.23t",
     "rus.a15.24",
-    "rus.a15.24t"
+    "rus.a15.24t",
+    "rus.a15.h01"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -34,5 +35,5 @@
       }
     ]
   },
-  "sequence": 54
+  "sequence": 74
 }

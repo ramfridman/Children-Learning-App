@@ -15,9 +15,13 @@
     "RUS-A-20"
   ],
   "items": [
+    "rus.a20.r02",
+    "rus.a20.r03",
+    "rus.a20.10",
+    "rus.a20.12",
     "rus.a20.13",
     "rus.a20.14",
-    "rus.a20.15",
+    "rus.a20.23",
     "rus.a20.16"
   ],
   "estimatedMinutes": 4,
@@ -30,5 +34,5 @@
       }
     ]
   },
-  "sequence": 69
+  "sequence": 93
 }

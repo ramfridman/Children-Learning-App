@@ -15,9 +15,11 @@
     "RUS-A-08"
   ],
   "items": [
-    "rus.a08.11",
-    "rus.a08.12",
-    "rus.a08.13"
+    "rus.a08.r07",
+    "rus.a08.r08",
+    "rus.a08.d02",
+    "rus.a08.s04",
+    "rus.a08.b01"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,5 +31,5 @@
       }
     ]
   },
-  "sequence": 33
+  "sequence": 45
 }

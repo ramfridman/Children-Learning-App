@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_arbuz"
@@ -94,8 +94,8 @@
       "арбуз"
     ],
     "foils": [
-      "клубника",
-      "виноград"
+      "виноград",
+      "морковь"
     ],
     "clip": "vo:rus.w_arbuz",
     "heard": {
@@ -117,6 +117,27 @@
         }
       ],
       "target": "vo:rus.w_arbuz"
+    },
+    "meet": {
+      "position": 1,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:grapes",
+          "clip": "vo:rus.w_vinograd"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: אֲבַטִּיחַ"
+          }
+        ],
+        "target": "vo:rus.gl_avatiach"
+      },
+      "written": "арбуз"
     }
   },
   "answer": {

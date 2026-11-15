@@ -15,11 +15,14 @@
     "RUS-A-11"
   ],
   "items": [
+    "rus.a11.f01",
+    "rus.a11.f02",
+    "rus.a11.f03",
     "rus.a11.06",
-    "rus.a11.07",
-    "rus.a11.08",
-    "rus.a11.09",
-    "rus.a11.11"
+    "rus.a11.f04",
+    "rus.a11.11",
+    "rus.a11.01",
+    "rus.a11.s01"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -31,15 +34,13 @@
       }
     ]
   },
-  "sequence": 39,
+  "sequence": 54,
   "teach": [
     {
       "items": [
         "rus.a11.tc01",
         "rus.a11.tc02",
-        "rus.a11.tc03",
-        "rus.a11.tc04",
-        "rus.a11.tc05"
+        "rus.a11.tc03"
       ],
       "routes": [
         "new"

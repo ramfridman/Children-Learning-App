@@ -153,11 +153,15 @@ TAG_FEEDBACK = {
     # G8 ("אֵינוֹ" → "הוּא לֹא") waits: its 7 rows are V1 rows the owner has not approved yet
     'M-ORD-CARD': ('vo:fb.ord', 'הַמָּקוֹם בַּתּוֹר אוֹמֵר מִי בָּא קֹדֶם. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה.'),
 }
+# a unit's own line for a tag gets this id (not the shared one) when the band says it differently (editor sweep 2026-11-08)
+TAG_ID_BY_BAND = {('M-NUM-REV', 'A'): 'vo:fb.num_rev.first'}
 # D1 (owner Q2, 2026-10-29): the M-CNT-SIZE line names the cue that misled the child, then the strategy
 SIZE_BY_CUE = {
     'big': ('vo:fb.size.big', 'הֵם גְּדוֹלִים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.'),
     'small': ('vo:fb.size.small', 'הֵם קְטַנִּים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.'),
     'spread': ('vo:fb.size.spread', 'הֵם רְחוֹקִים זֶה מִזֶּה, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.'),
+    # the NUM-A-11 "same number?" items compare by pairing (editor draft of D1, its own id; sweep 2026-11-08)
+    'pairs': ('vo:fb.size.pairs', 'בּוֹאוּ נַעֲשֶׂה זוּגוֹת: לְכֻלָּם יֵשׁ זוּג?'),
 }
 # A5 (B-15 addendum): the M-SORT-SHIFT line follows the item's sorting rule (`rule`: colour, shape or kind). The colour rule
 # (and an item with no rule) keeps the shared line, which says "the same colour"; the shape and kind rules say what the child
@@ -656,7 +660,7 @@ def k_compare_same(a, ctx):
               ('בְּצַד אֶחָד יֵשׁ %s, וּבַצַּד הָאַחֵר %s. זֶה לֹא אוֹתוֹ דָּבָר.' % (qty(l, obj), qty(r, obj))),
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example')),
         'child decides whether two groups have the same number, whatever their look',
-        prompt='יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים?', correct='כֵּן, צָדַקְתֶּם!')
+        prompt='יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים?', correct='כֵּן, צָדַקְתֶּם!', size_cue='pairs')
 
 
 def k_ordinal(a, ctx):
@@ -1186,7 +1190,8 @@ def k_mtake(a, ctx):
     while len(opts) < 3:
         opts.append(opts[-1] + 1)
     # B-15 §3: one missed; the start (nothing taken, M-CNT-CARD) stays untagged as in k_madd
-    return k_pick(pick_spec(a, prompt='יֵשׁ %s. לוֹקְחִים אֶחָד. כַּמָּה נִשְׁאֲרוּ?' % qty(n, obj),
+    # the number agrees with the noun just named: "אַרְבַּע צְפַרְדְּעִים. לוֹקְחִים אַחַת." (editor sweep 2026-11-08)
+    return k_pick(pick_spec(a, prompt='יֵשׁ %s. לוֹקְחִים %s. כַּמָּה נִשְׁאֲרוּ?' % (qty(n, obj), F[1] if obj['g'] == 'f' else M[1]),
                             group={'sprite': a['obj'], 'count': n}, options=['n:%d' % v for v in opts], correct='n:%d' % r,
                             tags={'n:%d' % (r - 1): 'M-CNT-SKIP'}, correct_text='%s! %s פָּחוֹת אַחַת.' % (F[r], F[n]),
                             h3=a.get('h3') or '%s פָּחוֹת אַחַת: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[n], count_words(max(r, 1)), F[r])), ctx)
@@ -1491,7 +1496,9 @@ def main(path):
         for colour, adjective in spec.get('colours', {}).items():
             ctx['names'].setdefault('%s_%s' % (thing, colour), {'one': noun + ' ' + adjective, 'g': gender})
     for tag, text in spec.get('tagFeedback', {}).items():
-        TAG_FEEDBACK[tag] = ('vo:fb.' + tag[2:].lower().replace('-', '_'), text)
+        # one id says one text: Band A's "the first digit" and Band B's "the first digit from the left" are two lines
+        vo = TAG_ID_BY_BAND.get((tag, spec.get('band', 'A')), 'vo:fb.' + tag[2:].lower().replace('-', '_'))
+        TAG_FEEDBACK[tag] = (vo, text)
     made = {'skill': 0, 'misconception': 0, 'activity': 0, 'lesson': 0}
     # lines no pack file carries yet (a demonstration said by the app): into the voice pool of the band, one text for the id
     for vo, text in spec.get('voiceLines', {}).items():

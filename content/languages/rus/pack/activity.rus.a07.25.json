@@ -140,6 +140,7 @@
         "id": "o1",
         "sprite": "asset:banana",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_banan",
         "at": {
           "x": 0.02,
           "y": 0.05,
@@ -151,6 +152,7 @@
         "id": "o2",
         "sprite": "asset:orange",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_apelsin",
         "misconception": "rus.lis.sem",
         "at": {
           "x": 0.02,
@@ -163,6 +165,7 @@
         "id": "o3",
         "sprite": "asset:pear",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_grusha",
         "misconception": "rus.lis.sem",
         "at": {
           "x": 0.02,

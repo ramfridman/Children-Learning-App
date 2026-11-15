@@ -15,11 +15,15 @@
     "RUS-A-05"
   ],
   "items": [
+    "rus.a05.f01",
+    "rus.a05.f02",
+    "rus.a05.f03",
     "rus.a05.01",
     "rus.a05.03",
-    "rus.a05.04",
     "rus.a05.05",
-    "rus.a05.06"
+    "rus.a05.h02",
+    "rus.a05.s10",
+    "rus.a05.s11"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -31,15 +35,13 @@
       }
     ]
   },
-  "sequence": 14,
+  "sequence": 19,
   "teach": [
     {
       "items": [
         "rus.a05.tc01",
         "rus.a05.tc02",
-        "rus.a05.tc03",
-        "rus.a05.tc04",
-        "rus.a05.tc05"
+        "rus.a05.tc03"
       ],
       "routes": [
         "new"

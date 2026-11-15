@@ -15,10 +15,11 @@
     "RUS-A-10"
   ],
   "items": [
-    "rus.a10.01",
+    "rus.a10.r03",
+    "rus.a10.r04",
     "rus.a10.02",
-    "rus.a10.03",
-    "rus.a10.04"
+    "rus.a10.04",
+    "rus.a10.b01"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +31,5 @@
       }
     ]
   },
-  "sequence": 38
+  "sequence": 53
 }

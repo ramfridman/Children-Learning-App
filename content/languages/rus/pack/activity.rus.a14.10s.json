@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_na",
+    "target": "vo:rus.w_spasibo",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_1",
+      "vo": "vo:rus.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "כֵּן!"
         }
       ],
-      "target": "vo:rus.w_na"
+      "target": "vo:rus.w_spasibo"
     },
     "incorrect": [
       {
@@ -80,7 +80,7 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_na"
+      "target": "vo:rus.w_spasibo"
     }
   },
   "hints": [],
@@ -91,13 +91,13 @@
   },
   "say": {
     "forms": [
-      "На!"
+      "спасибо"
     ],
     "foils": [
-      "спасибо",
+      "пожалуйста",
       "привет"
     ],
-    "clip": "vo:rus.w_na",
+    "clip": "vo:rus.w_spasibo",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_na"
+      "target": "vo:rus.w_spasibo"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +116,7 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_na"
+      "target": "vo:rus.w_spasibo"
     },
     "order": {
       "new": "echo",

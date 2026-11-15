@@ -2,7 +2,7 @@
   "skill": {
     "id": "HEB-A-11",
     "strand": "pk",
-    "title": "מזהה את השם הכתוב שלו (במכשיר בלבד)",
+    "title": "מזהים את השם הכתוב של הילד (במכשיר בלבד)",
     "prerequisites": [
       {
         "skill": "HEB-A-10"
@@ -169,16 +169,56 @@
       ],
       "rep": "symbolic",
       "ladder": "HL-NAME"
+    },
+    {
+      "id": "sh-n1",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "name-show",
+      "picture": "sign-letters"
+    },
+    {
+      "id": "u-n1",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "name-clap",
+      "picture": "act-clap"
+    },
+    {
+      "id": "sh-n2",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "name-first",
+      "picture": "sign-letters"
+    },
+    {
+      "id": "u-n2",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "name-home",
+      "picture": "book"
     }
   ],
   "lessons": [
     {
       "id": "name-1",
       "title": "הַשֵּׁם שֶׁלִּי",
+      "sequence": 280,
       "items": [
+        "sh-n1",
         "01",
         "02",
-        "03"
+        "u-n1"
+      ]
+    },
+    {
+      "id": "name-2",
+      "title": "הָאוֹת הָרִאשׁוֹנָה שֶׁל הַשֵּׁם",
+      "sequence": 285,
+      "items": [
+        "sh-n2",
+        "03",
+        "u-n2"
       ]
     }
   ]

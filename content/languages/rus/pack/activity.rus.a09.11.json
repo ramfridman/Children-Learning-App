@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_3",
+      "vo": "vo:rus.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "יָפֶה מְאֹד!"
+          "v": "כֵּן!"
         }
       ],
       "target": "vo:rus.w_shapka"
@@ -140,6 +140,7 @@
         "id": "o1",
         "sprite": "asset:hat",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_shapka",
         "at": {
           "x": 0.02,
           "y": 0.05,
@@ -149,9 +150,10 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:scarf",
+        "sprite": "asset:dress",
         "label": "תְּמוּנָה",
-        "misconception": "rus.voc.sound",
+        "clip": "vo:rus.w_platje",
+        "misconception": "rus.lis.sem",
         "at": {
           "x": 0.02,
           "y": 0.355,
@@ -161,8 +163,9 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:jacket",
+        "sprite": "asset:socks",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_noski",
         "misconception": "rus.lis.sem",
         "at": {
           "x": 0.02,

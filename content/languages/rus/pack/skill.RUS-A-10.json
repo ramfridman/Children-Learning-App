@@ -15,7 +15,9 @@
   "prerequisites": [],
   "representations": [
     "concrete",
-    "pictorial"
+    "pictorial",
+    "story",
+    "embodied"
   ],
   "misconceptions": [
     "rus.num.numword"

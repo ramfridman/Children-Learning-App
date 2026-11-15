@@ -3,8 +3,8 @@
   "id": "rus.a19.08",
   "review": "needs-editor",
   "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.3",
+  "template": "puppet_talk",
+  "templateVersion": "1.0",
   "course": "rus",
   "domain": "languages",
   "band": "A",
@@ -16,7 +16,7 @@
   ],
   "purpose": "learn",
   "checkType": "practice",
-  "representation": "pictorial",
+  "representation": "story",
   "variantGroup": "w-shapka",
   "difficulty": {
     "authored": 0.2
@@ -32,18 +32,18 @@
   },
   "tutor": {
     "llmAllowed": false,
-    "goal": "listen and choose",
+    "goal": "answer the puppet",
     "mustNotRevealBeforeHint": 2
   },
   "a11y": {
-    "altText": "שְׁתֵּי תְּמוּנוֹת"
+    "altText": "בֻּבָּה שֶׁמְּדַבֶּרֶת"
   },
   "prompt": {
     "vo": "vo:rus.f33",
     "caption": [
       {
         "t": "he",
-        "v": "הַמִּלִּים מַתְחִילוֹת אוֹתוֹ דָּבָר?"
+        "v": "הַמִּלִּים מַתְחִילוֹת בְּאוֹתוֹ צְלִיל?"
       }
     ],
     "target": "vo:rus.w_shapka",
@@ -52,14 +52,14 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_4",
+      "vo": "vo:rus.he_fb_right_3",
       "caption": [
         {
           "t": "he",
-          "v": "מְצָאתֶם!"
+          "v": "יָפֶה מְאֹד!"
         }
       ],
-      "target": "vo:rus.w_shapka"
+      "target": "vo:rus.w_da"
     },
     "incorrect": [
       {
@@ -104,7 +104,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הַמִּלִּים מַתְחִילוֹת אוֹתוֹ דָּבָר?"
+          "v": "הַמִּלִּים מַתְחִילוֹת בְּאוֹתוֹ צְלִיל?"
         }
       ],
       "target": "vo:rus.w_shapka"
@@ -122,25 +122,29 @@
       "target": "vo:rus.w_shapka"
     }
   ],
-  "scene": {},
+  "scene": {
+    "picture": "asset:mika_happy"
+  },
   "answer": {
     "type": "choice",
+    "mode": "bubble",
     "options": [
       {
         "id": "o1",
         "sprite": "asset:mika_yes",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_da"
       },
       {
         "id": "o2",
         "sprite": "asset:mika_no",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_net",
         "misconception": "rus.grm.yesno"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true,
-    "pole": "same"
+    "unsureAllowed": true
   }
 }

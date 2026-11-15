@@ -39,7 +39,12 @@ void main() {
     testWidgets(
       'the home opens, the pebble shows the rest scene instead of the placement visit, and back comes to the home',
       (WidgetTester tester) async {
-        final AppRig rig = await courseApp(tester, <String>['eng'], clockMs: _at(22));
+        final AppRig rig = await courseApp(
+          tester,
+          <String>['eng'],
+          clockMs: _at(22),
+          switches: knowsALittle('eng'),
+        );
         await openCourse(tester, 'eng');
         expect(
           find.byKey(const Key('course-invite')),

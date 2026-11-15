@@ -8,17 +8,22 @@
   "title": [
     {
       "t": "he",
-      "v": "עוֹד מִלִּים מֵהַסִּפּוּר"
+      "v": "נִיצִי אוֹפָה עוּגָה: מִלִּים חֲדָשׁוֹת"
     }
   ],
   "skills": [
-    "HEB-A-02"
+    "HEB-A-02",
+    "HEB-A-01"
   ],
   "items": [
-    "heb.a02.05",
-    "heb.a02.06",
-    "heb.a02.07",
-    "heb.a02.08"
+    "heb.a02.r-mechapeset",
+    "heb.a01.l2",
+    "heb.a02.f-kemach",
+    "heb.a02.f-keara",
+    "heb.a02.02",
+    "heb.a02.03",
+    "heb.a02.say-kemach",
+    "heb.a02.say-keara"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +35,18 @@
       }
     ]
   },
-  "sequence": 2
+  "sequence": 40,
+  "teach": [
+    {
+      "items": [
+        "heb.a02.tc04",
+        "heb.a02.tc05"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "heb.a02.f-kemach"
+    }
+  ]
 }

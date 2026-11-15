@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_1",
+      "vo": "vo:heb.ok_2",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "כֵּן, זֶהוּ זֶה!"
         }
       ],
       "target": "vo:heb.heb_a_s3_r2"
@@ -192,18 +192,21 @@
       {
         "id": "o1",
         "sprite": "asset:fish",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_dag"
       },
       {
         "id": "o2",
         "sprite": "asset:tortoise",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_tsav",
         "misconception": "heb.ol.story_role"
       },
       {
         "id": "o3",
         "sprite": "asset:bird",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_tsipor",
         "misconception": "heb.ol.story_world"
       }
     ],

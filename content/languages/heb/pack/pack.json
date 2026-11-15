@@ -1,10 +1,14 @@
 {
   "schema": "pack-source/v1",
   "id": "lang-heb",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "minAppVersion": "0.5.0",
   "course": "heb",
   "assets": [
+    {
+      "id": "act_clap",
+      "file": "act_clap.svg"
+    },
     {
       "id": "act_he_kick_boy_b",
       "file": "act_he_kick_boy_b.svg"
@@ -86,6 +90,10 @@
       "file": "boat_2.svg"
     },
     {
+      "id": "book",
+      "file": "book.svg"
+    },
+    {
       "id": "bowl",
       "file": "bowl.svg"
     },
@@ -122,16 +130,16 @@
       "file": "cat.svg"
     },
     {
-      "id": "cave",
-      "file": "cave.svg"
-    },
-    {
       "id": "chair",
       "file": "chair.svg"
     },
     {
       "id": "chick",
       "file": "chick.svg"
+    },
+    {
+      "id": "clock",
+      "file": "clock.svg"
     },
     {
       "id": "clouds",
@@ -168,6 +176,10 @@
     {
       "id": "doll",
       "file": "doll.svg"
+    },
+    {
+      "id": "dress",
+      "file": "dress.svg"
     },
     {
       "id": "dress_strawberries",

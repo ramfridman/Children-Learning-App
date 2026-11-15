@@ -8,13 +8,14 @@
   "title": [
     {
       "t": "he",
-      "v": "מוחא כף וסופר את ההברות של מילה"
+      "v": "מוחאים כף וסופרים את ההברות של מילה"
     }
   ],
   "strand": "pa",
   "prerequisites": [],
   "representations": [
     "pictorial",
+    "story",
     "embodied"
   ],
   "misconceptions": [

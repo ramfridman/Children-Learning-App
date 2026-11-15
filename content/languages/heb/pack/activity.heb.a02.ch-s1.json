@@ -1,0 +1,133 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a02.ch-s1",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sing_along",
+  "templateVersion": "1.0",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a02-ch-s1",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "say the chant together",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנוֹת שֶׁל שִׁיר"
+  },
+  "prompt": {
+    "vo": "vo:heb.say_together",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נֹאמַר יַחַד."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_7",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בְּדִיּוּק!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scene": {
+    "pictures": [
+      {
+        "picture": "asset:bush",
+        "label": "שִׂיחַ",
+        "clip": "vo:heb.heb_a_w_siach"
+      },
+      {
+        "picture": "asset:act_he_kick_rabbit_b",
+        "label": "בּוֹעֵט",
+        "clip": "vo:heb.heb_a_w_boet"
+      },
+      {
+        "picture": "asset:act_he_search_cat_b",
+        "label": "מְחַפֶּשֶׂת",
+        "clip": "vo:heb.heb_a_w_mechapeset"
+      }
+    ],
+    "lines": [
+      {
+        "clips": [
+          "vo:heb.heb_a_w_siach"
+        ],
+        "lights": [
+          0
+        ]
+      },
+      {
+        "clips": [
+          "vo:heb.heb_a_w_boet"
+        ],
+        "lights": [
+          1
+        ]
+      },
+      {
+        "clips": [
+          "vo:heb.heb_a_w_mechapeset"
+        ],
+        "lights": [
+          2
+        ]
+      }
+    ]
+  },
+  "answer": {
+    "type": "none",
+    "mode": "chant"
+  }
+}

@@ -149,18 +149,21 @@
       {
         "id": "o1",
         "sprite": "asset:plate",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_tsalachat"
       },
       {
         "id": "o2",
         "sprite": "asset:pizza",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_pitsa",
         "misconception": "heb.ol.cat_look"
       },
       {
         "id": "o3",
         "sprite": "asset:pita",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_pita",
         "misconception": "heb.ol.cat_theme"
       }
     ],

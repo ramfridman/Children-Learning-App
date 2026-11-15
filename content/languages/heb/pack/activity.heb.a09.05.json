@@ -51,14 +51,14 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_7",
+      "vo": "vo:heb.ok_5",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "מְצָאתֶם!"
         }
       ],
-      "target": "vo:heb.heb_a_u_banana"
+      "target": "vo:heb.heb_a_w_banana"
     },
     "incorrect": [
       {
@@ -150,18 +150,21 @@
       {
         "id": "o1",
         "sprite": "asset:banana",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_banana"
       },
       {
         "id": "o2",
         "sprite": "asset:house",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_bayit",
         "misconception": "heb.pa.blend_first"
       },
       {
         "id": "o3",
         "sprite": "asset:present",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_matana",
         "misconception": "heb.pa.blend_last"
       }
     ],

@@ -63,13 +63,14 @@
     "incorrect": [
       {
         "when": "default",
-        "vo": "vo:eng.he_fb_check",
+        "vo": "vo:eng.he_fb_where",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:eng.en_sad"
       }
     ],
     "unsure": {
@@ -127,24 +128,28 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:pip_sad",
-        "label": "תְּמוּנָה"
+        "sprite": "asset:mika_sad",
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_sad"
       },
       {
         "id": "o2",
-        "sprite": "asset:pip_happy",
+        "sprite": "asset:mika_happy",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_happy",
         "misconception": "eng.lis.sem"
       },
       {
         "id": "o3",
-        "sprite": "asset:cup_cold",
+        "sprite": "asset:pip_happy",
         "label": "תְּמוּנָה",
-        "misconception": "eng.lis.l1_guess"
+        "clip": "vo:eng.en_happy",
+        "misconception": "eng.lis.sem"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true
+    "unsureAllowed": true,
+    "askWhere": true
   }
 }

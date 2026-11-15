@@ -2,7 +2,7 @@
   "skill": {
     "id": "HEB-A-14",
     "strand": "wr",
-    "title": "עוקב באצבע אחרי קווים של טרום כתיבה",
+    "title": "עוקבים באצבע אחרי קווים של טרום כתיבה",
     "writing": "practised"
   },
   "items": [
@@ -104,28 +104,62 @@
       "guide": "full",
       "tag": "stroke",
       "ladder": "HL-TRACE"
+    },
+    {
+      "id": "sh-s1",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "air",
+      "picture": "stroke-rain-daisy"
+    },
+    {
+      "id": "u-s1",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "paper",
+      "picture": "stroke-pond"
+    },
+    {
+      "id": "sh-s2",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "air",
+      "picture": "stroke-hill"
+    },
+    {
+      "id": "u-s2",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "paper",
+      "picture": "stroke-fence"
     }
   ],
   "lessons": [
     {
       "id": "strokes-1",
       "title": "הוֹלְכִים עַל הַדֶּרֶךְ",
+      "sequence": 105,
       "items": [
+        "sh-s1",
         "01",
         "02",
         "03",
-        "04"
+        "04",
+        "u-s1"
       ]
     },
     {
       "id": "strokes-2",
       "title": "עוֹד דְּרָכִים",
+      "sequence": 195,
       "items": [
+        "sh-s2",
         "05",
         "06",
         "07",
         "08",
-        "09"
+        "09",
+        "u-s2"
       ]
     }
   ]

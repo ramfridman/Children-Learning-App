@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_4",
+      "vo": "vo:rus.he_fb_right_3",
       "caption": [
         {
           "t": "he",
-          "v": "מְצָאתֶם!"
+          "v": "יָפֶה מְאֹד!"
         }
       ],
       "target": "vo:rus.w_kukla"
@@ -140,6 +140,7 @@
         "id": "o1",
         "sprite": "asset:doll",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_kukla",
         "at": {
           "x": 0.02,
           "y": 0.05,
@@ -151,6 +152,7 @@
         "id": "o2",
         "sprite": "asset:blocks",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_kubiki",
         "misconception": "rus.voc.sound",
         "at": {
           "x": 0.02,
@@ -163,6 +165,7 @@
         "id": "o3",
         "sprite": "asset:teddy",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_mishka",
         "misconception": "rus.lis.sem",
         "at": {
           "x": 0.02,

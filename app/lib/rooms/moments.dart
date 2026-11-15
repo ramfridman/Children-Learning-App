@@ -9,7 +9,7 @@ bool cheerRepeatsPraise(String praise, String cheer) {
 
 String _words(String text) =>
     withoutNiqqud(text)
-        .replaceAll(RegExp(r'[^א-תa-zA-Z0-9 ]'), ' ')
+        .replaceAll(RegExp('[^\\u05D0-\\u05EAa-zA-Z0-9 ]'), ' ')
         .split(' ')
         .where((String w) => w.isNotEmpty)
         .join(' ');

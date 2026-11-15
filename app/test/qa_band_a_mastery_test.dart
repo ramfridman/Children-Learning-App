@@ -130,10 +130,7 @@ void main() {
     }
     final Map<String, MasteryLevel> mastery = masteryLevels(engine);
     for (final CourseGate g in courseGates(content)) {
-      final GateResult r = gateResult(
-        g,
-        GateInput(mastery: mastery, ageBand: 0, presentationBand: 0, route: 'new'),
-      );
+      final GateResult r = gateResult(g, GateInput(mastery: mastery, ageBand: 0, route: 'new'));
       expect(
         r.open,
         isTrue,

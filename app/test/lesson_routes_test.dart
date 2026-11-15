@@ -45,7 +45,7 @@ void main() {
       final Lesson l = rus.lessons['rus.family-1']!;
       final List<Activity> items = rus.itemsFor(l, route: 'new');
       final int teach = l.teach.fold(0, (int n, TeachSet s) => n + s.itemIds.length);
-      expect(teach, 4);
+      expect(teach, 3, reason: 'a Meet set is two or three words');
       expect(items.length, teach + l.itemIds.length);
       expect(items.take(teach).every((Activity a) => a is SayItActivity && a.teach), isTrue);
       expect(ids(items.skip(teach)), l.itemIds);
@@ -70,8 +70,8 @@ void main() {
       }
     });
 
-    test('a heritage speaker hears the words of A-20 once, before the lesson that asks them: 4 before pairs-1, 2 before pairs-2', () {
-      for (final MapEntry<String, int> e in <String, int>{'rus.pairs-1': 4, 'rus.pairs-2': 2}.entries) {
+    test('a heritage speaker hears the words of A-20 once, before the lesson that asks them: 3 before pairs-1, 3 before pairs-2', () {
+      for (final MapEntry<String, int> e in <String, int>{'rus.pairs-1': 3, 'rus.pairs-2': 3}.entries) {
         final Lesson l = rus.lessons[e.key]!;
         final List<Activity> items = rus.itemsFor(l, route: 'heritage');
         expect(
@@ -103,13 +103,8 @@ void main() {
         }
       }
       String short(String id) => id.split('.').last;
-      expect(screenIds(rus.lessons['rus.pairs-1']!, hear: true).map(short), <String>{
-        'th01',
-        'th02',
-        'th03',
-        'th04',
-      });
-      expect(screenIds(rus.lessons['rus.pairs-2']!, hear: true).map(short), <String>{'th05', 'th06'});
+      expect(screenIds(rus.lessons['rus.pairs-1']!, hear: true).map(short), <String>{'th01', 'th02', 'th03'});
+      expect(screenIds(rus.lessons['rus.pairs-2']!, hear: true).map(short), <String>{'th04', 'th05', 'th06'});
     });
 
     test('a new learner is never given a hearing screen, and the sets name one route each', () {
@@ -125,7 +120,7 @@ void main() {
       }
     });
 
-    test('R6.1 and R5: for every lesson and each served route, the screens of the route and then the lesson\'s items, the same for both', () {
+    test('R6.1 and R5: for every lesson and each served route, the lesson\'s items with the screens of the route in front of the item each set names, the same for both', () {
       for (final Lesson l in rus.lessons.values) {
         final List<String> items = ids(rus.itemsOf(l));
         expect(items, isNotEmpty, reason: l.id);
@@ -136,11 +131,15 @@ void main() {
         );
         for (final String route in <String>['new', 'heritage']) {
           final List<Activity> played = rus.itemsFor(l, route: route);
-          final List<String> screens = <String>[
-            for (final TeachSet s in l.teach)
-              if (s.routes.contains(route)) ...s.itemIds,
+          // A set stands in front of the item it names (L7-4), or in front of the first when it names none.
+          final List<String> expected = <String>[
+            for (final String item in items) ...<String>[
+              for (final TeachSet s in l.teach)
+                if (s.routes.contains(route) && (s.before ?? items.first) == item) ...s.itemIds,
+              item,
+            ],
           ];
-          expect(ids(played), <String>[...screens, ...items], reason: '${l.id} $route');
+          expect(ids(played), expected, reason: '${l.id} $route');
           expect(ids(played.where((Activity a) => !a.teachScreen)), items, reason: '${l.id} $route');
         }
       }
@@ -154,7 +153,7 @@ void main() {
       final PackContent odd = PackContent.fromPack(pack);
       final Lesson l = odd.lessons['rus.family-1']!;
       expect(odd.itemsFor(l, route: 'heritage').length, l.itemIds.length, reason: 'no teach screen');
-      expect(odd.itemsFor(l, route: 'new').length, l.itemIds.length + 4);
+      expect(odd.itemsFor(l, route: 'new').length, l.itemIds.length + 3, reason: 'the three teach screens');
       teach['mode'] = 'hear'; // the same set, now said to be a hearing set: the filter is by the set
       final PackContent heard = PackContent.fromPack(pack);
       final Lesson hear = heard.lessons['rus.family-1']!;
@@ -274,7 +273,7 @@ void main() {
             }
           }
         }
-        expect(teach, 117, reason: 'every word of every teach list of the teachers');
+        expect(teach, 130, reason: 'every word of every Meet set of the re-cut course');
         expect(hear, 6, reason: 'the six words of A-20');
       },
     );
@@ -306,11 +305,17 @@ void main() {
         for (final Lesson l in rus.lessons.values.where((Lesson x) => x.id.startsWith('rus.animals-')))
           l.id: <String>[for (final TeachSet s in l.teach) ...s.itemIds],
       };
-      // The Russian teacher's sets of the QA batch: 5, 4, 3, 4, 4 and 2 words (the giraffe and the whale are in the last two lessons).
-      expect(before['rus.animals-1'], hasLength(5));
-      expect(before['rus.animals-2'], hasLength(4));
-      expect(before['rus.animals-5'], hasLength(4));
-      expect(before['rus.animals-6'], hasLength(2), reason: 'the last set stands before the last lesson');
+      // The Russian teacher's re-cut (L7-6): a Meet set is two or three words, six sets of 3 and the last two of 2 (the giraffe and the
+      // whale are in the last two lessons), the same 22 words as before.
+      expect(before['rus.animals-1'], hasLength(3));
+      expect(before['rus.animals-2'], hasLength(3));
+      expect(before['rus.animals-6'], hasLength(3));
+      expect(before['rus.animals-7'], hasLength(2));
+      expect(
+        before['rus.animals-8'],
+        hasLength(2),
+        reason: 'the last set stands before the last lesson that has one',
+      );
       expect(
         <int>[for (final String id in before.keys.toList()..sort()) before[id]!.length]
             .fold(0, (int a, int b) => a + b),
@@ -324,18 +329,15 @@ void main() {
     Iterable<SayItActivity> says() =>
         rus.activities.values.whereType<SayItActivity>().where((SayItActivity a) => !a.teach);
 
-    test(
-      'there are 28 of them, and each has an order for both routes and a picture-first line with no clip',
-      () {
-        expect(says().length, 28);
-        for (final SayItActivity a in says()) {
-          expect(a.order.keys.toSet(), <String>{'new', 'heritage'}, reason: a.id);
-          expect(a.pictureFirstLine, isNotNull, reason: a.id);
-          expect(a.pictureFirstLine!.target, isNull, reason: '${a.id}: asking for the word must not give it');
-          expect(a.pictureFirstLine!.target2, isNull, reason: a.id);
-        }
-      },
-    );
+    test('there are 141 of them (one or more in the Use part of most lessons), and each has an order for both routes and a picture-first line with no clip', () {
+      expect(says().length, 141);
+      for (final SayItActivity a in says()) {
+        expect(a.order.keys.toSet(), <String>{'new', 'heritage'}, reason: a.id);
+        expect(a.pictureFirstLine, isNotNull, reason: a.id);
+        expect(a.pictureFirstLine!.target, isNull, reason: '${a.id}: asking for the word must not give it');
+        expect(a.pictureFirstLine!.target2, isNull, reason: a.id);
+      }
+    });
 
     test('no echo prompt is "what is this? try to say it" (f06): it is "let\'s say it together" (f03) and the word', () {
       for (final SayItActivity a in says()) {
@@ -345,18 +347,28 @@ void main() {
       }
     });
 
-    test('A-15 is picture first for both routes; A-01 and A-14 are echo for a new learner and picture first for a heritage speaker', () {
+    test('A-15 is picture first for both routes; every other skill is echo for a new learner and picture first for a heritage speaker', () {
       for (final SayItActivity a in says()) {
         expect(a.order['heritage'], 'picture', reason: a.id);
         expect(a.order['new'], a.skillId == 'RUS-A-15' ? 'picture' : 'echo', reason: a.id);
-        expect(<String>['RUS-A-01', 'RUS-A-14', 'RUS-A-15'], contains(a.skillId), reason: a.id);
       }
+      expect(
+        says().map((SayItActivity a) => a.skillId).toSet(),
+        containsAll(<String>['RUS-A-01', 'RUS-A-02', 'RUS-A-14', 'RUS-A-15']),
+      );
     });
 
     test(
       'the say step of a puppet\'s bubble asks "what do we answer?" (f07), the others "what is this?" (f06)',
       () {
-        const Set<String> afterBubble = <String>{'rus.a01.04s', 'rus.a01.05s', 'rus.a14.10s', 'rus.a14.11s'};
+        const Set<String> afterBubble = <String>{
+          'rus.a01.04s',
+          'rus.a01.05s',
+          'rus.a14.10s',
+          'rus.a14.11s',
+          'rus.a14.b01s',
+          'rus.a15.b01s',
+        };
         for (final SayItActivity a in says()) {
           expect(
             a.pictureFirstLine!.vo,
@@ -364,7 +376,7 @@ void main() {
             reason: a.id,
           );
         }
-        expect(says().where((SayItActivity a) => afterBubble.contains(a.id)).length, 4);
+        expect(says().where((SayItActivity a) => afterBubble.contains(a.id)).length, 6);
       },
     );
 
@@ -396,11 +408,11 @@ void main() {
     test('a new learner starts on a teach screen, a heritage speaker on the first item', () {
       final LessonController fresh = open('rus.family-1', 'new', <AttemptRecord>[]);
       expect(fresh.current, isA<SayItActivity>());
-      expect(fresh.items.length, 4 + 4);
-      expect(fresh.trailLength, 8);
+      expect(fresh.items.length, 3 + 9);
+      expect(fresh.trailLength, 10, reason: 'the three screens of a Meet set are one socket, and nine items');
       final LessonController heritage = open('rus.family-1', 'heritage', <AttemptRecord>[]);
       expect(heritage.current, isA<TapAnswerActivity>());
-      expect(heritage.items.length, 4);
+      expect(heritage.items.length, 9);
       fresh.dispose();
       heritage.dispose();
     });
@@ -419,7 +431,7 @@ void main() {
     test('a heritage speaker opens pairs-1 on a hearing screen: no help, no praise, nothing written, then the next', () {
       final List<AttemptRecord> written = <AttemptRecord>[];
       final LessonController c = open('rus.pairs-1', 'heritage', written);
-      expect(c.items.length, 4 + 4);
+      expect(c.items.length, 3 + 8);
       final SayItActivity hear = c.current as SayItActivity;
       expect(hear.hear, isTrue);
       expect(c.voice, 'vo:rus.f41');
@@ -436,7 +448,7 @@ void main() {
       expect(c.solved, isTrue);
       c.next();
       expect(written, isEmpty);
-      expect((c.current as SayItActivity).hear, isTrue, reason: 'the second of the four');
+      expect((c.current as SayItActivity).hear, isTrue, reason: 'the second of the three');
       c.dispose();
     });
 

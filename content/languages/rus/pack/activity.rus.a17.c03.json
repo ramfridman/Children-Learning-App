@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_2",
+      "vo": "vo:rus.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן!"
+          "v": "נָכוֹן!"
         }
       ]
     },
@@ -85,7 +85,8 @@
     "pictures": [
       {
         "picture": "asset:whale",
-        "label": "תְּמוּנָה"
+        "label": "кит",
+        "clip": "vo:rus.w_kit"
       }
     ],
     "lines": [
@@ -93,13 +94,17 @@
         "clips": [
           "vo:rus.rh3"
         ],
-        "lights": []
+        "lights": [
+          0
+        ]
       },
       {
         "clips": [
           "vo:rus.rh3"
         ],
-        "lights": []
+        "lights": [
+          0
+        ]
       }
     ]
   },

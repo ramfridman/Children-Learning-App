@@ -43,7 +43,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "בְּאֵיזוֹ תְּמוּנָה הַמִּלָּה מַתְחִילָה אוֹתוֹ דָּבָר?"
+        "v": "בְּאֵיזוֹ תְּמוּנָה הַמִּלָּה מַתְחִילָה בְּאוֹתוֹ צְלִיל?"
       }
     ],
     "target": "vo:rus.sf_sok",
@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.sf_sok"
@@ -133,9 +133,9 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:balloon_big",
+        "sprite": "asset:hat_warm",
         "label": "תְּמוּנָה",
-        "clip": "vo:rus.w_shar",
+        "clip": "vo:rus.w_shapka",
         "misconception": "rus.voc.sound"
       },
       {

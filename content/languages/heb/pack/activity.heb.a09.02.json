@@ -51,14 +51,14 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_4",
+      "vo": "vo:heb.ok_2",
       "caption": [
         {
           "t": "he",
-          "v": "הִקְשַׁבְתֶּם עַד הַסּוֹף!"
+          "v": "כֵּן, זֶהוּ זֶה!"
         }
       ],
-      "target": "vo:heb.heb_a_u_pitsa"
+      "target": "vo:heb.heb_a_w_pitsa"
     },
     "incorrect": [
       {
@@ -150,18 +150,21 @@
       {
         "id": "o1",
         "sprite": "asset:pizza",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_pitsa"
       },
       {
         "id": "o2",
         "sprite": "asset:elephant",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_pil",
         "misconception": "heb.pa.blend_first"
       },
       {
         "id": "o3",
         "sprite": "asset:egg",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_beitsa",
         "misconception": "heb.pa.blend_last"
       }
     ],

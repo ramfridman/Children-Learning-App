@@ -15,11 +15,13 @@
     "HEB-A-10"
   ],
   "items": [
+    "heb.a10.sh-l3",
     "heb.a10.s01",
     "heb.a10.s02",
     "heb.a10.t03",
     "heb.a10.t04",
-    "heb.a10.t05"
+    "heb.a10.t05",
+    "heb.a10.u-l3"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -31,5 +33,5 @@
       }
     ]
   },
-  "sequence": 21
+  "sequence": 270
 }

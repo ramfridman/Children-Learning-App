@@ -1,0 +1,51 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.words-5",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִלִּים שֶׁל רוּחַ וּמַיִם"
+    }
+  ],
+  "skills": [
+    "HEB-A-02"
+  ],
+  "items": [
+    "heb.a02.r-sira",
+    "heb.a02.r-kova",
+    "heb.a02.f-ruach",
+    "heb.a02.f-soche",
+    "heb.a02.07",
+    "heb.a02.12",
+    "heb.a02.say-ruach",
+    "heb.a02.do-soche"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 100,
+  "teach": [
+    {
+      "items": [
+        "heb.a02.tc10",
+        "heb.a02.tc11"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "heb.a02.f-ruach"
+    }
+  ]
+}

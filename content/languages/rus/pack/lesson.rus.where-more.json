@@ -15,10 +15,8 @@
     "RUS-A-13"
   ],
   "items": [
-    "rus.a13.07",
-    "rus.a13.08",
-    "rus.a13.09",
-    "rus.a13.10"
+    "rus.a13.10",
+    "rus.a13.s02"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +28,5 @@
       }
     ]
   },
-  "sequence": 45
+  "sequence": 64
 }

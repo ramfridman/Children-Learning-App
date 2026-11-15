@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_4",
+      "vo": "vo:rus.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "מְצָאתֶם!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:rus.mp_luk"
@@ -120,7 +120,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "בָּצָל."
+          "v": "בָּצָל"
         }
       ]
     },
@@ -160,7 +160,7 @@
       {
         "id": "o3",
         "label": "צְלִיל",
-        "clip": "vo:rus.w_zhuk",
+        "clip": "vo:rus.w_sok",
         "misconception": "rus.voc.sound"
       }
     ],

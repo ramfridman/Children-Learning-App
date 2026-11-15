@@ -15,10 +15,15 @@
     "RUS-A-02"
   ],
   "items": [
+    "rus.a02.f01",
+    "rus.a02.f02",
+    "rus.a02.f03",
     "rus.a02.01",
     "rus.a02.02",
     "rus.a02.03",
-    "rus.a02.04"
+    "rus.a02.s01",
+    "rus.a02.s02",
+    "rus.a02.u01"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,14 +35,13 @@
       }
     ]
   },
-  "sequence": 3,
+  "sequence": 4,
   "teach": [
     {
       "items": [
         "rus.a02.tc01",
         "rus.a02.tc02",
-        "rus.a02.tc03",
-        "rus.a02.tc04"
+        "rus.a02.tc03"
       ],
       "routes": [
         "new"

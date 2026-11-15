@@ -2,7 +2,7 @@
   "skill": {
     "id": "HEB-A-13",
     "strand": "ol",
-    "title": "מסדר 3 תמונות מסיפור לפי הסדר",
+    "title": "מסדרים 3 תמונות מסיפור לפי הסדר",
     "prerequisites": [
       {
         "skill": "HEB-A-01"
@@ -200,25 +200,101 @@
         "swap": "story_order"
       },
       "ladder": "HL-ORDER"
+    },
+    {
+      "id": "ch-o1",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "fb-story-world",
+      "lines": [
+        "heb-a-seq-1",
+        "heb-a-s1-p2",
+        "heb-a-seq-2",
+        "heb-a-s1-p4",
+        "heb-a-seq-3",
+        "heb-a-s1-p5"
+      ],
+      "pictures": [
+        {
+          "pic": "s1-p2",
+          "clip": "heb-a-s1-p2"
+        },
+        {
+          "pic": "s1-p4",
+          "clip": "heb-a-s1-p4"
+        },
+        {
+          "pic": "s1-p5",
+          "clip": "heb-a-s1-p5"
+        }
+      ]
+    },
+    {
+      "id": "u-o1",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "retell",
+      "picture": "s1-p5"
+    },
+    {
+      "id": "ch-o2",
+      "kind": "chant",
+      "purpose": "practice",
+      "frame": "fb-story-world",
+      "lines": [
+        "heb-a-seq-1",
+        "heb-a-s2-p2",
+        "heb-a-seq-2",
+        "heb-a-s2-p4",
+        "heb-a-seq-3",
+        "heb-a-s2-p5"
+      ],
+      "pictures": [
+        {
+          "pic": "s2-p2",
+          "clip": "heb-a-s2-p2"
+        },
+        {
+          "pic": "s2-p4",
+          "clip": "heb-a-s2-p4"
+        },
+        {
+          "pic": "s2-p5",
+          "clip": "heb-a-s2-p5"
+        }
+      ]
+    },
+    {
+      "id": "u-o2",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "retell",
+      "picture": "s2-p5"
     }
   ],
   "lessons": [
     {
       "id": "first-1",
       "title": "מַה קָּרָה קֹדֶם?",
+      "sequence": 190,
       "items": [
-        "03",
-        "04",
+        "ch-o1",
         "07",
-        "08"
+        "01",
+        "u-o1"
       ]
     },
     {
       "id": "order-1",
       "title": "סַדְּרוּ אֶת הַסִּפּוּר",
+      "sequence": 200,
       "items": [
-        "01",
-        "02"
+        "ch-o2",
+        "04",
+        "08",
+        "02",
+        "03",
+        "u-o2"
       ]
     }
   ]

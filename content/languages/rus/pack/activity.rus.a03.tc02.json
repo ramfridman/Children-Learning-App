@@ -46,7 +46,7 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_rot",
+    "target": "vo:rus.w_glaza",
     "replayButton": true
   },
   "feedback": {
@@ -58,7 +58,7 @@
           "v": "כֵּן!"
         }
       ],
-      "target": "vo:rus.w_rot"
+      "target": "vo:rus.w_glaza"
     },
     "incorrect": [
       {
@@ -80,24 +80,24 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_rot"
+      "target": "vo:rus.w_glaza"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:body_mouth"
+      "sprite": "asset:body_eyes"
     }
   },
   "say": {
     "forms": [
-      "рот"
+      "глаза"
     ],
     "foils": [
       "нос",
-      "глаза"
+      "рот"
     ],
-    "clip": "vo:rus.w_rot",
+    "clip": "vo:rus.w_glaza",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_rot"
+      "target": "vo:rus.w_glaza"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +116,28 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_rot"
+      "target": "vo:rus.w_glaza"
+    },
+    "meet": {
+      "position": 1,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:body_nose",
+          "clip": "vo:rus.w_nos"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: עֵינַיִם"
+          }
+        ],
+        "target": "vo:rus.gl_einayim"
+      },
+      "written": "глаза"
     }
   },
   "answer": {

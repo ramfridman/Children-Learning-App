@@ -15,7 +15,10 @@
     "ENG-A-04"
   ],
   "items": [
-    "eng.a04.p01"
+    "eng.a04.n08",
+    "eng.a04.i08",
+    "eng.a04.p01",
+    "eng.a04.k03"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -27,5 +30,5 @@
       }
     ]
   },
-  "sequence": 10
+  "sequence": 13
 }

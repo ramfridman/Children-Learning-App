@@ -51,47 +51,26 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_6",
+      "vo": "vo:heb.ok_5",
       "caption": [
         {
           "t": "he",
-          "v": "יוֹפִי שֶׁל הַקְשָׁבָה!"
+          "v": "מְצָאתֶם!"
         }
       ],
       "target": "vo:heb.heb_a_pl_6"
     },
     "incorrect": [
       {
-        "when": "misconception:heb.ol.role_swap",
-        "vo": "vo:heb.fb_role_swap",
-        "caption": [
-          {
-            "t": "he",
-            "v": "עַל מַה מְדַבְּרִים?"
-          }
-        ],
-        "target": "vo:heb.heb_a_pl_6"
-      },
-      {
-        "when": "misconception:heb.ol.prep",
-        "vo": "vo:heb.fb_prep",
-        "caption": [
-          {
-            "t": "he",
-            "v": "שִׁמְעוּ אֵיפֹה:"
-          }
-        ],
-        "target": "vo:heb.heb_a_pl_6"
-      },
-      {
         "when": "default",
-        "vo": "vo:heb.try_1",
+        "vo": "vo:heb.fb_where",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:heb.heb_a_pl_6"
       }
     ],
     "unsure": {
@@ -150,23 +129,27 @@
       {
         "id": "o1",
         "sprite": "asset:place_cat_in_basket",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_pl_6"
       },
       {
         "id": "o2",
         "sprite": "asset:place_basket_on_cat",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_pl_6b",
         "misconception": "heb.ol.role_swap"
       },
       {
         "id": "o3",
         "sprite": "asset:place_cat_by_basket",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_pl_6c",
         "misconception": "heb.ol.prep"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true
+    "unsureAllowed": true,
+    "askWhere": true
   }
 }

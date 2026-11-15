@@ -51,14 +51,14 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_5",
+      "vo": "vo:heb.ok_3",
       "caption": [
         {
           "t": "he",
-          "v": "מְצָאתֶם!"
+          "v": "שְׁמַעְתֶּם טוֹב!"
         }
       ],
-      "target": "vo:heb.heb_a_u_sira"
+      "target": "vo:heb.heb_a_w_sira"
     },
     "incorrect": [
       {
@@ -150,18 +150,21 @@
       {
         "id": "o1",
         "sprite": "asset:boat",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_sira"
       },
       {
         "id": "o2",
         "sprite": "asset:pot",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_sir",
         "misconception": "heb.pa.blend_first"
       },
       {
         "id": "o3",
-        "sprite": "asset:teacher_sing",
+        "sprite": "asset:bowl",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_keara",
         "misconception": "heb.pa.blend_last"
       }
     ],

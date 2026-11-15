@@ -52,11 +52,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_7",
+      "vo": "vo:eng.he_fb_right_5",
       "caption": [
         {
           "t": "he",
-          "v": "הִקְשַׁבְתֶּם יָפֶה!"
+          "v": "בְּדִיּוּק!"
         }
       ],
       "target": "vo:eng.en_its_apple"
@@ -100,11 +100,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_apple",
+      "vo": "vo:eng.he_gl_its_apple",
       "caption": [
         {
           "t": "he",
-          "v": "תַּפּוּחַ"
+          "v": "זֶה תַּפּוּחַ."
         }
       ],
       "target": "vo:eng.en_its_apple"
@@ -129,18 +129,21 @@
       {
         "id": "o1",
         "sprite": "asset:apple",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_apple"
       },
       {
         "id": "o2",
         "sprite": "asset:banana",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_banana",
         "misconception": "eng.lis.sem"
       },
       {
         "id": "o3",
         "sprite": "asset:car",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_car",
         "misconception": "eng.lis.l1_guess"
       }
     ],

@@ -1,0 +1,52 @@
+{
+  "schema": "lesson/v1",
+  "id": "eng.adj-3",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "eng",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "גָּדוֹל, קָטָן"
+    }
+  ],
+  "skills": [
+    "ENG-A-10"
+  ],
+  "items": [
+    "eng.a10.n07",
+    "eng.a10.n08",
+    "eng.a10.n09",
+    "eng.a10.n10",
+    "eng.a10.n11",
+    "eng.a10.n12",
+    "eng.a10.i01",
+    "eng.a10.i04",
+    "eng.a10.s03"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "sequence": 36,
+  "teach": [
+    {
+      "items": [
+        "eng.a10.tc05",
+        "eng.a10.tc06"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a10.n09"
+    }
+  ]
+}

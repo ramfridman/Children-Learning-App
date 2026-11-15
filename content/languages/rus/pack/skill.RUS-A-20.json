@@ -20,10 +20,12 @@
   ],
   "representations": [
     "pictorial",
+    "story",
     "embodied"
   ],
   "misconceptions": [
     "rus.pho.hardsoft",
+    "rus.lis.sem",
     "rus.voc.sound",
     "rus.grm.yesno",
     "rus.pho.yi"

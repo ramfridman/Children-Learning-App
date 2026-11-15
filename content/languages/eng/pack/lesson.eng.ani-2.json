@@ -15,10 +15,17 @@
     "ENG-A-05"
   ],
   "items": [
+    "eng.a05.n04",
+    "eng.a05.n05",
+    "eng.a05.n06",
+    "eng.a05.n07",
+    "eng.a05.n08",
+    "eng.a05.i04",
     "eng.a05.i05",
-    "eng.a05.i06",
     "eng.a05.i07",
-    "eng.a05.i08"
+    "eng.a05.s02",
+    "eng.a05.i10",
+    "eng.a05.s06"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +37,19 @@
       }
     ]
   },
-  "sequence": 12
+  "sequence": 15,
+  "teach": [
+    {
+      "items": [
+        "eng.a05.tc04",
+        "eng.a05.tc05",
+        "eng.a05.tc06"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a05.n06"
+    }
+  ]
 }

@@ -52,11 +52,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_4",
+      "vo": "vo:eng.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "מְצָאתֶם!"
+          "v": "כֵּן!"
         }
       ],
       "target": "vo:eng.en_its_book"
@@ -100,11 +100,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:eng.he_gl_book",
+      "vo": "vo:eng.he_gl_its_book",
       "caption": [
         {
           "t": "he",
-          "v": "סֵפֶר"
+          "v": "זֶה סֵפֶר."
         }
       ],
       "target": "vo:eng.en_its_book"
@@ -129,18 +129,21 @@
       {
         "id": "o1",
         "sprite": "asset:book",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_book"
       },
       {
         "id": "o2",
         "sprite": "asset:teddy",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_teddy",
         "misconception": "eng.lis.sem"
       },
       {
         "id": "o3",
         "sprite": "asset:car",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_car",
         "misconception": "eng.lis.l1_guess"
       }
     ],

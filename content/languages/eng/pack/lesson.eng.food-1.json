@@ -8,17 +8,23 @@
   "title": [
     {
       "t": "he",
-      "v": "פֵּרוֹת וּשְׁתִיָּה"
+      "v": "אֹכֶל"
     }
   ],
   "skills": [
+    "ENG-A-07",
     "ENG-A-08"
   ],
   "items": [
+    "eng.a07.n15",
+    "eng.a08.n01",
+    "eng.a08.n02",
+    "eng.a08.n03",
     "eng.a08.i01",
-    "eng.a08.i02",
-    "eng.a08.i03",
-    "eng.a08.i04"
+    "eng.a08.n04",
+    "eng.a08.n05",
+    "eng.a08.s01",
+    "eng.a08.i09"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +36,19 @@
       }
     ]
   },
-  "sequence": 20
+  "sequence": 26,
+  "teach": [
+    {
+      "items": [
+        "eng.a08.tc01",
+        "eng.a08.tc02",
+        "eng.a08.tc03"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a08.n01"
+    }
+  ]
 }

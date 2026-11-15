@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_1",
+      "vo": "vo:eng.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:eng.en_cow"
@@ -140,6 +140,7 @@
         "id": "o1",
         "sprite": "asset:cow",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_cow",
         "at": {
           "x": 0.02,
           "y": 0.05,
@@ -151,6 +152,7 @@
         "id": "o2",
         "sprite": "asset:pig",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_pig",
         "misconception": "eng.lis.sem",
         "at": {
           "x": 0.02,
@@ -163,6 +165,7 @@
         "id": "o3",
         "sprite": "asset:fish",
         "label": "תְּמוּנָה",
+        "clip": "vo:eng.en_fish",
         "misconception": "eng.lis.sem",
         "at": {
           "x": 0.02,

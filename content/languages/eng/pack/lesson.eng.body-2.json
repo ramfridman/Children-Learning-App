@@ -8,17 +8,23 @@
   "title": [
     {
       "t": "he",
-      "v": "כׇּל הַגּוּף"
+      "v": "הָרֹאשׁ וְהַפָּנִים"
     }
   ],
   "skills": [
     "ENG-A-06"
   ],
   "items": [
-    "eng.a06.i06",
-    "eng.a06.i07",
-    "eng.a06.i08",
-    "eng.a06.i09"
+    "eng.a06.n05",
+    "eng.a06.n06",
+    "eng.a06.n07",
+    "eng.a06.n08",
+    "eng.a06.n09",
+    "eng.a06.n10",
+    "eng.a06.i04",
+    "eng.a06.n11",
+    "eng.a06.e02",
+    "eng.a06.s02"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +36,19 @@
       }
     ]
   },
-  "sequence": 15
+  "sequence": 19,
+  "teach": [
+    {
+      "items": [
+        "eng.a06.tc04",
+        "eng.a06.tc05",
+        "eng.a06.tc06"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a06.n07"
+    }
+  ]
 }

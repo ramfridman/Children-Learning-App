@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_brat",
+    "target": "vo:rus.w_sestra",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_1",
+      "vo": "vo:rus.he_fb_right_2",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "כֵּן!"
         }
       ],
-      "target": "vo:rus.w_brat"
+      "target": "vo:rus.w_sestra"
     },
     "incorrect": [
       {
@@ -80,24 +80,23 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_brat"
+      "target": "vo:rus.w_sestra"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:fam_brother"
+      "sprite": "asset:fam_sister"
     }
   },
   "say": {
     "forms": [
-      "брат"
+      "сестра"
     ],
     "foils": [
-      "сестра",
-      "малыш"
+      "дедушка"
     ],
-    "clip": "vo:rus.w_brat",
+    "clip": "vo:rus.w_sestra",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +105,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_brat"
+      "target": "vo:rus.w_sestra"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +115,28 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_brat"
+      "target": "vo:rus.w_sestra"
+    },
+    "meet": {
+      "position": 1,
+      "size": 2,
+      "earlier": [
+        {
+          "sprite": "asset:fam_grandfather",
+          "clip": "vo:rus.w_dedushka"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: אָחוֹת"
+          }
+        ],
+        "target": "vo:rus.gl_achot"
+      },
+      "written": "сестра"
     }
   },
   "answer": {

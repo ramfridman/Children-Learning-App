@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:rus.w_pozhalujsta"
@@ -79,7 +79,8 @@
           "t": "he",
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
-      ]
+      ],
+      "target": "vo:rus.w_spasibo"
     }
   },
   "hints": [
@@ -92,7 +93,8 @@
           "t": "he",
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
-      ]
+      ],
+      "target": "vo:rus.w_spasibo"
     },
     {
       "level": 2,
@@ -103,7 +105,8 @@
           "t": "he",
           "v": "מָה עוֹנִים לֶחָבֵר?"
         }
-      ]
+      ],
+      "target": "vo:rus.w_spasibo"
     },
     {
       "level": 3,
@@ -114,7 +117,8 @@
           "t": "he",
           "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
         }
-      ]
+      ],
+      "target": "vo:rus.w_spasibo"
     }
   ],
   "scene": {
@@ -127,18 +131,21 @@
       {
         "id": "o1",
         "sprite": "asset:mika_gift",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_spasibo"
       },
       {
         "id": "o2",
         "sprite": "asset:mika_leave",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_poka",
         "misconception": "rus.lis.sem"
       },
       {
         "id": "o3",
         "sprite": "asset:mika_arrive",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_privet",
         "misconception": "rus.lis.sem"
       }
     ],

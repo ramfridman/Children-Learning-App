@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.animals-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "חַיּוֹת"
+    }
+  ],
+  "skills": [
+    "RUS-A-05"
+  ],
+  "items": [
+    "rus.a05.25",
+    "rus.a05.r14",
+    "rus.a05.02",
+    "rus.a05.s09",
+    "rus.a05.s19",
+    "rus.a05.s20"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 27
+}

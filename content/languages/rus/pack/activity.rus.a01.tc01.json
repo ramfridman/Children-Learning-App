@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_7",
+      "vo": "vo:rus.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "הִקְשַׁבְתֶּם יָפֶה!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:rus.w_privet"
@@ -94,8 +94,7 @@
       "привет"
     ],
     "foils": [
-      "пока",
-      "здравствуйте"
+      "пока"
     ],
     "clip": "vo:rus.w_privet",
     "heard": {
@@ -117,6 +116,30 @@
         }
       ],
       "target": "vo:rus.w_privet"
+    },
+    "meet": {
+      "position": 0,
+      "size": 2,
+      "opener": {
+        "vo": "vo:rus.f44",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת."
+          }
+        ]
+      },
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: שָׁלוֹם"
+          }
+        ],
+        "target": "vo:rus.gl_shalom"
+      },
+      "written": "Привет"
     }
   },
   "answer": {

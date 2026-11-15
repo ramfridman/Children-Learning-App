@@ -12,17 +12,17 @@
     }
   ],
   "skills": [
+    "ENG-A-11",
     "ENG-A-12"
   ],
   "items": [
+    "eng.a11.i06",
     "eng.a12.i01",
     "eng.a12.i01t",
     "eng.a12.i02",
     "eng.a12.i02t",
     "eng.a12.i03",
-    "eng.a12.i03t",
-    "eng.a12.i04",
-    "eng.a12.i04t"
+    "eng.a12.i03t"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -34,5 +34,5 @@
       }
     ]
   },
-  "sequence": 30
+  "sequence": 41
 }

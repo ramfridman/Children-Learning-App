@@ -15,10 +15,12 @@
     "HEB-A-05"
   ],
   "items": [
+    "heb.a05.ch-m2",
     "heb.a05.04",
     "heb.a05.05",
     "heb.a05.06",
-    "heb.a05.07"
+    "heb.a05.07",
+    "heb.a05.say-m2"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +32,5 @@
       }
     ]
   },
-  "sequence": 30
+  "sequence": 240
 }

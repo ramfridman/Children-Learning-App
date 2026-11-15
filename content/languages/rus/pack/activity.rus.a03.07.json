@@ -38,6 +38,7 @@
   "a11y": {
     "altText": "תְּמוּנָה וְחָבֵר שֶׁעוֹשֶׂה מַה שֶּׁאוֹמְרִים"
   },
+  "asks": "vo:rus.w_zhivot",
   "prompt": {
     "vo": "vo:rus.f08",
     "caption": [
@@ -51,11 +52,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_7",
+      "vo": "vo:rus.he_fb_right_4",
       "caption": [
         {
           "t": "he",
-          "v": "הִקְשַׁבְתֶּם יָפֶה!"
+          "v": "מְצָאתֶם!"
         }
       ],
       "target": "vo:rus.ch_pokazhi_zhivot"

@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ]
     },
@@ -85,11 +85,13 @@
     "pictures": [
       {
         "picture": "asset:dog_shaggy",
-        "label": "תְּמוּנָה"
+        "label": "пёс",
+        "clip": "vo:rus.w_pjos"
       },
       {
         "picture": "asset:body_nose",
-        "label": "תְּמוּנָה"
+        "label": "нос",
+        "clip": "vo:rus.w_nos"
       }
     ],
     "lines": [
@@ -97,13 +99,19 @@
         "clips": [
           "vo:rus.rh1"
         ],
-        "lights": []
+        "lights": [
+          0,
+          1
+        ]
       },
       {
         "clips": [
           "vo:rus.rh1"
         ],
-        "lights": []
+        "lights": [
+          0,
+          1
+        ]
       }
     ]
   },

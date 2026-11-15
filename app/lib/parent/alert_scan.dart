@@ -35,6 +35,7 @@ Future<int> runAlertScan(AppDatabase db, {required DateTime now, required Parent
         ageBand: p.ageBand,
         sessions: await db.sessionsOf(p.id),
         attempts: await db.attemptsOf(p.id),
+        notes: await db.behaviourNotesOf(p.id),
       ),
   ];
   final List<AlertDraft> drafts = scanHistory(

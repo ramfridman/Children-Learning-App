@@ -1,0 +1,146 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a05.ch-m1",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sing_along",
+  "templateVersion": "1.0",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-05",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "a05-ch-m1",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "say the chant together",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנוֹת שֶׁל שִׁיר"
+  },
+  "prompt": {
+    "vo": "vo:heb.say_together",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נֹאמַר יַחַד."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_4",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הִקְשַׁבְתֶּם עַד הַסּוֹף!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scene": {
+    "pictures": [
+      {
+        "picture": "asset:cat",
+        "label": "חָתוּל",
+        "clip": "vo:heb.heb_a_w_chatul"
+      },
+      {
+        "picture": "asset:set_cats",
+        "label": "חֲתוּלִים",
+        "clip": "vo:heb.heb_a_w_chatulim"
+      },
+      {
+        "picture": "asset:dog",
+        "label": "כֶּלֶב",
+        "clip": "vo:heb.heb_a_w_kelev"
+      },
+      {
+        "picture": "asset:set_dogs",
+        "label": "כְּלָבִים",
+        "clip": "vo:heb.heb_a_w_klavim"
+      }
+    ],
+    "lines": [
+      {
+        "clips": [
+          "vo:heb.heb_a_w_chatul"
+        ],
+        "lights": [
+          0
+        ]
+      },
+      {
+        "clips": [
+          "vo:heb.heb_a_w_chatulim"
+        ],
+        "lights": [
+          1
+        ]
+      },
+      {
+        "clips": [
+          "vo:heb.heb_a_w_kelev"
+        ],
+        "lights": [
+          2
+        ]
+      },
+      {
+        "clips": [
+          "vo:heb.heb_a_w_klavim"
+        ],
+        "lights": [
+          3
+        ]
+      }
+    ]
+  },
+  "answer": {
+    "type": "none",
+    "mode": "chant"
+  }
+}

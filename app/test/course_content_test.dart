@@ -27,8 +27,8 @@ Map<String, Object?> _gate({
   'course': 'eng',
   'requires': requires,
   'holds': holds,
-  'neverUnderBand': 0,
-  'durableBelowBand': 2,
+  'minAge': 5,
+  'durableBelowAge': 7,
   'parentSwitch': <String, Object?>{'name': 'oralOnly', 'effect': 'closes'},
 };
 
@@ -255,25 +255,19 @@ void main() {
       expect(g.course, Course.eng);
       expect(g.requires, <String>{'ENG-A-01'});
       expect(g.holds, <String>{'ENG-A-02'});
-      expect(g.neverUnderBand, 0);
-      expect(g.durableBelowBand, 2);
+      expect(g.minAge, 5);
+      expect(g.durableBelowAge, 7);
+      expect(g.early, isNull);
       expect(g.switchName, 'oralOnly');
       expect(g.switchEffect, SwitchEffect.closes);
       expect(gateSwitchNames, contains(g.switchName));
-      final GateResult closed = gateResult(
-        g,
-        const GateInput(mastery: <String, MasteryLevel>{}, ageBand: 1, presentationBand: 1),
-      );
+      final GateResult closed = gateResult(g, const GateInput(mastery: <String, MasteryLevel>{}, ageBand: 1));
       expect(closed.open, isFalse);
       expect(closed.missing, <String>['ENG-A-01']);
       expect(
         gateResult(
           g,
-          const GateInput(
-            mastery: <String, MasteryLevel>{'ENG-A-01': MasteryLevel.durable},
-            ageBand: 1,
-            presentationBand: 1,
-          ),
+          const GateInput(mastery: <String, MasteryLevel>{'ENG-A-01': MasteryLevel.durable}, ageBand: 2),
         ).open,
         isTrue,
       );

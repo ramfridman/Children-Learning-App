@@ -12,12 +12,19 @@
     }
   ],
   "skills": [
+    "ENG-A-03",
     "ENG-A-04"
   ],
   "items": [
+    "eng.a03.n05",
+    "eng.a04.n01",
+    "eng.a04.n02",
+    "eng.a04.n03",
     "eng.a04.i01",
     "eng.a04.i02",
-    "eng.a04.i03"
+    "eng.a04.i03",
+    "eng.a04.k01",
+    "eng.a04.s01"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,5 +36,19 @@
       }
     ]
   },
-  "sequence": 8
+  "sequence": 11,
+  "teach": [
+    {
+      "items": [
+        "eng.a04.tc01",
+        "eng.a04.tc02",
+        "eng.a04.tc03"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a04.n01"
+    }
+  ]
 }

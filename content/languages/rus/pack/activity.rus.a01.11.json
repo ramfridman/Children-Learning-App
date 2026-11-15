@@ -63,13 +63,14 @@
     "incorrect": [
       {
         "when": "default",
-        "vo": "vo:rus.he_fb_check",
+        "vo": "vo:rus.f43",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+            "v": "וְאֵיפֹה"
           }
-        ]
+        ],
+        "target": "vo:rus.w_do_svidanija"
       }
     ],
     "unsure": {
@@ -128,23 +129,27 @@
       {
         "id": "o1",
         "sprite": "asset:neighbour_leave",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_do_svidanija"
       },
       {
         "id": "o2",
         "sprite": "asset:neighbour_arrive",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_zdravstvujte",
         "misconception": "rus.lis.sem"
       },
       {
         "id": "o3",
-        "sprite": "asset:mika_gift",
+        "sprite": "asset:mika_arrive",
         "label": "תְּמוּנָה",
+        "clip": "vo:rus.w_privet",
         "misconception": "rus.lis.sem"
       }
     ],
     "correct": "o1",
     "shuffle": true,
-    "unsureAllowed": true
+    "unsureAllowed": true,
+    "askWhere": true
   }
 }

@@ -8,17 +8,17 @@
   "title": [
     {
       "t": "he",
-      "v": "עוֹצְרִים וּמַקְשִׁיבִים"
+      "v": "פְּעֻלּוֹת"
     }
   ],
   "skills": [
     "ENG-A-02"
   ],
   "items": [
-    "eng.a02.i09",
+    "eng.a02.n13",
+    "eng.a02.n14",
     "eng.a02.i10",
-    "eng.a02.e01",
-    "eng.a02.e02"
+    "eng.a02.s04"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +30,5 @@
       }
     ]
   },
-  "sequence": 5
+  "sequence": 7
 }

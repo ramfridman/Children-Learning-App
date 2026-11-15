@@ -1,0 +1,147 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a02.f-kemach",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.3",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "heb-a-w-kemach",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 2,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "listen and choose",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "שְׁתֵּי תְּמוּנוֹת"
+  },
+  "prompt": {
+    "vo": "vo:heb.i_find",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נִמְצָא:"
+      }
+    ],
+    "target": "vo:heb.heb_a_w_kemach",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן, זֶהוּ זֶה!"
+        }
+      ],
+      "target": "vo:heb.heb_a_w_kemach"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:heb.fb_where",
+        "caption": [
+          {
+            "t": "he",
+            "v": "וְאֵיפֹה"
+          }
+        ],
+        "target": "vo:heb.heb_a_w_kemach"
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_kemach"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_kemach"
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:heb.m_kemach",
+      "caption": [
+        {
+          "t": "he",
+          "v": "קֶמַח הוּא אֲבָקָה לְבָנָה. מִמֶּנּוּ אוֹפִים לֶחֶם וְעוּגוֹת."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:heb.show",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַעֲשֶׂה אֶת זֶה יַחַד."
+        }
+      ],
+      "target": "vo:heb.heb_a_w_kemach"
+    }
+  ],
+  "scene": {},
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:flour",
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_kemach"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:sugar",
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_sukar",
+        "misconception": "heb.ol.sem"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true,
+    "askWhere": true
+  }
+}

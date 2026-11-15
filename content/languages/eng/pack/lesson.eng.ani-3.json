@@ -8,17 +8,22 @@
   "title": [
     {
       "t": "he",
-      "v": "חַיּוֹת בַּסַּל"
+      "v": "עוֹד חַיּוֹת"
     }
   ],
   "skills": [
     "ENG-A-05"
   ],
   "items": [
+    "eng.a05.n09",
+    "eng.a05.n10",
+    "eng.a05.n11",
+    "eng.a05.n12",
+    "eng.a05.i06",
+    "eng.a05.i08",
+    "eng.a05.s03",
     "eng.a05.i09",
-    "eng.a05.i10",
-    "eng.a05.m01",
-    "eng.a05.m02"
+    "eng.a05.x01"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,5 +35,18 @@
       }
     ]
   },
-  "sequence": 13
+  "sequence": 16,
+  "teach": [
+    {
+      "items": [
+        "eng.a05.tc07",
+        "eng.a05.tc08"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "eng.a05.n11"
+    }
+  ]
 }

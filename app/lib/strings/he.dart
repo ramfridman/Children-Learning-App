@@ -165,14 +165,14 @@ abstract final class He {
   static const Str medalBraveAsker = Str('אֹמֶץ לִשְׁאֹל', nikud: true);
   static const Str medalTryAgain = Str('מְנַסִּים שׁוּב', nikud: true);
   static const Str medalExplainer = Str('אֵיךְ יָדַעְתִּי', nikud: true);
-  static const Str medalBugFixer = Str('מְתַקְּנֵי בָּאגִים', nikud: true);
+  static const Str medalBugFixer = Str('מְתַקְּנֵי תַּקָּלוֹת', nikud: true);
   static const Str medalBraveAskerHow = Str(
     'אוֹמְרִים "לֹא בָּטוּחַ" אוֹ "תַּרְאוּ לִי" חָמֵשׁ פְּעָמִים',
     nikud: true,
   );
   static const Str medalTryAgainHow = Str('מְנַסִּים שׁוּב וּמַצְלִיחִים שָׁלוֹשׁ פְּעָמִים', nikud: true);
-  static const Str medalExplainerHow = Str('בְּקָרוֹב אֶפְשָׁר יִהְיֶה לִזְכּוֹת בָּהּ', nikud: true);
-  static const Str medalBugFixerHow = Str('בְּקָרוֹב אֶפְשָׁר יִהְיֶה לִזְכּוֹת בָּהּ', nikud: true);
+  static const Str medalExplainerHow = Str('בְּקָרוֹב יִהְיֶה אֶפְשָׁר לִזְכּוֹת בָּהּ', nikud: true);
+  static const Str medalBugFixerHow = Str('בְּקָרוֹב יִהְיֶה אֶפְשָׁר לִזְכּוֹת בָּהּ', nikud: true);
   static const Str medalLockedSemantics = Str('מדליה שעוד לא זכינו בה');
   static const Str outfitHoney = Str('צָעִיף דְּבַשׁ', nikud: true);
   static const Str outfitSky = Str('צָעִיף שָׁמַיִם', nikud: true);
@@ -366,7 +366,7 @@ abstract final class He {
   static const Str tutorLogOpen = Str('מה העוזר אמר');
   static const Str tutorLogTitle = Str('מה העוזר אמר ב-30 הימים האחרונים');
   static const Str tutorLogHelp = Str(
-    'כל משפט נבדק לפני שהילד שמע אותו. משפט שלא עבר את הבדיקות לא נשמע, ובמקומו נשמעה ההודעה הרגילה.',
+    'כל משפט נבדק לפני שהילד שמע אותו. משפט שלא עבר את הבדיקות לא נשמע, ובמקומו נשמעת ההודעה הרגילה.',
   );
   static const Str tutorLogEmpty = Str('עוד לא נשמעו משפטים של העוזר.');
   static const Str tutorLogOffline = Str('אי אפשר להגיע לשרת כרגע. נסו שוב בעוד רגע.');
@@ -629,7 +629,7 @@ abstract final class He {
   );
   static const Str divisionHeading = Str('סימן החילוק');
   static const Str divisionHelp = Str(
-    'איך מצויר חילוק בתרגילים: ÷ (ברירת המחדל) או נקודתיים (:). ההגדרה נשמרת במכשיר הזה.',
+    'איך מוצג החילוק בתרגילים: ÷ (ברירת המחדל) או נקודתיים (:). ההגדרה נשמרת במכשיר הזה.',
   );
   static const Str aiHeading = Str('עוזר מילולי');
   static const Str aiHelp = Str(
@@ -706,6 +706,11 @@ abstract final class He {
   static const Str areaLangLetters = Str('אותיות לפני גיל 5');
   static const Str areaLangLettersOff = Str('כבוי: עד גיל 5 רק שומעים ומדברים');
   static const Str areaLangLettersOn = Str('מופעל: אפשר להתחיל באותיות גם לפני גיל 5');
+  // L7-8 (the editor's words, final 2026-11-15): "letters together with words", shown from age 6, on by default from 7; and the line under "letters before 5".
+  static const Str areaLangLettersTogether = Str('אותיות יחד עם מילים');
+  static const Str areaLangLettersTogetherOn = Str('מופעל: האותיות מתחילות כבר אחרי המילים הראשונות');
+  static const Str areaLangLettersTogetherOff = Str('כבוי: האותיות מתחילות כשהילד מכיר הרבה מילים');
+  static const Str areaLangLettersFirstWords = Str('גם כשמופעל, האותיות מתחילות רק אחרי המילים הראשונות');
   static const Str areaLangStress = Str('סימני הטעמה על המסך');
   static const Str areaLangStressHelp = Str(
     'סימן קטן שמראה על איזו אות ההטעמה במילה. בשיעורים על הטעמה הוא מופיע תמיד. ברירת המחדל במסלול של {route}: {default}.',
@@ -726,6 +731,18 @@ abstract final class He {
   static const Str areaLangQuestTitle = Str('שאלון שפת הבית');
   static const Str areaLangQuestHelp = Str('התשובות קובעות רק מאיפה מתחילים. אפשר לשנות אותן בכל זמן.');
   static const Str areaLangQuestButton = Str('לשאלון');
+  // L7-2: English and Hebrew ask what the child already knows; a child who knows nothing, or has no answers, starts at lesson 1.
+  static const Str areaLangKnowsTitle = Str('מה הילד כבר יודע');
+  static const Str areaLangKnowsHelp = Str(
+    'אם הילד עוד לא מכיר את השפה, אפשר לא לענות: הוא מתחיל משיעור 1. התשובות קובעות רק מאיפה מתחילים, ואפשר לשנות אותן בכל זמן.',
+  );
+  static const Str areaLangPlacementTitle = Str('משחק היכרות');
+  static const Str areaLangPlacementHelp = Str(
+    'ילד שלא מכיר את השפה מתחיל משיעור 1, בלי משחק. אפשר לבקש משחק קצר שיראה מאיפה כדאי להתחיל.',
+  );
+  static const Str areaLangPlacementButton = Str('לבקש משחק היכרות');
+  static const Str areaLangPlacementAsked = Str('ביקשתם משחק היכרות, והילד ישחק בו בביקור.');
+  static const Str areaLangPlacementByAnswers = Str('לפי התשובות, יש לילד משחק היכרות.');
   static const Str areaLangProgressEng = Str('התקדמות באנגלית');
   static const Str areaLangProgressHeb = Str('התקדמות בעברית');
   static const Str areaLangProgressRus = Str('התקדמות ברוסית');
@@ -767,6 +784,8 @@ abstract final class He {
   static const Str langRoute = Str('מסלול הלמידה');
   static const Str langQuestionnaireDone = Str('סיום');
   static const Str qKnowsLetters = Str('הילד מכיר אותיות באנגלית?');
+  static const Str qUnderstandsEng = Str('הילד מבין אנגלית?');
+  static const Str qKnowsLettersHeb = Str('הילד מכיר אותיות או קורא בעברית?');
   static const Str qHome = Str('מי מדבר רוסית בבית?');
   static const Str qUnderstands = Str('הילד מבין רוסית?');
   static const Str qSpeaks = Str('הילד מדבר רוסית?');
@@ -775,6 +794,7 @@ abstract final class He {
   static const Str aNo = Str('לא');
   static const Str aSome = Str('קצת');
   static const Str aMost = Str('הרבה');
+  static const Str aReads = Str('קורא');
   static const Str aNone = Str('אף אחד');
   static const Str aOneParent = Str('אחד ההורים');
   static const Str aBothParents = Str('שני ההורים');

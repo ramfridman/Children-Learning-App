@@ -1,447 +1,59 @@
 {
-  "skill": {
-    "id": "RUS-A-09",
-    "strand": "voc",
-    "title": "בְּגָדִים",
-    "prerequisites": [
-      {
-        "skill": "RUS-A-08"
-      }
-    ],
-    "setCoverage": true
-  },
+  "skill": {"id": "RUS-A-09", "strand": "voc", "title": "בְּגָדִים", "prerequisites": [{"skill": "RUS-A-08"}], "setCoverage": true},
   "items": [
-    {
-      "id": "01",
-      "kind": "tap",
-      "frame": "f01",
-      "target": "w-shapka",
-      "options": [
-        {
-          "pic": "hat-warm",
-          "clip": "w-shapka"
-        },
-        {
-          "pic": "scarf",
-          "clip": "w-sharf"
-        },
-        {
-          "pic": "jacket",
-          "clip": "w-kurtka"
-        }
-      ],
-      "wrong": {
-        "scarf": "sound",
-        "jacket": "sem"
-      }
-    },
-    {
-      "id": "02",
-      "kind": "tap",
-      "frame": "f01",
-      "target": "w-kurtka",
-      "options": [
-        {
-          "pic": "jacket",
-          "clip": "w-kurtka"
-        },
-        {
-          "pic": "doll",
-          "clip": "w-kukla"
-        },
-        {
-          "pic": "dress",
-          "clip": "w-platje"
-        }
-      ],
-      "wrong": {
-        "doll": "sound",
-        "dress": "sem"
-      }
-    },
-    {
-      "id": "03",
-      "kind": "tap",
-      "frame": "f01",
-      "target": "w-platje",
-      "options": [
-        {
-          "pic": "dress",
-          "clip": "w-platje"
-        },
-        {
-          "pic": "shirt",
-          "clip": "w-futbolka"
-        },
-        {
-          "pic": "trousers",
-          "clip": "w-shtany"
-        }
-      ],
-      "wrong": {
-        "shirt": "sem",
-        "trousers": "sem"
-      }
-    },
-    {
-      "id": "04",
-      "kind": "tap",
-      "frame": "f01",
-      "target": "w-futbolka",
-      "options": [
-        {
-          "pic": "shirt",
-          "clip": "w-futbolka"
-        },
-        {
-          "pic": "jacket",
-          "clip": "w-kurtka"
-        },
-        {
-          "pic": "dress",
-          "clip": "w-platje"
-        }
-      ],
-      "wrong": {
-        "jacket": "sem",
-        "dress": "sem"
-      }
-    },
-    {
-      "id": "05",
-      "kind": "tap",
-      "frame": "f01",
-      "target": "w-shtany",
-      "options": [
-        {
-          "pic": "trousers",
-          "clip": "w-shtany"
-        },
-        {
-          "pic": "socks",
-          "clip": "w-noski"
-        },
-        {
-          "pic": "shirt",
-          "clip": "w-futbolka"
-        }
-      ],
-      "wrong": {
-        "socks": "sem",
-        "shirt": "sem"
-      }
-    },
-    {
-      "id": "06",
-      "kind": "tap",
-      "frame": "f01",
-      "target": "w-noski",
-      "options": [
-        {
-          "pic": "socks",
-          "clip": "w-noski"
-        },
-        {
-          "pic": "shoes",
-          "clip": "w-botinki"
-        },
-        {
-          "pic": "body-nose",
-          "clip": "w-nos"
-        }
-      ],
-      "wrong": {
-        "shoes": "sem",
-        "body-nose": "sound"
-      }
-    },
-    {
-      "id": "07",
-      "kind": "tap",
-      "frame": "f01",
-      "target": "w-botinki",
-      "options": [
-        {
-          "pic": "shoes",
-          "clip": "w-botinki"
-        },
-        {
-          "pic": "boots",
-          "clip": "w-sapogi"
-        },
-        {
-          "pic": "socks",
-          "clip": "w-noski"
-        }
-      ],
-      "wrong": {
-        "boots": "sem",
-        "socks": "sem"
-      }
-    },
-    {
-      "id": "08",
-      "kind": "tap",
-      "frame": "f01",
-      "target": "w-sapogi",
-      "options": [
-        {
-          "pic": "boots",
-          "clip": "w-sapogi"
-        },
-        {
-          "pic": "shoes",
-          "clip": "w-botinki"
-        },
-        {
-          "pic": "hat-warm",
-          "clip": "w-shapka"
-        }
-      ],
-      "wrong": {
-        "shoes": "sem",
-        "hat-warm": "sem"
-      }
-    },
-    {
-      "id": "09",
-      "kind": "tap",
-      "frame": "f01",
-      "target": "w-sharf",
-      "options": [
-        {
-          "pic": "scarf",
-          "clip": "w-sharf"
-        },
-        {
-          "pic": "hat-warm",
-          "clip": "w-shapka"
-        },
-        {
-          "pic": "mittens",
-          "clip": "w-varezhki"
-        }
-      ],
-      "wrong": {
-        "hat-warm": "sound",
-        "mittens": "sem"
-      }
-    },
-    {
-      "id": "10",
-      "kind": "tap",
-      "frame": "f01",
-      "target": "w-varezhki",
-      "options": [
-        {
-          "pic": "mittens",
-          "clip": "w-varezhki"
-        },
-        {
-          "pic": "scarf",
-          "clip": "w-sharf"
-        },
-        {
-          "pic": "socks",
-          "clip": "w-noski"
-        }
-      ],
-      "wrong": {
-        "scarf": "sem",
-        "socks": "sem"
-      }
-    },
-    {
-      "id": "p01",
-      "kind": "tap",
-      "frame": "f01",
-      "target": "w-sharf",
-      "options": [
-        {
-          "pic": "scarf",
-          "clip": "w-sharf"
-        },
-        {
-          "pic": "hat-warm",
-          "clip": "w-shapka"
-        },
-        {
-          "pic": "mittens",
-          "clip": "w-varezhki"
-        }
-      ],
-      "wrong": {
-        "hat-warm": "sound",
-        "mittens": "sem"
-      },
-      "purpose": "probe"
-    },
-    {
-      "id": "11",
-      "kind": "listen_do",
-      "frame": "f13",
-      "mode": "drag",
-      "picture": "mika-body",
-      "target": "w-shapka",
-      "options": [
-        "hat",
-        "scarf",
-        "jacket"
-      ],
-      "right": "hat",
-      "wrong": {
-        "scarf": "sound",
-        "jacket": "sem"
-      },
-      "ladder": "HL-1",
-      "rep": "embodied"
-    },
-    {
-      "id": "12",
-      "kind": "listen_do",
-      "frame": "f13",
-      "mode": "drag",
-      "picture": "mika-body",
-      "target": "w-platje",
-      "options": [
-        "dress",
-        "shirt",
-        "trousers"
-      ],
-      "right": "dress",
-      "wrong": {
-        "shirt": "sem",
-        "trousers": "sem"
-      },
-      "ladder": "HL-1",
-      "rep": "embodied"
-    },
-    {
-      "id": "13",
-      "kind": "listen_do",
-      "frame": "f13",
-      "mode": "drag",
-      "picture": "mika-body",
-      "target": "w-noski",
-      "options": [
-        "socks",
-        "shoes",
-        "body-nose"
-      ],
-      "right": "socks",
-      "wrong": {
-        "shoes": "sem",
-        "body-nose": "sound"
-      },
-      "ladder": "HL-1",
-      "rep": "embodied"
-    },
-    {
-      "id": "14",
-      "kind": "listen_do",
-      "frame": "f13",
-      "purpose": "check",
-      "mode": "drag",
-      "picture": "mika-body",
-      "target": "w-sharf",
-      "options": [
-        "scarf",
-        "hat",
-        "mittens"
-      ],
-      "right": "scarf",
-      "wrong": {
-        "hat": "sound",
-        "mittens": "sem"
-      },
-      "ladder": "HL-1",
-      "rep": "embodied"
-    },
-    {
-      "id": "15",
-      "kind": "listen_do",
-      "frame": "f13",
-      "purpose": "check",
-      "mode": "drag",
-      "picture": "mika-body",
-      "target": "w-varezhki",
-      "options": [
-        "mittens",
-        "scarf",
-        "socks"
-      ],
-      "right": "mittens",
-      "wrong": {
-        "scarf": "sem",
-        "socks": "sem"
-      },
-      "ladder": "HL-1",
-      "rep": "embodied"
-    }
+    {"id": "01", "kind": "tap", "frame": "f01", "target": "w-shapka", "options": [{"pic": "hat-warm", "clip": "w-shapka"}, {"pic": "dress", "clip": "w-platje"}, {"pic": "socks", "clip": "w-noski"}], "wrong": {"w-platje": "sem", "w-noski": "sem"}},
+    {"id": "02", "kind": "tap", "frame": "f01", "target": "w-kurtka", "options": [{"pic": "jacket", "clip": "w-kurtka"}, {"pic": "doll", "clip": "w-kukla"}, {"pic": "dress", "clip": "w-platje"}], "wrong": {"doll": "sound", "dress": "sem"}},
+    {"id": "03", "kind": "tap", "frame": "f01", "target": "w-platje", "options": [{"pic": "dress", "clip": "w-platje"}, {"pic": "hat-warm", "clip": "w-shapka"}, {"pic": "socks", "clip": "w-noski"}], "wrong": {"w-shapka": "sem", "w-noski": "sem"}},
+    {"id": "04", "kind": "tap", "frame": "f01", "target": "w-futbolka", "options": [{"pic": "shirt", "clip": "w-futbolka"}, {"pic": "jacket", "clip": "w-kurtka"}, {"pic": "dress", "clip": "w-platje"}], "wrong": {"jacket": "sem", "dress": "sem"}},
+    {"id": "05", "kind": "tap", "frame": "f01", "target": "w-shtany", "options": [{"pic": "trousers", "clip": "w-shtany"}, {"pic": "socks", "clip": "w-noski"}, {"pic": "jacket", "clip": "w-kurtka"}], "wrong": {"w-noski": "sem", "w-kurtka": "sem"}},
+    {"id": "06", "kind": "tap", "frame": "f01", "target": "w-noski", "options": [{"pic": "socks", "clip": "w-noski"}, {"pic": "body-nose", "clip": "w-nos"}, {"pic": "dress", "clip": "w-platje"}], "wrong": {"w-nos": "sound", "w-platje": "sem"}},
+    {"id": "07", "kind": "tap", "frame": "f01", "target": "w-botinki", "options": [{"pic": "shoes", "clip": "w-botinki"}, {"pic": "socks", "clip": "w-noski"}, {"pic": "trousers", "clip": "w-shtany"}], "wrong": {"w-noski": "sem", "w-shtany": "sem"}},
+    {"id": "08", "kind": "tap", "frame": "f01", "target": "w-sapogi", "options": [{"pic": "boots", "clip": "w-sapogi"}, {"pic": "shoes", "clip": "w-botinki"}, {"pic": "hat-warm", "clip": "w-shapka"}], "wrong": {"shoes": "sem", "hat-warm": "sem"}},
+    {"id": "09", "kind": "tap", "frame": "f01", "target": "w-sharf", "options": [{"pic": "scarf", "clip": "w-sharf"}, {"pic": "hat-warm", "clip": "w-shapka"}, {"pic": "mittens", "clip": "w-varezhki"}], "wrong": {"hat-warm": "sound", "mittens": "sem"}},
+    {"id": "10", "kind": "tap", "frame": "f01", "target": "w-varezhki", "options": [{"pic": "mittens", "clip": "w-varezhki"}, {"pic": "scarf", "clip": "w-sharf"}, {"pic": "socks", "clip": "w-noski"}], "wrong": {"scarf": "sem", "socks": "sem"}},
+    {"id": "p01", "kind": "tap", "frame": "f01", "target": "w-sharf", "options": [{"pic": "scarf", "clip": "w-sharf"}, {"pic": "hat-warm", "clip": "w-shapka"}, {"pic": "mittens", "clip": "w-varezhki"}], "wrong": {"hat-warm": "sound", "mittens": "sem"}, "purpose": "probe"},
+    {"id": "11", "kind": "listen_do", "frame": "f13", "mode": "drag", "picture": "mika-body", "target": "w-shapka", "options": [{"pic": "hat", "clip": "w-shapka"}, {"pic": "dress", "clip": "w-platje"}, {"pic": "socks", "clip": "w-noski"}], "right": "hat", "wrong": {"dress": "sem", "socks": "sem"}, "ladder": "HL-1", "rep": "embodied"},
+    {"id": "12", "kind": "listen_do", "frame": "f13", "mode": "drag", "picture": "mika-body", "target": "w-platje", "options": [{"pic": "dress", "clip": "w-platje"}, {"pic": "trousers", "clip": "w-shtany"}, {"pic": "jacket", "clip": "w-kurtka"}], "right": "dress", "wrong": {"trousers": "sem", "jacket": "sem"}, "ladder": "HL-1", "rep": "embodied"},
+    {"id": "13", "kind": "listen_do", "frame": "f13", "mode": "drag", "picture": "mika-body", "target": "w-noski", "options": [{"pic": "socks", "clip": "w-noski"}, {"pic": "shoes", "clip": "w-botinki"}, {"pic": "body-nose", "clip": "w-nos"}], "right": "socks", "wrong": {"shoes": "sem", "body-nose": "sound"}, "ladder": "HL-1", "rep": "embodied"},
+    {"id": "14", "kind": "listen_do", "frame": "f13", "mode": "drag", "picture": "mika-body", "target": "w-sharf", "options": [{"pic": "scarf", "clip": "w-sharf"}, {"pic": "hat", "clip": "w-shapka"}, {"pic": "mittens", "clip": "w-varezhki"}], "right": "scarf", "wrong": {"hat": "sound", "mittens": "sem"}, "ladder": "HL-1", "rep": "embodied", "purpose": "check"},
+    {"id": "15", "kind": "listen_do", "frame": "f13", "mode": "drag", "picture": "mika-body", "target": "w-varezhki", "options": [{"pic": "mittens", "clip": "w-varezhki"}, {"pic": "scarf", "clip": "w-sharf"}, {"pic": "socks", "clip": "w-noski"}], "right": "mittens", "wrong": {"scarf": "sem", "socks": "sem"}, "ladder": "HL-1", "rep": "embodied", "purpose": "check"},
+    {"id": "f01", "kind": "tap", "frame": "f01", "target": "w-shapka", "options": [{"pic": "hat-warm", "clip": "w-shapka"}, {"pic": "dress", "clip": "w-platje"}], "wrong": {"w-platje": "sem"}},
+    {"id": "f02", "kind": "tap", "frame": "f01", "target": "w-platje", "options": [{"pic": "dress", "clip": "w-platje"}, {"pic": "socks", "clip": "w-noski"}], "wrong": {"w-noski": "sem"}},
+    {"id": "f03", "kind": "tap", "frame": "f01", "target": "w-noski", "options": [{"pic": "socks", "clip": "w-noski"}, {"pic": "hat-warm", "clip": "w-shapka"}], "wrong": {"w-shapka": "sem"}},
+    {"id": "f05", "kind": "tap", "frame": "f01", "target": "w-kurtka", "options": [{"pic": "jacket", "clip": "w-kurtka"}, {"pic": "trousers", "clip": "w-shtany"}], "wrong": {"w-shtany": "sem"}},
+    {"id": "f06", "kind": "tap", "frame": "f01", "target": "w-shtany", "options": [{"pic": "trousers", "clip": "w-shtany"}, {"pic": "shoes", "clip": "w-botinki"}], "wrong": {"w-botinki": "sem"}},
+    {"id": "f07", "kind": "tap", "frame": "f01", "target": "w-botinki", "options": [{"pic": "shoes", "clip": "w-botinki"}, {"pic": "jacket", "clip": "w-kurtka"}], "wrong": {"w-kurtka": "sem"}},
+    {"id": "f09", "kind": "tap", "frame": "f01", "target": "w-futbolka", "options": [{"pic": "shirt", "clip": "w-futbolka"}, {"pic": "boots", "clip": "w-sapogi"}], "wrong": {"w-sapogi": "sem"}},
+    {"id": "f10", "kind": "tap", "frame": "f01", "target": "w-sapogi", "options": [{"pic": "boots", "clip": "w-sapogi"}, {"pic": "shirt", "clip": "w-futbolka"}], "wrong": {"w-futbolka": "sem"}},
+    {"id": "f11", "kind": "tap", "frame": "f01", "target": "w-sharf", "options": [{"pic": "scarf", "clip": "w-sharf"}, {"pic": "mittens", "clip": "w-varezhki"}], "wrong": {"w-varezhki": "sem"}},
+    {"id": "f12", "kind": "tap", "frame": "f01", "target": "w-varezhki", "options": [{"pic": "mittens", "clip": "w-varezhki"}, {"pic": "scarf", "clip": "w-sharf"}], "wrong": {"w-sharf": "sem"}},
+    {"id": "r01", "kind": "tap", "frame": "f01", "target": "w-shapka", "options": [{"pic": "hat-warm", "clip": "w-shapka"}, {"pic": "socks", "clip": "w-noski"}, {"pic": "dress", "clip": "w-platje"}], "wrong": {"w-noski": "sem", "w-platje": "sem"}},
+    {"id": "r02", "kind": "tap", "frame": "f01", "target": "w-noski", "options": [{"pic": "socks", "clip": "w-noski"}, {"pic": "dress", "clip": "w-platje"}, {"pic": "hat-warm", "clip": "w-shapka"}], "wrong": {"w-platje": "sem", "w-shapka": "sem"}},
+    {"id": "r03", "kind": "tap", "frame": "f01", "target": "w-kurtka", "options": [{"pic": "jacket", "clip": "w-kurtka"}, {"pic": "trousers", "clip": "w-shtany"}, {"pic": "dress", "clip": "w-platje"}], "wrong": {"w-shtany": "sem", "w-platje": "sem"}},
+    {"id": "r04", "kind": "tap", "frame": "f01", "target": "w-botinki", "options": [{"pic": "shoes", "clip": "w-botinki"}, {"pic": "hat-warm", "clip": "w-shapka"}, {"pic": "socks", "clip": "w-noski"}], "wrong": {"w-shapka": "sem", "w-noski": "sem"}},
+    {"id": "r05", "kind": "tap", "frame": "f01", "target": "w-futbolka", "options": [{"pic": "shirt", "clip": "w-futbolka"}, {"pic": "jacket", "clip": "w-kurtka"}, {"pic": "trousers", "clip": "w-shtany"}], "wrong": {"w-kurtka": "sem", "w-shtany": "sem"}},
+    {"id": "r06", "kind": "tap", "frame": "f01", "target": "w-sapogi", "options": [{"pic": "boots", "clip": "w-sapogi"}, {"pic": "shoes", "clip": "w-botinki"}, {"pic": "socks", "clip": "w-noski"}], "wrong": {"w-botinki": "sem", "w-noski": "sem"}},
+    {"id": "r07", "kind": "tap", "frame": "f01", "target": "w-sharf", "options": [{"pic": "scarf", "clip": "w-sharf"}, {"pic": "hat-warm", "clip": "w-shapka"}, {"pic": "mittens", "clip": "w-varezhki"}], "wrong": {"w-shapka": "sound", "w-varezhki": "sem"}},
+    {"id": "r08", "kind": "tap", "frame": "f01", "target": "w-varezhki", "options": [{"pic": "mittens", "clip": "w-varezhki"}, {"pic": "socks", "clip": "w-noski"}, {"pic": "scarf", "clip": "w-sharf"}], "wrong": {"w-noski": "sem", "w-sharf": "sem"}},
+    {"id": "d01", "kind": "listen_do", "frame": "f13", "mode": "drag", "picture": "mika-body", "target": "w-kurtka", "options": [{"pic": "jacket", "clip": "w-kurtka"}, {"pic": "shirt", "clip": "w-futbolka"}, {"pic": "dress", "clip": "w-platje"}], "right": "jacket", "wrong": {"shirt": "sem", "dress": "sem"}, "ladder": "HL-1", "rep": "embodied"},
+    {"id": "d02", "kind": "listen_do", "frame": "f13", "mode": "drag", "picture": "mika-body", "target": "w-sapogi", "options": [{"pic": "boots", "clip": "w-sapogi"}, {"pic": "shoes", "clip": "w-botinki"}, {"pic": "socks", "clip": "w-noski"}], "right": "boots", "wrong": {"shoes": "sem", "socks": "sem"}, "ladder": "HL-1", "rep": "embodied"},
+    {"id": "s01", "kind": "say", "frame": "f06", "purpose": "practice", "picture": "hat-warm", "clip": "w-shapka", "forms": ["шапка"], "foils": ["шарф"], "heard": "f04", "together": "f03", "rep": "embodied"},
+    {"id": "s02", "kind": "say", "frame": "f06", "purpose": "practice", "picture": "shoes", "clip": "w-botinki", "forms": ["ботинки"], "foils": ["сапоги"], "heard": "f04", "together": "f03", "rep": "embodied"},
+    {"id": "s03", "kind": "say", "frame": "f06", "purpose": "practice", "picture": "dress", "clip": "w-platje", "forms": ["платье"], "foils": ["футболка"], "heard": "f04", "together": "f03", "rep": "embodied", "then": {"kind": "tap", "purpose": "learn", "frame": "f01", "target": "w-platje", "options": [{"pic": "dress", "clip": "w-platje"}, {"pic": "shirt", "clip": "w-futbolka"}, {"pic": "trousers", "clip": "w-shtany"}], "wrong": {"w-futbolka": "sem", "w-shtany": "sem"}, "ladder": "HL-1", "rep": "pictorial"}},
+    {"id": "s04", "kind": "say", "frame": "f06", "purpose": "practice", "picture": "trousers", "clip": "w-shtany", "forms": ["штаны"], "foils": ["носки"], "heard": "f04", "together": "f03", "rep": "embodied", "then": {"kind": "tap", "purpose": "learn", "frame": "f01", "target": "w-shtany", "options": [{"pic": "trousers", "clip": "w-shtany"}, {"pic": "socks", "clip": "w-noski"}, {"pic": "boots", "clip": "w-sapogi"}], "wrong": {"w-noski": "sem", "w-sapogi": "sem"}, "ladder": "HL-1", "rep": "pictorial"}},
+    {"id": "s05", "kind": "say", "frame": "f06", "purpose": "practice", "picture": "mittens", "clip": "w-varezhki", "forms": ["варежки"], "foils": ["шарф"], "heard": "f04", "together": "f03", "rep": "embodied"},
+    {"id": "b01", "kind": "puppet", "mode": "bubble", "frame": "f38", "picture": "mika-happy", "prompt": [], "options": [{"clip": "w-sharf"}, {"clip": "w-shapka"}, {"clip": "w-varezhki"}], "wrong": {"w-shapka": "sound", "w-varezhki": "sem"}, "ladder": "HL-1", "rep": "story", "shows": "scarf", "hintWord": "w-sharf"},
+    {"id": "s06", "kind": "say", "frame": "f06", "purpose": "practice", "picture": "dress", "clip": "w-platje", "forms": ["платье"], "foils": ["футболка"], "heard": "f04", "together": "f03", "rep": "embodied"},
+    {"id": "s07", "kind": "say", "frame": "f06", "purpose": "practice", "picture": "jacket", "clip": "w-kurtka", "forms": ["куртка"], "foils": ["кукла"], "heard": "f04", "together": "f03", "rep": "embodied"},
+    {"id": "s08", "kind": "say", "frame": "f06", "purpose": "practice", "picture": "boots", "clip": "w-sapogi", "forms": ["сапоги"], "foils": ["ботинки"], "heard": "f04", "together": "f03", "rep": "embodied"},
+    {"id": "s09", "kind": "say", "frame": "f06", "purpose": "practice", "picture": "scarf", "clip": "w-sharf", "forms": ["шарф"], "foils": ["шапка"], "heard": "f04", "together": "f03", "rep": "embodied"}
   ],
   "lessons": [
-    {
-      "id": "clothes-1",
-      "title": "בְּגָדִים",
-      "items": [
-        "01",
-        "02",
-        "03",
-        "04",
-        "05"
-      ]
-    },
-    {
-      "id": "clothes-2",
-      "title": "בְּגָדִים",
-      "items": [
-        "06",
-        "07",
-        "08",
-        "09",
-        "10"
-      ]
-    },
-    {
-      "id": "clothes-more",
-      "title": "בְּגָדִים",
-      "items": [
-        "11",
-        "12",
-        "13"
-      ]
-    }
+    {"id": "clothes-1", "title": "בְּגָדִים", "meet": [["w-shapka", "w-platje", "w-noski"]], "find": ["f01", "f02", "f03", "01", "03", "06"], "use": ["11", "s01", "s06"]},
+    {"id": "clothes-2", "title": "בְּגָדִים", "recall": ["r01", "r02"], "meet": [["w-kurtka", "w-shtany", "w-botinki"]], "find": ["f05", "f06", "f07", "02", "05", "07"], "use": ["12", "s02", "s07"]},
+    {"id": "clothes-3", "title": "בְּגָדִים", "recall": ["r03", "r04"], "meet": [["w-futbolka", "w-sapogi"]], "find": ["f09", "f10", "04", "08"], "use": ["13", "s03", "s08"]},
+    {"id": "clothes-4", "title": "בְּגָדִים", "recall": ["r05", "r06"], "meet": [["w-sharf", "w-varezhki"]], "find": ["f11", "f12", "09", "10"], "use": ["d01", "s04", "s09"]},
+    {"id": "clothes-more", "title": "בְּגָדִים", "recall": ["r07", "r08"], "use": ["d02", "b01", "s05"]}
   ],
-  "teach": [
-    [
-      "w-shapka",
-      "w-kurtka",
-      "w-platje",
-      "w-futbolka",
-      "w-shtany"
-    ],
-    [
-      "w-noski",
-      "w-botinki",
-      "w-sapogi",
-      "w-sharf",
-      "w-varezhki"
-    ]
-  ],
-  "routes": {
-    "new": {
-      "note": "teach in two sets; items 01 to 15"
-    },
-    "heritage": {
-      "teach": false,
-      "order": [
-        "11-15",
-        "01-10"
-      ]
-    },
-    "reader": {
-      "as": "oral",
-      "note": "as heritage or new"
-    }
-  }
+  "routes": {"new": {"note": "L7 shape: Meet шапка, платье, носки; then куртка, штаны, ботинки; then футболка, сапоги; then шарф, варежки (шапка / шарф, ботинки / сапоги, куртка / кукла and носки / нос never each other's first partner); dressing the friend as Use"}, "heritage": {"teach": false, "order": ["11-15", "01-10"]}, "reader": {"as": "oral", "note": "as heritage or new"}}
 }

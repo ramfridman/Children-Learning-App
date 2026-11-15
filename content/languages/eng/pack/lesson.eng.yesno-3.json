@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "eng.yesno-3",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "eng",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מַה יֵּשׁ בַּקֻּפְסָה?"
+    }
+  ],
+  "skills": [
+    "ENG-A-16"
+  ],
+  "items": [
+    "eng.a16.n07",
+    "eng.a16.n08",
+    "eng.a16.g02",
+    "eng.a16.u01",
+    "eng.a16.s03"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "sequence": 56
+}

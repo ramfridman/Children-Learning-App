@@ -15,9 +15,11 @@
     "RUS-A-09"
   ],
   "items": [
-    "rus.a09.11",
-    "rus.a09.12",
-    "rus.a09.13"
+    "rus.a09.r07",
+    "rus.a09.r08",
+    "rus.a09.d02",
+    "rus.a09.b01",
+    "rus.a09.s05"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,5 +31,5 @@
       }
     ]
   },
-  "sequence": 36
+  "sequence": 50
 }

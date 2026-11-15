@@ -120,7 +120,8 @@ class SkillNode {
   /// What a spelling that is right by sound counts as in this skill.
   final SoundRightPolicy soundRight;
 
-  /// The skill is letter work: it is never offered under the youngest presentation band (Hebrew A-10 to A-12 aside).
+  /// The skill is letter work. Whether a child is served it is the course gates' decision, by age and level (frame section 3.3.6), never
+  /// the presentation band.
   final bool letters;
 
   /// The same skill with other prerequisites (the catalogue replaces a roll-up by its groups).

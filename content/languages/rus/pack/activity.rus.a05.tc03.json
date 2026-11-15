@@ -46,19 +46,19 @@
         "v": "בּוֹאוּ נֹאמַר יַחַד."
       }
     ],
-    "target": "vo:rus.w_mysh",
+    "target": "vo:rus.w_ryba",
     "replayButton": true
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_5",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "בְּדִיּוּק!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
-      "target": "vo:rus.w_mysh"
+      "target": "vo:rus.w_ryba"
     },
     "incorrect": [
       {
@@ -80,24 +80,24 @@
           "v": "הַקְשִׁיבוּ שׁוּב."
         }
       ],
-      "target": "vo:rus.w_mysh"
+      "target": "vo:rus.w_ryba"
     }
   },
   "hints": [],
   "scene": {
     "picture": {
-      "sprite": "asset:mouse"
+      "sprite": "asset:fish"
     }
   },
   "say": {
     "forms": [
-      "мышь"
+      "рыба"
     ],
     "foils": [
       "кошка",
       "собака"
     ],
-    "clip": "vo:rus.w_mysh",
+    "clip": "vo:rus.w_ryba",
     "heard": {
       "vo": "vo:rus.f04",
       "caption": [
@@ -106,7 +106,7 @@
           "v": "שָׁמַעְתִּי:"
         }
       ],
-      "target": "vo:rus.w_mysh"
+      "target": "vo:rus.w_ryba"
     },
     "together": {
       "vo": "vo:rus.f03",
@@ -116,7 +116,32 @@
           "v": "בּוֹאוּ נֹאמַר יַחַד."
         }
       ],
-      "target": "vo:rus.w_mysh"
+      "target": "vo:rus.w_ryba"
+    },
+    "meet": {
+      "position": 2,
+      "size": 3,
+      "earlier": [
+        {
+          "sprite": "asset:cat",
+          "clip": "vo:rus.w_koshka"
+        },
+        {
+          "sprite": "asset:dog",
+          "clip": "vo:rus.w_sobaka"
+        }
+      ],
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: דָּג"
+          }
+        ],
+        "target": "vo:rus.gl_dag"
+      },
+      "written": "рыба"
     }
   },
   "answer": {

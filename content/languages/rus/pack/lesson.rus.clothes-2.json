@@ -15,11 +15,17 @@
     "RUS-A-09"
   ],
   "items": [
-    "rus.a09.06",
+    "rus.a09.r01",
+    "rus.a09.r02",
+    "rus.a09.f05",
+    "rus.a09.f06",
+    "rus.a09.f07",
+    "rus.a09.02",
+    "rus.a09.05",
     "rus.a09.07",
-    "rus.a09.08",
-    "rus.a09.09",
-    "rus.a09.10"
+    "rus.a09.12",
+    "rus.a09.s02",
+    "rus.a09.s07"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -31,20 +37,19 @@
       }
     ]
   },
-  "sequence": 35,
+  "sequence": 47,
   "teach": [
     {
       "items": [
-        "rus.a09.tc06",
-        "rus.a09.tc07",
-        "rus.a09.tc08",
-        "rus.a09.tc09",
-        "rus.a09.tc10"
+        "rus.a09.tc04",
+        "rus.a09.tc05",
+        "rus.a09.tc06"
       ],
       "routes": [
         "new"
       ],
-      "mode": "teach"
+      "mode": "teach",
+      "before": "rus.a09.f05"
     }
   ]
 }

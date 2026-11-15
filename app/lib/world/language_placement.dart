@@ -2,6 +2,7 @@ import '../content/models.dart';
 import '../data/app_database.dart';
 import '../engine/course.dart';
 import '../engine/staircase.dart';
+import '../parent/language_settings.dart' show LanguageSwitches;
 import '../play/lesson_controller.dart' show ItemFlow;
 import 'placement.dart' show landPath, placementIdFor;
 
@@ -11,19 +12,18 @@ import 'placement.dart' show landPath, placementIdFor;
 // the engine as assumed. Nothing is stored for the placement but the answers themselves: the same replay is how the engine works.
 
 /// The game of [content]'s course, or null when the pack has no placement document. [answers] are the parent's questionnaire (enums
-/// only): an answer sets where a staircase starts and never where it ends, and may make a strand offered or not. [presentationBand]
-/// is the child's (0 to 2): the English literacy strand is offered only to Band B or C.
+/// only): an answer sets where a staircase starts and never where it ends, and may make a strand offered or not. Nothing here reads the
+/// child's age or presentation band: a course's start never reads age (docs/milestones/L7.md step L7-8).
 PlacementGame? placementGameOf(
   PackContent content, {
   Map<String, String> answers = const <String, String>{},
-  int presentationBand = 0,
 }) {
   final PlacementDoc? doc = content.placement;
   if (doc == null) return null;
   final List<StrandPlan> strands = <StrandPlan>[];
   for (final PlacementStrandDoc s in doc.strands) {
     final bool asked = s.offerAnswer == null || answers[s.offerAnswer] == s.offerEquals;
-    if (!asked || presentationBand < s.offerMinBand) continue;
+    if (!asked) continue;
     int start = 0;
     for (final ({String answer, String equals, int level}) rule in s.start) {
       if (answers[rule.answer] == rule.equals && rule.level > start) start = rule.level;
@@ -47,12 +47,29 @@ PlacementGame? placementGameFor(
   PackContent content,
   Iterable<Attempt> attempts, {
   Map<String, String> answers = const <String, String>{},
-  int presentationBand = 0,
 }) {
-  final PlacementGame? game = placementGameOf(content, answers: answers, presentationBand: presentationBand);
+  final PlacementGame? game = placementGameOf(content, answers: answers);
   if (game == null) return null;
   replayPlacement(game, content.course, attempts.where((Attempt a) => a.packId == content.packId));
   return game;
+}
+
+/// The placement game of one child's course as the parent's settings stand (docs/milestones/L7.md step L7-2): none for a beginner, whose
+/// parent's answers say the child knows nothing of the language, or are missing, and who has not been asked to play it (the course then
+/// starts at lesson 1, with no probe and no assumed skill). A game that was begun stays, whatever the answers say now: what it found is
+/// the child's history.
+PlacementGame? placementGameOfChild(
+  PackContent content,
+  Iterable<Attempt> attempts,
+  LanguageSwitches switches,
+) {
+  final PlacementGame? game = placementGameFor(
+    content,
+    attempts,
+    answers: switches.placementAnswers(content.course),
+  );
+  if (game == null) return null;
+  return switches.wantsPlacement(content.course) || PlacementStatus.of(game).begun ? game : null;
 }
 
 /// Where a child's placement stands in a course: what each strand found so far, and whether every strand has stopped. Read from a game
@@ -119,6 +136,23 @@ Set<String> assumedSkills(PackContent content, PlacementGame game) {
   return out;
 }
 
+/// The gates the child's placement marks open: level comes before age (docs/languages/frame.md section 3.3.6). A gate is marked when the
+/// parent says the child knows letters or reads ([LanguageSwitches.claimsLetters]) **and** a finished letters strand that names the gate
+/// (`opens`) found a level from its `fromLevel` up passed at two thirds or more, before the "minus one unit" step. Placement only opens a
+/// gate and never closes one: a child whose placement does not confirm letters keeps the default (and the parent can ask again).
+Set<String> placedOpenGates(PackContent content, PlacementStatus? placement, LanguageSwitches switches) {
+  final PlacementDoc? doc = content.placement;
+  if (doc == null || placement == null || !switches.claimsLetters(content.course)) return const <String>{};
+  final Set<String> out = <String>{};
+  for (final PlacementStrandDoc s in doc.strands) {
+    final StrandResult? r = placement.results[s.id];
+    if (s.opensGate != null && r != null && r.stopped && (r.best ?? -1) >= s.opensFromLevel!) {
+      out.add(s.opensGate!);
+    }
+  }
+  return out;
+}
+
 /// The lessons whose every skill the placement assumed: they count as passed once, as the lessons a land's warm-up showed the child
 /// knows do. A lesson with no skill is never placed.
 Set<String> placedLanguageLessons(PackContent content, Set<String> assumed) {
@@ -173,15 +207,9 @@ class PlacementFlow implements ItemFlow {
   PackContent content,
   Iterable<Attempt> attempts, {
   Map<String, String> answers = const <String, String>{},
-  int presentationBand = 0,
 }) {
   final PlacementDoc? doc = content.placement;
-  final PlacementGame? game = placementGameFor(
-    content,
-    attempts,
-    answers: answers,
-    presentationBand: presentationBand,
-  );
+  final PlacementGame? game = placementGameFor(content, attempts, answers: answers);
   if (doc == null || game == null || game.next() == null) return null;
   final PlacementFlow flow = PlacementFlow(game, doc);
   final Lesson? lesson = placementLessonFor(content, flow);

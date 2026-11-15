@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/app/language_providers.dart';
+import 'package:nitznutz/content/models.dart' show PackContent;
 import 'package:nitznutz/data/app_database.dart';
+import 'package:nitznutz/engine/age.dart' show BirthMonth;
 import 'package:nitznutz/engine/types.dart';
 import 'package:nitznutz/parent/child_form.dart';
 import 'package:nitznutz/parent/language_pages.dart';
@@ -17,6 +19,8 @@ import 'package:nitznutz/strings/he.dart';
 import 'support/app_harness.dart';
 import 'support/harness.dart';
 import 'support/language_screens.dart';
+import 'support/letter_gates.dart';
+import 'support/sample_pack.dart';
 
 Future<FamilyLanguages> stored(AppRig rig) async =>
     FamilyLanguages.decode(await rig.db.setting(languagesSettingKey));
@@ -146,6 +150,39 @@ void main() {
       },
     );
 
+    testWidgets(
+      'turning English or Hebrew on for the first time asks what the child already knows, and the answers are saved as enums',
+      (WidgetTester tester) async {
+        final AppRig rig = await langRig();
+        await pumpParentScreen(
+          tester,
+          rig,
+          ChildSettingsScreen(profile: await langProfile(rig), onClose: () {}),
+        );
+        await tester.tap(find.byKey(const Key('language-switch-eng')));
+        await tester.pumpAndSettle();
+        expect(find.byType(QuestionnairePage), findsOneWidget);
+        expect(find.text(He.qUnderstandsEng.text), findsOneWidget);
+        expect(find.text(He.qKnowsLetters.text), findsOneWidget);
+        await tester.tap(find.byKey(const Key('answer-understands-some')));
+        await tester.pumpAndSettle();
+        FamilyLanguages f = await stored(rig);
+        expect(f.of(langKid, 'eng').on, isTrue);
+        expect(f.of(langKid, 'eng').questionnaire, <String, String>{'understands': 'some'});
+        await tester.tap(find.byKey(const Key('questionnaire-done')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('language-switch-heb')));
+        await tester.pumpAndSettle();
+        expect(find.text(He.qKnowsLettersHeb.text), findsOneWidget);
+        expect(find.text(He.aReads.text), findsOneWidget);
+        await tester.tap(find.byKey(const Key('answer-knowsLetters-reads')));
+        await tester.pumpAndSettle();
+        f = await stored(rig);
+        expect(f.of(langKid, 'heb').questionnaire, <String, String>{'knowsLetters': 'reads'});
+        expect(f.of(langKid, 'eng').questionnaire, <String, String>{'understands': 'some'});
+      },
+    );
+
     testWidgets('the row opens the language page', (WidgetTester tester) async {
       final AppRig rig = await langRig();
       await pumpParentScreen(
@@ -160,11 +197,19 @@ void main() {
   });
 
   group('a language page', () {
-    Future<AppRig> page(WidgetTester tester, String course, {LanguageSwitches? switches}) async {
+    // With [lettersGate] the course's installed pack carries a letters gate (the fixture of support/letter_gates.dart); without it no pack is
+    // on this phone (as the progress test below expects), which has no letters gate either.
+    Future<AppRig> page(
+      WidgetTester tester,
+      String course, {
+      LanguageSwitches? switches,
+      bool lettersGate = false,
+    }) async {
       final AppRig rig = await langRig(
         languages: <String, LanguageSwitches>{course: switches ?? const LanguageSwitches(on: true)},
-        installed: const <String>[], // no course pack is on this phone, as the progress test below expects
+        installed: const <String>[],
       );
+      if (lettersGate) rig.languagePacks = <String, PackContent>{course: LetterGatePack(course).content};
       await pumpParentScreen(tester, rig, LanguagePage(profile: await langProfile(rig), course: course));
       return rig;
     }
@@ -179,14 +224,18 @@ void main() {
         expect(find.byKey(const Key('band-age')), findsOneWidget);
         expect(find.byKey(const Key('page-letters5')), findsNothing);
         expect(find.byKey(const Key('page-read-check')), findsNothing);
-        expect(find.byKey(const Key('open-questionnaire')), findsNothing);
+        expect(
+          find.byKey(const Key('open-questionnaire')),
+          findsOneWidget,
+          reason: 'English asks what the child knows (L7-2)',
+        );
       },
     );
 
     testWidgets('Russian: letters before 5, stress marks with the route, the questionnaire', (
       WidgetTester tester,
     ) async {
-      await page(tester, 'rus');
+      await page(tester, 'rus', lettersGate: true);
       expect(find.byKey(const Key('page-letters5')), findsOneWidget);
       expect(find.byKey(const Key('stress-route')), findsOneWidget);
       expect(find.byKey(const Key('route-heritage')), findsOneWidget);
@@ -205,10 +254,192 @@ void main() {
       },
     );
 
+    // "Letters together with words" (L7-8): hidden under 6;0, shown (off) from 6, on by default from 7, a parent's own choice stands. The
+    // rig's clock is on 2026-10-26, so a child born in October 2020 is 6;0 and one born in November 2020 is 5;11.
+    Future<AppRig> pageAged(
+      WidgetTester tester,
+      String course, {
+      int? year,
+      int? month,
+      LanguageSwitches? switches,
+      bool lettersGate = true,
+    }) async {
+      final AppRig rig = await langRig(
+        languages: <String, LanguageSwitches>{course: switches ?? const LanguageSwitches(on: true)},
+        installed: const <String>[],
+      );
+      if (lettersGate) rig.languagePacks = <String, PackContent>{course: LetterGatePack(course).content};
+      if (year != null) await rig.db.setBirth(langKid, BirthMonth(year, month!));
+      await pumpParentScreen(tester, rig, LanguagePage(profile: await langProfile(rig), course: course));
+      return rig;
+    }
+
+    Switch togetherSwitch(WidgetTester tester) => tester.widget<Switch>(
+      find.descendant(of: find.byKey(const Key('page-letters-together')), matching: find.byType(Switch)),
+    );
+
+    for (final String course in <String>['eng', 'rus']) {
+      testWidgets(
+        '$course: "letters together with words" is hidden at 5;11, and when no birth month is known for a 5 to 6 bracket',
+        (WidgetTester tester) async {
+          await pageAged(tester, course, year: 2020, month: 11);
+          expect(find.byKey(const Key('page-letters-together')), findsNothing);
+          expect(find.text(He.areaLangLettersTogether.text), findsNothing);
+        },
+      );
+
+      testWidgets(
+        '$course: no birth month and the 5 to 6 bracket: hidden (the bracket is read by its youngest age)',
+        (WidgetTester tester) async {
+          await pageAged(tester, course);
+          expect(find.byKey(const Key('page-letters-together')), findsNothing);
+        },
+      );
+
+      testWidgets('$course: shown, off, from 6;0, and the choice is stored as a boolean', (
+        WidgetTester tester,
+      ) async {
+        final AppRig rig = await pageAged(tester, course, year: 2020, month: 10);
+        await tester.ensureVisible(find.byKey(const Key('page-letters-together')));
+        expect(togetherSwitch(tester).value, isFalse);
+        expect(find.text(He.areaLangLettersTogetherOff.text), findsOneWidget);
+        expect(
+          (await rig.db.setting(languagesSettingKey))!,
+          isNot(contains('lettersWithWords')),
+          reason: 'nothing stored until chosen',
+        );
+        await tester.tap(
+          find.descendant(of: find.byKey(const Key('page-letters-together')), matching: find.byType(Switch)),
+        );
+        await tester.pumpAndSettle();
+        expect(togetherSwitch(tester).value, isTrue);
+        expect(find.text(He.areaLangLettersTogetherOn.text), findsOneWidget);
+        expect((await stored(rig)).of(langKid, course).lettersWithWords, isTrue);
+        expect((await rig.db.setting(languagesSettingKey))!, contains('"lettersWithWords":true'));
+      });
+
+      testWidgets('$course: on from 7;0 until the parent turns it off, and the choice stands', (
+        WidgetTester tester,
+      ) async {
+        final AppRig rig = await pageAged(tester, course, year: 2019, month: 10);
+        await tester.ensureVisible(find.byKey(const Key('page-letters-together')));
+        expect(togetherSwitch(tester).value, isTrue);
+        expect((await stored(rig)).of(langKid, course).lettersWithWords, isNull);
+        await tester.tap(
+          find.descendant(of: find.byKey(const Key('page-letters-together')), matching: find.byType(Switch)),
+        );
+        await tester.pumpAndSettle();
+        expect(togetherSwitch(tester).value, isFalse);
+        expect((await stored(rig)).of(langKid, course).lettersWithWords, isFalse);
+      });
+    }
+
+    // The two letters switches act only on a letters gate: a course whose installed pack has none (no letter lessons yet) shows neither,
+    // at any age; one whose pack has the gate shows them as above.
+    for (final String course in <String>['eng', 'rus']) {
+      testWidgets('$course: a pack with no letters gate hides "letters together with words" even at 7;0', (
+        WidgetTester tester,
+      ) async {
+        await pageAged(tester, course, year: 2019, month: 10, lettersGate: false);
+        expect(find.byKey(const Key('page-letters-together')), findsNothing);
+        expect(find.text(He.areaLangLettersTogether.text), findsNothing);
+        expect(find.byKey(const Key('page-voice')), findsOneWidget, reason: 'the rest of the page is there');
+      });
+
+      testWidgets('$course: a pack with a letters gate shows "letters together with words" from 6;0', (
+        WidgetTester tester,
+      ) async {
+        await pageAged(tester, course, year: 2019, month: 10, lettersGate: true);
+        expect(find.byKey(const Key('page-letters-together')), findsOneWidget);
+      });
+
+      test('$course: the gate fixture has a letters gate, the course fixture without one has none', () {
+        expect(
+          LetterGatePack(course).content.hasLettersGate,
+          isTrue,
+          reason: 'its gate holds skills with letters: true',
+        );
+        expect(PackContent.fromPack(SamplePack.language(course).verified()).hasLettersGate, isFalse);
+      });
+    }
+
+    testWidgets(
+      'Russian: with no letters gate in the pack "letters before 5" is not shown, whatever it was set to',
+      (WidgetTester tester) async {
+        await pageAged(
+          tester,
+          'rus',
+          year: 2019,
+          month: 10,
+          switches: const LanguageSwitches(on: true, lettersBefore5: true),
+          lettersGate: false,
+        );
+        expect(find.byKey(const Key('page-letters5')), findsNothing);
+        expect(find.byKey(const Key('page-letters5-words')), findsNothing);
+        expect(find.text(He.areaLangLetters.text), findsNothing);
+        expect(
+          find.byKey(const Key('stress-route')),
+          findsOneWidget,
+          reason: 'the Russian page keeps its other rows',
+        );
+      },
+    );
+
+    testWidgets('Hebrew has no "letters together with words", at any age', (WidgetTester tester) async {
+      await pageAged(tester, 'heb', year: 2018, month: 3);
+      expect(find.byKey(const Key('page-letters-together')), findsNothing);
+    });
+
+    testWidgets('Russian: "letters before 5" says the letters still wait for the first words', (
+      WidgetTester tester,
+    ) async {
+      await pageAged(tester, 'rus', switches: const LanguageSwitches(on: true, lettersBefore5: true));
+      await tester.ensureVisible(find.byKey(const Key('page-letters5-words')));
+      expect(find.text(He.areaLangLettersFirstWords.text), findsOneWidget);
+    });
+
+    testWidgets('Russian: with "letters before 5" off that line is not shown', (WidgetTester tester) async {
+      await pageAged(tester, 'rus');
+      expect(find.byKey(const Key('page-letters5-words')), findsNothing);
+    });
+
+    for (final String course in <String>['eng', 'heb', 'rus']) {
+      testWidgets('$course: a beginner can ask for a placement game, and it is saved as a switch', (
+        WidgetTester tester,
+      ) async {
+        final AppRig rig = await page(tester, course);
+        await tester.ensureVisible(find.byKey(const Key('ask-placement')));
+        expect(find.byKey(const Key('placement-state')), findsNothing);
+        await tester.tap(find.byKey(const Key('ask-placement')));
+        await tester.pumpAndSettle();
+        expect((await stored(rig)).of(langKid, course).placementAsked, isTrue);
+        expect(
+          (await rig.db.setting(languagesSettingKey))!,
+          contains('"placement":true'),
+          reason: 'a boolean, and nothing else, is what travels',
+        );
+        expect(find.byKey(const Key('ask-placement')), findsNothing, reason: 'asked once');
+        expect(find.text(He.areaLangPlacementAsked.text), findsOneWidget);
+      });
+    }
+
+    testWidgets('a child whose answers already call for the placement has no button, and the page says so', (
+      WidgetTester tester,
+    ) async {
+      await page(
+        tester,
+        'eng',
+        switches: const LanguageSwitches(on: true, questionnaire: <String, String>{'knowsLetters': 'some'}),
+      );
+      await tester.ensureVisible(find.byKey(const Key('placement-state')));
+      expect(find.byKey(const Key('ask-placement')), findsNothing);
+      expect(find.text(He.areaLangPlacementByAnswers.text), findsOneWidget);
+    });
+
     testWidgets(
       'every switch is saved as the parent set it, and the voice is off, the personal questions on, until then',
       (WidgetTester tester) async {
-        final AppRig rig = await page(tester, 'rus');
+        final AppRig rig = await page(tester, 'rus', lettersGate: true);
         expect(
           tester
               .widget<Switch>(

@@ -15,9 +15,17 @@
     "RUS-A-06"
   ],
   "items": [
+    "rus.a06.r01",
+    "rus.a06.r02",
+    "rus.a06.f04",
+    "rus.a06.f05",
+    "rus.a06.f06",
+    "rus.a06.06",
     "rus.a06.04",
     "rus.a06.05",
-    "rus.a06.06"
+    "rus.a06.d02",
+    "rus.a06.s02",
+    "rus.a06.s05"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,7 +37,7 @@
       }
     ]
   },
-  "sequence": 21,
+  "sequence": 29,
   "teach": [
     {
       "items": [
@@ -40,7 +48,8 @@
       "routes": [
         "new"
       ],
-      "mode": "teach"
+      "mode": "teach",
+      "before": "rus.a06.f04"
     }
   ]
 }

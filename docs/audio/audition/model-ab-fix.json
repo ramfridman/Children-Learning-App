@@ -1,0 +1,242 @@
+{
+  "schema": "audition/v1",
+  "title": "Model A/B fix probe: candidate voice texts for three words that both models misread in model-ab (עשר after ב-, נאמר, עשרות). Each variant by nitzi and hero-son on Turbo and on v4.",
+  "review": "needs-editor",
+  "note": "Ids sort in pairs (09a-hero-turbo, 09a-hero-v4, 09a-nitzi-turbo, 09a-nitzi-v4). Settings are the usual ones. Variants 09c and 11c are rewordings that the hebrew-text-editor and the owner must approve; the others change only the voice text.",
+  "defaults": {
+    "character": "nitzi",
+    "model": "eleven_v4_turbo",
+    "format": "mp3_44100_64",
+    "settings": {
+      "stability": 0.5,
+      "similarity_boost": 0.75,
+      "use_speaker_boost": true
+    }
+  },
+  "clips": [
+    {
+      "id": "09a-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "משורה לשורה המספר גָּדֵל בעשר, וְסִפְרַת היחידות נשארת.",
+      "tests": "בעשר plain: does the voice find \"be'eser\" alone?"
+    },
+    {
+      "id": "09a-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "משורה לשורה המספר גָּדֵל בעשר, וְסִפְרַת היחידות נשארת.",
+      "tests": "בעשר plain: does the voice find \"be'eser\" alone?"
+    },
+    {
+      "id": "09a-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "משורה לשורה המספר גָּדֵל בעשר, וְסִפְרַת היחידות נשארת.",
+      "tests": "בעשר plain: does the voice find \"be'eser\" alone?"
+    },
+    {
+      "id": "09a-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "משורה לשורה המספר גָּדֵל בעשר, וְסִפְרַת היחידות נשארת.",
+      "tests": "בעשר plain: does the voice find \"be'eser\" alone?"
+    },
+    {
+      "id": "09b-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "משורה לשורה המספר גָּדֵל, בְּעֶשֶׂר, וְסִפְרַת היחידות נשארת.",
+      "tests": "the same pointed form with a comma before it: a breath before the ayin"
+    },
+    {
+      "id": "09b-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "משורה לשורה המספר גָּדֵל, בְּעֶשֶׂר, וְסִפְרַת היחידות נשארת.",
+      "tests": "the same pointed form with a comma before it: a breath before the ayin"
+    },
+    {
+      "id": "09b-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "משורה לשורה המספר גָּדֵל, בְּעֶשֶׂר, וְסִפְרַת היחידות נשארת.",
+      "tests": "the same pointed form with a comma before it: a breath before the ayin"
+    },
+    {
+      "id": "09b-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "משורה לשורה המספר גָּדֵל, בְּעֶשֶׂר, וְסִפְרַת היחידות נשארת.",
+      "tests": "the same pointed form with a comma before it: a breath before the ayin"
+    },
+    {
+      "id": "09c-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "משורה לשורה המספר גָּדֵל, וכל פעם מוסיפים עֶשֶׂר, וְסִפְרַת היחידות נשארת.",
+      "tests": "a REWORDING (the editor and the owner must approve it for the screen): no prefix on עשר"
+    },
+    {
+      "id": "09c-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "משורה לשורה המספר גָּדֵל, וכל פעם מוסיפים עֶשֶׂר, וְסִפְרַת היחידות נשארת.",
+      "tests": "a REWORDING (the editor and the owner must approve it for the screen): no prefix on עשר"
+    },
+    {
+      "id": "09c-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "משורה לשורה המספר גָּדֵל, וכל פעם מוסיפים עֶשֶׂר, וְסִפְרַת היחידות נשארת.",
+      "tests": "a REWORDING (the editor and the owner must approve it for the screen): no prefix on עשר"
+    },
+    {
+      "id": "09c-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "משורה לשורה המספר גָּדֵל, וכל פעם מוסיפים עֶשֶׂר, וְסִפְרַת היחידות נשארת.",
+      "tests": "a REWORDING (the editor and the owner must approve it for the screen): no prefix on עשר"
+    },
+    {
+      "id": "10a-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "נגיד את הסדר בקול, וְנִמְחָא כפיים עם כל אֶחָד.",
+      "tests": "voice-only: נגיד in place of נֹאמַר (the screen text keeps נֹאמַר)"
+    },
+    {
+      "id": "10a-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "נגיד את הסדר בקול, וְנִמְחָא כפיים עם כל אֶחָד.",
+      "tests": "voice-only: נגיד in place of נֹאמַר (the screen text keeps נֹאמַר)"
+    },
+    {
+      "id": "10a-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "נגיד את הסדר בקול, וְנִמְחָא כפיים עם כל אֶחָד.",
+      "tests": "voice-only: נגיד in place of נֹאמַר (the screen text keeps נֹאמַר)"
+    },
+    {
+      "id": "10a-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "נגיד את הסדר בקול, וְנִמְחָא כפיים עם כל אֶחָד.",
+      "tests": "voice-only: נגיד in place of נֹאמַר (the screen text keeps נֹאמַר)"
+    },
+    {
+      "id": "10b-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "נגיד יחד את הסדר בקול, וְנִמְחָא כפיים עם כל אֶחָד.",
+      "tests": "voice-only: נגיד יחד"
+    },
+    {
+      "id": "10b-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "נגיד יחד את הסדר בקול, וְנִמְחָא כפיים עם כל אֶחָד.",
+      "tests": "voice-only: נגיד יחד"
+    },
+    {
+      "id": "10b-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "נגיד יחד את הסדר בקול, וְנִמְחָא כפיים עם כל אֶחָד.",
+      "tests": "voice-only: נגיד יחד"
+    },
+    {
+      "id": "10b-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "נגיד יחד את הסדר בקול, וְנִמְחָא כפיים עם כל אֶחָד.",
+      "tests": "voice-only: נגיד יחד"
+    },
+    {
+      "id": "11a-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "במספר עם עֲשָׂרוֹת ויחידות יש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "voice-only: עֲשָׂרוֹת pointed (the screen form)"
+    },
+    {
+      "id": "11a-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "במספר עם עֲשָׂרוֹת ויחידות יש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "voice-only: עֲשָׂרוֹת pointed (the screen form)"
+    },
+    {
+      "id": "11a-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "במספר עם עֲשָׂרוֹת ויחידות יש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "voice-only: עֲשָׂרוֹת pointed (the screen form)"
+    },
+    {
+      "id": "11a-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "במספר עם עֲשָׂרוֹת ויחידות יש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "voice-only: עֲשָׂרוֹת pointed (the screen form)"
+    },
+    {
+      "id": "11b-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "במספר עם עֲשָׂרוֹת וִיחִידוֹת יש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "voice-only: both words pointed, the phrase as the screen shows it"
+    },
+    {
+      "id": "11b-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "במספר עם עֲשָׂרוֹת וִיחִידוֹת יש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "voice-only: both words pointed, the phrase as the screen shows it"
+    },
+    {
+      "id": "11b-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "במספר עם עֲשָׂרוֹת וִיחִידוֹת יש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "voice-only: both words pointed, the phrase as the screen shows it"
+    },
+    {
+      "id": "11b-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "במספר עם עֲשָׂרוֹת וִיחִידוֹת יש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "voice-only: both words pointed, the phrase as the screen shows it"
+    },
+    {
+      "id": "11c-nitzi-turbo",
+      "character": "nitzi",
+      "model": "eleven_v4_turbo",
+      "text": "במספר יש עשרות ויחידות, ויש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "a REWORDING (editor and owner): the phrase \"עם עשרות\" removed"
+    },
+    {
+      "id": "11c-nitzi-v4",
+      "character": "nitzi",
+      "model": "eleven_v4",
+      "text": "במספר יש עשרות ויחידות, ויש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "a REWORDING (editor and owner): the phrase \"עם עשרות\" removed"
+    },
+    {
+      "id": "11c-hero-turbo",
+      "character": "hero-son",
+      "model": "eleven_v4_turbo",
+      "text": "במספר יש עשרות ויחידות, ויש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "a REWORDING (editor and owner): the phrase \"עם עשרות\" removed"
+    },
+    {
+      "id": "11c-hero-v4",
+      "character": "hero-son",
+      "model": "eleven_v4",
+      "text": "במספר יש עשרות ויחידות, ויש רק שְׁתֵּי סְפָרוֹת.",
+      "tests": "a REWORDING (editor and owner): the phrase \"עם עשרות\" removed"
+    }
+  ]
+}

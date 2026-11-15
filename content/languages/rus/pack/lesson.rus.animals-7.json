@@ -1,0 +1,53 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.animals-7",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "חַיּוֹת"
+    }
+  ],
+  "skills": [
+    "RUS-A-05"
+  ],
+  "items": [
+    "rus.a05.r10",
+    "rus.a05.r11",
+    "rus.a05.f20",
+    "rus.a05.f21",
+    "rus.a05.20",
+    "rus.a05.f22",
+    "rus.a05.s07",
+    "rus.a05.s07t",
+    "rus.a05.h04",
+    "rus.a05.s17"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 25,
+  "teach": [
+    {
+      "items": [
+        "rus.a05.tc19",
+        "rus.a05.tc20"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach",
+      "before": "rus.a05.f20"
+    }
+  ]
+}

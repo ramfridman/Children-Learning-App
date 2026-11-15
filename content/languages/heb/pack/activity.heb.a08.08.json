@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_8",
+      "vo": "vo:heb.ok_1",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:heb.heb_a_w_kos"
@@ -139,18 +139,21 @@
       {
         "id": "o1",
         "sprite": "asset:drum_strip_1",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_drums_1"
       },
       {
         "id": "o2",
         "sprite": "asset:drum_strip_2",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_drums_2",
         "misconception": "heb.pa.syll"
       },
       {
         "id": "o3",
         "sprite": "asset:drum_strip_3",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_drums_3",
         "misconception": "heb.pa.syll"
       }
     ],

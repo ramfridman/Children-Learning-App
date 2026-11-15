@@ -2,7 +2,7 @@
   "skill": {
     "id": "HEB-A-10",
     "strand": "pk",
-    "title": "מבחין בין אותיות לספרות, לצורות ולציורים"
+    "title": "מבחינים בין אותיות לספרות, לצורות ולציורים"
   },
   "items": [
     {
@@ -406,36 +406,87 @@
       },
       "ladder": "HL-PRINT",
       "font": "display"
+    },
+    {
+      "id": "sh-l1",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "d-letters",
+      "picture": "sign-letters"
+    },
+    {
+      "id": "u-l1",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "look-letters",
+      "picture": "book"
+    },
+    {
+      "id": "sh-l2",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "fb-print-shape",
+      "picture": "sign-other"
+    },
+    {
+      "id": "u-l2",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "look-letters",
+      "picture": "box"
+    },
+    {
+      "id": "sh-l3",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "d-letters",
+      "picture": "book"
+    },
+    {
+      "id": "u-l3",
+      "kind": "listen_do",
+      "mode": "embodied",
+      "frame": "look-letters",
+      "picture": "sign-letters"
     }
   ],
   "lessons": [
     {
       "id": "letters-1",
       "title": "אֵיפֹה הָאוֹת?",
+      "sequence": 250,
       "items": [
+        "sh-l1",
         "01",
         "02",
-        "03"
+        "03",
+        "u-l1"
       ]
     },
     {
       "id": "letters-2",
       "title": "עוֹד אוֹתִיּוֹת",
+      "sequence": 260,
       "items": [
+        "sh-l2",
         "04",
         "05",
-        "07"
+        "07",
+        "u-l2"
       ]
     },
     {
       "id": "letters-or-not-more",
       "title": "אוֹתִיּוֹת",
+      "sequence": 270,
       "items": [
+        "sh-l3",
         "s01",
         "s02",
         "t03",
         "t04",
-        "t05"
+        "t05",
+        "u-l3"
       ]
     }
   ]

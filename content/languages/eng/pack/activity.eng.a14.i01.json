@@ -36,7 +36,7 @@
     "mustNotRevealBeforeHint": 2
   },
   "a11y": {
-    "altText": "תּוֹף וְתְמוּנָה שֶׁל מִלָּה"
+    "altText": "תּוֹף וּתְמוּנָה שֶׁל מִלָּה"
   },
   "prompt": {
     "vo": "vo:eng.he_ins_drum",
@@ -50,11 +50,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:eng.he_fb_right_7",
+      "vo": "vo:eng.he_fb_right_1",
       "caption": [
         {
           "t": "he",
-          "v": "הִקְשַׁבְתֶּם יָפֶה!"
+          "v": "נָכוֹן!"
         }
       ],
       "target": "vo:eng.en_cat"

@@ -51,14 +51,14 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_3",
+      "vo": "vo:heb.ok_1",
       "caption": [
         {
           "t": "he",
-          "v": "שְׁמַעְתֶּם טוֹב!"
+          "v": "נָכוֹן!"
         }
       ],
-      "target": "vo:heb.heb_a_u_atalef"
+      "target": "vo:heb.heb_a_w_atalef"
     },
     "incorrect": [
       {
@@ -150,18 +150,21 @@
       {
         "id": "o1",
         "sprite": "asset:bat",
-        "label": "תְּמוּנָה"
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_atalef"
       },
       {
         "id": "o2",
         "sprite": "asset:clouds",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_ananim",
         "misconception": "heb.pa.blend_first"
       },
       {
         "id": "o3",
         "sprite": "asset:bird",
         "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_w_tsipor",
         "misconception": "heb.ol.sem"
       }
     ],

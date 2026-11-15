@@ -17,9 +17,11 @@
   "items": [
     "eng.a01.i01",
     "eng.a01.i02",
-    "eng.a01.i09",
-    "eng.a01.i04",
-    "eng.a01.i05"
+    "eng.a01.i05",
+    "eng.a01.i12",
+    "eng.a01.s01",
+    "eng.a01.i07",
+    "eng.a01.r01"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -31,5 +33,17 @@
       }
     ]
   },
-  "sequence": 1
+  "sequence": 1,
+  "teach": [
+    {
+      "items": [
+        "eng.a01.tc01",
+        "eng.a01.tc02"
+      ],
+      "routes": [
+        "new"
+      ],
+      "mode": "teach"
+    }
+  ]
 }

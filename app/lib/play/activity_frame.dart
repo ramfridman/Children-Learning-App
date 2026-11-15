@@ -10,6 +10,7 @@ import '../design/course_text.dart';
 import '../design/layout.dart';
 import '../design/stage_spec.dart';
 import '../design/tokens.g.dart';
+import '../design/trail_layout.dart';
 import '../design/trail_shape.dart';
 import '../rewards/sticker_design.dart';
 import '../rooms/host_pair.dart';
@@ -300,6 +301,13 @@ class ActivityFrame extends StatelessWidget {
         ? math.max(floorTop, math.min(s.bubbleTop, ceiling - fit.height))
         : s.bubbleTop;
     final Size room = s.stageIsCard ? Size(s.stage.width - 32, s.stage.height - 32) : s.stage.size;
+    // The trail fits the room between the header's buttons (QA-L7-2); the pill is then put where it stays inside it.
+    final ({double left, double right}) trailRoom = s.trailRoom(board.size.width);
+    final TrailLayout trail = TrailLayout.fit(
+      total: trailTotal,
+      done: trailDone,
+      maxWidth: trailRoom.right - trailRoom.left,
+    );
     return Scaffold(
       body: BoardCanvas(
         background: sc?.room.screen ?? TokenColors.cream,
@@ -415,15 +423,13 @@ class ActivityFrame extends StatelessWidget {
           // The hand is drawn after the answer tiles (and the stage, the bubble and the guide), so it is never behind what it points at.
           if (hands != null) _handLayer(s, room),
           Positioned(
-            left: s.trailLeft,
+            left: s.trailPillLeft(trail, board.size.width),
             top: s.trailTop,
-            width: s.trailWidth,
-            child: Center(
-              child: ProgressTrail(
-                total: trailTotal,
-                done: trailDone,
-                shape: sc?.room.trail ?? TrailShape.circle,
-              ),
+            child: ProgressTrail(
+              total: trailTotal,
+              done: trailDone,
+              maxWidth: trailRoom.right - trailRoom.left,
+              shape: sc?.room.trail ?? TrailShape.circle,
             ),
           ),
           boardAt(

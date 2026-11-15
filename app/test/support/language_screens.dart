@@ -82,7 +82,7 @@ Future<void> pumpParentScreen(
     'course': 'eng',
     'requires': <Object?>['ENG-A-01'],
     'holds': <Object?>['ENG-A-02'],
-    'neverUnderBand': 0,
+    'minAge': 5,
     'parentSwitch': <String, Object?>{'name': 'oralOnly', 'effect': 'closes'},
   });
   final PackContent content = PackContent.fromPack(p.verified());

@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_8",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל הַכָּבוֹד!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
       "target": "vo:rus.w_shapka"
@@ -94,8 +94,8 @@
       "шапка"
     ],
     "foils": [
-      "куртка",
-      "платье"
+      "платье",
+      "носки"
     ],
     "clip": "vo:rus.w_shapka",
     "heard": {
@@ -117,6 +117,30 @@
         }
       ],
       "target": "vo:rus.w_shapka"
+    },
+    "meet": {
+      "position": 0,
+      "size": 3,
+      "opener": {
+        "vo": "vo:rus.f44",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִלְמַד מִלִּים חֲדָשׁוֹת."
+          }
+        ]
+      },
+      "meaning": {
+        "vo": "vo:rus.f42",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּעִבְרִית: כּוֹבַע"
+          }
+        ],
+        "target": "vo:rus.gl_kova"
+      },
+      "written": "шапка"
     }
   },
   "answer": {
