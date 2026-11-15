@@ -970,3 +970,16 @@ In `HostHe.togethers` and `HostHe.togetherVoice`; clip `vo:host.<host>.together`
 Total 79 characters. `נֹאמַר` keeps its niqqud (otherwise `נֶאֱמַר`). The line is also the idle prompt of a Meet (the design doc re-voices it). The word to say follows as the item's own target clip. Bubble fit is by word count only; the developer should check it at size 1.3 on the SE.
 
 Total new voice characters from this section: 79 (Hebrew) + 13 (target) = 92.
+
+### 15.4 Decision: the two course host names (owner, 2026-11-15), applied
+
+The owner chose **אַלְפִי** (Alfi, the Hebrew course's hyrax, from אלף-בית) and **גּוֹשָׁה** (Gosha, the Russian course's giraffe; male). None of the three names offered in 15.1 was taken. Applied in `HostHe` (`app/lib/strings/he.dart`):
+
+| Host | `names` (adult, no niqqud) | Greeting (screen) | Greeting voice text |
+|---|---|---|---|
+| host_heb | אלפי | שָׁלוֹם. אֲנִי אַלְפִי. נִלְמַד אוֹתִיּוֹת? | שלום, אני אַלְפִי. נלמד אותיות? |
+| host_rus | גושה | שָׁלוֹם! אֲנִי גּוֹשָׁה. נְדַבֵּר רוּסִית? | שלום, אני גּוֹשָׁה. נדבר רוסית? |
+
+Niqqud. Alfi: patach on the alef (the owner's message had a kamatz, `אָלְפִי`; the word אלף is `אַלֶף` and the name is said "Al-fi", so patach), and **no dagesh in the pe**: after a silent shva a pe would take a dagesh (`אַלְפִּי`, read "Alpi"), but the name is said with an f, like the end of the word `אלף`. The voice text keeps the niqqud on the name so that the voice does not hesitate between `אַלְפִי`, `אֶלְפִי` and `אֲלָפִי`. Gosha: `גּוֹשָׁה` (gimel with a dagesh and a holam on the vav, as in `גּוֹנִי`; shin with a dagesh and a kamatz, read "sha"); the voice text keeps the niqqud on the name for the same reason. Words about the host: the greetings are first person ("אני") and the cheers are "we", so no verb or adjective agrees with a gendered host (Gosha being male changes nothing in the text today). Any future line that talks about Gosha uses masculine forms. The "הַ" before the old noun names is gone (a name takes no article). The cheers do not name the host and are unchanged.
+
+Open: (1) `Gosha` is close to `Goni` in sound and in the first syllable (I had left it out in 15.1 for that reason); the owner chose it, so it stays, but the two hosts are never in the same room and the pictures differ. (2) The art tools and `docs/languages/pictures.md` call the Russian puppet "Sasha" (`make_language_characters.py`); that is an internal art name of the giraffe, now clashing with Gosha. Needs the design-director's decision whether to rename it; I changed nothing there. (3) Both greetings are shorter than before (the old `שְׁפַן הַסֶּלַע` and `הַגִּ׳ירָפָה` were longer), so the bubble fit only got easier; fit test at 1.3 passes.

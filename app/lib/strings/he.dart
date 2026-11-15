@@ -927,8 +927,8 @@ abstract final class HostHe {
     'tzaadon': Str('צעדון'),
     'pnina': Str('סבתא פנינה'),
     'host_eng': Str('פיפ'),
-    'host_heb': Str('שפן הסלע'),
-    'host_rus': Str('הג׳ירפה'),
+    'host_heb': Str('אלפי'),
+    'host_rus': Str('גושה'),
   };
 
   /// What a host says when a lesson in its room opens. The hosts address the children as "we" or in the plural, ask nothing personal,
@@ -943,8 +943,8 @@ abstract final class HostHe {
     'timi': Str('הֵי! אֲנִי טִימִי. נִפְתֹּר חִידָה?', nikud: true),
     'pnina': Str('שָׁלוֹם לָכֶם! אֲנִי סַבְתָּא פְּנִינָה. בּוֹאוּ לַשּׁוּק!', nikud: true),
     'host_eng': Str('צִיץ צִיץ! אֲנִי פִּיפּ. נְדַבֵּר אַנְגְּלִית?', nikud: true),
-    'host_heb': Str('שָׁלוֹם. אֲנִי שְׁפַן הַסֶּלַע. נִלְמַד אוֹתִיּוֹת?', nikud: true),
-    'host_rus': Str('שָׁלוֹם! אֲנִי הַגִּ׳ירָפָה. נְדַבֵּר רוּסִית?', nikud: true),
+    'host_heb': Str('שָׁלוֹם. אֲנִי אַלְפִי. נִלְמַד אוֹתִיּוֹת?', nikud: true),
+    'host_rus': Str('שָׁלוֹם! אֲנִי גּוֹשָׁה. נְדַבֵּר רוּסִית?', nikud: true),
   };
 
   /// What a host says when the lesson ends, after the companion's praise. None repeats the companion's "כל הכבוד" or "יפה מאוד", none
@@ -970,8 +970,8 @@ abstract final class HostHe {
     'timi': 'הי, אני טימי. נפתור חידה?',
     'pnina': 'שלום לכם, אני סבתא פנינה. בואו לשוק.',
     'host_eng': 'צִיץ צִיץ, אני פיפ. נדבר אנגלית?',
-    'host_heb': 'שלום, אני שפן הסלע. נלמד אותיות?',
-    'host_rus': 'שלום, אני הַגִּ׳ירָפָה. נדבר רוסית?',
+    'host_heb': 'שלום, אני אַלְפִי. נלמד אותיות?',
+    'host_rus': 'שלום, אני גּוֹשָׁה. נדבר רוסית?',
   };
 
   /// The voice text of each cheer (same convention).
