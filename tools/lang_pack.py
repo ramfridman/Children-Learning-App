@@ -47,6 +47,7 @@ import lang_routes  # noqa: E402
 
 COURSES = ('eng', 'heb', 'rus')
 DOMAIN = 'languages'
+CLIP_PREFIX = re.compile(r'[a-z0-9][a-z0-9-]{0,40}')
 # The template versions the recipes write (app/lib/content/schemas.dart `supportedTemplates` must be at least these).
 TEMPLATE_VERSIONS = {'tap_answer': '1.3', 'story': '1.0', 'listen_do': '1.0', 'sing_along': '1.0', 'puppet_talk': '1.0',
                      'sound_boxes': '1.0', 'count_tap': '1.1', 'sort_drag': '1.1', 'match_pairs': '1.1', 'build_pattern': '1.1',
@@ -113,6 +114,7 @@ class Course(lang_recipes.Recipes, lang_routes.Routes, lang_meet.Meet):
         self.files = {}  # name -> bytes, the pack source
         self.used_lines = set()
         self.used_clips = set()
+        self.taught_clips = set()  # the clips of the Meet and teach screens: words the course voice says, never the puppet's
         self.used_pictures = {}  # asset id -> picture file id
         self.skills = {}  # id -> skill info
         self.items = {}  # activity id (with the course) -> info
@@ -142,6 +144,22 @@ class Course(lang_recipes.Recipes, lang_routes.Routes, lang_meet.Meet):
             self.problem(os.path.relpath(path, self.root), 'cannot be read: %s' % e)
             return None
 
+    def _puppet_prefixes(self):
+        """course.json `puppetPrefixes`: the id prefixes of the puppet's own lines (Russian `ch-`). Only a clip with one of them may be
+        voiced by the puppet voice; a course without the list has no puppet voice."""
+        prefixes = self.spec.get('puppetPrefixes', [])
+        if not isinstance(prefixes, list) or any(not isinstance(p, str) or not CLIP_PREFIX.fullmatch(p) for p in prefixes):
+            self.problem('course.json', 'puppetPrefixes is a list of clip id prefixes (lower case letters, digits and hyphens)')
+            return []
+        return prefixes
+
+    def puppet_clips(self):
+        """The clips the puppet voice may say: a used clip with a puppet prefix that no Meet or teach screen teaches (a slow copy follows
+        its normal clip). The voice tool (app/tool/lang_voice_lib.dart) gives the puppet voice to these, and only these."""
+        def base(clip):
+            return clip[:-len('-slow')] if clip.endswith('-slow') else clip
+        return sorted(c for c in self.used_clips if c.startswith(tuple(self.puppet_prefixes)) and base(c) not in self.taught_clips)
+
     def _load(self):
         self.spec = self._json(os.path.join(self.dir, 'course.json')) or {}
         if self.spec.get('course') != self.id:
@@ -156,6 +174,7 @@ class Course(lang_recipes.Recipes, lang_routes.Routes, lang_meet.Meet):
         self.defaults = self.spec.get('defaults', {})
         if self.spec.get('metBefore', 'report') not in lang_met_before.MODES:
             self.problem('course.json', 'metBefore is "report" or "enforce" (how the rule "met before asked" treats the lessons still in the old form)')
+        self.puppet_prefixes = self._puppet_prefixes()
         self.pronunciation = {}
         csv_path = os.path.join(self.root, 'docs', 'languages', {'eng': 'english', 'heb': 'hebrew', 'rus': 'russian'}[self.id],
                                 'pronunciation.csv')
@@ -686,6 +705,11 @@ class Course(lang_recipes.Recipes, lang_routes.Routes, lang_meet.Meet):
             target.append({'id': clip, 'vo': 'vo:%s.%s' % (self.id, clip.replace('-', '_')), 'shown': row.get('shown'),
                            'say': row.get('say'), 'ipa': row.get('ipa')})
         self.voice_plan = {'course': self.id, 'pack': 'lang-%s' % self.id, 'frameLines': frame, 'targetClips': target}
+        for prefix in self.puppet_prefixes:
+            if not any(c.startswith(prefix) for c in self.used_clips):
+                self.problem('course.json puppetPrefixes', 'no clip of the course starts with "%s"' % prefix)
+        if self.puppet_prefixes:
+            self.voice_plan['puppetClips'] = self.puppet_clips()
         if self.cut_clips:
             # The clips of single words, cut from the clip of the page by word timing: nothing of them is voiced, so nothing is paid.
             self.voice_plan['cutClips'] = [dict(c, vo='vo:%s.%s' % (self.id, c['id'].replace('-', '_'))) for _, c in sorted(self.cut_clips.items())]

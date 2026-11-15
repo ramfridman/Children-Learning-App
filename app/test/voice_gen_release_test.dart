@@ -87,12 +87,14 @@ Map<String, Object?> _planJson({
   List<Map<String, Object?>> frame = const <Map<String, Object?>>[],
   List<Map<String, Object?>> targets = const <Map<String, Object?>>[],
   List<Map<String, Object?>> cuts = const <Map<String, Object?>>[],
+  List<String>? puppetClips,
 }) => <String, Object?>{
   'course': course,
   'pack': 'lang-$course',
   'frameLines': frame,
   'targetClips': targets,
   'cutClips': cuts,
+  'puppetClips': ?puppetClips,
 };
 
 Map<String, Object?> _frame(String id, String? voice, {String review = 'text-ready'}) => <String, Object?>{
@@ -1066,6 +1068,7 @@ void main() {
         _target('en-bye', 'Goodbye!', say: 'Goodbye!'),
         _target('en-name-slow', 'What is your name?'),
       ],
+      puppetClips: <String>['en-hello', 'en-name', 'en-bye', 'en-name-slow'],
     );
 
     LangPlan plan({PuppetVoice? puppet, Map<String, Object?>? source, String target = 'lang-en-female'}) =>
@@ -1153,6 +1156,7 @@ void main() {
           _target('en-name', 'What is your name?'),
           _target('en-name-slow', 'What is your name', say: 'What is your name, please?'),
         ],
+        puppetClips: <String>['en-name'],
       );
       final LangPlan p = plan(puppet: puppet(<String>{'vo:eng.en_name'}), source: own);
       expect(voiceOf(p), <String, String>{
@@ -1199,6 +1203,7 @@ void main() {
             _target('en-apple', 'apple', say: 'apple.'),
             _target('en-hello', 'Hello!', say: 'Hello!'),
           ],
+          puppetClips: <String>['en-hello'],
         );
         Future<BuiltPack> run(Keyboard keyboard) => generateLangGated(
           source: LangSource.fromJson(small),
@@ -1271,9 +1276,64 @@ void main() {
       expect(server.requests, isEmpty);
     });
 
-    for (final (String course, int clips) in <(String, int)>[('eng', 11), ('rus', 55)]) {
+    test('a puppet line the plan does not list (a Meet word) is said by the course voice', () {
+      final Map<String, Object?> meet = _planJson(
+        targets: <Map<String, Object?>>[
+          _target('en-hello', 'Hello!', say: 'Hello!'),
+          _target('en-name', 'What is your name?'),
+          _target('en-name-slow', 'What is your name?'),
+        ],
+        puppetClips: <String>['en-name'],
+      );
+      final LangPlan p = plan(puppet: puppet(<String>{'vo:eng.en_hello', 'vo:eng.en_name'}), source: meet);
+      expect(voiceOf(p), <String, String>{
+        'vo:eng.en_hello': 'lang-en-female',
+        'vo:eng.en_name': 'lang-en-male',
+      });
+      expect(p.puppetClips, 1);
+    });
+
+    test('a puppet voice for a course whose plan lists no puppet clips stops the run', () {
+      final Map<String, Object?> none = _planJson(
+        targets: <Map<String, Object?>>[_target('en-hello', 'Hello!', say: 'Hello!')],
+      );
+      expect(
+        () => plan(puppet: puppet(<String>{'vo:eng.en_hello'}), source: none),
+        throwsA(
+          isA<VoiceGenFailed>().having((VoiceGenFailed e) => e.message, 'message', contains('puppetClips')),
+        ),
+      );
+    });
+
+    // The words the Meet and teach screens of a course teach: its units' `meet` sets and old-form `teach` lists.
+    Set<String> meetWords(String course) {
+      final Set<String> words = <String>{};
+      void add(Object? word) {
+        if (word is String) words.add(word);
+        if (word is Map<String, Object?> && word['clip'] is String) words.add(word['clip']! as String);
+      }
+
+      for (final File f in Directory('../content/languages/$course/units').listSync().whereType<File>()) {
+        final Map<String, Object?> unit = jsonDecode(f.readAsStringSync()) as Map<String, Object?>;
+        for (final Object? lesson in unit['lessons'] as List<Object?>) {
+          for (final Object? set
+              in (lesson! as Map<String, Object?>)['meet'] as List<Object?>? ?? <Object?>[]) {
+            if (set is List<Object?>) set.forEach(add);
+            if (set is Map<String, Object?>) (set['words'] as List<Object?>).forEach(add);
+          }
+        }
+        ((unit['teach'] as List<Object?>?) ?? <Object?>[]).forEach(add);
+      }
+      return words;
+    }
+
+    // Puppet clips of the real courses: the puppet's own lines of puppet_talk activities with the puppet prefix, no Meet word.
+    for (final (String course, int clips, String prefix) in <(String, int, String)>[
+      ('eng', 7, 'en-'),
+      ('rus', 11, 'ch-'),
+    ]) {
       test(
-        'the real $course course has $clips puppet lines, all clips of its plan, said by the puppet and nobody else',
+        'the real $course course has $clips puppet clips, all its own lines, no Meet word, said by the puppet and nobody else',
         () {
           final Set<String> lines = puppetLinesIn(Directory('../content/languages/$course/pack'));
           final LangSource source = LangSource.fromJson(
@@ -1288,18 +1348,41 @@ void main() {
             workDir: work,
             puppet: PuppetVoice('lang-$course-male', male, lines),
           );
-          expect(lines, hasLength(clips));
+          final Set<String> words = meetWords(course);
+          expect(words, isNotEmpty);
+          final Set<String> theirs = <String>{
+            for (final PlannedClip c in p.voices.clips)
+              if (c.character == 'lang-$course-male') c.line.voId,
+          };
+          final Set<String> theirIds = <String>{
+            for (final LangTargetClip t in source.targets)
+              if (theirs.contains(t.voId)) t.id,
+          };
+          expect(theirs, hasLength(clips));
           expect(p.puppetClips, clips);
           expect(p.problems.where((TextProblem t) => !t.why.contains('placeholder')), isEmpty);
-          // The characters are those of the clips of the lines, whatever the texts are today.
+          // Only a line of the puppet that the plan lists, only with the course's puppet prefix, and never a Meet word.
+          expect(lines.containsAll(theirs), isTrue);
+          expect(theirIds.every((String id) => id.startsWith(prefix) || course == 'eng'), isTrue);
+          expect(
+            theirIds.intersection(words),
+            isEmpty,
+            reason: 'a Meet word is the course voice, not the puppet',
+          );
+          // Every clip of the course that is a Meet word is said by the course voice.
+          for (final PlannedClip c in p.voices.clips) {
+            final LangTargetClip? t = source.targets
+                .where((LangTargetClip t) => t.voId == c.line.voId)
+                .firstOrNull;
+            if (t != null && words.contains(t.id)) expect(c.character, 'lang-$course-female', reason: t.id);
+          }
           final int expected = source.targets
-              .where((LangTargetClip t) => lines.contains(t.voId))
+              .where((LangTargetClip t) => theirs.contains(t.voId))
               .fold<int>(0, (int s, LangTargetClip t) => s + t.spoken.replaceAll('!', '.').runes.length);
-          final Iterable<PlannedClip> theirs = p.voices.clips.where(
+          final Iterable<PlannedClip> voiced = p.voices.clips.where(
             (PlannedClip c) => c.character == 'lang-$course-male',
           );
-          expect(theirs.fold<int>(0, (int s, PlannedClip c) => s + c.request.characters), expected);
-          expect(theirs.map((PlannedClip c) => c.line.voId).toSet(), lines);
+          expect(voiced.fold<int>(0, (int s, PlannedClip c) => s + c.request.characters), expected);
         },
       );
     }

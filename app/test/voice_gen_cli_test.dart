@@ -149,6 +149,7 @@ void main() {
           <String, Object?>{'id': 'en-hi', 'vo': 'vo:eng.en_hi', 'shown': 'Hi!', 'say': 'Hi!'},
           <String, Object?>{'id': 'en-hi-slow', 'vo': 'vo:eng.en_hi_slow', 'shown': 'Hi!', 'say': 'Hi!'},
         ],
+        'puppetClips': <Object?>['en-hi'],
       }),
     );
     // The puppet's line of the course: the clip `en-hi` is the puppet's own.

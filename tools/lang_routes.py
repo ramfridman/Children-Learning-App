@@ -157,6 +157,8 @@ class Routes:
     def _screen(self, sk, sid, kind, item_id, clip, others, where, *, picture=None, meet=None):
         """One teach screen or hearing screen: the activity id, or None (the problem is said). [picture] overrides the word's picture of
         course.json `teachPictures`; [meet] is the data of a Meet screen of the lesson's four parts (tools/lang_meet.py)."""
+        if kind == 'teach':
+            self.taught_clips.add(clip)
         aid = '%s.%s.%s' % (self.id, sk['slug'], item_id)
         settings = dict(self.defaults.get('teach') or {})
         if kind == 'hear':

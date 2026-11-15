@@ -13,7 +13,9 @@
 //  - a cut word is made from its page's clip and the character times the voice returned for it, with ffmpeg;
 //  - lines with exactly the same request are voiced once and copied (voice_gen_lib.dart, sharingSameText);
 //  - with a puppet voice, the puppet's own lines (the `prompt.target` and `prompt.target2` clips of the `puppet_talk`
-//    activities of the course's pack) are voiced by it and every other target clip by the course voice. A clip is one
+//    activities of the course's pack) are voiced by it, when the plan lists them in `puppetClips` (tools/lang_pack.py writes
+//    that list: the clips with a `puppetPrefixes` prefix of course.json that no Meet or teach screen teaches), and every other
+//    target clip by the course voice. A word a Meet screen teaches is the course voice's, never the puppet's. A clip is one
 //    file with one voice, so a clip that is also a bubble answer belongs to the puppet (docs/languages/voices.md, section 11).
 // Every clip that is voiced goes through the same gate as `generate`: the plan, then the owner types the characters.
 import 'dart:convert';
@@ -81,7 +83,13 @@ class LangCutClip {
 
 /// The voice plan of one course, checked.
 class LangSource {
-  const LangSource({required this.course, required this.frame, required this.targets, required this.cuts});
+  const LangSource({
+    required this.course,
+    required this.frame,
+    required this.targets,
+    required this.cuts,
+    this.puppetClips = const <String>{},
+  });
 
   factory LangSource.fromJson(Object? json) {
     if (json is! Map<String, Object?>) throw const VoiceGenFailed('the voice plan is not a JSON object');
@@ -124,6 +132,9 @@ class LangSource {
         for (final Map<String, Object?> m in maps('cutClips'))
           LangCutClip(m['id']! as String, voId(m), m['from']! as String, (m['text'] ?? '') as String),
       ],
+      puppetClips: <String>{
+        for (final Object? id in (json['puppetClips'] ?? <Object?>[]) as List<Object?>) id! as String,
+      },
     );
   }
 
@@ -131,6 +142,10 @@ class LangSource {
   final List<LangFrameLine> frame;
   final List<LangTargetClip> targets;
   final List<LangCutClip> cuts;
+
+  /// The ids of the target clips the puppet voice may say (a clip with the course's puppet prefix that no Meet screen teaches).
+  /// Empty when the course has no puppet.
+  final Set<String> puppetClips;
 
   /// The `language_code` of the target clips.
   String get language => courseLanguage[course]!;
@@ -428,18 +443,30 @@ LangPlan planLang(
     warnings.add('$needsEditor Hebrew frame lines are still marked needs-editor in the course');
   }
 
-  // The target clips the puppet says: its lines, and the slow copy of a line (a copy with a text of its own is voiced, and
-  // must be voiced by the same voice as the normal clip).
+  // The target clips the puppet says: its lines that the plan lists as the puppet's (the course's puppet prefix, and no word
+  // a Meet screen teaches), and the slow copy of one (a copy with a text of its own is voiced, and must be voiced by the same
+  // voice as the normal clip).
+  if (puppet != null && source.puppetClips.isEmpty) {
+    throw VoiceGenFailed(
+      'the voice plan of ${source.course} lists no puppet clips ("puppetClips"): the course has no puppet, or its course.json '
+      'has no "puppetPrefixes" and tools/lang_pack.py was not run',
+    );
+  }
   final Map<String, LangTargetClip> byId = <String, LangTargetClip>{
     for (final LangTargetClip t in source.targets) t.id: t,
   };
+  bool isPuppetLine(LangTargetClip t) => source.puppetClips.contains(t.id) && puppet!.voIds.contains(t.voId);
+  bool isPuppetClip(LangTargetClip t) {
+    if (isPuppetLine(t)) return true;
+    if (!t.id.endsWith(slowSuffix)) return false;
+    final LangTargetClip? base = byId[t.id.substring(0, t.id.length - slowSuffix.length)];
+    return base != null && isPuppetLine(base);
+  }
+
   final Set<String> puppetIds = <String>{
     if (puppet != null)
       for (final LangTargetClip t in source.targets)
-        if (puppet.voIds.contains(t.voId) ||
-            (t.id.endsWith(slowSuffix) &&
-                puppet.voIds.contains(byId[t.id.substring(0, t.id.length - slowSuffix.length)]?.voId)))
-          t.id,
+        if (isPuppetClip(t)) t.id,
   };
   if (puppet != null) {
     final Set<String> targetVoIds = <String>{for (final LangTargetClip t in source.targets) t.voId};

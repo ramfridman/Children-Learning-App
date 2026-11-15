@@ -1503,5 +1503,6 @@
     "w-nosok": "sock",
     "w-knizhka": "book"
   },
-  "metBefore": "enforce"
+  "metBefore": "enforce",
+  "puppetPrefixes": ["ch-"]
 }

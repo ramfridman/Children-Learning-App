@@ -277,6 +277,50 @@ class PilotInvariantsTest(unittest.TestCase):
                 self.assertNotIn(c['vo'], {t['vo'] for t in plan['targetClips']}, 'a cut clip is not a clip to voice')
 
 
+class PuppetVoiceTest(Base):
+    """The voice plan names the clips the puppet voice may say: a puppet prefix, and never a word a Meet or teach screen teaches."""
+
+    def plan(self):
+        self.sb.write()
+        c = lang_pack.Course('eng', self.sb.root)
+        c.build()
+        return c.voice_plan
+
+    def test_a_course_without_puppet_prefixes_lists_no_puppet_clips(self):
+        self.assertNotIn('puppetClips', self.plan())
+
+    def test_only_a_clip_with_the_prefix_is_the_puppets_and_its_slow_copy_follows(self):
+        self.sb.course['puppetPrefixes'] = ['en-b']
+        self.assertEqual(self.plan()['puppetClips'], ['en-bye', 'en-bye-slow'])
+
+    def test_a_word_a_teach_screen_teaches_is_never_the_puppets(self):
+        self.sb.course['puppetPrefixes'] = ['en-b']
+        self.assertEqual(self.plan()['puppetClips'], ['en-bye', 'en-bye-slow'])
+        self.sb.course['teachPictures'] = {'en-bye': 'a', 'en-hello': 'b'}
+        self.sb.unit['teach'] = [['en-bye', 'en-hello']]
+        self.assertEqual(self.plan()['puppetClips'], [], 'the word and its slow copy are the course voice')
+
+    def test_a_prefix_no_clip_has_or_a_bad_prefix_is_a_problem(self):
+        self.sb.course['puppetPrefixes'] = ['xx-']
+        self.assertProblem('no clip of the course starts with "xx-"')
+        self.sb.course['puppetPrefixes'] = 'ch-'
+        self.assertProblem('puppetPrefixes is a list of clip id prefixes')
+
+    def test_in_the_real_courses_no_meet_word_gets_the_puppet_voice(self):
+        for course in ('eng', 'rus'):
+            c = lang_pack.Course(course)
+            c.build()
+            self.assertTrue(c.puppet_prefixes, course)
+            puppet = set(c.voice_plan['puppetClips'])
+            self.assertTrue(puppet, course)
+            self.assertTrue(c.taught_clips, course)
+            for clip in puppet:
+                base = clip[:-len('-slow')] if clip.endswith('-slow') else clip
+                self.assertTrue(clip.startswith(tuple(c.puppet_prefixes)), clip)
+                self.assertNotIn(base, c.taught_clips, '%s: a Meet word is said by the course voice' % clip)
+            self.assertEqual(puppet & c.taught_clips, set(), course)
+
+
 class DerivedTest(Base):
     def test_ids_vo_refs_and_defaults(self):
         f = self.files()

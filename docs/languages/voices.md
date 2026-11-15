@@ -283,7 +283,11 @@ Nothing else in the app changes. Later (not now): `voice_gen generate` and the p
    pilot's step 5 and the loudness check settle it.
 
 `generate-lang`, `plan-lang` and `verify-lang` take `--puppet-voice` (F7, built 2026-11-08): the `prompt.target` and `prompt.target2` clips of the
-`puppet_talk` activities go to the male voice (English 9 clips, 187 characters; Russian 11 clips, 147 characters), the other target clips to `--voice`.
+`puppet_talk` activities go to the male voice, the other target clips to `--voice`. Rule since 2026-11-15 (after the L7 re-cut): the puppet voice says a clip
+only if it is a puppet line, its id starts with a `puppetPrefixes` entry of the course's `course.json` (Russian `ch-`; English `en-pip-`, `en-whats-your-`,
+`en-how-`, `en-i-like-`, `en-im-`, `en-this-is-`, `en-who-`) and no Meet or teach screen teaches it (a word met is the course voice's, also `Goodbye!`,
+`What's this?`, `Что это?`). `tools/lang_pack.py` writes the list as `puppetClips` in `voice-plan.json`; the tool refuses `--puppet-voice` when it is empty.
+Today: English 7 clips, Russian 11 clips.
 
 **The pilot now.** One pilot per language, no voice-picking round:
 
