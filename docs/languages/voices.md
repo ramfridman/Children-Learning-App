@@ -265,7 +265,7 @@ Nothing else in the app changes. Later (not now): `voice_gen generate` and the p
 | `lang-en-female` | `qSeXEcewz7tA0Q0qk9fH` | the English course's main target voice |
 | `lang-en-male` | `Aa6nEBJJMKJwJkCx8VU2` | the puppet Pip (a "him" in the Band A build notes) |
 | `lang-ru-female` | `ymDCYd8puC7gYjxIamPt` | the Russian course's main target voice |
-| `lang-ru-male` | `XuEV9VY3VUASYgJVNBh0` | the puppet Саша (the name is neutral; the lines never reveal a gender, syllabus section 6) |
+| `lang-ru-male` | `XuEV9VY3VUASYgJVNBh0` | the puppet Гоша (a boy's name since 2026-11-15, which fits this voice; the lines still never reveal a gender, syllabus section 6) |
 
 **Who says what** (my decision; the owner can change it; [G] where it is a taste):
 
@@ -276,7 +276,7 @@ Nothing else in the app changes. Later (not now): `voice_gen generate` and the p
 2. **The female voice** says every target clip except the puppet's lines: words, phrases, chants and songs, the teacher's questions, the stories.
 3. **The male voice** says only the **puppet's own lines**: the `prompt.target` clips of the `puppet_talk` activities (English **9 clips**, 187 characters: `Hello! I'm Pip.`,
    `What's this?`, `What's your name?`, `How are you?`, `I like bananas! What do you like?`, `I'm five! How old are you?`, `This is my family: Mom, Dad and my sister.`,
-   `Who is in your family?`, `Goodbye!`; Russian **11 clips**, 150 characters: `Что это?`, `Как тебя зовут?`, `Кто это?`, `Кто у тебя в семье?`, `Меня зовут Саша.`, `У меня есть мама и бабушка.`,
+   `Who is in your family?`, `Goodbye!`; Russian **11 clips**, 150 characters: `Что это?`, `Как тебя зовут?`, `Кто это?`, `Кто у тебя в семье?`, `Меня зовут Гоша.`, `У меня есть мама и бабушка.`,
    `Привет!`, `Здравствуй!`, `До свидания!`, `Пока!`, `На!`). The child's answers in a bubble (the `options` clips) are the teacher's, not the puppet's. A clip is
    one file and has one voice, so a clip that is both a puppet line and a bubble answer (`Goodbye!`) is the puppet's.
 4. **Nothing else is spoken by the male voice.** A second voice that has to match the first in loudness and pace (within 1.5 LU) is the price; the

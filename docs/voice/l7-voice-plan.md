@@ -14,15 +14,15 @@ Commands: `plan-lang eng --voice lang-en-female --puppet-voice lang-en-male`, `p
 | **English** | | **18** | **3** | 261 | **227** (0.02 USD) |
 | Russian | nitzi | 116 | 9 | 54 | 936 |
 | Russian | lang-ru-female | 1 | 7 | 209 | 63 |
-| Russian | lang-ru-male (puppet Sasha, 11 clips) | 0 | 7 | 4 | 73 |
-| **Russian** | | **117** | **23** | 267 | **1,072** (0.09 USD) |
+| Russian | lang-ru-male (puppet Gosha, 11 clips) | 0 | 8 | 3 | 92 |
+| **Russian** | | **117** | **24** | 266 | **1,091** (0.09 USD) |
 | Hebrew | nitzi (frame and words) | 77 | 0 | 221 | 1,280 |
 | **Hebrew** | | **77** | **0** | 221 | **1,280** (0.10 USD) |
 
-**Grand total: 2,579 characters, about 0.21 USD.** New 212 clips, re-voice 26 clips. Cut words (Hebrew, 12) and slow copies (English, 5) cost nothing. `ffmpeg` is installed (WinGet link).
+**Grand total: 2,598 characters, about 0.21 USD.** New 212 clips, re-voice 27 clips. (2026-11-15: the puppet renamed Гоша, so `ch-menja-zovut` is re-voiced: Russian 1,072 became 1,091.) Cut words (Hebrew, 12) and slow copies (English, 5) cost nothing. `ffmpeg` is installed (WinGet link).
 
 Decisions closed by this run:
-- The Russian puppet question is settled: only Sasha's own 11 clips are male. The Meet words stay female.
+- The Russian puppet question is settled: only Gosha's own 11 clips are male. The Meet words stay female.
 - Hebrew `fb-soundalike` (blend items) now has a voice text, `שִׁמְעוּ עד הסוף.` (17 characters), and is in the Hebrew plan: **voice it now.** The blend word clip follows and finishes it (section 2).
 - The nine `he-gl-its-*` and the other frame lines are in the plan. The editor's voice text stands; if the audition shows a wrong gender or stress, the editor points the text.
 
@@ -42,7 +42,7 @@ Settings stay as `content/voices.json`: stability 0.5, similarity 0.75, speaker 
 | **Instruction lines** (`he-ins-*`, `f01`-`f40`, `i_*`) | nitzi | The plain narrator: even, kind, never a scold; the question rises only on its last word. | 300 ms |
 | **Feedback** ("שמעתי:", "הקשיבו שוב", "המממ… בואו נבדוק") | nitzi | Curious, never disappointed. "המממ" is a short thought, not a sigh. | 250 ms |
 | **Hebrew blend items** (`fb-blend-last` "שמעו מההתחלה.", `fb-soundalike`; then the whole word) | nitzi, then the word clip | The praise or hint is one short line that ends **open and level**, and the whole word clip follows and finishes it. The word is the last sound the child hears, always, and it is not followed by anything. The word clip falls and stops. | 200 ms between the line and the word; nothing after the word |
-| **Puppet lines** (`ch_*`, English Pip, Russian Саша) | puppet voice (male) | Friendly and a little lighter than the narrator; never a different language than the clip's text. | per the screen |
+| **Puppet lines** (`ch_*`, English Pip, Russian Гоша) | puppet voice (male) | Friendly and a little lighter than the narrator; never a different language than the clip's text. | per the screen |
 | **Verses and chants** (`v*_play`, `heb_a_v*_full`, `en_ch_*`) | nitzi / course voice | A rhythm, not a speech: even pace, small breath at each comma, the rhyme word lands on the beat. | none inside the clip |
 
 ### The comma variant for "וְאֵיפֹה"
@@ -57,7 +57,7 @@ The voice text today is `ואיפה` (5 characters), plain, no point. A bare unp
 4. One English phrase gloss, `זה סֵפֶר.`, and one feminine, `זו מכונית.` (gender and the plain-versus-pointed mix: `זו מכונית` is plain in the voice text).
 5. One Russian gloss with a short word pair: `אִמָּא` and `בָּא לִי חָלָב`.
 6. One Hebrew word clip, `ארבעה תופים` (the number in its construct form and gender), and `שְׁנֵי תֻּפִּים`.
-7. `Меня́ зову́т Са́ша.` in the male puppet voice.
+7. `Меня́ зову́т Го́ша.` in the male puppet voice.
 
 These need `audition-batch run`, which is paid and which only the owner runs. The free count is `audition-batch plan` on a spec of those texts.
 
@@ -67,7 +67,7 @@ These need `audition-batch run`, which is paid and which only the owner runs. Th
 
 1. Open PowerShell and go to the app folder: `cd <repo>\app`
 2. Free: `ffmpeg -version`
-3. Free plans (they must show 227, 1,072 and 1,280 characters, unless the editor changed a text since):
+3. Free plans (they must show 227, 1,091 and 1,280 characters, unless the editor changed a text since):
    - `dart run tool/voice_gen.dart plan-lang eng --voice lang-en-female --puppet-voice lang-en-male --model eleven_v4`
    - `dart run tool/voice_gen.dart plan-lang rus --voice lang-ru-female --puppet-voice lang-ru-male --model eleven_v4`
    - `dart run tool/voice_gen.dart plan-lang heb --voice nitzi --model eleven_v4`
@@ -75,7 +75,7 @@ These need `audition-batch run`, which is paid and which only the owner runs. Th
 4. Set the ElevenLabs key in this window only (never saved): `$env:ELEVENLABS_API_KEY = "<your key>"`
 5. Audition first (paid, small, section 2). If the carrier needs a comma, tell me; the editor changes the three lines; redo step 3.
 6. English, type **227**: `dart run tool/voice_gen.dart generate-lang eng --voice lang-en-female --puppet-voice lang-en-male --model eleven_v4 --pack-version 1.1.0`
-7. Russian, type **1072**: `dart run tool/voice_gen.dart generate-lang rus --voice lang-ru-female --puppet-voice lang-ru-male --model eleven_v4 --pack-version 1.1.0`
+7. Russian, type **1091**: `dart run tool/voice_gen.dart generate-lang rus --voice lang-ru-female --puppet-voice lang-ru-male --model eleven_v4 --pack-version 1.1.0`
 8. Hebrew, type **1280**: `dart run tool/voice_gen.dart generate-lang heb --voice nitzi --model eleven_v4 --pack-version 1.1.0`
 9. After each, free: the same command with `verify-lang` in place of `generate-lang`, and drop `--model` and `--pack-version` (verify-lang does not take them). It must list nothing missing. Then send me the `~\nitznutz-voice\lang-<course>` folder name for loudness and length checks.
 10. Clear the key: `Remove-Item Env:ELEVENLABS_API_KEY`

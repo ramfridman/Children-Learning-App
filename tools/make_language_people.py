@@ -1,6 +1,6 @@
 """Batch 3 of the shared Languages pictures: the people and characters (docs/languages/pictures.md section 4.2), drawn from
 the model sheet the owner approved on 2026-11-03 (docs/design/languages/characters_model_sheet.png,
-tools/make_language_characters.py, whose people, Pip and Sasha this module reuses).
+tools/make_language_characters.py, whose people, Pip and Gosha this module reuses).
 
     python tools/make_language_people.py           # writes the SVGs
     python tools/make_language_people.py --sheet   # and one contact sheet per part (pictures_batch3a.png, ...)

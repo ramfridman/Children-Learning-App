@@ -983,6 +983,7 @@ and `band-a-content.md`, `tools/hebrew_voice_review.py`; then `tools/lang_pack.p
 
 - **The Russian puppet.** `ch-menja-zovut` had `{puppet}`; a clip is voiced once and the voice tool refuses a placeholder. The puppet is a fixed character
   (Са́ша, the owner, 2026-11-03), so its name is written in the line: shown `Меня зовут Саша.`, said `Меня́ зову́т Са́ша.`, ipa `[mʲɪˈnʲa zɐˈvut ˈsaʂə]`.
+  **2026-11-15:** the owner renamed the puppet Го́ша (גּוֹשָׁה); the line is now shown `Меня зовут Гоша.`, said `Меня́ зову́т Го́ша.`, ipa `[mʲɪˈnʲa zɐˈvut ˈɡoʂə]`.
   The clip id is unchanged and the pack activity `rus.a01.08` only names the id, so **the Russian pack did not change**. English and Hebrew have no placeholder
   in any voice-plan text (a test now checks all three plans: `test_course_voice_plans_have_no_placeholder`).
 - **The 45 frame lines that were `needs-editor`** (English 5, Russian 15, Hebrew 25) are read and `text-ready`. Grammar, vocabulary and agreement were right in

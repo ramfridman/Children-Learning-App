@@ -47,7 +47,7 @@ The mark is the accent on the vowel (U+0301). **M** = right with the mark, **U**
 | 16 | `ru-female-04-sen-1` | "Я ви́жу ко́шку." calm, natural | ok / x |
 | 17 | `ru-female-04-call-ruka` | calling "ру-ка́-а": the stress stays on ка | ok / x |
 
-## Part 5. The male voice (the puppet Саша) and the pair
+## Part 5. The male voice (the puppet Гоша) and the pair
 
 | # | Play | Listen for | Answer |
 |---|---|---|---|

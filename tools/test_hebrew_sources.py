@@ -548,7 +548,7 @@ class SweepGuardsTest(unittest.TestCase):
         self.assertEqual(bad, [])
 
     def test_course_voice_plans_have_no_placeholder(self):
-        """A clip is voiced once, so no text of a course's voice plan may hold a {variable} (the Russian puppet is Саша, written in the line)."""
+        """A clip is voiced once, so no text of a course's voice plan may hold a {variable} (the Russian puppet is Гоша, written in the line)."""
         bad = []
         for lang in ('eng', 'heb', 'rus'):
             plan = read_json(os.path.join(ROOT, 'content', 'languages', lang, 'voice-plan.json'))

@@ -1498,9 +1498,9 @@
     {
       "id": "ch-menja-zovut",
       "vo": "vo:rus.ch_menja_zovut",
-      "shown": "Меня зовут Саша.",
-      "say": "Меня́ зову́т Са́ша.",
-      "ipa": "[mʲɪˈnʲa zɐˈvut ˈsaʂə]"
+      "shown": "Меня зовут Гоша.",
+      "say": "Меня́ зову́т Го́ша.",
+      "ipa": "[mʲɪˈnʲa zɐˈvut ˈɡoʂə]"
     },
     {
       "id": "ch-ochen-prijatno",
