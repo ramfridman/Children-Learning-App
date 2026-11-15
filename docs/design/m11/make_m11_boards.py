@@ -16,7 +16,7 @@ Boards written:
 Only existing art is used (design/assets, app/assets/art, content/starter), plus the three Nekudi poses drawn for this step
 (design/assets/nekudi-talk.svg, -show.svg, -celebrate.svg). The rooms are the layered art of app/assets/art/rooms/ (tools/make_room_art.py,
 spec section 3.2), put together with that tool's own SKY and LAYERS table, so the boards and the app use the same numbers; Goni in
-Colour Bay is the generated colour-safe file app/assets/art/hosts/goni_*_safe.svg.
+Colour Bay is his own recolourable file app/assets/art/hosts/goni_*.svg, in mint.
   room_<room>.png           one board per room (9): empty, under three pictures, a ten-frame and the robot grid, the reaction's end
                             state, tablet landscape and portrait, the celebration with its new piece.
 Every Hebrew line on the boards is a sample for the hebrew-text-editor, not final text. Red captions under a board are for the team.
@@ -171,8 +171,8 @@ SPARK = '<path d="M10 3.5 Q11 9 16.5 10 Q11 11 10 16.5 Q9 11 3.5 10 Q9 9 10 3.5 
 ROOMS = [
     dict(key='numbers', he='גִּבְעוֹת הַסְּפִירָה', en='Counting Hills', tint='#FFE3DF', rim='#F46A5E', deep='#B4233A', bd='numbers',
          lm=os.path.join(ART, 'world', 'stair.svg'), trail='stair', host=os.path.join(CAST, 'nekudi-show.svg'), hostName='Nekudi'),
-    dict(key='colors', he='מִפְרַץ הַצְּבָעִים', en='Colour Bay', tint=C['cream'], rim=C['sketch'], deep='#5A5378', bd='colors',
-          trail='drop', host=os.path.join(ART, 'hosts', 'goni_idle_safe.svg'),
+    dict(key='colors', he='מִפְרַץ הַצְּבָעִים', en='Colour Bay', tint='#FCE1F0', rim='#E04F9E', deep='#B4337C', bd='colors',
+          trail='drop', host=os.path.join(ART, 'hosts', 'goni_idle.svg'),
          hostName='Goni (colour-safe skin)'),
     dict(key='shapes', he='יַעַר הַצּוּרוֹת', en='Shape Forest', tint='#DDF3E6', rim='#34A86A', deep='#1E7F4C', bd='shapes',
          lm=os.path.join(ART, 'world', 'cone-tree.svg'), trail='tree', host=os.path.join(CAST, 'kubi.svg'), hostName='Kubi'),
@@ -232,7 +232,7 @@ def stage(b, room, inner_parts=None, landmark=True, lit=False):
     extra = ['reacted'] if lit else []
     if card:
         out.append(box(x, y, w, h, 'background:#fff;border-radius:28px;border:4px solid %s;box-shadow:0 6px 0 %s,0 6px 16px rgba(43,35,80,.14)' % (
-            room['rim'], room['deep'] if key != 'colors' else C['lip'])))
+            room['rim'], room['deep'])))
         ix, iy, iw, ih = x + 16, y + 16, w - 32, h - 32
         out.append(svg_at(ix, iy, iw, ih, backdrop(key, iw, ih, inside, extra), extra='border-radius:16px;overflow:hidden'))
     else:
@@ -522,7 +522,7 @@ PICS3 = {'numbers': ('apple', 'apple_green', 'banana_yellow'), 'colors': ('ball_
          'shapes': ('shape_triangle', 'shape_circle', 'shape_square'), 'logic': ('shape_circle_red', 'shape_square_orange', 'shape_triangle_green'),
          'cs': ('robot', 'flag', 'key'), 'math': ('coin_s1', 'coin_s2', 'coin_s5'), 'eng': ('cat', 'dog', 'bird'),
          'heb': ('fish', 'duck', 'frog'), 'rus': ('butterfly', 'chick', 'ladybug')}
-CELEBRATE = {'numbers': os.path.join(CAST, 'nekudi-celebrate.svg'), 'colors': os.path.join(ART, 'hosts', 'goni_celebrate_safe.svg')}
+CELEBRATE = {'numbers': os.path.join(CAST, 'nekudi-celebrate.svg'), 'colors': os.path.join(ART, 'hosts', 'goni_celebrate.svg')}
 SHOW = {'numbers': os.path.join(CAST, 'nekudi-show.svg')}
 
 
@@ -549,7 +549,7 @@ def stage_only(room, w, h, inner=None, lit=False, card=False):
     key = room['key']
     if card:
         out.append(box(0, 0, w, h, 'background:#fff;border-radius:28px;border:4px solid %s;box-shadow:0 6px 0 %s' % (
-            room['rim'], room['deep'] if key != 'colors' else C['lip'])))
+            room['rim'], room['deep'])))
         ix, iy, iw, ih = 16, 16, w - 32, h - 32
         rad = 16
     else:

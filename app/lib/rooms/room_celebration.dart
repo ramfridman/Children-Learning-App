@@ -9,6 +9,7 @@ import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
 import '../strings/he.dart';
+import 'host_view.dart';
 import 'moments.dart';
 import 'room_backdrop.dart';
 import 'room_spec.dart';
@@ -109,19 +110,23 @@ class RoomCelebrationCard extends StatelessWidget {
     );
   }
 
+  /// The window's whole content fits inside it, with a little air above the tallest pose and its hop: the host's box is sized so that the
+  /// figure (from [HostSpec.topShare] to [HostSpec.feetShare] of the box, lifted by the hop) is inside the window, whichever host it is;
+  /// the companion stands on the same ground line, a little smaller.
   Widget _window(Size window, double k, bool tablet) {
     final double landmark = (room.isCourse ? window.height * 0.66 : 104 * k).roundToDouble();
     final Offset at = room.isCourse ? Offset(20 * k, 6) : Offset(16 * k, window.height - landmark - 4 * k);
-    final double hostSize = 150 * k;
-    final double companionSize = 132 * k;
+    final double hostSize = hostBoxFor(window.height, k);
+    final double companionSize = (hostSize * companionShare).floorToDouble();
     final double mid = window.width / 2;
+    final double ground = window.height - feetAbove * k;
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: Stack(
         clipBehavior: Clip.none,
         children: <Widget>[
           Positioned.fill(
-            child: RoomBackdrop(room: room, size: window, radius: 20, landmark: false),
+            child: RoomBackdrop(room: room, size: window, radius: 20),
           ),
           Positioned(
             left: at.dx,
@@ -132,14 +137,14 @@ class RoomCelebrationCard extends StatelessWidget {
           ),
           Positioned(
             left: mid - hostSize,
-            top: window.height - hostSize,
+            top: ground - HostSpec.feetShare * hostSize,
             width: hostSize,
             height: hostSize,
             child: SizedBox(key: const Key('room-celebration-host'), child: host),
           ),
           Positioned(
             left: mid - 10 * k,
-            top: window.height - companionSize,
+            top: ground - HostSpec.feetShare * companionSize,
             width: companionSize,
             height: companionSize,
             child: SizedBox(key: const Key('lesson-cameo'), child: companion),
@@ -148,6 +153,20 @@ class RoomCelebrationCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// How far above the window's bottom the feet stand, and the air kept above the figure and its hop (both for the phone's board; a
+  /// tablet's are scaled by `k`).
+  static const double feetAbove = 8;
+  static const double airAbove = 4;
+
+  /// The companion's box as a share of the host's.
+  static const double companionShare = 0.9;
+
+  /// The biggest box (up to 150 on the phone's scale) in which a host's whole figure, hopping, is inside a window [windowHeight] high.
+  static double hostBoxFor(double windowHeight, double k) {
+    final double figure = HostSpec.feetShare - HostSpec.topShare + HostView.hopLift;
+    return math.min(150 * k, ((windowHeight - (feetAbove + airAbove) * k) / figure)).floorToDouble();
   }
 }
 

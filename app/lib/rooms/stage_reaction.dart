@@ -6,22 +6,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../design/tokens.g.dart';
 import 'room_spec.dart';
 
-/// The stage reacts when an activity is solved (docs/design/m11-rooms.md section 5.1): at the room's landmark, 220 ms after the check badge, a
-/// short motion of at most 900 ms, and then an end state that stays until the item leaves. It fills the box it is given (the landmark's
-/// box, in board points) and is drawn above the stage's content for as long as it shows.
+/// The room's landmark, which is where the stage reacts when an activity is solved (docs/design/m11-rooms.md section 5.1): 220 ms after the
+/// check badge, a short motion of at most 900 ms, and then an end state that stays until the item leaves. It fills the box it is given (the
+/// landmark's own place on the board, `LandmarkSlot`), which nothing else covers or is covered by, and draws the landmark at rest too.
 ///
 /// It is driven by [solved] alone: never before the answer is right, never on a wrong one, and it is not counted or kept anywhere: when the
 /// next item starts, [solved] is false again and the landmark is plain. With "reduce motion" on, only the end state appears (a fade of
 /// 120 ms, nothing moves).
 class StageReaction extends StatefulWidget {
-  const StageReaction({super.key, required this.room, required this.solved, this.showBase = false});
+  const StageReaction({super.key, required this.room, required this.solved});
 
   final RoomSpec room;
   final bool solved;
-
-  /// Draw the landmark itself even at rest (a land's landmark that stands outside the card on a landscape tablet). Otherwise the backdrop draws
-  /// it and this layer shows only once the reaction begins.
-  final bool showBase;
 
   /// The wait after the check badge pops, and how long the motion lasts at most.
   static const Duration after = Duration(milliseconds: 220);
@@ -84,11 +80,17 @@ class _StageReactionState extends State<StageReaction> with SingleTickerProvider
         animation: _c,
         builder: (BuildContext context, Widget? _) {
           final double? m = widget.solved ? _progress() : null;
-          if (m == null) {
-            return widget.showBase ? _landmark(<Widget>[]) : const SizedBox.shrink();
+          if (m == null) return _landmark(const <Widget>[]);
+          // With "reduce motion" the landmark stays as it is and only its end state fades in.
+          if (_reduced) {
+            return _landmark(<Widget>[
+              Opacity(
+                opacity: _c.value,
+                child: Stack(clipBehavior: Clip.none, fit: StackFit.expand, children: _parts(m)),
+              ),
+            ]);
           }
           final Widget picture = _landmark(_parts(m));
-          if (_reduced) return Opacity(opacity: _c.value, child: picture);
           final double lift = math.sin(math.pi * m);
           return Stack(
             clipBehavior: Clip.none,

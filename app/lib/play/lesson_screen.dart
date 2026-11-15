@@ -41,6 +41,7 @@ import '../parent/alert_scan.dart';
 import '../parent/language_settings.dart';
 import '../parent/parent_rules.dart';
 import '../parent/time_rules.dart';
+import '../rooms/goni_skin.dart';
 import '../rooms/host_view.dart';
 import '../rooms/moments.dart';
 import '../rooms/room_activity.dart';
@@ -69,6 +70,7 @@ import 'ls01_sequence_session.dart';
 import 'ls01_sort_session.dart';
 import 'ls01_spot_session.dart';
 import 'ls01_tap_session.dart';
+import 'goni_moment.dart';
 import 'lesson_controller.dart';
 import 'name_options.dart';
 import 'clock_set_session.dart';
@@ -605,6 +607,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           : Spoken(vo: HostHe.clip(host.id, 'cheer'), caption: HostHe.cheers[host.id]!.text),
     );
     made.addListener(_speak);
+    // Colour Bay: Goni's colours are parsed now, so that a change of skin never shows an empty frame.
+    if (room?.id == RoomId.colors) unawaited(precacheGoni(skinsForLesson(askedItems(made.items))));
     _startIdle(made);
     // The first line is spoken as soon as the lesson opens: the host's greeting, or the first question when the lesson has no host.
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -1032,6 +1036,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         pose: pose,
         // The host is announced once, at the greeting.
         semanticLabel: beat ? HostHe.names[host.id]!.text : null,
+        // Goni takes the colour the child just found after a right answer, and only then (a host on screen in a turn: the Show's last step).
+        skin: goniSkinFor(c, room),
       ),
       hostMouth: host.mouthShare(pose),
       hostBeat: beat,
@@ -1190,6 +1196,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
                           : HostView(
                               host: _host!,
                               pose: controller.endedForRest ? HostPose.idle : HostPose.celebrate,
+                              // In Colour Bay Goni takes the lesson's colour, or the rainbow when it had no one colour.
+                              skin: goniCardSkin(controller, _room),
                             ),
                       cheer: _host == null ? null : HostHe.cheers[_host!.id]?.text,
                       finished: !controller.endedForRest,

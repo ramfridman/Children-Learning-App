@@ -10,6 +10,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/rooms/room_spec.dart';
@@ -140,8 +141,29 @@ void main() {
               w.key == Key('tile-${rightOption(c, l, 0)}') || w.key == Key('option-${rightOption(c, l, 0)}'),
         ),
       );
-      await waitFor(tester, 1500);
+      // The reaction settles 1,120 ms after the answer is accepted (220 ms for the check badge, then at most 900 ms of motion) and the page
+      // turns 1,300 to 1,600 ms after it: the picture is taken at 1,250, when the end state stands and the item is still on.
+      await waitFor(tester, 1200);
+      expect(
+        find.text(c.activities[l.itemIds[1]]!.promptLine.caption),
+        findsNothing,
+        reason: '${room.name}: the next item is not on yet',
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('stage-reaction')),
+          matching: find.byWidgetPredicate(
+            (Widget w) =>
+                w is SvgPicture &&
+                w.bytesLoader is SvgAssetLoader &&
+                (w.bytesLoader as SvgAssetLoader).assetName.endsWith('_reacted.svg'),
+          ),
+        ),
+        findsOneWidget,
+        reason: '${room.name}: the end state is on the screen when the picture is taken',
+      );
       await _shot(tester, 'm11_room_${room.name}_reacted_phone');
+      await waitFor(tester, 400);
       for (int i = 0; i < l.itemIds.length; i++) {
         if (i > 0) {
           await tester.tap(
@@ -168,18 +190,18 @@ void main() {
       await tester.tapAt(const Offset(300, 330));
       await waitFor(tester, 1200);
       await tester.tap(find.byKey(Key('tile-${rightOption(c, l, 0)}')));
-      await waitFor(tester, 1500);
+      await waitFor(tester, 1200);
       if (reduced) await _shot(tester, 'm11_room_numbers_reacted_phone_reduce_motion');
       return _grey(tester);
     }
 
     final Uint8List moving = await landmark(false);
     final Uint8List still = await landmark(true);
-    // The two pictures differ only where the companion breathes: the landmark's corner of the stage is the same.
+    // The two pictures differ only where the companion breathes: the landmark's place in the header (645 to 709, 12 to 76) is the same.
     int differing = 0;
     const int width = 852;
-    for (int y = 150; y < 226; y++) {
-      for (int x = 70; x < 150; x++) {
+    for (int y = 8; y < 80; y++) {
+      for (int x = 640; x < 716; x++) {
         if ((moving[y * width + x] - still[y * width + x]).abs() > 12) differing++;
       }
     }

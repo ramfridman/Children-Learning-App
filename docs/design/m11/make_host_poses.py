@@ -25,7 +25,18 @@ References looked at before drawing (2026-11-14; facts from Wikipedia, photograp
             plain two-jaw round clamp, like any toy claw, no robot from a film or show.
   Pnina     Wikipedia "Pelican": long broad wings, a large throat pouch on the lower bill, fully webbed feet. Photos: "pelican
             standing spreading wings" (the wing opens from the shoulder, the long primaries fan apart at the tip like fingers).
-  Pip       Wikipedia "Budgerigar": black scalloped bars on the wing coverts, greenish-black flight feathers, a yellow flash across
+            Redrawn 2026-11-15 with her still (QA: "pale, goose-like"): Wikipedia "Great white pelican" (the pelican that
+            migrates through Israel: white coverts and black flight feathers, a pink-and-yellow bill with a red tip, a yellow
+            pouch, bare pink skin round the eye, a short shaggy crest, short legs, orange webbed feet) and "Pelican" (the
+            downcurved hook at the bill's tip, the pouch on the lower bill, short stout legs, big fully webbed feet). Photos (Bing
+            image search): "great white pelican standing side view" (the heavy low body, the thick neck held back, the dark
+            primaries at the back of the folded wing), "pelican head close up bill pouch hook" (the flat upper bill with a ridge
+            and the hooked nail, the pouch hanging deepest under the bill's middle), "dalmatian pelican spreading wings standing"
+            (pale inner wing, dark fanned primaries, the curly nape crest, here her grandmother's curls), "pelican webbed feet
+            standing close" (three toes joined by a web with a scalloped edge). Her glasses, flower and teal apron with the coin
+            pocket stay; her lilac is stronger, the bill, pouch and feet are clear orange and yellow. This script also writes her
+            still (design/assets/pnina.svg) and the bundled copies in app/assets/art/hosts/.
+  Pip      Wikipedia "Budgerigar": black scalloped bars on the wing coverts, greenish-black flight feathers, a yellow flash across
             the wing that shows only when the wing is spread, throat spots, zygodactyl feet, long tail. Photos: "budgie stretching
             one wing out" (a wing stretched forward and out, the primaries fanned).
   hyrax     Wikipedia "Rock hyrax": squat body, short neck, rounded ears, whiskers, soft padded feet; the male's long "songs".
@@ -95,30 +106,107 @@ def grp(gid, body, tr=''):
 
 
 # =========================================================================================================================
-# GONI, the chameleon (he). Palette: body #7FD3B0, bodyShade #5DB894, crest1-4 #FFC2B5 #FFE6A8 #BDE6F7 #D6C6FA, beret #B0477A,
-# eyeRing #FFE6A8. Only these hues (plus ink, white and the shared lip/tongue pinks) so the colour-safe skin (goniColorSafe) is
-# a plain colour mapping of each file.
+# GONI, the chameleon (he). Recolourable skin (the owner's decision of 2026-11-15; docs/design/m11-rooms.md section 5.2).
+# Every skin part is drawn in one of eight SENTINEL colours, which together are also his resting look ("mint"): skin, shade,
+# belly, rim (the outline round his silhouette and every line drawn on his skin) and four stripe colours that differ only in
+# their last digit (they look the same; the app colours them one by one for the rainbow ripple). The app swaps them at parse
+# time with flutter_svg's ColorMapper (GONI_SKINS is the table). Eyes, mouth, cheek, beret, sparks and shadow keep their own
+# colours. Each pose is drawn twice: first the outline pass (every skin shape in the rim colour, widened by GONI_RIM on each
+# side, nothing else), then the picture itself, so the outline follows his whole silhouette in any skin, white and black too.
 # =========================================================================================================================
-G_BODY, G_SHADE, G_BERET, G_RING = '#7FD3B0', '#5DB894', '#B0477A', '#FFE6A8'
-G_CREST = ['#FFC2B5', '#FFE6A8', '#BDE6F7', '#D6C6FA']
+GONI_SENTINEL = dict(skin='#7FD3B0', shade='#5DB894', belly='#C9EFDD', rim='#2B7A63',
+                     stripe=('#3E9E80', '#3E9E81', '#3E9E82', '#3E9E83'))
+G_BERET, G_BERET_RIM, G_RING = '#B0477A', '#7A2C52', '#FFE6A8'
+GONI_RIM = 6  # the outline outside the silhouette, artboard units (about 2 px at the phone host's 168)
+
+# The skins (skin, shade, stripe, belly, rim). The lesson colours take the activity pictures' own fill and shade tone
+# (tools/make_logic_sprites.py COLOURS, the same as app/lib/play/hints/hint_marks.dart hintColours), so Goni turns exactly the
+# colour of the picture the child found. Black has lighter stripes, belly and rim, so his bands, outline and mouth line read.
+GONI_SKINS = {
+    'mint': ('#7FD3B0', '#5DB894', '#3E9E80', '#C9EFDD', '#2B7A63'),
+    'red': ('#E5484D', '#B8323A', '#9A2630', '#F6AEB0', '#7A1C24'),
+    'orange': ('#FF9F43', '#D9762A', '#B85E1C', '#FFD6AE', '#8C4512'),
+    'yellow': ('#FFD84D', '#E0A21A', '#C98A10', '#FFF1B8', '#8A5E0A'),
+    'green': ('#4CAF50', '#2F8A3A', '#23702D', '#AEDDB0', '#1A5422'),
+    'blue': ('#2F7FE0', '#1F5DB0', '#184A8E', '#A9CBF5', '#123A70'),
+    'purple': ('#9B6BDF', '#7246B8', '#5A3596', '#D6C4F3', '#432672'),
+    'pink': ('#F48FB1', '#D9668F', '#C04E78', '#FCD6E3', '#94345A'),
+    'brown': ('#8A5A2B', '#66401C', '#4E3014', '#C9A27C', '#3A230E'),
+    'black': ('#2B2540', '#171424', '#4C4568', '#3E3858', '#9A93BA'),
+    'white': ('#FFFFFF', '#E2DEEC', '#CFC9DF', '#F4F2F8', '#8A82A6'),
+    'grey': ('#9AA0B4', '#767C92', '#5F6579', '#CDD0DA', '#474C5E'),
+}
+# The rainbow ripple: the four stripes take these in turn (app/lib/play/hints/spot_plans.dart rainbowOrder, the pictures' paint).
+GONI_RAINBOW = ('#E5484D', '#FF9F43', '#FFD84D', '#4CAF50', '#2F7FE0', '#9B6BDF')
+
+_GONI = {'outline': False}
 
 
-def goni_foot(x, y, ang, color, toe=17, w=12):
+def goni_map(skin='mint', ripple=None):
+    """The colour mapping the app makes: sentinel -> colour. `ripple` = k colours the stripes rainbowOrder[(i + k) % 6]."""
+    s, sh, st, be, ri = GONI_SKINS[skin]
+    m = {GONI_SENTINEL['skin']: s, GONI_SENTINEL['shade']: sh, GONI_SENTINEL['belly']: be, GONI_SENTINEL['rim']: ri}
+    for i, c in enumerate(GONI_SENTINEL['stripe']):
+        m[c] = GONI_RAINBOW[(i + ripple) % 6] if ripple is not None else st
+    return m
+
+
+def gline(d, tone, w):
+    """A limb or tail stroke in a skin tone; in the outline pass, the same stroke in the rim colour, wider."""
+    if _GONI['outline']:
+        return line(d, GONI_SENTINEL['rim'], w + 2 * GONI_RIM)
+    return line(d, GONI_SENTINEL[tone], w)
+
+
+def gell(cx, cy, rx, ry, tone):
+    if _GONI['outline']:
+        return '<ellipse cx="%s" cy="%s" rx="%s" ry="%s" fill="%s" stroke="%s" stroke-width="%d"/>' % (
+            f(cx), f(cy), f(rx), f(ry), GONI_SENTINEL['rim'], GONI_SENTINEL['rim'], 2 * GONI_RIM)
+    return '<ellipse cx="%s" cy="%s" rx="%s" ry="%s" fill="%s"/>' % (f(cx), f(cy), f(rx), f(ry), GONI_SENTINEL[tone])
+
+
+def gshape(d, tone):
+    if _GONI['outline']:
+        return '<path d="%s" fill="%s" stroke="%s" stroke-width="%d" stroke-linejoin="round"/>' % (
+            d, GONI_SENTINEL['rim'], GONI_SENTINEL['rim'], 2 * GONI_RIM)
+    return '<path d="%s" fill="%s"/>' % (d, GONI_SENTINEL[tone])
+
+
+def gx(s):
+    """Anything that is not his skin's silhouette (stripes, belly, face, beret, sparks, shadow): drawn only in the picture pass."""
+    return '' if _GONI['outline'] else s
+
+
+def goni_pose(fn):
+    """Draws a pose twice, the outline pass under the picture; the ground shadow stays under both."""
+    _GONI['outline'] = True
+    try:
+        rim, _ = fn()
+    finally:
+        _GONI['outline'] = False
+    body, anchors = fn()
+    cut = body.index('/>') + 2  # every pose starts with its ground shadow
+    rim = rim.replace('id="', 'id="outline-')
+    return body[:cut] + grp('outline', rim) + body[cut:], anchors
+
+
+def goni_foot(x, y, ang, tone, toe=17, w=12):
     """A chameleon's front foot: two opposed toe bundles opening like tongs around the direction `ang` (degrees)."""
     a1 = polar(x, y, ang - 30, toe)
     a2 = polar(x, y, ang + 30, toe)
-    return line('M%s %s L%s %s M%s %s L%s %s' % (f(x), f(y), f(a1[0]), f(a1[1]), f(x), f(y), f(a2[0]), f(a2[1])), color, w)
+    return gline('M%s %s L%s %s M%s %s L%s %s' % (f(x), f(y), f(a1[0]), f(a1[1]), f(x), f(y), f(a2[0]), f(a2[1])), tone, w)
 
 
 def goni_trunk(crest_wave=0.0):
-    """The body ellipse and the four crest bands (in front of the far legs)."""
-    out = '<ellipse cx="268" cy="360" rx="110" ry="76" fill="%s"/><ellipse cx="276" cy="352" rx="108" ry="74" fill="%s"/>' % (
-        G_SHADE, G_BODY)
-    xs = [220, 260, 300, 340]
-    tops = [300, 292, 292, 300]
-    for x, t, c in zip(xs, tops, G_CREST):
-        q = 12 + crest_wave
-        out += line('M%d %d Q%s 350 %d 408' % (x, t, f(x + q), x), c, 20)
+    """The body ellipse, his pale belly and the four stripes (in front of the far legs)."""
+    out = gell(268, 360, 110, 76, 'shade') + gell(276, 352, 108, 74, 'skin')
+    out += gx('<path d="M184 380 Q278 414 376 378 Q370 412 290 424 Q206 424 184 380 Z" fill="%s"/>' % GONI_SENTINEL['belly'])
+    # four bands from the shoulder to the hip, all clear of the head (which covers the trunk up to x 240), each starting 14
+    # inside the back's edge
+    for i, x in enumerate((256, 290, 324, 356)):
+        t = 352 - 74 * (1 - ((x - 276) / 108.0) ** 2) ** 0.5 + 14
+        q = 10 + crest_wave
+        out += gx(line('M%d %s Q%s 344 %d 394' % (x, f(t), f(x + q), x - 2), GONI_SENTINEL['stripe'][i], 17))
     return grp('trunk', out)
 
 
@@ -126,56 +214,77 @@ def goni_head(eyes='open', look=(0, 0), mouth='closed', far_look=None):
     """The head of the still, centred at (168, 310); `look` shifts both pupils (the gaze)."""
     lx, ly = look
     fx, fy = far_look if far_look else look
-    out = '<ellipse cx="160" cy="318" rx="74" ry="64" fill="%s"/><ellipse cx="168" cy="310" rx="72" ry="62" fill="%s"/>' % (
-        G_SHADE, G_BODY)
-    out += '<path d="M120 268 Q160 214 214 262 Z" fill="%s"/>' % G_BODY
-    out += '<ellipse cx="166" cy="246" rx="50" ry="18" fill="%s" transform="rotate(-12 166 246)"/>' % G_BERET
-    out += '<circle cx="168" cy="226" r="7" fill="%s"/>' % G_BERET
+    rim = GONI_SENTINEL['rim']
+    out = gell(160, 318, 74, 64, 'shade') + gell(168, 310, 72, 62, 'skin')
+    out += gshape('M120 268 Q160 214 214 262 Z', 'skin')
+    # a pale jaw line, like the light lip scales of a real chameleon
+    out += gx(line('M108 344 Q140 362 178 348', GONI_SENTINEL['belly'], 9))
+    out += gx('<ellipse cx="166" cy="246" rx="50" ry="18" fill="%s" stroke="%s" stroke-width="4" transform="rotate(-12 166 246)"/>'
+              % (G_BERET, G_BERET_RIM))
+    out += gx('<circle cx="168" cy="226" r="7" fill="%s" stroke="%s" stroke-width="3"/>' % (G_BERET, G_BERET_RIM))
+    ring = '<circle cx="%d" cy="%d" r="%d" fill="%s" stroke="%s" stroke-width="4"/>'
     if eyes == 'open':
-        out += '<circle cx="150" cy="300" r="30" fill="%s"/>' % G_RING
-        out += '<circle cx="%s" cy="%s" r="16" fill="%s"/>' % (f(146 + lx), f(302 + ly), INK)
-        out += '<circle cx="%s" cy="%s" r="6" fill="#FFFFFF"/>' % (f(140 + lx), f(296 + ly))
-        out += '<circle cx="200" cy="296" r="16" fill="%s"/>' % G_RING
-        out += '<circle cx="%s" cy="%s" r="8" fill="%s"/>' % (f(198 + fx * 0.5), f(298 + fy * 0.5), INK)
+        out += gx(ring % (150, 300, 30, G_RING, rim))
+        out += gx('<circle cx="%s" cy="%s" r="16" fill="%s"/>' % (f(146 + lx), f(302 + ly), INK))
+        out += gx('<circle cx="%s" cy="%s" r="6" fill="#FFFFFF"/>' % (f(140 + lx), f(296 + ly)))
+        out += gx(ring % (200, 296, 16, G_RING, rim))
+        out += gx('<circle cx="%s" cy="%s" r="8" fill="%s"/>' % (f(198 + fx * 0.5), f(298 + fy * 0.5), INK))
     else:  # happy closed: the turret lids squeezed into smiling arcs
-        out += '<circle cx="150" cy="300" r="30" fill="%s"/>' % G_RING
-        out += line('M134 304 Q150 286 166 304', INK, 7)
-        out += '<circle cx="200" cy="296" r="16" fill="%s"/>' % G_RING
-        out += line('M192 299 Q200 290 208 299', INK, 5)
+        out += gx(ring % (150, 300, 30, G_RING, rim))
+        out += gx(line('M134 304 Q150 286 166 304', INK, 7))
+        out += gx(ring % (200, 296, 16, G_RING, rim))
+        out += gx(line('M192 299 Q200 290 208 299', INK, 5))
     if mouth == 'closed':
-        out += line('M104 336 Q140 356 176 340', INK, 5)
-        out += '<ellipse cx="170" cy="334" rx="11" ry="7" fill="%s" opacity="0.9"/>' % LIP
+        # the closed mouth is a line on his skin, so it takes the rim tone (it reads on a black or a white Goni too)
+        out += gx(line('M104 336 Q140 356 176 340', rim, 5))
+        out += gx('<ellipse cx="170" cy="334" rx="11" ry="7" fill="%s" opacity="0.9"/>' % LIP)
     elif mouth == 'talk':
-        out += '<ellipse cx="176" cy="332" rx="11" ry="7" fill="%s" opacity="0.9"/>' % LIP
-        out += ('<g id="mouth"><path d="M102 334 Q140 352 174 338 Q160 374 126 368 Q106 360 102 334 Z" fill="%s"/>'
-                '<path d="M112 342 Q140 354 164 344 Q152 366 128 362 Q114 356 112 342 Z" fill="%s"/>'
-                '<ellipse cx="140" cy="358" rx="11" ry="4.5" fill="%s"/></g>') % (LIP, INK, TONGUE)
+        out += gx('<ellipse cx="176" cy="332" rx="11" ry="7" fill="%s" opacity="0.9"/>' % LIP)
+        out += gx(('<g id="mouth"><path d="M102 334 Q140 352 174 338 Q160 374 126 368 Q106 360 102 334 Z" fill="%s" stroke="%s" '
+                   'stroke-width="3"/><path d="M112 342 Q140 354 164 344 Q152 366 128 362 Q114 356 112 342 Z" fill="%s"/>'
+                   '<ellipse cx="140" cy="358" rx="11" ry="4.5" fill="%s"/></g>') % (LIP, rim, INK, TONGUE))
     elif mouth == 'show':
-        out += '<ellipse cx="176" cy="332" rx="11" ry="7" fill="%s" opacity="0.9"/>' % LIP
-        out += ('<g id="mouth"><path d="M104 336 Q140 352 172 340 Q156 362 130 360 Q110 354 104 336 Z" fill="%s"/>'
-                '<path d="M114 342 Q140 352 162 344 Q152 356 132 355 Q118 351 114 342 Z" fill="%s"/></g>') % (LIP, INK)
+        out += gx('<ellipse cx="176" cy="332" rx="11" ry="7" fill="%s" opacity="0.9"/>' % LIP)
+        out += gx(('<g id="mouth"><path d="M104 336 Q140 352 172 340 Q156 362 130 360 Q110 354 104 336 Z" fill="%s" stroke="%s" '
+                   'stroke-width="3"/><path d="M114 342 Q140 352 162 344 Q152 356 132 355 Q118 351 114 342 Z" fill="%s"/></g>')
+                  % (LIP, rim, INK))
     elif mouth == 'cheer':
-        out += '<ellipse cx="178" cy="330" rx="12" ry="8" fill="%s"/>' % LIP
-        out += ('<g id="mouth"><path d="M100 330 Q140 350 176 334 Q166 384 128 380 Q104 372 100 330 Z" fill="%s"/>'
-                '<path d="M110 339 Q140 352 166 342 Q158 374 130 372 Q112 366 110 339 Z" fill="%s"/>'
-                '<ellipse cx="140" cy="366" rx="13" ry="5" fill="%s"/></g>') % (LIP, INK, TONGUE)
+        out += gx('<ellipse cx="178" cy="330" rx="12" ry="8" fill="%s"/>' % LIP)
+        out += gx(('<g id="mouth"><path d="M100 330 Q140 350 176 334 Q166 384 128 380 Q104 372 100 330 Z" fill="%s" stroke="%s" '
+                   'stroke-width="3"/><path d="M110 339 Q140 352 166 342 Q158 374 130 372 Q112 366 110 339 Z" fill="%s"/>'
+                   '<ellipse cx="140" cy="366" rx="13" ry="5" fill="%s"/></g>') % (LIP, rim, INK, TONGUE))
     return out
 
 
-GONI_TAIL = line('M360 380 C430 380 452 440 414 456 C384 468 362 440 380 422 C392 410 410 420 404 432', G_SHADE, 26)
+GONI_TAIL_D = 'M360 380 C430 380 452 440 414 456 C384 468 362 440 380 422 C392 410 410 420 404 432'
+
+
+def goni_still():
+    """The approved still (design/assets/goni.svg), redrawn in the recolourable skin: the same shapes and places."""
+    body = gx('<ellipse cx="270" cy="466" rx="140" ry="11" fill="%s"/>' % SHADOW)
+    body += grp('tail', gline(GONI_TAIL_D, 'shade', 26))
+    far = gline('M330 400 L344 456', 'shade', 22) + gell(348, 460, 18, 9, 'shade')
+    far += gline('M196 396 L186 456', 'shade', 22) + gell(180, 460, 18, 9, 'shade')
+    body += grp('legs-far', far)
+    body += goni_trunk()
+    near = gline('M300 404 L300 458', 'skin', 22) + gell(296, 462, 18, 9, 'skin')
+    near += gline('M220 404 L226 458', 'skin', 22) + gell(222, 462, 18, 9, 'skin')
+    body += grp('legs-near', near)
+    body += grp('head', goni_head())
+    return body, dict(mouth=(138, 352), feet=(262, 462))
 
 
 def goni_talk():
-    body = '<ellipse cx="270" cy="466" rx="140" ry="11" fill="%s"/>' % SHADOW
-    body += grp('tail', GONI_TAIL)
-    far = line('M330 400 L344 456', G_SHADE, 22) + '<ellipse cx="348" cy="460" rx="18" ry="9" fill="%s"/>' % G_SHADE
-    far += line('M196 396 L186 456', G_SHADE, 22) + '<ellipse cx="180" cy="460" rx="18" ry="9" fill="%s"/>' % G_SHADE
+    body = gx('<ellipse cx="270" cy="466" rx="140" ry="11" fill="%s"/>' % SHADOW)
+    body += grp('tail', gline(GONI_TAIL_D, 'shade', 26))
+    far = gline('M330 400 L344 456', 'shade', 22) + gell(348, 460, 18, 9, 'shade')
+    far += gline('M196 396 L186 456', 'shade', 22) + gell(180, 460, 18, 9, 'shade')
     body += grp('legs-far', far)
     body += goni_trunk()
-    near = line('M300 404 L300 458', G_BODY, 22) + '<ellipse cx="296" cy="462" rx="18" ry="9" fill="%s"/>' % G_BODY
+    near = gline('M300 404 L300 458', 'skin', 22) + gell(296, 462, 18, 9, 'skin')
     body += grp('leg-hind', near)
     # the explaining hand: the near front foot lifted forward, toes open a little, under his chin
-    arm = line('M222 398 L184 428 L136 404', G_BODY, 22) + goni_foot(130, 400, -120, G_BODY, toe=17)
+    arm = gline('M222 398 L184 428 L136 404', 'skin', 22) + goni_foot(130, 400, -120, 'skin', toe=17)
     body += grp('arm-end', arm)
     body += grp('head', goni_head(look=(-6, 0), mouth='talk'), 'rotate(-3 236 330)')
     anchors = dict(mouth=(138, 352), feet=(262, 462))
@@ -183,19 +292,19 @@ def goni_talk():
 
 
 def goni_show():
-    body = '<ellipse cx="262" cy="466" rx="146" ry="11" fill="%s"/>' % SHADOW
-    inner = grp('tail', GONI_TAIL)
-    far = line('M330 400 L344 456', G_SHADE, 22) + '<ellipse cx="348" cy="460" rx="18" ry="9" fill="%s"/>' % G_SHADE
-    far += line('M200 396 L184 456', G_SHADE, 22) + '<ellipse cx="178" cy="460" rx="18" ry="9" fill="%s"/>' % G_SHADE
+    body = gx('<ellipse cx="262" cy="466" rx="146" ry="11" fill="%s"/>' % SHADOW)
+    inner = grp('tail', gline(GONI_TAIL_D, 'shade', 26))
+    far = gline('M330 400 L344 456', 'shade', 22) + gell(348, 460, 18, 9, 'shade')
+    far += gline('M200 396 L184 456', 'shade', 22) + gell(178, 460, 18, 9, 'shade')
     inner += grp('legs-far', far)
     inner += goni_trunk()
-    near = line('M300 404 L302 458', G_BODY, 22) + '<ellipse cx="298" cy="462" rx="18" ry="9" fill="%s"/>' % G_BODY
+    near = gline('M300 404 L302 458', 'skin', 22) + gell(298, 462, 18, 9, 'skin')
     inner += grp('leg-hind', near)
     inner += grp('head', goni_head(look=(-8, 7), mouth='show'), 'rotate(9 236 330)')
     # the worked-example hand: the near front leg reaching forward and up under his chin, the two toe bundles open like
     # tongs (a chameleon reaching for the next twig); the tip is between the bundles
-    hand = line('M222 398 L170 420 L98 382', G_BODY, 22) + goni_foot(94, 378, -152, G_BODY, toe=20, w=13)
-    hand += '<circle cx="100" cy="382" r="5" fill="#FFFFFF" opacity="0.3"/>'
+    hand = gline('M222 398 L170 420 L98 382', 'skin', 22) + goni_foot(94, 378, -152, 'skin', toe=20, w=13)
+    hand += gx('<circle cx="100" cy="382" r="5" fill="#FFFFFF" opacity="0.3"/>')
     inner += grp('hand', hand)
     body += grp('body', inner, 'rotate(-2 262 466)')
     anchors = dict(mouth=(140, 324), hand=(70, 362), feet=(256, 462))
@@ -203,23 +312,24 @@ def goni_show():
 
 
 def goni_celebrate():
-    body = '<ellipse cx="266" cy="466" rx="118" ry="9" fill="%s"/>' % SHADOW_HOP
-    body += grp('sparks', spark(84, 196, 16) + spark(300, 160, 11))
+    body = gx('<ellipse cx="266" cy="466" rx="118" ry="9" fill="%s"/>' % SHADOW_HOP)
+    body += grp('sparks', gx(spark(84, 196, 16) + spark(300, 160, 11)))
     inner = ''
-    # the tail curled up high behind him like a flag, the colour-change ripple running along it (crest colours as spots)
-    tail = line('M360 360 C420 330 436 270 400 248 C372 232 350 262 368 280 C380 292 398 282 392 268', G_SHADE, 26)
-    for (x, y), c in zip([(424, 300), (414, 266), (386, 246), (368, 270)], G_CREST):
-        tail += '<circle cx="%d" cy="%d" r="7.5" fill="%s"/>' % (x, y, c)
+    # the tail curled up high behind him like a flag, four spots along it in his stripe colours (the rainbow ripple runs
+    # along them and the stripes together)
+    tail = gline('M360 360 C420 330 436 270 400 248 C372 232 350 262 368 280 C380 292 398 282 392 268', 'shade', 26)
+    for (x, y), c in zip([(424, 300), (414, 266), (386, 246), (368, 270)], GONI_SENTINEL['stripe']):
+        tail += gx('<circle cx="%d" cy="%d" r="7.5" fill="%s"/>' % (x, y, c))
     inner += grp('tail', tail)
     # all four legs spread in the leap: the front feet reach up and forward (hands up), the hind feet kick back
-    far = line('M330 396 L360 430 L388 432', G_SHADE, 22) + goni_foot(392, 432, 10, G_SHADE, toe=15)
-    far += line('M204 390 L164 404 L132 372', G_SHADE, 22) + goni_foot(128, 366, -110, G_SHADE, toe=15)
+    far = gline('M330 396 L360 430 L388 432', 'shade', 22) + goni_foot(392, 432, 10, 'shade', toe=15)
+    far += gline('M204 390 L164 404 L132 372', 'shade', 22) + goni_foot(128, 366, -110, 'shade', toe=15)
     inner += grp('legs-far', far)
     inner += goni_trunk(crest_wave=6)
-    near = line('M300 404 L326 444 L356 452', G_BODY, 22) + goni_foot(360, 452, 15, G_BODY, toe=15)
+    near = gline('M300 404 L326 444 L356 452', 'skin', 22) + goni_foot(360, 452, 15, 'skin', toe=15)
     inner += grp('leg-hind', near)
     inner += grp('head', goni_head(eyes='closed', mouth='cheer'), 'rotate(7 236 330)')
-    arm = line('M226 398 L180 424 L120 404', G_BODY, 22) + goni_foot(114, 400, -135, G_BODY, toe=16)
+    arm = gline('M226 398 L180 424 L120 404', 'skin', 22) + goni_foot(114, 400, -135, 'skin', toe=16)
     inner += grp('arm-end', arm)
     body += grp('body', inner, 'translate(0 -22) rotate(-4 280 380)')
     anchors = dict(feet=(266, 466), burst=(180, 170))
@@ -612,71 +722,121 @@ def tz_celebrate():
 # GRANDMA PNINA, the pelican (she). Palette: body #CFD5EE, bodyShade #AEB7DC, beak #F7C98B, beakShade #E6AE6A, apron #1A9E9A,
 # apronShade #0F6E6A, flower #FF8C7A, glasses #2B2350, coin #FFC83D (and the still's oranges #FFA46B #FFB27E, leaf #86C474).
 # =========================================================================================================================
-P_BODY, P_SHADE, P_BEAK, P_BEAKS, P_APRON, P_APRONS, P_FLOWER = '#CFD5EE', '#AEB7DC', '#F7C98B', '#E6AE6A', '#1A9E9A', '#0F6E6A', '#FF8C7A'
+P_BODY, P_SHADE, P_COVERT = '#C3C6F0', '#9C9FDC', '#D9DBF7'
+P_PRIM, P_PRIM_LIT = '#3F3D7A', '#5C5A9E'
+P_BEAK, P_BEAKS, P_NAIL = '#FFA27A', '#EE7F58', '#DE4A3C'
+P_POUCH, P_POUCHS = '#FFC23D', '#F39A1E'
+P_FACE, P_FEET, P_FEETS = '#FFB7AE', '#FF9446', '#DD6E24'
+P_APRON, P_APRONS, P_FLOWER = '#1A9E9A', '#0F6E6A', '#FF6F61'
 
 
 def pn_feet(hop=False):
-    if hop:
-        return grp('feet', '<path d="M244 464 L264 444 L282 468 Z" fill="%s"/><path d="M302 468 L322 444 L340 464 Z" fill="%s"/>' % (P_BEAK, P_BEAK))
-    return grp('feet', '<path d="M240 470 L262 446 L284 470 Z" fill="%s"/><path d="M300 470 L322 446 L344 470 Z" fill="%s"/>' % (P_BEAK, P_BEAK))
+    """Short thick legs and big webbed feet: three toes joined by a web with a scalloped front edge (photos of pelican feet)."""
+    dy = -6 if hop else 0
+    out = ''
+    for x in (262, 322):
+        out += '<rect x="%s" y="%s" width="18" height="%s" rx="8" fill="%s"/>' % (f(x - 9), f(444 + dy), f(22), P_FEETS)
+        # the foot: a broad fan of webbing, toes as ridges, scalloped front edge (it points toward the end side, left)
+        fx, fy = x - 6, 470 + dy
+        out += ('<path d="M%s %s Q%s %s %s %s Q%s %s %s %s Q%s %s %s %s Q%s %s %s %s Q%s %s %s %s Z" fill="%s"/>' % (
+            f(fx + 22), f(fy), f(fx + 18), f(fy - 18), f(fx + 4), f(fy - 20), f(fx - 14), f(fy - 14), f(fx - 30), f(fy - 2),
+            f(fx - 20), f(fy - 4), f(fx - 14), f(fy + 1), f(fx - 6), f(fy - 3), f(fx + 2), f(fy + 1), f(fx + 12), f(fy - 2), f(fx + 22), f(fy),
+            P_FEET))
+        out += line('M%s %s L%s %s M%s %s L%s %s' % (f(fx + 6), f(fy - 16), f(fx - 22), f(fy - 4), f(fx + 6), f(fy - 16), f(fx - 4),
+                                                     f(fy - 2)), P_FEETS, 2.6)
+    return grp('feet', out)
 
 
 def pn_trunk():
-    out = '<ellipse cx="282" cy="374" rx="104" ry="96" fill="%s"/><ellipse cx="292" cy="366" rx="102" ry="94" fill="%s"/>' % (P_SHADE, P_BODY)
+    """The heavy, egg-shaped body sitting low on the short legs, and the short square tail."""
+    out = '<path d="M388 392 L432 398 Q438 410 426 418 L382 420 Z" fill="%s"/>' % P_SHADE
+    out += '<ellipse cx="286" cy="362" rx="112" ry="94" fill="%s"/><ellipse cx="296" cy="354" rx="108" ry="90" fill="%s"/>' % (
+        P_SHADE, P_BODY)
     return grp('trunk', out)
 
 
 def pn_apron():
-    out = '<path d="M220 330 Q280 320 330 336 L322 440 Q270 452 226 440 Z" fill="%s"/>' % P_APRON
-    out += '<rect x="246" y="380" width="56" height="38" rx="10" fill="%s"/>' % P_APRONS
-    out += '<circle cx="274" cy="382" r="13" fill="#FFC83D"/><circle cx="274" cy="382" r="7" fill="#E0A21A"/>'
+    out = '<path d="M206 326 Q262 314 316 330 L312 438 Q262 452 214 440 Z" fill="%s"/>' % P_APRON
+    out += '<path d="M206 326 Q262 314 316 330 L316 340 Q262 326 206 338 Z" fill="%s"/>' % P_APRONS
+    out += '<rect x="234" y="378" width="56" height="38" rx="10" fill="%s"/>' % P_APRONS
+    out += '<circle cx="262" cy="382" r="13" fill="#FFC83D"/><circle cx="262" cy="382" r="7" fill="#E0A21A"/>'
     return grp('apron', out)
 
 
 def pn_folded_wing():
-    out = '<ellipse cx="342" cy="372" rx="52" ry="70" fill="%s" transform="rotate(-18 342 372)"/>' % P_SHADE
-    out += line('M372 318 Q402 350 384 404', P_BODY, 6)
+    """The folded wing on her side: pale coverts over the shoulder, a scalloped row of dark secondaries under them, and the long
+    dark primaries crossing back over the tail (as on a standing white pelican, whose black flight feathers show at the back)."""
+    out = '<path d="M334 404 Q392 404 448 384 Q454 392 446 398 Q404 430 340 434 Z" fill="%s"/>' % P_PRIM
+    out += '<path d="M330 396 Q392 392 440 368 Q446 376 438 384 Q398 414 336 420 Z" fill="%s"/>' % P_PRIM_LIT
+    out += ('<path d="M300 318 Q372 300 404 346 Q420 378 398 404 Q386 414 372 406 Q360 418 344 410 Q330 420 316 408 '
+            'Q296 380 300 318 Z" fill="%s"/>' % P_PRIM)
+    out += '<path d="M302 316 Q370 300 400 344 Q414 372 396 392 Q350 402 318 388 Q298 362 302 316 Z" fill="%s"/>' % P_COVERT
+    out += line('M322 336 Q356 330 386 352', P_SHADE, 4, ' opacity="0.6"')
+    out += line('M322 362 Q356 360 390 374', P_SHADE, 4, ' opacity="0.45"')
     return grp('wing', out)
 
 
 def pn_head(eyes='closed', look=(0, 0), beak='closed'):
-    """Head, crest, flower, glasses and the bill with its pouch. `beak`: closed, talk (the upper bill lifts), cheer (wider)."""
+    """Head, curly crest and flower, glasses over the bare pink skin round the eye, and the pelican's bill: a long flat upper bill
+    with a ridge and a red hooked nail at its tip, the big yellow throat pouch hanging under it. `beak`: closed, talk (the upper
+    bill lifts), show (a little), cheer (wide)."""
     lx, ly = look
-    out = '<circle cx="226" cy="198" r="62" fill="%s"/><circle cx="232" cy="192" r="60" fill="%s"/>' % (P_SHADE, P_BODY)
-    out += '<path d="M238 134 Q246 104 262 112 Q252 124 250 138 Z" fill="%s"/>' % P_BODY
-    out += '<path d="M252 136 Q270 112 284 124 Q268 132 262 144 Z" fill="%s"/>' % P_BODY
-    for cx, cy in ((299, 146), (290, 158.4), (275.5, 153.6), (275.5, 138.4), (290, 133.6)):
+    out = '<ellipse cx="230" cy="194" rx="56" ry="54" fill="%s"/><ellipse cx="236" cy="188" rx="54" ry="52" fill="%s"/>' % (P_SHADE, P_BODY)
+    # the swollen forehead running down onto the bill
+    out += '<path d="M196 170 Q206 150 232 150 Q214 168 214 196 L196 204 Z" fill="%s"/>' % P_BODY
+    # the curly crest at the nape (a grandmother's curls), and the flower pinned in it
+    for cx, cy, r in ((282, 150, 14), (292, 172, 12), (268, 136, 12)):
+        out += '<circle cx="%s" cy="%s" r="%s" fill="%s"/>' % (f(cx), f(cy), f(r), P_BODY)
+        out += line('M%s %s a%s %s 0 1 1 %s %s' % (f(cx - r * 0.5), f(cy + r * 0.1), f(r * 0.5), f(r * 0.5), f(r * 0.6), f(-r * 0.3)),
+                    P_SHADE, 3.2)
+    for cx, cy in ((260, 128), (251, 140.4), (236.5, 135.6), (236.5, 120.4), (251, 115.6)):
         out += '<circle cx="%s" cy="%s" r="10" fill="%s"/>' % (f(cx), f(cy), P_FLOWER)
-    out += '<circle cx="286" cy="146" r="8" fill="#FFC83D"/>'
-    lift = dict(closed=0, talk=8, show=4, cheer=13)[beak]
+    out += '<circle cx="247" cy="128" r="8" fill="#FFC83D"/>'
+    lift = dict(closed=0, talk=9, show=4, cheer=15)[beak]
     if lift:
-        out += '<path d="M200 214 L52 222 Q120 246 194 244 Z" fill="%s"/>' % INK
+        out += '<path d="M204 210 L60 226 Q130 252 200 240 Z" fill="%s"/>' % INK
         if beak != 'show':
-            out += '<ellipse cx="170" cy="236" rx="16" ry="4" fill="%s"/>' % TONGUE
-    pouch = '<path d="M192 222 Q120 236 48 232 Q88 306 192 270 Z" fill="%s"/>' % P_BEAKS
-    pouch += '<circle cx="118" cy="238" r="15" fill="#FFA46B"/><circle cx="146" cy="236" r="14" fill="#FFB27E"/>'
-    pouch += '<ellipse cx="120" cy="226" rx="4" ry="3" fill="#86C474"/>'
+            out += '<ellipse cx="176" cy="234" rx="14" ry="4" fill="%s"/>' % TONGUE
+    # the throat pouch: bare yellow skin hanging from the lower bill, deepest under its middle
+    pouch = '<path d="M204 222 Q140 230 62 230 Q72 268 118 288 Q168 304 206 266 Z" fill="%s"/>' % P_POUCH
+    pouch += '<path d="M78 252 Q120 286 168 286 Q192 282 206 266 Q186 300 136 296 Q98 288 78 252 Z" fill="%s"/>' % P_POUCHS
+    pouch += line('M96 246 Q130 262 172 262', '#FFFFFF', 3, ' opacity="0.45"')
     out += grp('pouch', pouch)
-    upper = '<path d="M198 194 Q120 192 40 226 Q120 244 198 234 Z" fill="%s"/>' % P_BEAK
-    upper += line('M120 214 Q80 220 52 226', P_BEAKS, 3)
-    out += '<g id="mouth">%s</g>' % grp('bill', upper, 'rotate(%s 200 214)' % f(lift) if lift else '')
-    out += '<circle cx="214" cy="186" r="21" fill="#FFFFFF" opacity="0.65" stroke="%s" stroke-width="5"/>' % INK
-    out += '<circle cx="258" cy="186" r="17" fill="#FFFFFF" opacity="0.65" stroke="%s" stroke-width="5"/>' % INK
-    out += line('M235 186 L241 186', INK, 5)
+    # the upper bill, hinged at the face: flat on top with a ridge, narrowing to the hooked nail
+    upper = ('<path d="M208 182 Q140 194 66 214 Q48 218 46 230 Q46 240 56 236 Q60 228 70 228 Q140 226 206 228 Z" fill="%s"/>'
+             % P_BEAK)
+    upper += '<path d="M206 214 Q140 220 70 228 Q140 226 206 228 Z" fill="%s"/>' % P_BEAKS
+    upper += line('M196 198 Q130 208 74 220', P_BEAKS, 3)
+    upper += '<path d="M72 214 Q50 216 46 230 Q46 242 56 236 Q58 226 72 226 Z" fill="%s"/>' % P_NAIL
+    out += '<g id="mouth">%s</g>' % grp('bill', upper, 'rotate(%s 206 214)' % f(lift) if lift else '')
+    # the bare pink skin round the eye, the glasses over it
+    out += '<ellipse cx="218" cy="190" rx="24" ry="20" fill="%s"/>' % P_FACE
+    out += '<circle cx="216" cy="186" r="21" fill="#FFFFFF" opacity="0.55" stroke="%s" stroke-width="5"/>' % INK
+    out += '<circle cx="262" cy="182" r="16" fill="#FFFFFF" opacity="0.55" stroke="%s" stroke-width="5"/>' % INK
+    out += line('M237 185 L246 184', INK, 5) + line('M278 180 L292 176', INK, 4)
     if eyes == 'closed':
-        out += line('M204 186 Q214 176 224 186', INK, 6) + line('M250 186 Q258 178 266 186', INK, 6)
+        out += line('M206 188 Q216 178 226 188', INK, 6) + line('M254 184 Q262 177 270 184', INK, 6)
     else:
         out += '<ellipse cx="%s" cy="%s" rx="7.5" ry="9.5" fill="%s"/><circle cx="%s" cy="%s" r="3" fill="#FFFFFF"/>' % (
-            f(212 + lx), f(187 + ly), INK, f(210 + lx), f(183 + ly))
+            f(214 + lx), f(188 + ly), INK, f(212 + lx), f(184 + ly))
         out += '<ellipse cx="%s" cy="%s" rx="6.5" ry="8.5" fill="%s"/><circle cx="%s" cy="%s" r="2.6" fill="#FFFFFF"/>' % (
-            f(256 + lx * 0.8), f(187 + ly), INK, f(254 + lx * 0.8), f(183.5 + ly))
-        out += line('M204 166 Q214 160 224 165', INK, 4) + line('M251 168 Q258 163 265 167', INK, 4)
-    out += '<ellipse cx="250" cy="216" rx="12" ry="7" fill="%s" opacity="0.85"/>' % LIP
+            f(260 + lx * 0.8), f(184 + ly), INK, f(258 + lx * 0.8), f(180.5 + ly))
+        out += line('M205 162 Q216 156 227 161', INK, 4) + line('M254 160 Q262 155 269 159', INK, 4)
+    out += '<ellipse cx="256" cy="214" rx="12" ry="7" fill="%s" opacity="0.9"/>' % LIP
     return grp('head', out)
 
 
-def pn_neck(d='M262 336 C238 300 236 268 222 236'):
-    return grp('neck', line(d, P_BODY, 58))
+def pn_neck(d='M262 330 C242 300 238 268 230 236'):
+    """A thick, short neck (a resting pelican holds its head close on its shoulders), its front bulging a little."""
+    return grp('neck', line(d, P_SHADE, 80) + line(d, P_BODY, 72))
+
+
+def pn_still():
+    """The still (idle): standing, the bill resting a little down along her chest, eyes closed in a smile."""
+    body = '<ellipse cx="288" cy="468" rx="132" ry="10" fill="%s"/>' % SHADOW
+    body += pn_trunk() + pn_feet() + pn_folded_wing() + pn_neck() + pn_apron()
+    body += pn_head(eyes='closed', beak='closed')
+    return body, dict(mouth=(150, 232), feet=(288, 470))
 
 
 def pn_wing_out(shoulder, ang, L, colour=P_BODY, shade=P_SHADE, gid='hand', down=1, D=64, spread=1.0, fingers=5):
@@ -715,42 +875,38 @@ def pn_wing_out(shoulder, ang, L, colour=P_BODY, shade=P_SHADE, gid='hand', down
 
 
 def pn_talk():
-    body = '<ellipse cx="280" cy="466" rx="130" ry="11" fill="%s"/>' % SHADOW
-    body += pn_feet() + pn_trunk() + pn_apron()
-    # the explaining hand: the near wing lifted forward from the shoulder, its primaries open like fingers
-    body += pn_neck()
+    body = '<ellipse cx="288" cy="468" rx="132" ry="10" fill="%s"/>' % SHADOW
+    # the far wing's dark primaries show at her back; the near wing is lifted forward from the shoulder, primaries open like fingers
+    body += pn_folded_wing() + pn_trunk() + pn_feet() + pn_neck() + pn_apron()
     body += pn_head(eyes='open', look=(-3, 0), beak='talk')
-    body += pn_wing_out((322, 336), -160, 176, gid='wing-end', D=50, spread=1.25, fingers=4)
-    anchors = dict(mouth=(150, 232), feet=(292, 468))
+    body += pn_wing_out((318, 336), -160, 176, colour=P_COVERT, shade=P_PRIM, gid='wing-end', D=50, spread=1.25, fingers=4)
+    anchors = dict(mouth=(150, 232), feet=(288, 470))
     return body, anchors
 
 
 def pn_show():
-    body = '<ellipse cx="270" cy="466" rx="136" ry="11" fill="%s"/>' % SHADOW
-    inner = pn_feet() + pn_trunk() + pn_apron()
-    inner += pn_neck('M262 336 C240 302 232 272 214 244')
+    body = '<ellipse cx="276" cy="468" rx="138" ry="10" fill="%s"/>' % SHADOW
+    inner = pn_folded_wing() + pn_trunk() + pn_feet() + pn_neck('M262 336 C242 302 236 272 222 244') + pn_apron()
     inner += grp('head-turn', pn_head(eyes='open', look=(-4, 4), beak='show'), 'translate(-6 6) rotate(-4 226 230)')
-    # the worked-example hand: the near wing held out level toward the task, the long primaries fanned; the tip is the
-    # leading primary
-    inner += pn_wing_out((318, 346), 184, 264, D=66)
+    # the worked-example hand: the near wing held out level toward the task under her pouch, the long dark primaries fanned;
+    # the tip is the leading primary
+    inner += pn_wing_out((314, 346), 184, 262, colour=P_COVERT, shade=P_PRIM, D=66)
     body += grp('body', inner, 'rotate(-3 270 466)')
     anchors = dict(mouth=(140, 238), hand=(52, 316), feet=(282, 468))
     return body, anchors
 
 
 def pn_celebrate():
-    body = '<ellipse cx="282" cy="466" rx="104" ry="9" fill="%s"/>' % SHADOW_HOP
-    body += grp('sparks', spark(66, 120, 15) + spark(470, 300, 11))
-    inner = pn_feet(hop=True)
-    # both wings up and open, primaries spread like fingers
-    inner += pn_wing_out((262, 318), -110, 250, colour=P_SHADE, shade=P_SHADE, gid='wing-far', D=60, down=-1)
-    inner += pn_trunk() + pn_apron()
-    inner += pn_wing_out((330, 340), -54, 200, gid='wing-near', D=62)
-    inner += pn_neck('M262 336 C240 300 236 268 224 236')
-    # the head tossed up a little, the bill open: a pelican's happy head-throw
+    body = '<ellipse cx="288" cy="468" rx="106" ry="9" fill="%s"/>' % SHADOW_HOP
+    body += grp('sparks', spark(60, 330, 13) + spark(470, 300, 11))
+    # both wings raised behind her (side view: the far wing shows beside the near one), the dark primaries spread like fingers,
+    # the bill open in a happy head-toss
+    inner = pn_wing_out((300, 322), -78, 206, colour=P_SHADE, shade=P_PRIM, gid='wing-far', D=58)
+    inner += pn_trunk() + pn_feet(hop=True) + pn_neck('M262 336 C242 300 240 270 232 240') + pn_apron()
+    inner += pn_wing_out((332, 340), -52, 190, colour=P_COVERT, shade=P_PRIM, gid='wing-near', D=60)
     inner += grp('head-up', pn_head(eyes='closed', beak='cheer'), 'rotate(10 230 240)')
-    body += grp('body', inner, 'translate(0 -22)')
-    anchors = dict(feet=(292, 466), burst=(230, 70))
+    body += grp('body', inner, 'translate(0 -18)')
+    anchors = dict(feet=(288, 466), burst=(236, 96))
     return body, anchors
 
 
@@ -1157,15 +1313,22 @@ def gi_celebrate():
 # =========================================================================================================================
 HOSTS = [
     # id, file stem, still path, label he/en per pose, room tint, the pose functions, the room's name
-    dict(id='goni', still=os.path.join(CAST, 'goni.svg'), tint='#FFF6E8', room='Colour Bay (cream; colour-safe skin in the room)',
-         labels=('גּוֹנִי מְדַבֵּר', 'גּוֹנִי מַרְאֶה', 'גּוֹנִי חוֹגֵג'), fns=(goni_talk, goni_show, goni_celebrate),
+    dict(id='goni', still=os.path.join(CAST, 'goni.svg'), tint='#FCE1F0', room='Colour Bay (colors.tint)',
+         stillfn=lambda: goni_pose(goni_still), stillLabel='גּוֹנִי – זִקִּית',
+         stillNote='redrawn on 2026-11-15 in his recolourable skin (the owner gave him colour; docs/design/m11-rooms.md section 5.2)',
+         labels=('גּוֹנִי מְדַבֵּר', 'גּוֹנִי מַרְאֶה', 'גּוֹנִי חוֹגֵג'),
+         fns=(lambda: goni_pose(goni_talk), lambda: goni_pose(goni_show), lambda: goni_pose(goni_celebrate)),
          name='Goni the chameleon',
          notes=dict(talk='the near front foot lifted under his chin, toes a little open; mouth open along the jaw',
                     show='the near front foot reaches forward and up as a chameleon reaches for the next twig; the two toe '
                          'bundles open like tongs and the pointer tip is between them; the chin lifts so the leg passes under it',
                     celebrate='a leap with all four feet off the ground, the front feet up, the tail curled high like a flag '
-                              'with a ripple of his crest colours running along it (his colour change)')),
-    dict(id='kubi', still=os.path.join(CAST, 'kubi.svg'), tint='#DDF3E6', room='Shape Forest',
+                              'with four spots in his stripe colour, where the rainbow ripple runs'),
+         skinNote=('Recolourable skin (docs/design/m11-rooms.md section 5.2): the app maps skin %s, shade %s, belly %s, rim %s '
+                   'and stripes %s with flutter_svg ColorMapper; every other colour stays.' % (
+                       GONI_SENTINEL['skin'], GONI_SENTINEL['shade'], GONI_SENTINEL['belly'], GONI_SENTINEL['rim'],
+                       ' '.join(GONI_SENTINEL['stripe'])))),
+    dict(id='kubi', celebrateTop=25, still=os.path.join(CAST, 'kubi.svg'), tint='#DDF3E6', room='Shape Forest',
          labels=('קוּבִּי מְדַבֵּר', 'קוּבִּי מַרְאֶה', 'קוּבִּי חוֹגֵג'), fns=(kubi_talk, kubi_show, kubi_celebrate),
          name='Kubi the tortoise',
          notes=dict(talk='the near forefoot lifted, elbow out, nails up', show='the neck stretched up out of the shell, the '
@@ -1178,33 +1341,34 @@ HOSTS = [
                     'arm (her lower end-side arm) reaches out level, its tip rolled into a curl and the suckers on its underside; '
                     'the glass waits up by her head', celebrate='"aha!": a hop with every arm up or curling, the glass and '
                     'the puzzle piece held high, bubbles rising')),
-    dict(id='tzaadon', still=os.path.join(CAST, 'tzaadon.svg'), tint='#DEEBFC', room='Robot Harbour',
+    dict(id='tzaadon', celebrateTop=13, still=os.path.join(CAST, 'tzaadon.svg'), tint='#DEEBFC', room='Robot Harbour',
          labels=('צַעֲדוֹן מְדַבֵּר', 'צַעֲדוֹן מַרְאֶה', 'צַעֲדוֹן חוֹגֵג'), fns=(tz_talk, tz_show, tz_celebrate),
          name="Tza'adon the robot",
          notes=dict(talk='elbow bent, the round gripper up and a little open; open screen eyes and an open mouth on the screen',
                     show='the arm held out level, the two jaws of the round gripper open; the tip is between the jaws',
                     celebrate='a hop with both grippers up and open, the chest buttons shining, the antenna springing and '
                               'the sprout opening a third leaf and a bud')),
-    dict(id='pnina', still=os.path.join(CAST, 'pnina.svg'), tint='#FEEFD6', room='Market Village',
+    dict(id='pnina', celebrateTop=56, still=os.path.join(CAST, 'pnina.svg'), tint='#FEEFD6', room='Market Village', stillfn=pn_still,
+         stillLabel='סַבְתָא פְּנִינָה – שַׂקְנַאי',
          labels=('סַבְתָא פְּנִינָה מְדַבֶּרֶת', 'סַבְתָא פְּנִינָה מַרְאָה', 'סַבְתָא פְּנִינָה חוֹגֶגֶת'),
          fns=(pn_talk, pn_show, pn_celebrate), name='Grandma Pnina the pelican',
          notes=dict(talk='the near wing lifted forward with its primaries open like fingers; the upper bill lifts to speak',
                     show='the near wing held out level under her pouch, the long primaries fanned; the tip is the leading '
                          'primary', celebrate='a hop with both wings up and open and a happy head-toss, the bill open')),
-    dict(id='host-eng', still=os.path.join(LANG, 'host_eng.svg'), tint='#E1ECF8', room='the English room',
+    dict(id='host-eng', celebrateTop=51, still=os.path.join(LANG, 'host_eng.svg'), tint='#E1ECF8', room='the English room',
          labels=('host of the English course, talking', 'host of the English course, showing', 'host of the English course, celebrating'),
          fns=(pip_talk, pip_show, pip_celebrate), name='Pip the budgie (English)',
          notes=dict(talk='the end-side wing lifted out and up, its flight feathers open like a raised hand; the beak open',
                     show='the end-side wing held out level, the barred coverts and the fanned flight feathers; the tip is the '
                          'leading primary', celebrate='a hop with both wings up and spread, the yellow wing flash showing '
                          '(the flash shows only when the wing is open), the tail fanned')),
-    dict(id='host-heb', still=os.path.join(LANG, 'host_heb.svg'), tint='#FBE4DF', room='the Hebrew room',
+    dict(id='host-heb', celebrateTop=26, still=os.path.join(LANG, 'host_heb.svg'), tint='#FBE4DF', room='the Hebrew room',
          labels=('host of the Hebrew course, talking', 'host of the Hebrew course, showing', 'host of the Hebrew course, celebrating'),
          fns=(hy_talk, hy_show, hy_celebrate), name='the hyrax (Hebrew)',
          notes=dict(talk='the end-side paw lifted beside the cheek with its soft pads showing; the pencil rests in the other paw',
                     show='the end-side paw holds the coral pencil out level; the graphite tip is the pointer',
                     celebrate='a hop with both paws up, the pencil held high like a baton with a coral swirl drawn in the air')),
-    dict(id='host-rus', still=os.path.join(LANG, 'host_rus.svg'), tint='#EBE3F7', room='the Russian room',
+    dict(id='host-rus', celebrateTop=0, still=os.path.join(LANG, 'host_rus.svg'), tint='#EBE3F7', room='the Russian room',
          labels=('host of the Russian course, talking', 'host of the Russian course, showing', 'host of the Russian course, celebrating'),
          fns=(gi_talk, gi_show, gi_celebrate), name='the giraffe (Russian)',
          notes=dict(talk='the neck leaning toward the task and one front hoof lifted, the knee bent', show='the end-side '
@@ -1214,10 +1378,44 @@ HOSTS = [
 ]
 
 
+BUNDLED = os.path.join(ROOT, 'app', 'assets', 'art', 'hosts')
+
+# The highest point of a celebrate pose (y, artboard units), sparks included. The celebration card's window is shorter than the
+# host's box (docs/design/m11-rooms.md section 4: a 150 box in a 140 window, so y < 34 is cut, and the hop lifts it 7% more);
+# 72 keeps the whole figure inside the window on the phone and the tablets, at rest and at the top of its hop.
+CELEBRATE_TOP = 72
+
+
+def fit_celebrate(body, anchors, top):
+    """Scales a celebrate pose whose highest point (`top`, measured with headless Chrome's getBBox) is above CELEBRATE_TOP about the
+    middle of the baseline (256, 472) until it fits. Anchors move with it."""
+    if top >= CELEBRATE_TOP:
+        return body, anchors
+    k = (472 - CELEBRATE_TOP) / (472 - top)
+    tr = 'translate(256 472) scale(%.3f) translate(-256 -472)' % k
+    anchors = dict((n, (256 + (x - 256) * k, 472 + (y - 472) * k)) for n, (x, y) in anchors.items())
+    return grp('fit', body, tr), anchors
+
+
 def write_svgs(hosts):
     for h in hosts:
+        if h.get('stillfn'):
+            body, anchors = h['stillfn']()
+            anc = '; '.join('%s %d, %d' % (k, v[0], v[1]) for k, v in anchors.items())
+            note = h.get('stillNote', '2026-11-15 (QA of M11 Stage 1: she read as a pale goose)')
+            skin = ('\n     ' + h['skinNote']) if h.get('skinNote') else ''
+            svg = ('<?xml version="1.0" encoding="UTF-8"?>\n<!-- %s, the still (idle). Original drawing in plain shapes, redrawn on '
+                   '%s. Written by docs/design/m11/make_host_poses.py; the\n'
+                   '     references are in its docstring. Artboard 512, baseline y 472, faces left. Anchors (artboard units): %s.%s -->\n'
+                   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="%s">\n%s\n</svg>\n') % (
+                h['name'], note, anc, skin, h['stillLabel'], body)
+            for path in (h['still'], os.path.join(BUNDLED, '%s_idle.svg' % h['id'].replace('-', '_'))):
+                with open(path, 'w', encoding='utf-8', newline='\n') as fh:
+                    fh.write(svg)
         for pose, fn, label in zip(('talk', 'show', 'celebrate'), h['fns'], h['labels']):
             body, anchors = fn()
+            if pose == 'celebrate':
+                body, anchors = fit_celebrate(body, anchors, h.get('celebrateTop', CELEBRATE_TOP))
             anc = '; '.join('%s %d, %d' % (k, v[0], v[1]) for k, v in anchors.items())
             head = ('<?xml version="1.0" encoding="UTF-8"?>\n'
                     '<!-- %s, pose "%s" (M11 step 1.2). Original drawing in plain shapes, in the style, proportions and palette of its\n'
@@ -1225,12 +1423,16 @@ def write_svgs(hosts):
                     '     docs/design/m11-rooms.md section 7. Artboard 512, baseline y 472, centre x 256, faces left (celebrate: front).\n'
                     '     %s.\n'
                     '     Anchors (artboard units): %s.\n'
-                    '     References (2026-11-14, nothing traced): see the docstring of docs/design/m11/make_host_poses.py, which wrote this file. -->\n') % (
-                h['name'], pose, os.path.relpath(h['still'], ROOT).replace('\\', '/'), h['notes'][pose], anc)
+                    '     References (2026-11-14, nothing traced): see the docstring of docs/design/m11/make_host_poses.py, which wrote this file.%s -->\n') % (
+                h['name'], pose, os.path.relpath(h['still'], ROOT).replace('\\', '/'), h['notes'][pose], anc,
+                ('\n     ' + h['skinNote']) if h.get('skinNote') else '')
             svg = head + ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="%s">\n%s\n</svg>\n' % (
                 label, body))
-            with open(pose_path(h, pose), 'w', encoding='utf-8', newline='\n') as fh:
-                fh.write(svg)
+            # the bundled copy (Goni's too since 2026-11-15: his recolourable skin replaces the colour-safe files)
+            bundled = [os.path.join(BUNDLED, '%s_%s.svg' % (h['id'].replace('-', '_'), pose))]
+            for path in [pose_path(h, pose)] + bundled:
+                with open(path, 'w', encoding='utf-8', newline='\n') as fh:
+                    fh.write(svg)
 
 
 def pose_path(h, pose):
@@ -1270,28 +1472,111 @@ def host_files(h):
             (pose_path(h, 'celebrate'), 'celebrate')]
 
 
-def safe_copy(path):
-    """Goni's colour-safe preview: the plain colour mapping the developer's tool will do (tokens goniColorSafe)."""
-    m = {'#7FD3B0': '#C9D9D2', '#5DB894': '#AFC2BA', '#FFC2B5': '#E6DCDA', '#FFE6A8': '#ECE6D8', '#BDE6F7': '#DCE4E8',
-         '#D6C6FA': '#E2DDEB'}
+def mapped_copy(path, mapping, tag):
+    """A copy of a picture with its colours swapped as the app's ColorMapper will swap them (Goni's skins)."""
     s = open(path, encoding='utf-8').read()
-    # the face keeps its eye ring (design-spec 4.9.2: "with the original face")
-    s = s.replace('fill="#FFE6A8"/><circle', 'fill="EYERING"/><circle')
-    for a, b in m.items():
+    for a, b in mapping.items():
         s = s.replace(a, b)
-    s = s.replace('EYERING', '#FFE6A8')
-    tmp = tempfile.mkdtemp(prefix='safe_')
-    out = os.path.join(tmp, os.path.basename(path))
+    tmp = tempfile.mkdtemp(prefix='skin_')
+    out = os.path.join(tmp, '%s_%s' % (tag, os.path.basename(path)))
     open(out, 'w', encoding='utf-8').write(s)
     return out
+
+
+def _lab(hexc):
+    r, g, b = (int(hexc[i:i + 2], 16) / 255 for i in (1, 3, 5))
+    lin = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in (r, g, b)]
+    x = (0.4124 * lin[0] + 0.3576 * lin[1] + 0.1805 * lin[2]) / 0.95047
+    y = 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2]
+    z = (0.0193 * lin[0] + 0.1192 * lin[1] + 0.9505 * lin[2]) / 1.08883
+    fx, fy, fz = (t ** (1 / 3) if t > 0.008856 else 7.787 * t + 16 / 116 for t in (x, y, z))
+    return 116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz), y
+
+
+def _contrast(c1, c2):
+    l1, l2 = _lab(c1)[3], _lab(c2)[3]
+    hi, lo = max(l1, l2), min(l1, l2)
+    return (hi + 0.05) / (lo + 0.05)
+
+
+def goni_checks():
+    """Prints the numbers behind section 5.2: the base's distance from every lesson colour, and each skin's rim on the
+    room's tint and on its own skin."""
+    tint = '#FCE1F0'
+    base = GONI_SKINS['mint'][0]
+    for name, (sk, sh, st, be, ri) in GONI_SKINS.items():
+        L1, a1, b1, _ = _lab(base)
+        L2, a2, b2, _ = _lab(sk)
+        de = ((L1 - L2) ** 2 + (a1 - a2) ** 2 + (b1 - b2) ** 2) ** 0.5
+        print('%-7s dE76 from mint %5.1f | rim on tint %4.1f:1 | rim on skin %4.1f:1 | stripe on skin %4.1f:1' % (
+            name, de, _contrast(ri, tint), _contrast(ri, sk), _contrast(st, sk)))
+
+
+def goni_colours_sheet(out_png):
+    """docs/design/m11/goni_colours.png: the four poses in his resting skin on Colour Bay's tint (and on paper and the map's
+    cream, where he also stands), then the celebrate pose in every lesson colour and the rainbow ripple frame, then the same
+    small and in grey (the outline and the face must read without colour), then the talk pose in the hardest skins."""
+    h = HOSTS[0]
+    files = host_files(h)
+    tint = '#FCE1F0'
+    W = 1300
+    parts = [box(0, 0, W, 1460, 'background:#FFFFFF')]
+    parts.append(box(20, 8, W - 40, 22, 'font:700 16px sans-serif;color:#2B2350',
+                     'Goni: resting skin (mint %s) on Colour Bay tint %s; still, talk, show, celebrate at 220 px; '
+                     'right: celebrate on paper and on the map cream' % (GONI_SKINS['mint'][0], tint)))
+    for i, (fp, lab) in enumerate(files):
+        x = 20 + i * 236
+        parts.append(box(x, 36, 228, 228, 'background:%s;border-radius:14px' % tint))
+        parts.append(img(fp, x + 4, 40, 220, 220))
+        parts.append(box(x, 266, 228, 18, 'font:600 13px sans-serif;color:#2B2350;text-align:center', lab.split(' (')[0]))
+    for j, bg in enumerate(('#FFFFFF', '#FFF6E8')):
+        x = 20 + 4 * 236 + j * 168
+        parts.append(box(x, 76, 160, 160, 'background:%s;border-radius:12px;border:1px solid #DDD' % bg))
+        parts.append(img(files[3][0], x + 4, 80, 152, 152))
+    y0 = 300
+    parts.append(box(20, y0, W - 40, 22, 'font:700 16px sans-serif;color:#2B2350',
+                     'Celebrate in each lesson colour (the pictures\' own paint), and the rainbow ripple frame; 196 px on the tint'))
+    cells = [(n, goni_map(n), n) for n in GONI_SKINS if n != 'mint'] + [('ripple', goni_map('mint', ripple=0), 'rainbow ripple')]
+    for k, (tag, mp, lab) in enumerate(cells):
+        x = 20 + (k % 6) * 210
+        y = y0 + 28 + (k // 6) * 230
+        parts.append(box(x, y, 204, 204, 'background:%s;border-radius:12px' % tint))
+        parts.append(img(mapped_copy(files[3][0], mp, tag), x + 4, y + 4, 196, 196))
+        sw = GONI_SKINS[tag][0] if tag in GONI_SKINS else '#FFFFFF'
+        parts.append('<div style="position:absolute;left:%dpx;top:%dpx;width:18px;height:18px;border-radius:9px;background:%s;'
+                     'border:2px solid #2B2350"></div>' % (x + 8, y + 182, sw))
+        parts.append(box(x, y + 206, 204, 18, 'font:600 13px sans-serif;color:#2B2350;text-align:center', lab))
+    y1 = y0 + 28 + 2 * 230 + 8
+    parts.append(box(20, y1, W - 40, 22, 'font:700 16px sans-serif;color:#2B2350',
+                     'The same at the celebration size on the phone SE (96 px), in colour and in grey (no colour at all)'))
+    allc = [('mint', goni_map('mint'))] + [(c[0], c[1]) for c in cells]
+    for k, (tag, mp) in enumerate(allc):
+        x = 20 + k * 98
+        parts.append(box(x, y1 + 28, 94, 94, 'background:%s;border-radius:8px' % tint))
+        parts.append(img(mapped_copy(files[3][0], mp, tag + 's'), x, y1 + 28, 94, 94))
+        parts.append(box(x, y1 + 128, 94, 94, 'background:%s;border-radius:8px;filter:grayscale(1)' % tint))
+        parts.append(img(mapped_copy(files[3][0], mp, tag + 'g'), x, y1 + 128, 94, 94, 'filter:grayscale(1)'))
+    y2 = y1 + 236
+    parts.append(box(20, y2, W - 40, 22, 'font:700 16px sans-serif;color:#2B2350',
+                     'The praise pose (talk) and the still in the hardest skins: white, black, yellow, grey, pink; on the tint and on the bay\'s sand'))
+    k = 0
+    for tag in ('white', 'black', 'yellow', 'grey', 'pink'):
+        for fp, bg in ((files[1][0], tint), (files[0][0], '#F6DFA6')):
+            x = 20 + k * 126
+            parts.append(box(x, y2 + 28, 120, 120, 'background:%s;border-radius:10px' % bg))
+            parts.append(img(mapped_copy(fp, goni_map(tag), tag + 't'), x, y2 + 28, 120, 120))
+            k += 1
+    parts.append(box(20, y2 + 160, W - 40, 40, 'font:600 12px/1.4 sans-serif;color:#B23A3A', htmlmod.escape(
+        'Every skin is a colour mapping of the same four files (the app: flutter_svg ColorMapper, sentinel colours in the files\' '
+        'header). Eyes, mouth, cheek, beret, sparks and shadow never change.')))
+    render(parts, W, y2 + 210, out_png)
 
 
 def host_sheet(h, out_png):
     parts = []
     files = host_files(h)
     W = 4 * 300 + 40
-    safe = h['id'] == 'goni'
-    H = 560 + (210 if safe else 0)
+    H = 560  # (Goni's colour-safe row retired on 2026-11-15: goni_colours.png shows his skins)
     parts.append(box(0, 0, W, H, 'background:#FFF6E8'))
     for i, (fp, lab) in enumerate(files):
         x = 20 + i * 300
@@ -1305,14 +1590,8 @@ def host_sheet(h, out_png):
         parts.append(img(fp, x + 12, 328, 168, 168))
         parts.append(box(x + 200, 380, 60, 60, 'background:#fff;border-radius:8px'))
         parts.append(img(fp, x + 206, 386, 48, 48, 'filter:brightness(0)'))
-        if safe:
-            parts.append(box(x + 6, 512, 180, 180, 'background:#FFF6E8;border-radius:12px;border:2px solid rgba(43,35,80,0.35)'))
-            parts.append(img(safe_copy(fp), x + 12, 518, 168, 168))
     cap = ('Top: 280 px, dashed line = baseline y 472 of 512, dotted = centre x 256. Below: the phone host size (168) on the room\'s '
            'tint (%s), and a 48 pt black silhouette (design-spec 4.9.3). Only the poses are new; the still is the approved art.' % h['room'])
-    if safe:
-        cap += (' Bottom row: the colour-safe skin (goniColorSafe) as the developer\'s colour mapping will make it, on Colour Bay\'s '
-                'cream: every fill maps, the face keeps its eye ring.')
     parts.append(box(20, H - 52, W - 40, 48, 'font:600 12px/1.4 sans-serif;color:#B23A3A', htmlmod.escape(cap)))
     render(parts, W, H, out_png)
 
@@ -1352,6 +1631,9 @@ def main():
         write_svgs(hosts)
     for h in hosts:
         host_sheet(h, os.path.join(HERE, '%s_poses.png' % h['id'].replace('-', '_')))
+        if h['id'] == 'goni':
+            goni_checks()
+            goni_colours_sheet(os.path.join(HERE, 'goni_colours.png'))
     if not only:
         all_sheet(os.path.join(HERE, 'all_host_poses.png'))
 

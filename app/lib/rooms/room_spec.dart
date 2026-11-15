@@ -12,8 +12,9 @@ enum RoomId { numbers, colors, shapes, logic, cs, math, eng, heb, rus }
 /// sockets and the host who teaches in it. Looked up once for a lesson (see [RoomSpec.of]); the art is `assets/art/rooms/<id>_*.svg` and
 /// the hosts' pictures are described by `HostSpec`.
 ///
-/// A room is told apart by shape first (backdrop, landmark, trail); its colour is the third cue and never carries an answer, except in
-/// Colour Bay, which is neutral on purpose so that nothing competes with the colours being taught.
+/// A room is told apart by shape first (backdrop, landmark, trail); its colour is the third cue and never carries an answer. Colour Bay is the
+/// most vivid room (2026-11-15): its colour lives at the edges (the screen's pink tint, the stage's rim, the bay's sky), never on a thing that
+/// is asked about.
 class RoomSpec {
   const RoomSpec._({
     required this.id,
@@ -28,7 +29,7 @@ class RoomSpec {
 
   final RoomId id;
 
-  /// The colour of the screen behind the frame (the domain tint; Colour Bay keeps the cream).
+  /// The colour of the screen behind the frame (the domain tint).
   final Color screen;
 
   /// The 4 point rim of the stage, and the lip under the tablet's card.
@@ -64,11 +65,11 @@ class RoomSpec {
 
   static const RoomSpec colors = RoomSpec._(
     id: RoomId.colors,
-    screen: TokenColors.cream,
-    rim: TokenColors.sketch,
-    lip: TokenColors.cardLip,
-    skyTop: Color(0xFFFFFFFF),
-    skyBottom: Color(0xFFF5F2F8),
+    screen: TokenColors.domainColorsTint,
+    rim: TokenColors.domainColorsFill,
+    lip: TokenColors.domainColorsDeep,
+    skyTop: Color(0xFFA9DEF9),
+    skyBottom: Color(0xFFEAF8FD),
     trail: TrailShape.drop,
     hostId: 'goni',
   );

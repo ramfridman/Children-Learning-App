@@ -26,10 +26,16 @@ const Size _phone = Size(852, 393);
 Finder _tile(String id) =>
     find.byWidgetPredicate((Widget w) => w.key == Key('tile-$id') || w.key == Key('option-$id'));
 
-/// The pictures drawn by the stage's reaction layer: none while the landmark is only part of the backdrop, two (the landmark and the room's
-/// end state) once the stage has reacted.
+/// The pictures drawn by the landmark's layer: one (the landmark itself, always on the screen) at rest, two (and the room's end state) once the
+/// stage has reacted.
 Finder get _reactionArt =>
     find.descendant(of: find.byKey(const Key('stage-reaction')), matching: find.byType(SvgPicture));
+
+/// The room's end state, drawn over the landmark only once the stage has reacted.
+Finder get _reactedArt => find.descendant(
+  of: find.byKey(const Key('stage-reaction')),
+  matching: find.byWidgetPredicate((Widget w) => _isAsset(w, '_reacted.svg')),
+);
 
 bool _isAsset(Widget w, String name) =>
     w is SvgPicture &&
@@ -238,23 +244,21 @@ void main() {
         final (PackContent c, Lesson l) = await roomLesson(RoomId.numbers);
         await openRoomLesson(tester, c, l, _phone);
         await _endGreeting(tester);
-        expect(_reactionArt, findsNothing, reason: 'the landmark is only part of the backdrop at rest');
+        expect(_reactionArt, findsOneWidget, reason: 'the landmark is on the screen at rest');
+        expect(_reactedArt, findsNothing);
         await tester.tap(_tile(wrongOption(c, l, 0)));
         await waitFor(tester, 1500);
-        expect(_reactionArt, findsNothing, reason: 'a wrong answer does not move the stage');
+        expect(_reactedArt, findsNothing, reason: 'a wrong answer does not move the stage');
         await tester.tap(_tile(rightOption(c, l, 0)));
         await waitFor(tester, 300);
         expect(_reactionArt, findsNWidgets(2), reason: 'the landmark and the end state over it');
         expect(_asset('numbers_reacted.svg'), findsOneWidget);
-        expect(
-          _asset('numbers_landmark.svg'),
-          findsNWidgets(2),
-          reason: 'the backdrop\'s own and the raised one',
-        );
+        expect(_asset('numbers_landmark.svg'), findsOneWidget, reason: 'one landmark, in its own place');
         // The page turns: the next item starts with the plain landmark, and nothing is carried over.
         await waitFor(tester, 2500);
         expect(find.byKey(const Key('stage-reaction')), findsOneWidget);
-        expect(_reactionArt, findsNothing);
+        expect(_reactionArt, findsOneWidget);
+        expect(_reactedArt, findsNothing);
       },
     );
 
@@ -269,7 +273,7 @@ void main() {
         for (int i = 0; i < 3; i++) {
           await tester.tap(_tile(wrong));
           await waitFor(tester, 1800);
-          expect(_reactionArt, findsNothing, reason: 'mistake ${i + 1}');
+          expect(_reactedArt, findsNothing, reason: 'mistake ${i + 1}');
         }
         await waitFor(tester, 3000);
         await tester.tap(_tile(rightOption(c, l, 0)));
@@ -293,7 +297,7 @@ void main() {
       await _endGreeting(tester);
       await tester.tap(find.byKey(const Key('lesson-hint')));
       await waitFor(tester, 2500);
-      expect(_reactionArt, findsNothing, reason: 'asking for help is not an answer');
+      expect(_reactedArt, findsNothing, reason: 'asking for help is not an answer');
       await tester.tap(_tile(rightOption(c, l, 0)));
       await waitFor(tester, 300);
       expect(_reactionArt, findsNWidgets(2));
@@ -309,7 +313,7 @@ void main() {
         await tester.pump(const Duration(milliseconds: 700));
         await tester.tap(_tile(rightOption(c, l, 0)));
         await tester.pump(const Duration(milliseconds: 100));
-        expect(_reactionArt, findsNothing, reason: 'it waits for the check badge: 220 ms');
+        expect(_reactedArt, findsNothing, reason: 'it waits for the check badge: 220 ms');
         await tester.pump(const Duration(milliseconds: 350));
         expect(_reactionArt, findsWidgets, reason: 'mid-motion: the landmark is raised');
         await tester.pump(const Duration(milliseconds: 900));
@@ -375,7 +379,7 @@ void main() {
         final (PackContent c, Lesson l) = await roomLesson(room);
         await openRoomLesson(tester, c, l, _phone);
         await _endGreeting(tester);
-        expect(_reactionArt, findsNothing);
+        expect(_reactedArt, findsNothing);
         await tester.tap(_tile(rightOption(c, l, 0)));
         await waitFor(tester, 300);
         expect(_asset('${room.name}_reacted.svg'), findsOneWidget);
@@ -391,27 +395,52 @@ void main() {
   });
 
   group('the rooms differ where they should', () {
-    testWidgets('Colour Bay is neutral: the cream screen, a neutral rim and Goni in the colour-safe skin', (
-      WidgetTester tester,
-    ) async {
-      final (PackContent c, Lesson l) = await roomLesson(RoomId.colors);
-      await openRoomLesson(tester, c, l, _phone);
-      expect(_asset('goni_talk_safe.svg'), findsOneWidget);
-      expect(_asset('goni_idle_safe.svg'), findsNothing);
-      final ColoredBox screen = tester
-          .widgetList<ColoredBox>(find.byType(ColoredBox))
-          .firstWhere((ColoredBox b) => b.color == RoomSpec.colors.screen);
-      expect(screen.color, const Color(0xFFFFF6E8));
-    });
+    testWidgets(
+      'Colour Bay is the most vivid room: the pink tint screen, its rim, and Goni in his resting mint (his own files, no colour mapping)',
+      (WidgetTester tester) async {
+        final (PackContent c, Lesson l) = await roomLesson(RoomId.colors);
+        await openRoomLesson(tester, c, l, _phone);
+        expect(_asset('goni_talk.svg'), findsOneWidget);
+        expect(_asset('goni_idle.svg'), findsNothing);
+        final SvgPicture goni = tester.widget<SvgPicture>(
+          find.byWidgetPredicate((Widget w) => _isAsset(w, 'goni_talk.svg')),
+        );
+        expect(
+          (goni.bytesLoader as SvgAssetLoader).colorMapper,
+          isNull,
+          reason: 'mint is the colours the file is drawn in',
+        );
+        final ColoredBox screen = tester
+            .widgetList<ColoredBox>(find.byType(ColoredBox))
+            .firstWhere((ColoredBox b) => b.color == RoomSpec.colors.screen);
+        expect(screen.color, const Color(0xFFFCE1F0));
+      },
+    );
 
     testWidgets(
-      'a landscape tablet puts a land\'s landmark outside the card, a course keeps its window on the wall',
+      'the landmark has its own place: in the header of a phone, beside the card on the landscape tablet; always drawn, standing alone',
       (WidgetTester tester) async {
         final (PackContent c, Lesson l) = await roomLesson(RoomId.numbers);
+        await openRoomLesson(tester, c, l, _phone);
+        final Rect header = tester.getRect(find.byKey(const Key('stage-reaction')));
+        expect(header.size, const Size(64, 64));
+        expect(
+          header.top,
+          lessThan(tester.getRect(find.byKey(const Key('lesson-stage'))).top),
+          reason: 'above the stage',
+        );
+        expect(
+          _asset('numbers_landmark.svg'),
+          findsOneWidget,
+          reason: 'standing at rest in its own place, not in the stage backdrop',
+        );
+        await tester.pumpWidget(const SizedBox.shrink());
         await openRoomLesson(tester, c, l, const Size(1180, 820));
+        await _endGreeting(tester);
         final Rect card = tester.getRect(find.byKey(const Key('lesson-stage')));
         final Rect landmark = tester.getRect(find.byKey(const Key('stage-reaction')));
         expect(landmark.right, lessThan(card.left), reason: 'in the empty column beside the card');
+        expect(landmark.size, const Size(150, 150));
         expect(
           find.descendant(
             of: find.byKey(const Key('stage-reaction')),

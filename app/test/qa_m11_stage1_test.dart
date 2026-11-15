@@ -1,8 +1,8 @@
 // QA pass of M11 Stage 1 (docs/milestones/M11.md section 6, criteria 1 to 4 and 10), 2026-11-15. It adds what the developer's tests did not cover:
 //  - the trail in each of the nine room shapes keeps clear of the header buttons at every lesson length on every board (trail_room_test only
 //    pumps the default round sockets);
-//  - the stage's end state after a right answer, as a picture, in every room (the "reacted" goldens of golden_m11_rooms_test.dart are taken 1.5 s
-//    after the tap, when the next item is already on: they show the plain landmark);
+//  - the stage's end state after a right answer, as a picture, in every room (the "reacted" goldens of golden_m11_rooms_test.dart were taken
+//    1.5 s after the tap, when the next item was already on; they are now taken at 1.25 s, when the end state stands: QA's D2);
 //  - the host's lines at text size 1.3 on the small phone (the developer's check is on the large phone), greeting and celebration, in all nine rooms;
 //  - the real L7 screens (the opener, a Meet, a Find) inside the three course rooms on every board;
 //  - the ink on every room's screen, sky and bubble keeps its contrast.

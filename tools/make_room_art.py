@@ -11,8 +11,8 @@ Writes (deterministic: the same script gives the same bytes) into app/assets/art
   <room>_landmark.svg   200 x 200   the room's landmark (bottom left of the stage, or beside the card on tablet landscape)
   <room>_piece.svg      200 x 200   the celebration's new piece, drawn over the landmark in the same box
   <room>_reacted.svg    200 x 200   the stage reaction's end state, drawn over the landmark in the same box
-  and app/assets/art/hosts/goni_<pose>_safe.svg: Goni's still and poses in the colour-safe skin (tokens color.character.goniColorSafe),
-  made by colour mapping only, for Colour Bay (the pose files themselves are read, never written).
+  (Until 2026-11-15 it also wrote app/assets/art/hosts/goni_<pose>_safe.svg, Goni in a grey colour-safe skin. Retired: the owner
+  gave Goni colour; his recolourable poses come from docs/design/m11/make_host_poses.py, docs/design/m11-rooms.md section 5.2.)
 Rooms: numbers (Counting Hills), colors (Colour Bay), shapes (Shape Forest), logic (Riddle Grotto), cs (Robot Harbour),
 math (Market Village), eng, heb, rus (the three language rooms behind their doors).
 
@@ -32,8 +32,8 @@ How a backdrop is put together (the developer's RoomBackdrop does exactly this; 
 Rules the drawings keep (spec 3.1): the middle of the stage (15% to 80% of its height) stays light and low in chroma, so a
 picture laid on it keeps its contrast; the colourful parts live at the edges; nothing in a band is a small repeated, countable
 object in the working area; no text, letters or numerals in any picture; no clock face (Market Village teaches time); no flag,
-no national symbol in the language rooms. Colour Bay is drawn in neutrals (all at or below 35% chroma) except its celebration
-swirl, which only appears after the lesson's last answer.
+no national symbol in the language rooms. Colour Bay is the most vivid room (2026-11-15): its colour lives at the edges (the
+rainbow, the parasol, the easel, the shell), its middle is a pale sky and pale shallow water.
 
 Style: the map islands' style (tools/make_home_map.py): flat shapes with no outline, lit from the upper left with one shade tone
 on the right, soft ground shadows (#2B2350 at 12%), the world palette of design/tokens.json.
@@ -51,6 +51,12 @@ References looked at on 2026-11-14 (photographs and facts; every drawing here is
   Classroom corners: Bing image search "kindergarten reading corner bookshelf rug cushions plant window": low shelves with
     books, round rugs, floor cushions, an easel, potted plants, paper lanterns on a string, drawings pegged on a line.
   Rock pools and beaches for Colour Bay; a budgerigar's perch stand (a T-perch with a ring and a bell) for Pip's room.
+References looked at on 2026-11-15 (the vivid Colour Bay and the harbour's crate, QA of Stage 1):
+  Bing image search "colorful beach huts striped umbrellas turquoise sea": turquoise water lighter in the shallows, golden sand
+    with a white line of foam, rainbow-striped parasols in wedges, sailboats with striped sails. Scallop shells (fan of ribs
+    from a hinge with two "ears", a scalloped rim) and starfish (five tapering arms) from the same beach photographs.
+  Bing image search "crane hook lifting wooden crate slings": four slings from the crate's top corners meeting at the hook in a
+    pyramid, a slatted crate with a thick frame and a diagonal brace.
   Our own approved art: app/assets/art/scenes/home_phone.svg (the islands), app/assets/art/world/*.svg (the landmark icons),
   app/assets/art/languages/door_*.svg (the windows: round, arched, square).
 """
@@ -79,7 +85,7 @@ ROOMS = ['numbers', 'colors', 'shapes', 'logic', 'cs', 'math', 'eng', 'heb', 'ru
 # The sky (or wall) gradient of each room: top colour, bottom colour. Code-drawn (layer 1).
 SKY = {
     'numbers': (SKY_TOP, SKY_BOTTOM),
-    'colors': ('#FFFFFF', '#F5F2F8'),
+    'colors': ('#A9DEF9', '#EAF8FD'),
     'shapes': (SKY_TOP, '#EAF7EE'),
     'logic': ('#F7F3FF', '#ECE3FE'),
     'cs': (SKY_TOP, '#EEF6FD'),
@@ -327,70 +333,146 @@ def numbers_reacted():
             C(x0 + 30, top - 14, 9, '#F46A5E', stroke=INK, stroke_width=2.4), C(x0 + 27, top - 17, 2.6, WHITE, opacity=0.7)]
 
 
-# ================================================================ Colour Bay (colors): neutrals only (<= 35% chroma)
-BAY = dict(sea='#E9E6EF', line='#D9D4E3', land='#E2DEE9', sand='#F1ECE4', wet='#E7E1D7', stone='#E4E0EA', stoneShade='#CFC9D8',
-           water='#D9D5E5', waterLit='#E8E5F0', grey='#BDB6CB', wood='#CFC6BA', woodShade='#B9AF9F')
+# ================================================================ Colour Bay (colors): the most vivid room, colour at the edges
+# (2026-11-15, QA of Stage 1: the neutral bay read as washed out). A sunny turquoise bay with golden sand: a rainbow over the
+# far islet at the end side, a sailboat with a striped sail, a rainbow parasol, a painter's easel and a red bucket in the corner, a
+# coral scallop shell over a turquoise rock pool as the landmark. The middle of the stage stays light (a pale sky and pale shallow
+# water), so a colour laid on the stage keeps its contrast; every picture there has its ink outline, so colour is never the only cue.
+RAINBOW = ('#FF5A5F', '#FF9F1C', '#FFD93D', '#5BCB6A', '#3E9BEA', '#9B6BE0')
+BAY = dict(horizon='#2FB5C8', sea='#84DBE0', shallow='#B6EEE8', foam='#FFFFFF', land='#86D49B', landShade='#62BE7E',
+           sand='#FFE0A0', wet='#F6C981', sandShade='#EDB866', rock='#F2C98A', rockShade='#D9A563', water='#35BCD0',
+           waterLit='#8EE3EA', shell='#FF9E80', shellLit='#FFC2A8', shellDeep='#E8735A', palm='#3FAE6A', palmShade='#2E8E55',
+           trunk='#B07A52', wood='#C98F5E', woodShade='#A26C46', star='#FF6F61', starDeep='#E0493E')
+
+
+def rainbow_arc(cx, base, r_out, band, op=1.0):
+    """A rainbow standing on `base`: six bands from red (outside) to violet (inside)."""
+    out = []
+    for i, col in enumerate(RAINBOW):
+        r = r_out - band * (i + 0.5)
+        out.append(P('M%s %s A%s %s 0 0 1 %s %s' % (f(cx - r), f(base), f(r), f(r), f(cx + r), f(base)), stroke=col,
+                     stroke_width=band + 0.6))
+    return G(out, op=op)
+
+
+def palm(x, base, h, s=1.0, trunk=None, leaf=None, shade=None):
+    b = BAY
+    trunk, leaf, shade = trunk or b['trunk'], leaf or b['palm'], shade or b['palmShade']
+    tx, ty = x + 10 * s, base - h
+    out = [P('M%s %s Q%s %s %s %s' % (f(x), f(base), f(x - 2 * s), f(base - h * 0.55), f(tx), f(ty)), stroke=trunk, stroke_width=5 * s,
+             stroke_linecap='round')]
+    for dx, dy, col in ((-24, 2, shade), (24, 4, shade), (-20, -10, leaf), (22, -8, leaf), (2, -16, leaf)):
+        out.append(P('M%s %s q%s %s %s %s q%s %s %s %s Z' % (f(tx), f(ty), f(dx * 0.5 * s), f((dy - 10) * s), f(dx * s), f(dy * s),
+                                                          f(-dx * 0.45 * s), f(-4 * s), f(-dx * s), f(-dy * s)), col))
+    return ''.join(out)
 
 
 def colors_far():
     b = BAY
-    out = [R(0, 80, 1600, 120, '#EEEBF3'), R(0, 104, 1600, 96, '#E8E4EF'), R(0, 136, 1600, 64, '#E2DEEA'),
-           P('M0 80 Q70 38 150 48 Q230 56 290 80 Z', b['land']), P('M1380 80 Q1440 52 1500 58 Q1560 64 1600 70 V80 Z', b['land'])]
-    # a far islet with a grey palm
-    out += [P('M500 82 Q540 64 600 70 Q640 74 660 82 Z', '#DDD8E4'), P('M572 72 Q574 46 586 30', stroke='#C9C3D2', stroke_width=4, stroke_linecap='round'),
-            P('M586 30 q-16 -4 -26 6 M586 30 q14 -8 26 0 M586 30 q-6 -12 -18 -14 M586 30 q8 -12 22 -10', stroke='#C9CEC4', stroke_width=5,
-              stroke_linecap='round')]
-    out.append(P('M180 112 h70 M520 100 h50 M700 126 h80 M930 110 h60 M1280 120 h70 M420 146 h90 M1060 150 h60 M760 168 h70',
-                 stroke='#D9D4E3', stroke_width=4, stroke_linecap='round'))
-    # a white sailboat
-    out.append(G([P('M-30 0 L30 0 L21 12 L-21 12 Z', '#CFC8D8'), R(-1.5, -50, 3, 50, '#B9B1C6'),
-                  P('M2 -50 L2 -5 L26 -5 Z', WHITE), P('M-2 -44 L-2 -5 L-22 -5 Z', '#F4F2F7'), R(-30, 0, 60, 3, '#DCD6E3')], 'translate(1130 96)'))
+    out = [R(0, 80, 1600, 120, b['sea']), R(0, 80, 1600, 12, b['horizon']), R(0, 92, 1600, 8, '#5CCCD6'),
+           P('M0 150 Q400 140 800 148 Q1200 156 1600 146 V200 H0 Z', b['shallow']),
+           # green headlands at the far sides
+           P('M0 82 Q60 40 150 50 Q230 58 300 82 Z', b['land']), P('M0 82 Q90 62 180 66 Q250 70 300 82 Z', b['landShade'], opacity=0.5),
+           P('M1330 82 Q1410 48 1490 54 Q1560 60 1600 66 V82 Z', b['land'])]
+    # the rainbow, its foot on a small sandy islet with a palm (end side, left: over the landmark's corner)
+    out += [rainbow_arc(560, 80, 84, 9, 0.9),
+            P('M470 84 Q520 66 590 70 Q640 74 664 84 Z', b['sand']), P('M470 84 Q560 78 664 84 Z', b['wet']),
+            palm(560, 72, 40, 1.0)]
+    for x, y, w in ((150, 112, 60), (700, 104, 44), (1220, 116, 70), (380, 132, 54), (1040, 136, 60), (820, 166, 64), (1420, 170, 56)):
+        out.append(P('M%s %s q%s -6 %s 0' % (f(x), f(y), f(w / 2), f(w)), stroke=WHITE, stroke_width=3.4, stroke_linecap='round',
+                     opacity=0.9))
+    # a sailboat with a striped sail (red, yellow, blue), sailing toward the end side
+    sail = [P('M2 -56 L2 -6 L30 -6 Z', '#FFD93D'), P('M2 -56 L2 -40 L11 -40 Z', '#FF5A5F'), P('M2 -28 L2 -6 L30 -6 L20 -28 Z', '#3E9BEA'),
+            P('M-2 -48 L-2 -6 L-24 -6 Z', WHITE), P('M-2 -48 L-2 -32 L-10 -32 Z', '#FF5A5F', opacity=0.85)]
+    out.append(G([P('M-32 0 L32 0 L23 13 L-23 13 Z', '#FF5A5F'), R(-32, 0, 64, 3.5, WHITE), R(-1.6, -58, 3.2, 58, '#7A4E32')] + sail +
+                 [P('M-36 16 q8 -3 16 0 q8 3 16 0 q8 -3 16 0 q8 3 16 0', stroke=WHITE, stroke_width=2.4, stroke_linecap='round')],
+                 'translate(960 102)'))
     return out
 
 
 def colors_ground():
     b = BAY
-    out = [R(0, 30, 2400, 70, b['sand']), R(0, 30, 2400, 12, b['wet']),
-           P('M0 32 ' + ''.join('q30 -9 60 0 ' for _ in range(40)), stroke=WHITE, stroke_width=5, stroke_linecap='round')]
-    for x, y, r in ((260, 70, 7), (640, 82, 5), (1500, 76, 6), (1880, 66, 5), (2200, 84, 7)):
-        out += [E(x, y, r * 1.5, r, b['stoneShade']), E(x - 1, y - 1.5, r * 1.3, r * 0.75, b['stone'])]
-    for x in (430, 1700):                       # a pale scallop shell
-        out += [P('M%s 74 a12 12 0 0 1 24 0 Z' % f(x), '#EDE7E2'),
-                P('M%s 74 l0 -10 M%s 74 l-6 -8 M%s 74 l6 -8' % (f(x + 12), f(x + 12), f(x + 12)), stroke=b['grey'], stroke_width=1.4)]
+    out = [R(0, 30, 2400, 70, b['sand']), R(0, 30, 2400, 13, b['wet']), R(0, 84, 2400, 16, b['sandShade'], opacity=0.45),
+           P('M0 32 ' + ''.join('q30 -9 60 0 ' for _ in range(40)), stroke=WHITE, stroke_width=5.5, stroke_linecap='round')]
+    # three finds on the sand, far apart and all different (nothing to count): a starfish, a pink cone shell, a blue sea glass
+    out.append(starfish(760, 70, 13))
+    out += [P('M1460 80 Q1468 58 1486 56 Q1478 70 1484 82 Z', '#F48FB1'), P('M1468 78 Q1474 64 1484 58', stroke='#D96490',
+            stroke_width=1.6), E(1180, 78, 9, 5.5, '#7EC8F0'), E(1178, 76, 4, 2, WHITE, opacity=0.7)]
     return out
+
+
+def starfish(cx, cy, r, col=None, deep=None, rot=-8):
+    b = BAY
+    col, deep = col or b['star'], deep or b['starDeep']
+    pts = []
+    for k in range(10):
+        a = math.radians(rot - 90 + k * 36)
+        rr = r if k % 2 == 0 else r * 0.45
+        pts.append((cx + rr * math.cos(a), cy + rr * math.sin(a)))
+    d = 'M%s %s ' % (f(pts[0][0]), f(pts[0][1])) + ' '.join('L%s %s' % (f(x), f(y)) for x, y in pts[1:]) + ' Z'
+    return ''.join([P(d, col, stroke=col, stroke_width=r * 0.28, stroke_linejoin='round'),
+                    C(cx, cy, r * 0.22, deep), C(cx - r * 0.3, cy - r * 0.35, r * 0.09, WHITE, opacity=0.8)])
 
 
 def colors_corner():
     b = BAY
-    return [G([  # a beach parasol in white and pale grey stripes
-            P('M206 196 L196 40', stroke=b['woodShade'], stroke_width=5, stroke_linecap='round'),
-            P('M134 64 Q140 20 196 16 Q252 20 258 64 Q242 56 226 64 Q212 56 196 64 Q180 56 166 64 Q150 56 134 64 Z', WHITE),
-            P('M166 64 Q170 26 196 16 Q186 30 182 60 Z M226 64 Q222 26 196 16 Q206 30 212 60 Z', '#E6E1EC'),
-            C(196, 14, 3.5, b['woodShade'])], 'translate(-24 6)'),
-            shadow(108, 196, 60, 5),
-            # the easel with a blank canvas (Goni paints here; the canvas stays white)
-            P('M110 40 L124 192', stroke=b['woodShade'], stroke_width=7, stroke_linecap='round'),
-            P('M108 36 L74 196 M108 36 L142 196', stroke=b['wood'], stroke_width=8, stroke_linecap='round'),
-            R(62, 126, 94, 9, b['wood'], rx=3), R(62, 132, 94, 3, b['woodShade']),
-            R(66, 48, 86, 76, '#D9D2C6', rx=3), R(71, 53, 76, 66, WHITE, rx=2), R(110, 53, 37, 66, '#F3F1F6'),
-            R(100, 32, 16, 18, b['wood'], rx=3),
-            # a jar with brushes at the easel's foot, and a pebble
-            P('M166 160 h36 v28 q0 8 -8 8 h-20 q-8 0 -8 -8 Z', '#E9E6EE'), R(164, 156, 40, 7, '#D8D3E0', rx=3),
-            P('M176 160 L170 124 M184 160 L186 118 M192 160 L200 128', stroke=b['woodShade'], stroke_width=3.6, stroke_linecap='round'),
-            E(169, 120, 3.6, 6.5, '#8F889C', transform='rotate(-12 169 120)'), E(186, 114, 3.6, 6.5, '#A79FB4'),
-            E(201, 124, 3.6, 6.5, '#8F889C', transform='rotate(14 201 124)'),
-            R(170, 166, 5, 24, WHITE, rx=2.5, opacity=0.6),
-            E(30, 190, 20, 9, b['stoneShade']), E(28, 187, 17, 7, b['stone'])]
+    out = []
+    # a rainbow beach parasol (six wedges), its pole stuck in the sand
+    wedges = []
+    cx, top, rim = 172, 22, 64
+    xs = [110, 131, 151, 172, 193, 213, 234]
+    for i, col in enumerate(RAINBOW):
+        x0, x1 = xs[i], xs[i + 1]
+        wedges.append(P('M%s %s L%s %s Q%s %s %s %s Z' % (f(cx), f(top), f(x0), f(rim), f((x0 + x1) / 2), f(rim - 7), f(x1), f(rim)), col))
+    out += [P('M176 196 L170 30', stroke=b['woodShade'], stroke_width=5, stroke_linecap='round')] + wedges + [
+        P('M%s %s Q%s %s %s %s' % (f(xs[0]), f(rim), f(cx), f(top - 26), f(xs[-1]), f(rim)), stroke=WHITE, stroke_width=2.2, opacity=0.35),
+        C(cx, top - 2, 4, b['woodShade'])]
+    out.append(shadow(106, 196, 60, 5))
+    # the painter's easel with its canvas: three bold paint blots (red, yellow, blue) and a green stroke, no picture to name
+    out += [P('M106 40 L120 192', stroke=b['woodShade'], stroke_width=7, stroke_linecap='round'),
+            P('M104 36 L70 196 M104 36 L138 196', stroke=b['wood'], stroke_width=8, stroke_linecap='round'),
+            R(58, 126, 94, 9, b['wood'], rx=3), R(58, 132, 94, 3, b['woodShade']),
+            R(62, 48, 86, 76, '#E9D7BE', rx=3), R(67, 53, 76, 66, WHITE, rx=2),
+            P('M78 66 q8 -8 18 -2 q8 6 2 14 q-6 8 -16 4 q-10 -6 -4 -16 Z', '#FF5A5F'),
+            P('M108 62 q12 -6 20 4 q6 10 -4 16 q-12 4 -18 -4 q-4 -10 2 -16 Z', '#FFD93D'),
+            P('M90 92 q12 -6 22 2 q8 10 -2 18 q-12 6 -20 -2 q-6 -10 0 -18 Z', '#3E9BEA'),
+            P('M118 104 q8 -8 18 -4', stroke='#5BCB6A', stroke_width=6, stroke_linecap='round'),
+            R(96, 32, 16, 18, b['wood'], rx=3)]
+    # a red bucket with a yellow spade at the easel's foot
+    out += [P('M160 160 h40 l-5 32 q-1 5 -6 5 h-18 q-5 0 -6 -5 Z', '#FF5A5F'), R(158, 156, 44, 7, '#E0393F', rx=3),
+            P('M162 160 Q180 140 198 160', stroke='#7A4E5A', stroke_width=2.2),
+            R(166, 166, 5, 24, WHITE, rx=2.5, opacity=0.45),
+            P('M206 134 L194 182', stroke='#F0A500', stroke_width=4.4, stroke_linecap='round'),
+            P('M188 176 q-4 14 4 18 q10 2 12 -12 Z', '#FFD93D'),
+            starfish(30, 186, 12, rot=10)]
+    return out
 
 
 def colors_landmark():
-    """A giant open scallop shell standing behind a round pool: pearl white and grey-lilac (colour-safe by design)."""
+    """A giant coral scallop shell standing behind a round turquoise rock pool, a starfish on the rim and a pearl."""
     b = BAY
     cx, cy = POOL['cx'], POOL['cy']
-    out = [shadow(100, 190, 92, 7)]
-    # the shell's fan: ribs from the hinge, alternating two pale tones, with a scalloped rim
-    n, R0 = 9, 94
+    out = [shadow(100, 190, 92, 7)] + shell_fan(lambda i: b['shell'] if i % 2 == 0 else b['shellLit'])
+    out += [P('M%s %s A%s %s 0 0 1 %s %s' % (f(cx - 52), f(cy - 6), f(52), f(50), f(cx + 52), f(cy - 6)), stroke=WHITE, stroke_width=3,
+              opacity=0.5),
+            # the hinge's two ears
+            P('M%s %s l-16 0 l4 -12 Z M%s %s l16 0 l-4 -12 Z' % (f(cx - 6), f(cy - 4), f(cx + 6), f(cy - 4)), b['shellDeep']),
+            # the pool in front: a rim of warm sandstone and the turquoise water
+            E(cx, cy + 4, 90, 24, b['rockShade']), E(cx, cy, 86, 21, b['rock']),
+            E(cx + 2, cy + 1, 70, 14, b['water']), E(cx - 6, cy - 2, 52, 8, b['waterLit']),
+            P('M%s %s q10 -4 20 0 M%s %s q8 -3 16 0' % (f(cx - 34), f(cy - 1), f(cx + 16), f(cy + 5)), stroke=WHITE, stroke_width=2.4,
+              stroke_linecap='round', opacity=0.9),
+            starfish(cx - 70, cy + 4, 13, rot=14),
+            # a pearl on the rim
+            C(cx + 74, cy - 10, 8, WHITE), C(cx + 72, cy - 12, 2.6, '#F1EEF6'), E(cx + 74, cy - 2, 7, 2, INK, opacity=0.12)]
+    return out
+
+
+def shell_fan(colour_of, R0=94, n=9):
+    """The scallop's fan: ribs from the hinge with a scalloped rim; `colour_of(i)` colours rib i (0 = the end side)."""
+    cx, cy = POOL['cx'], POOL['cy']
     hinge = (cx, cy - 6)
+    out = []
     for i in range(n):
         a0 = math.pi + i * math.pi / n
         a1 = math.pi + (i + 1) * math.pi / n
@@ -399,34 +481,52 @@ def colors_landmark():
         mid = (a0 + a1) / 2
         pm = (hinge[0] + R0 * 1.08 * math.cos(mid), hinge[1] + R0 * 1.03 * math.sin(mid))
         out.append(P('M%s %s L%s %s Q%s %s %s %s Z' % (f(hinge[0]), f(hinge[1]), f(p0[0]), f(p0[1]), f(pm[0]), f(pm[1]), f(p1[0]), f(p1[1])),
-                     '#F2EEF5' if i % 2 == 0 else '#E3DDEA'))
-    out.append(P('M%s %s A%s %s 0 0 1 %s %s' % (f(cx - 52), f(cy - 6), f(52), f(50), f(cx + 52), f(cy - 6)), stroke=WHITE, stroke_width=3,
-                 opacity=0.6))
-    # the pool in front: a rim of pale stone and the grey-lilac water
-    out += [E(cx, cy + 4, 90, 24, b['stoneShade']), E(cx, cy, 86, 21, b['stone']),
-            E(cx + 2, cy + 1, 70, 14, b['water']), E(cx - 4, cy - 1, 56, 9, b['waterLit']),
-            P('M%s %s q10 -4 20 0 M%s %s q8 -3 16 0' % (f(cx - 34), f(cy - 1), f(cx + 14), f(cy + 4)), stroke=WHITE, stroke_width=2.4,
-              stroke_linecap='round', opacity=0.9),
-            # a pearl on the rim
-            C(cx + 74, cy - 10, 8, WHITE), C(cx + 72, cy - 12, 2.6, '#F1EEF6'), E(cx + 74, cy - 2, 7, 2, INK, opacity=0.08)]
+                     colour_of(i)))
+    # the ribs' grooves
+    for i in range(1, n):
+        a = math.pi + i * math.pi / n
+        out.append(P('M%s %s L%s %s' % (f(hinge[0] + 18 * math.cos(a)), f(hinge[1] + 18 * math.sin(a)), f(hinge[0] + R0 * 0.96 * math.cos(a)),
+                                       f(hinge[1] + R0 * 0.92 * math.sin(a))), stroke=INK, stroke_width=1.6, opacity=0.14))
     return out
 
 
 def colors_piece():
-    """The new swirl in the pool: soft colours, shown only in the celebration (after the last answer)."""
+    """The new swirl in the pool: the rainbow's colours, shown only in the celebration (after the last answer)."""
     cx, cy = POOL['cx'], POOL['cy']
     out = [glow(cx, cy, 46)]
-    for i, col in enumerate(('#F7A8C4', '#FFD66E', '#9ED8F0', '#AEDD9E')):
+    for i, col in enumerate(('#FF5A5F', '#FFD93D', '#3E9BEA', '#5BCB6A')):
         r = 40 - i * 9
         out.append(P('M%s %s A%s %s 0 1 1 %s %s' % (f(cx - r), f(cy), f(r), f(r * 0.3), f(cx + r * 0.8), f(cy)), stroke=col,
-                     stroke_width=5.5, stroke_linecap='round'))
+                     stroke_width=6, stroke_linecap='round'))
     return out + [spark(cx + 46, cy - 26, 6), spark(cx - 40, cy - 22, 4.5)]
 
 
+SHELL_RAINBOW = ('#FF5A5F', '#FF7F3E', '#FF9F1C', '#FFD93D', '#8FD45C', '#5BCB6A', '#3EB8D8', '#3E9BEA', '#9B6BE0')
+
+
 def colors_reacted():
+    """The reaction's end state: the whole shell lights up in the rainbow's colours (it covers the shell exactly, so even a corner of
+    it shows the change), a splash crown stands in the pool with two ripple rings, and sparks: a change of shape, not only of colour."""
     cx, cy = POOL['cx'], POOL['cy']
-    return [E(cx, cy + 1, 32, 8.5, 'none', stroke=INK, stroke_width=2.4, opacity=0.35),
-            E(cx, cy + 1, 15, 4, 'none', stroke=WHITE, stroke_width=2.4, opacity=0.9), C(cx, cy - 9, 3, WHITE)]
+    b = BAY
+    out = [glow(cx, cy - 50, 70, GOLD_TINT, 4, 0.3)] + shell_fan(lambda i: SHELL_RAINBOW[i])
+    out += [P('M%s %s A%s %s 0 0 1 %s %s' % (f(cx - 52), f(cy - 6), f(52), f(50), f(cx + 52), f(cy - 6)), stroke=WHITE, stroke_width=4,
+              opacity=0.7),
+            # the pool again in front of the lit shell (the overlay is drawn over the whole landmark)
+            E(cx, cy + 4, 90, 24, b['rockShade']), E(cx, cy, 86, 21, b['rock']),
+            E(cx + 2, cy + 1, 70, 14, b['water']), E(cx - 6, cy - 2, 52, 8, b['waterLit']),
+            starfish(cx - 70, cy + 4, 13, rot=14), C(cx + 74, cy - 10, 8, WHITE), C(cx + 72, cy - 12, 2.6, '#F1EEF6'),
+            # ripple rings on the water
+            E(cx, cy + 2, 60, 12, 'none', stroke=WHITE, stroke_width=3.2, opacity=0.95),
+            E(cx, cy + 2, 36, 7.5, 'none', stroke=INK, stroke_width=2.4, opacity=0.35),
+            # the splash crown: a ring of droplets thrown up from the middle of the pool
+            P('M%s %s q-6 -18 -16 -22 q10 2 14 12 q-2 -16 4 -28 q4 14 2 28 q4 -12 14 -12 q-10 8 -12 22 Z' % (f(cx - 6), f(cy + 1)), WHITE),
+            P('M%s %s q-6 -18 -16 -22 q10 2 14 12 q-2 -16 4 -28 q4 14 2 28 q4 -12 14 -12 q-10 8 -12 22 Z' % (f(cx - 6), f(cy + 1)),
+              stroke='#35BCD0', stroke_width=2, opacity=0.6),
+            C(cx - 22, cy - 30, 4, WHITE, stroke='#35BCD0', stroke_width=1.6), C(cx + 20, cy - 36, 3.4, WHITE, stroke='#35BCD0', stroke_width=1.6),
+            C(cx + 2, cy - 44, 3, WHITE, stroke='#35BCD0', stroke_width=1.6),
+            spark(cx - 64, cy - 88, 9), spark(cx + 66, cy - 80, 7), spark(cx + 10, cy - 104, 5.5, WHITE)]
+    return out
 
 
 # ================================================================ Shape Forest (shapes)
@@ -711,16 +811,53 @@ def cs_landmark():
     return out
 
 
+def big_crate(x, y, w, h, body, frame, lit):
+    """A big slatted crate for the harbour's reaction and piece: a thick frame, three planks, a diagonal brace, lit on the left,
+    edged in its frame colour so it reads at the phone's 56 pt landmark (Bing image search "crane hook lifting wooden crate slings")."""
+    t = w * 0.085
+    planks = ''.join('M%s %s H%s ' % (f(x + t), f(y + h * k / 3), f(x + w - t)) for k in (1, 2))
+    return ''.join([R(x - 2, y - 2, w + 4, h + 4, frame, rx=5), R(x, y, w, h, body, rx=3),
+                    P(planks, stroke=frame, stroke_width=2.6, opacity=0.55),
+                    P('M%s %s L%s %s' % (f(x + t), f(y + h - t), f(x + w - t), f(y + t)), stroke=frame, stroke_width=t * 0.95),
+                    R(x, y, w, t, frame), R(x, y + h - t, w, t, frame), R(x, y, t, h, frame), R(x + w - t, y, t, h, frame),
+                    R(x + t, y + t, w * 0.16, h - 2 * t, lit, opacity=0.55),
+                    R(x + w * 0.6, y, w * 0.4, h, INK, opacity=0.07)])
+
+
+def _hook(x, y):
+    """The crane's hook block and hook at (x, y) (the block's top)."""
+    return ''.join([R(x - 8, y, 16, 8, GOLD, rx=2), R(x - 8, y + 6, 16, 2, GOLD_DEEP),
+                    P('M%s %s v7 a6 6 0 1 1 -10 4' % (f(x), f(y + 8)), stroke=INK, stroke_width=3.4, stroke_linecap='round')])
+
+
 def cs_piece():
-    return [glow(68, 166, 30), crate(52, 156, 32, 30, '#F2B33D', '#C98A1A'), spark(88, 150, 6), spark(48, 150, 4)]
+    """The celebration's piece: a gold crate set on the quay under the hook, glowing."""
+    c = CRANE
+    x0, x1, top, base = 52, 132, 120, 178
+    return [glow(92, 150, 54), shadow(92, 180, 48, 4),
+            P('M%s %s V%s' % (f(c['trolleyX']), f(c['beam'] + 17), f(top - 22)), stroke=INK, stroke_width=2.2),
+            _hook(c['trolleyX'], top - 22),
+            big_crate(x0, top, x1 - x0, base - top, GOLD, GOLD_DEEP, '#FFF1C4'),
+            spark(92, 149, 9, WHITE), spark(x1 + 12, top - 6, 7), spark(x0 - 12, top + 6, 5)]
 
 
 def cs_reacted():
+    """The reaction's end state: a big orange crate set down on the quay between the legs, its four slings up to the lowered hook
+    (photographs of crane lifts: the slings meet at the hook in a pyramid). It is about half the landmark's width."""
     c = CRANE
     x = c['trolleyX']
-    hb = c['hookY'] + 14
-    return [P('M%s %s L%s 148 M%s %s L%s 148' % (f(x - 1), f(hb), f(x - 17), f(x + 1), f(hb), f(x + 17)), stroke=INK, stroke_width=2),
-            crate(x - 20, 148, 40, 34), spark(x + 28, 142, 5)]
+    x0, x1, top, base = 44, 144, 112, 178
+    hook = top - 30
+    return [glow(94, 140, 60, GOLD_TINT, 4, 0.3), shadow(94, 180, 56, 4),
+            P('M%s %s V%s' % (f(x), f(c['beam'] + 17), f(hook)), stroke=INK, stroke_width=2.2),
+            # the back slings (behind the crate's top), then the crate, then the front slings
+            P('M%s %s L%s %s M%s %s L%s %s' % (f(x - 2), f(hook + 14), f(x0 + 18), f(top + 2), f(x + 2), f(hook + 14), f(x1 - 18),
+                                                 f(top + 2)), stroke='#E0762A', stroke_width=2.6),
+            big_crate(x0, top, x1 - x0, base - top, '#FFB35C', '#E0762A', '#FFE0B8'),
+            P('M%s %s L%s %s M%s %s L%s %s' % (f(x - 3), f(hook + 14), f(x0 + 4), f(top + 3), f(x + 3), f(hook + 14), f(x1 - 4),
+                                                 f(top + 3)), stroke=INK, stroke_width=3, stroke_linecap='round'),
+            _hook(x, hook),
+            spark(x1 + 14, top - 10, 9), spark(x0 - 10, top - 4, 6.5), spark(x + 26, top - 30, 5, WHITE)]
 
 
 # ================================================================ Market Village (math)
@@ -1134,9 +1271,13 @@ def fir(cx, base, h, w, lit, shade, tiers=3, trunk=None):
 
 
 def colors_top():
-    b = BAY
-    return [sun(1660, 36, 22, '#FBF3DF', '#F7ECD3', '#FFFBF2', rays=False), cloud(620, 34, 0.9, '#EEEBF3'), cloud(1180, 28, 0.7, '#F1EEF5'),
-            cloud(1980, 36, 0.9, '#EEEBF3'), gull(900, 40, b['grey']), gull(934, 52, b['grey'], 0.8)]
+    # a bright sun, white clouds and a kite in the rainbow's colours (all within the band's middle, so every stage shape shows them)
+    kite = G([P('M0 -20 L14 0 L0 22 L-14 0 Z', '#FF5A5F'), P('M0 -20 L14 0 L0 0 Z', '#FFD93D'), P('M-14 0 L0 0 L0 22 Z', '#3E9BEA'),
+              P('M0 0 L14 0 L0 22 Z', '#5BCB6A'), P('M0 -20 V22 M-14 0 H14', stroke='#7A4E32', stroke_width=1.4, opacity=0.6),
+              P('M0 22 q-6 10 4 16 q10 6 2 18', stroke='#7A4E32', stroke_width=1.6, stroke_linecap='round'),
+              P('M2 36 l-6 -4 l0 8 Z M2 36 l6 -4 l0 8 Z', '#9B6BE0')], 'translate(900 30) rotate(-14)')
+    return [sun(1560, 34, 22, '#FFD93D', '#FFC21A', '#FFF1C4'), cloud(640, 34, 0.9), cloud(1240, 28, 0.7), cloud(1980, 36, 0.9),
+            kite, gull(1080, 40, '#5FB3C2'), gull(1112, 52, '#5FB3C2', 0.8)]
 
 
 POOL = dict(cx=100, cy=164)
@@ -1197,15 +1338,7 @@ def main():
             with open(os.path.join(OUT, '%s_%s.svg' % (room, part)), 'w', encoding='utf-8', newline='\n') as fh:
                 fh.write(s)
             n += 1
-    os.makedirs(HOSTS, exist_ok=True)
-    for name, pose in (('goni.svg', 'idle'), ('goni-talk.svg', 'talk'), ('goni-show.svg', 'show'), ('goni-celebrate.svg', 'celebrate')):
-        src = os.path.join(CAST, name)
-        if os.path.exists(src):
-            with open(src, encoding='utf-8') as fh:
-                text = fh.read()
-            with open(os.path.join(HOSTS, 'goni_%s_safe.svg' % pose), 'w', encoding='utf-8', newline='\n') as fh:
-                fh.write(goni_safe(text))
-            n += 1
+    # Goni's colour-safe files are no longer written (2026-11-15; see the docstring).
     print('%d files' % n)
 
 

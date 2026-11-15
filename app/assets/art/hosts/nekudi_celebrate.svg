@@ -6,8 +6,11 @@
      References looked at (2026-11-14), nothing traced: Wikipedia "Coccinellidae" (hard elytra that cover the folded membranous hind
      wings; springy veins that stiffen in flight); photographs of seven-spot ladybirds taking off, the two red elytra lifted up and
      apart and the clear wings unfolding behind them (Bing image search "seven spot ladybird walking side view legs macro", the
-     take-off frames among the results). -->
+     take-off frames among the results).
+     2026-11-15: the whole pose is scaled to 0.915 about the baseline's middle (group "fit") so the antennae stay inside the
+     celebration card's window (everything at y >= 72, docs/design/m11-rooms.md section 7.2); burst anchor 256, 104. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="נְקוּדִי חוֹגֶגֶת">
+<g id="fit" transform="translate(256 472) scale(0.915) translate(-256 -472)">
   <ellipse cx="256" cy="466" rx="94" ry="9" fill="rgba(43,35,80,0.11)"/>
   <g id="sparks">
     <path d="M136 120 Q139 131 150 134 Q139 137 136 148 Q133 137 122 134 Q133 131 136 120 Z" fill="#FFC83D"/>
@@ -66,4 +69,5 @@
       </g>
     </g>
   </g>
+</g>
 </svg>

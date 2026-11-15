@@ -2,6 +2,7 @@
 // geometry, the hosts' anchors against their pose files, the trail's shapes, the greeting of the lesson controller (who speaks, what is
 // asked and written), and the rules (nothing counted, nothing timed) as source rules.
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/design/board.dart';
+import 'package:nitznutz/design/tokens.g.dart';
 import 'package:nitznutz/play/activity_frame.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
 import 'package:nitznutz/rooms/host_places.dart';
@@ -29,6 +31,12 @@ import 'support/course_packs.dart';
 final String _generator = File('../tools/make_room_art.py').readAsStringSync();
 
 Color _hex(String h) => Color(0xFF000000 | int.parse(h.substring(1), radix: 16));
+
+/// The WCAG contrast ratio of two opaque colours.
+double _contrast(Color a, Color b) {
+  final double la = a.computeLuminance(), lb = b.computeLuminance();
+  return (math.max(la, lb) + 0.05) / (math.min(la, lb) + 0.05);
+}
 
 void main() {
   late PackContent starter;
@@ -62,26 +70,44 @@ void main() {
       expect(RoomSpec.of(null), isNull);
     });
 
+    test('every room has its own host, trail shape, screen colour and rim', () {
+      expect(RoomSpec.all.map((RoomSpec r) => r.hostId).toSet(), hasLength(9));
+      expect(RoomSpec.all.map((RoomSpec r) => r.trail).toSet(), hasLength(9));
+      expect(RoomSpec.all.map((RoomSpec r) => r.rim).toSet(), hasLength(9));
+      expect(RoomSpec.all.map((RoomSpec r) => r.screen).toSet(), hasLength(9));
+      for (final RoomSpec r in RoomSpec.all) {
+        expect(HostSpec.byId(r.hostId).id, r.hostId);
+        expect(HostHe.names.keys, contains(r.hostId));
+      }
+    });
+
     test(
-      'every room has its own host, trail shape, screen colour (but Colour Bay, which is neutral) and rim',
+      'Colour Bay is the most vivid room: the pink tint screen, its fill as the rim, its deep as the lip',
       () {
-        expect(RoomSpec.all.map((RoomSpec r) => r.hostId).toSet(), hasLength(9));
-        expect(RoomSpec.all.map((RoomSpec r) => r.trail).toSet(), hasLength(9));
-        expect(RoomSpec.all.map((RoomSpec r) => r.rim).toSet(), hasLength(9));
-        expect(RoomSpec.all.map((RoomSpec r) => r.screen).toSet(), hasLength(9));
-        // Colour Bay keeps the cream screen and a neutral rim: nothing in it competes with the colours being taught.
-        expect(RoomSpec.colors.screen, const Color(0xFFFFF6E8));
-        expect(RoomSpec.colors.rim.a, lessThan(0.5));
-        for (final RoomSpec r in RoomSpec.all) {
-          expect(HostSpec.byId(r.hostId).id, r.hostId);
-          expect(HostHe.names.keys, contains(r.hostId));
-        }
+        expect(RoomSpec.colors.screen, TokenColors.domainColorsTint);
+        expect(RoomSpec.colors.rim, TokenColors.domainColorsFill);
+        expect(RoomSpec.colors.lip, TokenColors.domainColorsDeep);
       },
     );
+
+    test("the text on every room's screen colour is at least 7:1 (ink) and 4.5:1 (soft ink)", () {
+      for (final RoomSpec r in RoomSpec.all) {
+        expect(
+          _contrast(TokenColors.ink, r.screen),
+          greaterThanOrEqualTo(7),
+          reason: '${r.name} ink on its screen',
+        );
+        expect(
+          _contrast(TokenColors.inkSoft, r.screen),
+          greaterThanOrEqualTo(4.5),
+          reason: '${r.name} soft ink on its screen',
+        );
+      }
+    });
   });
 
   group('the art and its numbers', () {
-    test('all 63 room files, the 36 host pictures and the 4 safe ones of Goni are there and are listed in the pubspec', () {
+    test('all 63 room files, the 36 host pictures (the four of Goni are the recolourable ones) are there and are listed in the pubspec', () {
       for (final RoomSpec r in RoomSpec.all) {
         for (final String part in <String>[
           'far',
@@ -130,13 +156,8 @@ void main() {
       expect(RoomLayout.top, number('top'));
       expect(RoomLayout.corner, number('corner'));
       expect(RoomLayout.cornerMaxWidth, number('cornerMaxW'));
-      expect(RoomLayout.landmark, number('landmark'));
-      expect(RoomLayout.landmarkMaxWidth, number('landmarkMaxW'));
       expect(RoomLayout.roomCorner, number('roomCorner'));
       expect(RoomLayout.roomCornerMaxWidth, number('roomCornerMaxW'));
-      expect(RoomLayout.window, number('window'));
-      expect(RoomLayout.windowMaxWidth, number('windowMaxW'));
-      expect(RoomLayout.windowBottom, number('windowBottom'));
       final RegExpMatch inset = RegExp(r'landmarkInset=\((\d+), (\d+)\)').firstMatch(layers)!;
       expect(RoomLayout.insetX, double.parse(inset.group(1)!));
       expect(RoomLayout.insetY, double.parse(inset.group(2)!));
@@ -184,47 +205,6 @@ void main() {
       // 6 in from the start (right) edge, 2 up from the bottom.
       expect(corner.right, 330 - 6);
       expect(corner.bottom, 128 - 2);
-    });
-
-    test('a land\'s landmark is 56 on the phone, 46 on the small phone and 118 on the portrait tablet, at the end-bottom corner', () {
-      expect(RoomLayout.landmarkBox(RoomSpec.numbers, phone).width, closeTo(56.32, 0.01));
-      expect(RoomLayout.landmarkBox(RoomSpec.numbers, const ui.Size(270, 104)).width, closeTo(45.76, 0.01));
-      expect(RoomLayout.landmarkBox(RoomSpec.numbers, const ui.Size(740, 268)).width, closeTo(117.92, 0.01));
-      final ui.Rect box = RoomLayout.landmarkBox(RoomSpec.numbers, phone);
-      expect(box.left, 6);
-      expect(box.bottom, 128 - 2);
-      // The tall robot stage (330 x 282): at most 24% of the width, 79.
-      expect(RoomLayout.landmarkBox(RoomSpec.cs, const ui.Size(330, 282)).width, closeTo(79.2, 0.01));
-    });
-
-    test('a course\'s window hangs on the wall: 67 on the phone, its bottom at 74% of the height', () {
-      final ui.Rect box = RoomLayout.landmarkBox(RoomSpec.eng, phone);
-      expect(box.width, closeTo(66.56, 0.01));
-      expect(box.left, 10);
-      expect(box.bottom, closeTo(0.74 * 128, 0.01));
-      expect(
-        RoomLayout.landmarkBox(RoomSpec.rus, const ui.Size(772 - 32, 300 - 32)).width,
-        closeTo(139.36, 0.01),
-      );
-    });
-
-    test('a land\'s landmark stands outside the card only on the landscape tablet', () {
-      for (final BoardClass b in BoardClass.values) {
-        expect(
-          RoomLayout.landmarkOutside(RoomSpec.numbers, b),
-          b == BoardClass.tabletLandscape,
-          reason: '$b',
-        );
-        expect(
-          RoomLayout.landmarkOutside(RoomSpec.eng, b),
-          isFalse,
-          reason: '$b: a window stays on its wall',
-        );
-      }
-      const ui.Rect card = ui.Rect.fromLTWH(288, 230, 584, 300);
-      final ui.Rect out = RoomLayout.outsideBox(card);
-      expect(out.right, lessThan(card.left), reason: 'in the empty column, clear of the card');
-      expect(out.bottom, greaterThan(card.bottom - 10));
     });
   });
 
@@ -276,8 +256,8 @@ void main() {
       },
     );
 
-    test('Goni is drawn in the colour-safe skin only', () {
-      expect(HostSpec.goni.asset(HostPose.talk), endsWith('goni_talk_safe.svg'));
+    test('Goni is drawn in his own recolourable files, as every other host is in his', () {
+      expect(HostSpec.goni.asset(HostPose.talk), endsWith('goni_talk.svg'));
       expect(HostSpec.nekudi.asset(HostPose.celebrate), endsWith('nekudi_celebrate.svg'));
     });
   });

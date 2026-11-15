@@ -139,6 +139,7 @@ class BoardBubble extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.maxWidth,
     this.tailTip,
+    this.tailAtEnd = false,
     this.chip,
     this.math,
     this.pointerAt,
@@ -172,6 +173,11 @@ class BoardBubble extends StatelessWidget {
   /// The tip stays put when the bubble grows; only the wedge gets shorter. Null: the small tail on the right edge.
   final Offset? tailTip;
 
+  /// The wedge stands at the bubble's end (right) edge instead of its left one, for a speaker to the right of the bubble and below it (the
+  /// lessons' guide and hosts on a tablet). Its [tailTip] is then from the body's top-right corner, so that it stays on the speaker
+  /// whatever width the line gives the body.
+  final bool tailAtEnd;
+
   Widget get _line => Text(
     text,
     textScaler: textScaler,
@@ -186,7 +192,10 @@ class BoardBubble extends StatelessWidget {
       if (tailTip != null)
         Positioned.fill(
           child: IgnorePointer(
-            child: CustomPaint(key: const Key('bubble-tail'), painter: _WedgeTailPainter(tailTip!)),
+            child: CustomPaint(
+              key: const Key('bubble-tail'),
+              painter: _WedgeTailPainter(tailTip!, atEnd: tailAtEnd),
+            ),
           ),
         )
       else
@@ -228,7 +237,10 @@ class BoardBubble extends StatelessWidget {
       if (tailTip != null)
         Positioned.fill(
           child: IgnorePointer(
-            child: CustomPaint(key: const Key('bubble-outline'), painter: _BubbleOutlinePainter(tailTip!)),
+            child: CustomPaint(
+              key: const Key('bubble-outline'),
+              painter: _BubbleOutlinePainter(tailTip!, atEnd: tailAtEnd),
+            ),
           ),
         ),
     ],
@@ -245,6 +257,7 @@ class SpeakerBubble extends StatelessWidget {
     this.math,
     this.chip,
     this.pointerAt,
+    this.tailTip,
     this.ring = false,
   });
 
@@ -253,6 +266,10 @@ class SpeakerBubble extends StatelessWidget {
   final Widget? math;
   final Widget? chip;
   final double? pointerAt;
+
+  /// A wedge tail from the pebble's bottom, at its end, to this point (from the pebble's top-right corner): for a speaker standing lower
+  /// than the pebble. Replaces the pointer.
+  final Offset? tailTip;
   final bool ring;
 
   @override
@@ -262,20 +279,30 @@ class SpeakerBubble extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: <Widget>[
-        Positioned(
-          right: -10,
-          top: pointerAt == null ? null : pointerAt! - 11,
-          bottom: pointerAt == null ? (plain ? size / 2 - 11 : 18) : null,
-          child: Transform.rotate(
-            angle: 0.785398,
-            child: Container(
-              key: const Key('speaker-pointer'),
-              width: 22,
-              height: 22,
-              decoration: BoxDecoration(color: TokenColors.paper, borderRadius: BorderRadius.circular(4)),
+        if (tailTip != null)
+          Positioned.fill(
+            child: IgnorePointer(
+              child: CustomPaint(
+                key: const Key('speaker-tail'),
+                painter: _WedgeTailPainter(tailTip!, atEnd: true),
+              ),
+            ),
+          )
+        else
+          Positioned(
+            right: -10,
+            top: pointerAt == null ? null : pointerAt! - 11,
+            bottom: pointerAt == null ? (plain ? size / 2 - 11 : 18) : null,
+            child: Transform.rotate(
+              angle: 0.785398,
+              child: Container(
+                key: const Key('speaker-pointer'),
+                width: 22,
+                height: 22,
+                decoration: BoxDecoration(color: TokenColors.paper, borderRadius: BorderRadius.circular(4)),
+              ),
             ),
           ),
-        ),
         if (ring)
           Positioned(
             left: -8,
@@ -325,20 +352,22 @@ const double bubbleOutlineWidth = 1.5;
 
 /// The outline of a [BoardBubble] body of [body] size with its wedge tail ending at [tip]: the union of the two shapes.
 @visibleForTesting
-Path bubbleOutline(Size body, Offset tip) => Path.combine(
+Path bubbleOutline(Size body, Offset tip, {bool atEnd = false}) => Path.combine(
   PathOperation.union,
   Path()..addRRect(RRect.fromRectAndRadius(Offset.zero & body, const Radius.circular(TokenRadius.lg))),
-  bubbleWedgeTail(body, tip),
+  bubbleWedgeTail(body, tip, atEnd: atEnd),
 );
 
 class _BubbleOutlinePainter extends CustomPainter {
-  const _BubbleOutlinePainter(this.tip);
+  const _BubbleOutlinePainter(this.tip, {this.atEnd = false});
 
+  /// From the body's top-left corner, or from its top-right one with [atEnd].
   final Offset tip;
+  final bool atEnd;
 
   @override
   void paint(Canvas canvas, Size size) => canvas.drawPath(
-    bubbleOutline(size, tip),
+    bubbleOutline(size, atEnd ? Offset(size.width + tip.dx, tip.dy) : tip, atEnd: atEnd),
     Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = bubbleOutlineWidth
@@ -346,17 +375,18 @@ class _BubbleOutlinePainter extends CustomPainter {
   );
 
   @override
-  bool shouldRepaint(_BubbleOutlinePainter old) => old.tip != tip;
+  bool shouldRepaint(_BubbleOutlinePainter old) => old.tip != tip || old.atEnd != atEnd;
 }
 
 /// The wedge tail of a [BoardBubble] with a body of [body] size, ending at [tip] (both from the body's top left): a
 /// triangle whose base lies on the bottom edge from 24 to 52 in from the left, reaching 4 up into the body so no seam
-/// shows, its tip rounded with a radius of 3 (B-26, nitzi-home.md section 3, "Bubble tail").
+/// shows, its tip rounded with a radius of 3 (B-26, nitzi-home.md section 3, "Bubble tail"). With [atEnd] the base lies the same way in from
+/// the right edge instead (a speaker to the right of the bubble).
 @visibleForTesting
-Path bubbleWedgeTail(Size body, Offset tip) {
+Path bubbleWedgeTail(Size body, Offset tip, {bool atEnd = false}) {
   const double r = 3;
-  final Offset a = Offset(24, body.height - 4);
-  final Offset b = Offset(52, body.height - 4);
+  final Offset a = Offset(atEnd ? body.width - 52 : 24, body.height - 4);
+  final Offset b = Offset(atEnd ? body.width - 24 : 52, body.height - 4);
   // The rounded end is a circle of radius 3 whose far side is the tip itself; the sides run from the base's ends to
   // where they touch that circle.
   final Offset toBase = Offset((a.dx + b.dx) / 2, a.dy) - tip;
@@ -386,13 +416,14 @@ Path bubbleWedgeTail(Size body, Offset tip) {
 
 /// Paints the wedge with the bubble body's paper and soft shadow, under the body.
 class _WedgeTailPainter extends CustomPainter {
-  const _WedgeTailPainter(this.tip);
+  const _WedgeTailPainter(this.tip, {this.atEnd = false});
 
   final Offset tip;
+  final bool atEnd;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final Path wedge = bubbleWedgeTail(size, tip);
+    final Path wedge = bubbleWedgeTail(size, atEnd ? Offset(size.width + tip.dx, tip.dy) : tip, atEnd: atEnd);
     for (final BoxShadow shadow in softShadow) {
       canvas.drawPath(wedge.shift(shadow.offset), shadow.toPaint());
     }
@@ -400,7 +431,7 @@ class _WedgeTailPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_WedgeTailPainter old) => old.tip != tip;
+  bool shouldRepaint(_WedgeTailPainter old) => old.tip != tip || old.atEnd != atEnd;
 }
 
 /// A row of answer tiles, centred, as wide as its tiles need. With the look's tile margins a full row of the oldest look (five tiles) is 20
