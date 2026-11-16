@@ -12,6 +12,8 @@ import '../strings/he.dart';
 import 'hint_widgets.dart';
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
+import 'hints/tap_plans.dart' show inkedSvg;
+import 'choice_row.dart' show withBigStage, withStageAtLeast;
 import 'host_moves.dart';
 import 'lesson_arc.dart' show ArcPart, ArcStep;
 import 'lesson_controller.dart';
@@ -364,6 +366,12 @@ class GiveNSession extends TemplateSession {
     notify();
   }
 
+  /// A Show has nothing under its stage, which takes the whole column. A phone's stage grows by what the tile of the check button leaves (it stands as low as the board lets it), up to 176 tall: the pile and the
+  /// places are as large as that room allows (docs/design/m11/min-sizes.md B6). A tablet's card is the grown one.
+  @override
+  ActivitySpec layoutFor(ActivitySpec base) =>
+      activity.isShow ? withBigStage(base) : withStageAtLeast(base, 176, tilesBox: base.tileSize + 12);
+
   @override
   Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
     _stage = size;
@@ -612,7 +620,8 @@ class _GiveStage extends StatelessWidget {
               color: picked ? TokenColors.sparkTint : null,
               border: picked ? Border.all(color: TokenColors.selectedRing, width: 3) : null,
             ),
-            child: PackSvg(a.assets.svg(a.sourceSprite)),
+            // Cut to its ink, so that an apple fills the place it is drawn in (min-sizes B6).
+            child: PackSvg(inkedSvg(a.assets.svg(a.sourceSprite)).$1),
           ),
         ),
       ),

@@ -326,22 +326,22 @@
      "role": "open",
      "vo": "vo:host.goni.show.col_a_03.open",
      "text": "עוֹד שְׁלוֹשָׁה צְבָעִים.",
-     "voice": "עוד שלושה צבעים.",
-     "review": "needs-editor"
+     "voice": "עוד שְׁלוֹשָׁה צבעים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_a_03.key",
      "text": "כָּתֹם, וָרֹד, סָגֹל.",
-     "voice": "כתם, ורד, סגל.",
-     "review": "needs-editor"
+     "voice": "כתום, ורוד, סגול.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.goni.show.col_a_03.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַבָּלוֹן הַוָּרֹד.",
-     "voice": "עכשו תורכם: הבלון הורד.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הבלון הוורוד.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -645,14 +645,14 @@
      "role": "open",
      "vo": "vo:host.goni.show.col_a_06.open",
      "text": "חוּם, אָפֹר, וְגַם שָׁחֹר.",
-     "voice": "חום, אפר, וגם שחר.",
-     "review": "needs-editor"
+     "voice": "חום, אפור, וגם שחור.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_a_06.key",
-     "text": "זֶה חוּם. וְזֶה אָפֹר.",
-     "voice": "זה חום. וזה אפור.",
+     "text": "זֶה חוּם. זֶה אָפֹר. וְזֶה שָׁחֹר.",
+     "voice": "זה חום. זה אפור. וזה שחור.",
      "review": "text-ready"
     },
     {

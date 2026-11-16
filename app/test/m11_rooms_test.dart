@@ -439,8 +439,12 @@ void main() {
         await _endGreeting(tester);
         final Rect card = tester.getRect(find.byKey(const Key('lesson-stage')));
         final Rect landmark = tester.getRect(find.byKey(const Key('stage-reaction')));
-        expect(landmark.right, lessThan(card.left), reason: 'in the empty column beside the card');
-        expect(landmark.size, const Size(150, 150));
+        // The card of a tablet is the grown one (848 wide from the margin): there is no empty column at its start side, so the landmark stands at
+        // the end side or in the header, never over the card.
+        expect(landmark.overlaps(card), isFalse, reason: 'beside the card, not over it: $landmark');
+        // It is the board's own, shrunk (150, 128, 105 ...) to the room that is left: 80 at least, above the card at the start side.
+        expect(landmark.width, greaterThanOrEqualTo(80));
+        expect(landmark.bottom, lessThan(card.top));
         expect(
           find.descendant(
             of: find.byKey(const Key('stage-reaction')),

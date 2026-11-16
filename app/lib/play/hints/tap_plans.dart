@@ -166,9 +166,16 @@ Rect _readInkBox(String svg) {
   if (px == null || py == null || sc == null) return whole;
   final Offset pivot = Offset(px, py);
   final double scale = sc;
+  // A picture drawn in a bigger space and brought into the box by one group, `scale(s) translate(tx ty)` (the apple's): a point (x, y) of it
+  // lies at s * (x + tx), s * (y + ty).
+  final RegExpMatch? fit = RegExp(
+    r'<g\s+transform="\s*scale\(\s*([\d.]+)\s*\)\s*translate\(\s*([-\d.]+)[\s,]+([-\d.]+)\s*\)\s*"',
+  ).firstMatch(svg);
+  final double fitScale = double.tryParse(fit?[1] ?? '') ?? 1;
+  final Offset fitMove = Offset(double.tryParse(fit?[2] ?? '') ?? 0, double.tryParse(fit?[3] ?? '') ?? 0);
   double minX = double.infinity, minY = double.infinity, maxX = -double.infinity, maxY = -double.infinity;
   void add(double x, double y) {
-    final Offset p = pivot + (Offset(x, y) - pivot) * scale;
+    final Offset p = (pivot + (Offset(x, y) - pivot) * scale + fitMove) * fitScale;
     minX = math.min(minX, p.dx);
     minY = math.min(minY, p.dy);
     maxX = math.max(maxX, p.dx);

@@ -77,8 +77,28 @@ class RobotPathSession extends TemplateSession {
   /// A tile of the pad with its tap margin (a tile is 58 and its margin 6 on each side).
   static const double _slot = 70;
 
-  /// The height of the row of the plan's steps at the foot of a phone's stage.
-  static const double _stripHeight = 30;
+  /// The steps of a plan are arrows of 28 (a tablet's 40) that are never scaled down, in a strip 44 high (56) with a start dot at its left end: a
+  /// row that is full goes on in a second row under it, left to right too (docs/design/m11/min-sizes.md B2, R9).
+  static double programIcon(ActivitySpec spec) => spec.stageIsCard ? 40 : 28;
+
+  /// The least height of the strip with one row of steps; each further row adds an arrow and its gap of 4.
+  static double stripHeightOf(ActivitySpec spec, int lines) =>
+      lines * (programIcon(spec) + 4) - 4 + (spec.stageIsCard ? 16 : 16);
+
+  /// How many rows the steps of [a] take in a strip [width] wide (less its margins, its start dot and the room round the steps), when the arrows are
+  /// [gap] apart (4, or 0 where that keeps all of them in one row: the smallest phone's 8 steps).
+  static int _linesAt(RobotPathActivity a, ActivitySpec spec, double width, double gap) {
+    final double icon = programIcon(spec);
+    final double room = width - 12 - 18;
+    final int perRow = math.max(1, ((room + gap) / (icon + gap)).floor());
+    return (a.maxSteps / perRow).ceil();
+  }
+
+  static double programGap(RobotPathActivity a, ActivitySpec spec, double width) =>
+      _linesAt(a, spec, width, 4) > 1 && _linesAt(a, spec, width, 0) == 1 ? 0 : 4;
+
+  static int programLines(RobotPathActivity a, ActivitySpec spec, double width) =>
+      _linesAt(a, spec, width, programGap(a, spec, width));
 
   /// Whether the arrows stand as a block beside the stage (the phones: their stage is short, and a grid of four rows would have
   /// squares of 29 points). The tablets keep the row of arrows under the stage, where cells are large enough.
@@ -89,7 +109,7 @@ class RobotPathSession extends TemplateSession {
   double tilesRise(ActivitySpec spec) => spec.tileSlop - 6;
 
   @override
-  ActivitySpec layoutFor(ActivitySpec base) => laidOut(base);
+  ActivitySpec layoutFor(ActivitySpec base) => _spec = laidOut(base);
 
   /// The board numbers of this template: on a phone the stage reaches down to the foot of the board, and the arrows (with the
   /// undo and go buttons of a plan, in a third column) stand to its end side, under the speech bubble. A board of four rows then
@@ -112,13 +132,23 @@ class RobotPathSession extends TemplateSession {
   /// The height at the foot of the stage that the plan's steps take: 0 where they stand over the arrows (the tablets) or the
   /// activity has no plan.
   static double stripOf(RobotPathActivity a, ActivitySpec spec) =>
-      a.plan && padBeside(spec) ? _stripHeight : 0;
+      a.plan && padBeside(spec) ? stripHeightOf(spec, programLines(a, spec, spec.stage.width - 16)) : 0;
 
   double get _strip => _spec == null ? 0 : stripOf(activity, _spec!);
 
   /// The arrow tiles stand left, up, down, right in a row that is drawn left to right in every language; a plan has three more
   /// tiles after them (undo, 70 wide, and go, 94, with a gap of 10) and a row of its steps above.
   static const List<String> arrowOrder = <String>['left', 'up', 'down', 'right'];
+
+  /// The height the steps of a plan have above the row of arrows on a tablet (one row of 40, or two).
+  double _tabletStrip(ActivitySpec spec) =>
+      stripHeightOf(spec, programLines(activity, spec, spec.tilesWidth)) + 8;
+
+  /// The side of a control tile and its tap margin on a tablet (80 and 8, so that the arrows are not the phone's 58 on a card of 848: min-sizes C1), a
+  /// phone's 58 and 6.
+  double get _t => (_spec?.stageIsCard ?? false) ? 80 : 58;
+  double get _ts => (_spec?.stageIsCard ?? false) ? 8 : 6;
+  static double _tabletSlot(ActivitySpec spec) => spec.stageIsCard ? 96 : 70;
 
   /// The fingertip place on the top edge of the arrow tile [dir] (a tile is 58 and its tap margin 6). The block of 2 by 2 of a phone
   /// holds the arrows in the order of [arrowOrder], row by row. The row of a plan is taller
@@ -128,9 +158,10 @@ class RobotPathSession extends TemplateSession {
       final int i = arrowOrder.indexOf(dir);
       return spec.fromTiles(_padLeft + (i % 2 + 0.5) * _slot, i ~/ 2 * _slot + 6);
     }
-    final double row = (activity.plan ? 4 * 70 + 10 + 70 + 94 : 4 * 70).toDouble();
-    final double x = (spec.tilesWidth - row) / 2 + (arrowOrder.indexOf(dir) + 0.5) * 70;
-    return spec.fromTiles(x, (activity.plan ? 34 + 12 : 0) + 6);
+    final double slot = _tabletSlot(spec);
+    final double row = activity.plan ? 4 * slot + 10 + slot + slot + 24 : 4 * slot;
+    final double x = (spec.tilesWidth - row) / 2 + (arrowOrder.indexOf(dir) + 0.5) * slot;
+    return spec.fromTiles(x, (activity.plan ? _tabletStrip(spec) + 12 : 0) + 6);
   }
 
   static (int, int) _after((int, int) p, String d) => switch (d) {
@@ -565,56 +596,82 @@ class RobotPathSession extends TemplateSession {
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
     listenable: this,
-    builder: (BuildContext c, Widget? _) => padBeside(spec) ? _pad() : _arrowRow(),
+    builder: (BuildContext c, Widget? _) => padBeside(spec) ? _pad() : _arrowRow(spec),
   );
 
-  /// The steps of a plan, the first at the left, and an arrow never mirrors, in every language.
-  Widget _programRow() => Directionality(
-    textDirection: TextDirection.ltr,
-    child: FittedBox(
-      fit: BoxFit.scaleDown,
-      child: Row(
-        key: const Key('robot-program'),
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          for (final String d in program)
+  /// The steps of a plan, the first at the left after a start dot, and an arrow never mirrors, in every language. Each step is a square of the
+  /// arrow's size; a row that is full goes on in a second row under it (see [programLines]).
+  Widget _programRow(ActivitySpec spec, double width) {
+    final double icon = programIcon(spec);
+    final double gap = programGap(activity, spec, width);
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+        child: Row(
+          key: const Key('robot-program'),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2),
-              child: Icon(_icon(d), size: 28, color: TokenColors.ink),
+              padding: EdgeInsets.only(top: (icon - 10) / 2, right: 8),
+              child: const SizedBox(
+                key: Key('robot-start'),
+                width: 10,
+                height: 10,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: TokenColors.ink, shape: BoxShape.circle),
+                ),
+              ),
             ),
-          for (int i = program.length; i < activity.maxSteps; i++)
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 2),
-              child: Icon(Icons.circle_outlined, size: 22, color: TokenColors.hairline),
+            Expanded(
+              child: Wrap(
+                spacing: gap,
+                runSpacing: 4,
+                children: <Widget>[
+                  for (final String d in program)
+                    SizedBox(
+                      width: icon,
+                      height: icon,
+                      child: Icon(_icon(d), size: icon, color: TokenColors.ink),
+                    ),
+                  for (int i = program.length; i < activity.maxSteps; i++)
+                    SizedBox(
+                      width: icon,
+                      height: icon,
+                      child: Icon(Icons.circle_outlined, size: icon * 0.7, color: TokenColors.hairline),
+                    ),
+                ],
+              ),
             ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 
   AnswerTile _arrowTile(String d) => AnswerTile(
     key: Key('arrow-$d'),
     semanticLabel: d,
-    size: 58,
-    slop: 6,
+    size: _t,
+    slop: _ts,
     state: hintStep == d ? AnswerState.selected : AnswerState.idle,
     onPressed: () => arrow(d),
-    child: Icon(_icon(d), size: 34, color: TokenColors.ink),
+    child: Icon(_icon(d), size: _t > 60 ? 44 : 34, color: TokenColors.ink),
   );
 
   AnswerTile get _undoTile => AnswerTile(
     key: const Key('robot-undo'),
     semanticLabel: 'undo',
-    size: 58,
-    slop: 6,
+    size: _t,
+    slop: _ts,
     state: hintStep == 'undo' ? AnswerState.selected : AnswerState.idle,
     onPressed: undo,
-    child: const Icon(Icons.backspace_outlined, size: 28, color: TokenColors.ink),
+    child: Icon(Icons.backspace_outlined, size: _t > 60 ? 36 : 28, color: TokenColors.ink),
   );
 
   Widget get _goButton => Padding(
-    padding: const EdgeInsets.all(6),
-    child: PlayPebble(key: const Key('robot-go'), semanticLabel: 'go', size: 58, onPressed: go),
+    padding: EdgeInsets.all(_ts),
+    child: PlayPebble(key: const Key('robot-go'), semanticLabel: 'go', size: _t, onPressed: go),
   );
 
   /// The same button in a slot of the pad: 58 with a tap margin of 6, as the arrows.
@@ -646,18 +703,22 @@ class RobotPathSession extends TemplateSession {
 
   /// The tablets' controls: a row under the stage, with the steps of a plan above it. The controls are drawn left to right: an arrow
   /// that points left stands on the left, in every language.
-  Widget _arrowRow() => Column(
+  Widget _arrowRow(ActivitySpec spec) => Column(
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
-      if (activity.plan) SizedBox(height: 34, child: _programRow()),
+      if (activity.plan) SizedBox(height: _tabletStrip(spec), child: _programRow(spec, spec.tilesWidth)),
       Directionality(
         textDirection: TextDirection.ltr,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            for (final String d in arrowOrder) _arrowTile(d),
-            if (activity.plan) ...<Widget>[const SizedBox(width: 10), _undoTile, _goButton],
-          ],
+        // (Scaled down only on a board narrower than the grown card, where the row of arrows, undo and go does not fit.)
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              for (final String d in arrowOrder) _arrowTile(d),
+              if (activity.plan) ...<Widget>[const SizedBox(width: 10), _undoTile, _goButton],
+            ],
+          ),
         ),
       ),
     ],
@@ -756,9 +817,9 @@ class _RobotStage extends StatelessWidget {
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: TokenColors.paper.withValues(alpha: 0.85),
-                    borderRadius: BorderRadius.circular(strip / 2),
+                    borderRadius: BorderRadius.circular(math.min(strip / 2, 22)),
                   ),
-                  child: s._programRow(),
+                  child: s._programRow(s._spec!, s._spec!.stage.width - 16),
                 ),
               ),
             Positioned.fill(child: s._hint.body(size)),

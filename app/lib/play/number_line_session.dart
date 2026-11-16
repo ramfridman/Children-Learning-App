@@ -53,12 +53,13 @@ class NumberLineSession extends TemplateSession {
   int get tickCount => activity.to - activity.from + 1;
 
   // The places of the stage (the same numbers `_LineStage` draws with), for the hints' marks.
-  static const double _pad = 22;
+  /// The room at each end of the line: 22 on a phone, 40 on a tablet's card (the line runs from 80 to 816 of the card's 848).
+  double get _pad => tablet ? 40 : 22;
 
   double _tickX(Size size, int n) =>
       _pad + (n - activity.from) / (activity.to - activity.from) * (size.width - 2 * _pad);
 
-  double _lineY(Size size) => size.height * 0.66;
+  double _lineY(Size size) => size.height * (tablet ? 0.75 : 0.66);
 
   /// The top of the tick of [n]: where the fingertip touches it and where a hop starts and ends.
   Offset _tickTop(Size size, int n) => Offset(_tickX(size, n), _lineY(size) - 12);
@@ -433,7 +434,8 @@ class _LineStage extends StatelessWidget {
   final NumberLineSession s;
   final Size size;
 
-  static const double _pad = 22;
+  /// The room at each end of the line: 22 on a phone, 40 on a tablet's card (the line runs from 80 to 816 of the card's 848).
+  double get _pad => s.tablet ? 40 : 22;
 
   double _x(int n) {
     final NumberLineActivity a = s.activity;
@@ -443,8 +445,9 @@ class _LineStage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final NumberLineActivity a = s.activity;
-    final double lineY = size.height * 0.66;
-    final double marker = math.min(size.height * 0.5, 52);
+    // A tablet's line stands at three quarters of its card (min-sizes 8.3) and its marker is 80 (a phone's 56: the frog's ink is about 44 of it).
+    final double lineY = size.height * (s.tablet ? 0.75 : 0.66);
+    final double marker = s.tablet ? 80 : math.min(size.height * 0.5, 56);
     // Before it stands on a number (place mode) the marker waits in the top left corner, on the stage and clearly off the
     // line (QA-6), a little smaller; it hops onto the tick the child touches.
     final bool waiting = s.markerAt == null;

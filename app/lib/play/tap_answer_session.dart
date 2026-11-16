@@ -15,7 +15,7 @@ import '../speech/answer_matcher.dart';
 import '../speech/spoken_options.dart';
 import 'count_tap_session.dart' show Dots;
 import 'caption_policy.dart';
-import 'choice_row.dart' show withPictureStage, withWideStage;
+import 'choice_row.dart' show withBigStage, withMeetStage, withPictureStage, withWideStage;
 import 'find_stage.dart';
 import 'speaking_badge.dart';
 import 'hint_widgets.dart';
@@ -298,9 +298,13 @@ class TapAnswerSession extends TemplateSession {
   @override
   ActivitySpec layoutFor(ActivitySpec base) {
     if (pictureFind) return withPictureStage(base);
+    if (activity.chart.isNotEmpty) return _chartLayout(base);
+    if (_groupWithSmallTiles) return _groupLayout(base);
     // Blocks have their own two layouts (docs/design/c1-blocks.md section 5), which give the cubes the board's height.
     if (BlockLayout.hasBlocks(activity)) return BlockLayout.of(activity, base, scaler: bubbleScaler);
-    if (!_hasSpeakers && !numberMode) return _sizeLayout(_longRow ? withWideStage(base) : base);
+    if (!_hasSpeakers && !numberMode) {
+      return _wideSetTiles(_sizeLayout(_longRow ? withWideStage(base) : base));
+    }
     final double margin = base.tileSlop;
     final double need = numberMode
         ? KeypadLayout.of(base).roomHeight
@@ -325,6 +329,46 @@ class TapAnswerSession extends TemplateSession {
     );
   }
 
+  /// Tiles of sets of things (min-sizes 8.3, V1: 177 wide for seven to ten) use the wide answer band of a phone: from the board's margin to under the guide
+  /// (x 24 to 605; the small phone's 8 to 651, the guide's figure ends above the tiles).
+  ActivitySpec _wideSetTiles(ActivitySpec base) {
+    if (base.stageIsCard || !activity.optionsInTiles) return base;
+    if (!activity.options.any((ChoiceOption o) => o.set != null)) return base;
+    final bool se = base.boardHeight < 380;
+    return base.withStageAndTiles(
+      stage: base.stage,
+      tilesLeft: se ? 8 : 24,
+      tilesTop: base.tilesTop,
+      tilesWidth: se ? 643 : 581,
+    );
+  }
+
+  /// A chart to read stands on the whole start column of a phone (a column of 7 pictures is then 33 high, not 13: docs/design/m11/min-sizes.md A4) and
+  /// its answers are three tiles of 56 in the column under the bubble, where a clock's controls stand (a tile of the look's size does not fit
+  /// beside it). A tablet's card is the grown one, with the look's tiles under it.
+  ActivitySpec _chartLayout(ActivitySpec base) =>
+      base.stageIsCard ? base : withMeetStage(base).withTiles(size: 56, slop: 4, numeralFont: 36);
+
+  /// A group (or two) to count, add or compare, with up to three numerals or ticks to answer with: on a phone the group takes the whole start column
+  /// (stars and apples 36 or more across, not 20: docs/design/m11/min-sizes.md A6, A7, B7) and the tiles stand in the column under the bubble, each
+  /// as wide as the column allows (88 at most, 56 for three; with a tap margin of 4 that is 64 to touch). A lone thing to find (`loneThingOf`) and a
+  /// set to choose from keep their layouts.
+  bool get _groupWithSmallTiles =>
+      activity.group != null &&
+      activity.optionsInTiles &&
+      !numberMode &&
+      activity.row.isEmpty &&
+      activity.options.length <= 3 &&
+      !(activity.group!.count == 1 && activity.group2 == null) &&
+      activity.options.every((ChoiceOption o) => o.set == null && o.picture == null && o.text == null);
+
+  ActivitySpec _groupLayout(ActivitySpec base) {
+    if (base.stageIsCard) return base;
+    final ActivitySpec meet = withMeetStage(base);
+    final double side = math.min(base.tileSize, meet.tilesWidth / activity.options.length - 8);
+    return meet.withTiles(size: side, slop: 4, numeralFont: side * 0.64);
+  }
+
   /// A row of six cells or more, or of pictures that compare sizes: a tablet gives it the whole width the board has (see [withWideStage]).
   bool get _longRow => activity.row.length >= 6 || comparesSizes(activity);
 
@@ -332,7 +376,16 @@ class TapAnswerSession extends TemplateSession {
   /// board lets them (a tile is 96 with 12 of tap margin each side, over the edge where no hotspot may be) and the stage reaches 14
   /// above them (a selected tile is lifted 6, its ring 6 wider), so that the pictures are as large as they can be.
   ActivitySpec _sizeLayout(ActivitySpec base) {
-    if (base.stageIsCard || TapGeometry.rowLinesOf(activity, base.stage.size) < 2) return base;
+    if (base.stageIsCard) {
+      // The grown card of a tablet gives way for tall tiles (towers: 168): they stand over the edge where no hotspot may be.
+      if (!TapGeometry.rowIsTall(activity)) return base;
+      final double tile = tallTileHeightOf(TapGeometry.stageSizeOf(base));
+      final double height = base.boardHeight - TokenTouch.bottomNoHotspot - tile - 32 - base.stage.top;
+      return height >= base.stage.height
+          ? base
+          : withBigStage(base, landscapeHeight: height, portraitHeight: height);
+    }
+    if (TapGeometry.rowLinesOf(activity, base.stage.size) < 2) return base;
     final double top = math.max(
       base.tilesTop,
       base.boardHeight - TokenTouch.bottomNoHotspot - base.tileSize - base.tileSlop,
@@ -697,27 +750,31 @@ Widget _face(
     // and not under a fact's answer.
     return Directionality(
       textDirection: TextDirection.ltr,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                '${o.numeral}',
-                textScaler: TextScaler.noScaling,
-                maxLines: 1,
-                softWrap: false,
-                style: AppText.fixed(size: numeralFont, weight: 800, lineHeight: 1),
+      // On a small tile (a chart's, 56) the numeral and its dots are kept whole and scaled together.
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '${o.numeral}',
+                  textScaler: TextScaler.noScaling,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: AppText.fixed(size: numeralFont, weight: 800, lineHeight: 1),
+                ),
               ),
             ),
-          ),
-          if (numeralHasDots(a, o.numeral!)) ...<Widget>[
-            const SizedBox(height: 4),
-            FittedBox(fit: BoxFit.scaleDown, child: Dots(o.numeral!)),
+            if (numeralHasDots(a, o.numeral!)) ...<Widget>[
+              const SizedBox(height: 4),
+              FittedBox(fit: BoxFit.scaleDown, child: Dots(o.numeral!)),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -735,9 +792,17 @@ Widget _face(
           );
   }
   final SpriteSet g = o.set!;
-  final ({String arrangement, int lineSlots}) tile = tileGroup(g.arrangement, g.count);
+  // Options that are one thing each (the shapes of "which is the small one?") are compared by their drawn sizes, so each stands alone in a cell as
+  // large as its tile allows: the full-size ones are 60 or more and the small one (drawn at a share of that) never under 24 (min-sizes A12).
+  final bool singles = g.arrangement == 'line' && a.options.every((ChoiceOption x) => x.set?.count == 1);
+  final ({String arrangement, int lineSlots}) tile = singles
+      ? (arrangement: 'line', lineSlots: 1)
+      : tileGroup(g.arrangement, g.count);
+  // Cut to its ink, so that a picture with a wide margin (an apple, a bird) fills its cell (min-sizes A8, R2).
   return SpriteGroup(
-    svg: a.assets.svg(g.sprite),
+    svg: g.scale == 1 && !drawsTenFrame(tile.arrangement, g.count)
+        ? inkedSvg(a.assets.svg(g.sprite)).$1
+        : a.assets.svg(g.sprite),
     count: g.count,
     arrangement: tile.arrangement,
     seed: g.seed,
@@ -1245,7 +1310,11 @@ class _TapStage extends StatelessWidget {
     final ({double outer, double inner}) pad = TapGeometry.groupPadOf(a, stage);
     // A group scattered to be counted, alone on the stage, is drawn cut to its ink: a ladybug or a sock fills its place (its
     // picture has a wide margin) and reads on a phone. Never where two groups or a scale are compared, or a row is drawn.
-    final bool inked = a.group2 == null && a.group!.arrangement == 'scatter' && a.group!.scale == 1;
+    // (Min-sizes A6, A7, B7: so is a line of apples, or two sets of one sort that are compared, as they are the same size on both sides.)
+    final bool inked =
+        a.group!.scale == 1 &&
+        (a.group2 == null || (a.group2!.scale == 1 && a.group2!.sprite == a.group!.sprite)) &&
+        !drawsTenFrame(a.group!.arrangement, a.group!.count);
     Widget one(SpriteSet g) => SpriteGroup(
       svg: inked ? inkedSvg(a.assets.svg(g.sprite)).$1 : a.assets.svg(g.sprite),
       count: g.count,

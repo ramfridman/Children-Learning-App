@@ -14,6 +14,7 @@ import 'hints/hint_marks.dart';
 import 'hints/hint_pictures.dart' show hintScale;
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
+import 'hints/tap_plans.dart' show inkedSvg;
 import 'hints/tile_points.dart';
 import 'shop_pay_session.dart' show CoinFace;
 import 'sprite_group.dart';
@@ -57,13 +58,17 @@ class MatchPairsSession extends TemplateSession {
 
   /// A face's side in a row of [n] faces over [width] by [height], and where the faces stand: a row is centred and drawn left to
   /// right, each face with 5 around it. The top row is in the stage, the bottom row in the tiles' box.
-  static double faceSide(double width, double height, int n) =>
-      math.min(height - 12, math.min(96, width / n - 14));
+  /// A phone's faces are 96 at most, a tablet's 136 (its stage is 368 tall, a tablet's is not a sea of room round 96).
+  static double faceSide(double width, double height, int n, {bool tablet = false}) =>
+      math.min(height - 12, math.min(tablet ? 136 : 96, width / n - 14));
+
+  /// A tablet's stage is the grown card, which is taller than 200 inside; a phone's is not.
+  static bool _tabletStage(Size stage) => stage.height > 200;
 
   static double _rowStart(double width, int n, double side) => (width - n * (side + 10)) / 2;
 
   static Rect topFace(Size stage, int n, int i) {
-    final double side = faceSide(stage.width, stage.height, n);
+    final double side = faceSide(stage.width, stage.height, n, tablet: _tabletStage(stage));
     return Rect.fromCenter(
       center: Offset(_rowStart(stage.width, n, side) + (i + 0.5) * (side + 10), stage.height / 2),
       width: side,
@@ -73,9 +78,12 @@ class MatchPairsSession extends TemplateSession {
 
   /// The fingertip place on the top edge of bottom face [i] of [n] (a tile's top, 5 under the box's top).
   static Offset bottomTip(ActivitySpec spec, int n, int i) {
-    final double side = faceSide(spec.tilesWidth, 110, n);
+    final double side = faceSide(spec.tilesWidth, rowHeight(spec), n, tablet: spec.stageIsCard);
     return spec.fromTiles(_rowStart(spec.tilesWidth, n, side) + (i + 0.5) * (side + 10), 5);
   }
+
+  /// The height of the row of tiles: 110, and 150 on a tablet.
+  static double rowHeight(ActivitySpec spec) => spec.stageIsCard ? 150 : 110;
 
   int numberOf(String leftId) => matched.keys.toList().indexOf(leftId) + 1;
   int? numberOfRight(String rightId) {
@@ -386,7 +394,14 @@ class MatchPairsSession extends TemplateSession {
             clipBehavior: Clip.none,
             children: <Widget>[
               Positioned.fill(
-                child: _Row(this, activity.left, top: true, width: size.width, height: size.height),
+                child: _Row(
+                  this,
+                  activity.left,
+                  top: true,
+                  width: size.width,
+                  height: size.height,
+                  tablet: size.height > 200,
+                ),
               ),
               Positioned.fill(child: _hint.body(size)),
             ],
@@ -404,19 +419,34 @@ class MatchPairsSession extends TemplateSession {
     listenable: this,
     builder: (BuildContext c, Widget? _) => Directionality(
       textDirection: TextDirection.ltr,
-      child: _Row(this, activity.right, top: false, width: spec.tilesWidth, height: 110),
+      child: _Row(
+        this,
+        activity.right,
+        top: false,
+        width: spec.tilesWidth,
+        height: rowHeight(spec),
+        tablet: spec.stageIsCard,
+      ),
     ),
   );
 }
 
 class _Row extends StatelessWidget {
-  const _Row(this.s, this.faces, {required this.top, required this.width, required this.height});
+  const _Row(
+    this.s,
+    this.faces, {
+    required this.top,
+    required this.width,
+    required this.height,
+    required this.tablet,
+  });
 
   final MatchPairsSession s;
   final List<MatchFace> faces;
   final bool top;
   final double width;
   final double height;
+  final bool tablet;
 
   static const List<Color> _pairColours = <Color>[
     Color(0xFF4DA3FF),
@@ -428,7 +458,7 @@ class _Row extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double side = MatchPairsSession.faceSide(width, height, faces.length);
+    final double side = MatchPairsSession.faceSide(width, height, faces.length, tablet: tablet);
     return Center(
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -515,8 +545,9 @@ class _Row extends StatelessWidget {
     // Fair sizes (M9 §13): where the faces are sets, every picture of every set is as big as one of the largest set, so a
     // set of one is never a big picture next to small ones (that would teach M-CNT-SIZE).
     final ({String arrangement, int lineSlots}) tile = tileGroup('line', f.count);
+    // Cut to its ink, so that an apple fills its cell (min-sizes A8, R2).
     return SpriteGroup(
-      svg: svg,
+      svg: inkedSvg(svg).$1,
       count: f.count,
       arrangement: tile.arrangement,
       seed: f.count,

@@ -13,6 +13,7 @@ import 'hints/tap_plans.dart' show inkedSvg;
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
+import 'choice_row.dart' show withMeetStage;
 import 'host_moves.dart';
 import 'lesson_arc.dart' show ArcPart, ArcStep;
 import 'template_session.dart';
@@ -134,9 +135,32 @@ class BalanceSession extends TemplateSession {
 
   // ---- the host's part (a Show, the lead of a Together item) ----
 
+  /// A phone's scale takes the whole start column (a deep scale whose things stand 24 points across or more, docs/design/m11/min-sizes.md A5) and
+  /// the three tiles stand in a row under the bubble and the guide, 88 across with 12 between (x 413, 513, 613 at y 262; the small phone's 96 apart at
+  /// x 300, 396, 492, y 236): the guide's figure ends above them. A tablet's card is the grown one, with the look's tiles under it.
+  @override
+  ActivitySpec layoutFor(ActivitySpec base) {
+    if (base.stageIsCard) return base;
+    final bool se = base.boardHeight < 380;
+    final ActivitySpec meet = withMeetStage(base);
+    return meet.withStageAndTiles(
+      stage: meet.stage,
+      tilesLeft: se ? 296 : 407,
+      tilesTop: se ? 232 : 256,
+      tilesWidth: se ? 288 : 300,
+    );
+  }
+
+  /// The side of a tile, its tap margin, the two together (the slot of its row) and its icon: 88 / 6 on a phone (4 on the small phone, whose tiles
+  /// are 96 apart), the look's on a tablet.
+  double get _tile => _spec.stageIsCard ? _spec.tileSize : 88;
+  double get _slop => _spec.stageIsCard ? _spec.tileSlop : (_spec.boardHeight < 380 ? 4 : 6);
+  double get _slot => _tile + 2 * _slop;
+  double get _icon => _spec.stageIsCard ? 48 : (_spec.boardHeight < 380 ? 36 : 40);
+
   /// The fingertip place on the plus tile of a Show (its only tile) or of a weighing.
   Offset _plusTip() =>
-      _spec.tileTip(activity.isShow ? 1 : 2, activity.isShow ? 0 : 1, slot: 96, slop: 12, rtl: false);
+      _spec.tileTip(activity.isShow ? 1 : 2, activity.isShow ? 0 : 1, slot: _slot, slop: _slop, rtl: false);
 
   bool get _canDraw => !_size.isEmpty;
 
@@ -384,7 +408,7 @@ class BalanceSession extends TemplateSession {
     if (activity.weigh) {
       final int need = int.parse(activity.result);
       added = 0;
-      final Offset plus = _spec.tileTip(2, 1, slot: 96, slop: 12, rtl: false);
+      final Offset plus = _spec.tileTip(2, 1, slot: _slot, slop: _slop, rtl: false);
       final _ScaleBox g = _ScaleBox(_size);
       for (int k = 1; k <= need; k++) {
         later(Duration(milliseconds: 700 * (k - 1) + 450), () {
@@ -429,7 +453,7 @@ class BalanceSession extends TemplateSession {
       final HintPlan tour = handTourPlan(<HandStop>[
         if (angle == 0) ...<HandStop>[HandStop(_panTip(angle, 0), 700), HandStop(_panTip(angle, 1), 700)] else
           HandStop(_panTip(angle, angle < 0 ? 0 : 1), 800),
-        HandStop(_spec.tileTip(3, tile, slot: 104, slop: 12, rtl: false), 1100),
+        HandStop(_spec.tileTip(3, tile, slot: _slot, slop: _slop, rtl: false), 1100),
       ]);
       _hint.play(
         HintPlan(<HintFrame>[
@@ -479,9 +503,10 @@ class BalanceSession extends TemplateSession {
                 AnswerTile(
                   key: const Key('balance-plus'),
                   semanticLabel: 'plus',
-                  size: 72,
+                  size: _tile,
+                  slop: _slop,
                   onPressed: addBlock,
-                  child: const Icon(Icons.add_rounded, size: 44, color: TokenColors.ink),
+                  child: Icon(Icons.add_rounded, size: _icon, color: TokenColors.ink),
                 ),
               ]
             : activity.weigh
@@ -489,16 +514,18 @@ class BalanceSession extends TemplateSession {
                 AnswerTile(
                   key: const Key('balance-minus'),
                   semanticLabel: 'minus',
-                  size: 72,
+                  size: _tile,
+                  slop: _slop,
                   onPressed: removeBlock,
-                  child: const Icon(Icons.remove_rounded, size: 40, color: TokenColors.ink),
+                  child: Icon(Icons.remove_rounded, size: _icon - 4, color: TokenColors.ink),
                 ),
                 AnswerTile(
                   key: const Key('balance-plus'),
                   semanticLabel: 'plus',
-                  size: 72,
+                  size: _tile,
+                  slop: _slop,
                   onPressed: addBlock,
-                  child: const Icon(Icons.add_rounded, size: 44, color: TokenColors.ink),
+                  child: Icon(Icons.add_rounded, size: _icon, color: TokenColors.ink),
                 ),
               ]
             : <Widget>[
@@ -510,14 +537,15 @@ class BalanceSession extends TemplateSession {
                   AnswerTile(
                     key: Key('balance-${t.$1}'),
                     semanticLabel: t.$1,
-                    size: 80,
+                    size: _tile,
+                    slop: _slop,
                     state: chosen == t.$1
                         ? (ring == AnswerState.notYet
                               ? AnswerState.notYet
                               : (ring == AnswerState.correct ? AnswerState.correct : AnswerState.selected))
                         : AnswerState.idle,
                     onPressed: () => choose(t.$1),
-                    child: Icon(t.$2, size: 44, color: TokenColors.ink),
+                    child: Icon(t.$2, size: _icon, color: TokenColors.ink),
                   ),
               ],
       ),
@@ -840,7 +868,8 @@ class _ScaleBox {
   _ScaleBox(this.size)
     : u = math.min(size.width / 330, size.height / 128),
       cx = size.width / 2,
-      ground = size.height - 2;
+      ground = size.height - 2,
+      extra = math.max(0, size.height - 128 * math.min(size.width / 330, size.height / 128));
 
   final Size size;
 
@@ -851,20 +880,25 @@ class _ScaleBox {
   /// Where the foot stands.
   final double ground;
 
+  /// The height a stage has beyond the phone's drawing at [u] (a stage that is taller than 330 by 128 in its shape): the upright is that much
+  /// taller and the strings that much longer, so that a pan is deep enough for its things to stand 24 points across or more (docs/design/m11/
+  /// min-sizes.md A5) and the beam stays as far from the top of the stage as it is on the phone.
+  final double extra;
+
   /// The height of the pivot.
-  double get beamY => ground - 92 * u;
+  double get beamY => ground - 92 * u - extra;
 
   /// Half the beam's length, from the pivot to a hook.
   double get half => 92 * u;
 
   /// How far below its hook a pan's rim hangs, how deep the bowl is under its rim, and half the rim's width.
-  double get drop => 53 * u;
+  double get drop => 53 * u + 0.9 * extra;
   double get bowl => 8 * u;
   double get rimHalf => 56 * u;
 
   /// The room on a pan for what lies on it: as wide as the rim, less a little, and as high as the strings leave free.
   double get loadW => 104 * u;
-  double get loadH => 43 * u;
+  double get loadH => 43 * u + 0.9 * extra;
 
   /// The ends of the beam (its hooks) when it leans by [angle] radians (positive: the right end is lower).
   Offset rightEnd(double angle) => Offset(cx + half * math.cos(angle), beamY + half * math.sin(angle));

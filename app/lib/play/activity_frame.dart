@@ -335,7 +335,7 @@ class ActivityFrame extends StatelessWidget {
       scaler: scaler,
       // The caption keeps its stage's size down to two points under it, drawn; only then does the bubble widen (B-29 D1).
       // (A layout whose tail must meet the guide's mouth wherever the bubble stands, the blocks', keeps the old floor of 14.)
-      min: look == null || s.tailAtMouth ? 14 : look.stage.captionFloor(sizeClass),
+      min: s.tailAtMouth ? 14 : (look?.stage.captionFloor(sizeClass) ?? _noLookFloor(s)),
     );
     final double font = fit.font;
     final double bubbleTop = clear
@@ -837,3 +837,7 @@ class _StickerPop extends StatelessWidget {
     );
   }
 }
+
+/// The least caption size of a frame with no look (min-sizes V2): 22 on a phone, 20 on the small phone, 28 on a tablet (the P3 look's floor, two under its
+/// caption), where it was 14.
+double _noLookFloor(ActivitySpec s) => s.stageIsCard ? 28 : (s.boardHeight < 380 ? 20 : 22);

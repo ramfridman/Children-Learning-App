@@ -23,12 +23,21 @@ class GroupLayout {
 /// same size: by default four, and the largest group's count where every group of a screen is drawn in one row of its own.
 const List<String> groupArrangements = <String>['line', 'scatter', 'dice', 'ten_frame'];
 
-/// How a set of [count] pictures that a content file draws in a `line` is drawn on an answer tile (min-sizes.md A8, R2): up to three in a row with
-/// room for three (a cell of a third of the tile, so about 27 points on a 96 tile, never 20), more in rows of three, so that a picture is never
-/// under 24 points (ten on a tile of 96 is the one exception). An arrangement the content chose (scatter, dice, a ten-frame) is kept.
+/// How a set of [count] pictures that a content file draws in a `line` is drawn on an answer tile (min-sizes 8.3, R2 on the ink, a cell of 32 at least):
+/// one or two in a row, three or four two to a row, five or six three to a row, seven to ten five to a row (two rows: a frame without its board). The
+/// tile is as wide as its count needs (see [tileWidthFor]). An arrangement the content chose (scatter, dice, a ten-frame) is kept.
 ({String arrangement, int lineSlots}) tileGroup(String arrangement, int count) {
   if (arrangement != 'line') return (arrangement: arrangement, lineSlots: 4);
-  return count <= 3 ? (arrangement: 'line', lineSlots: 3) : (arrangement: 'rows3', lineSlots: 3);
+  if (count <= 2) return (arrangement: 'line', lineSlots: 2);
+  if (count <= 4) return (arrangement: 'rows2', lineSlots: 2);
+  return count <= 6 ? (arrangement: 'rows3', lineSlots: 3) : (arrangement: 'rows5', lineSlots: 5);
+}
+
+/// The width of a tile of a set of [count] things on a phone (a tablet's is a quarter more): 96 for one to four, 128 for five or six, 177 for seven
+/// to ten; every tile of an item takes the widest.
+double tileWidthFor(int count, {required bool tablet}) {
+  final double w = count <= 4 ? 96 : (count <= 6 ? 128 : 177);
+  return tablet ? w * 1.25 : w;
 }
 
 GroupLayout groupLayout(String arrangement, int count, {int seed = 0, int lineSlots = 4}) {
@@ -45,19 +54,20 @@ GroupLayout groupLayout(String arrangement, int count, {int seed = 0, int lineSl
         0.2,
         1 / rows,
       );
-    case 'rows3':
-      // Three to a row, each row centred: the arrangement of a set on an answer tile (see [tileGroup]).
-      final int rows3 = (count / 3).ceil();
+    case 'rows2' || 'rows3' || 'rows5':
+      // So many to a row (two, three or five), each row centred: the arrangements of a set on an answer tile (see [tileGroup]).
+      final int per = int.parse(arrangement.substring(4));
+      final int rows = (count / per).ceil();
       return GroupLayout(
         <Offset>[
           for (int i = 0; i < count; i++)
             Offset(
-              0.5 + ((i % 3) - (math.min(3, count - (i ~/ 3) * 3) - 1) / 2) / 3,
-              ((i ~/ 3) + 0.5) / rows3,
+              0.5 + ((i % per) - (math.min(per, count - (i ~/ per) * per) - 1) / 2) / per,
+              ((i ~/ per) + 0.5) / rows,
             ),
         ],
-        1 / 3,
-        1 / rows3,
+        1 / per,
+        1 / rows,
       );
     case 'scatter':
       const int cols = 5;

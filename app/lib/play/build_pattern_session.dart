@@ -75,10 +75,21 @@ class BuildPatternSession extends TemplateSession {
 
   @override
   ActivitySpec layoutFor(ActivitySpec base) => withStageAtLeast(
-    activity.slots >= 6 || look != null ? withWideStage(base) : base,
+    _widerOnPhone(activity.slots >= 6 || look != null ? withWideStage(base) : base),
     ActivitySpec.phone.stage.height,
     tilesBox: (tall ? tallTileHeight : math.min(96, base.tilesWidth / activity.palette.length - 16)) + 12,
   );
+
+  /// A phone's stage reaches the board's margin (x 24, as a picture stage does) and is 377 wide, not 330, so that a row of six cells has cells of 60 and
+  /// pictures of 50, not 52 and 42 (docs/design/m11/min-sizes.md B5). The smallest phone's stage (270) is as wide as the room has.
+  ActivitySpec _widerOnPhone(ActivitySpec base) => base.stageIsCard || base.boardHeight < 380
+      ? base
+      : base.withStageAndTiles(
+          stage: Rect.fromLTWH(24, base.stage.top, 377, base.stage.height),
+          tilesLeft: base.tilesLeft,
+          tilesTop: base.tilesTop,
+          tilesWidth: base.tilesWidth,
+        );
 
   /// The look of the size pictures of the pattern (towers), cut to one part of their box: where they are tall, their tiles are taller
   /// and their margins smaller, so that the cubes can be counted (see `size_scale.dart`).

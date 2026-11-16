@@ -15,6 +15,7 @@ import 'borrowed_screens.dart';
 import 'choice_row.dart';
 import 'choice_session.dart';
 import 'hints/hint_pictures.dart' show SkyRing;
+import 'hints/tap_plans.dart' show inkedSvg;
 import 'l5_art.dart' show SkyCard;
 import 'lesson_controller.dart';
 import 'ls01_hand.dart';
@@ -757,7 +758,8 @@ class Ls01TapSession extends ChoiceSession {
               borderRadius: BorderRadius.circular(18),
               border: Border.all(color: TokenColors.hairline, width: 3),
             ),
-            child: PackSvg(tap.assets.svg(picture)),
+            // Cut to its ink, so that a chair fills its place (min-sizes B8: 40 at least).
+            child: PackSvg(inkedSvg(tap.assets.svg(picture)).$1),
           );
     if (pictureFull && picture != null) {
       final double big = math.min(size.width, size.height) - 8;
@@ -775,7 +777,8 @@ class Ls01TapSession extends ChoiceSession {
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(color: TokenColors.hairline, width: 3),
               ),
-              child: PackSvg(tap.assets.svg(picture)),
+              // Cut to its ink, so that a chair fills its place (min-sizes B8: 40 at least).
+              child: PackSvg(inkedSvg(tap.assets.svg(picture)).$1),
             ),
             const Positioned.fill(child: IgnorePointer(child: SkyRing(round: false, radius: 20))),
           ],

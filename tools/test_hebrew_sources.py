@@ -144,7 +144,9 @@ class HebrewMasterTableTest(unittest.TestCase):
         # tags of the wrong moves that the lands now record (more feedback lines)
         # 16309 since the QA round of the pilot (2026-11-16): the 24 new lines of the curriculum-expert and the hebrew-text-editor, and the new items
         # 17110 since the editor's text-ready pass for the five lands (2026-11-16): the rows of the five lands' lines, Shows and hints
-        self.assertEqual(len(self.rows), 17110)
+        # 17082 after the editor's round 2 (2026-11-16): the generators' wordings are in and the old texts of re-cut items are gone; three NUM-A-09 items, the plates and
+        # M-GRP-ONE lines and the new Colour Bay Shows are in
+        self.assertEqual(len(self.rows), 17082)
         # the owner's bulk approval (the switch in tools/owner_approval.py) moves the rows with a changed text to `owner-approved` (none is `proposed` and changed now)
         approved_all = owner_approval.load_approval() is not None
         # 1308 before C1: 19 corrections (מֵאֶפֶס, מֵאַחַת …) are now in the sources; 1296 after the 7 of the deferred items (מַה שֶּׁ, מַה מִּסְתַּתֵּר)

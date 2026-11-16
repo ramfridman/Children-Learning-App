@@ -77,6 +77,7 @@ import 'lesson_arc.dart';
 import 'show_predict.dart';
 import 'show_stage.dart';
 import 'lesson_controller.dart';
+import 'choice_row.dart' show withGrownCard;
 import 'name_options.dart';
 import 'clock_set_session.dart';
 import 'lesson_voice.dart';
@@ -1171,7 +1172,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     if (voiceOn && _voice == null && _voiceAllowedIn(c)) _voice = _makeVoice(controller);
     final StageSpec stageSpec = _stageSpec!;
     final SizeClass sizeClass = AppLayout.of(context).sizeClass;
-    final ActivitySpec board = stageSpec.applyTo(ActivitySpec.of(AppLayout.of(context).board), sizeClass);
+    final ActivitySpec board = withGrownCard(
+      stageSpec.applyTo(ActivitySpec.of(AppLayout.of(context).board), sizeClass),
+    );
     return StageScope(
       stage: stageSpec,
       captionsShown: _look!.captionsShown,

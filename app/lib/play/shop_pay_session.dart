@@ -16,6 +16,7 @@ import 'hints/hint_marks.dart';
 import 'hints/hint_pictures.dart' show hintScale;
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
+import 'hints/tap_plans.dart' show inkedSvg;
 import 'hints/tile_points.dart';
 import 'host_moves.dart';
 import 'lesson_arc.dart' show ArcPart, ArcStep;
@@ -719,7 +720,8 @@ class _Counter extends StatelessWidget {
                   children: <Widget>[
                     Expanded(
                       child: SpriteGroup(
-                        svg: a.assets.svg(a.itemSprite),
+                        // Cut to its ink, so that the thing for sale fills its place (min-sizes V6: 40 on a phone, 64 on a tablet).
+                        svg: inkedSvg(a.assets.svg(a.itemSprite)).$1,
                         count: a.itemCount,
                         arrangement: 'line',
                         scale: 1.6,
@@ -733,7 +735,11 @@ class _Counter extends StatelessWidget {
                         borderRadius: BorderRadius.circular(TokenRadius.lg),
                         border: s.lightPrice ? Border.all(color: TokenColors.hintHalo, width: 4) : null,
                       ),
-                      child: Text(price, style: AppText.fixed(size: 24, weight: 800, lineHeight: 1.2)),
+                      // A tablet's price is 32 (V6), a phone's 24.
+                      child: Text(
+                        price,
+                        style: AppText.fixed(size: size.height > 250 ? 32 : 24, weight: 800, lineHeight: 1.2),
+                      ),
                     ),
                   ],
                 ),

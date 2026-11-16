@@ -45,8 +45,12 @@ void main() {
   const ActivitySpec spec = ActivitySpec.phone;
 
   /// The stage, the hand's layer over it and the tiles, placed as the lesson screen places them.
+  /// The board numbers the last hosted template asked for (a template may move its stage: a phone's pattern stage starts at x 24 and is 377 wide).
+  late ActivitySpec laidNow;
+
   Future<void> host(WidgetTester tester, TemplateSession s, {bool reduceMotion = true}) async {
     final ActivitySpec laid = s.layoutFor(spec);
+    laidNow = laid;
     await tester.pumpWidget(
       MaterialApp(
         builder: (BuildContext context, Widget? child) => MediaQuery(
@@ -125,7 +129,7 @@ void main() {
   }
 
   /// A point of the board (as the tests host it) in the stage's own points.
-  Offset inStage(Offset board) => board - Offset(spec.stage.left, spec.stage.top);
+  Offset inStage(Offset board) => board - Offset(laidNow.stage.left, laidNow.stage.top);
 
   /// The middle of the top edge of the tile that [f] finds, in the stage's own points, [slop] under the widget's top.
   Offset tileTopOf(WidgetTester t, Finder f, double slop) {
@@ -498,7 +502,7 @@ void main() {
         expect(hand, findsOneWidget);
         near(
           handTip(t)!,
-          BuildPatternSession.modelCell(spec.stage.size, a.model.length, 0).center,
+          BuildPatternSession.modelCell(laidNow.stage.size, a.model.length, 0).center,
           'the hand starts at the first picture of the model',
         );
         final List<double> tips = <double>[];

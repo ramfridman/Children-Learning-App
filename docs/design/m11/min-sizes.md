@@ -345,3 +345,242 @@ multiplies by the composite's detail share (a strip: 0.143 of the width), so the
   deliberate size item?).
 - **qa-engineer:** section 5 as `test/min_sizes_test.dart`, once the sort board lands, then per template as each fix lands.
 - **hebrew-text-editor:** none. The labels keep their words, at 18 / 24 pt w500.
+
+---
+
+## 8. Addendum 2026-11-17
+
+Design director, branch `lands-ux` at 7e7b17aa, after the developer's round 1 (`docs/agents/dev-report-2026-11-17.md`). It is a spec
+and a review only; nothing in `app/` changed. The owner said yes to section 6, decisions 1 to 3, so phones sort one card at a time,
+every tablet screen grows, and **the c1-blocks hint-card exemption is dropped**.
+
+Mocks (script `min-sizes/make_addendum_mocks.py`, drawn over the round-1 goldens taken from 7e7b17aa with `git show`):
+`min-sizes/add_b9_hint_card_phone.png`, `add_size_bins_phone.png`, `add_numline_phone.png`, `add_numline_tabletL.png`,
+`add_balance_phone.png`, `add_ten_tiles_phone.png`. Review sheets: `min-sizes/review-round1/` (8.4, 8.5).
+`make_sheets.py` now takes `GOLD=<dir>` so it can sheet a frozen snapshot.
+
+### 8.1 B9: the hint card of a where-is item on tiles (Layout T), with no exemption
+**The rule.** A hint card draws its blocks at **the tiles' cube u** (c1-blocks 4.7, one u per item): 12.7 on the phone and 13.2 on the
+SE, never under 12. On phones it does this by drawing the **rods lying down**. A lying rod is 10 u long and 1 u thick, so four tens
+need 4 u of height and not 10.3 u. The box stays where the developer put it (between the top bar and 16 over the tiles), so nothing
+else on the screen moves.
+
+| | Phone | Phone SE | Tablet L | Tablet P |
+|---|---|---|---|---|
+| Card box | 262 × 104 (95, 92) | 230 × 96 | as built (cube 19.6) | as built (cube 20.1) |
+| u | **12.7** (the tiles') | **13.2** | as built, standing rods | as built, standing rods |
+| Rods | lying, left to right, tens stacked **4** apart | lying, **3** apart | standing | standing |
+| Ones | a lying 5-frame (rows of five, 1 apart, rows 2 apart), **14** to the right of the tens, bottom-aligned with them | same | as built | as built |
+| The number | on top, **20 w800 LTR**, ink, no badge (today a 10-pt badge) | 20 | 28 | 28 |
+| Fit (4 tens, 9 ones, Layout T's limit) | 210 × 91 in 246 × 96 | 214 × 90 in 218 × 90 | | |
+| Level 2 (a digit beside one rod and one cube) | one lying rod, the digits 28 w800 beside the rod and the cube | 24 | as built | as built |
+
+- Level 3 counts the rods as "ten, twenty, thirty": each lying rod lights as one piece, then each one-cube lights in turn. A cube of
+  12.7 or more is big enough to light one by one.
+- **Never mirrored.** Tens come first at the left, so the card reads 3 then 4, the same order as the digits.
+- The rods on the tiles stand up and the ones in the card lie down. The voice line already says "three rods and four cubes", and a lying
+  rod is the same ten linked cubes. The mock shows the two side by side. This is the one real design choice in this addendum (8.8).
+- For the developer: the hint card's `BaseTenPicture` gets `orientation: lying` and the item's `sharedUnit`. Test
+  (`hint_tap_c1_test.dart`): the hint card's u equals the tiles' u and is ≥ 12 on SE, at every level, for every Layout T item.
+  The exemption paragraph in `docs/design/c1-blocks.md` §10 is superseded by this section. I did not edit that file because it is
+  outside this task's scope; the orchestrator can add a pointer.
+
+### 8.2 The size rule's samples (big and small) and its items
+**What is wrong.** `ball_size_s` draws its ball at 0.35 of the box, so its ink is about 27 % of the box. In the 64 sign box that is
+**17 pt**, and in a 48 well box it would be **13**. A bigger box only makes the empty margin bigger.
+
+**The design.** Size is relative, so a sign shows **both sizes**: the rule's own size is drawn fully, and the other size stands beside it
+as a ghost at opacity **0.3**. Both are drawn with **`ball_size_l`** (the full-box art) at two box sizes. A sign never uses the
+`_s` / `_m` sprites. The items in a well keep **the tray's scale**, so a small ball stays small next to a big one, and neither is
+shrunk to the 48 of a square item.
+
+| | Phone (2 shelves 361 × 116) | Phone SE (252 × 116) | Tablet L | Tablet P |
+|---|---|---|---|---|
+| Sign | column **104** wide (was 72) | column **96** | header row **80** high | header 80 |
+| Boxes (ink) | **31 / 62** (24 / 48), 6 apart | **31 / 56** (24 / 44) | **40 / 80** (31 / 62), beside the 24-pt label | same |
+| Label | 18 w500 h1.7 under the pair | 18 | 24 beside | 24 |
+| Item in the well | the tray's box **88** (small ink 24, big 69); one shown, then a pile with the badge | 86 | **112** (small 30) | 112 |
+| Three sizes (big, middle, small) | three shelves 361 × 76: boxes 31 / 46 / 62 in a row, label at its side, column 160 | 30 / 44 / 56 | 40 / 60 / 80 | same |
+
+The same applies to every `*_size_*` set (apple, fish, star): only `*_size_l` is drawn in a sign, and it is drawn at the box sizes above.
+Mock: `add_size_bins_phone.png`.
+
+### 8.3 The number line, the numeral-to-set stage, the balance, ten on a tile
+
+**Phone number line (the empty top left).** The line stays in the answer band (24,244, 581 × 112, as built). The top left gets a
+**number sign**, and the bubble moves beside it. Mock: `add_numline_phone.png`.
+- Sign: a paper card **24,100 160 × 132** (border hairline 3, radius 16). SE: 16,86 120 × 120.
+- Place and estimate: the number to find, **64 w800 LTR** (SE 48). Two digits fit; "47" on 0–100 also fits at 64.
+- Jump and back: the start numeral **56** on top, and under it **one arc per hop**, 28 wide, 12 high, stroke 4, `skyDeep`, with an
+  arrowhead, in rows of five. Forward arcs run left to right and back arcs right to left. They point the way the marker moves, and RTL
+  never flips them. SE: 48, arcs 22 wide in rows of four.
+- Bubble: 196..603 × 100..232 at the look's caption, never under its floor (24 phone). SE: 148..476.
+- Marker: a **56** box standing on the line (the frog's ink is about 44; today it is 30). Hop arcs on the line rise at most 40 above it.
+- Hint hop numbers: chips 32 with the digit 20 w800, over each arc's top (today 10–12).
+- The sign repeats the prompt: the number said, or the start and the hops said. It never shows the answer. **Curriculum-expert to
+  confirm** that showing the target on a place item is wanted (it helps a child who forgot the spoken number).
+
+**Tablet number line.** Mock: `add_numline_tabletL.png`.
+
+| | Tablet L | Tablet P |
+|---|---|---|
+| Card | 24,230 848 × 400 (was the 584 card for place / jump) | 24,372 772 × 520 |
+| Line | at **0.75** of the card (y 530), from 80 to 816; 0–10 spacing 73.6, 0–20 36.8 | at 0.72 (y 746), 64..756; 0–10 69, 0–20 34.6 |
+| Ticks, labels | 4 × 24, labelled 6 × 32; labels **28** w800 | same |
+| Marker | **80** box (today 52, frog ink 30) | 80 |
+| Sign | 220 × 160 in the card's top left (56, 262): numeral **72**, arcs 40 wide, stroke 5 | 220 × 160 |
+| Hops on the line | arcs up to 120 high, hint chips 40 with digit 24 | same |
+
+**Numeral-to-set and set-to-numeral stages** (`unit_set_to_numeral_*`, `tap_count`, `hint_tap_count_*`, `hint_tap_add_*`). Things
+to count (R2), in cells, five to a row, at most two rows, centred:
+- phone: cell **52**, thing 40 (stage 330 × 128 holds 2 × 5 = 260 × 104)
+- SE: cell 48, thing 36
+- tablet L: card **848 × 400** (`withBigStage`), cell **96**, thing 64, tiles 3 × 112 under the card at 654
+- tablet P: card 772 × 520, cell 104, thing 72, tiles at 916
+
+A number tile shown on the stage (the "5" card in `tap_add`) is 72 tall with numeral 48, and 96 / 64 on tablets.
+
+**A5, the balance, refined after round 1.** Mock: `add_balance_phone.png`. Round 1 moved the answer tiles of other templates into the
+192-wide column under the bubble, which holds only two 88 tiles. A balance has three (←, =, →), so its tiles stand **in a row under the
+bubble and the guide**: the guide's figure ends by y 245 on every phone golden, and the band under it is empty on every phone screen.
+
+| | Phone | Phone SE | Tablet L | Tablet P |
+|---|---|---|---|---|
+| Stage | 24,96 377 × 260 (`withMeetStage`) | 24,86 264 × 256 | card 24,230 848 × 400 | card 24,372 772 × 520 |
+| Pivot, post | (212.5, 236), post to 342, base 124 wide | (156, 220) | centre, 0.4 of the card from the top | same |
+| Beam (between the pans' centres) | **191**, tilt ≤ 6° | 148 | 520 | 470 |
+| Pans | level trays **170** × 10 on a 16 stem (a tray stays level as the beam tilts) | 124 | 300 | 280 |
+| Things on a pan | **30** box (ink ≥ 24), rows of **five**, 4 apart, up to three rows (15) | **28** (ink 23, the SE floor), rows of four, three rows | **44**, rows of five, 8 apart | 44 |
+| Answer tiles | 3 × **88** at x 413 / 513 / 613, y 262 | 3 × 88 at 300 / 396 / 492, y 236 | 3 × 112 under the card at 654, centred | at 916 |
+| Arrows | icon 40, ← points at the left pan; never mirrored | 36 | 48 | 48 |
+
+Hint hands point at the tiles' centres. The "−/+" of `balance_weigh` use the same row, as two tiles.
+
+**Ten pictures on one tile** (a set of 7 to 10; today about 19). Mock: `add_ten_tiles_phone.png`. The floor is on the **ink**. The
+app's round sprites (apple, ball, star) fill about 0.75 of their box, so a 24-pt ink needs a **32** cell. A set on a tile is laid
+out by its count:
+
+| Count | Layout in the tile | Phone tile | SE tile | Tablet tile (cell × 1.25) |
+|---|---|---|---|---|
+| 1–2 | one row, cell 40 | 96 × 96 | 88 × 88 | 112 |
+| 3–4 | 2 × 2, cell 38 | 96 × 96 | 88 (cell 36) | 112 |
+| 5–6 | 3 × 2, cell 36 | **128** × 96 | 120 × 88 | 160 × 112 |
+| 7–10 | a **5 × 2 frame**, cell **32** (gaps 1 / 2) | **177** × 96 | 172 × 88 | **224** × 112 |
+
+- A row of up to three 177 tiles takes the **wide answer band 24..605** (555 with 12 gaps), as the number line does.
+- SE: three 172 tiles need 532, so they use **8..651** under the guide. The guide's figure ends by y 205, and the SE tiles start at 214.
+- Four or more sets of 7–10 do not fit a phone. That is a content rule: at most three such options (curriculum-expert, validator).
+- **Never a pile with a count** for a set whose quantity is the question. A pile with a badge is only for things whose count is not the
+  answer: the cards sorted into a bin, the things already bought, the plates of a share (where the badge is the point).
+- `tileGroup` (`sprite_group.dart`) changes: cell from the table, not `inner / 3`; the tile's width comes from its count. In a row
+  of tiles, all tiles take the width of the widest one.
+
+### 8.4 design-spec §7.4 and §8: the robot program strip (B2)
+Updated in `docs/design-spec.md` (§7.4 "Robot coding" row and §8 "Robot program strip" row): horizontal, left to right from a start dot,
+never mirrored, arrows 28 (40 on tablets), strip 44 (56 on tablets), wrapping to a second row that also runs left to right. The source is
+the curriculum decision in `docs/milestones/M11-stage2.md` §11.8. Round 1 has not built it yet (`stage2_robot_turn_phone`: the strip is
+30, its arrows about 18, no start dot).
+
+### 8.5 Review of round 1, as built
+Sheets (snapshot of 7e7b17aa, at 0.5): `review-round1/sort_00..03`, `clock_00`, `count_00..02`, `sets_00..01`, `trace_00`,
+`numline_00..01`, `coins_00..02`, `celebration_00..01`. I opened 1:1: `sortstrip_phone_sorted`, `sortstrip_phoneSE_sorted`,
+`sortstrip_tabletL_sorted`, `sortstrip_tabletP_sorted`, `unit_drag_sort_phone`, `unit_drag_sort_three_phone`,
+`unit_drag_sort_three_tablet_landscape`, `stage2_anyshape_turn_tabletL`, `hint_clock_l3_phone`, `unit_clock_set_tablet_landscape`,
+`stage2_counttap_turn_phone`, `lesson_2_count_three_answers_phone`, `ls01_count_answer_phone`, `hint_count_l3_phone`,
+`unit_match_numbers_phone`, `unit_more_big_things_phone`, `unit_set_to_numeral_phone`, `unit_number_line_jump_phone`,
+`unit_shop_pay_phone`, `unit_shop_pay_tablet_landscape`, `stage2_shop_turn_phone`, `lesson_6_celebration_tablet_landscape`,
+`m11_celebration_numbers_phone_se`.
+
+**What passes.** The sort board is right on all four boards: an animal in a bin card is 27 / 24 / 43 / 40, a tray animal 25 / 27 / 36 /
+43, labels 18 / 24 w500, piles with badges, and no empty band over the S4 limit (tablet L 180, P 235). Count-tap objects are 40–45 pt
+(the stage2 ladybirds), and the count badge numeral is 26. The clock numerals are about 26 on the phone and 36 on tablet L, with a 356
+face. The trace pad is 247 on the phone (figure about 200) and 360 on tablets. Number-line labels are 20 / 28, with tick spacing 53.7 on
+0–10. Coins on the phone purse are 48 / 56 with digits about 22. The m11 celebration on SE is 22 / 18 pt.
+
+**What still fails (16: S1 1, S2 12, S3 3).**
+
+| # | Sev | Goldens | Measured | Fix (numbers) |
+|---|---|---|---|---|
+| V1 | S1 | `unit_match_numbers_*`, `hint_match_l3_*`, `hint_tap_numerals_l3_phone`, `unit_more_big_things_*` (sets on tiles) | A8 sized the **box** (cell 27); the apple's **ink** is about 0.74 of it, so **18–20** pt. Birds on tiles about 16 | 8.3, "Ten pictures on one tile": a cell of 32 or more by count, tile width by count |
+| V2 | S2 | Every frame with no look: `unit_*`, `hint_*`, `lesson_*`. Measured: `hint_count_l3_phone` **17**, `hint_tapb_ten_more_l3_phone` 17, `hint_tapb_after_l3_phone` 17, `unit_number_line_jump_phone` **21**, `hint_shop_l3_phone` about **14**, `hint_shop_l3_phone_se` about **13** | `activity_frame.dart` l. 338: `min: look == null ? 14 : …`, so a long hint line shrinks to 14 | Floor with no look: **22 phone, 20 SE, 28 tablet** (P3's −2). The bubble first grows down to the tiles' top − 12, then widens to the start side over empty stage. If it still does not fit, the hebrew-text-editor shortens the line (lines over 3 at the floor are listed by a test) |
+| V3 | S2 | `unit_clock_set_*`, `hint_clock_*`, `stage2_clock_*` (all boards) | The **minute hand runs through the "12"**: numerals are centred at 0.68 r, and the minute hand reaches 0.86 r over them | Numerals centred at **0.78 r**; minute hand **0.62 r**, hour 0.45 r; hands painted under the numerals, and each numeral gets a 3-pt paper halo |
+| V4 | S2 | `hint_clock_l3_phone` (hand over the bubble's last two lines), `hint_share_l3_phone` (over "עַכְשָׁו תּוֹרְכֶם"), `hint_count_l3_*` (the hand hides the apple it counts), `hint_shop_l3_*` | Hand 60 × 85 laid on the caption or on its target | A hint hand never overlaps the bubble or its target. The tip stops **8 outside the target's edge**. When the target is under the bubble, the hand comes from below (tip up). Test: the hand's rect and the bubble's rect do not intersect |
+| V5 | S2 | `unit_more_big_things_*` | Small apples on purpose, ink **18** (R1 small floor 24); the stage above is an **empty landscape** | Phone: the two set tiles stand on the picture stage (24,96 377 × 253), each 176 × 160, small ink 30, big 56; nothing under. Tablets: tiles 224 × 160 on the 848 card |
+| V6 | S2 | `unit_shop_pay_tablet_landscape`, `hint_shop_l3*_tablet_*`, `unit_shop_pay_phone`, `stage2_shop_*`, `hint_shop_l3_*` | Tablet coins **47 / 56** (expected 64 / 77: the "third larger" did not take; the card is still 584). Apple for sale **24** on the phone and 40 on the tablet; the hint's item (a yellow block) **16**. Price numeral 20 on tablets | Tablet: `withBigStage` and coins × 1.333 (1 ₪ 64, 2 ₪ 77, 5 ₪ 85, 10 ₪ 81). Item for sale **40** phone / 64 tablet. Price numeral 24 / 32 |
+| V7 | S2 | `unit_match_coins_*`, `hint_match_coin_*`, `hint_tapb_coins_*` | Coins on tiles **30–34**, digits about **14** (coin rule 18) | Coin on a tile at the real ratio with 5 ₪ = 80 (1 ₪ 60, 2 ₪ 72, 10 ₪ 77), digits ≥ 20; tablet 5 ₪ 96 |
+| V8 | S2 | `lesson_2_count_three_answers_tablet_*`, `lesson_3/4_*_tablet_*`, `hint_count_l3_tablet_landscape` | The target (flower, basket) about **40** and its count badge digit about **14** on tablets | Tablet target **72**, badge 40 with digit 24 (the phone's 26 badge is fine) |
+| V9 | S2 | `unit_drag_sort_three_phone`, `unit_drag_sort_three_tablet_landscape`, `stage2_anyshape_turn_tabletL` | A three-shelf sample is a pair at **30** each (R1 40). Tablet samples are a pair at **40–44** (target 56). A sorted shape in a tablet bin is **52** (rule 64), and the tray tiles 96 (tablet 104 / 112) | A three-shelf sign shows **one** sample at 40. Tablet header: one sample 72 (or a pair of 56). Tablet items 64; tray tiles at the look's tablet size |
+| V10 | S2 | every size sort (`*_size_*` samples) | Small sample ink **17**; small item in a well about 13 (computed) | 8.2 |
+| V11 | S2 | `lesson_6_celebration_tablet_*` | Nitzi 125 tall, the hero cameo **70** on its pebble (the report says 160) | Both cameos 160 tall on tablets, 112 on phones |
+| V12 | S2 | `unit_trace_*`, `hint_trace_l3_*`, `stage2_tracetheshapes_*` | The start dot the child aims at is **14** (tablet 16); guide dots 6 | Start dot **28** with a 40 halo ring (tablet 36 / 52), as R10's aim target |
+| V13 | S2 | Hint chips: `hint_clock_l3_*` (16), `hint_count_l3_*` (16), `hint_numberline_jump/back/place_l3_*` (**10–12**), `hint_tap_count_l3`, `hint_tap_numerals_l3`, `hint_tapb_sides_l3`, `hint_tapb_corners_l3`, `hint_robot_l3` (14), `hint_spot_n_l3_card` (12) | The circled count numbers of a hint, digits **10–16** | Chip **32**, digit **20** w800 LTR (tablet 40 / 24); it stands outside the thing it counts |
+| V14 | S3 | `unit_number_line_*_phone`, `stage2_numline_*`, `c1b_estimate_line_phone*` | The top left is empty (24..290 × 96..236); the marker frog's ink is **30** | 8.3 (number sign, marker 56) |
+| V15 | S3 | `unit_number_line_*_tablet_*`, `c1b_estimate_line_tablet*`, `hint_numberline_jump_l3_tablet_landscape` | The marker box is 52 (ink 30). The line sits in the bottom third of the card with two thirds empty sky (S5) | 8.3, tablet table |
+| V16 | S3 | `lesson_3_scattered_midway_tablet_landscape` (220 empty under the card, limit 205), `lesson_3/4_*_tablet_portrait` (about **330**, limit 295), `unit_count_seven_tablet_landscape` (180) | While counting there are no tiles, so the room under the card is empty | On tablets the count's answer tiles stand **inside the card's bottom band** (a row 136 high), and the card reaches the bottom line while counting: landscape 24,230 848 × 534, portrait 24,372 772 × 728. The card never changes size between counting and answering |
+
+### 8.6 The audit, extended (hints, languages, screens)
+Sheets: `review-round1/audit_hint_l3_phone_00..05` (every hint family at its last level on the phone, 71), `audit_hint_tablet_00..05`
+(all 42 tablet hints), `audit_lang_phone_00..05`, `audit_lang_tabL_00..05`, `audit_lang_tabP_00..04`, `audit_lang_se_00`,
+`audit_lang_l7_00..01`, `audit_screens_home_00..02`, `audit_screens_course_00..01`, `audit_screens_hall_00`,
+`audit_screens_parent_00`. Findings already in §4 (A4, B2, B4, B5, C1, C2) or in 8.5 (captions V2, chips V13, hands V4) are not
+repeated. The language and screen pass was done with a second design-director run on the same snapshot. It measured glyph ink, so
+its text sizes are ±1 pt.
+
+**New findings: 22 (S1 5, S2 15, S3 2).**
+
+| # | Sev | Goldens | Measured | Fix |
+|---|---|---|---|---|
+| HX1 | S1 | `hint_tap_add_l3_phone` (stars **12**), `hint_flash_l3_phone` (apples 14), `hint_tap_count_l3_phone` (ladybirds 14), `hint_tapb_pairs_l*_phone` (shoes **16**) | Counted things on the 330 × 128 stage | 8.3 numeral-to-set table (thing 40 in 52 cells). Pairs: shoes 40, a pair 88 wide, three pairs to a row |
+| HX2 | S1 | `hint_tapb_after_l3` (digits **14** in 28 × 30 cards), `hint_tap_sequence_l3`, `hint_tapb_take_one_l3` (1..10 strip, digits about **10**), `hint_tapb_skip_l3` (10..100, about **9**) | Number strips squeezed to fit the stage | Cards **44 × 48**, digit **24** w800 LTR, gap 4; show a **window of seven** around the target (the rest as a fading edge). Skip counting shows its own row (10, 20 … 100) on two rows of five. Tablets 56 × 60 / 28 |
+| HX3 | S1 | `hint_tapb_add_more_l3` (rods about **9**), `hint_tapb_sentence_l3` / `_part_l3` (cubes 9), `hint_tapb_ten_more_l3` (11), `hint_tapb_growing_l3` (tower cubes in tiles about 10), `hint_tapb_bars_l3` / `hint_tapb_to_ten_card_l3` (14), `hint_tapb_whole_parts_l3` (16) | Base-ten and cube pictures in Band B hints under the c1 floor of 12 | One u per item (c1-blocks 4.7) of at least **14** on phones (19 on tablets). Rods lie down where the height is short (8.1). A cube tower on a tile has at most 6 cubes of 14, or it shows a count |
+| L1 | S1 | `ls10_personal_family_*` (all boards) | 8 answer bubbles of 56 with pictures **32–36**. On the phone the second row is cut at y 275 by the stage, and the skip pebble (84..138 × 282..336) covers it. 8 choices is over `maxChoices` (A 3, B 4) | At most **4 at a time** on tiles of 88 (phone) / 104, pictures 56 / 72, a 64 "more" pebble, the prompt picture 64. Tablets: 2 rows × 4 tiles of 112 on the 848 × 400 card |
+| L2 | S1 | `ls13_probe_*`, `ls13_thanks_*`, `l7_find_layout_3_*`, `l7_find_first_text13_phoneSE`, `l7_trail_12_*` (phone, SE) | Pictures to tell apart on the 330 × 128 stage: trail figures 37–41 wide, the SE doors 64 × 95 with a 36 parrot, the telling detail (a pose, a wave) about **10**. The answer band is empty (phone 123, SE 115; limits 98, 94) | `withPictureStage` 377 × 253 (SE 264 × 256): 3 pictures 110 wide with gaps of 24, or 2 at 150; trail figures ≥ 120 tall |
+| HX4 | S2 | `hint_share_l3_phone` | The plate's apples about **22**, badge 24 | §3.4 share: a plate shows its items at 40 with the badge 32 / 20 |
+| HX5 | S2 | `hint_spot_p_l3_card_phone` | Animals in the cards about **30** (R1 40) | Cards 56 with the animal 44, three to a row |
+| HX6 | S2 | `hint_tapb_week_*` | The calendar icons about **22**; the days marked by 3-pt dots | Calendar 48, day dots 6 with gap 3; the numeral of the day (if shown) 20 |
+| L3 | S2 | `ls08_question/row`, `ls10_bubbles*`, `ls12_ends/rhyme` (side speaker **44**), `ls03b_*` (card speaker **30–32**) | Under the touch floor (56 B / 64 A) | Side speaker 56 (64 Band A), icon 32; card speaker 48 with hit slop to 64 |
+| L4 | S2 | `ls10_personal_age_*` | Numeral answers are 56 circles with numerals about **32** | `AnswerTile` 96 / 112, numeral 56 / 72 |
+| L5 | S2 | `ls05_wheel_*`, `ls04_stem_wheel_heb_*` | Nikud chips 46–54. The made unit in the centre is about **40**, smaller than the wheel letters (48) | Chips 56 (64 Band A); centre tile 104 × 88, letter 56 (tablet 64) |
+| L6 | S2 | `l7_meet_*_lookC_letters_*` | The word in a chip is about **24–25** (Band C word 34 / 40) | The band's word size, chip 56 high |
+| L7 | S2 | `ls02_word_heb_*` | Writing pad 190 × 190, writing band **103** (the trace pad is 250) | `withTallStage` 330 × 253 pad, the 46 boxes above it |
+| L8 | S2 | `ls03_taps/drum/hands_*` | Beat dots **18**, hands about 20 (R2 24 / 32) | Dots 28 / 40, gap 12 |
+| H1 | S2 | `home_island_*` | Landmark labels (גְּבִיעִים, מַדְבֵּקוֹת, …) about **14** (tablet L 15) on the sand, no plate | 18 w500 h1.7 (24 tablets) on a sign plate, like the land signs |
+| H2 | S2 | `home_*` | Nitzi's map bubble about **16** | 20 phone, 24 tablet |
+| H3 | S2 | `island_counting_*`, `island_colors_*` | Legend (מִתְרַגְּלִים / יוֹדְעִים / …) about **11–12**; path icons 43 × 29 | Legend 18 w500 (or icons only, voiced); path icons 40 tall |
+| H4 | S2 | `hall_*` (phone) | Land row labels about 15–16; "2/4" counts about 14; medal titles 21 at **w700 with nikud** (the rule is ≤ w500 under 24); descriptions 16 | Row label 18 w500; count 20 w800 LTR; title 24 w700 (or 20 w500); description 18 |
+| H5 | S2 | `ceremony_prize_phone` | Prize-card labels about 15–16 | 18 w500 |
+| H6 | S2 | `progress_view`, `gate_*` (parent area) | Row and status text about **13–14**; the gate subtitle 13–14 in grey | Parent text **16** minimum, grey only at 16 + |
+| L9 | S3 | `ls08_question_tabletPortrait` (320 empty, limit 295; tiles 96), `ls03b_*`, `ls08_row`, `ls10_bubbles*`, `ls11_buttons`, `ls12_ends/rhyme` tablet portrait (about 400–530 empty) | C2 for the language templates | Card 772 × 520, tiles at 916 at 104 / 112, pictures 72 / 80 |
+| H7 | S3 | `course_home_eng_invite_tabletLandscape` (and phone) | Path node "6" cut at the board edge (1136..1180+) | Fit the nodes inside the island (gap 40), or make the path scroll with an edge peek |
+
+(Tablet landscape language screens in the 584 card, `ls02`, `ls03`, `ls10`–`ls13`, are C1 again. The tablet hints keep phone sizes
+in phone-size cards, for example `hint_qa_teens_l2_tablet_portrait` with 16-pt ten-frame cells in a 772 card and `hint_robot_l3_tablet_landscape` with
+60-pt grid cells. That is also C1 / C2 and is not counted again.)
+
+### 8.7 Top ten (what to build next, after the rest of section 4)
+1. **V2** the caption floor of frames with no look: 13–17 pt text on most `unit_*` / `hint_*` / `lesson_*` screens.
+2. **L1** `ls10_personal_family`: answers cut off and covered on the phone.
+3. **V1 + HX1** counted things at 12–20 (sets on tiles by ink; things on the stage at 40).
+4. **HX2** number strips with 9–14 pt digits.
+5. **L2** picture choices on the 330 × 128 stage in `ls13` / `l7` find and trail.
+6. **HX3 + 8.1** base-ten in hints under 12 (one u per item, lying rods).
+7. **V13 + V4** hint chips at 10–16 and hands over the caption or the target.
+8. **V6 + V7** coins on tablets (not grown) and on tiles (digit 14).
+9. **V14 + V15** the number line (sign, marker 56 / 80, tablet line at 0.75).
+10. **L3 + L4** speakers and numeral answers under the touch floor in the language lessons.
+
+### 8.8 For the owner, the hand-offs, and what I did not see
+- **Needs the owner (one design choice): B9.** On a phone, the hint card of a where-is item draws the rods **lying down** at the tiles'
+  cube (12.7), while the rods on the tiles stand. The alternative is a card that covers the tiles while the hint shows, but then the
+  child cannot compare the card with the tiles. **Recommendation: lying rods.** Open `docs/design/m11/min-sizes/add_b9_hint_card_phone.png`.
+- **app-developer:** 8.1–8.3 and V1–V16, then HX1–HX6, L1–L9, H1–H7 in the order of 8.7. The goldens are named in each row.
+- **curriculum-expert:** the number sign (does a place item show its target numeral?); the size signs with the other size as a ghost;
+  at most three set options of 7–10 on phones; `ls10_personal_family` at most four at a time; skip-count strips on two rows.
+- **hebrew-text-editor:** hint lines that need more than three lines at the floor (V2 lists them once the test exists); the hall's
+  medal titles at w500 / 20 if they stay under 24.
+- **qa-engineer:** add to `min_sizes_test.dart`: the caption floor with no look; ink (not box) for sets on tiles; hint chips ≥ 20;
+  the hand never on the bubble; the hint card's u equals the tiles'; the language speaker ≥ 56.
+- **What I did not look at.** A real phone or tablet. The ls* `text_1_3` variants (none exist except two l7 ones). 63 of the 75
+  language SE goldens. `hall_friend_phone`, `alerts_view` and `parent_language*`, seen only on a sheet. The hint goldens below level 3
+  on the phone, except the ones on the round-1 sheets. **Placeholder art seen:** the friend figure on `ceremony_*` / `hall_friend` is a
+  head-and-body stand-in. The balance, arcs, cubes and signs in the mocks are plain shapes for size, not final art.

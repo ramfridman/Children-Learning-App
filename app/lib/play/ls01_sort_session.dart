@@ -9,6 +9,7 @@ import '../design/components.dart';
 import '../design/course_text.dart';
 import '../design/tokens.g.dart';
 import 'hints/hint_pictures.dart' show SkyRing;
+import 'hints/tap_plans.dart' show inkedSvg;
 import 'ls01_chips.dart';
 import 'ls01_hand.dart';
 import 'ls01_metrics.dart';
@@ -509,7 +510,11 @@ class Ls01SortSession extends Ls01Session {
     // A bin with a picture shows the picture and no text, whatever else the pack holds for it: a child who cannot read has the sign, and the
     // bin says its word on a touch (docs/languages/band-a-build.md 7.6).
     if (b.sprite != null) {
-      face = Padding(padding: const EdgeInsets.all(4), child: PackSvg(sort.assets.svg(b.sprite!)));
+      // Cut to its ink, so that a cat fills the sign (min-sizes B8: 40 at least).
+      face = Padding(
+        padding: const EdgeInsets.all(4),
+        child: PackSvg(inkedSvg(sort.assets.svg(b.sprite!)).$1),
+      );
     } else if (b.text != null) {
       final bool letter = isSingleLetter(b.text!);
       face = FittedBox(

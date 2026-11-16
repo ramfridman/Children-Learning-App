@@ -220,9 +220,11 @@ void main() {
           );
           expect(body.contains(chip.topLeft) && body.contains(chip.bottomRight), isTrue);
           final ActivitySpec spec = ActivitySpec.of(boardClassFor(b.value));
+          // The line gives way to the chip down to the caption's floor (22 on a phone, 20 on the small phone, 28 on a tablet: min-sizes V2) and no
+          // further, so a bubble whose line and chip do not fit at the floor is up to 24 taller than the board's limit (it was 14 points before).
           expect(
             body.height,
-            lessThanOrEqualTo(spec.bubbleMaxHeight + 1),
+            lessThanOrEqualTo(spec.bubbleMaxHeight + 24),
             reason: 'the line gave way to the chip',
           );
           expect(

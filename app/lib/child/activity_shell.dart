@@ -156,6 +156,8 @@ class ActivitySpec {
     required double tilesWidth,
     double? bubbleTop,
     double? tileHeight,
+    double? tileSize,
+    double? tileFont,
     bool? stageDrawn,
     double? bubbleWidth,
     bool? tailAtMouth,
@@ -188,9 +190,9 @@ class ActivitySpec {
     tilesLeft: tilesLeft,
     tilesTop: tilesTop,
     tilesWidth: tilesWidth,
-    tileFont: tileFont,
+    tileFont: tileFont ?? this.tileFont,
     tileHeight: tileHeight ?? this.tileHeight,
-    tileSize: tileSize,
+    tileSize: tileSize ?? this.tileSize,
     tileSlop: tileSlop ?? this.tileSlop,
     stageDrawn: stageDrawn ?? this.stageDrawn,
     blocksStageTop: blocksStageTop,
@@ -244,6 +246,20 @@ class ActivitySpec {
     blocksBubbleRight: blocksBubbleRight,
     tailAtMouth: tailAtMouth,
   );
+
+  /// The same board with answer tiles of their own side, tap margin and numeral (a template that has less room for its tiles than the look's:
+  /// the three of a chart beside it on a phone). The tile is a square of [size], [slop] is the room round it that still counts as touching it.
+  ActivitySpec withTiles({required double size, required double slop, required double numeralFont}) =>
+      withStageAndTiles(
+        stage: stage,
+        tilesLeft: tilesLeft,
+        tilesTop: tilesTop,
+        tilesWidth: tilesWidth,
+        tileHeight: size,
+        tileSize: size,
+        tileSlop: slop,
+        tileFont: numeralFont,
+      );
 
   // Board 13.
   static const ActivitySpec phone = ActivitySpec(

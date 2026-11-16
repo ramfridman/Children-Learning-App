@@ -790,6 +790,19 @@ VOICE_AUDIT_KEEP = {canon(w): why for w, why in VOICE_AUDIT_KEEP.items()}
 VOICE_SWEEP_KEEP = {canon(w): why for w, why in VOICE_SWEEP_KEEP.items()}
 KEEP_POINTED |= set(VOICE_AUDIT_KEEP) | set(VOICE_SWEEP_KEEP)
 VOICE_AUDIT = 'voice-audit 2026-10-29'
+# The owner's answer of 2026-11-16 (Stage 2, decision 10): the voice may keep the pointing of these three words, so a row whose only V1 note
+# is one of them is not held for confirmation any more (the row stays text-ready; the owner still approves its text).
+V1_RELEASED = {canon(w) for w in ('שָׂמִים', 'בַּתּוֹר', 'גְּדֵלִים')}
+
+
+def v1_held(notes):
+    """True when a V1 note (a kept nikud, voice-audit 2026-10-29) is about a word the owner has not released."""
+    for n in notes:
+        if n.startswith(VOICE_AUDIT) and not any('kept the nikud of %s,' % w in n for w in V1_RELEASED):
+            return True
+    return False
+
+
 VOICE_SUBS = [(re.compile(p), r, why) for p, r, why in VOICE_SUBS]
 VOICE_MANUAL = {}  # the ui text -> (voice text, why), for lines no rule can say well
 # B-39 (Today's Adventure): the bottle's five lines. {land} is a land name, not a person's name, so it is not dropped (unlike
@@ -1009,8 +1022,9 @@ READ = [
     # colour-bay,robot-harbour}.arc.json (the hosts' lines are in those files, read and final), and the narrator lines of the items the closing content pass re-cut
     # (the families below; every distinct text of them was read). First, so that these rows carry the reading of this round.
     ('3', r'', r'^activity\.show\.(num|math|col|log|cs)-[abc]-\d+\.json$', STAGE2_READ),
-    ('3', r'', r'^activity\.(b\.(colb0[23]|logb0[1469]|mathb(0[12368]|1[0458])|numb(0[1-48]|1[0-8]))\.\d+|b15\.(cola05|loga06|loga10|matha0[47])\.\d+|col\.|cs\.(routine|wrong)\.|log\.|math\.(graph|size|time)\.|count\.(birds|ladybugs)\.10\.|show\.(apples|birds)\.\d+\.|flash\.|next\.(after|before)\.\d+|numeral\.|pick\.numeral\.|x\.mathb(16|19)\.\d+)',
+    ('3', r'', r'^activity\.(b\.(colb0[23]|logb0[1469]|mathb(0[12368]|1[0458])|numb(0[1-48]|1[0-8]))\.\d+|b15\.(cola05|loga06|loga10|matha0[47]|numa09)\.\d+|col\.|cs\.(routine|wrong)\.|log\.|math\.(graph|size|time)\.|count\.(birds|ladybugs)\.10\.|show\.(apples|birds)\.\d+\.|flash\.|next\.(after|before)\.\d+|numeral\.|pick\.numeral\.|x\.mathb(16|19)\.\d+)',
      STAGE2_READ_ITEMS),
+    ('3', r'', r'^misconception\.M-GRP-ONE\.json$', STAGE2_READ_ITEMS),
     ('3', r'', r'^activity\.c\.(mathb04\.[13]|mathc0[123]\.\d+|numb0[69]\.\d+|numc0[1-46-9]\.\d+)\.json$', STAGE2_READ_ITEMS),
     # M11 Stage 2 pilot (2026-11-15): the 61 re-cut and new Shape Forest items, SHP-B-05 and B-06 and their two lessons, and the 17 Show
     # activities that tools/arc_build.py writes from content/units/arc/shape-forest.arc.json (Kubi's lines are in that file, read and final).
@@ -1777,7 +1791,7 @@ def master(rows, result, rules, path=None, approval=None):
                                                   or before['comment'].startswith(EDITOR + read_batch(r)[:60])
                                                   or before['comment'].startswith(EDITOR + 'V1 (pronunciation audit 2026-10-29): the voice text keeps')):
                 # covered by a READ entry: the editor's reading is the reason it is text-ready (or why it still waits)
-                doubt, v1 = first_match(DOUBT, r['text']), is_spoken and any(n_.startswith(VOICE_AUDIT) for n_ in notes)
+                doubt, v1 = first_match(DOUBT, r['text']), is_spoken and v1_held(notes)
                 if any(n_.startswith('REVIEW') for n_ in notes):
                     status, comment = 'proposed', EDITOR + 'a rule flagged this row; not yet decided'
                 elif doubt:
@@ -1791,7 +1805,7 @@ def master(rows, result, rules, path=None, approval=None):
                         comment = comment.replace(READ_OLD_DAY, READ_NEW, 1)
             elif reviewed(r):
                 doubt, note = first_match(DOUBT, r['text']), first_match(NOTE, r['text'])
-                v1 = is_spoken and any(n_.startswith(VOICE_AUDIT) for n_ in notes)
+                v1 = is_spoken and v1_held(notes)
                 if rule:
                     status, comment = rule[2], EDITOR + rule[3]
                     if any(n_.startswith('REVIEW') for n_ in notes):
@@ -1802,7 +1816,7 @@ def master(rows, result, rules, path=None, approval=None):
                     status, comment = 'proposed', EDITOR + doubt
                 elif any(n.startswith('REVIEW') for n in notes):
                     status, comment = 'proposed', EDITOR + 'a rule flagged this row; not yet decided'
-                elif is_spoken and any(n.startswith(VOICE_AUDIT) for n in notes):
+                elif is_spoken and v1_held(notes):
                     status, comment = 'proposed', EDITOR + (
                         'V1 (pronunciation audit 2026-10-29): the voice text changed so a voice cannot misread it '
                         '(a kept nikud or a beat; see "changes" and docs/agents/voice-pronunciation-audit.md). Please confirm.')

@@ -14,7 +14,7 @@ import 'hints/hint_marks.dart';
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
-import 'choice_row.dart' show withMeetStage;
+import 'choice_row.dart' show withBigStage, withMeetStage;
 import 'host_moves.dart';
 import 'response_code.dart';
 import 'template_session.dart';
@@ -227,15 +227,7 @@ class ClockSetSession extends TemplateSession {
   /// or 520 (a portrait's) with the controls in one row under it.
   @override
   ActivitySpec layoutFor(ActivitySpec base) {
-    if (!base.stageIsCard) return withMeetStage(base);
-    final bool land = base.boardHeight < 1000;
-    final double height = land ? 400 : 520;
-    return base.withStageAndTiles(
-      stage: Rect.fromLTWH(24, base.stage.top, land ? 848 : 772, height),
-      tilesLeft: 24,
-      tilesTop: base.stage.top + height + 24 + base.tileSlop - 4,
-      tilesWidth: land ? 848 : 772,
-    );
+    return base.stageIsCard ? withBigStage(base) : withMeetStage(base);
   }
 
   /// The side of a control tile: 56 on a phone, 88 on a tablet (with a tap margin of 4 all round).
@@ -261,11 +253,11 @@ class ClockSetSession extends TemplateSession {
 
   Offset get _centre => Offset(_size.width / 2, _size.height / 2);
 
-  /// Where the numeral [h] stands on the dial: the stage's clock has its numerals at 0.7 of the radius.
+  /// Where the numeral [h] stands on the dial: the stage's clock has its numerals at 0.78 of the radius.
   Offset _numeralAt(int h) {
     final double r = _side / 2 - 3;
     final double a = h * math.pi / 6;
-    return _centre + Offset(math.sin(a), -math.cos(a)) * (r * 0.7);
+    return _centre + Offset(math.sin(a), -math.cos(a)) * (r * 0.78);
   }
 
   /// The card with the hour of the question: at the stage's left, as wide as its numeral.
@@ -483,25 +475,39 @@ class _ClockPainter extends CustomPainter {
     for (int i = 0; i < 12; i++) {
       final double a = i * math.pi / 6;
       canvas.drawLine(
-        c + Offset(math.sin(a), -math.cos(a)) * (r * 0.86),
-        c + Offset(math.sin(a), -math.cos(a)) * (r * 0.94),
+        c + Offset(math.sin(a), -math.cos(a)) * (r * 0.91),
+        c + Offset(math.sin(a), -math.cos(a)) * (r * 0.97),
         tick,
       );
     }
-    for (int i = 1; i <= 12; i++) {
-      final double a = i * math.pi / 6;
-      final TextPainter tp = TextPainter(
-        text: TextSpan(
-          text: '$i',
-          style: AppText.fixed(size: r * 0.23, weight: 800, lineHeight: 1).copyWith(color: TokenColors.ink),
-        ),
-        textDirection: TextDirection.ltr,
-      )..layout();
-      tp.paint(
-        canvas,
-        c + Offset(math.sin(a), -math.cos(a)) * (r * 0.7) - Offset(tp.width / 2, tp.height / 2),
-      );
+    // The numerals stand at 0.78 of the radius, over the hands, each in a halo of paper 3 points wide (min-sizes V3: a minute hand of 0.62 r no longer
+    // runs through the "12").
+    void numerals() {
+      final double size = r * 0.23;
+      for (int i = 1; i <= 12; i++) {
+        final double a = i * math.pi / 6;
+        TextPainter text(TextStyle style) => TextPainter(
+          text: TextSpan(text: '$i', style: style),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        final TextStyle base = AppText.fixed(size: size, weight: 800, lineHeight: 1);
+        final TextPainter halo = text(
+          base.copyWith(
+            foreground: Paint()
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 6
+              ..strokeJoin = StrokeJoin.round
+              ..color = Colors.white,
+          ),
+        );
+        final TextPainter fill = text(base.copyWith(color: TokenColors.ink));
+        final Offset at =
+            c + Offset(math.sin(a), -math.cos(a)) * (r * 0.78) - Offset(fill.width / 2, fill.height / 2);
+        halo.paint(canvas, at);
+        fill.paint(canvas, at);
+      }
     }
+
     void hand(double deg, double length, double width, Color colour, {double alpha = 1}) {
       final double a = deg * math.pi / 180;
       canvas.drawLine(
@@ -519,7 +525,7 @@ class _ClockPainter extends CustomPainter {
     if (s.numeralRing) {
       final double ang = a.hour * math.pi / 6;
       canvas.drawCircle(
-        c + Offset(math.sin(ang), -math.cos(ang)) * (r * 0.7),
+        c + Offset(math.sin(ang), -math.cos(ang)) * (r * 0.78),
         r * 0.16,
         Paint()
           ..color = TokenColors.hintHalo
@@ -529,14 +535,15 @@ class _ClockPainter extends CustomPainter {
     }
     if (s.lightHand) {
       // The short hand is lit from behind with a sky stroke, and the long hand fades back.
-      hand((shown % 12) * 30.0 + (s.half ? 15 : 0), r * 0.5, 18, TokenColors.hintHalo, alpha: 0.7);
+      hand((shown % 12) * 30.0 + (s.half ? 15 : 0), r * 0.45, 18, TokenColors.hintHalo, alpha: 0.7);
     }
     if (s.ghost) {
-      hand((a.hour % 12) * 30.0 + (a.half ? 15 : 0), r * 0.5, 9, TokenColors.hintHalo, alpha: 0.55);
-      hand(a.half ? 180 : 0, r * 0.78, 5, TokenColors.hintHalo, alpha: 0.55);
+      hand((a.hour % 12) * 30.0 + (a.half ? 15 : 0), r * 0.45, 9, TokenColors.hintHalo, alpha: 0.55);
+      hand(a.half ? 180 : 0, r * 0.62, 5, TokenColors.hintHalo, alpha: 0.55);
     }
-    hand(s.half ? 180 : 0, r * 0.78, 4, const Color(0xFF4DA3FF), alpha: s.lightHand ? 0.35 : 1);
-    hand((shown % 12) * 30.0 + (s.half ? 15 : 0), r * 0.5, 8, const Color(0xFFE5484D));
+    hand(s.half ? 180 : 0, r * 0.62, 4, const Color(0xFF4DA3FF), alpha: s.lightHand ? 0.35 : 1);
+    hand((shown % 12) * 30.0 + (s.half ? 15 : 0), r * 0.45, 8, const Color(0xFFE5484D));
+    numerals();
     canvas.drawCircle(c, 5, Paint()..color = TokenColors.ink);
   }
 

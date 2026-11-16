@@ -420,7 +420,14 @@ class TapGeometry {
   /// wide as the row allows for a set of things (170 at most) and for words (220 at most).
   static double tileWidthOf(TapAnswerActivity a, ActivitySpec spec) {
     final double room = spec.tilesWidth / a.options.length - 2 * spec.tileSlop;
-    if (a.options.any((ChoiceOption o) => o.set != null)) return math.min(170, room);
+    if (a.options.any((ChoiceOption o) => o.set != null)) {
+      // As wide as its largest set needs (min-sizes 8.3); sets of the content's own arrangements (a ten-frame, scattered) keep the old room.
+      final int most = a.options.fold(0, (int m, ChoiceOption o) => math.max(m, o.set?.count ?? 0));
+      final bool lines = a.options.every((ChoiceOption o) => o.set == null || o.set!.arrangement == 'line');
+      return lines
+          ? math.min(tileWidthFor(most, tablet: spec.stageIsCard), math.max(room, spec.tileSize))
+          : math.min(170, room);
+    }
     if (a.options.any((ChoiceOption o) => o.picture != null)) return math.min(260, room);
     if (a.options.any((ChoiceOption o) => o.text != null) && !a.letterFace) return math.min(220, room);
     // A size item's tiles are as large as its pictures need (see `size_scale.dart`).

@@ -75,8 +75,9 @@ class Ls01SequenceSession extends Ls01Session {
     final double aspect = <double>[for (int i = 0; i < n; i++) aspectOf(i)].reduce(math.max);
     final double room = s.tilesWidth;
     final double w = (room - (n - 1) * _gap) / n;
-    // The tallest a place may be: 120 on the tablets, and on the phones what the room between the stage and the bottom band leaves (88; 82 on the SE).
-    final double maxH = s.stageIsCard ? 120 : (s.boardHeight < 380 ? 82 : 88);
+    // The tallest a place may be: 180 on the tablets, and on the phones what the room between the stage and the bottom band leaves (104; 84 on the
+    // SE): the cards are as wide as their row allows, so that the characters in a story page are 24 points across or more (min-sizes A11).
+    final double maxH = s.stageIsCard ? 180 : (s.boardHeight < 380 ? 84 : 104);
     double h = w / aspect;
     double width = w;
     if (h > maxH) {

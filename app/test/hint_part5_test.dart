@@ -107,9 +107,6 @@ void main() {
   final Finder places = find.byKey(const Key('hint-place'));
   final Finder gold = find.byKey(const Key('hint-place-full'));
 
-  /// A point of the stage, on the board.
-  Offset onBoard(Offset p) => p + spec.stage.topLeft;
-
   group('shop', () {
     testWidgets('the layout of the purse and the pay button is the one the tiles are drawn with', (
       WidgetTester t,
@@ -254,19 +251,21 @@ void main() {
     testWidgets('the hand goes to the real tiles: the top edge of each tile of the row', (
       WidgetTester t,
     ) async {
-      for (final (String id, String key, int n, int i, double slot) in <(String, String, int, int, double)>[
-        ('b.mathb09.5', 'balance-left', 3, 0, 104),
-        ('b.mathb09.5', 'balance-same', 3, 1, 104),
-        ('b.mathb09.5', 'balance-right', 3, 2, 104),
-        ('b.mathb13.7', 'balance-plus', 2, 1, 96),
+      // The tiles of a phone's balance are 88 with a tap margin of 6 (a slot of 100) in a row under the bubble (min-sizes 8.3).
+      for (final (String id, String key, int n, int i) in <(String, String, int, int)>[
+        ('b.mathb09.5', 'balance-left', 3, 0),
+        ('b.mathb09.5', 'balance-same', 3, 1),
+        ('b.mathb09.5', 'balance-right', 3, 2),
+        ('b.mathb13.7', 'balance-plus', 2, 1),
       ]) {
         final BalanceActivity a = content.activities[id]! as BalanceActivity;
         final BalanceSession s = BalanceSession(controllerFor(a), a);
         await host(t, s);
+        final ActivitySpec laid = s.layoutFor(spec);
         final Rect tile = t.getRect(find.byKey(Key(key)));
-        final Offset mine = spec.tileTip(n, i, slot: slot, slop: 12, rtl: false);
+        final Offset mine = laid.tileTip(n, i, slot: 100, slop: 6, rtl: false);
         expect(
-          (onBoard(mine) - Offset(tile.center.dx, tile.top + 12)).distance,
+          ((mine + laid.stage.topLeft) - Offset(tile.center.dx, tile.top + 6)).distance,
           lessThan(0.6),
           reason: '$id $key',
         );

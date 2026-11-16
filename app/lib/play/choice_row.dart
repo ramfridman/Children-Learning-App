@@ -109,15 +109,16 @@ ActivitySpec withLs01Zones(ActivitySpec base, Band band, {bool wide = false, boo
   final bool bandA = band == Band.a;
   if (base.stageIsCard) {
     final bool landscape = base.boardHeight < 1000;
+    // The card is the grown one of [withGrownCard]; a second row of tiles under it makes it shorter (docs/design/m11/min-sizes.md S2, S3).
     return base.withStageAndTiles(
       stage: Rect.fromLTWH(
         base.stage.left,
         base.stage.top,
         base.stage.width,
-        secondRow && landscape ? base.stage.height - 12 : base.stage.height,
+        secondRow ? (landscape ? 288 : 420) : base.stage.height,
       ),
-      tilesLeft: landscape ? (wide ? 24 : 194) : 24,
-      tilesTop: landscape ? (secondRow ? 548 : 566) : 696,
+      tilesLeft: landscape ? (wide ? 24 : 62) : 24,
+      tilesTop: secondRow ? (landscape ? 548 : 816) : base.tilesTop,
       tilesWidth: landscape ? (wide ? 942 : 772) : 772,
     );
   }
@@ -157,15 +158,7 @@ ActivitySpec withTallStage(ActivitySpec base) {
 /// portrait's is 120 taller: it holds one picture and nothing else) and has the answer zone under it for the tile. The frame (controls,
 /// trail, bubble, guide, microphone) does not move.
 ActivitySpec withMeetStage(ActivitySpec base) {
-  if (base.stageIsCard) {
-    final bool landscape = base.boardHeight < 1000;
-    return base.withStageAndTiles(
-      stage: landscape ? base.stage : Rect.fromLTWH(base.stage.left, base.stage.top, base.stage.width, 420),
-      tilesLeft: landscape ? 194 : 24,
-      tilesTop: landscape ? 566 : 816,
-      tilesWidth: 772,
-    );
-  }
+  if (base.stageIsCard) return withBigStage(base);
   if (base.boardHeight > 380) {
     return base.withStageAndTiles(
       stage: const Rect.fromLTWH(24, 96, 377, 260),
@@ -198,6 +191,11 @@ ActivitySpec withBigStage(ActivitySpec base, {double landscapeHeight = 400, doub
     tilesWidth: width,
   );
 }
+
+/// The board of every lesson on a tablet (docs/design/m11/min-sizes.md C1 and C2, the owner's "tablets grow on every screen"): the card is the
+/// big one of [withBigStage], 848 by 400 in a landscape and 772 by 520 in a portrait, with the row of tiles under it, so that a template that
+/// asks for nothing else is not drawn at a phone's size in a sea of room. A phone's board is unchanged (a phone's template asks for its own).
+ActivitySpec withGrownCard(ActivitySpec base) => base.stageIsCard ? withBigStage(base) : base;
 
 /// The board of a phone at a picture choice whose pictures stand on the stage with no answer tiles (docs/design/l7-meet-find.md section 6.4):
 /// the stage takes the whole start column, from x 24 to 401 and down to 349 (the small phone: to 288 and 331), so that two pictures are 166

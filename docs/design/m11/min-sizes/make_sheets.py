@@ -13,7 +13,7 @@ import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, '..', '..', '..', '..'))
-GOLD = os.path.join(ROOT, 'app', 'test', 'goldens')
+GOLD = os.environ.get('GOLD') or os.path.join(ROOT, 'app', 'test', 'goldens')  # GOLD=dir sheets a snapshot (git archive)
 CHROME = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
 
 
@@ -47,7 +47,8 @@ def sheet(out, files, scale, cols):
 
 
 if __name__ == '__main__':
-    out_dir, name, scale, cols = sys.argv[1], sys.argv[2], float(sys.argv[3]), int(sys.argv[4])
+    out_dir, name, scale, cols = os.path.abspath(sys.argv[1]), sys.argv[2], float(sys.argv[3]), int(sys.argv[4])
+    os.makedirs(out_dir, exist_ok=True)
     files = []
     for g in sys.argv[5:]:
         files += sorted(glob.glob(os.path.join(GOLD, g)))

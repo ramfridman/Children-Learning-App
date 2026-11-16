@@ -670,8 +670,8 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_09.open",
      "text": "סוֹפְרִים אֶת כׇּל הַחִפּוּשִׁיּוֹת.",
-     "voice": "סופרים את כל החפושיות.",
-     "review": "needs-editor"
+     "voice": "סופרים את כל החיפושיות.",
+     "review": "text-ready"
     },
     {
      "role": "key",

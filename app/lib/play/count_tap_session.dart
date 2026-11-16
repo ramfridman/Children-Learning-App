@@ -544,22 +544,37 @@ class CountTapSession extends TemplateSession {
   }
 }
 
-/// A row of small dots, one for each thing, as the second way of showing a number (R2).
+/// Small dots, one for each thing, as the second way of showing a number (R2): 7 across with 3 between, in rows of five (a ten is two rows,
+/// each 47 wide, so that a tile does not scale them down: docs/design/m11/min-sizes.md B4).
 class Dots extends StatelessWidget {
   const Dots(this.count, {super.key});
 
   final int count;
 
-  @override
-  Widget build(BuildContext context) => Row(
+  static const double dot = 7;
+  static const double gap = 3;
+
+  Widget _row(int n) => Row(
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
-      for (int i = 0; i < count; i++)
+      for (int i = 0; i < n; i++)
         Container(
-          width: 8,
-          height: 8,
-          margin: const EdgeInsets.symmetric(horizontal: 2),
+          width: dot,
+          height: dot,
+          margin: EdgeInsets.only(left: i == 0 ? 0 : gap),
           decoration: const BoxDecoration(color: TokenColors.inkSoft, shape: BoxShape.circle),
+        ),
+    ],
+  );
+
+  @override
+  Widget build(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: <Widget>[
+      for (int from = 0; from < count; from += 5)
+        Padding(
+          padding: EdgeInsets.only(top: from == 0 ? 0 : gap),
+          child: _row(math.min(5, count - from)),
         ),
     ],
   );
