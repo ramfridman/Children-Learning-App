@@ -32,7 +32,11 @@
   "ball_red",
   "ball_blue",
   "ball_green",
-  "ball_yellow"
+  "ball_yellow",
+  "can",
+  "party_hat",
+  "pyramid_egypt",
+  "shape_triangle_half_orange"
  ],
  "objects": {
   "ladybug": {
@@ -886,15 +890,17 @@
    "difficulty": 0.44,
    "prompt": "אֵיפֹה הַמְּשֻׁשֶּׁה?",
    "options": [
-    "shape_quad",
+    "shape_pentagon",
     "shape_hexagon",
     "shape_curved"
    ],
    "correct": "shape_hexagon",
    "tags": {
+    "shape_pentagon": "M-CNT-DOUBLE",
     "shape_curved": "M-SHP-CLOSED"
    },
    "domain": "shapes",
+   "revision": 2,
    "correct_text": "כֵּן! לַמְּשֻׁשֶּׁה יֵשׁ שֵׁשׁ צְלָעוֹת.",
    "h3": "הַמְּשֻׁשֶּׁה הוּא צוּרָה סְגוּרָה עִם שֵׁשׁ צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם."
   },
@@ -1034,9 +1040,11 @@
    ],
    "correct": "shape_hexagon",
    "tags": {
+    "shape_pentagon": "M-CNT-DOUBLE",
     "shape_curved": "M-SHP-CLOSED"
    },
    "domain": "shapes",
+   "revision": 2,
    "correct_text": "כֵּן! לַמְּשֻׁשֶּׁה יֵשׁ שֵׁשׁ צְלָעוֹת.",
    "h3": "הַמְּשֻׁשֶּׁה הוּא צוּרָה סְגוּרָה עִם שֵׁשׁ צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם."
   },
@@ -2097,19 +2105,19 @@
      1
     ],
     [
-     "solid_box",
+     "gift_box",
      2
     ],
     [
-     "solid_cylinder",
+     "can",
      1
     ],
     [
-     "solid_pyramid",
+     "pyramid_egypt",
      2
     ],
     [
-     "solid_cone",
+     "party_hat",
      1
     ]
    ]
@@ -2159,23 +2167,19 @@
    "correct_text": "כֵּן! כׇּל גּוּף עִם הַשֵּׁם שֶׁלּוֹ.",
    "items": [
     [
+     "can",
+     1
+    ],
+    [
+     "party_hat",
+     2
+    ],
+    [
      "ball_blue",
      3
     ],
     [
-     "solid_cone",
-     2
-    ],
-    [
-     "solid_cylinder",
-     1
-    ],
-    [
      "ball_yellow",
-     3
-    ],
-    [
-     "solid_sphere",
      3
     ]
    ]
@@ -2193,7 +2197,7 @@
    ],
    "correct": "gift_box",
    "domain": "shapes",
-   "correct_text": "כֵּן! זוֹ הַתֵּבָה — כְּמוֹ קֻפְסָה שֶׁל נַעֲלַיִם.",
+   "correct_text": "כֵּן! זוֹ הַתֵּבָה.",
    "h3": "הַתֵּבָה דּוֹמָה לְקֻפְסָה שֶׁל נַעֲלַיִם. עַכְשָׁו תּוֹרְכֶם."
   },
   {
@@ -2271,20 +2275,16 @@
    "correct_text": "כֵּן! כׇּל גּוּף עִם הַשֵּׁם שֶׁלּוֹ.",
    "items": [
     [
-     "solid_cylinder",
-     1
+     "party_hat",
+     2
     ],
     [
      "ball_red",
      3
     ],
     [
-     "solid_cone",
-     2
-    ],
-    [
-     "solid_sphere",
-     3
+     "can",
+     1
     ],
     [
      "ball_green",
@@ -2569,32 +2569,32 @@
    "skill": "SHP-B-06",
    "difficulty": 0.51,
    "domain": "shapes",
-   "what": "מְרֻבָּע",
+   "what": "מְשֻׁלָּשׁ גָּדוֹל",
    "slots": [
     [
-     "shape_triangle_orange",
+     "shape_triangle_half_orange",
+     36,
      50,
      40,
-     50,
-     0
+     -90
     ],
     [
-     "shape_triangle_orange",
+     "shape_triangle_half_orange",
+     64.8,
      50,
-     74,
-     50,
-     180
+     40,
+     0
     ]
    ],
    "decoys": [
     "shape_square_blue",
     "shape_circle_green"
    ],
-   "prompt": "בּוֹנִים מְרֻבָּע מִשְּׁנֵי מְשֻׁלָּשִׁים.",
-   "correct_text": "כֵּן! שְׁנֵי מְשֻׁלָּשִׁים עוֹשִׂים מְרֻבָּע.",
+   "prompt": "בּוֹנִים מְשֻׁלָּשׁ גָּדוֹל מִשְּׁנֵי מְשֻׁלָּשִׁים.",
+   "correct_text": "כֵּן! שְׁנֵי מְשֻׁלָּשִׁים עוֹשִׂים מְשֻׁלָּשׁ גָּדוֹל.",
    "h2": "אֵיזוֹ צוּרָה קְטַנָּה נִכְנֶסֶת בַּצֵּל שׁוּב וְשׁוּב?",
    "h2_shared": "shp_twice",
-   "h3": "שְׁנֵי מְשֻׁלָּשִׁים עוֹשִׂים מְרֻבָּע. מַנִּיחִים אֶחָד לְיַד אֶחָד. עַכְשָׁו תּוֹרְכֶם.",
+   "h3": "שְׁנֵי מְשֻׁלָּשִׁים עוֹשִׂים מְשֻׁלָּשׁ גָּדוֹל. מַנִּיחִים אֶחָד לְיַד אֶחָד. עַכְשָׁו תּוֹרְכֶם.",
    "goal": "child fills a shape with two or more smaller shapes"
   },
   {

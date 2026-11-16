@@ -1,0 +1,178 @@
+{
+  "schema": "activity/v1",
+  "id": "shp.match.trapezoid",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "shape_builder",
+  "templateVersion": "1.0",
+  "domain": "shapes",
+  "band": "A",
+  "skills": [
+    {
+      "id": "SHP-A-01",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "shapebuild",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "prompt": {
+    "vo": "vo:shp.match.trapezoid.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מַכְנִיסִים כׇּל צוּרָה לַחֹר שֶׁלָּהּ."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "aspect": 1.091,
+    "slots": [
+      {
+        "id": "s1",
+        "sprite": "asset:shape_rect_orange",
+        "x": 0.0,
+        "y": 0.0,
+        "w": 0.4048,
+        "h": 0.4416,
+        "rot": 0
+      },
+      {
+        "id": "s2",
+        "sprite": "asset:shape_circle_blue",
+        "x": 0.5952,
+        "y": 0.0,
+        "w": 0.4048,
+        "h": 0.4416,
+        "rot": 0
+      },
+      {
+        "id": "s3",
+        "sprite": "asset:shape_triangle_green",
+        "x": 0.2976,
+        "y": 0.5584,
+        "w": 0.4048,
+        "h": 0.4416,
+        "rot": 0
+      }
+    ],
+    "decoys": [
+      "asset:shape_trapezoid_orange",
+      "asset:shape_oval_blue"
+    ]
+  },
+  "answer": {
+    "type": "shapes",
+    "pieceTags": [
+      {
+        "piece": "asset:shape_oval_blue",
+        "misconception": "M-SHP-PROTO"
+      },
+      {
+        "piece": "asset:shape_trapezoid_orange",
+        "misconception": "M-SHP-PROTO"
+      }
+    ]
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:shp.match.trapezoid.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! כׇּל צוּרָה בַּחֹר שֶׁלָּהּ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-SHP-PROTO",
+        "vo": "vo:fb.proto.sorter",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַצּוּרָה הַזֹּאת רַק דּוֹמָה. הַחֹר צָרִיךְ צוּרָה בְּדִיּוּק כְּמוֹתוֹ. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.shp_sorter.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נַעֲבֹר בָּאֶצְבַּע מִסָּבִיב לַחֹר: הוּא עָגֹל, אוֹ שֶׁיֵּשׁ לוֹ פִּנּוֹת?"
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:shp.match.trapezoid.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כׇּל צוּרָה נִכְנֶסֶת לַחֹר שֶׁדּוֹמֶה לָהּ בְּדִיּוּק. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child puts each shape into the hole of the same shape",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "מַכְנִיסִים כׇּל צוּרָה לַחֹר שֶׁלָּהּ."
+  }
+}

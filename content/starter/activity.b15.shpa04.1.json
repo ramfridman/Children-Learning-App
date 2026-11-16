@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "b15.shpa04.1",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "shapes",
@@ -44,8 +44,9 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:shape_circle_yellow",
-        "label": "עִגּוּל"
+        "sprite": "asset:shape_trapezoid_yellow",
+        "label": "צוּרָה אַחֶרֶת",
+        "misconception": "M-SHP-PROTO"
       }
     ],
     "correct": "o1",
@@ -64,6 +65,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-PROTO",
+        "vo": "vo:fb.proto.trapezoid",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לַמַּלְבֵּן יֵשׁ פִּנּוֹת כְּמוֹ בְּדַף. כָּאן הַצְּלָעוֹת נוֹטוֹת. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

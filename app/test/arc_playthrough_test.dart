@@ -7,6 +7,7 @@ import 'package:nitznutz/play/lesson_controller.dart';
 import 'package:nitznutz/play/shape_builder_session.dart';
 import 'package:nitznutz/play/show_stage.dart';
 import 'package:nitznutz/play/sort_drag_session.dart';
+import 'package:nitznutz/play/trace_session.dart';
 import 'package:nitznutz/play/template_session.dart';
 
 import 'support/arc.dart';
@@ -146,6 +147,7 @@ void main() {
           final TemplateSession s = switch (show) {
             SortDragActivity() => SortDragSession(c, show),
             ShapeBuilderActivity() => ShapeBuilderSession(c, show),
+            TraceActivity() => TraceSession(c, show),
             _ => throw StateError(show.template),
           };
           s.showStyle = ShowStyle(

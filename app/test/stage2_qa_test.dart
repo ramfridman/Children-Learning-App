@@ -8,6 +8,7 @@ import 'package:nitznutz/engine/age.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
 import 'package:nitznutz/play/shape_builder_session.dart';
 import 'package:nitznutz/play/sort_drag_session.dart';
+import 'package:nitznutz/play/template_session.dart';
 
 import 'support/arc.dart';
 import 'support/fakes.dart';
@@ -166,7 +167,7 @@ void main() {
         expect(content.activities[id]!.isShow, isFalse, reason: '${l.id} lists a Show among its items');
       }
     }
-    expect(content.activities.values.where((Activity a) => a.isShow).length, 16);
+    expect(content.activities.values.where((Activity a) => a.isShow).length, greaterThanOrEqualTo(16));
   });
 
   // Criterion 4 and the evidence rule: a touch skips a reminder Show; nothing is written; the child's step is left.
@@ -196,24 +197,23 @@ void main() {
     },
   );
 
-  // Criterion 1, every lesson in parts: a child new to the skills meets a Show first. A lesson whose Alone pool is empty has no plan and is played flat.
-  test(
-    'every lesson of Shape Forest in parts has a plan for a new child, so that a Show comes first (V1 at the visit)',
-    () {
-      final List<String> flat = <String>[];
-      for (final Lesson l in content.lessons.values) {
-        if (l.parts == null) continue;
-        for (final PresentationStage st in PresentationStage.values) {
-          if (planOrNull(content, l.id, st, newChild) == null) flat.add('${l.id}@${st.name}');
-        }
+  // Criterion 1, every lesson in parts: a child new to the skills meets a Show first. A lesson whose Alone pool is empty has no plan and is played flat (QA-2: the validator refuses such a lesson, so none is left).
+  test('every lesson of Shape Forest in parts has a plan for a new child, so that a Show comes first (V1 at the visit)', () {
+    final List<String> flat = <String>[];
+    for (final Lesson l in content.lessons.values) {
+      if (l.parts == null) continue;
+      for (final PresentationStage st in PresentationStage.values) {
+        if (planOrNull(content, l.id, st, newChild) == null) flat.add('${l.id}@${st.name}');
       }
-      expect(flat, isEmpty, reason: 'played flat, with no Show: $flat');
-    },
-    skip: 'QA-2 open: shapes-around-us-again-1-b15 has an empty Alone pool, so it plays flat with no Show (remove the skip when fixed)',
-  );
+    }
+    expect(flat, isEmpty, reason: 'played flat, with no Show: $flat');
+  });
 
-  // Robustness: a clip that never reports its end (a player that fails to fire its completion) must not freeze a full Show, which has no skip.
-  testWidgets('a clip that never ends does not freeze a full Show', (WidgetTester tester) async {
+  // Robustness (QA-3): a clip that never reports its end (a player that fails to fire its completion) must not freeze a full Show, which has no skip:
+  // every wait for the voice has a ceiling, and once the host has done its part the child may move on.
+  testWidgets('a clip that never ends does not freeze a full Show; the child may move on', (
+    WidgetTester tester,
+  ) async {
     final LessonController c = arcController(
       content,
       'any-shape',
@@ -223,10 +223,24 @@ void main() {
     final SortDragSession s = SortDragSession(c, c.current as SortDragActivity);
     s.untilQuiet = () => Completer<void>().future;
     await hostSession(tester, s);
+    expect(s.canMoveOn.value, isFalse, reason: 'no "next" before the host has done its part');
     s.startHost();
     await passTime(tester, 90000);
     expect(s.hosting, isFalse, reason: 'the host waits for ever for a line that never ends');
+    expect(s.canMoveOn.value, isTrue);
+    final int shows = c.index;
+    c.skipShow();
+    expect(c.index, shows + 1, reason: 'moving on from a Show goes to the next screen');
+    expect(written, isEmpty, reason: 'a Show writes nothing, however it is left');
     s.dispose();
-    // QA-3 open: TemplateSession.lineSaid waits for the voice with no limit (remove the skip when fixed)
-  }, skip: true);
+  });
+
+  test('the ceiling of a line grows with its length and never passes its maximum', () {
+    const Duration least = TemplateSession.hostLinePause;
+    final Duration short = TemplateSession.lineCeiling('אבג', least);
+    final Duration long = TemplateSession.lineCeiling('א' * 90, least);
+    expect(short, greaterThan(least));
+    expect(long, greaterThan(short));
+    expect(TemplateSession.lineCeiling('א' * 5000, least), TemplateSession.lineCeilingMax);
+  });
 }

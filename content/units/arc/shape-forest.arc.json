@@ -3,7 +3,7 @@
  "land": "shapes",
  "host": "kubi",
  "review": "text-ready",
- "status": "M11 Stage 2 pilot (step 2.4a), authored by the curriculum-expert on 2026-11-15. Data for the developer; the app does not read it yet. Hebrew text finalised by the hebrew-text-editor on 2026-11-15 (pointed text, voice text, text-ready; waits for the owner).",
+ "status": "M11 Stage 2 pilot (step 2.4a), authored by the curriculum-expert on 2026-11-15. Data for the developer; the app does not read it yet. Hebrew text finalised by the hebrew-text-editor on 2026-11-15 (pointed text, voice text, text-ready; waits for the owner). QA round of 2026-11-16 (M11-stage2 §11.4): the Shows of SHP-A-03, B-01, B-02, B-08 and B-09 re-cut, a tracing Show for SHP-A-02 (the two tracing lessons open with it), the lessons regrouped; its 12 new or changed host lines were read by the hebrew-text-editor on 2026-11-16 (pointed text, voice text, text-ready; waits for the owner; hebrew-notes.md section 18).",
  "spec": "docs/milestones/M11-stage2.md §2, §7.4 (the format of this file) and §8",
  "howToRead": [
   "shows: one Show per skill. `template` is the hands-on template the Show plays on and `scene` is its scene in pack form. `steps` are the moves in order, `by` host or child; the last step is always the child's (`handOver: last`). The key line plays at the step marked `say: key`. Other step keys (trace, count, sticks, walk, push, stack, turn, stamp) name the motion of the host hand; `picture` describes it for the design-director.",
@@ -238,6 +238,90 @@
    "status": "buildable on today's template once 2.1 lands"
   },
   {
+   "id": "show.shp-a-02.trace",
+   "skill": "SHP-A-02",
+   "band": "A",
+   "purpose": "show",
+   "template": "trace",
+   "representation": "embodied",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "strokes": [
+     [
+      [
+       50,
+       15
+      ],
+      [
+       85,
+       82
+      ],
+      [
+       15,
+       82
+      ],
+      [
+       50,
+       15
+      ]
+     ]
+    ],
+    "guide": "full",
+    "tolerance": 12
+   },
+   "steps": [
+    {
+     "by": "host",
+     "segment": 1,
+     "trace": "side"
+    },
+    {
+     "by": "host",
+     "segment": 2,
+     "trace": "side",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "segment": 3
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.kubi.show.shp_a_02_trace.open",
+     "text": "אֲנִי מְצַיֵּר מְשֻׁלָּשׁ בָּאֶצְבַּע.",
+     "voice": "אני מצייר משולש באצבע.",
+     "review": "text-ready"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.kubi.show.shp_a_02_trace.key",
+     "text": "יָשָׁר, פִּנָּה, יָשָׁר, פִּנָּה.",
+     "voice": "ישר, פינה, ישר, פינה.",
+     "review": "text-ready"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.kubi.show.shp_a_02_trace.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַקַּו הָאַחֲרוֹן.",
+     "voice": "עכשיו תורכם: הקו האחרון.",
+     "review": "text-ready"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "מְשֻׁלָּשׁ"
+   ],
+   "picture": "the triangle of x.shpa02.3 with its green start dot; the host finger draws the first side and stops at the corner (the corner pulses), draws the second side, and the third side is left dotted for the child. QA round 2026-11-16 (M11-stage2 §11.4)",
+   "status": "buildable: trace is a lead template (one lead step = one side of the path; app-developer, 2026-11-16)"
+  },
+  {
    "id": "show.shp-a-03",
    "skill": "SHP-A-03",
    "band": "A",
@@ -267,17 +351,17 @@
      },
      {
       "id": "i2",
-      "sprite": "asset:shape_triangle_down",
-      "bin": "b1"
-     },
-     {
-      "id": "i3",
       "sprite": "asset:shape_open",
       "bin": "b2"
      },
      {
+      "id": "i3",
+      "sprite": "asset:shape_square_tilt",
+      "bin": "b2"
+     },
+     {
       "id": "i4",
-      "sprite": "asset:shape_triangle_red",
+      "sprite": "asset:shape_triangle_down",
       "bin": "b1"
      }
     ]
@@ -293,13 +377,14 @@
     {
      "by": "host",
      "item": "i2",
-     "bin": "b1"
+     "bin": "b2",
+     "trace": "gap"
     },
     {
      "by": "host",
      "item": "i3",
      "bin": "b2",
-     "trace": "gap"
+     "turn": "upright"
     },
     {
      "by": "child",
@@ -325,8 +410,8 @@
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_a_03.handover",
-     "text": "צוּרָה פְּתוּחָה — לֹא. עַכְשָׁו תּוֹרְכֶם.",
-     "voice": "צורה פתוחה — לא. עכשיו תורכם.",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַמְּשֻׁלָּשׁ הַהָפוּךְ.",
+     "voice": "עכשיו תורכם: המשולש ההפוך.",
      "review": "text-ready"
     }
    ],
@@ -337,10 +422,9 @@
    },
    "teaches": [
     "מְשֻׁלָּשׁ",
-    "לֹא מְשֻׁלָּשׁ",
-    "צוּרָה פְּתוּחָה"
+    "רִבּוּעַ"
    ],
-   "picture": "the host hand runs along each side of the thin triangle (each side lights in turn), then stops at the gap of the open figure",
+   "picture": "the host hand runs along each side of the thin triangle (each side lights in turn), stops at the gap of the open figure, then turns the tilted square upright (it is a square) and back before it goes out; the child puts the upside-down triangle in. QA round 2026-11-16 (M11-stage2 §11.4)",
    "status": "buildable on today's template once 2.1 lands"
   },
   {
@@ -664,7 +748,7 @@
      },
      {
       "id": "i2",
-      "sprite": "asset:block",
+      "sprite": "asset:gift_box",
       "bin": "b2"
      },
      {
@@ -928,30 +1012,43 @@
     "bins": [
      {
       "id": "b1",
-      "sprite": "asset:shape_triangle",
-      "label": "מְשֻׁלָּשׁ"
+      "sprite": "asset:stick_long",
+      "count": 4,
+      "label": "מְרֻבָּע"
      },
      {
       "id": "b2",
-      "sprite": "asset:shape_quad",
-      "label": "מְרֻבָּע"
+      "sprite": "asset:stick_long",
+      "count": 5,
+      "label": "מְחֻמָּשׁ"
+     },
+     {
+      "id": "b3",
+      "sprite": "asset:stick_long",
+      "count": 6,
+      "label": "מְשֻׁשֶּׁה"
      }
     ],
     "items": [
      {
       "id": "i1",
-      "sprite": "asset:shape_triangle_thin",
+      "sprite": "asset:shape_square_tilt",
       "bin": "b1"
      },
      {
       "id": "i2",
-      "sprite": "asset:shape_square_tilt",
+      "sprite": "asset:shape_pentagon",
       "bin": "b2"
      },
      {
       "id": "i3",
-      "sprite": "asset:shape_rect",
-      "bin": "b2"
+      "sprite": "asset:shape_hexagon",
+      "bin": "b3"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:shape_quad",
+      "bin": "b1"
      }
     ]
    },
@@ -960,8 +1057,7 @@
      "by": "host",
      "item": "i1",
      "bin": "b1",
-     "count": "sides",
-     "say": "key"
+     "count": "sides"
     },
     {
      "by": "host",
@@ -970,31 +1066,38 @@
      "count": "sides"
     },
     {
-     "by": "child",
+     "by": "host",
      "item": "i3",
-     "bin": "b2"
+     "bin": "b3",
+     "count": "sides",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b1"
     }
    ],
    "lines": [
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_b_01.open",
-     "text": "יֵשׁ שֵׁמוֹת: מְחֻמָּשׁ, מְשֻׁשֶּׁה, וְעוֹד.",
-     "voice": "יש שמות: מחומש, משושה, ועוד.",
+     "text": "סוֹפְרִים צְלָעוֹת, וְיוֹדְעִים אֶת הַשֵּׁם.",
+     "voice": "סופרים צלעות, ויודעים את השם.",
      "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_b_01.key",
-     "text": "שָׁלוֹשׁ — מְשֻׁלָּשׁ. אַרְבַּע — מְרֻבָּע.",
-     "voice": "שָׁלוֹשׁ — משולש. אַרְבַּע — מרובע.",
+     "text": "אַרְבַּע — מְרֻבָּע, חָמֵשׁ — מְחֻמָּשׁ, שֵׁשׁ — מְשֻׁשֶּׁה.",
+     "voice": "אַרְבַּע — מרובע, חָמֵשׁ — מחומש, שֵׁשׁ — משושה.",
      "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_b_01.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: לִסְפֹּר אֶת הָאַחֲרוֹן.",
-     "voice": "עכשיו תורכם: לספור את האחרון.",
+     "text": "עַכְשָׁו תּוֹרְכֶם: לִסְפֹּר אֶת הַצְּלָעוֹת.",
+     "voice": "עכשיו תורכם: לספור את הצלעות.",
      "review": "text-ready"
     }
    ],
@@ -1004,12 +1107,11 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "מְשֻׁלָּשׁ",
     "מְרֻבָּע",
     "מְחֻמָּשׁ",
     "מְשֻׁשֶּׁה"
    ],
-   "picture": "each side lights and takes a number badge as the host counts (the badge marks of B-40)",
+   "picture": "three bins, each with its sticks (4, 5, 6) under its name; the host counts the sides of each shape from a start dot, a number badge on each side as it lights (the count motion), and the shape goes to the bin with as many sticks; the key line names all three. QA round 2026-11-16 (M11-stage2 §11.4)",
    "status": "buildable on today's template once 2.1 lands"
   },
   {
@@ -1026,14 +1128,20 @@
      {
       "id": "b1",
       "sprite": "asset:stick_long",
-      "label": "שָׁלוֹשׁ צְלָעוֹת",
-      "count": 3
+      "count": 3,
+      "label": "שָׁלוֹשׁ צְלָעוֹת"
      },
      {
       "id": "b2",
       "sprite": "asset:stick_long",
-      "label": "אַרְבַּע צְלָעוֹת",
-      "count": 4
+      "count": 4,
+      "label": "אַרְבַּע צְלָעוֹת"
+     },
+     {
+      "id": "b3",
+      "sprite": "asset:stick_long",
+      "count": 5,
+      "label": "חָמֵשׁ צְלָעוֹת"
      }
     ],
     "items": [
@@ -1049,6 +1157,11 @@
      },
      {
       "id": "i3",
+      "sprite": "asset:shape_pentagon",
+      "bin": "b3"
+     },
+     {
+      "id": "i4",
       "sprite": "asset:shape_rect_green",
       "bin": "b2"
      }
@@ -1059,18 +1172,24 @@
      "by": "host",
      "item": "i1",
      "bin": "b1",
-     "count": "sides",
-     "say": "key"
+     "sticks": "sides"
     },
     {
      "by": "host",
      "item": "i2",
      "bin": "b2",
-     "count": "sides"
+     "sticks": "sides"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b3",
+     "count": "sides",
+     "say": "key"
     },
     {
      "by": "child",
-     "item": "i3",
+     "item": "i4",
      "bin": "b2"
     }
    ],
@@ -1078,15 +1197,15 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_b_02.open",
-     "text": "אֲנִי סוֹפֵר צְלָעוֹת: שָׁלוֹשׁ אוֹ אַרְבַּע.",
-     "voice": "אני סופר צלעות: שָׁלוֹשׁ או אַרְבַּע.",
+     "text": "אֲנִי סוֹפֵר צְלָעוֹת, אַחַת אַחַת.",
+     "voice": "אני סופר צלעות, אַחַת אַחַת.",
      "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_b_02.key",
-     "text": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ: שָׁלוֹשׁ צְלָעוֹת.",
-     "voice": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ: שָׁלוֹשׁ צלעות.",
+     "text": "סוֹפְרִים כׇּל צֶלַע פַּעַם אַחַת.",
+     "voice": "סופרים כל צלע פעם אַחַת.",
      "review": "text-ready"
     },
     {
@@ -1105,9 +1224,10 @@
    "teaches": [
     "צְלָעוֹת",
     "שָׁלוֹשׁ צְלָעוֹת",
-    "אַרְבַּע צְלָעוֹת"
+    "אַרְבַּע צְלָעוֹת",
+    "חָמֵשׁ צְלָעוֹת"
    ],
-   "picture": "a counted side lifts off as a stick and lies down beside the three sticks of its bin",
+   "picture": "three bins of sticks (3, 4, 5); each counted side lifts off as a stick and lies by its bin; on the pentagon a green start dot marks where the count begins and ends, so no side is counted twice or missed (M-CNT-DOUBLE, M-CNT-SKIP). QA round 2026-11-16 (M11-stage2 §11.4)",
    "status": "buildable on today's template once 2.1 lands"
   },
   {
@@ -1188,8 +1308,8 @@
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_b_03.handover",
-     "text": "בַּמַּלְבֵּן — לֹא. עַכְשָׁו תּוֹרְכֶם.",
-     "voice": "במלבן — לא. עכשיו תורכם.",
+     "text": "בַּמַּלְבֵּן לֹא כֻּלָּן שָׁווֹת. עַכְשָׁו תּוֹרְכֶם.",
+     "voice": "במלבן לא כולן שוות. עכשיו תורכם.",
      "review": "text-ready"
     }
    ],
@@ -1200,6 +1320,7 @@
    },
    "teaches": [
     "כׇּל הַצְּלָעוֹת שָׁווֹת",
+    "לֹא כֻּלָּן שָׁווֹת",
     "רִבּוּעַ",
     "מַלְבֵּן"
    ],
@@ -1511,24 +1632,24 @@
      },
      {
       "id": "b3",
-      "sprite": "asset:solid_sphere",
-      "label": "כַּדּוּר"
+      "sprite": "asset:solid_box",
+      "label": "תֵּבָה"
      }
     ],
     "items": [
      {
       "id": "i1",
-      "sprite": "asset:ball_red",
-      "bin": "b3"
-     },
-     {
-      "id": "i2",
-      "sprite": "asset:solid_cone",
+      "sprite": "asset:party_hat",
       "bin": "b2"
      },
      {
+      "id": "i2",
+      "sprite": "asset:gift_box",
+      "bin": "b3"
+     },
+     {
       "id": "i3",
-      "sprite": "asset:solid_cylinder",
+      "sprite": "asset:can",
       "bin": "b1"
      }
     ]
@@ -1537,15 +1658,15 @@
     {
      "by": "host",
      "item": "i1",
-     "bin": "b3",
-     "turn": true,
-     "say": "key"
+     "bin": "b2",
+     "turn": "point"
     },
     {
      "by": "host",
      "item": "i2",
-     "bin": "b2",
-     "turn": true
+     "bin": "b3",
+     "turn": "corners",
+     "say": "key"
     },
     {
      "by": "child",
@@ -1557,15 +1678,15 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_b_08.open",
-     "text": "לַגּוּפִים יֵשׁ שֵׁמוֹת.",
-     "voice": "לגופים יש שמות.",
+     "text": "לַגּוּפִים יֵשׁ שֵׁמוֹת. תֵּבָה — כְּמוֹ קֻפְסָה.",
+     "voice": "לגופים יש שמות. תיבה — כמו קופסה.",
      "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_b_08.key",
-     "text": "הַכַּדּוּר עָגֹל כֻּלּוֹ. לֶחָרוּט יֵשׁ חֹד.",
-     "voice": "הכדור עגול כולו. לחרוט יש חוד.",
+     "text": "חָרוּט עִם חֹד. תֵּבָה עִם פִּנּוֹת.",
+     "voice": "חרוט עם חוד. תיבה עם פינות.",
      "review": "text-ready"
     },
     {
@@ -1584,11 +1705,10 @@
    "teaches": [
     "גָּלִיל",
     "חָרוּט",
-    "כַּדּוּר"
+    "תֵּבָה"
    ],
-   "picture": "each solid turns slowly as it is named: the point of the cone up, the two circles of the cylinder",
-   "status": "buildable on today's template once 2.1 lands",
-   "upgrade": "real things in the items (a can, a party hat, a gift box) once the design-director has drawn them; the pyramid and the box then get their own line"
+   "picture": "the party hat turns slowly, point up, and goes to the cone; the gift box turns to show its corners and goes to the תֵּבָה; the child puts the can, whose two circles the hand-over line names. QA round 2026-11-16 (M11-stage2 §11.4)",
+   "status": "buildable on today's template once 2.1 lands"
   },
   {
    "id": "show.shp-b-09",
@@ -1610,6 +1730,11 @@
       "id": "b2",
       "sprite": "asset:shape_rect",
       "label": "מַלְבֵּן"
+     },
+     {
+      "id": "b3",
+      "sprite": "asset:shape_triangle",
+      "label": "מְשֻׁלָּשׁ"
      }
     ],
     "items": [
@@ -1625,6 +1750,11 @@
      },
      {
       "id": "i3",
+      "sprite": "asset:solid_pyramid",
+      "bin": "b3"
+     },
+     {
+      "id": "i4",
       "sprite": "asset:solid_cone",
       "bin": "b1"
      }
@@ -1645,8 +1775,14 @@
      "stamp": true
     },
     {
-     "by": "child",
+     "by": "host",
      "item": "i3",
+     "bin": "b3",
+     "stamp": "side"
+    },
+    {
+     "by": "child",
+     "item": "i4",
      "bin": "b1"
     }
    ],
@@ -1668,8 +1804,8 @@
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_b_09.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: הֶחָרוּט.",
-     "voice": "עכשיו תורכם: החרוט.",
+     "text": "פִּירָמִידָה עַל הַצַּד: מְשֻׁלָּשׁ. עַכְשָׁו תּוֹרְכֶם.",
+     "voice": "פירמידה על הצד: משולש. עכשיו תורכם.",
      "review": "text-ready"
     }
    ],
@@ -1681,9 +1817,12 @@
    "teaches": [
     "עִגּוּל",
     "מַלְבֵּן",
-    "מְשֻׁלָּשׁ"
+    "מְשֻׁלָּשׁ",
+    "מַשְׁאִיר עִגּוּל",
+    "תֵּבָה",
+    "פִּירָמִידָה"
    ],
-   "picture": "a sand tray: the solid presses down and lifts, and its flat face stays as a print",
+   "picture": "a sand tray: each solid presses down and lifts, and its flat face stays as a print (circle, rectangle); the pyramid is laid on its side before it presses, so its print is a triangle; the child stamps the cone. QA round 2026-11-16 (M11-stage2 §11.4)",
    "status": "buildable on today's template once 2.1 lands"
   }
  ],
@@ -1787,7 +1926,6 @@
    ],
    "alone": [
     "shp.match.square",
-    "shp.match.triangle",
     "shp.name.circle",
     "shp.name.square",
     "shp.name.triangle",
@@ -1811,13 +1949,12 @@
    "show": "show.shp-a-03",
    "together": [
     {
-     "id": "shp.any.tilt",
+     "id": "shp.any.down",
      "lead": 1
     }
    ],
    "alone": [
-    "shp.any.thin",
-    "shp.any.down",
+    "shp.any.tilt",
     "shp.any.small"
    ],
    "use": [],
@@ -1843,6 +1980,7 @@
     }
    ],
    "alone": [
+    "shp.rect.sort",
     "shp.rect.find",
     "shp.rect.square"
    ],
@@ -1876,6 +2014,7 @@
    ],
    "alone": [
     "shp.world.triangle",
+    "shp.line.straight2",
     "shp.world.circle",
     "shp.line.straight",
     "shp.line.curved"
@@ -1896,11 +2035,12 @@
    "show": "show.shp-a-07",
    "together": [
     {
-     "id": "shp.solid.rolls.blue",
+     "id": "shp.solid.real",
      "lead": 1
     }
    ],
    "alone": [
+    "shp.solid.rolls.blue",
     "shp.solid.rolls",
     "shp.solid.stacks",
     "shp.solid.which"
@@ -1958,6 +2098,7 @@
     }
    ],
    "alone": [
+    "shp.match.oval",
     "shp.match.triangle.green",
     "shp.match.square.orange",
     "shp.name.square.yellow",
@@ -1985,11 +2126,12 @@
    "show": "show.shp-a-03",
    "together": [
     {
-     "id": "shp.any.small.square",
+     "id": "shp.any.thin",
      "lead": 1
     }
    ],
    "alone": [
+    "shp.any.small.square",
     "b15.shpa03.1",
     "b15.shpa03.2",
     "shp.any.big.circle",
@@ -2055,7 +2197,7 @@
     }
    ],
    "alone": [
-    "shp.line.straight2",
+    "shp.world.clock",
     "shp.line.curved2",
     "shp.line.straight3",
     "shp.line.curved3",
@@ -2080,12 +2222,11 @@
    "show": "show.shp-a-07",
    "together": [
     {
-     "id": "shp.solid.rolls.blue",
+     "id": "shp.solid.stacks.blue",
      "lead": 1
     }
    ],
    "alone": [
-    "shp.solid.stacks.blue",
     "shp.solid.which2",
     "b15.shpa07.1"
    ],
@@ -2171,11 +2312,12 @@
    },
    "together": [
     {
-     "id": "shp.match.circle",
+     "id": "shp.match.trapezoid",
      "lead": 1
     }
    ],
    "alone": [
+    "shp.match.triangle",
     "b15.shpa02.2",
     "b15.shpa02.3"
    ],
@@ -2191,32 +2333,28 @@
    "id": "shapes-around-us-again-1-b15",
    "band": "A",
    "skills": [
-    "SHP-A-05",
     "SHP-A-10"
    ],
    "recall": [
-    "shp.any.big.circle"
+    "shp.name.circle"
    ],
-   "show": "show.shp-a-05",
-   "secondShow": {
-    "id": "show.shp-a-10",
-    "kind": "reminder",
-    "before": "the first item of SHP-A-10"
-   },
+   "show": "show.shp-a-10",
    "together": [
     {
-     "id": "shp.world.rect",
+     "id": "shp.line.shapes",
      "lead": 1
     }
    ],
-   "alone": [],
+   "alone": [
+    "shp.line.shapes2"
+   ],
    "use": [
     "b15.shpa10.2"
    ],
    "poolRungs": [
-    0
-   ],
-   "v7": "no rung 1 item in this pool: the controller takes one from the skill's other lessons (§5 rule 3)"
+    0,
+    1
+   ]
   },
   {
    "id": "polygon-detectives",
@@ -2230,12 +2368,12 @@
    "show": "show.shp-b-01",
    "together": [
     {
-     "id": "b.shpb01.1",
+     "id": "b.shpb01.7",
      "lead": 1
     }
    ],
    "alone": [
-    "b.shpb01.3",
+    "b.shpb01.1",
     "b.shpb01.2",
     "b.shpb01.4"
    ],
@@ -2262,7 +2400,7 @@
     }
    ],
    "alone": [
-    "b.shpb01.7",
+    "b.shpb01.3",
     "b.shpb01.6",
     "b.shpb01.8",
     "b.shpb01.9"
@@ -2292,9 +2430,9 @@
     }
    ],
    "alone": [
-    "b.shpb02.4",
+    "b.shpb02.6",
     "b.shpb02.1",
-    "b.shpb02.3"
+    "b.shpb02.5"
    ],
    "use": [],
    "poolRungs": [
@@ -2314,13 +2452,13 @@
    "show": "show.shp-b-02",
    "together": [
     {
-     "id": "b.shpb02.6",
+     "id": "b.shpb02.8",
      "lead": 1
     }
    ],
    "alone": [
-    "b.shpb02.8",
-    "b.shpb02.5",
+    "b.shpb02.4",
+    "b.shpb02.3",
     "b.shpb02.7",
     "b.shpb02.9"
    ],
@@ -2434,12 +2572,12 @@
    "show": "show.shp-b-08",
    "together": [
     {
-     "id": "b.shpb08.2",
+     "id": "b.shpb08.4",
      "lead": 1
     }
    ],
    "alone": [
-    "b.shpb08.4",
+    "b.shpb08.2",
     "b.shpb08.1",
     "b.shpb08.3",
     "b.shpb08.5"
@@ -2462,12 +2600,12 @@
    "show": "show.shp-b-08",
    "together": [
     {
-     "id": "b.shpb08.6",
+     "id": "b.shpb08.7",
      "lead": 1
     }
    ],
    "alone": [
-    "b.shpb08.7",
+    "b.shpb08.6",
     "b.shpb08.8"
    ],
    "use": [
@@ -2543,12 +2681,12 @@
    "recall": [
     "shp.match.circle"
    ],
-   "show": "show.shp-a-02",
+   "show": "show.shp-a-02.trace",
    "together": [
     {
      "id": "x.shpa02.1",
      "lead": 1,
-     "note": "trace: the host draws the first stroke"
+     "note": "trace: the host draws the first side of the path, the child the rest (QA-7, M11-stage2 §11.4)"
     }
    ],
    "alone": [
@@ -2570,12 +2708,12 @@
    "recall": [
     "shp.match.circle"
    ],
-   "show": "show.shp-a-02",
+   "show": "show.shp-a-02.trace",
    "together": [
     {
      "id": "x.shpa02.4",
      "lead": 1,
-     "note": "trace: the host draws the first stroke"
+     "note": "trace: the host draws the first side of the path, the child the rest (QA-7, M11-stage2 §11.4)"
     }
    ],
    "alone": [

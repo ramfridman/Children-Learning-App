@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/arc_checks.dart';
+import 'package:nitznutz/content/w1_words.dart';
 
 /// The rules V1 to V7 and the warning W1 of the lesson arc (M11 Stage 2, docs/milestones/M11-stage2.md section 7.2, with the corrections of section
 /// 11.2), over the starter sources and over changed copies of them. By ids and structure: no Hebrew text is pinned.
@@ -72,6 +73,56 @@ void main() {
     expect(failing, tagWaivers.keys.toSet());
   });
 
+  test('V5: the waived hint 2s are exactly those whose family draws the own question representation', () {
+    for (final String id in hintTwoWaivers.keys) {
+      final String? family = hintFamilyOf(_m(_l(activities[id]!['hints'])[1])['vo']);
+      expect(
+        hintFamilyRepresentation[family],
+        activities[id]!['representation'],
+        reason: '$id is fixed: take it off hintTwoWaivers',
+      );
+    }
+    // and every other item of the arc passes (the starter sources pass every rule)
+    expect(run(), isEmpty);
+  });
+
+  test('V6 (QA round): a hands-on item needs as many tags as its skill lists, up to two; a tap tags its distractors, counted not distinct', () {
+    final String id = activities.entries
+        .firstWhere(
+          (MapEntry<String, Map<String, Object?>> e) =>
+              e.value['template'] == 'tap_answer' &&
+              (_m(_l(e.value['skills']).first)['id']! as String).startsWith('SHP-') &&
+              _l(_m(e.value['answer'])['options']).length == 3 &&
+              !noSecondTagSkills.contains(_m(_l(e.value['skills']).first)['id']) &&
+              _l(skills[_m(_l(e.value['skills']).first)['id']]?['misconceptions']).isNotEmpty &&
+              !tagWaivers.containsKey(e.key),
+        )
+        .key;
+    final Map<String, Object?> tap = _copy(activities[id]!);
+    final List<Object?> options = _l(_m(tap['answer'])['options']);
+    // three options, two distractors that carry the same tag: two tagged distractors
+    final List<Map<String, Object?>> wrong = <Map<String, Object?>>[
+      for (final Object? o in options)
+        if (_m(o)['id'] != _m(tap['answer'])['correct']) _m(o),
+    ];
+    expect(wrong.length, greaterThanOrEqualTo(2));
+    for (final Map<String, Object?> o in wrong) {
+      o['misconception'] = 'M-SHP-SQRECT';
+    }
+    final Map<String, Map<String, Object?>> a = <String, Map<String, Object?>>{
+      for (final MapEntry<String, Map<String, Object?>> e in activities.entries) e.key: e.value,
+    };
+    a[id] = tap;
+    expect(
+      run(a: a).where((String m) => m.contains('activity.$id.json')),
+      isEmpty,
+      reason: 'the same tag twice is two tagged distractors',
+    );
+    // one tagged distractor of three options is refused
+    wrong.last.remove('misconception');
+    expect(run(a: a).where((String m) => m.contains('activity.$id.json')), isNotEmpty);
+  });
+
   test('V1: a lesson of a land in a room without parts is refused, unless it is named as waiting', () {
     final Map<String, Map<String, Object?>> l = <String, Map<String, Object?>>{
       for (final MapEntry<String, Map<String, Object?>> e in lessons.entries) e.key: _copy(e.value),
@@ -82,6 +133,18 @@ void main() {
     for (final String id in arcLessonsWaiting.keys) {
       expect(lessons[id]!['parts'], isNull, reason: id);
     }
+  });
+
+  test('V1 (QA-2): a lesson in parts with an empty Alone pool is refused, because the planner has nothing to serve', () {
+    final Map<String, Map<String, Object?>> l = <String, Map<String, Object?>>{
+      for (final MapEntry<String, Map<String, Object?>> e in lessons.entries) e.key: _copy(e.value),
+    };
+    _m(l['any-shape']!['parts'])['alone'] = <Object?>[];
+    final List<String> found = run(l: l)
+        .where((String m) => m.contains('lesson.any-shape.json') && m.contains('parts.alone'))
+        .toList();
+    expect(found, hasLength(1));
+    expect(found.single, contains('at least one Alone item'));
   });
 
   test('V1: the Show of a lesson is a Show of one of its skills, and never one of its items', () {
@@ -118,11 +181,11 @@ void main() {
     expect(check(wrongBin).join(), contains('its own bin'));
   });
 
-  test('V2: a skill in a lesson in parts has exactly one Show', () {
+  test('V2: a skill in a lesson in parts has a Show, and one for each template at most', () {
     final Map<String, Map<String, Object?>> a = <String, Map<String, Object?>>{
       for (final MapEntry<String, Map<String, Object?>> e in activities.entries) e.key: e.value,
     }..remove('show.shp-a-03');
-    expect(run(a: a).join('\n'), contains('exactly one Show'));
+    expect(run(a: a).join('\n'), contains('has a Show (V2), found none'));
   });
 
   test(
@@ -183,8 +246,9 @@ void main() {
     final Map<String, Map<String, Object?>> a = <String, Map<String, Object?>>{
       for (final MapEntry<String, Map<String, Object?>> e in activities.entries) e.key: e.value,
     };
-    // a sort of the ladder draws a picture at hint 2 (the next card goes past the bins): a pictorial question repeats it
-    a['shp.any.tilt'] = _copy(activities['shp.any.tilt']!)..['representation'] = 'pictorial';
+    // hint 2 of b.shpb01.1 is the family shp_sides (the finger traces the sides: embodied): an embodied question repeats it
+    expect(hintFamilyOf(_m(_l(activities['b.shpb01.1']!['hints'])[1])['vo']), 'shp_sides');
+    a['b.shpb01.1'] = _copy(activities['b.shpb01.1']!)..['representation'] = 'embodied';
     expect(run(a: a).join('\n'), contains('V5'));
   });
 
@@ -225,6 +289,50 @@ void main() {
         e.key: _copy(e.value)..remove('parts'),
     };
     expect(run(l: l), isEmpty);
+  });
+
+  test('W1: the starter sources give no warning, with the exceptions of the named data (yes and no, not-X, the counting words, the right option only)', () {
+    expect(metBeforeAsked(activities: activities, lessons: lessons, skills: skills), isEmpty);
+    // what the exceptions are: data, not code
+    expect(w1YesNo, containsAll(<String>['כן', 'לא']));
+    expect(w1CountingWords, containsAll(<String>['חמש', 'חמישה', 'עשר']));
+    expect(w1CountingSkill, 'NUM-A-02');
+  });
+
+  test('W1: the label of a wrong option is not asked for, the label of the right one is', () {
+    final Map<String, Map<String, Object?>> a = <String, Map<String, Object?>>{
+      for (final MapEntry<String, Map<String, Object?>> e in activities.entries) e.key: e.value,
+    };
+    final String id = activities.entries
+        .firstWhere(
+          (MapEntry<String, Map<String, Object?>> e) =>
+              e.value['template'] == 'tap_answer' &&
+              (_m(_l(e.value['skills']).first)['id']! as String).startsWith('SHP-') &&
+              _l(_m(e.value['answer'])['options']).any((Object? o) => _m(o)['label'] is String),
+        )
+        .key;
+    final Map<String, Object?> tap = _copy(activities[id]!);
+    final Map<String, Object?> answer = _m(tap['answer']);
+    final List<Map<String, Object?>> options = <Map<String, Object?>>[
+      for (final Object? o in _l(answer['options'])) _m(o),
+    ];
+    a[id] = tap;
+    final Map<String, Object?> right = options.firstWhere(
+      (Map<String, Object?> o) => o['id'] == answer['correct'],
+    );
+    final Map<String, Object?> other = options.firstWhere(
+      (Map<String, Object?> o) => o['id'] != answer['correct'],
+    );
+    other['label'] = 'מילה שלא נלמדה';
+    expect(
+      metBeforeAsked(activities: a, lessons: lessons, skills: skills).where((String w) => w.contains(id)),
+      isEmpty,
+    );
+    right['label'] = 'מילה שלא נלמדה';
+    expect(
+      metBeforeAsked(activities: a, lessons: lessons, skills: skills).where((String w) => w.contains(id)),
+      isNotEmpty,
+    );
   });
 
   test('W1: a label the Show has not taught is a warning, not a refusal', () {

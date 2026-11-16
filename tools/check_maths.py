@@ -167,6 +167,7 @@ COLOUR_WORDS = {
 SHAPE_WORDS = {
     'circle': ('עגול', 'עגולים'), 'square': ('רבוע', 'רבועים'), 'triangle': ('משלש', 'משלשים'),
     'rect': ('מלבן', 'מלבנים'), 'quad': ('מרבע', 'מרבעים'), 'pentagon': ('מחמש', 'מחמשים'), 'hexagon': ('מששה',),
+    'oval': ('אליפסה',), 'trapezoid': ('טרפז', 'טרפזים'),
 }
 REAL_SOLIDS = {'gift_box': 'box', 'dice': 'box', 'can': 'cylinder', 'party_hat': 'cone', 'pyramid_egypt': 'pyramid'}
 SOLID_WORDS = {'cylinder': ('גליל', 'גלילים'), 'cone': ('חרוט',), 'pyramid': ('פירמידה',), 'box': ('תבה', 'קפסה'),
@@ -206,7 +207,8 @@ COLOURS = ('red', 'blue', 'yellow', 'green', 'orange', 'purple', 'pink', 'black'
 RAINBOW = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
 MIX = {frozenset(('red', 'yellow')): 'orange', frozenset(('blue', 'yellow')): 'green',
        frozenset(('red', 'blue')): 'purple'}
-SIDES = {'triangle': 3, 'square': 4, 'rect': 4, 'quad': 4, 'pentagon': 5, 'hexagon': 6}
+# an oval has no sides (it is curved and closed); a trapezoid has four straight ones, not all equal, and is neither a square nor a rectangle
+SIDES = {'triangle': 3, 'square': 4, 'rect': 4, 'quad': 4, 'pentagon': 5, 'hexagon': 6, 'trapezoid': 4}
 POLYGONS = set(SIDES)
 COINS = {'a10': 0.1, 'h50': 0.5, 's1': 1, 's2': 2, 's5': 5, 's10': 10}
 SIZE_RANK = {'s': 1, 'm': 2, 'l': 3}
@@ -231,7 +233,7 @@ def sprite_info(s):
         s = s.get('sprite', '')
     n = (s or '')[6:] if (s or '').startswith('asset:') else (s or '')
     info = {'name': n, 'kind': n}
-    m = re.fullmatch(r'shape_(circle|square|triangle|rect|pentagon|hexagon|quad|open|curved)(?:_(\w+))?', n)
+    m = re.fullmatch(r'shape_(circle|square|triangle|rect|pentagon|hexagon|quad|open|curved|oval|trapezoid)(?:_(\w+))?', n)
     if m:
         info.update(kind='shape', shape=m[1])
         if m[2] in COLOURS:
@@ -719,7 +721,7 @@ def shape_member(info, shape, inclusive):
     if s == shape:
         return True
     if shape == 'quad':
-        return s in ('square', 'rect', 'quad')
+        return s in ('square', 'rect', 'quad', 'trapezoid')
     if inclusive and shape == 'rect':
         return s == 'square'
     return False
@@ -737,7 +739,7 @@ def _sides(i):
 
 
 def _closed_straight(i):
-    if i.get('shape') in ('open', 'curved', 'circle'):
+    if i.get('shape') in ('open', 'curved', 'circle', 'oval'):
         return False
     return True if i.get('shape') in SIDES else None
 
@@ -746,7 +748,7 @@ def _equal_sides(i):
     s, v = i.get('shape'), i.get('variant')
     if s in ('square', 'quad', 'pentagon', 'hexagon'):
         return True
-    if s == 'rect' or (s == 'triangle' and v == 'thin'):
+    if s in ('rect', 'trapezoid') or (s == 'triangle' and v == 'thin'):
         return False
     return None
 
@@ -755,7 +757,7 @@ def _straight(i):
     n = i['name']
     if n.startswith('line_'):
         return n.startswith('line_straight')
-    if i.get('shape') == 'circle':
+    if i.get('shape') in ('circle', 'oval'):
         return False
     return True if i.get('shape') in SIDES else None
 

@@ -1,0 +1,161 @@
+{
+  "schema": "activity/v1",
+  "id": "shp.solid.real",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
+  "domain": "shapes",
+  "band": "A",
+  "skills": [
+    {
+      "id": "SHP-A-07",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "sort",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "prompt": {
+    "vo": "vo:shp.solid.real.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מַה מִּתְגַּלְגֵּל — לְכָאן. מָה אֶפְשָׁר לַעֲרֹם — לְכָאן."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:ball_red",
+        "count": 1,
+        "label": "מִתְגַּלְגֵּל"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:solid_box",
+        "count": 1,
+        "label": "נֶעֱרָם"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:gift_box",
+        "bin": "b2"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:ball_green",
+        "bin": "b1"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:solid_box",
+        "bin": "b2"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:apple",
+        "bin": "b1"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:shp.solid.real.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! מַה שֶּׁעָגֹל מִתְגַּלְגֵּל, וּמַה שֶּׁשָּׁטוּחַ נֶעֱרָם."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.shp_roll.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִדְחַף וְנִרְאֶה: מַה מִּתְגַּלְגֵּל, וּמַה נִּשְׁאָר עוֹמֵד?"
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:shp.solid.real.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כַּדּוּר עָגֹל וּמִתְגַּלְגֵּל. לְקֻפְסָה יֵשׁ צְדָדִים שְׁטוּחִים, וְאֶפְשָׁר לַעֲרֹם אוֹתָהּ. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child sorts the things that roll from the things that stack",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "מַה מִּתְגַּלְגֵּל — לְכָאן. מָה אֶפְשָׁר לַעֲרֹם — לְכָאן."
+  }
+}

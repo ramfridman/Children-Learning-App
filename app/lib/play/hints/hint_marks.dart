@@ -90,7 +90,19 @@ final class SwatchMark extends HintMark {
 }
 
 /// The outlines a [GhostMark] can draw: flat shapes, a line, and the outline of a solid as it is drawn on paper.
-enum GhostKind { circle, square, rect, triangle, straight, curved, cylinder, cone, box, pyramid }
+enum GhostKind {
+  circle,
+  square,
+  rect,
+  triangle,
+  rightTriangle,
+  straight,
+  curved,
+  cylinder,
+  cone,
+  box,
+  pyramid,
+}
 
 /// P9 (sample): a dashed outline of a shape (or a line); [turn] lets it turn once to show that a shape stays itself.
 final class GhostMark extends HintMark {

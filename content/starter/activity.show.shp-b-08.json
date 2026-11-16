@@ -25,7 +25,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "לַגּוּפִים יֵשׁ שֵׁמוֹת."
+        "v": "לַגּוּפִים יֵשׁ שֵׁמוֹת. תֵּבָה — כְּמוֹ קֻפְסָה."
       }
     ],
     "replayButton": true
@@ -45,24 +45,24 @@
       },
       {
         "id": "b3",
-        "sprite": "asset:solid_sphere",
-        "label": "כַּדּוּר"
+        "sprite": "asset:solid_box",
+        "label": "תֵּבָה"
       }
     ],
     "items": [
       {
         "id": "i1",
-        "sprite": "asset:ball_red",
-        "bin": "b3"
-      },
-      {
-        "id": "i2",
-        "sprite": "asset:solid_cone",
+        "sprite": "asset:party_hat",
         "bin": "b2"
       },
       {
+        "id": "i2",
+        "sprite": "asset:gift_box",
+        "bin": "b3"
+      },
+      {
         "id": "i3",
-        "sprite": "asset:solid_cylinder",
+        "sprite": "asset:can",
         "bin": "b1"
       }
     ]
@@ -78,7 +78,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הַכַּדּוּר עָגֹל כֻּלּוֹ. לֶחָרוּט יֵשׁ חֹד."
+          "v": "חָרוּט עִם חֹד. תֵּבָה עִם פִּנּוֹת."
         }
       ]
     },
@@ -120,7 +120,7 @@
     "mustNotRevealBeforeHint": 0
   },
   "a11y": {
-    "altText": "לַגּוּפִים יֵשׁ שֵׁמוֹת."
+    "altText": "לַגּוּפִים יֵשׁ שֵׁמוֹת. תֵּבָה — כְּמוֹ קֻפְסָה."
   },
   "show": {
     "handOver": "last",
@@ -131,7 +131,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "לַגּוּפִים יֵשׁ שֵׁמוֹת."
+            "v": "לַגּוּפִים יֵשׁ שֵׁמוֹת. תֵּבָה — כְּמוֹ קֻפְסָה."
           }
         ]
       },
@@ -141,7 +141,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "הַכַּדּוּר עָגֹל כֻּלּוֹ. לֶחָרוּט יֵשׁ חֹד."
+            "v": "חָרוּט עִם חֹד. תֵּבָה עִם פִּנּוֹת."
           }
         ]
       },
@@ -160,15 +160,17 @@
       {
         "by": "host",
         "item": "i1",
-        "bin": "b3",
-        "say": "key",
-        "motion": "turn"
+        "bin": "b2",
+        "motion": "turn",
+        "detail": "point"
       },
       {
         "by": "host",
         "item": "i2",
-        "bin": "b2",
-        "motion": "turn"
+        "bin": "b3",
+        "say": "key",
+        "motion": "turn",
+        "detail": "corners"
       },
       {
         "by": "child",
@@ -179,7 +181,7 @@
     "teaches": [
       "גָּלִיל",
       "חָרוּט",
-      "כַּדּוּר"
+      "תֵּבָה"
     ]
   }
 }

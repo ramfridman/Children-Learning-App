@@ -24,15 +24,20 @@ Iterable<Rect> tilesOnScreen(WidgetTester t) sync* {
   }
 }
 
-/// What the speech bubble covers: one line per tile it lies over; empty when there is no bubble or it keeps clear.
+/// How far the bubble keeps from a tile at the least, in points (QA: the lifted tile of a touch was 2 points under it).
+const double tileHitClear = 4;
+
+/// What the speech bubble covers: one line per tile it lies over or comes nearer to than [tileHitClear] (measured from the tile as drawn, lifted
+/// when it is touched); empty when there is no bubble or it keeps clear.
 List<String> bubbleOverTiles(WidgetTester t) {
   final Finder bubble = find.byKey(const Key('bubble-body'));
   if (bubble.evaluate().isEmpty) return const <String>[];
   final Rect b = t.getRect(bubble.first);
   return <String>[
     for (final Rect tile in tilesOnScreen(t))
-      if (b.intersect(tile) case final Rect hit when hit.width > 0.5 && hit.height > 0.5)
-        'the bubble $b covers a tile $tile',
+      if (b.intersect(Rect.fromLTRB(tile.left, tile.top - tileHitClear + 0.01, tile.right, tile.bottom))
+          case final Rect hit when hit.width > 0.5 && hit.height > 0.01)
+        'the bubble $b is over or within $tileHitClear pt of a tile $tile',
   ];
 }
 
@@ -211,9 +216,9 @@ typedef StageAuditCase = ({String board, Size size, double scale, AuditLook look
 /// that does not fit its column even at 14 points drawn spills into the stage: that is a defect of the content, listed here (printed
 /// as `SPILL`, id and state) for the hebrew-text-editor to shorten, and its count is pinned per case so it can only go down.
 ///
-/// The bubble over a tile is counted too (`TILE`, pinned): at the youngest look the tiles' hit area reaches 18 points above the drawn tile,
-/// and a bubble that keeps its 16 points clear of the drawn tile lies 2 points over that hit area (the tiles are drawn above the bubble,
-/// so no tap is lost). It was the same before B-29's caption fit; the older looks have none.
+/// The bubble over a tile is counted too (`TILE`, pinned at 0): the bubble keeps 4 points or more from every tile as drawn, lifted when it is touched.
+/// It was 2 points over the lifted tile of the sort and shape-builder trays (their tiles stand 12 or 8 above the board's place, `tilesRise`) until
+/// the frame measured the ceiling from the tiles as drawn.
 void bubbleStageAuditTests(List<StageAuditCase> cases) {
   late PackContent content;
   setUpAll(() async {

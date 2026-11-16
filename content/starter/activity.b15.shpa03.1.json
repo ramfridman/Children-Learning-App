@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "b15.shpa03.1",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "sort_drag",
   "templateVersion": "1.0",
   "domain": "shapes",
@@ -37,13 +37,13 @@
         "id": "b1",
         "sprite": "asset:shape_circle",
         "count": 1,
-        "label": "עִגּוּלִים"
+        "label": "עִגּוּל"
       },
       {
         "id": "b2",
         "sprite": "asset:shape_square",
         "count": 1,
-        "label": "רִבּוּעִים"
+        "label": "רִבּוּעַ"
       }
     ],
     "items": [
@@ -55,7 +55,8 @@
       {
         "id": "i2",
         "sprite": "asset:shape_square_tilt",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-SHP-ORIENT"
       },
       {
         "id": "i3",
@@ -91,6 +92,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-ORIENT",
+        "vo": "vo:fb.shp_orient",
+        "caption": [
+          {
+            "t": "he",
+            "v": "צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה גַּם כְּשֶׁמְּסֹבְבִים אוֹתָהּ. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "misconception:M-SORT-SHIFT",
         "vo": "vo:fb.sort_shift.shape",
@@ -137,11 +148,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.sort.h2",
+      "vo": "vo:hint.shp_square_turn.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
+          "v": "רִבּוּעַ מְסֻבָּב הוּא עֲדַיִן רִבּוּעַ: אַרְבַּע צְלָעוֹת שָׁווֹת."
         }
       ]
     },

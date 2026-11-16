@@ -14,8 +14,10 @@ import 'hints/hint_pictures.dart' show hintScale;
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
+import 'activity_frame.dart' show ActivityFrame;
 import 'choice_row.dart' show withStageAtLeast;
 import 'lesson_arc.dart' show ArcPart, ArcStep;
+import 'show_solids.dart';
 import 'show_stage.dart';
 import 'size_scale.dart';
 import 'sprite_group.dart';
@@ -67,6 +69,10 @@ class SortDragSession extends TemplateSession {
   Size _size = Size.zero;
   ActivitySpec? _spec;
 
+  /// The size the bins' labels are drawn at (see [labelScale]), worked out when the stage is built, for the stage's size and the text size.
+  double _labelScale = 1;
+  (Size, double)? _labelKey;
+
   /// The picture the host holds up in the middle of the stage in a Show (it has left its tile and is not in a bin yet).
   String? _lifted;
 
@@ -107,11 +113,15 @@ class SortDragSession extends TemplateSession {
   /// rule, and the pictures that lie in it (the label stands first, clear of the hand that reaches down to the tray). The pictures take what [most] of them need (one line of them, two where they are
   /// many) and the sample the rest, so it is as large as the bin lets it be: a picture of at least `TokenComponent.stagePictureMin`
   /// on a phone, though a small phone's bin leaves it a little less. The label and the pictures are smaller where the bin is low.
-  static BinBands binBands(Rect bin, int most) {
+  ///
+  /// The label's strip grows with the size its text is drawn at ([scale], the system's text size up to 1.3, see [labelScale]): the strip is
+  /// 17 points for a text of 13, which is a strip of 1.3 times its font, and it keeps that proportion, so a larger text is never cut at its
+  /// top (QA-1). The sample gives up what the strip takes.
+  static BinBands binBands(Rect bin, int most, {double scale = 1}) {
     final double inner = bin.height - 6 - 2 * _binMargin;
     final bool low = inner < 90;
     final double itemSide = low ? 22 : 26;
-    final double label = low ? 15 : 17;
+    final double label = (low ? 15 : 17) * scale;
     final int perLine = math.max(1, ((bin.width - 6 - 2 * _binMargin + 2) / (itemSide + 2)).floor());
     final double items = math.min(3, math.max(1, (most / perLine).ceil())) * (itemSide + 2);
     return (sample: math.max(0, inner - label - items), label: label, items: items, itemSide: itemSide);
@@ -127,10 +137,40 @@ class SortDragSession extends TemplateSession {
           (int m, SortBin b) => math.max(m, activity.items.where((SortItem i) => i.bin == b.id).length),
         );
 
-  /// The middle of the sample picture of bin [i] of [n] (a bin that takes [most] pictures).
-  static Offset sampleCentre(Size size, int n, int i, {int most = 1}) {
+  /// The size the labels of the bins are drawn at, as a multiple of their own size: the system's text size (at most [ActivityFrame.maxTextScale]),
+  /// less where the longest of [labels] would not fit one line of a bin, but never under 1 (the label's own size, which every bin of every board
+  /// holds). One scale for all the bins of a stage, so that the strips stand level.
+  static double labelScale(List<String> labels, Size stage, {required TextScaler system}) {
+    final double wanted = system.scale(1).clamp(1.0, ActivityFrame.maxTextScale);
+    if (wanted <= 1) return 1;
+    final Rect bin = binRect(stage, labels.length, 0);
+    final double width = bin.width - 6 - 2 * _binMargin;
+    final double font = binBands(bin, 1).label - 4;
+    double scale = wanted;
+    for (; scale > 1; scale -= 0.05) {
+      if (labels.every((String l) => _labelWidth(l, font, scale) <= width)) return scale;
+    }
+    return 1;
+  }
+
+  static double _labelWidth(String label, double font, double scale) {
+    final TextPainter p = TextPainter(
+      text: TextSpan(text: label, style: _labelStyle(font)),
+      textDirection: TextDirection.rtl,
+      textScaler: TextScaler.linear(scale),
+      maxLines: 1,
+    )..layout();
+    final double width = p.width;
+    p.dispose();
+    return width;
+  }
+
+  static TextStyle _labelStyle(double font) => AppText.fixed(size: font, weight: 700);
+
+  /// The middle of the sample picture of bin [i] of [n] (a bin that takes [most] pictures), with the labels drawn at [scale].
+  static Offset sampleCentre(Size size, int n, int i, {int most = 1, double scale = 1}) {
     final Rect r = binRect(size, n, i);
-    final BinBands band = binBands(r, most);
+    final BinBands band = binBands(r, most, scale: scale);
     return Offset(r.center.dx, r.top + 3 + _binMargin + band.label + band.sample / 2);
   }
 
@@ -168,6 +208,10 @@ class SortDragSession extends TemplateSession {
   @override
   ActivitySpec layoutFor(ActivitySpec base) =>
       withStageAtLeast(base, ActivitySpec.phone.stage.height, tilesBox: _traySide(base) + 8);
+
+  /// The tray's tiles have a tap margin of 4 and the row starts `tileSlop` above the tiles' place, so the drawn tiles stand 12 or 8 above it.
+  @override
+  double tilesRise(ActivitySpec spec) => spec.tileSlop - 4;
 
   void select(String itemId) {
     _endDemo();
@@ -322,18 +366,16 @@ class SortDragSession extends TemplateSession {
     await pause(Duration(milliseconds: over - put));
   }
 
-  /// A step of a Show with a motion of the host's hand (a finger along the sides, a count, an ant, sticks): the picture is lifted to the middle of
-  /// the stage, shown, and dragged into its bin. Anything the director has no row for, a reminder and a stage with no art for the hand is the plain
-  /// drag of [_hostMove].
+  /// A step of a Show with a motion of the host's hand (a finger along the sides, a count, an ant, sticks, a push, a stack, a turn, a stamp): the
+  /// picture is lifted to the middle of the stage, shown, and dragged into its bin. Anything the director has no row for, a reminder and a stage with
+  /// no art for the hand is the plain drag of [_hostMove].
   Future<void> _hostShow(ShowStep step, {required bool fast}) async {
     final ShowStyle? style = showStyle;
     final SortItem item = _itemOf(step);
     final ShowOutline? outline = item.sprite == null ? null : style?.art.of(item.sprite!);
-    if (style == null ||
-        outline == null ||
-        fast ||
-        !_canDraw ||
-        !ShowDirector.motions.contains(step.motion)) {
+    final bool solid = ShowDirector.solidMotions.contains(step.motion);
+    final bool outlined = ShowDirector.motions.contains(step.motion) && outline != null;
+    if (style == null || fast || !_canDraw || !(solid || outlined)) {
       return _hostMove(item, fast: fast, rests: step.motion != null);
     }
     final ShowDirector director = ShowDirector(this, style, showMarks);
@@ -342,6 +384,9 @@ class SortDragSession extends TemplateSession {
     final double side = ShowDirector.spotSide(_size);
     showMarks.scale = hintScale(_size);
     final Rect spot = Rect.fromCenter(center: _size.center(Offset.zero), width: side, height: side);
+    final int bins = activity.bins.length;
+    final int binAt = activity.bins.indexWhere((SortBin b) => b.id == item.bin);
+    final Rect into = Rect.fromCenter(center: binRect(_size, bins, binAt).center, width: 40, height: 40);
     _lifted = item.id;
     hintItem = null;
     notify();
@@ -350,13 +395,24 @@ class SortDragSession extends TemplateSession {
       spot: spot,
       svg: activity.assets.svg(item.sprite!),
     );
-    await director.motion(step, outline, spot);
-    final Rect bin = binRect(
-      _size,
-      activity.bins.length,
-      activity.bins.indexWhere((SortBin b) => b.id == item.bin),
-    );
-    await director.dropTo(Rect.fromCenter(center: bin.center, width: 40, height: 40));
+    SolidEnd? end;
+    if (solid) {
+      end = await director.solid(
+        step,
+        sprite: item.sprite!,
+        spot: spot,
+        into: into,
+        onto: Rect.fromCenter(
+          center: sampleCentre(_size, bins, binAt, most: mostPerBin, scale: _labelScale),
+          width: 40,
+          height: 40,
+        ),
+        stage: _size,
+      );
+    } else {
+      await director.motion(step, outline!, spot);
+    }
+    await director.dropTo(end?.to ?? into, carried: end?.carried ?? false, squash: end?.squash ?? false);
     placed[item.id] = item.bin!;
     _lifted = null;
     notify();
@@ -467,7 +523,8 @@ class SortDragSession extends TemplateSession {
             HintFrame(<HintMark>[
               CopyMark(
                 Rect.fromCenter(
-                  center: sampleCentre(_size, n, i, most: mostPerBin) - Offset(0, side * 0.2),
+                  center:
+                      sampleCentre(_size, n, i, most: mostPerBin, scale: _labelScale) - Offset(0, side * 0.2),
                   width: side,
                   height: side,
                 ),
@@ -591,6 +648,16 @@ class SortDragSession extends TemplateSession {
   Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
     _size = size;
     _spec = spec;
+    final TextScaler system = ActivityFrame.bubbleScaler(context);
+    final (Size, double) key = (size, system.scale(1));
+    if (_labelKey != key) {
+      _labelKey = key;
+      _labelScale = labelScale(
+        <String>[for (final SortBin b in activity.bins) b.label],
+        size,
+        system: system,
+      );
+    }
     return ListenableBuilder(
       listenable: this,
       builder: (BuildContext c, Widget? _) => _SortStage(this, size),
@@ -653,6 +720,7 @@ class _SortStage extends StatelessWidget {
     final BinBands band = SortDragSession.binBands(
       SortDragSession.binRect(size, a.bins.length, 0),
       s.mostPerBin,
+      scale: s._labelScale,
     );
     return Semantics(
       container: true,
@@ -720,12 +788,15 @@ class _SortStage extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   SizedBox(
+                    key: Key('bin-strip-${b.id}'),
                     height: band.label,
                     child: Text(
                       b.label,
+                      key: Key('bin-label-${b.id}'),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppText.fixed(size: band.label - 4, weight: 700),
+                      textScaler: TextScaler.linear(s._labelScale),
+                      style: SortDragSession._labelStyle(band.label / s._labelScale - 4),
                     ),
                   ),
                   SizedBox(
@@ -739,6 +810,16 @@ class _SortStage extends StatelessWidget {
                               key: const Key('bin-sample'),
                               dimension: math.min(band.sample, _sampleMax) * boxShare,
                               child: PackSvg(a.assets.svg(b.sprite!)),
+                            ),
+                          )
+                        : b.sprite == 'asset:stick_long'
+                        // Sticks that count the sides of a shape stand side by side as a tally, "this many sides"; a flat dash each, in a row,
+                        // read as a ruler, and a row laid out as the shape would match it instead of counting it (docs/design/m11-rooms.md 13.2).
+                        ? Center(
+                            child: CustomPaint(
+                              key: const Key('bin-tally'),
+                              size: _TallyPainter.sizeOf(b.count, band.sample, size),
+                              painter: _TallyPainter(b.count, _TallyPainter.stickWidthOf(size)),
                             ),
                           )
                         : SpriteGroup(
@@ -773,4 +854,55 @@ class _SortStage extends StatelessWidget {
       },
     );
   }
+}
+
+/// A tally of [count] sticks standing side by side: the wood of `stick_long` (an ink edge, a grain line, a light end), each as wide as the stage
+/// makes it (7 on a phone, 6 on a small one, 9 on a tablet), as tall as its band lets it be (at most 62% of a bin's body), with a gap of 0.7 of a
+/// stick's width.
+class _TallyPainter extends CustomPainter {
+  const _TallyPainter(this.count, this.stickWidth);
+
+  final int count;
+  final double stickWidth;
+
+  static double stickWidthOf(Size stage) => stage.width > 500 ? 9 : (stage.width < 300 ? 6 : 7);
+
+  /// The box a tally of [count] sticks takes in a band of height [band] on [stage].
+  static Size sizeOf(int count, double band, Size stage) {
+    final double w = stickWidthOf(stage);
+    return Size(count * w + (count - 1) * 0.7 * w, math.min(band, 0.62 * (stage.height - 16)));
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double w = stickWidth;
+    for (int i = 0; i < count; i++) {
+      final double x = i * 1.7 * w;
+      final RRect stick = RRect.fromRectAndRadius(
+        Rect.fromLTWH(x, 0, w, size.height),
+        Radius.circular(w * 0.4),
+      );
+      canvas
+        ..drawRRect(stick, Paint()..color = const Color(0xFFC98F52))
+        ..drawLine(
+          Offset(x + w * 0.3, size.height * 0.15),
+          Offset(x + w * 0.3, size.height * 0.85),
+          Paint()
+            ..color = const Color(0xFF9E6A35)
+            ..strokeWidth = 1.2
+            ..strokeCap = StrokeCap.round,
+        )
+        ..drawRRect(
+          stick,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 1.6
+            ..color = TokenColors.ink,
+        )
+        ..drawOval(Rect.fromLTWH(x + 1, 1, w - 2, w * 0.55), Paint()..color = const Color(0xFFF2D7A6));
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _TallyPainter old) => old.count != count || old.stickWidth != stickWidth;
 }

@@ -28,7 +28,7 @@ class ArcBuildTest(unittest.TestCase):
         built = 0
         for arc in arcs():
             for show in arc['shows']:
-                if show['template'] not in ('sort_drag', 'shape_builder'):
+                if show['template'] not in ('sort_drag', 'shape_builder', 'trace'):
                     self.assertFalse(os.path.exists(os.path.join(STARTER, 'activity.%s.json' % show['id'])), show['id'])
                     continue
                 d = load('activity.%s.json' % show['id'])
@@ -61,12 +61,25 @@ class ArcBuildTest(unittest.TestCase):
                 self.assertTrue(os.path.exists(os.path.join(STARTER, 'activity.%s.json' % parts['show'])))
                 for t in parts.get('together', []):
                     a = load('activity.%s.json' % t['id'])
-                    if a['template'] in ('sort_drag', 'shape_builder'):
-                        steps = len(a['scene']['items']) if a['template'] == 'sort_drag' else len(a['scene']['slots'])
+                    if a['template'] in ('sort_drag', 'shape_builder', 'trace'):
+                        steps = {'sort_drag': lambda: len(a['scene']['items']), 'shape_builder': lambda: len(a['scene']['slots']),
+                                 'trace': lambda: sum(len(s) - 1 if len(s) <= 8 else 4 for s in a['scene']['strokes'])}[a['template']]()
                         self.assertTrue(1 <= t['lead'] < steps, t)
                     else:
                         self.assertEqual(t['lead'], 0, t)
         self.assertGreaterEqual(n, 20)
+
+    def test_a_lesson_with_an_empty_alone_pool_is_refused(self):
+        # QA-2: the planner serves nothing from an empty Alone pool, so the build refuses such a lesson instead of writing parts that play flat
+        import sys
+        sys.path.insert(0, os.path.join(ROOT, 'tools'))
+        import arc_build
+        lesson = {'id': 'x', 'show': 'show.shp-a-01', 'together': [], 'alone': []}
+        with self.assertRaises(AssertionError) as raised:
+            arc_build.lesson_parts(lesson, {'show.shp-a-01'}, [], 0)
+        self.assertIn('empty Alone pool', str(raised.exception))
+        lesson['alone'] = ['shp.match.square']
+        self.assertEqual(arc_build.lesson_parts(lesson, {'show.shp-a-01'}, [], 0)['alone'], ['shp.match.square'])
 
     def test_the_lessons_that_wait_for_a_show_keep_their_flat_list(self):
         d = load('lesson.where-is-it.json')

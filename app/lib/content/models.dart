@@ -94,6 +94,7 @@ class ShowStep {
     this.saysKey = false,
     this.motion,
     this.detail,
+    this.segment,
   });
 
   factory ShowStep.fromJson(Map<String, Object?> m) => ShowStep(
@@ -105,6 +106,7 @@ class ShowStep {
     saysKey: m['say'] == 'key',
     motion: m['motion'] as String?,
     detail: m['detail'] as String?,
+    segment: m['segment'] as int?,
   );
 
   final bool byHost;
@@ -121,6 +123,9 @@ class ShowStep {
   /// The motion the host's hand makes (one of `hostMotions`) and its detail; they only say what is drawn.
   final String? motion;
   final String? detail;
+
+  /// A tracing: the side of the path this move draws, counted from 1 (`traceSides`).
+  final int? segment;
 }
 
 /// What a Show says and does (`purpose: show`, M11 Stage 2): the host's lines, and the moves it makes one after another before it stops, so

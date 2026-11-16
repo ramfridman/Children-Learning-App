@@ -919,6 +919,14 @@ class LessonController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// The child moved on from a Show without making its last step (the frame's "next", offered once the host has done its part): nothing is
+  /// written and nothing is counted, as when the Show is finished. Any other activity is scored and cannot be left this way.
+  void skipShow() {
+    if (finished || solved || !current.isShow) return;
+    actionNonce++;
+    next();
+  }
+
   /// Moves on after a correct answer. After the last activity the lesson is finished.
   void next() {
     if (finished) return;

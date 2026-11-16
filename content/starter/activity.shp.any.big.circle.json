@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "shp.any.big.circle",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "shapes",
@@ -40,12 +40,13 @@
       {
         "id": "o1",
         "set": {
-          "sprite": "asset:shape_triangle_green",
+          "sprite": "asset:shape_oval_green",
           "count": 1,
           "arrangement": "line",
           "seed": 1
         },
-        "label": "מְשֻׁלָּשׁ"
+        "label": "אֶלִיפְּסָה",
+        "misconception": "M-SHP-PROTO"
       },
       {
         "id": "o2",
@@ -86,6 +87,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-PROTO",
+        "vo": "vo:fb.proto.oval",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עִגּוּל עָגֹל מִכׇּל הַצְּדָדִים. זוֹ אֶלִיפְּסָה, וְהִיא אֲרֻכָּה יוֹתֵר. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "misconception:M-SHP-SIZE",
         "vo": "vo:fb.shp_size",

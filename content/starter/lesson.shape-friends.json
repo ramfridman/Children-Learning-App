@@ -17,7 +17,6 @@
   "items": [
     "shp.match.circle",
     "shp.match.square",
-    "shp.match.triangle",
     "shp.name.circle",
     "shp.name.square",
     "shp.name.triangle",
@@ -57,7 +56,6 @@
     ],
     "alone": [
       "shp.match.square",
-      "shp.match.triangle",
       "shp.name.circle",
       "shp.name.square",
       "shp.name.triangle",

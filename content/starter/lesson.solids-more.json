@@ -14,8 +14,8 @@
     "SHP-B-08"
   ],
   "items": [
-    "b.shpb08.6",
     "b.shpb08.7",
+    "b.shpb08.6",
     "b.shpb08.8",
     "b.shpb08.9"
   ],
@@ -37,7 +37,7 @@
     ],
     "together": [
       {
-        "id": "b.shpb08.6",
+        "id": "b.shpb08.7",
         "lead": 1,
         "line": {
           "vo": "vo:host.kubi.together.sort",
@@ -51,7 +51,7 @@
       }
     ],
     "alone": [
-      "b.shpb08.7",
+      "b.shpb08.6",
       "b.shpb08.8"
     ],
     "use": [

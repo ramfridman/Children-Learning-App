@@ -722,6 +722,8 @@ VOICE_SUBS = [
     (r'(?<![֐-׿])בואו נֹאמַר(?![֐-׿])', 'בואו נגיד', 'voice: "נֹאמַר" is kept pointed (VOICE_SWEEP_KEEP), but "בואו נאמר" is still "בואו נגיד"'),
     (r'(?<![֐-׿])(ש?)אין כלום זה ', r'\1אין כלום — זה ', 'voice-audit 2026-10-29: a beat before "זה אֶפֶס" (without it '
      'the two clauses run together and the rule is not heard)'),
+    # QA round 2026-11-16 (hebrew-notes.md section 18): "עֲדַיִן" (still) loses its yod in the plain form, and "עדין" is read "adin" (gentle)
+    (r'(?<![֐-׿])מסובב הוא עדין ', 'מסובב הוא עדיין ', 'voice: "עדין" is read "adin" (gentle); the full spelling "עדיין" is "adayin" (still)'),
 ]
 # words that keep their nikud in the voice text because the plain form can be read another way
 KEEP_POINTED = {'שֵׁנִי', 'הַשֵּׁנִי', 'הַוִּי', 'לְהֵרָאוֹת', 'נִסְפַּר', 'נְחַתֶּם'}
@@ -974,11 +976,19 @@ SWEEP = ('Editor sweep 2026-11-08 (owner: a full read before the children try th
          'this row is the corrected text (what was wrong is in the section); waits for the owner.')
 SHAPE_FOREST_PILOT_READ = ('M11 Stage 2 pilot, Shape Forest (docs/agents/hebrew-notes.md section 17): read by the editor on 2026-11-15, every distinct text '
                            '(grammar, nikud, agreement, plural address, vocabulary for ages 3 to 8, the shape words of docs/curriculum.md); the curriculum-expert\'s '
-                           'draft, corrected where the table says; waits for the owner.')
+                           'draft, corrected where the table says (a text new or changed in the QA round of 2026-11-16, M11-stage2 section 11.4, was read again '
+                           'on that day: hebrew-notes.md section 18); waits for the owner.')
+SHAPE_FOREST_QA_READ = ('M11 Stage 2 pilot, Shape Forest (docs/agents/hebrew-notes.md section 18): new in the QA round of 2026-11-16 (M11-stage2 section 11.4), '
+                        'read by the editor on 2026-11-16 (grammar, nikud, agreement, plural address, vocabulary for ages 3 to 8, the shape words of '
+                        'docs/curriculum.md); the curriculum-expert\'s draft, corrected where the table says; waits for the owner.')
 READ = [
     # M11 Stage 2 pilot (2026-11-15): the 61 re-cut and new Shape Forest items, SHP-B-05 and B-06 and their two lessons, and the 17 Show
     # activities that tools/arc_build.py writes from content/units/arc/shape-forest.arc.json (Kubi's lines are in that file, read and final).
-    ('3', r'', r'^(activity\.(b\.shpb0[1-68]\.\d+|b15\.shpa0[1247]\.\d+|shp\.[a-z0-9.]+|x\.shpb09\.\d+|show\.shp-[ab]-\d+)|lesson\.(one-shadow|shapes-make-shapes)|skill\.SHP-B-0[56])\.json$',
+    # The QA round of 2026-11-16 (M11-stage2 section 11.4): the eight activities that are new in it are NOT covered by the entry after this one
+    # (its source pattern leaves them out), so a text of theirs that the editor has not read stays "NOT READ"; they have their own entry here.
+    ('3', r'', r'^(activity\.(shp\.(rect\.sort|solid\.real|match\.oval|match\.trapezoid|world\.clock|line\.shapes2?)|show\.shp-a-02\.trace|b15\.shpa03\.[12])|misconception\.M-SHP-PROTO)\.json$',
+     SHAPE_FOREST_QA_READ),
+    ('3', r'', r'^(?!activity\.(shp\.(rect\.sort|solid\.real|match\.oval|match\.trapezoid|world\.clock|line\.shapes2?)|show\.shp-a-02\.trace)\.json$)(activity\.(b\.shpb0[1-68]\.\d+|b15\.shpa0[1247]\.\d+|shp\.[a-z0-9.]+|x\.shpb09\.\d+|show\.shp-[ab]-\d+)|lesson\.(one-shadow|shapes-make-shapes)|skill\.SHP-B-0[56])\.json$',
      SHAPE_FOREST_PILOT_READ),
     # the host lines that tools/arc_build.py copies into the parts of the 27 Shape Forest lessons (Kubi's hand-overs and Together lead-ins: the same
     # 10 texts as hostLines of the arc file, read and final)
@@ -1012,6 +1022,8 @@ READ = [
      'Hint 3 shortened to 14 words or fewer, second pass (QA, 2026-11-07; hebrew-notes.md section 11.14): the editor read it (a count keeps its first '
      'three numbers, an ellipsis and the last, or ends at the number the hint already says with "עַכְשָׁו תּוֹרְכֶם."; the zero line keeps its move; '
      'the scale line computes both sides in a colon form; the two-ball patterns show two turns; agreement and plural address as before); waits for the owner.'),
+    ('1', r'^showNextSemantics$', r'he\.dart$', 'M11 Stage 2 (read by the editor on 2026-11-16): the screen-reader label of the button that moves a Show on, '
+     'plain adult text, an infinitive like the other buttons; correct as written.'),
     ('1', r'^keypad(Delete|Done)Semantics$', r'he\.dart$', 'M10 C1 keypad (read by the editor on 2026-11-07): the screen-reader labels of the number keypad, plain adult text '
      '(an infinitive for the key that deletes a digit, "זה המספר" for the key that sends the number); correct as written.'),
     # The pass of 2026-11-07 (hebrew-notes.md 11.12). The first 60 characters of each comment are the same as C1's, so a row that was
@@ -1139,7 +1151,7 @@ OWNER_APPROVED = [
     (r'', r'וִיחִידָה אַחַת',
      'M10 C1 (notes 11.7): the owner approved "שְׁמוֹנֶה עֲשָׂרוֹת וִיחִידָה אַחַת" for one unit (owner-approved 2026-11-07).'),
     # The owner's answers of 2026-11-07 (in chat; hebrew-notes.md 11.8). (1) the dagesh after מִ on a letter with a shva (`from_`).
-    (r'^activity\.', r'(^|[^֐-׿])מִשְּׁ',
+    (r'^activity\.(?!b\.shpb06\.3\.json)', r'(^|[^֐-׿])מִשְּׁ',
      'M10 C1 (notes 11.8): the owner confirmed the dagesh after מִ on a letter with a shva, "מִשְּׁלוֹשִׁים" (owner-approved 2026-11-07).'),
     # (2) NUM-C-04 hint 3 says both tens in full, with no "עַכְשָׁו תּוֹרְכֶם" (14 words).
     (r'^activity\.c\.numc04\.(7|8|9|10|11|12)\.json$', r'עֲשָׂרוֹת\. הַצַּד הַפָּתוּחַ פּוֹנֶה לַגָּדוֹל\.$',

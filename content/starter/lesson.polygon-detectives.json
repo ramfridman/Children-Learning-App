@@ -14,8 +14,8 @@
     "SHP-B-01"
   ],
   "items": [
+    "b.shpb01.7",
     "b.shpb01.1",
-    "b.shpb01.3",
     "b.shpb01.2",
     "b.shpb01.4"
   ],
@@ -37,7 +37,7 @@
     ],
     "together": [
       {
-        "id": "b.shpb01.1",
+        "id": "b.shpb01.7",
         "lead": 1,
         "line": {
           "vo": "vo:host.kubi.together.sort",
@@ -51,7 +51,7 @@
       }
     ],
     "alone": [
-      "b.shpb01.3",
+      "b.shpb01.1",
       "b.shpb01.2",
       "b.shpb01.4"
     ],

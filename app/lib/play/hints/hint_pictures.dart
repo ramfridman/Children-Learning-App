@@ -1247,6 +1247,13 @@ class _GhostPainter extends CustomPainter {
           ..lineTo(c.dx + side * 0.5, c.dy + side * 0.4)
           ..lineTo(c.dx - side * 0.5, c.dy + side * 0.4)
           ..close(),
+      // The half of a square: the right angle at the bottom start side, the long side from the top corner to the far bottom corner.
+      GhostKind.rightTriangle =>
+        Path()
+          ..moveTo(c.dx - side * 0.43, c.dy - side * 0.43)
+          ..lineTo(c.dx + side * 0.43, c.dy + side * 0.43)
+          ..lineTo(c.dx - side * 0.43, c.dy + side * 0.43)
+          ..close(),
       GhostKind.cylinder => _cylinder(c, side),
       GhostKind.cone => _cone(c, side),
       GhostKind.box => _box(c, side),
@@ -1270,7 +1277,11 @@ class _GhostPainter extends CustomPainter {
     // A flat shape is a pale place of its own form with a dashed rim, like the place a piece leaves on a puzzle board; a solid and a
     // line are their dashed edges only.
     final bool flat = switch (kind) {
-      GhostKind.circle || GhostKind.square || GhostKind.rect || GhostKind.triangle => true,
+      GhostKind.circle ||
+      GhostKind.square ||
+      GhostKind.rect ||
+      GhostKind.triangle ||
+      GhostKind.rightTriangle => true,
       _ => false,
     };
     if (flat) {

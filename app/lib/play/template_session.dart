@@ -94,6 +94,11 @@ abstract class TemplateSession extends ChangeNotifier {
   bool hosting = false;
   int _hostRun = 0;
 
+  /// True in a Show once the host has done its part (its lines are said, or their ceiling has passed) and the child has not yet made the last
+  /// step: the frame then offers a quiet "next" (QA-3), so a Show is never a dead end. It is never offered on a Together item or an Alone item,
+  /// which are scored, and it shows no timer. Read by the frame through a [ValueListenable], so a change redraws only that button.
+  final ValueNotifier<bool> canMoveOn = ValueNotifier<bool>(false);
+
   /// The Show on screen is a reminder (the child has met the skill): a touch skips what the host does.
   bool get reminder => controller.step?.show == ShowKind.reminder;
 
@@ -133,9 +138,25 @@ abstract class TemplateSession extends ChangeNotifier {
     await lineSaid(atLeast);
   }
 
-  /// Waits until the line in the bubble has been read and heard: at least [atLeast], and until the voice has ended.
-  Future<void> lineSaid([Duration atLeast = hostLinePause]) =>
-      Future.wait(<Future<void>>[pause(atLeast), ?untilQuiet?.call()]);
+  /// The longest the host waits for the voice of a line (QA-3): a clip that never reports its end (a player that fails to fire its completion)
+  /// must not freeze a Show, which the child cannot skip. The ceiling is the least wait, 2 seconds for the voice to start, and 90 ms for each
+  /// letter of the line (a line of 90 letters with its niqqud is about 8 seconds spoken), at most [lineCeilingMax].
+  static Duration lineCeiling(String line, Duration atLeast) {
+    final Duration wait = atLeast + Duration(milliseconds: 2000 + 90 * line.length);
+    return wait > lineCeilingMax ? lineCeilingMax : wait;
+  }
+
+  static const Duration lineCeilingMax = Duration(seconds: 14);
+
+  /// Waits until the line in the bubble has been read and heard: at least [atLeast], and until the voice has ended, but never beyond its
+  /// [lineCeiling]. A session with no voice (a test) waits only [atLeast].
+  Future<void> lineSaid([Duration atLeast = hostLinePause]) {
+    final Future<void> Function()? quiet = untilQuiet;
+    return Future.wait(<Future<void>>[
+      pause(atLeast),
+      if (quiet != null) Future.any(<Future<void>>[quiet(), pause(lineCeiling(controller.bubble, atLeast))]),
+    ]);
+  }
 
   /// A Show: the host says its lines and makes its moves through [move] (the template draws them; [fast] for a reminder), then it stops before
   /// the last move, which the child makes. Nothing is written. The opening line (the key line, for a reminder) is already in the bubble.
@@ -160,6 +181,7 @@ abstract class TemplateSession extends ChangeNotifier {
     if (!fast && handover != null) await sayLine(handover);
     if (!alive()) return;
     hosting = false;
+    canMoveOn.value = true;
     notify();
   }
 
@@ -187,6 +209,7 @@ abstract class TemplateSession extends ChangeNotifier {
     _hostRun++;
     placeAll();
     hosting = false;
+    canMoveOn.value = true;
     notify();
   }
 
@@ -284,6 +307,9 @@ abstract class TemplateSession extends ChangeNotifier {
   /// needs a different stage or tile box. Every `build...` below is given what this returns.
   ActivitySpec layoutFor(ActivitySpec base) => base;
 
+  /// How far above `spec.tilesTop` this template's drawn tiles stand (see `ActivityFrame.tilesRise`): 0 where the tiles are drawn at the board's place.
+  double tilesRise(ActivitySpec spec) => 0;
+
   /// The picture that fills the stage, inside [size].
   Widget buildStage(BuildContext context, Size size, ActivitySpec spec);
 
@@ -301,6 +327,7 @@ abstract class TemplateSession extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    canMoveOn.dispose();
     for (final Timer t in _timers) {
       t.cancel();
     }

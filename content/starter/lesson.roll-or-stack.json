@@ -14,6 +14,7 @@
     "SHP-A-07"
   ],
   "items": [
+    "shp.solid.real",
     "shp.solid.rolls.blue",
     "shp.solid.rolls",
     "shp.solid.stacks",
@@ -34,7 +35,7 @@
     "show": "show.shp-a-07",
     "together": [
       {
-        "id": "shp.solid.rolls.blue",
+        "id": "shp.solid.real",
         "lead": 1,
         "line": {
           "vo": "vo:host.kubi.together.sort",
@@ -48,6 +49,7 @@
       }
     ],
     "alone": [
+      "shp.solid.rolls.blue",
       "shp.solid.rolls",
       "shp.solid.stacks",
       "shp.solid.which"

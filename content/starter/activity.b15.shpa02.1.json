@@ -39,8 +39,9 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:shape_triangle_green",
-        "label": "מְשֻׁלָּשׁ"
+        "sprite": "asset:shape_oval_green",
+        "label": "אֶלִיפְּסָה",
+        "misconception": "M-SHP-PROTO"
       },
       {
         "id": "o2",
@@ -77,6 +78,16 @@
           {
             "t": "he",
             "v": "עִגּוּל עָגֹל מִכׇּל הַצְּדָדִים. לַצּוּרָה הַזֹּאת יֵשׁ צַד יָשָׁר. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SHP-PROTO",
+        "vo": "vo:fb.proto.oval",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עִגּוּל עָגֹל מִכׇּל הַצְּדָדִים. זוֹ אֶלִיפְּסָה, וְהִיא אֲרֻכָּה יוֹתֵר. בּוֹאוּ נִבְדֹּק."
           }
         ]
       },

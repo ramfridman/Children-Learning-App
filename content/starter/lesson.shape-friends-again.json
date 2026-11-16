@@ -16,6 +16,7 @@
   ],
   "items": [
     "shp.match.circle.blue",
+    "shp.match.oval",
     "shp.match.triangle.green",
     "shp.match.square.orange",
     "shp.name.square.yellow",
@@ -57,6 +58,7 @@
       }
     ],
     "alone": [
+      "shp.match.oval",
       "shp.match.triangle.green",
       "shp.match.square.orange",
       "shp.name.square.yellow",

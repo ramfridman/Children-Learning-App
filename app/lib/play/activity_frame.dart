@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
@@ -44,6 +45,9 @@ class ActivityFrame extends StatelessWidget {
     this.onHint,
     this.hintGlow = false,
     this.onShowMe,
+    this.moveOn,
+    this.onMoveOn,
+    this.tilesRise = 0,
     this.onReplay,
     this.overlay,
     this.guide,
@@ -117,6 +121,16 @@ class ActivityFrame extends StatelessWidget {
   /// True when help is on offer (after a mistake): the lamp is washed with the hint colour.
   final bool hintGlow;
   final VoidCallback? onShowMe;
+
+  /// How far above [ActivitySpec.tilesTop] the drawn tiles stand, for a template whose tray draws its tiles with a smaller tap margin than the
+  /// look's slop (the sort and the shape builder: margin 4, so a tile stands `tileSlop - 4` above where the board says). The bubble keeps
+  /// [tileClear] from the tiles as they are drawn: with the lifted tile of a touch and its ring it was 2 points over them (QA, the pinned `TILE` counts).
+  final double tilesRise;
+
+  /// A Show whose host has done its part offers a quiet "next" in the lamp's place (a Show has no lamp): [moveOn] says when, [onMoveOn] is the touch.
+  /// It is a pebble with an arrow, with no count and no timer, and it writes nothing (QA-3).
+  final ValueListenable<bool>? moveOn;
+  final VoidCallback? onMoveOn;
   final VoidCallback? onReplay;
 
   /// Drawn over everything (the celebration).
@@ -284,7 +298,7 @@ class ActivityFrame extends StatelessWidget {
     // (never below the minimum), and a bubble that is still too tall (a long line with a chip) stands higher, not over the tiles.
     final double floorTop = s.trailTop + 36 + 4;
     final bool clear = (bubbleAboveTiles || target != null || tiles != null) && s.tilesTop > s.bubbleTop;
-    final double ceiling = clear ? s.tilesTop - tileClear : double.infinity;
+    final double ceiling = clear ? s.tilesTop - tilesRise - tileClear : double.infinity;
     // Where the bubble ends on its right (the guide's side), and how far to the left it may widen when its line does not fit at the
     // smallest size: a tablet to its stage's card, a phone to leave the stage the room of a hint's drawing.
     final double rightEdge = s.bubbleLeft != null
@@ -514,6 +528,22 @@ class ActivityFrame extends StatelessWidget {
                 lip: hintGlow ? TokenColors.hintHalo : TokenColors.cardLip,
                 onPressed: onHint,
                 child: const BoardSvg('assets/art/ui/hint.svg', width: 32, height: 32),
+              ),
+            ),
+          if (moveOn != null && onMoveOn != null)
+            boardAt(
+              left: s.hintLeft,
+              top: s.controlsTop,
+              child: ValueListenableBuilder<bool>(
+                valueListenable: moveOn!,
+                builder: (BuildContext context, bool offered, Widget? _) => offered
+                    ? PebbleButton(
+                        key: const Key('lesson-show-next'),
+                        semanticLabel: He.showNextSemantics.text,
+                        onPressed: onMoveOn,
+                        child: const Icon(Icons.arrow_forward_rounded, color: TokenColors.ink, size: 32),
+                      )
+                    : const SizedBox(width: 64, height: 64),
               ),
             ),
           if (showHelp)

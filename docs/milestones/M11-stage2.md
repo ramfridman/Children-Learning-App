@@ -419,10 +419,10 @@ The correct-feedback lines are kept where they still say the fact ("yes, red and
 | V2 | a Show with a `tap_answer` template (except its optional `predict`), more than 3 host lines, no `handOver: "last"`, or a skill without exactly one Show |
 | V3 | a `together` entry whose `lead` is 0 or not less than the item's number of steps, or whose item is not of the lesson's skills |
 | V4 | a skill over its pick cap (60% A and B, 70% C, 80% for the 11 recognition skills; Shows not counted), or a land and band over 50% without the exempt skills; the exempt list is a named constant with the step each skill waits for |
-| V5 | `hints[1]` whose R-code equals the activity's `representation` or level 1's |
-| V6 | a re-cut or new hands-on activity that can record fewer than 2 misconception tags (§4.1), unless its skill lists none; a three-option tap with fewer than 2 tagged distractors; a two-option tap with an untagged distractor |
+| V5 | `hints[1]` whose R-code equals the activity's `representation` or level 1's. Hints carry no R-code: V5 reads a table of what each hint-2 picture draws, keyed by the hint-2 family (§11.4) |
+| V6 | a re-cut or new hands-on activity that can record fewer than min(2, the tags its skill lists) misconception tags (§4.1, §11.4); a tap of three options or more with fewer than 2 tagged distractors (counted per distractor, not per distinct tag); a two-option tap with an untagged distractor |
 | V7 | a lesson pool without a rung-0 and a rung-1 item for each of its skills, or without a rung-2 item where the skill has symbols |
-| W1 (warning) | a scored option label not in the skill's `teaches` or in an earlier skill's |
+| W1 (warning) | a label the child is asked for (the right option of a tap, every bin of a sort) that is not in the skill's `teaches` or a prerequisite's, with the exceptions of §11.4 (counting words, yes/no and "לֹא X"); a distractor's label is not asked for |
 
 ### 7.3 Acceptance criteria for Stage 2 (testable)
 
@@ -526,11 +526,14 @@ The owner said yes to all four questions: (1) at most 7 scored items for ages 7 
 
 | Step | Status (2026-11-15) |
 |---|---|
-| 2.1 Show, parts, lead, evidence, gating, caps | **built for the pilot (2026-11-15, app-developer)**: schema, `arc_build.py`, `lesson_arc.dart`, the controller and the two sort and shape sessions, the host's hand for Kubi; not yet: the "show me" hand button, a second Together item, the predict question, the motions push, stack, turn and stamp, other hosts' pointers; QA and the security-engineer's review still to come |
+| 2.1 Show, parts, lead, evidence, gating, caps | **built for the pilot (2026-11-15, app-developer), QA round 2026-11-16**: schema, `arc_build.py`, `lesson_arc.dart`, the controller and the sort, shape-builder and trace sessions, the host's hand for Kubi, the motions trace, count, walk, sticks, push, stack, turn and stamp, the turn arrow of a piece, `trace` as a lead template, bounded voice waits and the "next" pebble of a Show (QA-3); not yet: the "show me" hand button (not asked for by §7.3; the eye button gives the worked example), a second Together item, the predict question, other hosts' pointers; the security-engineer's review still to come |
 | 2.2, 2.2c template extensions | not started (2.2c frees SHP-A-08's Show) |
 | 2.3 validator V1 to V7, W1, the fade rule | **built** in `arc_checks.dart` (§11.2's corrections as named waiver lists) and `lesson_arc.dart`; V5 reads a table of what each B-40 picture draws |
 | **2.4a pilot: Shape Forest content** | **done by the curriculum-expert** (§11.1); Hebrew drafts wait for the hebrew-text-editor, drawings for the design-director |
+| QA round of the pilot (QA-2, -5, -6, -7) | **content done by the curriculum-expert on 2026-11-16** (§11.4); validator, trace lead and checker data wait for the app-developer, 24 texts for the hebrew-text-editor |
 | 2.4b to 2.4e, 2.5, 2.7, signing | not started |
+
+**QA round (2026-11-16, app-developer).** QA-3 bounded waits and a "next" pebble in a Show; QA-4 the four solid motions, the turn arrow of a piece, the right-triangle ghost and the tracing lead; QA-1 bin labels that grow with the text; the bubble keeps 16 points from the drawn tiles (the pinned counts went 146, 74 and 73 to 0); QA-2 the validator refuses an empty Alone pool; QA-8 the pointer's leg and the tally of sticks; W1, V5 (by family), V6 as §11.4 says; the check_maths rules for the oval and trapezoid; the two halves of a square in one box. Open for the curriculum-expert: 17 sorts whose hint 2 family draws the question's own representation (`hintTwoWaivers` in `arc_checks.dart`); the host's pointer still crosses the sand tray in the stamp (the leg is long), a design question.
 
 ### 11.1 What the pilot changed (content only, generators re-run)
 
@@ -560,3 +563,89 @@ The owner said yes to all four questions: (1) at most 7 scored items for ages 7 
 - **hebrew-text-editor:** the 61 host lines (plain drafts in the arc file) and 173 narrator clips new or re-worded (4,810 letters, 10,457 characters with nikud), all `NOT READ` rows of `docs/review/hebrew-master.csv`. Six new rows came out `owner-approved` by the dagesh-after-מִ rule (`b.shpb06.1` to `.3` prompts and alt texts) and four `text-ready` by an identical reviewed text: they are drafts. The regenerated table also lists 64 app-string rows from the branch's earlier screens (not the pilot's). `x.shpb09.1` and `.4` say "stamp the solid" for a pyramid whose stamp is its square base: "on its side" would make the triangle true.
 - **owner (via the orchestrator):** the naming tag M-SHP-NAME (curriculum §5.2).
 - **Pinned tests now red because of the pilot's content (not the signature):** `content_lints_test.dart`, three tests: the source counts become 1,214 activities and 114 skills; `b15.shpa02.2` leaves the list of explained gaps (it has two tags now); the older gaps' pin goes from 326 to 297. `tools/test_hebrew_sources.py` `test_table_counts`: 15,912 rows. `docs/audio/voicing-groups.json` was re-run (`tools/voicing_groups.py`, free) so every new clip is in a group (shapes-A 250 ids, 7,496 characters; shapes-B 187, 7,364). **Red because the bundled pack is not re-signed:** `starter_pack_test.dart` "built from the sources". **Will go red at signing** (they read the signed pack): `hint_tap_families_test.dart` (the A-07 "solids" id lists name four re-cut items), `hint_tap_golden_test.dart` and `hint_qa_test.dart` (`shp.name.triangle` now offers the dome for the circle).
+
+### 11.4 The QA round of the pilot (2026-11-16, curriculum-expert)
+
+QA of the pilot filed four teaching defects. All are fixed at the source (`content/units/arc/shape-forest.arc.json`, `content/units/shapes.json`, the
+shape tables of `tools/band_b2.py` and `tools/band_b3.py`), regenerated with `tools/regen_content.py`. The rule that decides them: **every word, shape
+and number an Alone or Together item asks for is shown and named in its skill's Show or in a prerequisite's Show** (W1 below); a Show line stays at
+most 6 words, and a Show adds a step rather than lengthen a line.
+
+**QA-5, the Shows that did not teach what the items ask.**
+
+| Skill (lesson) | Before | Now |
+|---|---|---|
+| SHP-B-01 (`polygon-detectives`) | sorted three shapes into triangle / four-sided; the new names only in the opening line | three bins of sticks (4, 5, 6) under their names; Kubi counts a turned square, a pentagon and a hexagon from a start dot, the key line names all three ("אַרְבַּע — מְרֻבָּע, חָמֵשׁ — מְחֻמָּשׁ, שֵׁשׁ — מְשֻׁשֶּׁה"), the child counts a four-sided shape. Together is the 4-or-5 sort `b.shpb01.7` |
+| SHP-B-02 (`count-sides`) | counted 3 and 4 only; the items jump to 5 and 6 | bins of 3, 4 and 5 sticks; the sides lift off as sticks, the pentagon is counted from a green start dot; key line "סוֹפְרִים כׇּל צֶלַע פַּעַם אַחַת" (the procedure, not a number). The first lesson stays at 3 and 4 (`b.shpb02.2`, `.6`, `.1`, `.5`); 5 and 6 come in `count-sides-more` (6 sides is named in B-01's Show) |
+| SHP-B-09 (`solid-and-face`) | stamps a cylinder and a box; the items also sort a pyramid to the triangles | three bins; Kubi lays the pyramid on its side before it stamps (a triangle), the hand-over names it; `teaches` adds תֵּבָה, פִּירָמִידָה, מַשְׁאִיר עִגּוּל. A can stamps a circle in two sorts |
+| SHP-B-08 (`solids`) | named a ball, a cone, a cylinder; תֵּבָה never shown | bins גָּלִיל, חָרוּט, תֵּבָה; a party hat (cone, "with a point") and a gift box (תֵּבָה, "with corners") go in, the child puts a can ("two circles": the cylinder). The named and rolls sorts use the real things |
+| SHP-B-03 | the second bin's words never said | hand-over "בַּמַּלְבֵּן לֹא כֻּלָּן שָׁווֹת" |
+| SHP-A-03 (`any-shape`) | Together a square sort after a triangle Show | the child's step is the upside-down triangle (the heart of M-SHP-ORIENT); Kubi turns a tilted square upright and back before it goes to "not a triangle". Together is a triangle sort in both lessons (`shp.any.down`, `shp.any.thin`); the square sorts are Alone transfer |
+| SHP-A-07 | — | the Show's stacking box is the real gift box |
+
+Labels: `b15.shpa03.1`, `.2` had plural bins ("עִגּוּלִים") and now say "עִגּוּל" / "רִבּוּעַ" as every other bin; the red ball of A-07 is "כַּדּוּר" (the colour is
+not the answer in Shape Forest).
+
+**W1: before 57, now 53 as built, 0 with the exceptions below (checked by a script over the pack).** The 10 real gaps were content and are fixed
+above; the rest are exceptions with a reason. **What W1 should accept** (`metBeforeAsked` in `app/lib/content/arc_checks.dart`):
+
+1. **Only what the child is asked for:** the label of the right option of a tap, and every bin label of a sort. A distractor's label is not checked:
+   a non-example is never asked for, and offering it before it is taught is the first-attempt diagnosis of §2.2 (M-SHP-CLOSED, M-SHP-PROTO). Covers 26
+   warnings (צוּרָה עֲקֻמָּה, צוּרָה פְּתוּחָה, מַלְבֵּן before A-04, אֶלִיפְּסָה, טְרַפֵּז, פִּירָמִידָה). A number tap (every option a `numeral`) is the exception: all its
+   options are weighed, so all are checked (rule 3 then accepts them).
+2. **"כֵּן", "לֹא", and "לֹא X" when X is known.** Two-year-olds understand "no" and "not" before a known noun; the bin also shows a crossed picture. 8 warnings
+   (לֹא מְשֻׁלָּשׁ, לֹא רִבּוּעַ, לֹא מִתְגַּלְגֵּל, לֹא עִגּוּל).
+3. **Counting words 1 to 10** (both genders), alone or before a known word ("חָמֵשׁ צְלָעוֹת"), **when the skill's prerequisite closure holds NUM-A-02**
+   (counting words 1–10; NUM-A-01 alone: 1 to 5). They are taught in Counting Hills, whose Shows come in 2.4c; SHP-B-01 needs NUM-A-09. 19 warnings.
+
+Nothing else is accepted: a shape or solid name, a property word or a plural must be in a Show.
+
+**QA-6, a tap first for a new child.** Each of the five lessons now has a second rung-0 hands-on item, so hands-on comes first after Together: `rectangle`
++ `shp.rect.sort` (square / not a square, the trapezoid goes out, M-SHP-PROTO); `roll-or-stack` + `shp.solid.real` (a gift box stacks; Together) and
+`shp.solid.rolls.blue` moved in, `roll-or-stack-again` Together `shp.solid.stacks.blue`; `shape-friends-again` + `shp.match.oval` (sorter, the oval
+decoy); `shapes-around-us-again` + `shp.world.clock` (a clock, a banknote, a sign, a coin, a window); `shape-friends-again-1-b15` Together
+`shp.match.trapezoid` (sorter, trapezoid and oval decoys) and Alone `shp.match.triangle` (moved from `shape-friends`). `shapes-around-us` takes
+`shp.line.straight2`, so SHP-A-10 has a sort there too. SHP-A-02 in the three `shape-friends` lessons stays taps (a recognition skill; its hands-on form
+is tracing).
+
+**QA-2.** `shapes-around-us-again-1-b15` ("קַו יָשָׁר וְקַו עָקֹם") was one tap. It is now an SHP-A-10 lesson (its title's skill): Show `show.shp-a-10`,
+Together `shp.line.shapes` (the trapezoid is straight, the oval curved), Alone `shp.line.shapes2`, Use `b15.shpa10.2`, Recall `shp.name.circle`.
+
+**QA-7, tracing.** A tracing Show, `show.shp-a-02.trace`: Kubi draws two sides of the triangle of `x.shpa02.3` from its start dot ("יָשָׁר, פִּנָּה, יָשָׁר, פִּנָּה"), the third side is the child's. `trace` is a lead template (app-developer, 2026-11-16: one lead step = one side of the path, corner to corner, a circle in quarters; V2 reads one Show per skill and template), so the two tracing lessons now open with it and their Together item is led one side (lead 1).
+
+**Three weakest lessons.** B-01, B-02 and B-09 are re-cut as in the table, with the motions count, sticks, stamp and turn (`detail` is one word in the
+step: `sides`, `upright`, `point`, `corners`, `side`).
+
+**The new pictures.** Oval: a look-alike circle in `shp.name.circle`, `shp.name.mix`, `b15.shpa02.1`, `shp.any.big.circle`, the sorters and the line
+sorts. Trapezoid: a look-alike rectangle in `shp.rect.find` (two options now), `b15.shpa04.1`, `shp.rect.sort` and `shp.match.trapezoid`. Half-square
+triangle: `b.shpb06.3` is now two of them making a big triangle. Real things: the can, the party hat, the gift box and the Egyptian pyramid in B-08's
+Show and sorts, the can in B-09's stamp sorts, the gift box in A-07. Each look-alike says its own line (the shared M-SHP-PROTO line, "count the sides",
+would excuse it). The dice is not used: in Hebrew one rolls a dice (מְגַלְגְּלִים קֻבִּיָּה), so it is no honest "does not roll". **Taps without a second
+honest tag: 30 → 23** (19 outside the exempt SHP-A-08; list in `docs/curriculum.md` §4).
+
+**V5: the developer's reading is right, with a correction.** Hints carry no R-code; V5 reads `_hintRepresentation` over `HintLadder`, one picture per
+template. Two gaps: (a) for `tap_answer` the level-2 picture is `anotherWay`, which maps to null, so V5 checks no tap; (b) for `sort_drag` it is
+`nextPicture` (the next card lit, the bins compared), counted as pictorial, which passes against a concrete sort but changes no representation and is
+not what the spoken hint 2 says. **Correction:** V5 keys its table by the hint-2 family, the `<family>` of `hints[1].vo` (`vo:hint.<family>.h2`), and
+the hint player draws that family's picture. Shape Forest: `shp_sides`, `shp_closed`, `shp_line`, `shp_world`, `shp_sorter` = the finger traces
+(embodied); `shp_equal` = sticks on the sides, `shp_face` = the stamp, `shp_roll`, `shp_solid_roll` = the push, `shp_square_turn` = the turn
+(concrete); `shp_triangle`, `shp_square_rect`, `shp_solid_name`, `shp_shadow`, `shp_twice` = the shape's parts lit and named (pictorial, so against a
+pictorial question V5 flags them). The generic `pick`, `sort`, `spot`, `match`, `sb` families are lights (null, flagged when they are the only hint 2).
+59 Shape Forest taps still have the generic "נִסְתַּכֵּל לְאַט עַל כֻּלָּם" hint 2; giving them their family line is a later CE pass (not in this round).
+
+**V6 (two fixes for the developer).** (a) The two-option branch never fires: for a two-option tap `wrong.length` is 1, and the code tests `== 2`. Test
+`wrong.length == 1 && wrong.single == null`, and for three options or more count tagged distractors (`tagged < 2`), not distinct tags (two distractors
+both M-SHP-SQRECT are two tagged distractors, §11.1). (b) A hands-on item needs `min(2, tags the skill lists)`: SHP-B-09 lists only M-SHP-FACE, so
+`x.shpb09.2`, `.3`, `.6` pass by rule, not by waiver. **`tagWaivers` becomes** `b.shpb03.1`, `.3`, `.5` only (remove `shp.any.big.circle`,
+`shp.rect.find`, `b.shpb01.2`, `b.shpb01.6`, `b15.shpa03.1`, `b15.shpa03.2`, and the three `x.shpb09` by rule). **`rungWaivers`** drops
+`shapes-around-us:SHP-A-10` and both `shapes-around-us-again-1-b15` entries (V7 over the new parts fails only the remaining ten entries).
+
+**Other things for the developer.** `tools/check_maths.py` does not know the new pictures (4 UNCHECKED, so `--strict` and
+`test_every_maths_item_is_read_by_a_rule` are red): add `oval` (curved, closed, no sides, not a circle) and `trapezoid` (4 sides, straight, closed, not
+all sides equal, not a square, not a rectangle) to `sprite_info`'s shape pattern and the property helpers; `triangle_half` already reads as a triangle.
+Two shape-builder places in one box (the square from two half triangles, the skill's own example) need the touch tested on the triangle itself: today
+the first filled place catches the touch meant for the second. The pinned counts move: 7 new Band A activities (`b.shpb06.3` changed in place), 1 new Show in the arc file (not built).
+`tools/check_maths.py --strict` was already failing on other lands (395 RULE, 6 AMBIG at HEAD); Shape Forest's RULE findings go from 37 to 30.
+
+**For the hebrew-text-editor.** 24 new texts, all drafts: 12 host lines in the arc file (`needs-editor`: 9 changed Show lines and the 3 of the tracing Show; 225 letters, 508 characters) and 12 narrator and parent texts in the pack (the oval, trapezoid, square-sort and sorter look-alike lines, the labels אֶלִיפְּסָה and טְרַפֵּז, `b.shpb06.3`'s three lines, `shp.world.clock`'s hint 3, the M-SHP-PROTO parent and home text; 499 letters, 915 characters). The new items' other clips reuse texts already read. **Before the table is regenerated, the pilot's READ entry in `tools/hebrew_voice_review.py`
+(`SHAPE_FOREST_PILOT_READ`, matched by file name) must be narrowed**: as written it would mark these new drafts "read on 2026-11-15".

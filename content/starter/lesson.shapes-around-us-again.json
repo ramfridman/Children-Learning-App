@@ -16,7 +16,7 @@
   ],
   "items": [
     "shp.world.window.shape",
-    "shp.line.straight2",
+    "shp.world.clock",
     "shp.line.curved2",
     "shp.line.straight3",
     "shp.line.curved3",
@@ -39,7 +39,7 @@
     "show": "show.shp-a-05",
     "secondShow": {
       "id": "show.shp-a-10",
-      "before": "shp.line.straight2"
+      "before": "shp.line.curved2"
     },
     "recall": [
       "shp.any.big.circle"
@@ -60,7 +60,7 @@
       }
     ],
     "alone": [
-      "shp.line.straight2",
+      "shp.world.clock",
       "shp.line.curved2",
       "shp.line.straight3",
       "shp.line.curved3",

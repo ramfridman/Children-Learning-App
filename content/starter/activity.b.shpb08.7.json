@@ -55,8 +55,8 @@
     "items": [
       {
         "id": "i1",
-        "sprite": "asset:solid_cylinder",
-        "bin": "b1"
+        "sprite": "asset:party_hat",
+        "bin": "b2"
       },
       {
         "id": "i2",
@@ -65,16 +65,11 @@
       },
       {
         "id": "i3",
-        "sprite": "asset:solid_cone",
-        "bin": "b2"
+        "sprite": "asset:can",
+        "bin": "b1"
       },
       {
         "id": "i4",
-        "sprite": "asset:solid_sphere",
-        "bin": "b3"
-      },
-      {
-        "id": "i5",
         "sprite": "asset:ball_green",
         "bin": "b3"
       }

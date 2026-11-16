@@ -58,6 +58,10 @@ class BuildPatternSession extends TemplateSession {
 
   /// A small phone's stage is as tall as a phone's, so that the two rows (the model and the places) are tall enough for pictures that
   /// can be read; the palette stands lower by what it takes. A tablet gives a long row (six places, or towers) the board's whole width.
+  /// The palette's tiles have a tap margin of 6 and the row starts `tileSlop` above the tiles' place, so the drawn tiles stand `tileSlop - 6` above it (see `ActivityFrame.tilesRise`).
+  @override
+  double tilesRise(ActivitySpec spec) => spec.tileSlop - 6;
+
   @override
   ActivitySpec layoutFor(ActivitySpec base) => withStageAtLeast(
     activity.slots >= 6 || look != null ? withWideStage(base) : base,

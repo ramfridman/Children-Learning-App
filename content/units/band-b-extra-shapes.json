@@ -15,7 +15,8 @@
   "solid_pyramid",
   "gift_box",
   "solid_sphere",
-  "clue_not_circle"
+  "clue_not_circle",
+  "can"
  ],
  "objects": {
   "ladybug": {
@@ -870,6 +871,11 @@
      "solid_cylinder",
      1,
      "M-SHP-FACE"
+    ],
+    [
+     "can",
+     1,
+     "M-SHP-FACE"
     ]
    ],
    "prompt": "מַטְבִּיעִים כׇּל גּוּף בַּחוֹל. אֵיזוֹ צוּרָה נִשְׁאֶרֶת? מְמַיְּנִים.",
@@ -1009,6 +1015,11 @@
     [
      "solid_pyramid",
      2,
+     "M-SHP-FACE"
+    ],
+    [
+     "can",
+     1,
      "M-SHP-FACE"
     ]
    ],

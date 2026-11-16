@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "shp.name.mix",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "shapes",
@@ -39,13 +39,15 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:shape_square",
-        "label": "רִבּוּעַ"
+        "sprite": "asset:shape_oval",
+        "label": "אֶלִיפְּסָה",
+        "misconception": "M-SHP-PROTO"
       },
       {
         "id": "o2",
-        "sprite": "asset:shape_triangle",
-        "label": "מְשֻׁלָּשׁ"
+        "sprite": "asset:shape_curved",
+        "label": "צוּרָה עֲקֻמָּה",
+        "misconception": "M-SHP-CLOSED"
       },
       {
         "id": "o3",
@@ -69,6 +71,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-CLOSED",
+        "vo": "vo:fb.closed.not_circle",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עִגּוּל עָגֹל מִכׇּל הַצְּדָדִים. לַצּוּרָה הַזֹּאת יֵשׁ צַד יָשָׁר. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SHP-PROTO",
+        "vo": "vo:fb.proto.oval",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עִגּוּל עָגֹל מִכׇּל הַצְּדָדִים. זוֹ אֶלִיפְּסָה, וְהִיא אֲרֻכָּה יוֹתֵר. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

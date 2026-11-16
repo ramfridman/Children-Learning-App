@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -9,7 +10,10 @@ import '../design/components.dart';
 import '../design/tokens.g.dart';
 import 'hints/hint_marks.dart';
 import 'hints/hint_pictures.dart';
+import 'lesson_arc.dart' show ArcPart, ArcStep;
 import 'response_code.dart';
+import 'show_solids.dart';
+import 'show_stage.dart';
 import 'stroke_geometry.dart';
 import 'template_session.dart';
 
@@ -19,10 +23,117 @@ import 'template_session.dart';
 ///
 /// Everything is in a 100 by 100 box. With `guide: start` only the starting dot and the first direction are drawn; after three
 /// mistakes the whole path is shown and a dot walks along it.
+///
+/// The host's part (M11 Stage 2): a path is drawn side by side, corner to corner (a circle in quarters, `traceSides`). In a Show the host draws
+/// every side but the last with its pointer, each staying lit, and the child traces the rest (a wrong stroke is only "let's look again", and nothing
+/// is written); in a Together item the host draws its first sides ([ArcStep.lead]) and the child traces the rest.
 class TraceSession extends TemplateSession {
   TraceSession(super.controller, this.activity);
 
   final TraceActivity activity;
+
+  /// The sides of each stroke, and how many of them the host has drawn; the child's strokes are what is left ([childStrokes]).
+  late final List<List<List<Offset>>> _sides = <List<List<Offset>>>[
+    for (final List<Offset> stroke in activity.strokes) traceSides(stroke),
+  ];
+  int _hosted = 0;
+  late List<List<Offset>> childStrokes = activity.strokes;
+  Size _size = Size.zero;
+  ActivitySpec? _spec;
+
+  bool get _canDraw => _spec != null && !_size.isEmpty;
+
+  /// How many sides the host has drawn, and the strokes the child still has to trace: the rest of the stroke the host stopped in, then the strokes
+  /// after it. A stroke the host drew whole is the host's.
+  void _setHosted(int n) {
+    _hosted = n;
+    final List<List<Offset>> out = <List<Offset>>[];
+    int left = n;
+    for (final List<List<Offset>> sides in _sides) {
+      if (left >= sides.length) {
+        left -= sides.length;
+        continue;
+      }
+      final List<Offset> rest = <Offset>[];
+      for (final List<Offset> side in sides.skip(left)) {
+        rest.addAll(rest.isEmpty ? side : side.skip(1));
+      }
+      out.add(rest);
+      left = 0;
+    }
+    childStrokes = n == 0 ? activity.strokes : out;
+  }
+
+  /// The square the path is drawn in, in the stage's own points: inside the border, centred.
+  Rect get _box {
+    final double side = math.min(_size.width, _size.height) - 6;
+    final double inner = side - 2 * _border;
+    return Rect.fromLTWH(
+      (_size.width - side) / 2 + _border,
+      (_size.height - side) / 2 + _border,
+      inner,
+      inner,
+    );
+  }
+
+  /// The host draws side [n] (counted from 1) with its pointer, and it stays lit: its own colour, white with the room's deep edge.
+  Future<void> _hostSide(int n, {required bool fast}) async {
+    final List<Offset> side = <List<Offset>>[for (final List<List<Offset>> s in _sides) ...s][n - 1];
+    final Rect box = _box;
+    final List<Offset> path = <Offset>[for (final Offset p in side) box.topLeft + p / 100 * box.width];
+    final ShowStyle? style = showStyle;
+    if (style != null && _canDraw && !fast) {
+      showMarks.scale = hintScale(_size);
+      await ShowDirector(
+        this,
+        style,
+        showMarks,
+      ).drawPath(path, ms: style.slow ? 900 : 600, around: box.center);
+      await pause(const Duration(milliseconds: 250));
+    } else {
+      showMarks.lit.add(path);
+      await pause(Duration(milliseconds: fast ? 200 : 700));
+    }
+    _setHosted(n);
+    notify();
+  }
+
+  @override
+  void startHost() {
+    final ArcStep? step = controller.step;
+    if (step == null || hosting) return;
+    if (activity.isShow) {
+      unawaited(
+        playShow(
+          activity.show!,
+          move: (ShowStep s, {required bool fast}) => _hostSide(s.segment!, fast: fast),
+        ),
+      );
+    } else if (step.part == ArcPart.together && controller.leading && step.lead > 0) {
+      unawaited(
+        playLead(<Future<void> Function()>[
+          for (int n = 1; n <= step.lead; n++) () => _hostSide(n, fast: false),
+        ]),
+      );
+    }
+  }
+
+  /// A touch on a reminder skips what the host still has to do: its sides are lit at once, and the child's stroke is left.
+  @override
+  void onScreenTouch() {
+    if (!activity.isShow) return;
+    skipHost(() {
+      showMarks.clearMarks();
+      final Rect box = _box;
+      final List<List<Offset>> all = <List<Offset>>[for (final List<List<Offset>> s in _sides) ...s];
+      final int upto = activity.show!.hostSteps.last.segment!;
+      showMarks.lit.clear();
+      for (final List<Offset> side in all.take(upto)) {
+        showMarks.lit.add(<Offset>[for (final Offset p in side) box.topLeft + p / 100 * box.width]);
+      }
+      _setHosted(upto);
+    });
+  }
 
   /// The strokes the child has finished (right), and the one in progress, in box units.
   final List<List<Offset>> finished = <List<Offset>>[];
@@ -38,24 +149,24 @@ class TraceSession extends TemplateSession {
   int get strokeIndex => finished.length;
 
   void begin(Offset p) {
-    if (_busy || ring == AnswerState.correct) return;
+    if (_busy || hosting || ring == AnswerState.correct) return;
     current = <Offset>[p];
     notify();
   }
 
   void extend(Offset p) {
-    if (_busy || current.isEmpty) return;
+    if (_busy || hosting || current.isEmpty) return;
     current.add(p);
     notify();
   }
 
   Future<void> end() async {
-    if (_busy || current.length < 2 || ring == AnswerState.correct) {
+    if (_busy || hosting || current.length < 2 || ring == AnswerState.correct) {
       current = <Offset>[];
       notify();
       return;
     }
-    final PathVerdict v = pathVerdict(current, activity.strokes[strokeIndex], activity.tolerance);
+    final PathVerdict v = pathVerdict(current, childStrokes[strokeIndex], activity.tolerance);
     final bool onPath = v.onPath;
     final bool startsRight = v.startsRight;
     final bool startsAtEnd = v.startsAtEnd;
@@ -64,9 +175,14 @@ class TraceSession extends TemplateSession {
       finished.add(List<Offset>.of(current));
       current = <Offset>[];
       _stopDemo();
-      if (finished.length == activity.strokes.length) {
+      if (finished.length == childStrokes.length) {
         _busy = true;
-        await controller.submitPlacement(right: true, response: ResponseCode.traced);
+        if (activity.isShow) {
+          // The child traced the last side of the Show: the host's key line is said again as the praise, and nothing is written.
+          controller.completePractice();
+        } else {
+          await controller.submitPlacement(right: true, response: ResponseCode.traced);
+        }
         if (disposed) return;
         ring = AnswerState.correct;
         notify();
@@ -74,6 +190,13 @@ class TraceSession extends TemplateSession {
       } else {
         notify();
       }
+      return;
+    }
+    if (activity.isShow) {
+      // The wrong stroke of a Show: nothing is written and nothing is counted; the host says "let's look again" and the child may try again.
+      current = <Offset>[];
+      controller.speak(activity.feedback.forIncorrect(null));
+      notify();
       return;
     }
     if (controller.guided) {
@@ -140,10 +263,10 @@ class TraceSession extends TemplateSession {
     final int id = _demoId;
     if (guide) showWay = true;
     int at = 0;
-    final int first = math.min(strokeIndex, activity.strokes.length - 1);
-    final int last = allStrokes ? activity.strokes.length - 1 : first;
+    final int first = math.min(strokeIndex, childStrokes.length - 1);
+    final int last = allStrokes ? childStrokes.length - 1 : first;
     for (int k = first; k <= last; k++) {
-      final List<Offset> path = resampleStroke(activity.strokes[k], 24);
+      final List<Offset> path = resampleStroke(childStrokes[k], 24);
       final int shown = math.max(2, (path.length * fraction).round());
       for (int i = 0; i < shown; i++) {
         later(Duration(milliseconds: msPerPoint * (++at)), () {
@@ -165,6 +288,13 @@ class TraceSession extends TemplateSession {
 
   @override
   void onReset() {
+    // The sides the host drew in the lead of a Together item stay drawn, and a Show's keep their place; any other tracing starts from nothing.
+    final ArcStep? step = controller.step;
+    _setHosted(
+      activity.isShow
+          ? _hosted
+          : (step?.part == ArcPart.together && !controller.leading ? math.min(step!.lead, _hosted) : 0),
+    );
     finished.clear();
     current = <Offset>[];
     ring = AnswerState.idle;
@@ -196,44 +326,57 @@ class TraceSession extends TemplateSession {
   // ---- drawing ----
 
   @override
-  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) => ListenableBuilder(
-    listenable: this,
-    builder: (BuildContext c, Widget? _) {
-      final double side = math.min(size.width, size.height) - 6;
-      // The finger is read and the path is drawn inside the border, on the same square.
-      final double inner = side - 2 * _border;
-      Offset toBox(Offset local) => local / inner * 100;
-      return Semantics(
-        container: true,
-        label: activity.altText,
-        child: Center(
-          child: Container(
-            key: const Key('trace-stage'),
-            width: side,
-            height: side,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.9),
-              borderRadius: BorderRadius.circular(TokenRadius.lg),
-              border: Border.all(
-                color: ring == AnswerState.correct
-                    ? TokenColors.correctGlow
-                    : (ring == AnswerState.notYet ? TokenColors.notYetRing : TokenColors.hairline),
-                width: _border,
+  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
+    _size = size;
+    _spec = spec;
+    return ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _stage(size));
+  }
+
+  Widget _stage(Size size) {
+    final double side = math.min(size.width, size.height) - 6;
+    // The finger is read and the path is drawn inside the border, on the same square.
+    final double inner = side - 2 * _border;
+    Offset toBox(Offset local) => local / inner * 100;
+    return Semantics(
+      container: true,
+      label: activity.altText,
+      child: Stack(
+        children: <Widget>[
+          Positioned.fill(
+            child: Center(
+              child: Container(
+                key: const Key('trace-stage'),
+                width: side,
+                height: side,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.9),
+                  borderRadius: BorderRadius.circular(TokenRadius.lg),
+                  border: Border.all(
+                    color: ring == AnswerState.correct
+                        ? TokenColors.correctGlow
+                        : (ring == AnswerState.notYet ? TokenColors.notYetRing : TokenColors.hairline),
+                    width: _border,
+                  ),
+                ),
+                child: GestureDetector(
+                  key: const Key('trace-touch'),
+                  behavior: HitTestBehavior.opaque,
+                  onPanStart: (DragStartDetails d) => begin(toBox(d.localPosition)),
+                  onPanUpdate: (DragUpdateDetails d) => extend(toBox(d.localPosition)),
+                  onPanEnd: (DragEndDetails d) => end(),
+                  child: CustomPaint(painter: _TracePainter(this), size: Size(inner, inner)),
+                ),
               ),
             ),
-            child: GestureDetector(
-              key: const Key('trace-touch'),
-              behavior: HitTestBehavior.opaque,
-              onPanStart: (DragStartDetails d) => begin(toBox(d.localPosition)),
-              onPanUpdate: (DragUpdateDetails d) => extend(toBox(d.localPosition)),
-              onPanEnd: (DragEndDetails d) => end(),
-              child: CustomPaint(painter: _TracePainter(this), size: Size(inner, inner)),
-            ),
           ),
-        ),
-      );
-    },
-  );
+          if (showStyle != null)
+            Positioned.fill(
+              child: ShowLayer(marks: showMarks, style: showStyle!),
+            ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => null;
@@ -250,9 +393,8 @@ class _TracePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final double k = size.width / 100;
     Offset px(Offset p) => p * k;
-    final TraceActivity a = s.activity;
     final Paint dot = Paint()..color = TokenColors.ink.withValues(alpha: 0.4);
-    for (final (int i, List<Offset> stroke) in a.strokes.indexed) {
+    for (final (int i, List<Offset> stroke) in s.childStrokes.indexed) {
       final bool done = i < s.finished.length;
       if (s.guideShown && !done) {
         for (final Offset p in resampleStroke(stroke, math.max(6, (strokeLength(stroke) / 5).round()))) {

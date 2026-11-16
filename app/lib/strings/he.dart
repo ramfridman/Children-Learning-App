@@ -108,6 +108,7 @@ abstract final class He {
   static const Str counterSemantics = Str('כמה כבר נספרו');
   static const Str showMeSemantics = Str('תראו לי');
   static const Str hintSemantics = Str('רמז');
+  static const Str showNextSemantics = Str('להמשיך');
   static const Str keypadDeleteSemantics = Str('למחוק ספרה');
   static const Str keypadDoneSemantics = Str('זה המספר');
   static const Str homeSemantics = Str('הביתה');

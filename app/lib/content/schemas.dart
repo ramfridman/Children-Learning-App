@@ -1121,7 +1121,7 @@ const List<String> hostMotions = <String>[
 
 /// One move of a Show: the host's, or the child's last one. A sort moves a card (`item`) into a bin; a shape builder puts a piece (`piece`,
 /// the picture of the tray piece) into a place (`slot`). `say: key` marks the move at which the key line is said. `motion` and `detail` name the
-/// motion of the host's hand (what the design shows), and are never read by any rule of the lesson.
+/// motion of the host's hand (what the design shows), and are never read by any rule of the lesson. A tracing moves a side of its path (`segment`).
 const SObject _showStep = SObject(<String, SField>{
   'by': SField(SEnum(<String>['host', 'child'])),
   'item': SField(SString(minLength: 2, maxLength: 3, pattern: r'i[0-9]{1,2}'), required: false),
@@ -1131,6 +1131,8 @@ const SObject _showStep = SObject(<String, SField>{
   'say': SField(SConst('key'), required: false),
   'motion': SField(SEnum(hostMotions), required: false),
   'detail': SField(SString(minLength: 2, maxLength: 12, pattern: r'[a-z]{2,12}'), required: false),
+  // A tracing: the side of the path the move draws, counted from 1 (see `traceSideCount`: corner to corner, or a quarter of a circle).
+  'segment': SField(SInt(min: 1, max: 12), required: false),
 });
 
 /// A Show: an activity with `purpose: show` that plays on the skill's hands-on template, unscored. The host does the `steps` one after
@@ -2114,6 +2116,7 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'directionMisconception': SField(_tag, required: false),
         }),
       ),
+      'show': const SField(_show, required: false),
     }),
   ),
   // LS09 say it with me (docs/languages/frame.md section 2.3): the voice says a word with its picture, the child may say it (the

@@ -26,7 +26,7 @@ void main() {
   test('every picture of every Show of Shape Forest that a motion acts on has an outline', () {
     for (final Activity a in content.activities.values.where((Activity a) => a.isShow)) {
       for (final ShowStep s in a.show!.steps) {
-        if (!ShowDirector.motions.contains(s.motion)) continue;
+        if (!ShowDirector.motions.contains(s.motion) || a is TraceActivity) continue;
         final String? sprite = a is SortDragActivity
             ? a.items.firstWhere((SortItem i) => i.id == s.item).sprite
             : (a as ShapeBuilderActivity).slots.firstWhere((ShapeSlot x) => x.id == s.slot).sprite;

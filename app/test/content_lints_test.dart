@@ -110,7 +110,6 @@ const Map<String, String> _knownNewGaps = <String, String>{
   'b.mathb10.8': 'E2',
   'b15.loga09.1': 'E2',
   'b15.loga09.2': 'E2',
-  'b15.shpa02.1': 'E2',
   'b.logb01.9': 'one tag only: the pattern has no second wrong place',
   'b.logb01.10': 'one tag only: the pattern has no second wrong place',
   'b15.numa13.1': 'spec: one tag (M-ORD-CARD)',
@@ -124,7 +123,8 @@ void main() {
 
   test('the sources are the 967 activities and 100 skills of pack 0.11.0, and the 239 and 12 of M10 batch C1 (170 of the first sessions, 58 for the block, chart, keypad and tolerance modes, 5 for the line by estimate and the true-or-false card, 4 lucky-right items, and 2 hidden-basket count-on items)', () {
     // + 14 skills and 48 items of the Shape Forest pilot (M11 Stage 2): SHP-B-05 and SHP-B-06, 8 new shape builders, and the 16 Shows
-    expect(acts.length, 967 + 239 + 8 + 16);
+    // + 8 after the QA round of the pilot (2026-11-16): 7 new items (shp.rect.sort, shp.solid.real, shp.match.oval, shp.match.trapezoid, shp.world.clock, shp.line.shapes, shp.line.shapes2) and the tracing Show
+    expect(acts.length, 967 + 239 + 8 + 16 + 8);
     expect(skills.length, 100 + 12 + 2);
   });
 
@@ -181,14 +181,15 @@ void main() {
   group('section 5.3: two tagged wrong answers on an item with three or more options', () {
     final List<String> gaps = _tagGaps(acts);
 
-    test('the 20 new items B-15 added with a gap are exactly the explained ones', () {
+    test('the 19 new items B-15 added with a gap are exactly the explained ones', () {
       final Set<String> newGaps = gaps.where(_knownNewGaps.containsKey).toSet();
       expect(
         newGaps,
         _knownNewGaps.keys.toSet(),
         reason: 'a gap on this list got fixed (take it off), or the item changed its id',
       );
-      expect(_knownNewGaps.length, 20);
+      // 19 since the QA round of the pilot (2026-11-16): b15.shpa02.1 has two tags (the oval)
+      expect(_knownNewGaps.length, 19);
     });
 
     // 320 since the maths check fixes of 2026-11-06 (docs/knowledge/maths/check-2026-11-06-fixes.md): +14 where a second
@@ -205,7 +206,8 @@ void main() {
       expect(
         older.length,
         // 297 since the Shape Forest pilot (M11 Stage 2): 29 taps were re-cut to hands-on templates or got an honest second tag
-        297,
+        // 292 since the QA round of the pilot (2026-11-16): the oval and the trapezoid gave five taps their second honest tag
+        292,
         reason: 'a new gap, or an old one fixed: update the pin with the curriculum-expert',
       );
     });

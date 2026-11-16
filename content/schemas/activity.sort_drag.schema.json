@@ -510,6 +510,11 @@
                 "minLength": 2,
                 "maxLength": 12,
                 "pattern": "^(?:[a-z]{2,12})$"
+              },
+              "segment": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 12
               }
             },
             "required": [

@@ -12,8 +12,8 @@ import 'template_session.dart';
 // middle of the stage and held up big under a veil, the host's pointer (its own limb) glides along its sides, the sides it has shown stay lit (a
 // white core with an edge in the room's deep colour), numbers pop on the sides it counts, an ant walks the outline, sticks lie on the sides. After
 // the motion the pointer drags the thing into its bin. This file is the art, the geometry and the choreography; the sessions of the templates give
-// it the places and draw its layer over their stage. Motions that have no row here yet (push, stack, turn, stamp) leave the plain drag of the
-// worked example.
+// it the places and draw its layer over their stage. The solids' motions (push and roll, stack, turn round, stamp in the sand) are in
+// `show_solids.dart`; a step key with no row at all leaves the plain drag of the worked example.
 
 /// The sides of one picture in its own 100 by 100 units, from `outlines.json` (`tools/make_show_art.py`).
 class ShowOutline {
@@ -26,14 +26,48 @@ class ShowOutline {
   final Offset? gap;
 }
 
-/// The pictures a Show draws: the outlines, the host's pointer and the ant, as the files hold them.
+/// What a solid has that the turn-round motion points at, in its picture's 100 by 100 units (`outlines.json`, kind `solid`): the point of a cone,
+/// the top and the base of a cylinder as ellipses (centre x, centre y, radius x, radius y), the face of a box as a polygon.
+class ShowSolid {
+  const ShowSolid({this.point, this.top, this.base, this.face});
+
+  final Offset? point;
+  final List<double>? top;
+  final List<double>? base;
+  final List<Offset>? face;
+}
+
+/// The pictures a Show draws: the outlines, the host's pointer, the ant, the arrows, the sand tray and its prints, as the files hold them.
 class ShowArt {
-  const ShowArt({required this.outlines, required this.hand, required this.antA, required this.antB});
+  const ShowArt({
+    required this.outlines,
+    required this.solids,
+    required this.hand,
+    required this.antA,
+    required this.antB,
+    required this.turnBack,
+    required this.turnFront,
+    required this.rotateCw,
+    required this.rotateCcw,
+    required this.sandTray,
+    required this.prints,
+  });
 
   final Map<String, ShowOutline> outlines;
+  final Map<String, ShowSolid> solids;
   final String hand;
   final String antA;
   final String antB;
+
+  /// The orbit arrow round a solid (the back half under it, the front half with the head over it), and the turn arrows of a piece.
+  final String turnBack;
+  final String turnFront;
+  final String rotateCw;
+  final String rotateCcw;
+
+  /// The sand tray, and the print each kind of face leaves in it (`circle`, `rect`, `square`, `triangle`).
+  final String sandTray;
+  final Map<String, String> prints;
 
   /// The files carry Shape Forest's deep (#1E7F4C); another room's deep replaces it.
   static const String shapesDeep = '#1E7F4C';
@@ -46,21 +80,49 @@ class ShowArt {
             shapesDeep,
             '#${(deep.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase()}',
           );
-    final (String json, String hand, String a, String bb) = await (
+    const List<String> kinds = <String>['circle', 'rect', 'square', 'triangle'];
+    final List<String> files = await Future.wait(<Future<String>>[
       b.loadString('assets/art/show/outlines.json'),
       b.loadString('assets/art/hosts/kubi_hand.svg'),
-      b.loadString('assets/art/show/ant_a.svg'),
-      b.loadString('assets/art/show/ant_b.svg'),
-    ).wait;
-    return ShowArt(outlines: parseOutlines(json), hand: hand, antA: paint(a), antB: paint(bb));
+      for (final String f in <String>[
+        'ant_a',
+        'ant_b',
+        'turn_back',
+        'turn_front',
+        'rotate_cw',
+        'rotate_ccw',
+        'sand_tray',
+      ])
+        b.loadString('assets/art/show/$f.svg'),
+      for (final String k in kinds) b.loadString('assets/art/show/sand_print_$k.svg'),
+    ]);
+    return ShowArt(
+      outlines: parseOutlines(files[0]),
+      solids: parseSolids(files[0]),
+      hand: files[1],
+      antA: paint(files[2]),
+      antB: paint(files[3]),
+      turnBack: paint(files[4]),
+      turnFront: paint(files[5]),
+      rotateCw: paint(files[6]),
+      rotateCcw: paint(files[7]),
+      sandTray: files[8],
+      prints: <String, String>{for (final (int i, String k) in kinds.indexed) k: files[9 + i]},
+    );
   }
 
+  static String _key(String asset) => asset.startsWith('asset:') ? asset.substring(6) : asset;
+
   /// The outline of the picture [asset] (`asset:shape_triangle_red`), or null for a picture the Show has no outline of.
-  ShowOutline? of(String asset) => outlines[asset.startsWith('asset:') ? asset.substring(6) : asset];
+  ShowOutline? of(String asset) => outlines[_key(asset)];
+
+  /// What the solid [asset] has that a turn points at (a cone's point, a cylinder's circles, a box's face), or null for a picture that is no solid
+  /// the files know (a ball has nothing to point at).
+  ShowSolid? solidOf(String asset) => solids[_key(asset)];
 }
 
-/// Reads `outlines.json`: a picture is a polygon (`poly`), an open figure (`open`), a dome (`dome`), an ellipse or a line; a solid has no outline
-/// here (its motions are not built yet).
+/// Reads `outlines.json`: a picture is a polygon (`poly`), an open figure (`open`), a dome (`dome`), an ellipse or a line; a solid has no sides
+/// here (see [parseSolids]).
 Map<String, ShowOutline> parseOutlines(String json) {
   final Map<String, Object?> doc = jsonDecode(json) as Map<String, Object?>;
   final Map<String, Object?> pictures = doc['pictures']! as Map<String, Object?>;
@@ -105,6 +167,35 @@ Map<String, ShowOutline> parseOutlines(String json) {
     }
   }
   return out;
+}
+
+/// Reads the solids of `outlines.json`: the point, the ellipses and the face of each.
+Map<String, ShowSolid> parseSolids(String json) {
+  final Map<String, Object?> doc = jsonDecode(json) as Map<String, Object?>;
+  final Map<String, Object?> pictures = doc['pictures']! as Map<String, Object?>;
+  Offset pt(Object? p) {
+    final List<Object?> v = p! as List<Object?>;
+    return Offset((v[0]! as num).toDouble(), (v[1]! as num).toDouble());
+  }
+
+  List<double>? ellipse(Object? o) =>
+      o == null ? null : <double>[for (final Object? n in o as List<Object?>) (n! as num).toDouble()];
+  return <String, ShowSolid>{
+    for (final MapEntry<String, Object?> e in pictures.entries)
+      if ((e.value! as Map<String, Object?>)['kind'] == 'solid')
+        e.key: ShowSolid(
+          point: (e.value! as Map<String, Object?>)['point'] == null
+              ? null
+              : pt((e.value! as Map<String, Object?>)['point']),
+          top: ellipse((e.value! as Map<String, Object?>)['top']),
+          base: ellipse((e.value! as Map<String, Object?>)['base']),
+          face: (e.value! as Map<String, Object?>)['face'] == null
+              ? null
+              : <Offset>[
+                  for (final Object? q in (e.value! as Map<String, Object?>)['face']! as List<Object?>) pt(q),
+                ],
+        ),
+  };
 }
 
 Offset _quad(Offset a, Offset c, Offset b, double t) =>
@@ -205,7 +296,38 @@ class ShowMarks {
   double antHeading = 0;
   bool antStep = false;
 
-  bool get active => spot != null || tip != null || veil > 0;
+  /// How the lifted thing is held (the solids' motions): turned by [spotTurn] radians (about its middle, or about its base for a sway), pressed
+  /// flat by [spotSquash] (1 = as it is, about its base).
+  double spotTurn = 0;
+  bool turnAboutBase = false;
+  double spotSquash = 1;
+
+  /// The short speed lines behind a rolling ball (from, to), and how visible they are (1 to 0).
+  final List<(Offset, Offset)> speed = <(Offset, Offset)>[];
+  double speedAlpha = 0;
+
+  /// The orbit arrow round a solid: its box, how visible its dotted back half is, and how far its front half has swept (0 to 1).
+  Rect? orbitBox;
+  double orbitBack = 0;
+  double orbitSweep = 0;
+
+  /// The sand tray (how far it has risen, 0 to 1), the print a face has left in it, and the sand grains of a press (position, progress 0 to 1).
+  Rect? tray;
+  double trayRise = 0;
+  String? printSvg;
+  Rect? printBox;
+  double printAlpha = 0;
+  final List<(Offset, double)> grains = <(Offset, double)>[];
+
+  /// The ring of a press: where, and how far it has grown (0 to 1, fading as it grows).
+  Offset? pressAt;
+  double pressT = 0;
+
+  /// The arrow that turns a piece in the shape builder: its box and the way it turns (clockwise or not).
+  Rect? rotateBox;
+  bool rotateClockwise = true;
+
+  bool get active => spot != null || tip != null || veil > 0 || tray != null || lit.isNotEmpty;
 
   void clearMarks() {
     lit.clear();
@@ -215,8 +337,17 @@ class ShowMarks {
     sticks.clear();
     tip = null;
     ant = null;
+    speed.clear();
+    speedAlpha = 0;
+    orbitBox = null;
+    orbitBack = 0;
+    orbitSweep = 0;
+    grains.clear();
+    pressAt = null;
+    rotateBox = null;
   }
 
+  /// The tray and its print stay through the drop (they fade with the veil), so they are not part of [clearMarks].
   void clear() {
     clearMarks();
     spot = null;
@@ -224,6 +355,14 @@ class ShowMarks {
     from = null;
     veil = 0;
     lift = 1;
+    spotTurn = 0;
+    turnAboutBase = false;
+    spotSquash = 1;
+    tray = null;
+    trayRise = 0;
+    printSvg = null;
+    printBox = null;
+    printAlpha = 0;
   }
 }
 
@@ -236,8 +375,12 @@ class ShowDirector {
   final ShowStyle style;
   final ShowMarks marks;
 
-  /// The step keys this director draws; any other leaves the worked example's plain drag.
+  /// The step keys this director draws along the sides of an outline; the solids' own (see [solidMotions]) are in `show_solids.dart`; any other
+  /// leaves the worked example's plain drag.
   static const Set<String> motions = <String>{'trace', 'count', 'walk', 'sticks'};
+
+  /// The step keys of the solids: a ball pushed and rolled, a block stacked, a solid turned round, a solid stamped in the sand.
+  static const Set<String> solidMotions = <String>{'push', 'stack', 'turn', 'stamp'};
 
   int _ms(int fast, int slow) => style.slow ? slow : fast;
 
@@ -247,6 +390,9 @@ class ShowDirector {
   /// The thing flies from its tile to the spot (450 ms, 350 for the older looks) and the veil comes over the bins.
   Future<void> lift({required Rect from, required Rect spot, required String svg}) async {
     marks
+      ..spotTurn = 0
+      ..spotSquash = 1
+      ..turnAboutBase = false
       ..from = from
       ..spot = spot
       ..spotSvg = svg
@@ -262,56 +408,97 @@ class ShowDirector {
     });
   }
 
-  /// The pointer drags the thing from the spot to [to] (the bin it goes in), the marks go, and the veil lifts.
-  Future<void> dropTo(Rect to) async {
+  /// The thing goes to its bin [to], the marks go, and the veil lifts. The pointer drags it there; with [carried] it is already there (a ball that
+  /// rolled in) and only the veil lifts. With [squash] it settles on landing (0.94, 120 ms). A sand tray and its print fade with the veil.
+  Future<void> dropTo(Rect to, {bool carried = false, bool squash = false}) async {
     final Rect? from = marks.spot;
     if (from == null) return;
     marks.clearMarks();
+    final double trayFrom = marks.trayRise;
+    final double printFrom = marks.printAlpha;
+    void fade(double t) {
+      marks
+        ..veil = 1 - t
+        ..trayRise = trayFrom * (1 - t)
+        ..printAlpha = printFrom * (1 - t);
+    }
+
     if (!style.still) {
-      await session.animate(Duration(milliseconds: _ms(450, 600)), (double t) {
-        final double k = Curves.easeInOutCubic.transform(t);
-        marks
-          ..spot = Rect.lerp(from, to, k)
-          ..veil = 1 - t;
-        marks.tip = marks.spot!.center + Offset(0, marks.spot!.height / 2);
-        marks.tipAngle = 0;
+      await session.animate(Duration(milliseconds: carried ? 200 : _ms(450, 600)), (double t) {
+        fade(t);
+        if (!carried) {
+          final double k = Curves.easeInOutCubic.transform(t);
+          marks.spot = Rect.lerp(from, to, k);
+          marks.tip = marks.spot!.center + Offset(0, marks.spot!.height / 2);
+          marks.tipAngle = 0;
+        }
         session.notify();
       });
+      if (squash) {
+        marks.tip = null;
+        await session.animate(const Duration(milliseconds: 120), (double t) {
+          marks.spotSquash = 1 - 0.06 * math.sin(math.pi * t);
+          session.notify();
+        });
+      }
     }
     marks.clear();
     session.notify();
   }
 
-  /// The pointer's angle at [tip] on a thing centred at [centre]: the leg points away from the middle of the thing, so it never lies across
-  /// it, within the range of the design (-120 to +45 degrees, 0 = straight down).
-  static double angleAway(Offset tip, Offset centre) {
-    final Offset d = tip - centre;
-    if (d.distanceSquared < 1) return 0;
-    final double a = math.atan2(-d.dx, d.dy);
-    return a.clamp(-120 * math.pi / 180, 45 * math.pi / 180);
+  /// The pointer's angle at [tip] on a thing centred at [centre]: the leg points away from the middle of the thing, so it never lies across it,
+  /// within the range of the design (-120 to +45 degrees, 0 = straight down). Where "away" is outside the range (the tip is above the middle, or
+  /// at its upper left) the nearest end of the range round the circle is taken, not the nearest on the number line: a tip at the top of a shape
+  /// gets the leg that reaches in from the host's side (-120), not the one that would lie across the shape (+45).
+  ///
+  /// A tip with little room above it ([above] under 60 points: a hole at the stage's top) holds the leg level (-90, in from the host's side) at the
+  /// most, so that the leg is not cut off by the stage's top edge and only its nails show.
+  static double angleAway(Offset tip, Offset centre, {double above = double.infinity}) {
+    final double a = _away(tip, centre);
+    return above < 60 && a < -math.pi / 2 ? -math.pi / 2 : a;
   }
 
-  /// Draws the motion of [step] on [outline], mapped into [box] (the picture's square on the stage). Returns false when this director has no row
-  /// for the step's key (nothing was drawn).
-  Future<bool> motion(ShowStep step, ShowOutline outline, Rect box) async {
+  static double _away(Offset tip, Offset centre) {
+    final Offset d = tip - centre;
+    if (d.distanceSquared < 1) return 0;
+    const double low = -120 * math.pi / 180;
+    const double high = 45 * math.pi / 180;
+    final double a = math.atan2(-d.dx, d.dy);
+    if (a >= low && a <= high) return a;
+    double gap(double to) {
+      final double diff = (a - to).abs() % (2 * math.pi);
+      return diff > math.pi ? 2 * math.pi - diff : diff;
+    }
+
+    return gap(low) <= gap(high) ? low : high;
+  }
+
+  /// Draws the motion of [step] on [outline], mapped into [box] (the picture's square on the stage). The pointer keeps clear of [around] (the middle
+  /// of what the whole picture is: a builder's piece is one part of a house, and the leg must not lie across the house); it is the box's middle
+  /// when null. Returns false when this director has no row for the step's key (nothing was drawn).
+  Future<bool> motion(ShowStep step, ShowOutline outline, Rect box, {Offset? around}) async {
     final String? key = step.motion;
     if (key == null || !motions.contains(key)) return false;
     Offset map(Offset u) => box.topLeft + Offset(u.dx / 100 * box.width, u.dy / 100 * box.height);
     final List<List<Offset>> sides = <List<Offset>>[
       for (final List<Offset> side in outline.sides) <Offset>[for (final Offset p in side) map(p)],
     ];
-    final Offset centre = box.center;
+    final Offset centre = around ?? box.center;
     final double k = marks.scale;
     final bool walk = key == 'walk';
     final bool open = outline.gap != null;
     final double speed = (style.slow ? 70 : 100) * k;
     for (final (int i, List<Offset> side) in sides.indexed) {
-      final double length = _length(side);
+      final double length = pathLength(side);
+      // A side takes 600 ms (900 for the youngest looks), but a step with many sides (a hexagon counted) is held to 4.2 seconds, so that three
+      // such steps and the host's lines still fit the 25 seconds of a full Show (the least a side takes is 350 ms).
+      final int dwell = key == 'count' ? _ms(300, 400) : 250;
+      final int fitted = math.max(350, 4200 ~/ sides.length - dwell);
       final int ms = key == 'sticks'
           ? 200
           : walk
           ? math.max(300, (length / speed * 1000).round())
-          : _ms(600, 900);
+          : math.min(_ms(600, 900), fitted);
       if (style.still) {
         await session.pause(const Duration(milliseconds: 600));
       } else if (key != 'sticks') {
@@ -320,7 +507,7 @@ class ShowDirector {
         _place(walk, side.first, centre, side.first, side[1]);
         session.notify();
         await session.animate(Duration(milliseconds: ms), (double t) {
-          final List<Offset> upto = _upTo(side, t);
+          final List<Offset> upto = upTo(side, t);
           marks.drawing = upto;
           _place(walk, upto.last, centre, upto.length > 1 ? upto[upto.length - 2] : side.first, upto.last);
           if (walk) marks.antStep = (t * ms / 200).floor().isEven;
@@ -368,12 +555,13 @@ class ShowDirector {
     } else {
       marks
         ..tip = at
-        ..tipAngle = angleAway(at, centre)
+        ..tipAngle = angleAway(at, centre, above: at.dy)
         ..ant = null;
     }
   }
 
-  static double _length(List<Offset> side) {
+  /// The length of the polyline [side].
+  static double pathLength(List<Offset> side) {
     double l = 0;
     for (int i = 1; i < side.length; i++) {
       l += (side[i] - side[i - 1]).distance;
@@ -382,8 +570,8 @@ class ShowDirector {
   }
 
   /// The part of [side] up to [t] (0 to 1) of its length, ending at the exact point.
-  static List<Offset> _upTo(List<Offset> side, double t) {
-    final double want = _length(side) * t;
+  static List<Offset> upTo(List<Offset> side, double t) {
+    final double want = pathLength(side) * t;
     final List<Offset> out = <Offset>[side.first];
     double done = 0;
     for (int i = 1; i < side.length; i++) {
@@ -400,7 +588,8 @@ class ShowDirector {
   }
 }
 
-/// The Show's layer over a stage: the veil, the lifted thing, the marks, the ant and the host's pointer. It draws only while a Show acts.
+/// The Show's layer over a stage: the veil, the sand tray and its print, the lifted thing with its orbit arrow, the marks, the ant and the host's
+/// pointer. It draws only while a Show acts.
 class ShowLayer extends StatelessWidget {
   const ShowLayer({super.key, required this.marks, required this.style});
 
@@ -419,6 +608,8 @@ class ShowLayer extends StatelessWidget {
         : Rect.lerp(marks.from, spot, marks.lift);
     final double handWidth = 34 * k;
     final double handScale = handWidth / 64;
+    final Rect? orbit = marks.orbitBox;
+    final Rect? rotate = marks.rotateBox;
     return IgnorePointer(
       child: Stack(
         clipBehavior: Clip.none,
@@ -427,8 +618,46 @@ class ShowLayer extends StatelessWidget {
             Positioned.fill(
               child: ColoredBox(color: TokenColors.paper.withValues(alpha: 0.5 * marks.veil)),
             ),
+          if (marks.tray != null && marks.trayRise > 0)
+            Positioned.fromRect(
+              rect: marks.tray!.shift(Offset(0, 16 * k * (1 - marks.trayRise))),
+              child: Opacity(opacity: marks.trayRise, child: PackSvg(style.art.sandTray)),
+            ),
+          if (marks.printSvg != null && marks.printBox != null && marks.printAlpha > 0)
+            Positioned.fromRect(
+              rect: marks.printBox!,
+              child: Opacity(opacity: marks.printAlpha, child: PackSvg(marks.printSvg!)),
+            ),
+          if (orbit != null && marks.orbitBack > 0)
+            Positioned.fromRect(
+              rect: orbit,
+              child: Opacity(opacity: 0.7 * marks.orbitBack, child: PackSvg(style.art.turnBack)),
+            ),
           if (at != null && marks.spotSvg != null)
-            Positioned.fromRect(rect: at, child: PackSvg(marks.spotSvg!)),
+            Positioned.fromRect(
+              rect: at,
+              // Turned about its middle (a ball rolling, a piece turning) or about its base (a solid swaying); pressed flat about its base.
+              child: Transform.rotate(
+                angle: marks.spotTurn,
+                alignment: marks.turnAboutBase ? Alignment.bottomCenter : Alignment.center,
+                child: Transform.scale(
+                  scaleY: marks.spotSquash,
+                  alignment: Alignment.bottomCenter,
+                  child: PackSvg(marks.spotSvg!),
+                ),
+              ),
+            ),
+          if (orbit != null && marks.orbitSweep > 0)
+            // The front half of the arrow sweeps: it is shown from the end side to as far as it has gone (the files are drawn left to right).
+            Positioned.fromRect(
+              rect: orbit,
+              child: ClipRect(clipper: _SweepClip(marks.orbitSweep), child: PackSvg(style.art.turnFront)),
+            ),
+          if (rotate != null)
+            Positioned.fromRect(
+              rect: rotate,
+              child: PackSvg(marks.rotateClockwise ? style.art.rotateCw : style.art.rotateCcw),
+            ),
           Positioned.fill(child: CustomPaint(painter: _MarksPainter(marks, style))),
           if (marks.ant != null)
             Positioned(
@@ -457,6 +686,19 @@ class ShowLayer extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Shows the left [fraction] of the box: the sweep of the orbit arrow, whose picture runs from its tail to its head left to right.
+class _SweepClip extends CustomClipper<Rect> {
+  _SweepClip(this.fraction);
+
+  final double fraction;
+
+  @override
+  Rect getClip(Size size) => Rect.fromLTWH(0, 0, size.width * fraction, size.height);
+
+  @override
+  bool shouldReclip(covariant _SweepClip old) => old.fraction != fraction;
 }
 
 class _MarksPainter extends CustomPainter {
@@ -536,6 +778,40 @@ class _MarksPainter extends CustomPainter {
         textDirection: TextDirection.ltr,
       )..layout();
       text.paint(canvas, at - Offset(text.width / 2, text.height / 2));
+    }
+    // The speed lines behind a rolling ball, the grains of a press, the ring of a press.
+    if (marks.speedAlpha > 0) {
+      for (final (Offset from, Offset to) in marks.speed) {
+        canvas.drawLine(
+          from,
+          to,
+          Paint()
+            ..color = style.deep.withValues(alpha: marks.speedAlpha)
+            ..strokeWidth = 2.5 * k
+            ..strokeCap = StrokeCap.round,
+        );
+      }
+    }
+    for (final (Offset from, double t) in marks.grains) {
+      final double out = 10 * k * t;
+      for (final int dir in <int>[-1, 0, 1]) {
+        canvas.drawCircle(
+          from + Offset(dir * out, -out * (dir == 0 ? 1.2 : 0.6)),
+          1.8 * k,
+          Paint()..color = const Color(0xFFC9A36A).withValues(alpha: 1 - t),
+        );
+      }
+    }
+    final Offset? press = marks.pressAt;
+    if (press != null && marks.pressT < 1) {
+      canvas.drawCircle(
+        press,
+        ((8 + 6 * marks.pressT) * k),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.5 * k
+          ..color = style.deep.withValues(alpha: 1 - marks.pressT),
+      );
     }
     final Offset? gap = marks.gap;
     if (gap != null) {

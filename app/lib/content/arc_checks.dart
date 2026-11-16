@@ -6,8 +6,11 @@
 //
 // Pure functions of the documents. The rules V1 to V7 and the warning W1 are the spec's names.
 
+import 'dart:math' as math;
+
 import '../strings/niqqud.dart';
 import 'hint_ladder.dart';
+import 'w1_words.dart';
 
 typedef ArcSay = void Function(String file, String path, String message);
 
@@ -17,6 +20,8 @@ List<Map<String, Object?>> _maps(Object? v) => <Map<String, Object?>>[
   for (final Object? e in (v as List<Object?>? ?? const <Object?>[]))
     if (e is Map<String, Object?>) e,
 ];
+
+List<Object?> _list(Object? v) => v as List<Object?>? ?? const <Object?>[];
 
 List<String> _strings(Object? v) => <String>[
   for (final Object? e in (v as List<Object?>? ?? const <Object?>[]))
@@ -71,20 +76,9 @@ bool skillHasSymbols(String skill) => RegExp(r'^(NUM|MATH)-[BC]-').hasMatch(skil
 /// each waits for is in M11-stage2 section 11.2 item 2. A fixed gap must be taken off the list (arc_checks_test.dart pins the list to the
 /// failing set of the starter sources).
 const Map<String, String> tagWaivers = <String, String>{
-  'shp.any.big.circle': 'waits for an oval (the near-circle that is not a circle): the drawing',
-  'shp.rect.find': 'waits for a four-sided shape that is not a rectangle: the drawing',
-  'b.shpb01.2': 'waits for the owner answer on the naming tag M-SHP-NAME (curriculum 5.2)',
-  'b.shpb01.6': 'waits for the owner answer on the naming tag M-SHP-NAME (curriculum 5.2)',
   'b.shpb03.1': 'a thin triangle shows no catalogued error: no tag is honest',
   'b.shpb03.3': 'a thin triangle shows no catalogued error: no tag is honest',
   'b.shpb03.5': 'a thin triangle shows no catalogued error: no tag is honest',
-  'b15.shpa03.1':
-      'found by V6 in the pilot: one tag, no second honest one known (curriculum-expert to decide)',
-  'b15.shpa03.2':
-      'found by V6 in the pilot: one tag, no second honest one known (curriculum-expert to decide)',
-  'x.shpb09.2': 'found by V6 in the pilot: one tag, no second honest one known (curriculum-expert to decide)',
-  'x.shpb09.3': 'found by V6 in the pilot: one tag, no second honest one known (curriculum-expert to decide)',
-  'x.shpb09.6': 'found by V6 in the pilot: one tag, no second honest one known (curriculum-expert to decide)',
 };
 
 /// Skills whose hands-on items have no honest tag to record beyond the one they carry (M11-stage2 section 11.2 item 3).
@@ -112,12 +106,6 @@ const Map<String, String> rungWaivers = <String, String>{
       'the naming items are pictures to tap; the hands-on form of A-02 is its two tracing lessons',
   'trace-the-shapes:SHP-A-02': 'a tracing lesson takes its pictorial item from the skills taps',
   'draw-the-shapes:SHP-A-02': 'a tracing lesson takes its pictorial item from the skills taps',
-  'shapes-around-us:SHP-A-10':
-      'found by V7 in the pilot: its pool is taps only (curriculum-expert to decide)',
-  'shapes-around-us-again-1-b15:SHP-A-05':
-      'a short second visit; its pictorial item comes from the skills other lessons',
-  'shapes-around-us-again-1-b15:SHP-A-10':
-      'a short second visit; its pictorial item comes from the skills other lessons',
 };
 
 /// The templates in which the child makes the answer with its hands (their items have a rung 0, and a second tag to record).
@@ -136,7 +124,7 @@ const Set<String> handsOnTemplates = <String>{
 };
 
 /// The templates that have a lead player: the host does the first steps of the item itself (M11-stage2 section 2.1).
-const Set<String> leadTemplates = <String>{'sort_drag', 'shape_builder'};
+const Set<String> leadTemplates = <String>{'sort_drag', 'shape_builder', 'trace'};
 
 /// The most host lines of a Show.
 const int showMaxLines = 3;
@@ -172,6 +160,56 @@ _Rep? _hintRepresentation(HintPicture p) => switch (p) {
 };
 
 enum _Rep { concrete, pictorial, embodied, symbolic }
+
+/// What the hint 2 of a family draws (M11-stage2 section 11.4): the family is the `<family>` of the hint's clip, `vo:hint.<family>.h2`. A family with no
+/// row (and the generic ones, `pick`, `sort`, `spot`, `match`, `sb`) is a light on the parts: no representation of its own, so V5 checks nothing.
+const Map<String, String> hintFamilyRepresentation = <String, String>{
+  'shp_sides': 'embodied',
+  'shp_closed': 'embodied',
+  'shp_line': 'embodied',
+  'shp_world': 'embodied',
+  'shp_sorter': 'embodied',
+  'shp_equal': 'concrete',
+  'shp_face': 'concrete',
+  'shp_roll': 'concrete',
+  'shp_solid_roll': 'concrete',
+  'shp_square_turn': 'concrete',
+  'shp_triangle': 'pictorial',
+  'shp_square_rect': 'pictorial',
+  'shp_solid_name': 'pictorial',
+  'shp_shadow': 'pictorial',
+  'shp_twice': 'pictorial',
+};
+
+/// Items whose hint 2 draws the question's own representation by the family table above: a hands-on sort (concrete) whose hint 2 is the push, the turn, the
+/// stamp or the sticks (concrete too). Found by V5 when it was keyed by family (M11-stage2 section 11.4); the curriculum-expert decides whether the hint or
+/// the item changes. A fixed one must come off the list (arc_checks_test.dart pins the list to the failing set).
+const Map<String, String> hintTwoWaivers = <String, String>{
+  'shp.any.small.square': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'b15.shpa03.1': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'b15.shpa03.2': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'shp.any.tilt': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'shp.solid.stacks.blue':
+      'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'shp.solid.which2': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'b15.shpa07.2': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'shp.solid.real': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'shp.solid.rolls.blue': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'x.shpb09.2': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'x.shpb09.3': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'x.shpb09.6': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'b.shpb08.6': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'b.shpb08.2': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'b.shpb03.2': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'b.shpb03.4': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+  'b.shpb03.6': 'a concrete sort whose hint 2 family is concrete too (curriculum-expert to decide)',
+};
+
+/// The family of a hint's clip (`vo:hint.shp_sides.h2` is `shp_sides`), or null.
+String? hintFamilyOf(Object? vo) {
+  final RegExpMatch? m = RegExp(r'^vo:hint\.([a-z0-9_]+)\.h[0-9]$').firstMatch(vo is String ? vo : '');
+  return m?.group(1);
+}
 
 /// The tags a move of the child can record in [a]: the activity's own and those of its cards, pieces and classifiers.
 Set<String> recordableTags(Map<String, Object?> a) {
@@ -224,7 +262,7 @@ void checkShowActivity(String file, Map<String, Object?> a, ArcSay say) {
     say(
       file,
       'template',
-      'a Show plays on a hands-on template that has a lead player (sort_drag or shape_builder), not on $template',
+      'a Show plays on a hands-on template that has a lead player (sort_drag, shape_builder or trace), not on $template',
     );
     return;
   }
@@ -268,6 +306,25 @@ void checkShowActivity(String file, Map<String, Object?> a, ArcSay say) {
         'the steps move every card of the scene, so that the child\'s step finishes the sort',
       );
     }
+  } else if (template == 'trace') {
+    // A tracing Show draws the sides of its path in order; the host draws all but the last, which the child traces.
+    final int sides = traceSideCount(_list(scene['strokes']));
+    for (final (int i, Map<String, Object?> s) in steps.indexed) {
+      if (s['segment'] != i + 1) {
+        say(
+          file,
+          'show.steps[$i].segment',
+          'the steps are the sides of the path in order, from 1 (found ${s['segment']})',
+        );
+      }
+    }
+    if (steps.length != sides) {
+      say(
+        file,
+        'show.steps',
+        'the steps are every side of the path, so that the child\'s step finishes the tracing ($sides sides, ${steps.length} steps)',
+      );
+    }
   } else {
     final Map<String, String> spriteOf = <String, String>{
       for (final Map<String, Object?> s in _maps(scene['slots'])) s['id']! as String: s['sprite']! as String,
@@ -291,12 +348,29 @@ void checkShowActivity(String file, Map<String, Object?> a, ArcSay say) {
   }
 }
 
-/// The steps an item gives the host to lead (sort: its cards, shape builder: its places); null for a template with no lead player.
+/// The steps an item gives the host to lead (sort: its cards, shape builder: its places, trace: the sides of its path); null for a template with
+/// no lead player.
 int? leadableSteps(Map<String, Object?> a) => switch (a['template']) {
   'sort_drag' => _map(a['answer'])['mode'] == 'share' ? null : _maps(_map(a['scene'])['items']).length,
   'shape_builder' => _maps(_map(a['scene'])['slots']).length,
+  'trace' => traceSideCount(_list(_map(a['scene'])['strokes'])),
   _ => null,
 };
+
+/// How many sides the host draws one at a time on a tracing: for each stroke, its parts corner to corner when it has few points (a polygon: 8 at the
+/// most), else four parts of equal length (a circle in quarters). The app's `traceSides` makes the same parts from the same rule.
+int traceSideCount(List<Object?> strokes) {
+  int n = 0;
+  for (final Object? s in strokes) {
+    final int points = _list(s).length;
+    n += points <= maxCornerPoints ? points - 1 : quarterSides;
+  }
+  return n;
+}
+
+/// The most points of a stroke that are still read as corners; a stroke with more is a curve, drawn in [quarterSides] parts.
+const int maxCornerPoints = 8;
+const int quarterSides = 4;
 
 /// The rules that look at lessons and skills together (V1, V3 to V7). [activities], [lessons] and [skills] are the valid documents of a pack of
 /// the lands, by id.
@@ -316,9 +390,12 @@ void checkArc({
       if (inArc(l.value)) l.key,
   ];
   final Map<String, List<String>> showsOf = <String, List<String>>{};
+  final Map<String, List<String>> showsOfTemplate = <String, List<String>>{};
   for (final MapEntry<String, Map<String, Object?>> e in activities.entries) {
     if (e.value['purpose'] != 'show') continue;
-    showsOf.putIfAbsent(_map(_maps(e.value['skills']).first)['id']! as String, () => <String>[]).add(e.key);
+    final String skill = _map(_maps(e.value['skills']).first)['id']! as String;
+    showsOf.putIfAbsent(skill, () => <String>[]).add(e.key);
+    showsOfTemplate.putIfAbsent('$skill ${e.value['template']}', () => <String>[]).add(e.key);
   }
 
   // ---- V1, V3: the lessons ----
@@ -355,6 +432,14 @@ void checkArc({
     }
 
     showOf('parts.show', parts['show']);
+    // QA-2: a visit is planned from the Alone pool; with none, the planner has nothing to serve and the lesson would be played flat, with no Show.
+    if (_strings(parts['alone']).isEmpty) {
+      say(
+        file,
+        'parts.alone',
+        'a lesson in parts has at least one Alone item (the visit is planned from the Alone pool; with none the lesson plays flat with no Show)',
+      );
+    }
     final Object? second = parts['secondShow'];
     if (second is Map<String, Object?>) {
       showOf('parts.secondShow.id', second['id']);
@@ -412,10 +497,19 @@ void checkArc({
     }
   }
 
-  // ---- V2 (across files): a skill in parts has exactly one Show ----
+  // ---- V2 (across files): a skill in parts has one Show for each template it is shown on, and at least one ----
   for (final String s in skillsInParts) {
-    final int n = showsOf[s]?.length ?? 0;
-    if (n != 1) say('skill.$s.json', '', 'a skill in a lesson in parts has exactly one Show (V2), found $n');
+    final List<String> all = showsOf[s] ?? const <String>[];
+    if (all.isEmpty) say('skill.$s.json', '', 'a skill in a lesson in parts has a Show (V2), found none');
+    for (final MapEntry<String, List<String>> e in showsOfTemplate.entries) {
+      if (e.key.startsWith('$s ') && e.value.length > 1) {
+        say(
+          'skill.$s.json',
+          '',
+          'a skill has one Show for each template (V2), found ${e.value.length} on ${e.key.substring(s.length + 1)}',
+        );
+      }
+    }
   }
 
   _pickCaps(activities, skills, say, arcLessons, lessons);
@@ -501,14 +595,16 @@ void _tags(
     final String skill = _map(_maps(a['skills']).first)['id']! as String;
     if (!own.contains(skill) || waived.containsKey(e.key)) continue;
     final String file = 'activity.${e.key}.json';
-    final bool listsNone = _strings(skills[skill]?['misconceptions']).isEmpty;
+    final int listed = _strings(skills[skill]?['misconceptions']).length;
     if (a['template'] == 'tap_answer' && isPickOnly(a)) {
+      // The wrong options of the tap: one for a two-option tap, two or more for three options or more. Each must carry a tag; two distractors that
+      // carry the same tag are two tagged distractors (M11-stage2 section 11.1).
       final List<String?> wrong = _distractorTags(a);
-      final int tagged = wrong.whereType<String>().toSet().length;
-      if (noSecondTagSkills.contains(skill) || listsNone) continue;
-      if (wrong.length == 2 && wrong.any((String? t) => t == null)) {
+      final int tagged = wrong.whereType<String>().length;
+      if (noSecondTagSkills.contains(skill) || listed == 0) continue;
+      if (wrong.length == 1 && wrong.single == null) {
         say(file, 'answer.options', 'V6: a two-option tap tags its distractor');
-      } else if (wrong.length >= 3 && tagged < 2) {
+      } else if (wrong.length >= 2 && tagged < 2) {
         say(
           file,
           'answer.options',
@@ -516,9 +612,11 @@ void _tags(
         );
       }
     } else if (handsOnTemplates.contains(a['template']) && a['template'] != 'trace') {
-      if (noSecondTagSkills.contains(skill) || listsNone) continue;
+      // A hands-on item can record as many tags as its skill lists, up to two: a skill with one tag (SHP-B-09) needs one.
+      if (noSecondTagSkills.contains(skill) || listed == 0) continue;
       final int n = recordableTags(a).length;
-      if (n < 2) say(file, 'answer', 'V6: a hands-on item can record at least two tags (found $n)');
+      final int need = math.min(2, listed);
+      if (n < need) say(file, 'answer', 'V6: a hands-on item can record $need tags (found $n)');
     }
   }
 }
@@ -536,14 +634,18 @@ void _hintTwo(
   };
   for (final String id in ids) {
     final Map<String, Object?>? a = activities[id];
-    if (a == null || _maps(a['hints']).length < 2) continue;
+    if (a == null || _maps(a['hints']).length < 2 || hintTwoWaivers.containsKey(id)) continue;
     final HintLadder? ladder = HintLadder.of(
       a['template']! as String,
       share: a['template'] == 'sort_drag' && _map(a['answer'])['mode'] == 'share',
     );
-    if (ladder == null) continue;
-    final _Rep? two = _hintRepresentation(ladder.at(2));
-    final _Rep? one = _hintRepresentation(ladder.at(1));
+    // The family of hint 2 says what it draws; a family with no row is a light, or (for a template whose families are not listed) the ladder's own.
+    final String? family = hintFamilyOf(_maps(a['hints'])[1]['vo']);
+    final String? named = family == null ? null : hintFamilyRepresentation[family];
+    final _Rep? two = named != null
+        ? _Rep.values.byName(named)
+        : (family != null || ladder == null ? null : _hintRepresentation(ladder.at(2)));
+    final _Rep? one = ladder == null ? null : _hintRepresentation(ladder.at(1));
     if (two == null) continue;
     if (two.name == a['representation']) {
       say(
@@ -590,8 +692,10 @@ void _rungs(
   }
 }
 
-/// W1 (a warning): a scored item of a skill in parts labels an option with a word its Show (or an earlier skill's Show) does not teach: it is
-/// asked before it is met. [activities] and [skills] are the valid documents; the result lists one message per item and word.
+/// W1 (a warning): a scored item of a skill in parts asks for a word its Show (or an earlier skill's Show) does not teach: it is asked before it is
+/// met. What an item asks for is the label of its right option (every option of a number tap, which is weighed whole) and every bin of a sort; the label
+/// of a wrong option is never asked for, and offering a non-example before it is taught is the first-attempt diagnosis (M-SHP-CLOSED, M-SHP-PROTO).
+/// [activities] and [skills] are the valid documents; the result lists one message per item and word.
 List<String> metBeforeAsked({
   required Map<String, Map<String, Object?>> activities,
   required Map<String, Map<String, Object?>> lessons,
@@ -605,13 +709,12 @@ List<String> metBeforeAsked({
         .putIfAbsent(_map(_maps(a['skills']).first)['id']! as String, () => <String>{})
         .addAll(_strings(_map(a['show'])['teaches']).map(plain));
   }
-  Set<String> known(String skill, Set<String> seen) {
-    if (!seen.add(skill)) return const <String>{};
-    return <String>{
-      ...?taught[skill],
-      for (final Map<String, Object?> p in _maps(skills[skill]?['prerequisites']))
-        ...known(p['skill']! as String, seen),
-    };
+  Set<String> closure(String skill, Set<String> seen) {
+    if (!seen.add(skill)) return seen;
+    for (final Map<String, Object?> p in _maps(skills[skill]?['prerequisites'])) {
+      closure(p['skill']! as String, seen);
+    }
+    return seen;
   }
 
   final Set<String> own = <String>{
@@ -624,15 +727,33 @@ List<String> metBeforeAsked({
     if (a['purpose'] == 'show') continue;
     final String skill = _map(_maps(a['skills']).first)['id']! as String;
     if (!own.contains(skill)) continue;
-    final Set<String> ok = known(skill, <String>{});
+    final Set<String> skillsKnown = closure(skill, <String>{});
+    final Set<String> ok = <String>{for (final String s in skillsKnown) ...?taught[s]};
+    final bool counts = skillsKnown.contains(w1CountingSkill);
+    bool accepted(String label) {
+      if (ok.contains(label) || w1YesNo.contains(label)) return true;
+      final List<String> words = label.split(RegExp(r'\s+'));
+      if (words.length > 1 && words.first == w1Not && accepted(words.skip(1).join(' '))) return true;
+      return counts &&
+          w1CountingWords.contains(words.first) &&
+          (words.length == 1 || accepted(words.skip(1).join(' ')));
+    }
+
+    final Map<String, Object?> answer = _map(a['answer']);
+    final List<Map<String, Object?>> options = _maps(answer['options']);
+    final Object? correct = answer['correct'];
+    final bool numberTap =
+        options.isNotEmpty && options.every((Map<String, Object?> o) => o['numeral'] != null);
     final Set<String> labels = <String>{
-      for (final Map<String, Object?> o in _maps(_map(a['answer'])['options']))
-        if (o['label'] is String) plain(o['label']! as String),
+      for (final Map<String, Object?> o in options)
+        if (o['label'] is String &&
+            (numberTap || (correct is List ? correct.contains(o['id']) : o['id'] == correct)))
+          plain(o['label']! as String),
       if (a['template'] == 'sort_drag')
         for (final Map<String, Object?> b in _maps(_map(a['scene'])['bins']))
           if (b['label'] is String) plain(b['label']! as String),
     };
-    for (final String w in labels.difference(ok)) {
+    for (final String w in labels.where((String l) => !accepted(l))) {
       out.add(
         'W1: ${e.key} labels an option "$w" that the Show of $skill (and of its earlier skills) does not teach',
       );

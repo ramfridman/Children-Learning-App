@@ -14,9 +14,9 @@
     "SHP-B-02"
   ],
   "items": [
-    "b.shpb02.6",
     "b.shpb02.8",
-    "b.shpb02.5",
+    "b.shpb02.4",
+    "b.shpb02.3",
     "b.shpb02.7",
     "b.shpb02.9",
     "b.shpb02.10"
@@ -39,7 +39,7 @@
     ],
     "together": [
       {
-        "id": "b.shpb02.6",
+        "id": "b.shpb02.8",
         "lead": 1,
         "line": {
           "vo": "vo:host.kubi.together.sort",
@@ -53,8 +53,8 @@
       }
     ],
     "alone": [
-      "b.shpb02.8",
-      "b.shpb02.5",
+      "b.shpb02.4",
+      "b.shpb02.3",
       "b.shpb02.7",
       "b.shpb02.9"
     ],

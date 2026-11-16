@@ -14,9 +14,8 @@
     "SHP-A-03"
   ],
   "items": [
-    "shp.any.tilt",
-    "shp.any.thin",
     "shp.any.down",
+    "shp.any.tilt",
     "shp.any.small"
   ],
   "estimatedMinutes": 4,
@@ -37,7 +36,7 @@
     ],
     "together": [
       {
-        "id": "shp.any.tilt",
+        "id": "shp.any.down",
         "lead": 1,
         "line": {
           "vo": "vo:host.kubi.together.sort",
@@ -51,8 +50,7 @@
       }
     ],
     "alone": [
-      "shp.any.thin",
-      "shp.any.down",
+      "shp.any.tilt",
       "shp.any.small"
     ],
     "handover": {

@@ -203,9 +203,13 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   RoomSpec? _room;
   HostSpec? _host;
   Timer? _greetTimer;
+  Timer? _ceilingTimer;
 
   /// How long the host's greeting stays at least: long enough to read while it has no voice, and it waits for its voice to end.
   static const Duration _greetingPause = Duration(seconds: 3);
+
+  /// The longest a host's line waits for its voice to end (QA-3: a clip that never reports its end must not hold the screen).
+  static const Duration _voiceCeiling = TemplateSession.lineCeilingMax;
 
   @override
   void initState() {
@@ -463,6 +467,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     _ladder?.stop();
     _ringTimer?.cancel();
     _greetTimer?.cancel();
+    _ceilingTimer?.cancel();
     _director.removeListener(_idleHold);
     _voice?.dispose();
     _session?.dispose();
@@ -710,6 +715,22 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     return skill == null ? null : RoomSpec.of(content.skills[skill]);
   }
 
+  /// Completes when the voice is quiet, or when [_voiceCeiling] has passed, whichever is first (QA-3). The timer is the screen's own and goes with it.
+  Future<void> _quietOrCeiling() {
+    final Completer<void> done = Completer<void>();
+    _ceilingTimer?.cancel();
+    _ceilingTimer = Timer(_voiceCeiling, () {
+      if (!done.isCompleted) done.complete();
+    });
+    unawaited(
+      _director.untilQuiet().then((_) {
+        _ceilingTimer?.cancel();
+        if (!done.isCompleted) done.complete();
+      }),
+    );
+    return done.future;
+  }
+
   /// A host's line that leads no steps (the lead-in of a tap or a tracing, the hand-over to the companion) ends by itself, once it has been there
   /// for [_greetingPause] and its voice (when it has one) has ended, or at a touch.
   void _holdLead(LessonController c) {
@@ -717,7 +738,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     _greetTimer?.cancel();
     _greetTimer = Timer(_greetingPause, () {
       unawaited(
-        _director.untilQuiet().then((_) {
+        _quietOrCeiling().then((_) {
           if (mounted && c.index == at) c.leadDone();
         }),
       );
@@ -729,7 +750,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     if (c.moment != Moment.greeting) return;
     _greetTimer = Timer(_greetingPause, () {
       unawaited(
-        _director.untilQuiet().then((_) {
+        _quietOrCeiling().then((_) {
           if (mounted) c.endGreeting();
         }),
       );
@@ -1314,6 +1335,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
                             session.onShowMe();
                             unawaited(controller.unsure());
                           }),
+              moveOn: controller.finished || !controller.current.isShow ? null : session.canMoveOn,
+              onMoveOn: controller.skipShow,
+              tilesRise: session.tilesRise(spec),
               onReplay: controller.finished ? null : controller.replayPrompt,
               mic: controller.finished ? null : _mic(spec, session, controller.current),
               onConfirmYes: heard == MicState.confirming ? _voice?.answer.confirmYes : null,

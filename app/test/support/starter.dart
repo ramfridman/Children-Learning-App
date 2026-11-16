@@ -28,8 +28,9 @@ Future<PackContent> loadStarterButterfliesFirst() async {
   return PackContent.fromPack(pack);
 }
 
-/// The starter pack's manifest, with the docs and pictures read from the sources in content/starter.
-Future<PackContent> loadSourcePack() async {
+/// The starter pack's manifest, with the docs and pictures read from the sources in content/starter. [edit] may change the documents (by file name)
+/// before the pack is made, to try a Show or a lesson that the sources do not have yet.
+Future<PackContent> loadSourcePack({void Function(Map<String, Object?> docs)? edit}) async {
   final VerifiedPack signed = await verifyPack(
     File(bundledStarterAsset).readAsBytesSync(),
     publicKey: unhex(File('assets/pack_signing_public_key.txt').readAsStringSync()),
@@ -47,6 +48,7 @@ Future<PackContent> loadSourcePack() async {
       assets.add(<String, Object?>{'id': name.substring(0, name.length - 4), 'file': name});
     }
   }
+  edit?.call(docs);
   final Map<String, Object?> manifest = Map<String, Object?>.of(signed.manifest)..['assets'] = assets;
   return PackContent.fromPack(
     VerifiedPack(

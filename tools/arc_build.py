@@ -29,13 +29,18 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 OUT = os.path.join(ROOT, 'content', 'starter')
 ARC_DIR = os.path.join(ROOT, 'content', 'units', 'arc')
 
-# The templates the app has a lead player for: the host does the first steps of the item (sort: its cards, shape builder: its places).
-LEAD_TEMPLATES = ('sort_drag', 'shape_builder')
+# The templates the app has a lead player for: the host does the first steps of the item (sort: its cards, shape builder: its places, trace: the sides
+# of its path, counted as arc_checks.dart `traceSideCount` does).
+LEAD_TEMPLATES = ('sort_drag', 'shape_builder', 'trace')
 # The shared lines of the activity that every Show and its feedback use (author.py: ALMOST and UNSURE, one text for one id).
 ALMOST = ('vo:fb.almost', 'בּוֹאוּ נְנַסֶּה שׁוּב.')
 UNSURE = ('vo:fb.unsure', 'שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד.')
 TEMPLATE_OF_LEAD_LINE = {'sort_drag': 'sort_drag', 'shape_builder': 'shape_builder', 'tap_answer': 'tap_answer',
                          'trace': 'trace', 'listen_do': 'listen_do'}
+
+
+# The answer block of a Show of each template (a Show is never scored; the schema wants the template's own type).
+SHOW_ANSWER = {'sort_drag': {'type': 'sort', 'mode': 'sort'}, 'shape_builder': {'type': 'shapes'}, 'trace': {'type': 'trace'}}
 
 
 def read(name):
@@ -64,7 +69,7 @@ def show_doc(show, land, band_of):
     steps = []
     for st in show['steps']:
         out = {'by': st['by']}
-        for k in ('item', 'bin', 'piece', 'slot'):
+        for k in ('item', 'bin', 'piece', 'slot', 'segment'):
             if k in st:
                 out[k] = st[k]
         if st.get('say') == 'key':
@@ -87,7 +92,7 @@ def show_doc(show, land, band_of):
         'representation': show['representation'], 'variantGroup': 'show', 'difficulty': {'authored': 0.05},
         'prompt': dict(spoken(open_line['vo'], open_line['text']), replayButton=True),
         'scene': show['scene'],
-        'answer': {'type': 'sort', 'mode': 'sort'} if show['template'] == 'sort_drag' else {'type': 'shapes'},
+        'answer': SHOW_ANSWER[show['template']],
         'voiceAnswer': False,
         'feedback': {
             'correct': spoken(key_line['vo'], key_line['text']),
@@ -134,6 +139,9 @@ def lesson_parts(lesson, show_ids, host_lines, number):
         together.append({'id': t['id'], 'lead': lead, 'line': spoken(line['vo'], line['text'])})
     if together:
         parts['together'] = together
+    # QA-2: the planner serves nothing from an empty Alone pool, so such a lesson would be played flat with no Show. The build refuses it, as the
+    # app's validator does (arc_checks.dart, V1).
+    assert lesson['alone'], 'the lesson %s has an empty Alone pool: a lesson in parts needs at least one Alone item (QA-2)' % lesson['id']
     parts['alone'] = list(lesson['alone'])
     if lesson.get('use'):
         parts['use'] = list(lesson['use'])

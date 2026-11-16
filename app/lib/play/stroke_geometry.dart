@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'dart:ui' show Offset, Rect;
 
+import '../content/arc_checks.dart' show maxCornerPoints, quarterSides;
+
 // The small geometry of a stroke, shared by the tracing of the lands (T04) and by LS02: a finger path made dense, a path resampled to a
 // fixed number of points, the distance from a point to a path. Everything is in the box of 100 by 100 units, y down. Pure functions.
 
@@ -37,6 +39,19 @@ List<Offset> resampleStroke(List<Offset> pts, int count) {
     out.add(Offset.lerp(pts[seg - 1], pts[seg], span == 0 ? 0 : ((d - cum[seg - 1]) / span).clamp(0, 1))!);
   }
   return out;
+}
+
+/// The sides of [stroke] that the host draws one at a time (a Show, the lead of a Together item): a stroke of few points is drawn corner to corner (a
+/// triangle has three sides, a square four), a stroke of many (a circle) in four parts of equal length. `traceSideCount` in `arc_checks.dart`
+/// counts the same sides from the same rule, so that the validator and the session agree on how many steps a tracing has.
+List<List<Offset>> traceSides(List<Offset> stroke) {
+  if (stroke.length <= maxCornerPoints) {
+    return <List<Offset>>[
+      for (int i = 1; i < stroke.length; i++) <Offset>[stroke[i - 1], stroke[i]],
+    ];
+  }
+  final List<Offset> dense = resampleStroke(stroke, quarterSides * 10 + 1);
+  return <List<Offset>>[for (int q = 0; q < quarterSides; q++) dense.sublist(q * 10, q * 10 + 11)];
 }
 
 /// The length of a polyline.

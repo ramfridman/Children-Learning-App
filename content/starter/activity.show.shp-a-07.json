@@ -52,7 +52,7 @@
       },
       {
         "id": "i2",
-        "sprite": "asset:block",
+        "sprite": "asset:gift_box",
         "bin": "b2"
       },
       {

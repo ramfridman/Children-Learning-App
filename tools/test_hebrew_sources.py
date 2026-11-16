@@ -142,7 +142,8 @@ class HebrewMasterTableTest(unittest.TestCase):
         # "friend", the new LOG-A-07 and LOG-B-02 titles, the +2 towers) replace some of C1's rows with other texts
         # 15912 since the Shape Forest pilot's content (M11 Stage 2, 2026-11-15), 16210 with the pilot's Shows, the host lines on the lessons and the
         # tags of the wrong moves that the lands now record (more feedback lines)
-        self.assertEqual(len(self.rows), 16210)
+        # 16309 since the QA round of the pilot (2026-11-16): the 24 new lines of the curriculum-expert and the hebrew-text-editor, and the new items
+        self.assertEqual(len(self.rows), 16309)
         # the owner's bulk approval (the switch in tools/owner_approval.py) moves the rows with a changed text to `owner-approved` (none is `proposed` and changed now)
         approved_all = owner_approval.load_approval() is not None
         # 1308 before C1: 19 corrections (מֵאֶפֶס, מֵאַחַת …) are now in the sources; 1296 after the 7 of the deferred items (מַה שֶּׁ, מַה מִּסְתַּתֵּר)
@@ -155,7 +156,8 @@ class HebrewMasterTableTest(unittest.TestCase):
         # 1215 after the owner's answers of 2026-11-08: six rows whose old text needed a correction are now written right by their source (the x.shpb09 "נְדַמְיֵן" line was reworded)
         # the same 1215 with the owner's bulk approval on (2026-11-08): its 6 extra rows were b.numb11.1-.6, now written right by their generator
         # 1212 after the Shape Forest pilot (M11 Stage 2): the editor's final texts of 43 rows are now written by the generators (band_b2.py, band_b3.py)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1212)
+        # 1209 after the QA round of the pilot (2026-11-16): the editor's 24 new lines, three rows whose text now agrees with the source (editor to confirm)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1209)
         # 18 after the editor sweep of 2026-11-08: the 11 Q2 drafts (the NUM-A-11 pairing line, the NUM-A-07 counting line) are now
         # written in the generators, each with an id of its own (vo:fb.size.pairs, vo:fb.size.count), so the pack says what the table says
         # 6 after the owner approved D12 (2026-11-08): the 12 balance rows (b.mathb13.7-.10) are in the sources

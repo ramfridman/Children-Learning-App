@@ -15,6 +15,7 @@ import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
 import 'lesson_arc.dart' show ArcPart, ArcStep;
 import 'response_code.dart';
+import 'show_solids.dart';
 import 'show_stage.dart';
 import 'template_session.dart';
 
@@ -80,7 +81,7 @@ class ShapeBuilderSession extends TemplateSession {
     if (sprite.contains('shape_circle')) return GhostKind.circle;
     if (sprite.contains('shape_square')) return GhostKind.square;
     // The half of a square (a right triangle) is tested before the triangle: its id contains the triangle's.
-    if (sprite.contains('shape_triangle_half')) return GhostKind.triangle;
+    if (sprite.contains('shape_triangle_half')) return GhostKind.rightTriangle;
     if (sprite.contains('shape_triangle')) return GhostKind.triangle;
     if (sprite.contains('shape_rect')) return GhostKind.rect;
     return null;
@@ -119,6 +120,10 @@ class ShapeBuilderSession extends TemplateSession {
     demoRunning = false;
     controller.demoDone();
   }
+
+  /// The tray's tiles have a tap margin of 4 and the row starts `tileSlop` above the tiles' place, so the drawn tiles stand 12 or 8 above it.
+  @override
+  double tilesRise(ActivitySpec spec) => spec.tileSlop - 4;
 
   void select(int piece) {
     _endDemo();
@@ -242,17 +247,32 @@ class ShapeBuilderSession extends TemplateSession {
     await pause(Duration(milliseconds: over - put));
   }
 
-  /// A step of a Show with a motion (the finger round the hole, the corners): the host's hand shows the place first, then fills it.
+  /// A step of a Show with a motion (the finger round the hole, the corners): the host's hand shows the place first, then fills it. A place that
+  /// is turned in the picture (`rot`) first shows the piece turning to its angle under the turn arrow, as the child would turn it in their head.
+  /// The pointer keeps clear of the middle of the whole picture, so that its leg never lies across the house or the rocket.
   Future<void> _hostShowFill(ShowStep step, {required bool fast}) async {
     final ShowStyle? style = showStyle;
     final ShapeSlot slot = _slotOf(step);
     final ShowOutline? outline = style?.art.of(slot.sprite);
-    if (style != null && outline != null && !fast && _canDraw && ShowDirector.motions.contains(step.motion)) {
+    final bool traced = outline != null && ShowDirector.motions.contains(step.motion);
+    if (style != null && !fast && _canDraw) {
       showMarks.scale = hintScale(_size);
-      await ShowDirector(this, style, showMarks).motion(step, outline, slotRect(_size, slot));
-      showMarks.clearMarks();
+      final ShowDirector director = ShowDirector(this, style, showMarks);
+      if (traced) {
+        await director.motion(step, outline, slotRect(_size, slot), around: pictureBox(_size).center);
+        showMarks.clearMarks();
+      }
+      if (slot.rot != 0) {
+        await director.turnPiece(
+          place: slotRect(_size, slot),
+          svg: activity.assets.svg(pieces[_pieceFor(slot)]),
+          degrees: slot.rot.toDouble(),
+        );
+        showMarks.clear();
+        notify();
+      }
     }
-    await _hostFill(slot, fast: fast, rests: step.motion != null && outline == null);
+    await _hostFill(slot, fast: fast, rests: step.motion != null && !traced);
   }
 
   ShapeSlot _slotOf(ShowStep step) => activity.slots.firstWhere((ShapeSlot s) => s.id == step.slot);
@@ -581,25 +601,30 @@ class _BuilderStage extends StatelessWidget {
               child: FractionallySizedBox(
                 widthFactor: vis.$1,
                 heightFactor: vis.$2,
-                child: DragTarget<int>(
-                  onWillAcceptWithDetails: (DragTargetDetails<int> d) => !done,
-                  onAcceptWithDetails: (DragTargetDetails<int> d) => s.drop(d.data, slot.id),
-                  builder: (BuildContext context, List<int?> candidate, List<dynamic> rejected) {
-                    final Color? ring = s.notYetSlot == slot.id
-                        ? TokenColors.notYetRing
-                        : (candidate.isNotEmpty || s.hintSlot == slot.id ? TokenColors.hintHalo : null);
-                    return GestureDetector(
-                      key: Key('slot-${slot.id}'),
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => s.tapSlot(slot.id),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: ring == null ? null : Border.all(color: ring, width: 4),
+                // Two halves of a square stand in one box: a touch is only on the triangle itself, so that the half that is placed does not catch the
+                // touch meant for the other (the half's own corner of the box is empty).
+                child: _TriangleHit(
+                  enabled: slot.sprite.contains('shape_triangle_half'),
+                  child: DragTarget<int>(
+                    onWillAcceptWithDetails: (DragTargetDetails<int> d) => !done,
+                    onAcceptWithDetails: (DragTargetDetails<int> d) => s.drop(d.data, slot.id),
+                    builder: (BuildContext context, List<int?> candidate, List<dynamic> rejected) {
+                      final Color? ring = s.notYetSlot == slot.id
+                          ? TokenColors.notYetRing
+                          : (candidate.isNotEmpty || s.hintSlot == slot.id ? TokenColors.hintHalo : null);
+                      return GestureDetector(
+                        key: Key('slot-${slot.id}'),
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => s.tapSlot(slot.id),
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: ring == null ? null : Border.all(color: ring, width: 4),
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -608,4 +633,31 @@ class _BuilderStage extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Keeps a touch (and a drop) to the right triangle that is the half of a square: the right angle at the bottom start corner, the long side from
+/// the top corner to the far bottom corner, in the box the picture's own triangle fills.
+class _TriangleHit extends StatelessWidget {
+  const _TriangleHit({required this.enabled, required this.child});
+
+  final bool enabled;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) =>
+      enabled ? ClipPath(clipper: const _HalfSquareClip(), child: child) : child;
+}
+
+class _HalfSquareClip extends CustomClipper<Path> {
+  const _HalfSquareClip();
+
+  @override
+  Path getClip(Size size) => Path()
+    ..moveTo(0, 0)
+    ..lineTo(size.width, size.height)
+    ..lineTo(0, size.height)
+    ..close();
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }

@@ -15,7 +15,8 @@
     "SHP-A-02"
   ],
   "items": [
-    "shp.match.circle",
+    "shp.match.trapezoid",
+    "shp.match.triangle",
     "b15.shpa02.2",
     "b15.shpa02.3",
     "b15.shpa02.4"
@@ -39,7 +40,7 @@
     },
     "together": [
       {
-        "id": "shp.match.circle",
+        "id": "shp.match.trapezoid",
         "lead": 1,
         "line": {
           "vo": "vo:host.kubi.together.build",
@@ -53,6 +54,7 @@
       }
     ],
     "alone": [
+      "shp.match.triangle",
       "b15.shpa02.2",
       "b15.shpa02.3"
     ],

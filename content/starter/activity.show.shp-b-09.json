@@ -42,6 +42,11 @@
         "id": "b2",
         "sprite": "asset:shape_rect",
         "label": "מַלְבֵּן"
+      },
+      {
+        "id": "b3",
+        "sprite": "asset:shape_triangle",
+        "label": "מְשֻׁלָּשׁ"
       }
     ],
     "items": [
@@ -57,6 +62,11 @@
       },
       {
         "id": "i3",
+        "sprite": "asset:solid_pyramid",
+        "bin": "b3"
+      },
+      {
+        "id": "i4",
         "sprite": "asset:solid_cone",
         "bin": "b1"
       }
@@ -146,7 +156,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "עַכְשָׁו תּוֹרְכֶם: הֶחָרוּט."
+            "v": "פִּירָמִידָה עַל הַצַּד: מְשֻׁלָּשׁ. עַכְשָׁו תּוֹרְכֶם."
           }
         ]
       }
@@ -166,15 +176,25 @@
         "motion": "stamp"
       },
       {
-        "by": "child",
+        "by": "host",
         "item": "i3",
+        "bin": "b3",
+        "motion": "stamp",
+        "detail": "side"
+      },
+      {
+        "by": "child",
+        "item": "i4",
         "bin": "b1"
       }
     ],
     "teaches": [
       "עִגּוּל",
       "מַלְבֵּן",
-      "מְשֻׁלָּשׁ"
+      "מְשֻׁלָּשׁ",
+      "מַשְׁאִיר עִגּוּל",
+      "תֵּבָה",
+      "פִּירָמִידָה"
     ]
   }
 }

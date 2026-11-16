@@ -70,6 +70,12 @@
         "sprite": "asset:solid_pyramid",
         "bin": "b2",
         "misconception": "M-SHP-FACE"
+      },
+      {
+        "id": "i5",
+        "sprite": "asset:can",
+        "bin": "b1",
+        "misconception": "M-SHP-FACE"
       }
     ]
   },

@@ -81,6 +81,10 @@ class RobotPathSession extends TemplateSession {
   /// squares of 29 points). The tablets keep the row of arrows under the stage, where cells are large enough.
   static bool padBeside(ActivitySpec spec) => !spec.stageIsCard;
 
+  /// The palette's tiles have a tap margin of 6 and the row starts `tileSlop` above the tiles' place, so the drawn tiles stand `tileSlop - 6` above it (see `ActivityFrame.tilesRise`).
+  @override
+  double tilesRise(ActivitySpec spec) => spec.tileSlop - 6;
+
   @override
   ActivitySpec layoutFor(ActivitySpec base) => laidOut(base);
 

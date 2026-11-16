@@ -30,14 +30,14 @@
     ]
   },
   "parts": {
-    "show": "show.shp-a-02",
+    "show": "show.shp-a-02.trace",
     "recall": [
       "shp.match.circle"
     ],
     "together": [
       {
         "id": "x.shpa02.1",
-        "lead": 0,
+        "lead": 1,
         "line": {
           "vo": "vo:host.kubi.together.trace",
           "caption": [

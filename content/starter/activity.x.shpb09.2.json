@@ -64,6 +64,12 @@
         "sprite": "asset:solid_cylinder",
         "bin": "b1",
         "misconception": "M-SHP-FACE"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:can",
+        "bin": "b1",
+        "misconception": "M-SHP-FACE"
       }
     ]
   },

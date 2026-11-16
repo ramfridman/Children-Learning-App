@@ -25,7 +25,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "יֵשׁ שֵׁמוֹת: מְחֻמָּשׁ, מְשֻׁשֶּׁה, וְעוֹד."
+        "v": "סוֹפְרִים צְלָעוֹת, וְיוֹדְעִים אֶת הַשֵּׁם."
       }
     ],
     "replayButton": true
@@ -35,30 +35,43 @@
     "bins": [
       {
         "id": "b1",
-        "sprite": "asset:shape_triangle",
-        "label": "מְשֻׁלָּשׁ"
+        "sprite": "asset:stick_long",
+        "count": 4,
+        "label": "מְרֻבָּע"
       },
       {
         "id": "b2",
-        "sprite": "asset:shape_quad",
-        "label": "מְרֻבָּע"
+        "sprite": "asset:stick_long",
+        "count": 5,
+        "label": "מְחֻמָּשׁ"
+      },
+      {
+        "id": "b3",
+        "sprite": "asset:stick_long",
+        "count": 6,
+        "label": "מְשֻׁשֶּׁה"
       }
     ],
     "items": [
       {
         "id": "i1",
-        "sprite": "asset:shape_triangle_thin",
+        "sprite": "asset:shape_square_tilt",
         "bin": "b1"
       },
       {
         "id": "i2",
-        "sprite": "asset:shape_square_tilt",
+        "sprite": "asset:shape_pentagon",
         "bin": "b2"
       },
       {
         "id": "i3",
-        "sprite": "asset:shape_rect",
-        "bin": "b2"
+        "sprite": "asset:shape_hexagon",
+        "bin": "b3"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:shape_quad",
+        "bin": "b1"
       }
     ]
   },
@@ -73,7 +86,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "שָׁלוֹשׁ — מְשֻׁלָּשׁ. אַרְבַּע — מְרֻבָּע."
+          "v": "אַרְבַּע — מְרֻבָּע, חָמֵשׁ — מְחֻמָּשׁ, שֵׁשׁ — מְשֻׁשֶּׁה."
         }
       ]
     },
@@ -115,7 +128,7 @@
     "mustNotRevealBeforeHint": 0
   },
   "a11y": {
-    "altText": "יֵשׁ שֵׁמוֹת: מְחֻמָּשׁ, מְשֻׁשֶּׁה, וְעוֹד."
+    "altText": "סוֹפְרִים צְלָעוֹת, וְיוֹדְעִים אֶת הַשֵּׁם."
   },
   "show": {
     "handOver": "last",
@@ -126,7 +139,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "יֵשׁ שֵׁמוֹת: מְחֻמָּשׁ, מְשֻׁשֶּׁה, וְעוֹד."
+            "v": "סוֹפְרִים צְלָעוֹת, וְיוֹדְעִים אֶת הַשֵּׁם."
           }
         ]
       },
@@ -136,7 +149,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "שָׁלוֹשׁ — מְשֻׁלָּשׁ. אַרְבַּע — מְרֻבָּע."
+            "v": "אַרְבַּע — מְרֻבָּע, חָמֵשׁ — מְחֻמָּשׁ, שֵׁשׁ — מְשֻׁשֶּׁה."
           }
         ]
       },
@@ -146,7 +159,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "עַכְשָׁו תּוֹרְכֶם: לִסְפֹּר אֶת הָאַחֲרוֹן."
+            "v": "עַכְשָׁו תּוֹרְכֶם: לִסְפֹּר אֶת הַצְּלָעוֹת."
           }
         ]
       }
@@ -156,7 +169,6 @@
         "by": "host",
         "item": "i1",
         "bin": "b1",
-        "say": "key",
         "motion": "count",
         "detail": "sides"
       },
@@ -168,13 +180,20 @@
         "detail": "sides"
       },
       {
-        "by": "child",
+        "by": "host",
         "item": "i3",
-        "bin": "b2"
+        "bin": "b3",
+        "say": "key",
+        "motion": "count",
+        "detail": "sides"
+      },
+      {
+        "by": "child",
+        "item": "i4",
+        "bin": "b1"
       }
     ],
     "teaches": [
-      "מְשֻׁלָּשׁ",
       "מְרֻבָּע",
       "מְחֻמָּשׁ",
       "מְשֻׁשֶּׁה"

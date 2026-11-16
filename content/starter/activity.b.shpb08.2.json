@@ -54,22 +54,22 @@
       },
       {
         "id": "i2",
-        "sprite": "asset:solid_box",
+        "sprite": "asset:gift_box",
         "bin": "b2"
       },
       {
         "id": "i3",
-        "sprite": "asset:solid_cylinder",
+        "sprite": "asset:can",
         "bin": "b1"
       },
       {
         "id": "i4",
-        "sprite": "asset:solid_pyramid",
+        "sprite": "asset:pyramid_egypt",
         "bin": "b2"
       },
       {
         "id": "i5",
-        "sprite": "asset:solid_cone",
+        "sprite": "asset:party_hat",
         "bin": "b1"
       }
     ]

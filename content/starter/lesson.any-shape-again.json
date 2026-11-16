@@ -14,6 +14,7 @@
     "SHP-A-03"
   ],
   "items": [
+    "shp.any.thin",
     "shp.any.small.square",
     "b15.shpa03.1",
     "b15.shpa03.2",
@@ -39,7 +40,7 @@
     ],
     "together": [
       {
-        "id": "shp.any.small.square",
+        "id": "shp.any.thin",
         "lead": 1,
         "line": {
           "vo": "vo:host.kubi.together.sort",
@@ -53,6 +54,7 @@
       }
     ],
     "alone": [
+      "shp.any.small.square",
       "b15.shpa03.1",
       "b15.shpa03.2",
       "shp.any.big.circle",

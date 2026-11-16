@@ -105,7 +105,12 @@ B06_SUBSTITUTIONS = [
      ['shape_triangle_green', 'shape_circle_red']),
     ('רִבּוּעַ', 'שְׁנֵי מַלְבֵּנִים', 'מִשְּׁנֵי מַלְבֵּנִים', [['shape_rect_green', 50, 50, 50, 0], ['shape_rect_green', 50, 72, 50, 0]],
      ['shape_triangle_blue', 'shape_circle_yellow']),
-    ('מְרֻבָּע', 'שְׁנֵי מְשֻׁלָּשִׁים', 'מִשְּׁנֵי מְשֻׁלָּשִׁים', [['shape_triangle_orange', 50, 40, 50, 0], ['shape_triangle_orange', 50, 74, 50, 180]],
+    # QA round 2026-11-16: two half-square triangles (the design-director's `shape_triangle_half`, visible 0.14 to 0.86 of its square) make one
+    # big triangle; one is turned a quarter back so that their legs meet (the template turns the piece with its place). "Two triangles make a
+    # square" puts both places in one box, where the first filled place would catch the touch meant for the second: it waits for a touch
+    # tested on the triangle itself (M11-stage2 §11.4).
+    ('מְשֻׁלָּשׁ גָּדוֹל', 'שְׁנֵי מְשֻׁלָּשִׁים', 'מִשְּׁנֵי מְשֻׁלָּשִׁים',
+     [['shape_triangle_half_orange', 36, 50, 40, -90], ['shape_triangle_half_orange', 64.8, 50, 40, 0]],
      ['shape_square_blue', 'shape_circle_green']),
     ('רִבּוּעַ גָּדוֹל', 'אַרְבָּעָה רִבּוּעִים', 'מֵאַרְבָּעָה רִבּוּעִים',
      [['shape_square_yellow', 40, 40, 30, 0], ['shape_square_yellow', 61.6, 40, 30, 0], ['shape_square_yellow', 40, 61.6, 30, 0],
@@ -127,10 +132,13 @@ _NAMED = dict(bins=[{'sprite': 'solid_cylinder', 'label': 'גָּלִיל'}, {'s
               correct_text='כֵּן! כׇּל גּוּף עִם הַשֵּׁם שֶׁלּוֹ.')
 # (the box item, i = 4, stays a tap: its lines carry the owner's "תֵּבָה, like a shoe box" bridge, hebrew-notes D6)
 B08_SORTS = {
-    1: dict(_ROLLS, items=[['solid_sphere', 1], ['solid_box', 2], ['solid_cylinder', 1], ['solid_pyramid', 2], ['solid_cone', 1]]),
-    3: dict(_NAMED, items=[['ball_blue', 3], ['solid_cone', 2], ['solid_cylinder', 1], ['ball_yellow', 3], ['solid_sphere', 3]]),
+    # QA round 2026-11-16: the design-director's real things carry the names to the world (a can is a cylinder, a party hat a cone, a gift
+    # box a תֵּבָה; the Show of SHP-B-08 names them so). An Egyptian pyramid and a box do not roll. The dice is left out on purpose: in
+    # Hebrew a dice is what one rolls (מְגַלְגְּלִים קֻבִּיָּה), so it is no honest "does not roll".
+    1: dict(_ROLLS, items=[['solid_sphere', 1], ['gift_box', 2], ['can', 1], ['pyramid_egypt', 2], ['party_hat', 1]]),
+    3: dict(_NAMED, items=[['can', 1], ['party_hat', 2], ['ball_blue', 3], ['ball_yellow', 3]]),
     5: dict(_ROLLS, items=[['solid_pyramid', 2], ['ball_green', 1], ['solid_cylinder', 1], ['solid_box', 2], ['solid_cone', 1]]),
-    6: dict(_NAMED, items=[['solid_cylinder', 1], ['ball_red', 3], ['solid_cone', 2], ['solid_sphere', 3], ['ball_green', 3]]),
+    6: dict(_NAMED, items=[['party_hat', 2], ['ball_red', 3], ['can', 1], ['ball_green', 3]]),
 }
 
 
@@ -276,7 +284,8 @@ def shapes():
              30, assets=['shape_pentagon', 'shape_hexagon', 'shape_quad', 'shape_open', 'shape_curved', 'solid_cylinder', 'solid_cone',
                          'solid_sphere', 'solid_pyramid', 'solid_box', 'gift_box', 'shape_triangle', 'shape_square', 'shape_rect', 'shape_circle',
                          'shape_triangle_thin', 'shape_triangle_down', 'shape_square_tilt', 'tick', 'cross',
-                         'stick_long', 'clue_not_triangle', 'block', 'ball_red', 'ball_blue', 'ball_green', 'ball_yellow'])
+                         'stick_long', 'clue_not_triangle', 'block', 'ball_red', 'ball_blue', 'ball_green', 'ball_yellow',
+                         'can', 'party_hat', 'pyramid_egypt', 'shape_triangle_half_orange'])
     u.tag('M-SHP-CLOSED', ['SHP-B-01', 'SHP-B-04'], 'הילד מכנה צורה פתוחה או עם צלע עקומה "משולש" או "מרובע", כי היא נראית דומה.',
           'לצייר בעיפרון משולש, ואז לצייר אחד שלא סגור בפינה, ולשאול: האם נמלה יכולה ללכת מסביב בלי לצאת?',
           ['pictorial', 'concrete'], 'לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק.')
@@ -294,9 +303,12 @@ def shapes():
         if sh == 'triangle':  # M11 Stage 2: for "the triangle" the open three-line figure is the second honest lure (revision 2)
             wrong[0] = 'shape_open'
             tags = {'shape_open': 'M-SHP-CLOSED', wrong[1]: 'M-SHP-CLOSED'}
+        if sh == 'hexagon':  # QA round 2026-11-16: the pentagon taken for "the hexagon" counted a side twice (revision 2)
+            wrong[0] = 'shape_pentagon'
+            tags = {'shape_pentagon': 'M-CNT-DOUBLE', wrong[1]: 'M-SHP-CLOSED'}
         n = SIDES_N[sh]
         u.act('SHP-B-01', 'pick', prompt='אֵיפֹה %s?' % SIDES_DEF[sh], options=place('shape_' + sh, wrong, i % 3), correct='shape_' + sh,
-              tags=tags, domain='shapes', **({'revision': 2} if sh == 'triangle' else {}),
+              tags=tags, domain='shapes', **({'revision': 2} if sh in ('triangle', 'hexagon') else {}),
               correct_text='כֵּן! %s יֵשׁ %s צְלָעוֹת.' % ('לַ' + SIDES_DEF[sh][2:], F[n]),
               h3='%s הוּא צוּרָה סְגוּרָה עִם %s צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם.' % (SIDES_DEF[sh], F[n]))
 
@@ -368,7 +380,7 @@ def shapes():
     u.skill('SHP-B-08', 'גופים', 'גָּלִיל, חָרוּט, כַּדּוּר וּפִירָמִידָה', 'cone-tree', ['SHP-A-07'], ['pictorial', 'concrete'], [])
     solids = [('solid_cylinder', 'הַגָּלִיל'), ('solid_cone', 'הֶחָרוּט'), ('solid_sphere', 'הַכַּדּוּר'), ('solid_pyramid', 'הַפִּירָמִידָה'),
               ('gift_box', 'הַתֵּבָה')]
-    bridge = {'gift_box': ('כֵּן! זוֹ הַתֵּבָה — כְּמוֹ קֻפְסָה שֶׁל נַעֲלַיִם.', 'הַתֵּבָה דּוֹמָה לְקֻפְסָה שֶׁל נַעֲלַיִם. עַכְשָׁו תּוֹרְכֶם.')}
+    bridge = {'gift_box': ('כֵּן! זוֹ הַתֵּבָה.', 'הַתֵּבָה דּוֹמָה לְקֻפְסָה שֶׁל נַעֲלַיִם. עַכְשָׁו תּוֹרְכֶם.')}
     for i in range(8):
         if i in B08_SORTS:  # M11 Stage 2 pilot: sorts of the solids (same id, revision 2)
             u.act('SHP-B-08', 'sort', revision=2, domain='shapes', **B08_SORTS[i])

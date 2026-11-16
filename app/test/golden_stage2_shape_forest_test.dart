@@ -107,6 +107,8 @@ Future<void> _lesson(
   bool motion = true,
   bool badges = false,
   String? suffix,
+  bool Function(ShowMarks m)? seen,
+  int settle = 700,
 }) async {
   final String sfx = '${board.$1}${suffix ?? ''}';
   await _open(t, content, lessonId, board.$2, look: look, scale: scale);
@@ -118,14 +120,16 @@ Future<void> _lesson(
       !motion ||
       await _until(
         t,
-        () => badges
+        () => seen != null
+            ? _marks(t) != null && seen(_marks(t)!)
+            : badges
             ? (_marks(t)?.badges.length ?? 0) >= 2
             : builder
             ? _marks(t)?.tip != null
             : _drawing(_marks(t)),
       );
   expect(drawn, isTrue, reason: '$lessonId: the hosts pointer draws on the shape');
-  await waitFor(t, 700);
+  await waitFor(t, settle);
   if (!motion) await waitFor(t, 2500); // the host has put its first piece
   await _shot(t, 'stage2_${tag}_show_$sfx');
   if (!rest) return;
@@ -225,15 +229,27 @@ void main() {
     await _lesson(t, content, 'rectangle', 'rectangle', phoneSE, scale: 1.3, rest: false, suffix: '_t13');
   });
 
-  // The motions the developer did not build (push, stack, turn, stamp): the Show falls back to the plain drag of the worked example, so these three
-  // lessons are shown as a child new to them sees them.
-  for (final (String, String) m in <(String, String)>[
-    ('roll-or-stack', 'push'),
-    ('solids', 'turn'),
-    ('solid-and-face', 'stamp'),
-  ]) {
-    testWidgets('${m.$1}: the ${m.$2} Show is not built, what the child sees', (WidgetTester t) async {
-      await _lesson(t, content, m.$1, m.$1.replaceAll('-', ''), phone, motion: false);
+  // The solids' motions (QA-4): the ball pushed and rolling with its speed lines, the solid turned with the orbit arrow half way round, the print in the
+  // sand being traced; and the tracing Show, the host's pointer on a side of the triangle with the sides before it staying lit.
+  for (final (String, String, bool Function(ShowMarks), int) m
+      in <(String, String, bool Function(ShowMarks), int)>[
+        ('roll-or-stack', 'push', (ShowMarks k) => k.speed.isNotEmpty && k.spotTurn.abs() > 1, 0),
+        ('solids', 'turn', (ShowMarks k) => k.orbitSweep > 0.5 && k.orbitSweep < 0.9, 0),
+        (
+          'solid-and-face',
+          'stamp',
+          (ShowMarks k) => k.printAlpha > 0.99 && k.drawing.length >= 2 && k.tip != null,
+          0,
+        ),
+        (
+          'trace-the-shapes',
+          'trace',
+          (ShowMarks k) => k.lit.isNotEmpty && k.drawing.length >= 2 && k.tip != null,
+          0,
+        ),
+      ]) {
+    testWidgets('${m.$1}: the ${m.$2} Show on the phone', (WidgetTester t) async {
+      await _lesson(t, content, m.$1, m.$1.replaceAll('-', ''), phone, seen: m.$3, settle: m.$4);
     });
   }
 

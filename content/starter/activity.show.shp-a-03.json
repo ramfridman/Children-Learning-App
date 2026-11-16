@@ -52,17 +52,17 @@
       },
       {
         "id": "i2",
-        "sprite": "asset:shape_triangle_down",
-        "bin": "b1"
-      },
-      {
-        "id": "i3",
         "sprite": "asset:shape_open",
         "bin": "b2"
       },
       {
+        "id": "i3",
+        "sprite": "asset:shape_square_tilt",
+        "bin": "b2"
+      },
+      {
         "id": "i4",
-        "sprite": "asset:shape_triangle_red",
+        "sprite": "asset:shape_triangle_down",
         "bin": "b1"
       }
     ]
@@ -151,7 +151,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "צוּרָה פְּתוּחָה — לֹא. עַכְשָׁו תּוֹרְכֶם."
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַמְּשֻׁלָּשׁ הַהָפוּךְ."
           }
         ]
       }
@@ -168,14 +168,16 @@
       {
         "by": "host",
         "item": "i2",
-        "bin": "b1"
+        "bin": "b2",
+        "motion": "trace",
+        "detail": "gap"
       },
       {
         "by": "host",
         "item": "i3",
         "bin": "b2",
-        "motion": "trace",
-        "detail": "gap"
+        "motion": "turn",
+        "detail": "upright"
       },
       {
         "by": "child",
@@ -185,8 +187,7 @@
     ],
     "teaches": [
       "מְשֻׁלָּשׁ",
-      "לֹא מְשֻׁלָּשׁ",
-      "צוּרָה פְּתוּחָה"
+      "רִבּוּעַ"
     ]
   }
 }
