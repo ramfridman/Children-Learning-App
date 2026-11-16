@@ -2235,6 +2235,13 @@ def check_docs(docs, records, skills, catalogue, svg, band=None, ids=None):
                 kind, nums = 'balance', check_balance(f, it)
             elif it.template == 'give_n':
                 kind, nums = 'give', check_give(f, it)
+                # M11 Stage 2, NUM-A-07 (numeral to set): the bubble shows the one numeral to give, which is the number the frame is filled to
+                pm = (it.doc.get('prompt') or {}).get('math')
+                if pm is not None:
+                    want = (it.answer.get('n') or 0) + (it.scene.get('prefilled') or 0)
+                    if pm != ['n:%d' % want]:
+                        f.add('WRONG', it, 'math', 'the bubble shows %s, the frame is filled to %s' % (pm, want))
+                    it.math_read = True
             elif it.template == 'clock_set':
                 kind, nums = 'clock', check_clock(f, it)
             elif it.template == 'shop_pay':

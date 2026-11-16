@@ -323,14 +323,21 @@ class ShopPaySession extends TemplateSession {
   /// The fingertip place on coin [i] of a purse that holds [kinds], and on the pay button: 4 and 8 inside their bottom edges. The
   /// hand comes from below, so that its body never covers the counter's total, its places or the price.
   Offset _coinTip(List<String> kinds, int i) {
-    final Rect face = PurseLayout(kinds, _spec.tilesWidth).faces[i];
+    final Rect face = PurseLayout(kinds, _spec.tilesWidth, scale: purseScale(_spec)).faces[i];
     return _spec.fromTiles(face.center.dx, face.bottom - 4);
   }
 
   Offset _payTip(List<String> kinds) {
-    final Rect pay = PurseLayout(kinds, _spec.tilesWidth).pay;
+    final Rect pay = PurseLayout(kinds, _spec.tilesWidth, scale: purseScale(_spec)).pay;
     return _spec.fromTiles(pay.center.dx, pay.bottom - 8);
   }
+
+  /// The scale of the coins of the purse as it started (the coins do not change size as they go to the counter), for the room the board leaves.
+  double purseScale(ActivitySpec spec) => CoinFace.purseScale(
+    <String>[for (final PurseCoin c in purse) c.kind],
+    spec.tilesWidth,
+    spec.boardHeight - TokenTouch.bottomNoHotspot - (spec.tilesTop - spec.tileSlop + 4),
+  );
 
   /// The kinds of the coins that are in the purse now (not on the counter), in the order of the purse.
   List<String> get _purseKinds => <String>[
@@ -424,7 +431,7 @@ class ShopPaySession extends TemplateSession {
     builder: (BuildContext c, Widget? _) => _hint.hands(
       size,
       spec,
-      rowEnd: spec.fromTiles(PurseLayout(_purseKinds, spec.tilesWidth).rowEnd, 0).dx,
+      rowEnd: spec.fromTiles(PurseLayout(_purseKinds, spec.tilesWidth, scale: purseScale(spec)).rowEnd, 0).dx,
     ),
   );
 
@@ -440,8 +447,8 @@ class ShopPaySession extends TemplateSession {
             child: Wrap(
               key: const Key('purse'),
               alignment: WrapAlignment.center,
-              spacing: 4,
-              runSpacing: 4,
+              spacing: PurseLayout.spacing,
+              runSpacing: PurseLayout.spacing,
               children: <Widget>[
                 for (final PurseCoin c in purse)
                   if (!onCounter.contains(c.id))
@@ -449,6 +456,7 @@ class ShopPaySession extends TemplateSession {
                       key: Key('coin-${c.id}'),
                       kind: c.kind,
                       svg: activity.assets.svg('asset:${coinSprites[c.kind]}'),
+                      scale: purseScale(spec),
                       hinted: hinted.contains(c.id),
                       onTap: () => toggle(c.id),
                     ),
@@ -480,14 +488,15 @@ class ShopPaySession extends TemplateSession {
 /// the same numbers the row of tiles is laid out with (a [Wrap] of the coins with 4 between them, 12, and the pay tile with its tap
 /// margin, the whole row centred), so that the pointing hand can end on a coin or on the button.
 class PurseLayout {
-  PurseLayout(List<String> kinds, double boxWidth) {
+  PurseLayout(List<String> kinds, double boxWidth, {this.scale = 1}) {
     const double slot = payTile + 2 * payMargin;
     final double limit = boxWidth - payGap - slot;
     final List<List<int>> runs = <List<int>>[<int>[]];
     final List<double> widths = <double>[0];
     final List<double> heights = <double>[0];
     final List<Size> cells = <Size>[
-      for (final String k in kinds) CoinFace.faceOf(k) + const Offset(2 * CoinFace.pad, 2 * CoinFace.pad),
+      for (final String k in kinds)
+        CoinFace.faceOf(k, scale: scale) + const Offset(2 * CoinFace.pad, 2 * CoinFace.pad),
     ];
     for (int i = 0; i < cells.length; i++) {
       if (runs.last.isNotEmpty && widths.last + spacing + cells[i].width > limit + 1e-10) {
@@ -523,7 +532,12 @@ class PurseLayout {
     final double slotLeft = start + wrapW + payGap;
     pay = Rect.fromLTWH(slotLeft + payMargin, (rowH - payTile) / 2, payTile, payTile);
     rowEnd = slotLeft + slot;
+    height = rowH;
   }
+
+  /// The scale of the coins (see [CoinFace.purseScale]) and the height of the row, the coins' rows and the pay tile together.
+  final double scale;
+  late final double height;
 
   static const double payTile = 72;
   static const double payMargin = 12;
@@ -557,7 +571,7 @@ class CoinFace extends StatelessWidget {
   /// The same for every coin of a row, so that the coins keep their real sizes to each other.
   final double scale;
 
-  static const double pad = 3;
+  static const double pad = 4;
 
   /// The real size of each, in millimetres (the width of a note; coins are round): the half shekel is the biggest coin and the shekel the
   /// smallest, as in a purse.
@@ -587,6 +601,18 @@ class CoinFace extends StatelessWidget {
     'n200': He.noteN200Semantics.text,
   };
 
+  /// The scale the coins of a purse are drawn at (min-sizes.md B3, R3): a 1-shekel coin is 48 points, a 2-shekel one 58, a 5-shekel one 64 and a
+  /// 10-shekel one 61 on a phone (the coins keep their real sizes to each other), a third larger on a tablet; the scale goes down by a twentieth
+  /// at a time only as far as it must for the rows of the purse to fit in [room] under the board's line where no hotspot may be.
+  static double purseScale(List<String> kinds, double boxWidth, double room) {
+    final double most = boxWidth > 700 ? 1.48 : 1.111;
+    double k = most;
+    while (k > 0.6 && PurseLayout(kinds, boxWidth, scale: k).height > room) {
+      k -= 0.05;
+    }
+    return k;
+  }
+
   /// The picture's own size (a note is 71 mm high, a coin is round), without the room around it.
   static Size faceOf(String kind, {double scale = 1}) {
     final bool note = kind.startsWith('n');
@@ -595,7 +621,7 @@ class CoinFace extends StatelessWidget {
   }
 
   /// The largest scale, at most [most], at which [kinds] fit in [room] in rows (as a [Wrap] without spacing lays them out).
-  static double fitScale(List<String> kinds, Size room, {double most = 0.8}) {
+  static double fitScale(List<String> kinds, Size room, {double most = 1.111}) {
     double k = most;
     while (k > 0.25 && _rowsHeight(kinds, room.width, k) > room.height) {
       k -= 0.05;

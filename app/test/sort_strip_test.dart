@@ -8,9 +8,21 @@ import 'support/c1_screens.dart';
 import 'support/golden_comparator.dart';
 import 'support/harness.dart';
 
-/// The pattern strips of LOG-A-04 (`strip_*`, a viewBox of 120 by 48) in a sort: a wide tile in the tray (84 tall, as wide as the row allows up to 200), a
-/// card 2.5 times its height wide in a bin (two side by side in a phone's bin), never mirrored in a right-to-left screen.
+/// The pattern strips of LOG-A-04 (`strip_*`, a viewBox of 120 by 48) in a sort, on the board of docs/design/m11/min-sizes.md section 3: on a
+/// phone a deck of wide tiles (one card at a time) and two shelves, each showing its newest card at full size and the earlier ones as a pile
+/// with a count badge; on a tablet all the cards in a grid and two bins side by side. A card is never drawn smaller than the table says, and
+/// a strip reads the way it is drawn in a right-to-left screen.
 const String _id = 'log.pat.yes.animals';
+
+/// Per board: the tray's tile, the card in the tray, the card in a bin, the bin's label size and its sample picture's side.
+typedef _Sizes = ({Size tile, Size tray, Size bin, double label, double sample});
+
+const Map<String, _Sizes> _sizes = <String, _Sizes>{
+  'phone': (tile: Size(184, 88), tray: Size(176, 70.4), bin: Size(190, 76), label: 18, sample: 44),
+  'phoneSE': (tile: Size(196, 86), tray: Size(188, 75.2), bin: Size(170, 68), label: 18, sample: 40),
+  'tabletL': (tile: Size(300, 112), tray: Size(250, 100), bin: Size(300, 120), label: 24, sample: 48),
+  'tabletP': (tile: Size(340, 128), tray: Size(300, 120), bin: Size(280, 112), label: 24, sample: 48),
+};
 
 void main() {
   late PackContent content;
@@ -24,88 +36,116 @@ void main() {
     expect(SortDragSession.viewBoxAspect('<svg viewBox="0 0 120 48" width="120">'), closeTo(2.5, 1e-9));
     expect(SortDragSession.viewBoxAspect('<svg viewBox="0 0 100 100">'), 1);
     expect(SortDragSession.viewBoxAspect('<svg width="10">'), isNull);
-    final Rect bin = SortDragSession.binRect(const Size(340, 128), 2, 0);
-    final BinBands strips = SortDragSession.binBands(bin, 4, wide: true);
-    final BinBands squares = SortDragSession.binBands(bin, 4);
-    expect(strips.itemWidth, strips.itemSide * 2.5);
-    expect(squares.itemWidth, squares.itemSide);
-    expect(
-      strips.items,
-      greaterThanOrEqualTo(squares.items),
-      reason: 'fewer fit in a line, so the band is as tall or taller',
-    );
   });
 
   for (final (String, Size) b in boards) {
-    testWidgets('${b.$1}: the strips are wide tiles 84 tall, and wide cards in the bins, not mirrored', (
-      WidgetTester t,
-    ) async {
-      final SortDragActivity a = content.activities[_id]! as SortDragActivity;
-      await startOn(t, content, b.$2);
-      await openOne(t, content, a);
-      final Finder tray = find.byKey(const Key('sort-tray'));
-      expect(tray, findsOneWidget);
-      final double trayWidth = t.getSize(tray).width;
-      for (final SortItem i in a.items) {
-        final Rect tile = t.getRect(
-          find.descendant(
-            of: find.byKey(Key('item-${i.id}')),
-            matching: find.byKey(const Key('answer-tile')),
-          ),
+    testWidgets(
+      '${b.$1}: the strips are drawn at the table of the board, a pile counts the rest, never mirrored',
+      (WidgetTester t) async {
+        final _Sizes want = _sizes[b.$1] ?? _sizes['phone']!;
+        final bool deck = b.$1.startsWith('phone');
+        final SortDragActivity a = content.activities[_id]! as SortDragActivity;
+        await startOn(t, content, b.$2);
+        await openOne(t, content, a);
+        expect(find.byKey(const Key('sort-tray')), findsOneWidget);
+        // the tray: a deck (the top card only) on a phone, every card on a tablet
+        final Iterable<SortItem> tray = a.items.where(
+          (SortItem i) => find.byKey(Key('item-${i.id}')).evaluate().isNotEmpty,
         );
-        expect(tile.height, 84, reason: 'the touch target keeps its height');
-        expect(tile.width, inInclusiveRange(84, 200));
-        expect(
-          tile.width,
-          closeTo((trayWidth / a.items.length - 10).clamp(84.0, 200.0), 1.5),
-          reason: 'tilesWidth / n - 10, clamped',
-        );
-        expect(tile.width, greaterThan(tile.height), reason: 'wide, so that the animals can be told apart');
-      }
-      await _shot('sortstrip_${b.$1}_tray');
-      // two cards sorted: each lies in its bin 2.5 times its height wide, and the strip reads as drawn (left to right) in the right-to-left screen
-      for (final SortItem i in a.items.take(2)) {
-        await t.dragFrom(
-          t.getCenter(find.byKey(Key('item-${i.id}'))),
-          t.getCenter(find.byKey(Key('bin-${i.bin}'))) - t.getCenter(find.byKey(Key('item-${i.id}'))),
-        );
-        await t.pump(const Duration(milliseconds: 400));
-      }
-      final Finder inBins = find.descendant(
-        of: find.byKey(const Key('sort-stage')),
-        matching: find.byWidgetPredicate(
+        expect(tray.length, deck ? 1 : a.items.length);
+        for (final SortItem i in tray) {
+          final Rect tile = t.getRect(
+            find.descendant(
+              of: find.byKey(Key('item-${i.id}')),
+              matching: find.byKey(const Key('answer-tile')),
+            ),
+          );
+          expect(tile.size, _near(want.tile), reason: 'the wide tile');
+          expect(
+            t.getSize(find.byKey(Key('tray-card-${i.id}'))),
+            _near(want.tray),
+            reason: 'the card in the tray',
+          );
+        }
+        await _shot('sortstrip_${b.$1}_tray');
+        // every card that belongs in the first bin goes in: they pile in it, the newest at full size, with a count
+        final SortBin first = a.bins.first;
+        final List<SortItem> mine = a.items.where((SortItem i) => i.bin == first.id).toList();
+        expect(mine.length, greaterThanOrEqualTo(2));
+        for (final SortItem i in mine) {
+          final Finder card = find.byKey(Key('item-${i.id}'));
+          // on a phone the card comes to the top of the deck once the others have gone: sort the cards of the other bin too
+          while (card.evaluate().isEmpty) {
+            final SortItem other = a.items.firstWhere(
+              (SortItem x) => x.bin != first.id && find.byKey(Key('item-${x.id}')).evaluate().isNotEmpty,
+            );
+            await _sort(t, other);
+          }
+          await _sort(t, i);
+        }
+        final Finder inBin = find.byWidgetPredicate(
           (Widget w) =>
-              w is SizedBox &&
-              w.height != null &&
-              w.width != null &&
-              w.width! > w.height! &&
-              w.width! == w.height! * SortDragSession.wideItem &&
-              w.height! <= 26,
-        ),
-      );
-      expect(
-        inBins.evaluate().length,
-        greaterThanOrEqualTo(2),
-        reason: 'a wide card in a bin for each card sorted',
-      );
-      for (final Element e in inBins.evaluate()) {
-        final Iterable<SvgPicture> pictures = find
-            .descendant(of: find.byWidget(e.widget), matching: find.byType(SvgPicture))
-            .evaluate()
-            .map((Element x) => x.widget as SvgPicture);
-        expect(pictures, isNotEmpty);
-        expect(
-          pictures.every((SvgPicture p) => !p.matchTextDirection),
-          isTrue,
-          reason: 'a pattern reads the way it is drawn',
+              w.key is ValueKey<String> && (w.key! as ValueKey<String>).value.startsWith('bin-card-'),
         );
-        final Rect r = t.getRect(find.byWidget(e.widget));
-        expect(r.width / r.height, closeTo(2.5, 0.01));
-      }
-      await _shot('sortstrip_${b.$1}_sorted');
-      await closeOne(t);
-    });
+        final List<Rect> cards = <Rect>[
+          for (final Element e in inBin.evaluate()) t.getRect(find.byWidget(e.widget)),
+        ];
+        expect(cards, isNotEmpty);
+        for (final Rect r in cards) {
+          expect(
+            r.size,
+            _near(want.bin),
+            reason: 'every card in a bin is the same size: a pile, not a shrink',
+          );
+          expect(r.width / r.height, closeTo(2.5, 0.01));
+        }
+        final Finder count = find.byKey(Key('bin-count-${first.id}'));
+        final bool piled = mine.length > (b.$1 == 'tabletP' ? 2 : 1);
+        expect(count, piled ? findsOneWidget : findsNothing, reason: 'the badge shows when cards are piled');
+        if (piled) {
+          expect(find.byKey(Key('bin-pile-${first.id}')), findsOneWidget);
+          expect(find.descendant(of: count, matching: find.text('${mine.length}')), findsOneWidget);
+          expect(t.getSize(count).width, greaterThanOrEqualTo(b.$1.startsWith('tablet') ? 40 : 30));
+        }
+        // the strip reads as drawn (left to right) in the right-to-left screen
+        for (final Element e in inBin.evaluate()) {
+          final Iterable<SvgPicture> pictures = find
+              .descendant(of: find.byWidget(e.widget), matching: find.byType(SvgPicture))
+              .evaluate()
+              .map((Element x) => x.widget as SvgPicture);
+          expect(pictures, isNotEmpty);
+          expect(
+            pictures.every((SvgPicture p) => !p.matchTextDirection),
+            isTrue,
+            reason: 'a pattern reads the way it is drawn',
+          );
+        }
+        // the label and the sample picture of a bin
+        final Text label = t.widget<Text>(find.byKey(Key('bin-label-${first.id}')));
+        expect(label.style!.fontSize! * (label.textScaler?.scale(1) ?? 1), greaterThanOrEqualTo(want.label));
+        expect(label.style!.fontWeight, FontWeight.w500);
+        expect(label.style!.height, 1.7);
+        expect(
+          t.getSize(find.byKey(const Key('bin-sample')).first).shortestSide,
+          greaterThanOrEqualTo(want.sample - 0.5),
+        );
+        await _shot('sortstrip_${b.$1}_sorted');
+        await closeOne(t);
+      },
+    );
   }
+}
+
+Matcher _near(Size s) => predicate<Size>(
+  (Size x) => (x.width - s.width).abs() < 1 && (x.height - s.height).abs() < 1,
+  'a size of about ${s.width} by ${s.height}',
+);
+
+/// Drags [i] into its own bin.
+Future<void> _sort(WidgetTester t, SortItem i) async {
+  final Offset from = t.getCenter(find.byKey(Key('item-${i.id}')));
+  await t.dragFrom(from, t.getCenter(find.byKey(Key('bin-${i.bin}'))) - from);
+  await t.pump(const Duration(milliseconds: 400));
 }
 
 Future<void> _shot(String name) =>

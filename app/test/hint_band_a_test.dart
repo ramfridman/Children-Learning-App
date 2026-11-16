@@ -10,6 +10,7 @@ import 'package:nitznutz/play/lesson_controller.dart';
 import 'package:nitznutz/play/match_pairs_session.dart';
 import 'package:nitznutz/play/robot_path_session.dart';
 import 'package:nitznutz/play/shape_builder_session.dart';
+import 'package:nitznutz/play/sort_board.dart';
 import 'package:nitznutz/play/sort_drag_session.dart';
 import 'package:nitznutz/play/spot_error_session.dart';
 import 'package:nitznutz/play/template_session.dart';
@@ -130,6 +131,21 @@ void main() {
   Offset tileTopOf(WidgetTester t, Finder f, double slop) {
     final Rect r = t.getRect(f);
     return inStage(Offset(r.center.dx, r.top + slop));
+  }
+
+  /// The sort board of [a] as the phone lays it out (the stage that [s] asked for) and that stage's own origin on the board.
+  (SortBoard, Offset) sortBoardOf(SortDragActivity a, SortDragSession s) {
+    final ActivitySpec laid = s.layoutFor(spec);
+    return (
+      SortBoard(
+        kind: SortKind.phone,
+        stage: laid.stage.size,
+        labels: <String>[for (final SortBin b in a.bins) b.label],
+        marks: <BinMark>[for (final SortBin b in a.bins) (count: b.count, tally: false)],
+        wide: false,
+      ),
+      laid.stage.topLeft,
+    );
   }
 
   void near(Offset a, Offset b, String why) {
@@ -281,16 +297,13 @@ void main() {
         c.showHint();
         await pass(t, 200);
         expect(find.byKey(const Key('hint-copy')), findsOneWidget, reason: 'the next picture, drawn again');
-        final double first = inStage(t.getCenter(find.byKey(const Key('hint-copy')))).dx;
-        expect(
-          first,
-          closeTo(SortDragSession.sampleCentre(spec.stage.size, a.bins.length, 0).dx, 2),
-          reason: 'first over the sample of the first bin',
-        );
+        final (SortBoard board, Offset origin) = sortBoardOf(a, s);
+        final double first = (t.getCenter(find.byKey(const Key('hint-copy'))) - origin).dx;
+        expect(first, closeTo(board.sampleCentre(0).dx, 2), reason: 'first over the sample of the first bin');
         await pass(t, 700);
         expect(
-          inStage(t.getCenter(find.byKey(const Key('hint-copy')))).dx,
-          closeTo(SortDragSession.sampleCentre(spec.stage.size, a.bins.length, 1).dx, 2),
+          (t.getCenter(find.byKey(const Key('hint-copy'))) - origin).dx,
+          closeTo(board.sampleCentre(1).dx, 2),
           reason: 'then over the sample of the next',
         );
         await pass(t, 1500);
@@ -310,19 +323,17 @@ void main() {
         await host(t, s);
         await lamp(t, c, 3, last: 700);
         expect(hand, findsOneWidget);
+        final (SortBoard board, Offset origin) = sortBoardOf(a, s);
+        final Rect top = t.getRect(find.byKey(Key('item-${a.items.first.id}')));
         near(
           handTip(t)!,
-          tileTopOf(t, find.byKey(Key('item-${a.items.first.id}')), 4),
+          Offset(top.center.dx, top.top + 4) - origin,
           'the fingertip is on the top edge of the first picture of the tray',
         );
         await pass(t, 1500);
         expect(s.placed, isNotEmpty, reason: 'the picture is in the bin');
         final int bin = a.bins.indexWhere((SortBin b) => b.id == a.items.first.bin);
-        near(
-          handTip(t)!,
-          SortDragSession.dropPlace(spec.stage.size, a.bins.length, bin),
-          'the hand is in its bin',
-        );
+        near(handTip(t)!, board.dropPlace(bin), 'the hand is in its bin');
         await pass(t, 2500);
         expect(hand, findsNothing);
         expect(s.placed, isEmpty, reason: 'the picture goes back to the tray');
@@ -341,7 +352,7 @@ void main() {
       await host(t, s);
       await lamp(t, c, 3, last: 500);
       expect(hand, findsOneWidget);
-      await t.tap(find.byKey(Key('item-${a.items.last.id}')));
+      await t.tap(find.byKey(Key('item-${a.items.first.id}')));
       await pass(t, 200);
       expect(hand, findsNothing);
       expect(s.demoRunning, isFalse);
@@ -380,21 +391,23 @@ void main() {
       },
     );
 
-    test(
-      "the bins are side by side in the language's direction: the first at the right, none over another",
-      () {
-        for (final int n in <int>[2, 3]) {
-          final List<Rect> bins = <Rect>[
-            for (int i = 0; i < n; i++) SortDragSession.binRect(spec.stage.size, n, i),
-          ];
-          for (int i = 1; i < n; i++) {
-            expect(bins[i].right, lessThan(bins[i - 1].left), reason: 'bin $i is left of bin ${i - 1}');
-          }
-          expect(bins.first.right, lessThanOrEqualTo(spec.stage.width));
-          expect(bins.last.left, greaterThanOrEqualTo(0));
+    test("on a tablet the bins are side by side in the language's direction: the first at the right, none over another", () {
+      for (final int n in <int>[2, 3]) {
+        final SortBoard board = SortBoard(
+          kind: SortKind.tabletL,
+          stage: const Size(816, 238),
+          labels: <String>[for (int i = 0; i < n; i++) 'b$i'],
+          marks: <BinMark>[for (int i = 0; i < n; i++) (count: 1, tally: false)],
+          wide: false,
+        );
+        final List<Rect> bins = board.bins;
+        for (int i = 1; i < n; i++) {
+          expect(bins[i].right, lessThan(bins[i - 1].left), reason: 'bin $i is left of bin ${i - 1}');
         }
-      },
-    );
+        expect(bins.first.right, lessThanOrEqualTo(816));
+        expect(bins.last.left, greaterThanOrEqualTo(0));
+      }
+    });
   });
 
   // ---- build a pattern ----

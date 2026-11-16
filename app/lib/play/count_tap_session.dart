@@ -20,7 +20,7 @@ import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'host_moves.dart';
 import 'lesson_arc.dart' show ArcPart, ArcStep;
-import 'choice_row.dart' show withTallStage;
+import 'choice_row.dart' show withBigStage, withTallStage;
 import 'lesson_controller.dart';
 import 'listen_do_session.dart' show ListenDoSession;
 import 'option_faces.dart';
@@ -35,13 +35,45 @@ class CountLayout {
       _language(size, a);
       return;
     }
-    final double flowerH = h * 0.86;
+    // The target to fly to is the size the 128-point stage gave it (110 high at most): a taller stage gives the room to the objects.
+    final double flowerH = math.min(h * 0.86, 110);
     final double flowerW = flowerH * 0.8;
     flower = Rect.fromLTWH(size.width - flowerW - 10, (h - flowerH) / 2, flowerW, flowerH);
-    objectSize = math.min(60, math.max(36, h * 0.34));
-    touch = math.max(objectSize, 48);
     final Rect region = Rect.fromLTRB(10, 8, flower.left - 8, h - 8);
-    centers = a.arrangement == 'line' ? _line(region, a.count) : _scatter(region, a.count, a.seed);
+    _cells(region, a.count, oneRow: a.arrangement == 'line', shuffle: a.arrangement != 'line', seed: a.seed);
+  }
+
+  /// The objects of a count (min-sizes.md A9, R3): each has a cell of its own, in one row or in two to four, whichever makes the cells largest; the
+  /// object is drawn 0.84 of its cell (at most 96) and its touch square is the cell (at most 96): two touch squares never overlap, and a Band A child
+  /// control is 64 or more where the stage has the room (the phone's tall stage up to eight objects). The cells are taken in a seeded order, so a
+  /// scattered scene is the same every time.
+  void _cells(Rect region, int count, {required bool oneRow, required bool shuffle, int seed = 0}) {
+    final int n = math.max(1, count);
+    int rows = 1;
+    double cell = 0;
+    for (int r = 1; r <= (oneRow ? 1 : math.min(4, n)); r++) {
+      final double c = math.min(region.width / (n / r).ceil(), region.height / r);
+      if (c > cell + 0.5) {
+        cell = c;
+        rows = r;
+      }
+    }
+    objectSize = math.min(96, cell * 0.84);
+    touch = math.min(cell, 96);
+    final int cols = (n / rows).ceil();
+    final double top = region.center.dy - rows * cell / 2;
+    final List<int> order = List<int>.generate(n, (int i) => i);
+    if (shuffle) order.shuffle(math.Random(seed));
+    centers = <Offset>[
+      for (int i = 0; i < n; i++)
+        Offset(
+          // Each row is centred on its own (a last row of fewer stands in the middle), and the objects run left to right (a count
+          // is read in order, and numbers never mirror).
+          region.center.dx +
+              ((order[i] % cols) - (math.min(cols, n - (order[i] ~/ cols) * cols) - 1) / 2) * cell,
+          top + (order[i] ~/ cols + 0.5) * cell,
+        ),
+    ];
   }
 
   /// A count whose target is the blank picture: nothing is there to fly to, so the objects are counted where they stand.
@@ -56,32 +88,7 @@ class CountLayout {
     // The strip ends 10 above the stage's bottom, so the counter (40 high, 34 above the strip's bottom) stays inside the stage.
     flower = Rect.fromLTWH(size.width - strip - 4, 0, strip, size.height - 10);
     final Rect region = Rect.fromLTRB(8, 6, flower.left - 4, size.height - 6);
-    final int n = math.max(1, a.count);
-    int rows = 1;
-    double cell = 0;
-    for (int r = 1; r <= math.min(4, n); r++) {
-      final double c = math.min(region.width / (n / r).ceil(), region.height / r);
-      if (c > cell + 0.5) {
-        cell = c;
-        rows = r;
-      }
-    }
-    objectSize = math.min(96, cell * 0.84);
-    // The touch square is the object's cell, at most 96: two touch squares never overlap (a touch on a neighbour would start the count
-    // again). On the phone's 128-point stage a cell is 64 or more up to four objects; five to ten need the tall stage while they are
-    // counted (docs/design/languages-band-a-qa.md section 3).
-    touch = math.min(cell, 96);
-    final int cols = (n / rows).ceil();
-    final double top = region.center.dy - rows * cell / 2;
-    centers = <Offset>[
-      for (int i = 0; i < n; i++)
-        Offset(
-          // Each row is centred on its own (a last row of fewer stands in the middle), and the objects run left to right (a count
-          // is read in order, and numbers never mirror).
-          region.center.dx + ((i % cols) - (math.min(cols, n - (i ~/ cols) * cols) - 1) / 2) * cell,
-          top + (i ~/ cols + 0.5) * cell,
-        ),
-    ];
+    _cells(region, a.count, oneRow: false, shuffle: false);
   }
 
   late final Rect flower;
@@ -92,31 +99,6 @@ class CountLayout {
   late final List<Offset> centers;
 
   Offset get flowerCentre => flower.center;
-
-  List<Offset> _line(Rect r, int n) {
-    final double step = math.min(r.width / n, objectSize * 1.5);
-    final double start = r.center.dx - step * (n - 1) / 2;
-    return <Offset>[for (int i = 0; i < n; i++) Offset(start + step * i, r.center.dy + r.height * 0.1)];
-  }
-
-  List<Offset> _scatter(Rect r, int n, int seed) {
-    // One object in each of n cells of a grid, picked in a seeded order and moved a little inside its cell.
-    final math.Random rnd = math.Random(seed);
-    final int cols = math.max(1, (math.sqrt(n * r.width / r.height)).ceil());
-    final int rows = (n / cols).ceil();
-    final List<int> cells = List<int>.generate(cols * rows, (int i) => i)..shuffle(rnd);
-    final double cw = r.width / cols;
-    final double ch = r.height / rows;
-    final double jx = math.max(0, (cw - objectSize) / 2) * 0.7;
-    final double jy = math.max(0, (ch - objectSize) / 2) * 0.7;
-    return <Offset>[
-      for (int i = 0; i < n; i++)
-        Offset(
-          r.left + (cells[i] % cols + 0.5) * cw + (rnd.nextDouble() * 2 - 1) * jx,
-          r.top + (cells[i] ~/ cols + 0.5) * ch + (rnd.nextDouble() * 2 - 1) * jy,
-        ),
-    ];
-  }
 }
 
 /// The count-and-tap template (T02): touch each object once, it flies to the flower (or lights up where
@@ -165,11 +147,11 @@ class CountTapSession extends TemplateSession {
   /// of 58 points or more (Band A: a child control is at least 64, the SE's ten objects 58); at the question the stage is the usual one
   /// again, to leave the room to the answers (docs/design/languages-band-a-qa.md section 3).
   bool get _tallWhileCounting =>
-      activity.isLanguage && CountLayout.countsInPlace(activity) && activity.count >= 5;
+      activity.isLanguage ? CountLayout.countsInPlace(activity) && activity.count >= 5 : activity.count >= 4;
 
   @override
   ActivitySpec layoutFor(ActivitySpec base) =>
-      _tallWhileCounting && !answering && !base.stageIsCard ? withTallStage(base) : base;
+      base.stageIsCard ? withBigStage(base) : (_tallWhileCounting && !answering ? withTallStage(base) : base);
   int get counter => counted.length;
 
   // ---- the host's part (a Show, the lead of a Together item) ----

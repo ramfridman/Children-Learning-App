@@ -106,11 +106,7 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "אַחַת",
-    "שְׁתַּיִם",
-    "שָׁלוֹשׁ",
-    "אַרְבַּע",
-    "חָמֵשׁ"
+    "אַחַת"
    ],
    "picture": "the frog on a track of five stones labelled 1 to 5; Nekudi taps the frog, it hops one stone and he says the number it lands on; three hops, then the child makes the hop to 5",
    "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
@@ -275,10 +271,7 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "אַחַת",
-    "שְׁתַּיִם",
-    "שָׁלוֹשׁ",
-    "אַרְבַּע"
+    "אַחַת"
    ],
    "picture": "four ladybugs in a row; Nekudi's finger touches one, it lights and he says its number; three of them, then the child touches the last",
    "status": "waits for the Show and lead player of count_tap (step 2.1)"
@@ -352,12 +345,7 @@
     "line": "key",
     "maxSeconds": 8
    },
-   "teaches": [
-    "אַחַת",
-    "שְׁתַּיִם",
-    "שָׁלוֹשׁ",
-    "אַרְבַּע"
-   ],
+   "teaches": [],
    "picture": "four butterflies; Nekudi touches three and says one, two, three; the child touches the fourth; Nekudi repeats the last number, \"four: there are four\", and the numeral 4 lights",
    "status": "waits for the Show and lead player of count_tap (step 2.1)"
   },
@@ -424,8 +412,6 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "אַחַת",
-    "שְׁתַּיִם",
     "שָׁלוֹשׁ"
    ],
    "picture": "a ten-frame; Nekudi puts two stars in the first cells, the child the third; the three stand in a row, seen at a glance",
@@ -493,8 +479,6 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "אַחַת",
-    "שְׁתַּיִם",
     "שָׁלוֹשׁ"
    ],
    "picture": "a pile of six apples and a basket; Nekudi moves one (\"one\"), then one (\"two\"), the child moves the third and the hand stops: the rest of the pile stays",
@@ -566,8 +550,6 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "אַחַת",
-    "שְׁתַּיִם",
     "שָׁלוֹשׁ"
    ],
    "picture": "three apples; Nekudi touches two, the child the third; then the numeral 3 lights among the number tiles as the key line is said",
@@ -687,9 +669,9 @@
     {
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_09.open",
-     "text": "סוֹפְרִים עַד עֶשֶׂר.",
-     "voice": "סופרים עד עֶשֶׂר.",
-     "review": "text-ready"
+     "text": "סוֹפְרִים אֶת כׇּל הַחִפּוּשִׁיּוֹת.",
+     "voice": "סופרים את כל החפושיות.",
+     "review": "needs-editor"
     },
     {
      "role": "key",
@@ -713,9 +695,6 @@
    },
    "teaches": [
     "אַחַת",
-    "שְׁתַּיִם",
-    "שָׁלוֹשׁ",
-    "אַרְבַּע",
     "חָמֵשׁ",
     "שֵׁשׁ"
    ],
@@ -782,7 +761,6 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "אַרְבַּע",
     "חָמֵשׁ"
    ],
    "picture": "a ten-frame; Nekudi fills four cells of the top row in one run; the child puts the fifth; the full row glows: five",
@@ -826,10 +804,7 @@
     "line": "key",
     "maxSeconds": 8
    },
-   "teaches": [
-    "יוֹתֵר",
-    "פָּחוֹת"
-   ],
+   "teaches": [],
    "picture": "two rows of ladybugs matched one to one by lines; the one left over shows \"more\"",
    "status": "waits for Stage 3.1 (two ten-frames as rows), as the exempt list says"
   },
@@ -997,16 +972,16 @@
    "steps": [
     {
      "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "host",
      "hop": 1,
      "say": "key"
-    },
-    {
-     "by": "host",
-     "hop": 1
-    },
-    {
-     "by": "host",
-     "hop": 1
     },
     {
      "by": "child",
@@ -1044,8 +1019,7 @@
    "teaches": [
     "אַחַת עֶשְׂרֵה",
     "שְׁתֵּים עֶשְׂרֵה",
-    "שְׁלֹשׁ עֶשְׂרֵה",
-    "אַרְבַּע עֶשְׂרֵה"
+    "שְׁלֹשׁ עֶשְׂרֵה"
    ],
    "picture": "the line 0 to 20 with 10 marked; the frog on 10 hops one at a time and Nekudi says 11, 12, 13; the child hops to 14",
    "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
@@ -1198,13 +1172,7 @@
     "line": "key",
     "maxSeconds": 8
    },
-   "teaches": [
-    "עֶשֶׂר",
-    "תֵּשַׁע",
-    "שְׁמוֹנֶה",
-    "שֶׁבַע",
-    "שֵׁשׁ"
-   ],
+   "teaches": [],
    "picture": "the line 0 to 10; the frog on 10 hops back (to the left) three times as Nekudi counts down 9, 8, 7; the child hops to 6",
    "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
   },
@@ -1278,10 +1246,7 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "עֶשֶׂר",
-    "אַחַת עֶשְׂרֵה",
-    "שְׁתֵּים עֶשְׂרֵה",
-    "שְׁלֹשׁ עֶשְׂרֵה"
+    "עֶשֶׂר"
    ],
    "picture": "thirteen stars; Nekudi touches ten in one run (they light as a group: \"ten\"), then 11 and 12; the child touches the last",
    "status": "waits for the Show and lead player of count_tap (step 2.1)"
@@ -1352,10 +1317,7 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "עֶשֶׂר",
-    "אַחַת עֶשְׂרֵה",
-    "שְׁתֵּים עֶשְׂרֵה",
-    "שְׁלֹשׁ עֶשְׂרֵה"
+    "עֶשֶׂר"
    ],
    "picture": "a pile of twenty fish; Nekudi moves ten in one run (\"ten\"), then 11 and 12; the child moves the thirteenth and the hand stops",
    "status": "waits for the Show and lead player of give_n (step 2.1)"
@@ -1677,8 +1639,7 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "חָמֵשׁ",
-    "שְׁמוֹנֶה"
+    "חָמֵשׁ"
    ],
    "picture": "a ten-frame; Nekudi fills the top row in one run (\"five\"), then puts two more under it; the child puts the eighth; \"five and three is eight\"",
    "status": "waits for the Show and lead player of give_n (step 2.1)"
@@ -1821,11 +1782,7 @@
     "line": "key",
     "maxSeconds": 8
    },
-   "teaches": [
-    "אַרְבַּע",
-    "חָמֵשׁ",
-    "שֵׁשׁ"
-   ],
+   "teaches": [],
    "picture": "the frog on 5; Nekudi hops it forward to 6 (\"one more\"), back to 5 (\"one less\"); the child hops back to 4",
    "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
   },
@@ -1902,12 +1859,7 @@
     "line": "key",
     "maxSeconds": 8
    },
-   "teaches": [
-    "אַחַת",
-    "שְׁתַּיִם",
-    "שָׁלוֹשׁ",
-    "אַרְבַּע"
-   ],
+   "teaches": [],
    "picture": "the line 0 to 10; the frog on 0 makes three equal hops, each arc drawn the same size; the child makes the fourth",
    "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
   },
@@ -1975,8 +1927,6 @@
    },
    "teaches": [
     "חָמֵשׁ",
-    "שֵׁשׁ",
-    "שֶׁבַע",
     "שְׁמוֹנֶה"
    ],
    "picture": "a ten-frame that starts with its top row full (five); Nekudi adds the sixth and the seventh; the child the eighth",
@@ -2138,8 +2088,7 @@
    "teaches": [
     "שְׁתַּיִם",
     "אַרְבַּע",
-    "שֵׁשׁ",
-    "שְׁמוֹנֶה"
+    "שֵׁשׁ"
    ],
    "picture": "the frog hops two stones at a time from 0: 2, 4, 6; the child hops to 8",
    "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
@@ -2324,10 +2273,8 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "שְׁלוֹשִׁים וּשְׁמוֹנֶה",
     "שְׁלוֹשִׁים וְתֵשַׁע",
-    "אַרְבָּעִים",
-    "אַרְבָּעִים וְאַחַת"
+    "אַרְבָּעִים"
    ],
    "picture": "the line 30 to 50; the frog hops 37 to 38, 39, then over the marked 40 (the ten flashes); the child hops to 41",
    "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
@@ -2543,10 +2490,7 @@
     "line": "key",
     "maxSeconds": 8
    },
-   "teaches": [
-    "שְׁלוֹשִׁים וְתֵשַׁע",
-    "אַרְבָּעִים וְאַחַת"
-   ],
+   "teaches": [],
    "picture": "the line 30 to 50 with 39 and 41 marked; Nekudi lights the tens digit of each (3, 4), then points along the arrow to 41; the child puts the frog on 41",
    "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
   },
@@ -2691,12 +2635,7 @@
     "line": "key",
     "maxSeconds": 8
    },
-   "teaches": [
-    "עֶשְׂרִים וְשָׁלוֹשׁ",
-    "שְׁלוֹשִׁים וְשָׁלוֹשׁ",
-    "אַרְבָּעִים וְשָׁלוֹשׁ",
-    "חֲמִשִּׁים וְשָׁלוֹשׁ"
-   ],
+   "teaches": [],
    "picture": "the line 20 to 60; the frog on 23 makes a long hop to 33, then to 43 (the 3 of the ones lights each time); the child hops to 53",
    "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
   }
@@ -3005,7 +2944,8 @@
     "count.apples.7",
     "count.stars.8",
     "count.fish.9",
-    "count.birds.10"
+    "count.birds.10",
+    "b15.numa09.5"
    ],
    "use": [],
    "poolRungs": [
@@ -3335,10 +3275,12 @@
    "alone": [
     "count.dogs.8",
     "count.ladybugs.10",
-    "b15.numa09.1"
+    "b15.numa09.1",
+    "b15.numa09.3"
    ],
    "use": [
-    "b15.numa09.2"
+    "b15.numa09.2",
+    "b15.numa09.4"
    ],
    "poolRungs": [
     0

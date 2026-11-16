@@ -182,6 +182,23 @@ ActivitySpec withMeetStage(ActivitySpec base) {
   );
 }
 
+/// The board of a template that has the stage to itself or with one row of tiles under it, drawn as big as the board lets it be (docs/design/m11/
+/// min-sizes.md 2.3 S1 to S3): a phone's stage is the whole start column down to the edge where no hotspot may be (see [withTallStage]); a tablet's
+/// card is 848 wide from the margin (a landscape: 400 tall, or [landscapeHeight]) or 772 by 520 (a portrait: [portraitHeight]), the tiles under it, so that
+/// what is drawn in it is not at a phone's size in a sea of room.
+ActivitySpec withBigStage(ActivitySpec base, {double landscapeHeight = 400, double portraitHeight = 520}) {
+  if (!base.stageIsCard) return withTallStage(base);
+  final bool land = base.boardHeight < 1000;
+  final double height = land ? landscapeHeight : portraitHeight;
+  final double width = land ? 848 : 772;
+  return base.withStageAndTiles(
+    stage: Rect.fromLTWH(24, base.stage.top, width, height),
+    tilesLeft: 24,
+    tilesTop: base.stage.top + height + 24 + base.tileSlop - 4,
+    tilesWidth: width,
+  );
+}
+
 /// The board of a phone at a picture choice whose pictures stand on the stage with no answer tiles (docs/design/l7-meet-find.md section 6.4):
 /// the stage takes the whole start column, from x 24 to 401 and down to 349 (the small phone: to 288 and 331), so that two pictures are 166
 /// points wide where they were about 95. A tablet's card is unchanged.

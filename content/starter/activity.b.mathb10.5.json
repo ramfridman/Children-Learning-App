@@ -58,7 +58,8 @@
       {
         "id": "o1",
         "numeral": 2,
-        "label": "שְׁתַּיִם"
+        "label": "שְׁתַּיִם",
+        "misconception": "M-GRP-ONE"
       },
       {
         "id": "o2",
@@ -68,7 +69,8 @@
       {
         "id": "o3",
         "numeral": 6,
-        "label": "שֵׁשׁ"
+        "label": "שֵׁשׁ",
+        "misconception": "M-CNT-SKIP"
       }
     ],
     "correct": "o2",
@@ -87,6 +89,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-SKIP",
+        "vo": "vo:fb.skip_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-GRP-ONE",
+        "vo": "vo:fb.grp_one",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה מַה שֶּׁיֵּשׁ בְּצַלַּחַת אַחַת. בּוֹאוּ נִסְפֹּר אֶת כׇּל הַצַּלָּחוֹת."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

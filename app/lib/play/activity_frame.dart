@@ -297,7 +297,11 @@ class ActivityFrame extends StatelessWidget {
     // The bubble keeps clear of the tiles under it: its text shrinks to the room there is between the progress trail and the tiles
     // (never below the minimum), and a bubble that is still too tall (a long line with a chip) stands higher, not over the tiles.
     final double floorTop = s.trailTop + 36 + 4;
-    final bool clear = (bubbleAboveTiles || target != null || tiles != null) && s.tilesTop > s.bubbleTop;
+    // A phone's stage that stands under the bubble (a number line, drawn across the answer band: min-sizes.md B1) is a box the bubble keeps clear of
+    // too, and it may widen to the start side over the room above the stage.
+    final bool stageBelow = !s.stageIsCard && s.stage.top >= 200;
+    final bool clear =
+        (bubbleAboveTiles || target != null || tiles != null || stageBelow) && s.tilesTop > s.bubbleTop;
     final double ceiling = clear ? s.tilesTop - tilesRise - tileClear : double.infinity;
     // Where the bubble ends on its right (the guide's side), and how far to the left it may widen when its line does not fit at the
     // smallest size: a tablet to its stage's card, a phone to leave the stage the room of a hint's drawing.
@@ -312,11 +316,13 @@ class ActivityFrame extends StatelessWidget {
     // The room's rim stands 4 points outside the phone's stage: the bubble keeps clear of it too, with 2 points to spare.
     final double rimClear = sc != null && phoneBoard && s.stageDrawn ? roomRimClear : 0;
     final double? widest = clear
-        ? phoneBoard
+        ? stageBelow
+              ? rightEdge - s.stage.left
+              : phoneBoard
               ? rightEdge - s.stage.right - rimClear
               : rightEdge - s.stage.left - (s.stageIsCard ? 0 : keep)
         : null;
-    final double? spill = clear && phoneBoard ? rightEdge - s.stage.left - keep : null;
+    final double? spill = clear && phoneBoard && !stageBelow ? rightEdge - s.stage.left - keep : null;
     final ({double font, double height, double width}) fit = fitBubble(
       bubbleText,
       s,
@@ -727,7 +733,9 @@ class LessonCelebration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BoardClass board = AppLayout.of(context).board;
-    final double w = math.min(board.size.width - 80, 520);
+    // A tablet's card is 640 wide with the cameo at 160 and the words at 32 (min-sizes.md B10), as the room's celebration card is.
+    final bool tablet = board.isTablet;
+    final double w = tablet ? 640 : math.min(board.size.width - 80, 520);
     final RoomSpec? place = room;
     return Positioned.fill(
       child: ColoredBox(
@@ -760,7 +768,12 @@ class LessonCelebration extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           if (cameo != null)
-                            SizedBox(key: const Key('lesson-cameo'), width: 112, height: 112, child: cameo)
+                            SizedBox(
+                              key: const Key('lesson-cameo'),
+                              width: tablet ? 160 : 112,
+                              height: tablet ? 160 : 112,
+                              child: cameo,
+                            )
                           else
                             const BoardSvg('assets/art/ui/spark.svg', width: 64, height: 64),
                           if (sticker != null) ...<Widget>[
@@ -770,7 +783,11 @@ class LessonCelebration extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      Text(text, textAlign: TextAlign.center, style: AppText.fixed(size: 26, weight: 600)),
+                      Text(
+                        text,
+                        textAlign: TextAlign.center,
+                        style: AppText.fixed(size: tablet ? 32 : 26, weight: 600),
+                      ),
                       const SizedBox(height: 12),
                       PebbleButton(
                         key: const Key('lesson-done'),

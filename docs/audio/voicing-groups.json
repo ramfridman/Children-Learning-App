@@ -371,6 +371,19 @@
     "vo:b15.numa09.2.h3",
     "vo:b15.numa09.2.how_many",
     "vo:b15.numa09.2.prompt",
+    "vo:b15.numa09.3.correct",
+    "vo:b15.numa09.3.h2",
+    "vo:b15.numa09.3.h3",
+    "vo:b15.numa09.3.prompt",
+    "vo:b15.numa09.4.correct",
+    "vo:b15.numa09.4.h1",
+    "vo:b15.numa09.4.h2",
+    "vo:b15.numa09.4.h3",
+    "vo:b15.numa09.4.prompt",
+    "vo:b15.numa09.5.correct",
+    "vo:b15.numa09.5.h2",
+    "vo:b15.numa09.5.h3",
+    "vo:b15.numa09.5.prompt",
     "vo:b15.numa10.1.correct",
     "vo:b15.numa10.1.h2",
     "vo:b15.numa10.1.h3",
@@ -3485,7 +3498,6 @@
     "vo:host.timi.show.log_b_06.handover",
     "vo:host.timi.show.log_b_06.key",
     "vo:host.timi.show.log_b_06.open",
-    "vo:host.timi.show.log_b_06.predict",
     "vo:host.timi.show.log_b_08.handover",
     "vo:host.timi.show.log_b_08.key",
     "vo:host.timi.show.log_b_08.open",
@@ -3496,7 +3508,7 @@
     "vo:host.timi.show.log_b_11.key",
     "vo:host.timi.show.log_b_11.open"
    ],
-   "chars": 6289
+   "chars": 6274
   },
   {
    "name": "cs-B",
@@ -4042,6 +4054,7 @@
     "vo:fb.count_on_card",
     "vo:fb.count_on_hidden",
     "vo:fb.count_on_start",
+    "vo:fb.grp_one",
     "vo:fb.money_count",
     "vo:fb.money_size",
     "vo:fb.part_miss.sentence.1_5",
@@ -4053,6 +4066,7 @@
     "vo:fb.part_miss.sentence.6_6",
     "vo:fb.part_miss.sentence.7_9",
     "vo:fb.part_miss.sentence.8_12",
+    "vo:fb.share_uneq.plates",
     "vo:fb.sum_card",
     "vo:fb.take_card",
     "vo:hint.clock.h2",
@@ -4222,7 +4236,7 @@
     "vo:x.mathb19.9.h3",
     "vo:x.mathb19.9.prompt"
    ],
-   "chars": 33073
+   "chars": 33130
   },
   {
    "name": "numbers-C",

@@ -165,12 +165,7 @@
         "touch": 1
       }
     ],
-    "teaches": [
-      "אַחַת",
-      "שְׁתַּיִם",
-      "שָׁלוֹשׁ",
-      "אַרְבַּע"
-    ]
+    "teaches": []
   },
   "answerPrompt": {
     "vo": "vo:host.nekudi.show.num_a_04.key",

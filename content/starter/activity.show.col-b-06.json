@@ -136,13 +136,13 @@
       {
         "by": "host",
         "piece": "asset:ball_red",
-        "cell": 0,
-        "say": "key"
+        "cell": 0
       },
       {
         "by": "host",
         "piece": "asset:ball_orange",
-        "cell": 1
+        "cell": 1,
+        "say": "key"
       },
       {
         "by": "child",

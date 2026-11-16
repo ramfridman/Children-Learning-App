@@ -208,8 +208,6 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "חָתוּל",
-    "כֶּלֶב",
     "בַּרְוָז"
    ],
    "picture": "three apples dealt in turn: one to the cat, one to the dog, the child gives the duck its apple; all three plates show one",
@@ -568,11 +566,7 @@
     "line": "key",
     "maxSeconds": 8
    },
-   "teaches": [
-    "תַּפּוּחִים",
-    "דָּגִים",
-    "כּוֹכָבִים"
-   ],
+   "teaches": [],
    "picture": "three columns; each thing goes up its column; at the end the apples column is the tallest",
    "status": "buildable on the sort player of today"
   },
@@ -1332,8 +1326,7 @@
     {
      "by": "host",
      "cell": 0,
-     "piece": "asset:day_1",
-     "say": "key"
+     "piece": "asset:day_1"
     },
     {
      "by": "host",
@@ -1343,7 +1336,8 @@
     {
      "by": "host",
      "cell": 2,
-     "piece": "asset:day_3"
+     "piece": "asset:day_3",
+     "say": "key"
     },
     {
      "by": "child",
@@ -1814,11 +1808,7 @@
     "line": "key",
     "maxSeconds": 8
    },
-   "teaches": [
-    "תַּפּוּחִים",
-    "בָּנָנוֹת",
-    "כַּדּוּרִים"
-   ],
+   "teaches": [],
    "picture": "the three columns of the chart fill as the things are sorted; the bananas column ends tallest",
    "status": "buildable on the sort player of today"
   },

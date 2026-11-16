@@ -138,8 +138,7 @@
       {
         "by": "host",
         "piece": "asset:day_1",
-        "cell": 0,
-        "say": "key"
+        "cell": 0
       },
       {
         "by": "host",
@@ -149,7 +148,8 @@
       {
         "by": "host",
         "piece": "asset:day_3",
-        "cell": 2
+        "cell": 2,
+        "say": "key"
       },
       {
         "by": "child",

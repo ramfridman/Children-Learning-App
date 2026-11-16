@@ -125,9 +125,11 @@ void main() {
             for (final PurseCoin p in s.purse)
               if (!s.onCounter.contains(p.id)) p,
           ];
-          final PurseLayout layout = PurseLayout(<String>[
-            for (final PurseCoin p in inPurse) p.kind,
-          ], spec.tilesWidth);
+          final PurseLayout layout = PurseLayout(
+            <String>[for (final PurseCoin p in inPurse) p.kind],
+            spec.tilesWidth,
+            scale: s.purseScale(spec),
+          );
           for (int i = 0; i < inPurse.length; i++) {
             final Rect real = t.getRect(find.byKey(Key('coin-${inPurse[i].id}'))).deflate(CoinFace.pad);
             final Rect mine = layout.faces[i].shift(box);

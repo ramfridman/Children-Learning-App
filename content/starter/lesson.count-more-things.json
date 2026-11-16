@@ -18,7 +18,9 @@
     "count.dogs.8",
     "count.ladybugs.10",
     "b15.numa09.1",
-    "b15.numa09.2"
+    "b15.numa09.3",
+    "b15.numa09.2",
+    "b15.numa09.4"
   ],
   "estimatedMinutes": 4,
   "sequence": 18,
@@ -54,10 +56,12 @@
     "alone": [
       "count.dogs.8",
       "count.ladybugs.10",
-      "b15.numa09.1"
+      "b15.numa09.1",
+      "b15.numa09.3"
     ],
     "use": [
-      "b15.numa09.2"
+      "b15.numa09.2",
+      "b15.numa09.4"
     ],
     "handover": {
       "vo": "vo:host.nekudi.handover.3",

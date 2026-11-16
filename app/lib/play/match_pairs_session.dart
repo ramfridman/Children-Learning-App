@@ -514,6 +514,13 @@ class _Row extends StatelessWidget {
     if (most <= 1) return PackSvg(svg);
     // Fair sizes (M9 §13): where the faces are sets, every picture of every set is as big as one of the largest set, so a
     // set of one is never a big picture next to small ones (that would teach M-CNT-SIZE).
-    return SpriteGroup(svg: svg, count: f.count, arrangement: 'line', seed: f.count, lineSlots: most);
+    final ({String arrangement, int lineSlots}) tile = tileGroup('line', f.count);
+    return SpriteGroup(
+      svg: svg,
+      count: f.count,
+      arrangement: tile.arrangement,
+      seed: f.count,
+      lineSlots: tile.lineSlots,
+    );
   }
 }

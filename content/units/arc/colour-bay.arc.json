@@ -264,9 +264,15 @@
      },
      {
       "id": "b2",
-      "sprite": "asset:ball_red",
+      "sprite": "asset:ball_pink",
       "count": 1,
-      "label": "אָדֹם"
+      "label": "וָרֹד"
+     },
+     {
+      "id": "b3",
+      "sprite": "asset:ball_purple",
+      "count": 1,
+      "label": "סָגֹל"
      }
     ],
     "items": [
@@ -277,17 +283,17 @@
      },
      {
       "id": "i2",
-      "sprite": "asset:bloom_red",
+      "sprite": "asset:bloom_pink",
       "bin": "b2"
      },
      {
       "id": "i3",
-      "sprite": "asset:balloon_orange",
-      "bin": "b1"
+      "sprite": "asset:balloon_purple",
+      "bin": "b3"
      },
      {
       "id": "i4",
-      "sprite": "asset:balloon_red",
+      "sprite": "asset:balloon_pink",
       "bin": "b2"
      }
     ]
@@ -296,8 +302,7 @@
     {
      "by": "host",
      "item": "i1",
-     "bin": "b1",
-     "say": "key"
+     "bin": "b1"
     },
     {
      "by": "host",
@@ -307,7 +312,8 @@
     {
      "by": "host",
      "item": "i3",
-     "bin": "b1"
+     "bin": "b3",
+     "say": "key"
     },
     {
      "by": "child",
@@ -319,23 +325,23 @@
     {
      "role": "open",
      "vo": "vo:host.goni.show.col_a_03.open",
-     "text": "כָּתֹם וְאָדֹם דּוֹמִים.",
-     "voice": "כתום ואדום דומים.",
-     "review": "text-ready"
+     "text": "עוֹד שְׁלוֹשָׁה צְבָעִים.",
+     "voice": "עוד שלושה צבעים.",
+     "review": "needs-editor"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_a_03.key",
-     "text": "זֶה כָּתֹם, לֹא אָדֹם.",
-     "voice": "זה כתום, לא אדום.",
-     "review": "text-ready"
+     "text": "כָּתֹם, וָרֹד, סָגֹל.",
+     "voice": "כתם, ורד, סגל.",
+     "review": "needs-editor"
     },
     {
      "role": "handover",
      "vo": "vo:host.goni.show.col_a_03.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: הַבָּלוֹן הָאָדֹם.",
-     "voice": "עכשיו תורכם: הבלון האדום.",
-     "review": "text-ready"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַבָּלוֹן הַוָּרֹד.",
+     "voice": "עכשו תורכם: הבלון הורד.",
+     "review": "needs-editor"
     }
    ],
    "predict": null,
@@ -345,9 +351,10 @@
    },
    "teaches": [
     "כָּתֹם",
-    "אָדֹם"
+    "וָרֹד",
+    "סָגֹל"
    ],
-   "picture": "orange and red side by side; Goni holds the orange ball against the red bucket, shakes his head, and it goes to the orange",
+   "picture": "three buckets, orange, pink and purple (owner, 2026-11-16: the Show names the colours its items ask); Goni puts an orange ball, a pink flower and a purple balloon, naming each colour as it lands; the child puts the pink balloon. Black and white: see M11-stage2 §11.8",
    "status": "buildable on the sort player of today"
   },
   {
@@ -553,10 +560,7 @@
     "line": "key",
     "maxSeconds": 8
    },
-   "teaches": [
-    "בָּנָנוֹת",
-    "תַּפּוּחִים"
-   ],
+   "teaches": [],
    "picture": "a banana box and an apple box; a green banana goes in with the yellow one; the child puts the green apple with the red",
    "status": "buildable on the sort player of today"
   },
@@ -582,6 +586,12 @@
       "sprite": "asset:ball_grey",
       "count": 1,
       "label": "אָפֹר"
+     },
+     {
+      "id": "b3",
+      "sprite": "asset:ball_black",
+      "count": 1,
+      "label": "שָׁחֹר"
      }
     ],
     "items": [
@@ -597,8 +607,8 @@
      },
      {
       "id": "i3",
-      "sprite": "asset:bloom_brown",
-      "bin": "b1"
+      "sprite": "asset:bloom_black",
+      "bin": "b3"
      },
      {
       "id": "i4",
@@ -622,7 +632,7 @@
     {
      "by": "host",
      "item": "i3",
-     "bin": "b1"
+     "bin": "b3"
     },
     {
      "by": "child",
@@ -634,9 +644,9 @@
     {
      "role": "open",
      "vo": "vo:host.goni.show.col_a_06.open",
-     "text": "עוֹד שְׁנֵי צְבָעִים.",
-     "voice": "עוד שְׁנֵי צבעים.",
-     "review": "text-ready"
+     "text": "חוּם, אָפֹר, וְגַם שָׁחֹר.",
+     "voice": "חום, אפר, וגם שחר.",
+     "review": "needs-editor"
     },
     {
      "role": "key",
@@ -660,9 +670,10 @@
    },
    "teaches": [
     "חוּם",
-    "אָפֹר"
+    "אָפֹר",
+    "שָׁחֹר"
    ],
-   "picture": "a brown bucket and a grey one; things land as Goni names them",
+   "picture": "a brown bucket and a grey one; things land as Goni names them Third bucket (2026-11-16): black, next to grey, a black flower goes in it.",
    "status": "buildable on the sort player of today"
   },
   {
@@ -1094,7 +1105,6 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "אָדֹם",
     "כָּחֹל"
    ],
    "picture": "circles and squares sorted by colour only",
@@ -1121,13 +1131,13 @@
     {
      "by": "host",
      "cell": 0,
-     "piece": "asset:ball_red",
-     "say": "key"
+     "piece": "asset:ball_red"
     },
     {
      "by": "host",
      "cell": 1,
-     "piece": "asset:ball_orange"
+     "piece": "asset:ball_orange",
+     "say": "key"
     },
     {
      "by": "child",

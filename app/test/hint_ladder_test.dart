@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
 import 'package:nitznutz/content/hint_ladder.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/design/layout.dart';
+import 'package:nitznutz/design/token_types.dart' show Band;
 import 'package:nitznutz/design/components.dart';
 import 'package:nitznutz/play/balance_session.dart';
 import 'package:nitznutz/play/build_pattern_session.dart';
@@ -61,26 +63,35 @@ void main() {
         ),
         home: Directionality(
           textDirection: TextDirection.rtl,
-          child: Scaffold(
-            body: Builder(
-              builder: (BuildContext ctx) => Center(
-                child: SizedBox(
-                  width: spec.tilesWidth,
-                  height: spec.stage.height + 160,
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        width: spec.stage.width,
-                        height: spec.stage.height,
-                        child: s.buildStage(ctx, spec.stage.size, spec),
-                      ),
-                      Expanded(
-                        child: SizedBox(
-                          width: spec.tilesWidth,
-                          child: s.buildTiles(ctx, spec) ?? const SizedBox(),
+          child: LayoutScope(
+            band: Band.a,
+            child: Scaffold(
+              body: Builder(
+                builder: (BuildContext ctx) => Center(
+                  child: SizedBox(
+                    width: spec.tilesWidth,
+                    height: spec.stage.height + 160,
+                    // the board's own layer (the counting card of a count under the tall stage stands there)
+                    child: Stack(
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            SizedBox(
+                              width: spec.stage.width,
+                              height: spec.stage.height,
+                              child: s.buildStage(ctx, spec.stage.size, spec),
+                            ),
+                            Expanded(
+                              child: SizedBox(
+                                width: spec.tilesWidth,
+                                child: s.buildTiles(ctx, spec) ?? const SizedBox(),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                        ?s.buildBoardLayer(ctx, spec),
+                      ],
+                    ),
                   ),
                 ),
               ),

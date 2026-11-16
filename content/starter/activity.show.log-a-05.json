@@ -142,8 +142,7 @@
       {
         "by": "host",
         "piece": "asset:ball_red",
-        "cell": 0,
-        "say": "key"
+        "cell": 0
       },
       {
         "by": "host",
@@ -153,7 +152,8 @@
       {
         "by": "host",
         "piece": "asset:ball_red",
-        "cell": 2
+        "cell": 2,
+        "say": "key"
       },
       {
         "by": "child",

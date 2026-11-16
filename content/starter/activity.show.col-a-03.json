@@ -25,7 +25,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "כָּתֹם וְאָדֹם דּוֹמִים."
+        "v": "עוֹד שְׁלוֹשָׁה צְבָעִים."
       }
     ],
     "replayButton": true
@@ -41,9 +41,15 @@
       },
       {
         "id": "b2",
-        "sprite": "asset:ball_red",
+        "sprite": "asset:ball_pink",
         "count": 1,
-        "label": "אָדֹם"
+        "label": "וָרֹד"
+      },
+      {
+        "id": "b3",
+        "sprite": "asset:ball_purple",
+        "count": 1,
+        "label": "סָגֹל"
       }
     ],
     "items": [
@@ -54,17 +60,17 @@
       },
       {
         "id": "i2",
-        "sprite": "asset:bloom_red",
+        "sprite": "asset:bloom_pink",
         "bin": "b2"
       },
       {
         "id": "i3",
-        "sprite": "asset:balloon_orange",
-        "bin": "b1"
+        "sprite": "asset:balloon_purple",
+        "bin": "b3"
       },
       {
         "id": "i4",
-        "sprite": "asset:balloon_red",
+        "sprite": "asset:balloon_pink",
         "bin": "b2"
       }
     ]
@@ -80,7 +86,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "זֶה כָּתֹם, לֹא אָדֹם."
+          "v": "כָּתֹם, וָרֹד, סָגֹל."
         }
       ]
     },
@@ -122,7 +128,7 @@
     "mustNotRevealBeforeHint": 0
   },
   "a11y": {
-    "altText": "כָּתֹם וְאָדֹם דּוֹמִים."
+    "altText": "עוֹד שְׁלוֹשָׁה צְבָעִים."
   },
   "show": {
     "handOver": "last",
@@ -133,7 +139,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "כָּתֹם וְאָדֹם דּוֹמִים."
+            "v": "עוֹד שְׁלוֹשָׁה צְבָעִים."
           }
         ]
       },
@@ -143,7 +149,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "זֶה כָּתֹם, לֹא אָדֹם."
+            "v": "כָּתֹם, וָרֹד, סָגֹל."
           }
         ]
       },
@@ -153,7 +159,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "עַכְשָׁו תּוֹרְכֶם: הַבָּלוֹן הָאָדֹם."
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַבָּלוֹן הַוָּרֹד."
           }
         ]
       }
@@ -162,8 +168,7 @@
       {
         "by": "host",
         "item": "i1",
-        "bin": "b1",
-        "say": "key"
+        "bin": "b1"
       },
       {
         "by": "host",
@@ -173,7 +178,8 @@
       {
         "by": "host",
         "item": "i3",
-        "bin": "b1"
+        "bin": "b3",
+        "say": "key"
       },
       {
         "by": "child",
@@ -183,7 +189,8 @@
     ],
     "teaches": [
       "כָּתֹם",
-      "אָדֹם"
+      "וָרֹד",
+      "סָגֹל"
     ]
   }
 }

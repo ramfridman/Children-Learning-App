@@ -202,7 +202,7 @@ The skill becomes **`durable_mastery`** when a delayed check at least 7 days lat
 | | NUM-B-07 | Traces and writes 0–10 with correct stroke direction | B-06 | Trace → dotted → free | M-NUM-REV (mirror) |
 | | NUM-B-08 | Reads 11–20 | B-06, B-01 | Distractors include reversed digits (12 vs 21) | M-NUM-REV, M-NUM-TEEN |
 | | NUM-B-09 | Sees quantities to 10 on a ten-frame (5 and 3 is 8) | A-10 | Flash ten-frames | — |
-| B3 Number relations | NUM-B-10 | Says which of two numbers ≤10 is bigger, with no objects shown | B-06, A-12 | U4 reversible: "which is smaller?" | M-CNT-SIZE |
+| B3 Number relations | NUM-B-10 | Says which of two numbers ≤10 is bigger, with no objects shown | B-06, A-12, A-02 | U4 reversible: "which is smaller?" | M-CNT-SIZE |
 | | NUM-B-11 | Orders 0–10; finds a missing number; knows "one more" and "one less" | B-10 | — | M-CNT-SEQ |
 | | NUM-B-12 | Ordinals to tenth, with the correct gender | A-13 | Masculine and feminine nouns | M-ORD-CARD |
 | | NUM-B-13 | Places 0–10 on a number line running left to right | B-11 | Jump and place tasks | M-NL-SPACE, M-NL-DIR |
@@ -400,7 +400,7 @@ Every CS activity is unplugged-style: arrows, picture cards and robots on a grid
 | A2 Big & small | MATH-A-04 | Compares big/small, long/short, tall/short, heavy/light (כָּבֵד / קַל) | — | — | M-MEAS-ALIGN |
 | A3 My day | MATH-A-05 | Orders morning, noon, evening and night; before and after | LOG-A-08 | — | — |
 | A4 The shop | MATH-A-06 | Pretend-shop play: gives one coin per item | NUM-A-03 | Coins as tokens | — |
-| A5 Picture graph | MATH-A-07 | Sorts and compares groups in a picture chart ("which do we have more of?") | LOG-A-03, NUM-A-11 | — | — |
+| A5 Picture graph | MATH-A-07 | Sorts and compares groups in a picture chart ("which do we have more of?") | LOG-A-03, NUM-A-11, NUM-A-09 | — | — |
 
 **Band B: ages 5–6**
 
@@ -415,7 +415,7 @@ Every CS activity is unplugged-style: arrows, picture cards and robots on a grid
 | | MATH-B-07 | Zero in addition and subtraction ("two aspects of zero") | B-03, NUM-A-14 | — | M-NUM-ZERO |
 | B2 Into the teens | MATH-B-08 | Add/subtract within 20 using ten (8+5 = 8+2+3) | B-06, NUM-B-16 | No method forced | M-ADD-RECOUNT |
 | | MATH-B-09 | The equals sign as "same as" (3+4 = 5+2; 7 = 3+4) | B-03 | U5 | M-EQ-OPER |
-| | MATH-B-10 | Equal groups: repeated addition, sharing and grouping (≤20) | MATH-A-03, NUM-B-17 | Both kinds of division problem | M-SHARE-UNEQ |
+| | MATH-B-10 | Equal groups: repeated addition, sharing and grouping (≤20) | MATH-A-03, NUM-B-17, NUM-A-09 | Both kinds of division problem | M-SHARE-UNEQ, M-GRP-ONE |
 | B3 Measure | MATH-B-11 | Compares length directly and through an intermediary (a string) | MATH-A-04 | — | M-MEAS-ALIGN |
 | | MATH-B-12 | Measures with arbitrary units (clips, footsteps) | B-11, NUM-B-04 | No gaps or overlaps | M-MEAS-GAP, M-MEAS-UNIT |
 | | MATH-B-13 | Compares weight on a balance | MATH-A-04 | — | M-MEAS-BIG |
@@ -614,6 +614,7 @@ The tags of the three language courses (English, Hebrew, Russian) are not in thi
 | M-MUL-ADD | Adds instead of multiplying (3 × 4 = 7) | Picks 7 | MATH-C-09 | R1 equal groups of objects; R2 an array |
 | M-MUL-ZERO | Thinks × 0 = the number | Picks 5 for 5 × 0 | MATH-C-12 | R3 "5 plates with 0 cookies on each" |
 | M-SHARE-UNEQ | Shares unequally ("one to you, two to me") | Unequal groups | MATH-A-03, MATH-B-10 | R1 deal one by one |
+| M-GRP-ONE | In equal groups, counts one group only (answers how many on one plate when asked how many on all of them) | Picks the size of one group | MATH-B-10 | R1 plates with the same number of fruit: ask "how many on one plate?", then "how many on all of them together?", counting on across the plates; the hint-2 picture is a running total over each plate (owner-approved 2026-11-16) |
 | M-REM-BIG | Leaves a remainder ≥ the divisor | 17 : 5 = 2 remainder 7 | MATH-C-13 | R1 group the leftovers again |
 | M-FRAC-UNEQ | Calls unequal parts "halves" or "quarters" | Picks an unequal split | MATH-C-14 | R1 fold and overlay; R3 "fair share" story |
 | M-FRAC-ONEPIECE | Thinks "each gets one piece, so it's the same" and ignores piece size | Picks "the same" when comparing ⅓ and ¼ of equal wholes | MATH-C-15 | R1 overlay the pieces; R3 "would you rather have one slice of a pizza shared by 3 or by 8?" |

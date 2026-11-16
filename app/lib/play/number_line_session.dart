@@ -9,6 +9,7 @@ import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import 'choice_row.dart' show withBigStage;
 import 'hint_widgets.dart';
 import 'hints/hint_marks.dart';
 import 'hints/hint_player.dart';
@@ -390,6 +391,7 @@ class NumberLineSession extends TemplateSession {
   @override
   Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
     _size = size;
+    tablet = spec.stageIsCard;
     return Stack(
       fit: StackFit.expand,
       clipBehavior: Clip.none,
@@ -402,6 +404,24 @@ class NumberLineSession extends TemplateSession {
 
   @override
   Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
+
+  /// The line is drawn as wide as the board lets it be (min-sizes.md B1, R10): a phone's stage is the answer band, from the start margin to the
+  /// guide (581 wide, the smallest phone's 472), so that the ticks of a line from 0 to 20 are 26 apart (they were 14); a tablet's card is 848 wide
+  /// and 400 tall (a portrait 520), the ticks 38 apart.
+  @override
+  ActivitySpec layoutFor(ActivitySpec base) {
+    if (base.stageIsCard) return withBigStage(base);
+    final bool se = base.boardHeight < 380;
+    return base.withStageAndTiles(
+      stage: se ? const Rect.fromLTWH(16, 218, 472, 124) : const Rect.fromLTWH(24, 244, 581, 112),
+      tilesLeft: base.tilesLeft,
+      tilesTop: base.tilesTop,
+      tilesWidth: base.tilesWidth,
+    );
+  }
+
+  /// True on a tablet: the labels of the line are 28 points there, 20 on a phone.
+  bool tablet = false;
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => null;
@@ -518,25 +538,27 @@ class _LineStage extends StatelessWidget {
     final bool lit = s.trail.contains(n);
     final bool wrong = s.wrongTick == n;
     final bool right = s.ring == AnswerState.correct && n == a.target;
+    final bool labelled = a.labels.contains(n);
     final Color colour = wrong
         ? TokenColors.notYetRing
         : (right ? TokenColors.correctGlow : (lit ? TokenColors.hintHalo : TokenColors.ink));
     return Positioned(
-      left: _x(n) - 22,
+      left: _x(n) - 30,
       top: lineY - 12,
-      width: 44,
-      height: 64,
+      width: 60,
+      height: 80,
       child: Column(
         children: <Widget>[
+          // A tick is 4 by 20, a labelled one 6 by 28 (R10); one the help lights is wider and taller still.
           Container(
-            width: lit || wrong || right ? 8 : 4,
-            height: lit || wrong || right ? 24 : 18,
+            width: lit || wrong || right ? 8 : (labelled ? 6 : 4),
+            height: lit || wrong || right ? 32 : (labelled ? 28 : 20),
             decoration: BoxDecoration(color: colour, borderRadius: BorderRadius.circular(3)),
           ),
-          if (a.labels.contains(n))
+          if (labelled)
             Text(
               '$n',
-              style: AppText.fixed(size: 17, weight: 800, lineHeight: 1.1),
+              style: AppText.fixed(size: s.tablet ? 28 : 20, weight: 800, lineHeight: 1.1),
               textAlign: TextAlign.center,
             ),
         ],

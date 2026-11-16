@@ -25,7 +25,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "עוֹד שְׁנֵי צְבָעִים."
+        "v": "חוּם, אָפֹר, וְגַם שָׁחֹר."
       }
     ],
     "replayButton": true
@@ -44,6 +44,12 @@
         "sprite": "asset:ball_grey",
         "count": 1,
         "label": "אָפֹר"
+      },
+      {
+        "id": "b3",
+        "sprite": "asset:ball_black",
+        "count": 1,
+        "label": "שָׁחֹר"
       }
     ],
     "items": [
@@ -59,8 +65,8 @@
       },
       {
         "id": "i3",
-        "sprite": "asset:bloom_brown",
-        "bin": "b1"
+        "sprite": "asset:bloom_black",
+        "bin": "b3"
       },
       {
         "id": "i4",
@@ -122,7 +128,7 @@
     "mustNotRevealBeforeHint": 0
   },
   "a11y": {
-    "altText": "עוֹד שְׁנֵי צְבָעִים."
+    "altText": "חוּם, אָפֹר, וְגַם שָׁחֹר."
   },
   "show": {
     "handOver": "last",
@@ -133,7 +139,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "עוֹד שְׁנֵי צְבָעִים."
+            "v": "חוּם, אָפֹר, וְגַם שָׁחֹר."
           }
         ]
       },
@@ -173,7 +179,7 @@
       {
         "by": "host",
         "item": "i3",
-        "bin": "b1"
+        "bin": "b3"
       },
       {
         "by": "child",
@@ -183,7 +189,8 @@
     ],
     "teaches": [
       "חוּם",
-      "אָפֹר"
+      "אָפֹר",
+      "שָׁחֹר"
     ]
   }
 }

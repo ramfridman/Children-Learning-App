@@ -254,7 +254,8 @@
       "world": "pool",
       "needs": [
         "LOG-A-03",
-        "NUM-A-11"
+        "NUM-A-11",
+        "NUM-A-09"
       ],
       "reps": [
         "pictorial"

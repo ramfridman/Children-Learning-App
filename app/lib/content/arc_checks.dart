@@ -94,10 +94,6 @@ const Map<String, String> tagWaivers = <String, String>{
   // The other five lands (M11-stage2 section 11.5, content/units/pending/stage2-recuts.json `waivers`): taps that stay with no second honest tag.
   'b.colb03.6':
       'light red asked; no shade of a hue near red exists; the plain purple shows no catalogued error',
-  'b.mathb10.4': "equal groups, how many in all: one group's size or a wrong group count has no catalogue tag (a proposal: M-GRP-ONE)",
-  'b.mathb10.5': 'as b.mathb10.4',
-  'b.mathb10.6': 'as b.mathb10.4',
-  'b.mathb10.8': 'as b.mathb10.4 (how many plates)',
   'col.world.banana.ripe':
       'the colour of a ripe banana: green (unripe) shows world knowledge, not a catalogued colour error',
   'col.world.grass': 'the colour of grass: red shows no catalogued error',
@@ -624,11 +620,17 @@ void checkArc({
   }
 
   // ---- V2 (across files): a skill in parts has one Show for each template it is shown on, and at least one ----
+  final Set<String> named = <String>{
+    for (final String id in arcLessons)
+      if (lessons[id]!['parts'] is Map<String, Object?>)
+        ..._strings(<Object?>[(lessons[id]!['parts']! as Map<String, Object?>)['show']]),
+  };
   for (final String s in skillsInParts) {
     final List<String> all = showsOf[s] ?? const <String>[];
     if (all.isEmpty) say('skill.$s.json', '', 'a skill in a lesson in parts has a Show (V2), found none');
     for (final MapEntry<String, List<String>> e in showsOfTemplate.entries) {
-      if (e.key.startsWith('$s ') && e.value.length > 1) {
+      // A second Show of a template is allowed when each Show of it is named by a lesson (`parts.show`): the lesson says which it plays.
+      if (e.key.startsWith('$s ') && e.value.length > 1 && !e.value.every(named.contains)) {
         say(
           'skill.$s.json',
           '',
@@ -829,7 +831,7 @@ void _rungs(
 }
 
 /// W1 (a warning): a scored item of a skill in parts asks for a word its Show (or an earlier skill's Show) does not teach: it is asked before it is
-/// met. What an item asks for is the label of its right option (every option of a number tap, which is weighed whole) and every bin of a sort; the label
+/// met. What an item asks for is the label of its right option (in a tap of numbers too: only the right one is checked) and every bin of a sort; the label
 /// of a wrong option is never asked for, and offering a non-example before it is taught is the first-attempt diagnosis (M-SHP-CLOSED, M-SHP-PROTO).
 /// [activities] and [skills] are the valid documents; the result lists one message per item and word.
 List<String> metBeforeAsked({
@@ -869,31 +871,37 @@ List<String> metBeforeAsked({
     final Set<String> skillsKnown = closure(skill, <String>{});
     final Set<String> ok = <String>{for (final String s in skillsKnown) ...?taught[s]};
     final Set<String> knownWords = <String>{for (final String t in ok) ...t.split(RegExp(r'\s+'))};
-    // Counting words: one to ten when the skill's prerequisites hold counting to ten, one to five when they hold counting to five only.
-    final Set<String> countWords = skillsKnown.contains(w1CountingSkill)
-        ? w1CountingWords
-        : (skillsKnown.contains(w1CountingFiveSkill) ? w1CountingWordsToFive : const <String>{});
+    // Counting words: the range that the counting skill of the item's skills sets (to five, ten, twenty, thirty or a hundred).
+    final Set<String> countWords = w1CountingWordsOf(skillsKnown);
+    // A sequence is taught as a set: one member taught opens the days of the week, the steps in order, the parts of a day or the seasons.
+    final Set<String> sequenceWords = w1SequenceWords(knownWords);
+    // A counting word may carry the "and" of a longer number ("twenty and three").
+    bool counting(String w) => w1IsCounting(countWords, w);
+    bool knownWord(String w) =>
+        knownWords.contains(w) || sequenceWords.contains(w) || counting(w) || w1YesNo.contains(w);
     bool accepted(String label, {String? sprite}) {
       if (ok.contains(label) || w1YesNo.contains(label)) return true;
       final List<String> words = label.split(RegExp(r'\s+'));
-      if (words.length > 1 && words.first == w1Not && accepted(words.skip(1).join(' '))) return true;
-      if (countWords.contains(words.first) && (words.length == 1 || accepted(words.skip(1).join(' ')))) {
+      if (words.length > 1 && words.first == w1Not && accepted(words.skip(1).join(' '), sprite: sprite)) {
         return true;
       }
-      if (w1AcceptKnownWords && words.every(knownWords.contains)) return true;
-      return w1AcceptCardObjectName && w1NamesCardObject(sprite);
+      if (counting(words.first) && (words.length == 1 || accepted(words.skip(1).join(' '), sprite: sprite))) {
+        return true;
+      }
+      if (w1AcceptKnownWords && words.every(knownWord)) return true;
+      // The object drawn on the card counts as a known word of the label: one word of a longer label is allowed to be unknown.
+      return w1AcceptCardObjectName &&
+          w1NamesCardObject(sprite) &&
+          words.where((String w) => !knownWord(w)).length <= 1;
     }
 
     final Map<String, Object?> answer = _map(a['answer']);
     final List<Map<String, Object?>> options = _maps(answer['options']);
     final Object? correct = answer['correct'];
-    final bool numberTap =
-        options.isNotEmpty && options.every((Map<String, Object?> o) => o['numeral'] != null);
     // What the item asks for, with the picture each label stands under (a card's own picture is what a label that only names it is read against).
     final Map<String, String?> labels = <String, String?>{
       for (final Map<String, Object?> o in options)
-        if (o['label'] is String &&
-            (numberTap || (correct is List ? correct.contains(o['id']) : o['id'] == correct)))
+        if (o['label'] is String && (correct is List ? correct.contains(o['id']) : o['id'] == correct))
           plain(o['label']! as String): o['sprite'] as String?,
       if (a['template'] == 'sort_drag')
         for (final Map<String, Object?> b in _maps(_map(a['scene'])['bins']))

@@ -963,10 +963,6 @@
  "waivers": {
   "note": "Taps that stay with no second honest tag (a false diagnosis is worse than none, as tagWaivers in arc_checks.dart). For the app-developer to add to tagWaivers when these lands join arcDomains, each with this reason.",
   "b.colb03.6": "light red asked; no shade of a hue near red exists (no pink or orange shades); the plain purple shows no catalogued error",
-  "b.mathb10.4": "equal groups, how many in all: answering one group's size or a wrong group count has no catalogue tag (a proposal: M-GRP-ONE, counts one group only)",
-  "b.mathb10.5": "as b.mathb10.4",
-  "b.mathb10.6": "as b.mathb10.4",
-  "b.mathb10.8": "as b.mathb10.4 (how many plates)",
   "col.world.banana.ripe": "the colour of a ripe banana: green (unripe) shows world knowledge, not a catalogued colour error",
   "col.world.grass": "the colour of grass: red shows no catalogued error",
   "col.world.sun": "the colour of the sun: green shows no catalogued error",

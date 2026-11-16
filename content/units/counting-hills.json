@@ -2212,6 +2212,56 @@
       "difficulty": 0.5
     },
     {
+      "kind": "set_to_numeral",
+      "id": "b15.numa09.3",
+      "skill": "NUM-A-09",
+      "obj": "duck",
+      "count": 8,
+      "options": [
+        7,
+        8,
+        9
+      ],
+      "arrangement": "line",
+      "seed": 73,
+      "check": "practice",
+      "difficulty": 0.55,
+      "note": "owner-approved 2026-11-16: NUM-A-09 became a prerequisite of MATH-A-07 and MATH-B-10, so it is core; this drawn row (no glow on touch) is its pictorial way"
+    },
+    {
+      "kind": "give",
+      "id": "b15.numa09.4",
+      "skill": "NUM-A-09",
+      "obj": "star",
+      "n": 8,
+      "source": 10,
+      "frame": true,
+      "check": "reverse",
+      "difficulty": 0.55,
+      "classifiers": {
+        "took_fewer": "M-CNT-SKIP",
+        "took_more": "M-CNT-DOUBLE"
+      },
+      "note": "the reverse check of NUM-A-09: from the number to the set, eight into a ten-frame"
+    },
+    {
+      "kind": "set_to_numeral",
+      "id": "b15.numa09.5",
+      "skill": "NUM-A-09",
+      "obj": "fish",
+      "count": 6,
+      "options": [
+        5,
+        6,
+        7
+      ],
+      "arrangement": "line",
+      "seed": 74,
+      "check": "practice",
+      "difficulty": 0.45,
+      "note": "the pictorial rung of the first counting-to-ten lesson (V7): six fish drawn in a row, counted without touching"
+    },
+    {
       "kind": "compare_more",
       "id": "b15.numa11.1",
       "skill": "NUM-A-11",
@@ -2449,7 +2499,8 @@
         "count.apples.7",
         "count.stars.8",
         "count.fish.9",
-        "count.birds.10"
+        "count.birds.10",
+        "b15.numa09.5"
       ],
       "minutes": 5,
       "done": "וַאוּ! סְפַרְתֶּם עַד עֶשֶׂר."
@@ -2633,7 +2684,9 @@
         "count.dogs.8",
         "count.ladybugs.10",
         "b15.numa09.1",
-        "b15.numa09.2"
+        "b15.numa09.2",
+        "b15.numa09.3",
+        "b15.numa09.4"
       ],
       "minutes": 4,
       "done": "וַאוּ! סְפַרְתֶּם עַד עֶשֶׂר."

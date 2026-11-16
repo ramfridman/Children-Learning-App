@@ -735,12 +735,14 @@ Widget _face(
           );
   }
   final SpriteSet g = o.set!;
+  final ({String arrangement, int lineSlots}) tile = tileGroup(g.arrangement, g.count);
   return SpriteGroup(
     svg: a.assets.svg(g.sprite),
     count: g.count,
-    arrangement: g.arrangement,
+    arrangement: tile.arrangement,
     seed: g.seed,
     scale: g.scale,
+    lineSlots: tile.lineSlots,
     framed: answerGroupsFramed,
   );
 }

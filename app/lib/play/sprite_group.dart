@@ -23,6 +23,14 @@ class GroupLayout {
 /// same size: by default four, and the largest group's count where every group of a screen is drawn in one row of its own.
 const List<String> groupArrangements = <String>['line', 'scatter', 'dice', 'ten_frame'];
 
+/// How a set of [count] pictures that a content file draws in a `line` is drawn on an answer tile (min-sizes.md A8, R2): up to three in a row with
+/// room for three (a cell of a third of the tile, so about 27 points on a 96 tile, never 20), more in rows of three, so that a picture is never
+/// under 24 points (ten on a tile of 96 is the one exception). An arrangement the content chose (scatter, dice, a ten-frame) is kept.
+({String arrangement, int lineSlots}) tileGroup(String arrangement, int count) {
+  if (arrangement != 'line') return (arrangement: arrangement, lineSlots: 4);
+  return count <= 3 ? (arrangement: 'line', lineSlots: 3) : (arrangement: 'rows3', lineSlots: 3);
+}
+
 GroupLayout groupLayout(String arrangement, int count, {int seed = 0, int lineSlots = 4}) {
   if (count <= 0) return const GroupLayout(<Offset>[], 1, 1);
   switch (arrangement) {
@@ -36,6 +44,20 @@ GroupLayout groupLayout(String arrangement, int count, {int seed = 0, int lineSl
         <Offset>[for (int i = 0; i < count; i++) Offset(((i % 5) + 0.5) / 5, ((i ~/ 5) + 0.5) / rows)],
         0.2,
         1 / rows,
+      );
+    case 'rows3':
+      // Three to a row, each row centred: the arrangement of a set on an answer tile (see [tileGroup]).
+      final int rows3 = (count / 3).ceil();
+      return GroupLayout(
+        <Offset>[
+          for (int i = 0; i < count; i++)
+            Offset(
+              0.5 + ((i % 3) - (math.min(3, count - (i ~/ 3) * 3) - 1) / 2) / 3,
+              ((i ~/ 3) + 0.5) / rows3,
+            ),
+        ],
+        1 / 3,
+        1 / rows3,
       );
     case 'scatter':
       const int cols = 5;

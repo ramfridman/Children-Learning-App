@@ -340,7 +340,8 @@ def numbers():
                  h3='%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (', '.join(F[ans if v is None else v] for v in seq), F[ans]))
 
     # ---- NUM-B-10: which numeral is bigger
-    u.skill('NUM-B-10', 'איזה מספר גדול יותר', 'מַשְׁוִים שְׁנֵי מִסְפָּרִים', 'pool', ['NUM-A-12', 'NUM-A-08'], ['symbolic'], ['M-CNT-SIZE'])
+    # owner, 2026-11-16 (M11-stage2 §9 question 5): the counting words to ten come before comparing numbers to ten
+    u.skill('NUM-B-10', 'איזה מספר גדול יותר', 'מַשְׁוִים שְׁנֵי מִסְפָּרִים', 'pool', ['NUM-A-12', 'NUM-A-08', 'NUM-A-02'], ['symbolic'], ['M-CNT-SIZE'])
     # numbers up to 10 (curriculum §4: "two numbers ≤10"; check-2026-11-06 §4); 10 and 1 is the digit trap of the old 13 and 31
     for i, (a, b, ask) in enumerate([(7, 4, 'big'), (5, 9, 'big'), (8, 6, 'big'), (9, 10, 'big'), (6, 3, 'small'), (9, 2, 'small'),
                                      (10, 7, 'small'), (7, 8, 'big'), (1, 10, 'big'), (2, 5, 'big')]):
@@ -522,6 +523,10 @@ def math():
     u.tag('M-MEAS-BIG', ['MATH-B-13'], 'הילד חושב שמה שגדול יותר גם כבד יותר.',
           'להחזיק בכל יד חפץ גדול וקל (כדור נייר) וחפץ קטן וכבד (אבן), ולנחש מי כבד יותר לפני שמרגישים.',
           ['concrete'], 'זֶה נִרְאֶה גָּדוֹל, אֲבָל מַה כָּבֵד יוֹתֵר? בּוֹאוּ נִשְׁקֹל וְנִרְאֶה.')
+    # owner, 2026-11-16: the catalogue tag for equal groups (a draft line, needs-editor)
+    u.tag('M-GRP-ONE', ['MATH-B-10'], 'בקבוצות שוות הילד סופר רק קבוצה אחת: עונה בכמה שיש בצלחת אחת במקום בכמה שיש בכל הצלחות.',
+          'לשים כמה צלחות עם אותו מספר פירות, ולשאול כמה בצלחת אחת וכמה בכולן יחד.',
+          ['concrete', 'pictorial'], 'זֶה מַה שֶּׁיֵּשׁ בְּצַלַּחַת אַחַת. בּוֹאוּ נִסְפֹּר אֶת כׇּל הַצַּלָּחוֹת.')
     u.tag('M-CLOCK-HANDS', ['MATH-B-15'], 'הילד מחליף בין המחוג הקצר למחוג הארוך: קורא 3:00 כ"שתים עשרה".',
           'להסביר: המחוג הקצר והעבה הוא "הבוס של השעות". להסתכל ביחד בשעון קיר בכל שעה עגולה.',
           ['pictorial', 'embodied'], 'הַמַּחֲוָג הַקָּצָר וְהָעָבֶה אוֹמֵר אֶת הַשָּׁעָה. בּוֹאוּ נִסְתַּכֵּל עָלָיו.')
@@ -689,14 +694,20 @@ def math():
               h3='%s שָׁוֶה %s וְעוֹד %s. עַכְשָׁו תּוֹרְכֶם.' % (F[z], F[x], F[y]), correct_text='כֵּן! %s שָׁוֶה %s וְעוֹד %s.' % (F[z], F[x], F[y]))
 
     # ---- MATH-B-10: equal groups
-    u.skill('MATH-B-10', 'קבוצות שוות', 'קְבוּצוֹת עִם אוֹתוֹ מִסְפָּר', 'stall', ['MATH-A-03'], ['concrete', 'pictorial'], ['M-SHARE-UNEQ'])
+    # owner, 2026-11-16 (M11-stage2 §9 question 5): counting objects to ten comes before equal groups; M-GRP-ONE is the owner's new tag
+    # (M-GRP-ONE is recorded by the taps; the skill keeps its one listed tag, so a deal to plates, which can record only an unequal share, is
+    # not asked for a second)
+    u.skill('MATH-B-10', 'קבוצות שוות', 'קְבוּצוֹת עִם אוֹתוֹ מִסְפָּר', 'stall', ['MATH-A-03', 'NUM-A-09'], ['concrete', 'pictorial'],
+            ['M-SHARE-UNEQ'])
     for i, (g, per, obj) in enumerate([(2, 3, 'apple'), (3, 2, 'fish'), (2, 4, 'star'), (3, 3, 'duck'), (4, 2, 'ladybug'), (2, 5, 'bird')]):
         o = OBJECTS[obj]
         r = g * per
-        # G5 (B-15): one chart column per plate. Options (§3): one plate (M-CNT-CARD) and the groups added to the size
-        # (M-MUL-ADD, not in the pack), both untagged until they have lines
+        # G5 (B-15): one chart column per plate. Options: one plate only (M-GRP-ONE, the owner's tag of 2026-11-16) and one plate missed
+        # (M-CNT-SKIP: a whole group skipped); where that is the same number as one plate, one too many (M-CNT-DOUBLE)
+        miss = r - per if r - per != per else r + 1
         numpick(u, 'MATH-B-10', 'יֵשׁ %s. עַל כׇּל צַלַּחַת %s. כַּמָּה יֵשׁ בְּסַךְ הַכֹּל?' % (qty(g, PLATE), qty(per, o)), r,
-                [per, g + per], i, chart=[[obj, per]] * g,
+                [per, miss], i, chart=[[obj, per]] * g,
+                tags={per: 'M-GRP-ONE', miss: 'M-CNT-SKIP' if miss == r - per else 'M-CNT-DOUBLE'},
                 text='%s! %s הֵם %s.' % (F[r], ' וְעוֹד '.join(F[per] for _ in range(g)), F[r]),
                 h3='%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (' וְעוֹד '.join(F[per] for _ in range(g)), F[r]))
 
@@ -704,7 +715,8 @@ def math():
     for i, (g, per, obj) in enumerate([(3, 2, 'duck'), (2, 4, 'bird')]):
         o = OBJECTS[obj]
         r = g * per
-        numpick3(u, 'MATH-B-10', 'יֵשׁ %s. עַל כׇּל צַלַּחַת %s. כַּמָּה צַלָּחוֹת?' % (qty(r, o), qty(per, o)), g, {r: None, per: None}, i,
+        # the number on one plate given for the number of plates is M-GRP-ONE; the total showed no catalogued error and is left out
+        numpick3(u, 'MATH-B-10', 'יֵשׁ %s. עַל כׇּל צַלַּחַת %s. כַּמָּה צַלָּחוֹת?' % (qty(r, o), qty(per, o)), g, {per: 'M-GRP-ONE'}, i,
                  check='reverse', difficulty=0.6, chart=[[obj, per]] * g,
                  correct_text='%s! %s הֵם %s.' % (qty(g, PLATE), ' וְעוֹד '.join(F[per] for _ in range(g)), F[r]))
 

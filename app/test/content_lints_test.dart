@@ -105,7 +105,6 @@ const Map<String, String> _knownNewGaps = <String, String>{
   'b15.matha02.2': 'M-CNT-CARD',
   'b15.numa14.1': 'M-CNT-CARD',
   'b15.numa14.2': 'M-CNT-CARD',
-  'b.mathb10.8': 'E2',
   'b15.loga09.1': 'E2',
   'b15.loga09.2': 'E2',
   'b15.numa13.1': 'spec: one tag (M-ORD-CARD)',
@@ -121,7 +120,8 @@ void main() {
     // + 14 skills and 48 items of the Shape Forest pilot (M11 Stage 2): SHP-B-05 and SHP-B-06, 8 new shape builders, and the 16 Shows
     // + 8 after the QA round of the pilot (2026-11-16): 7 new items (shp.rect.sort, shp.solid.real, shp.match.oval, shp.match.trapezoid, shp.world.clock, shp.line.shapes, shp.line.shapes2) and the tracing Show
     // + 4 since the closing pass (the pattern-strip cards' sorts and the new items of the lands). + 83 for the other five lands (M11 Stage 2, 2.4b to 2.4e): 83 Shows (the lands' own 235 swaps re-cut items in place and add none)
-    expect(acts.length, 967 + 239 + 8 + 16 + 8 + 83 + 4);
+    // + 3 since the curriculum-expert's third pass (2026-11-16): the new NUM-A-09 items b15.numa09.3, .4 and .5
+    expect(acts.length, 967 + 239 + 8 + 16 + 8 + 83 + 4 + 3);
     expect(skills.length, 100 + 12 + 2);
   });
 
@@ -180,7 +180,7 @@ void main() {
   group('section 5.3: two tagged wrong answers on an item with three or more options', () {
     final List<String> gaps = _tagGaps(acts);
 
-    test('the 14 new items B-15 added with a gap are exactly the explained ones', () {
+    test('the 13 new items B-15 added with a gap are exactly the explained ones', () {
       final Set<String> newGaps = gaps.where(_knownNewGaps.containsKey).toSet();
       expect(
         newGaps,
@@ -188,7 +188,7 @@ void main() {
         reason: 'a gap on this list got fixed (take it off), or the item changed its id',
       );
       // 19 since the QA round of the pilot (2026-11-16): b15.shpa02.1 has two tags (the oval)
-      expect(_knownNewGaps.length, 14);
+      expect(_knownNewGaps.length, 13);
     });
 
     // 320 since the maths check fixes of 2026-11-06 (docs/knowledge/maths/check-2026-11-06-fixes.md): +14 where a second
@@ -200,7 +200,7 @@ void main() {
     // tag, M-SER-DIR, is proposed to the curriculum-expert), +2 where the false M-PAT-UNIT lure became an untagged
     // same-size lure (b15.loga06.1, .2), +2 for the "+1" tower of b.logb04.7 and .8 (growth by two; no honest
     // tag yet), -2 where LOG-B-06 .5 and .6 now offer two options
-    test('no other new item falls short: the old gaps are pinned at 67', () {
+    test('no other new item falls short: the old gaps are pinned at 64', () {
       final List<String> older = gaps.where((String id) => !_knownNewGaps.containsKey(id)).toList();
       expect(
         older.length,
@@ -208,7 +208,8 @@ void main() {
         // 292 since the QA round of the pilot (2026-11-16): the oval and the trapezoid gave five taps their second honest tag
         // 158 since the other five lands' swaps and second tags (M11 Stage 2, 2.4b to 2.4e): 134 taps became hands-on items or got an honest tag
         // 67 since the closing pass of the curriculum-expert (2026-11-16): second tags for most of the rest
-        67,
+        // 64 since the M-GRP-ONE tag (2026-11-16): the taps of MATH-B-10 have their second honest tag
+        64,
         reason: 'a new gap, or an old one fixed: update the pin with the curriculum-expert',
       );
     });

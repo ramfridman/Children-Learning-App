@@ -66,8 +66,8 @@ def bigger(a, b, ask):
     right = max(a, b) if ask == 'big' else min(a, b)
     word = 'גָּדוֹל' if ask == 'big' else 'קָטָן'
     return place(0, 10, right, [0, a, b, 10], 'M-NL-DIR', mirror=False,
-                 prompt='מִי %s יוֹתֵר, %s אוֹ %s? שָׂמִים אֶת %s עַל %s.' % (word, F[a], F[b], FROG, THE[word]),
-                 text='כֵּן! %s. עַל הַצִּיר הַמִּסְפָּרִים גְּדֵלִים לְכִוּוּן הַחֵץ.' % F[right],
+                 prompt='אֵיזֶה מִסְפָּר %s יוֹתֵר, %s אוֹ %s? שָׂמִים אֶת %s עַל %s.' % (word, F[a], F[b], FROG, THE[word]),
+                 text='כֵּן! %s. עַל הַצִּיר, הַמִּסְפָּרִים גְּדֵלִים לְכִוּוּן הַחֵץ.' % F[right],
                  # the hint of the tap it replaces (b.numb10), said of the two numbers on the line
                  h3='%s %s. %s. עַכְשָׁו תּוֹרְכֶם.' % (F[a], vav(F[b]), 'הַמִּסְפָּר שֶׁבָּא יוֹתֵר מְאֻחָר בַּסְּפִירָה גָּדוֹל יוֹתֵר' if ask == 'big' else
                                                    'הַמִּסְפָּר שֶׁבָּא קֹדֶם בַּסְּפִירָה קָטָן יוֹתֵר'))
@@ -148,7 +148,7 @@ def frame(obj, n):
 def pay(n, item):
     t, o = divmod(n, 10)
     tens = ', '.join(F[10 * k] for k in range(1, t + 1))
-    rest = '' if not o else (', וְעוֹד שֶׁקֶל אֶחָד' if o == 1 else ', וְעוֹד %s שְׁקָלִים' % M[o])
+    rest = '' if not o else (', וְעוֹד שֶׁקֶל אֶחָד' if o == 1 else ', וְעוֹד שְׁנֵי שְׁקָלִים' if o == 2 else ', וְעוֹד %s שְׁקָלִים' % M[o])
     return {'kind': 'pay', 'price': n * 100, 'item': item, 'purse': [['s10', min(8, t + 2)], ['s1', min(8, o + 3)]], 'tag': 'M-MONEY-COUNT',
             'classifiers': {'paid_digits': 'M-PV-FACE', **({'paid_reversed': 'M-NUM-REV'} if o else {})},
             'prompt': 'הַמְּחִיר הוּא %s שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַוִּי.' % M[n],
@@ -173,7 +173,7 @@ def compare(a, b, ask):
         hi = lo + 30
     word = 'גָּדוֹל' if ask == 'big' else 'קָטָן'
     return place(lo, hi, right, [lo, a, b, hi], 'M-PV-FACE', mirror=True,
-                 prompt='מִי %s יוֹתֵר, %s אוֹ %s? שָׂמִים אֶת הַצְּפַרְדֵּעַ עַל %s.' % (word, F[a], F[b], THE[word]),
+                 prompt='אֵיזֶה מִסְפָּר %s יוֹתֵר, %s אוֹ %s? שָׂמִים אֶת הַצְּפַרְדֵּעַ עַל %s.' % (word, F[a], F[b], THE[word]),
                  text='כֵּן! %s. מַשְׁוִים קֹדֶם אֶת הָעֲשָׂרוֹת.' % F[right],
                  h3='%s %s יוֹתֵר: יֵשׁ בּוֹ %s עֲשָׂרוֹת. עַכְשָׁו תּוֹרְכֶם.' % (F[right], word, 'יוֹתֵר' if ask == 'big' else 'פָּחוֹת'))
 
@@ -274,6 +274,7 @@ def plates(n, k, obj, objs):
     each = n // k
     o = {'one': one, 'many': many, 'g': g}
     return {'kind': 'share', 'n': n, 'sprite': obj, 'friends': ['plate'] * k,
+            'tag_lines': {'M-SHARE-UNEQ': ['vo:fb.share_uneq.plates', 'בְּכׇל צַלַּחַת צָרִיךְ לִהְיוֹת אוֹתוֹ מִסְפָּר. בּוֹאוּ נְחַלֵּק שׁוּב, אֶחָד לְכׇל צַלַּחַת.']},
             'prompt': 'מְחַלְּקִים %s %s, אֶחָד לְכׇל צַלַּחַת בַּתּוֹר.' % (qty(n, o), prefix('ל', qty(k, {'g': 'f', 'one': 'צַלַּחַת', 'many': 'צַלָּחוֹת'}))),
             'correct_text': 'כֵּן! בְּכׇל צַלַּחַת %s.' % qty(each, o)}
 
@@ -526,7 +527,7 @@ def same_hue(a, b):
              ['shade_%s_1' % b, 2, 'M-COL-SHADE']]
     return {'kind': 'sort', 'rule': 'colour', 'tag': 'M-COL-SHADE',
             'bins': [{'sprite': 'shade_%s_2' % a, 'label': HUE[a]}, {'sprite': 'shade_%s_2' % b, 'label': HUE[b]}], 'items': items,
-            'prompt': 'מְמַיְּנִים לְפִי צֶבַע: %s לְכָאן, וְ%s לְכָאן.' % (HUE[a], HUE[b]),
+            'prompt': 'מְמַיְּנִים לְפִי צֶבַע: %s לְכָאן, %s לְכָאן.' % (HUE[a], vav(HUE[b])),
             'h3': 'גַּם בָּהִיר וְגַם כֵּהֶה, זֶה אוֹתוֹ צֶבַע. עַכְשָׁו תּוֹרְכֶם.', 'correct_text': 'כֵּן! בָּהִיר אוֹ כֵּהֶה, אוֹתוֹ צֶבַע.'}
 
 

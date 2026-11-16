@@ -10,11 +10,9 @@ import 'support/fakes.dart';
 import 'support/harness.dart';
 import 'support/starter.dart';
 
-/// QA-1: the label of a bin keeps its room when the text is larger. The strip over a bin's sample is 17 points for a text of 13, which is 1.3 times
-/// the text as drawn; at the system's text size 1.3 the text is 16.9 and the strip stayed 17, so the top of the letters was cut (and, with niqqud,
-/// more). QA's first test compared the strip with the 1.7 line box of the text (22 at 1.0), which no strip of the design can hold and which is not
-/// what is cut: the letters' ink sits inside the box with even leading. The measure here is the ink: a strip must be at least 1.3 times the text
-/// as it is drawn (its font times the scaler), which is exactly what the design gives at 1.0, and the label must not be cut to an ellipsis.
+/// The label of a bin (docs/design/m11/min-sizes.md R6): 18 points on a phone and 24 on a tablet, weight 500, line height 1.7, grown with the
+/// system's text size (up to 1.3) where its box lets it and kept at its own size, never smaller, where it does not; and never cut to an
+/// ellipsis (QA-1), on every board and at 1.0, 1.15 and 1.3.
 void main() {
   late PackContent content;
   setUpAll(() async {
@@ -29,7 +27,7 @@ void main() {
     celebration: const Spoken(vo: 'vo:x', caption: 'x'),
   );
 
-  Future<List<({String id, double strip, double drawn, bool cut})>> labelsOf(
+  Future<List<({String id, double drawn, bool cut, FontWeight? weight, double? height})>> labelsOf(
     WidgetTester tester,
     SortDragActivity a,
     ActivitySpec board,
@@ -46,6 +44,9 @@ void main() {
     );
     final SortDragSession s = SortDragSession(c, a);
     final ActivitySpec spec = s.layoutFor(board);
+    final Size size = spec.stageIsCard
+        ? Size(spec.stage.width - 32, spec.stage.height - 32)
+        : spec.stage.size;
     await tester.pumpWidget(
       MaterialApp(
         home: Directionality(
@@ -54,28 +55,29 @@ void main() {
             body: Align(
               alignment: Alignment.topLeft,
               child: SizedBox.fromSize(
-                size: spec.stage.size,
-                child: Builder(builder: (BuildContext ctx) => s.buildStage(ctx, spec.stage.size, spec)),
+                size: size,
+                child: Builder(builder: (BuildContext ctx) => s.buildStage(ctx, size, spec)),
               ),
             ),
           ),
         ),
       ),
     );
-    final List<({String id, double strip, double drawn, bool cut})> out =
-        <({String id, double strip, double drawn, bool cut})>[];
+    final List<({String id, double drawn, bool cut, FontWeight? weight, double? height})> out =
+        <({String id, double drawn, bool cut, FontWeight? weight, double? height})>[];
     for (final SortBin b in a.bins) {
       final Finder text = find.byKey(Key('bin-label-${b.id}'));
       final RenderParagraph p = tester.renderObject<RenderParagraph>(text);
       final Text widget = tester.widget<Text>(text);
-      final double font = widget.style!.fontSize! * widget.textScaler!.scale(1);
       out.add((
         id: b.id,
-        strip: tester.getSize(find.byKey(Key('bin-strip-${b.id}'))).height,
-        drawn: font,
+        drawn: widget.style!.fontSize! * widget.textScaler!.scale(1),
         cut: p.didExceedMaxLines,
+        weight: widget.style!.fontWeight,
+        height: widget.style!.height,
       ));
     }
+    expect(tester.takeException(), isNull, reason: '${a.id}: the stage lays out without an overflow');
     s.dispose();
     return out;
   }
@@ -83,12 +85,15 @@ void main() {
   final Map<String, ActivitySpec> boards = <String, ActivitySpec>{
     'phone': ActivitySpec.phone,
     'phoneSE': ActivitySpec.phoneSE,
+    'tabletL': ActivitySpec.tabletLandscape,
+    'tabletP': ActivitySpec.tabletPortrait,
   };
 
   for (final MapEntry<String, ActivitySpec> board in boards.entries) {
     testWidgets(
-      'every bin label of every sort on the ${board.key} has the room of its ink at 1.0, 1.15 and 1.3',
+      'every bin label of every sort on the ${board.key} is 18 (24 on a tablet) at least, w500, line 1.7, and never cut, at 1.0, 1.15 and 1.3',
       (WidgetTester tester) async {
+        final double base = board.key.startsWith('tablet') ? 24 : 18;
         final List<SortDragActivity> sorts = content.activities.values
             .whereType<SortDragActivity>()
             .where(
@@ -101,40 +106,32 @@ void main() {
         int grew = 0;
         final List<String> bad = <String>[];
         for (final SortDragActivity a in sorts) {
-          double? stripAt1;
+          double? at1;
           for (final double scale in <double>[1.0, 1.15, 1.3]) {
             final labels = await labelsOf(tester, a, board.value, scale);
             for (final l in labels) {
               checked++;
-              if (l.strip < 1.3 * l.drawn - 0.01) {
-                bad.add('${a.id}/${l.id} at $scale: strip ${l.strip} for text ${l.drawn}');
-              }
+              if (l.drawn < base - 0.01) bad.add('${a.id}/${l.id} at $scale: ${l.drawn} is under $base');
+              if (l.weight != FontWeight.w500) bad.add('${a.id}/${l.id}: weight ${l.weight}');
+              if (l.height != 1.7) bad.add('${a.id}/${l.id}: line height ${l.height}');
               if (l.cut) bad.add('${a.id}/${l.id} at $scale: the label is cut to an ellipsis');
             }
-            stripAt1 ??= labels.first.strip;
+            at1 ??= labels.first.drawn;
             if (scale > 1) {
-              if (labels.first.strip > stripAt1) grew++;
+              if (labels.first.drawn > at1 + 0.01) grew++;
               expect(
-                labels.first.strip,
-                greaterThanOrEqualTo(stripAt1),
-                reason: '${a.id}: the strip never shrinks with the text at $scale',
+                labels.first.drawn,
+                greaterThanOrEqualTo(at1 - 0.01),
+                reason: '${a.id}: the label never shrinks with the text at $scale',
               );
             }
           }
         }
         expect(bad, isEmpty, reason: bad.take(8).join('\n'));
         expect(checked, greaterThan(300));
-        expect(grew, greaterThan(40), reason: 'most labels fit one line at 1.3, so most strips grow');
+        expect(grew, greaterThan(20), reason: 'most labels fit at 1.3, so most grow');
       },
       timeout: const Timeout(Duration(minutes: 5)),
     );
   }
-
-  testWidgets(
-    'the arithmetic discriminates: a strip of the old 17 fails the ink test at 1.3 and passes at 1.0',
-    (WidgetTester tester) async {
-      expect(17 < 1.3 * (13 * 1.3), isTrue);
-      expect(17 < 1.3 * (13 * 1.0), isFalse);
-    },
-  );
 }

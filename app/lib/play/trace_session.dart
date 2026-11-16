@@ -9,6 +9,7 @@ import '../content/models.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import 'hints/hint_marks.dart';
+import 'choice_row.dart' show withBigStage;
 import 'hints/hint_pictures.dart';
 import 'lesson_arc.dart' show ArcPart, ArcStep;
 import 'response_code.dart';
@@ -377,6 +378,11 @@ class TraceSession extends TemplateSession {
       ),
     );
   }
+
+  /// The path to trace is drawn as large as the board lets it be: the phone's whole start column (the pad 247 across, the figure over 200), a
+  /// tablet's card of 400 or 520 (min-sizes.md A10, R10).
+  @override
+  ActivitySpec layoutFor(ActivitySpec base) => withBigStage(base);
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => null;

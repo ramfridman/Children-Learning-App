@@ -515,16 +515,21 @@ void main() {
         });
       }
 
-      testWidgets("a small phone gives the bins a stage as tall as a phone's, and the tray stands lower", (
-        WidgetTester tester,
-      ) async {
-        await _open(tester, 'b.logb08.1', _windows['phone SE']!);
-        final Rect stage = tester.getRect(find.byKey(const Key('sort-stage')));
-        expect(stage.height, ActivitySpec.phone.stage.height);
-        final Rect tile = tester.getRect(find.byKey(const Key('answer-tile')).first);
-        expect(tile.top - stage.bottom, greaterThanOrEqualTo(12));
-        expect(tile.bottom, lessThanOrEqualTo(_windows['phone SE']!.height - TokenTouch.bottomNoHotspot));
-      });
+      testWidgets(
+        'a small phone gives the bins the whole start column, and the tray is a deck beside the stage, above the line where no hotspot stands',
+        (WidgetTester tester) async {
+          await _open(tester, 'b.logb08.1', _windows['phone SE']!);
+          final Rect stage = tester.getRect(find.byKey(const Key('sort-stage')));
+          expect(stage.height, 256, reason: 'withMeetStage of the smallest phone: 264 by 256');
+          final Rect tile = tester.getRect(find.byKey(const Key('answer-tile')).first);
+          expect(
+            tile.left,
+            greaterThanOrEqualTo(stage.right),
+            reason: 'the deck stands under the bubble, at the stage side',
+          );
+          expect(tile.bottom, lessThanOrEqualTo(_windows['phone SE']!.height - TokenTouch.bottomNoHotspot));
+        },
+      );
     });
 
     test('a stage is made taller, a tablet is made wider, and nothing else changes', () {

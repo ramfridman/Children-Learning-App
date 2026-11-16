@@ -14,6 +14,7 @@ import 'hints/hint_marks.dart';
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
+import 'choice_row.dart' show withMeetStage;
 import 'host_moves.dart';
 import 'response_code.dart';
 import 'template_session.dart';
@@ -91,9 +92,7 @@ class ClockSetSession extends TemplateSession {
 
   /// The host turns the short hand one hour: its pointing hand presses the plus tile, and the hand of the clock goes to [to].
   HostMove _turnMove(int to) {
-    final Offset? tip = _size.isEmpty
-        ? null
-        : _spec.tileTip(allowHalf ? 4 : 3, 1, slot: 96, slop: 12, rtl: false);
+    final Offset? tip = _size.isEmpty ? null : _plusTip;
     return HostMove(tip, () => hour = to, rest: 750);
   }
 
@@ -220,7 +219,43 @@ class ClockSetSession extends TemplateSession {
     }
   }
 
-  // ---- the places of the stage, as the stage draws them ----
+  // ---- the board and the places of the stage, as the stage draws them ----
+
+  /// The clock takes the stage the board has for one big picture (min-sizes.md A3): on a phone the start column (377 by 260, the smallest phone's
+  /// 264 by 256), so the face is 252 across and its numerals 29 points (they were 14); the controls stand in the column under the bubble, three
+  /// round tiles of 56 with a tap margin of 4 (a half-hour tile makes it two rows of two). A tablet's card is 400 tall (a landscape's, 848 wide)
+  /// or 520 (a portrait's) with the controls in one row under it.
+  @override
+  ActivitySpec layoutFor(ActivitySpec base) {
+    if (!base.stageIsCard) return withMeetStage(base);
+    final bool land = base.boardHeight < 1000;
+    final double height = land ? 400 : 520;
+    return base.withStageAndTiles(
+      stage: Rect.fromLTWH(24, base.stage.top, land ? 848 : 772, height),
+      tilesLeft: 24,
+      tilesTop: base.stage.top + height + 24 + base.tileSlop - 4,
+      tilesWidth: land ? 848 : 772,
+    );
+  }
+
+  /// The side of a control tile: 56 on a phone, 88 on a tablet (with a tap margin of 4 all round).
+  double get _tile => _spec.stageIsCard ? 88 : 56;
+
+  /// The controls in their rows: back, forward, (half,) check. A phone's column holds three; with the half-hour tile they are two rows of two.
+  List<List<String>> get _rows {
+    final List<String> all = <String>['prev', 'next', if (allowHalf) 'half', 'ok'];
+    return _spec.stageIsCard || all.length <= 3
+        ? <List<String>>[all]
+        : <List<String>>[all.sublist(0, 2), all.sublist(2)];
+  }
+
+  /// The fingertip place on the top edge of the plus tile (the second of the first row).
+  Offset get _plusTip {
+    final double slot = _tile + 8;
+    final int inRow = _rows.first.length;
+    final double x = (_spec.tilesWidth - inRow * slot) / 2 + 1.5 * slot;
+    return _spec.fromTiles(x, 4);
+  }
 
   double get _side => math.min(_size.width, _size.height) - 8;
 
@@ -265,7 +300,7 @@ class ClockSetSession extends TemplateSession {
     final int steps = (activity.hour - hour + 12) % 12;
     demoHour = hour;
     // The hand presses the plus tile once for each hour, and the hour it has reached is numbered on the dial.
-    final Offset plus = _spec.tileTip(allowHalf ? 4 : 3, 1, slot: 96, slop: 12, rtl: false);
+    final Offset plus = _plusTip;
     List<HintMark> reached(int k) => <HintMark>[
       for (int j = 1; j <= k; j++) BadgeMark(_numeralAt((hour + j - 1) % 12 + 1), (hour + j - 1) % 12 + 1),
     ];
@@ -358,51 +393,65 @@ class ClockSetSession extends TemplateSession {
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
     listenable: this,
-    builder: (BuildContext c, Widget? _) => Directionality(
-      textDirection: TextDirection.ltr,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          AnswerTile(
-            key: const Key('clock-prev'),
-            semanticLabel: 'back an hour',
-            size: 72,
-            onPressed: previous,
-            child: const Icon(Icons.remove_rounded, size: 40, color: TokenColors.ink),
+    builder: (BuildContext c, Widget? _) {
+      final double size = _tile;
+      final double icon = size * 0.6;
+      Widget control(String id) => switch (id) {
+        'prev' => AnswerTile(
+          key: const Key('clock-prev'),
+          semanticLabel: 'back an hour',
+          size: size,
+          slop: 4,
+          onPressed: previous,
+          child: Icon(Icons.remove_rounded, size: icon, color: TokenColors.ink),
+        ),
+        'next' => AnswerTile(
+          key: const Key('clock-next'),
+          semanticLabel: 'forward an hour',
+          size: size,
+          slop: 4,
+          onPressed: next,
+          child: Icon(Icons.add_rounded, size: icon, color: TokenColors.ink),
+        ),
+        'half' => AnswerTile(
+          key: const Key('clock-half'),
+          semanticLabel: 'half past',
+          size: size,
+          slop: 4,
+          state: half ? AnswerState.selected : AnswerState.idle,
+          onPressed: toggleHalf,
+          child: Text('½', style: AppText.fixed(size: icon, weight: 800, lineHeight: 1)),
+        ),
+        // A Show has no check (it ends when the short hand is at the child's hour): the tile stands where it always does, but faded.
+        _ => Opacity(
+          opacity: activity.isShow ? 0.35 : 1,
+          child: AnswerTile(
+            key: const Key('clock-ok'),
+            semanticLabel: 'check',
+            size: size,
+            slop: 4,
+            state: ring == AnswerState.notYet
+                ? AnswerState.notYet
+                : (ring == AnswerState.correct ? AnswerState.correct : AnswerState.idle),
+            onPressed: activity.isShow ? null : check,
+            child: Icon(Icons.check_rounded, size: icon, color: TokenColors.ink),
           ),
-          AnswerTile(
-            key: const Key('clock-next'),
-            semanticLabel: 'forward an hour',
-            size: 72,
-            onPressed: next,
-            child: const Icon(Icons.add_rounded, size: 44, color: TokenColors.ink),
-          ),
-          if (allowHalf)
-            AnswerTile(
-              key: const Key('clock-half'),
-              semanticLabel: 'half past',
-              size: 72,
-              state: half ? AnswerState.selected : AnswerState.idle,
-              onPressed: toggleHalf,
-              child: Text('½', style: AppText.fixed(size: 40, weight: 800, lineHeight: 1)),
-            ),
-          // A Show has no check (it ends when the short hand is at the child's hour): the tile stands where it always does, but faded.
-          Opacity(
-            opacity: activity.isShow ? 0.35 : 1,
-            child: AnswerTile(
-              key: const Key('clock-ok'),
-              semanticLabel: 'check',
-              size: 72,
-              state: ring == AnswerState.notYet
-                  ? AnswerState.notYet
-                  : (ring == AnswerState.correct ? AnswerState.correct : AnswerState.idle),
-              onPressed: activity.isShow ? null : check,
-              child: const Icon(Icons.check_rounded, size: 44, color: TokenColors.ink),
-            ),
-          ),
-        ],
-      ),
-    ),
+        ),
+      };
+      return Directionality(
+        textDirection: TextDirection.ltr,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            for (final List<String> row in _rows)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[for (final String id in row) control(id)],
+              ),
+          ],
+        ),
+      );
+    },
   );
 }
 

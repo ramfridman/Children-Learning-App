@@ -127,8 +127,6 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "הַסַּל",
-    "הַדֶּשֶׁא",
     "תַּפּוּחַ"
    ],
    "picture": "apples to the basket; Timi holds the red ball by an apple, shakes its head, and it rolls to the grass; the child puts the red balloon on the grass",
@@ -232,10 +230,7 @@
     "line": "key",
     "maxSeconds": 8
    },
-   "teaches": [
-    "הַסַּל",
-    "הַדֶּשֶׁא"
-   ],
+   "teaches": [],
    "picture": "three stars and an apple; the stars to the basket, the apple to the grass as Timi says the key line",
    "status": "buildable on the sort player of today"
   },
@@ -338,7 +333,6 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "חָתוּל",
     "כֶּלֶב"
    ],
    "picture": "cats and dogs into two groups; each lands by its own kind",
@@ -472,8 +466,7 @@
     {
      "by": "host",
      "cell": 0,
-     "piece": "asset:ball_red",
-     "say": "key"
+     "piece": "asset:ball_red"
     },
     {
      "by": "host",
@@ -483,7 +476,8 @@
     {
      "by": "host",
      "cell": 2,
-     "piece": "asset:ball_red"
+     "piece": "asset:ball_red",
+     "say": "key"
     },
     {
      "by": "child",
@@ -878,9 +872,7 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "צַלַּחַת",
-    "נַעַל",
-    "מַנְעוּל"
+    "צַלַּחַת"
    ],
    "picture": "a plate, a shoe and a lock as the bins; the spoon goes by the plate, the sock by the shoe; the child puts the key by the lock",
    "status": "buildable on the sort player of today"
@@ -1252,21 +1244,12 @@
      "review": "text-ready"
     }
    ],
-   "predict": {
-    "line": "מְמַיְּנִים לְפִי מָה?",
-    "voice": "ממיינים לפי מה?",
-    "choices": [
-     "לְפִי הַצֶּבַע",
-     "לְפִי הַצּוּרָה"
-    ],
-    "review": "text-ready"
-   },
+   "predict": null,
    "reminder": {
     "line": "key",
     "maxSeconds": 8
    },
    "teaches": [
-    "אָדֹם",
     "כָּחֹל"
    ],
    "picture": "two bins with one sample each (a red circle, a blue circle); the square and the triangles go by colour; Timi taps the colour of each card before it drops",
@@ -1475,10 +1458,7 @@
     "line": "key",
     "maxSeconds": 8
    },
-   "teaches": [
-    "הַסַּל",
-    "הַדֶּשֶׁא"
-   ],
+   "teaches": [],
    "picture": "two crossed clue cards (not red, not a circle); Timi checks each shape twice, a tick or a cross under each clue",
    "status": "buildable on the sort player of today"
   },

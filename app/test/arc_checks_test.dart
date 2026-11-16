@@ -206,6 +206,26 @@ void main() {
   });
 
   test(
+    'V2: a second Show of a skill on one template is allowed only when a lesson names each of the Shows',
+    () {
+      final Map<String, Map<String, Object?>> a = <String, Map<String, Object?>>{
+        for (final MapEntry<String, Map<String, Object?>> e in activities.entries) e.key: e.value,
+      };
+      final Map<String, Object?> second = _copy(a['show.shp-a-03']!);
+      a['show.shp-a-03b'] = second;
+      expect(run(a: a).join('\n'), contains('one Show for each template'));
+      // a lesson that names the second Show (the first stays named by the lesson that has it): both are named
+      final Map<String, Map<String, Object?>> l = <String, Map<String, Object?>>{
+        for (final MapEntry<String, Map<String, Object?>> e in lessons.entries) e.key: _copy(e.value),
+      };
+      final Map<String, Object?> other = _copy(l['any-shape']!);
+      _m(other['parts'])['show'] = 'show.shp-a-03b';
+      l['any-shape-b'] = other;
+      expect(run(a: a, l: l).join('\n'), isNot(contains('one Show for each template')));
+    },
+  );
+
+  test(
     'V3: the host leads at least one and fewer than all the steps of a hands-on item, and nothing of a tap',
     () {
       final Map<String, Map<String, Object?>> l = <String, Map<String, Object?>>{
@@ -313,7 +333,12 @@ void main() {
     // what the exceptions are: data, not code
     expect(w1YesNo, containsAll(<String>['כן', 'לא']));
     expect(w1CountingWords, containsAll(<String>['חמש', 'חמישה', 'עשר']));
-    expect(w1CountingSkill, 'NUM-A-02');
+    expect(w1CountingWordsOf(<String>{'NUM-A-02'}), w1CountingWords);
+    expect(w1CountingWordsOf(<String>{'NUM-A-01'}), w1CountingWordsToFive);
+    expect(w1CountingWordsOf(<String>{'NUM-B-01', 'NUM-A-02'}), w1CountingWordsToTwenty);
+    expect(w1CountingWordsOf(<String>{'NUM-B-02'}), contains('שלושים'));
+    expect(w1CountingWordsOf(<String>{'NUM-C-01'}), contains('מאה'));
+    expect(w1CountingWordsOf(<String>{'SHP-A-01'}), isEmpty);
   });
 
   test('W1: the label of a wrong option is not asked for, the label of the right one is', () {
@@ -364,7 +389,7 @@ void main() {
     expect(warnings, everyElement(startsWith('W1:')));
   });
 
-  test('the five lands under the rules: V1 to V7 clean, W1 at most 380 (a warning)', () {
+  test('the five lands under the rules: V1 to V7 clean, W1 at most 159 (a warning)', () {
     final List<String> found = <String>[];
     checkArc(
       activities: activities,
@@ -401,10 +426,11 @@ void main() {
     print('FIVE LANDS ${byRule.entries.map((MapEntry<String, int> e) => '${e.key}=${e.value}').join(' ')}');
     // ignore: avoid_print
     print(found.take(400).join('\n'));
-    // The five lands joined `arcDomains` on 2026-11-16: V1 to V7 are clean for all six. W1 (number words and shade words that no Show teaches) is still a
-    // warning for the five, pending the owner's two provisional rules: its count may only fall (380 on 2026-11-16).
+    // The five lands joined `arcDomains` on 2026-11-16: V1 to V7 are clean for all six. W1 is still a warning for the five: after the owner's rules of
+    // 2026-11-16 (counting ranges, the right option only, the card's object, sequences as sets) it measures 159 (396 before); what is left is words no
+    // Show teaches (colour names, size words, shape plurals, counting words in a skill whose prerequisites hold no counting skill). It may only fall.
     expect(byRule.keys.where((String r) => r != 'W1'), isEmpty, reason: '$byRule');
-    expect(byRule['W1'] ?? 0, lessThanOrEqualTo(380));
+    expect(byRule['W1'] ?? 0, lessThanOrEqualTo(159));
   });
 }
 
