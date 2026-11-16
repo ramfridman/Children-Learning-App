@@ -784,6 +784,8 @@ def numbers_c1_waiting(u):
             tens_count = ', '.join(F[10 * k] for k in range(1, t + 1))
             pays.append(u.act(
                 'NUM-C-03', 'pay', price=n * 100, item=item, purse=[('s10', t + 2), ('s1', o + 3 if o else 3)], tag='M-MONEY-COUNT',
+                # M11 Stage 2: the digits paid as shekels (M-PV-FACE) and the price paid reversed (M-NUM-REV, not for a whole ten)
+                classifiers={'paid_digits': 'M-PV-FACE', **({'paid_reversed': 'M-NUM-REV'} if o else {})},
                 **({'check': check, 'difficulty': 0.6} if check else {}),
                 prompt='הַמְּחִיר הוּא %s. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַוִּי.' % qty(n, SHEKEL),
                 h3=fit('סוֹפְרִים בַּעֲשָׂרוֹת: %s, וְעוֹד %s. %s' % (tens_count, qty(o, SHEKEL), TURN) if o else

@@ -53,11 +53,6 @@
         "id": "o2",
         "sprite": "asset:tower_1",
         "label": "מִגְדָּל שֶׁל קֻבִּיָּה אַחַת"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:tower_5",
-        "label": "מִגְדָּל שֶׁל חָמֵשׁ קֻבִּיּוֹת"
       }
     ],
     "correct": "o2",

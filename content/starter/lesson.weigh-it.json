@@ -14,13 +14,13 @@
     "MATH-B-13"
   ],
   "items": [
+    "b.mathb13.10",
     "b.mathb13.1",
     "b.mathb13.2",
     "b.mathb13.3",
     "b.mathb13.4",
     "b.mathb13.5",
-    "b.mathb13.6",
-    "b.mathb13.10"
+    "b.mathb13.6"
   ],
   "estimatedMinutes": 5,
   "sequence": 44,
@@ -40,8 +40,8 @@
     ],
     "together": [
       {
-        "id": "b.mathb13.1",
-        "lead": 0,
+        "id": "b.mathb13.10",
+        "lead": 1,
         "line": {
           "vo": "vo:host.pnina.together.scale",
           "caption": [
@@ -54,12 +54,12 @@
       }
     ],
     "alone": [
+      "b.mathb13.1",
       "b.mathb13.2",
       "b.mathb13.3",
       "b.mathb13.4",
       "b.mathb13.5",
-      "b.mathb13.6",
-      "b.mathb13.10"
+      "b.mathb13.6"
     ],
     "handover": {
       "vo": "vo:host.pnina.handover.3",

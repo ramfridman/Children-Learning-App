@@ -20,10 +20,10 @@
     "count.butterflies.4",
     "count.butterflies.5",
     "give.butterflies.4",
+    "b15.cola02.1",
     "pick.red.flower",
     "b15.numa03.1",
-    "b15.numa04.1",
-    "b15.cola02.1"
+    "b15.numa04.1"
   ],
   "estimatedMinutes": 4,
   "sequence": 1,
@@ -64,10 +64,10 @@
       "count.butterflies.4",
       "count.butterflies.5",
       "give.butterflies.4",
+      "b15.cola02.1",
       "pick.red.flower",
       "b15.numa03.1",
-      "b15.numa04.1",
-      "b15.cola02.1"
+      "b15.numa04.1"
     ],
     "handover": {
       "vo": "vo:host.nekudi.handover.1",

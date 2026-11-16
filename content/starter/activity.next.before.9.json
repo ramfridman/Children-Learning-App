@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "next.before.9",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "numbers",
@@ -49,8 +49,9 @@
       },
       {
         "id": "o3",
-        "numeral": 9,
-        "label": "תֵּשַׁע"
+        "numeral": 10,
+        "label": "עֶשֶׂר",
+        "misconception": "M-CNT-SEQ"
       }
     ],
     "correct": "o2",

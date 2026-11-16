@@ -15,6 +15,7 @@
     "NUM-C-02"
   ],
   "items": [
+    "c.numc03.1",
     "c.numc03.18",
     "c.numc03.19",
     "c.numc03.20",
@@ -22,7 +23,6 @@
     "c.numc03.25",
     "c.numc02.18",
     "c.numc02.19",
-    "c.numc03.1",
     "c.numc03.13",
     "c.numc02.1",
     "c.numc02.20"
@@ -59,27 +59,27 @@
     ],
     "together": [
       {
-        "id": "c.numc03.18",
-        "lead": 0,
+        "id": "c.numc03.1",
+        "lead": 1,
         "line": {
-          "vo": "vo:host.nekudi.together.tap",
+          "vo": "vo:host.nekudi.together.pay",
           "caption": [
             {
               "t": "he",
-              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+              "v": "סוֹפְרִים אֶת הַמַּטְבְּעוֹת בְּקוֹל."
             }
           ]
         }
       }
     ],
     "alone": [
+      "c.numc03.18",
       "c.numc03.19",
       "c.numc03.20",
       "c.numc03.24",
       "c.numc03.25",
       "c.numc02.18",
       "c.numc02.19",
-      "c.numc03.1",
       "c.numc03.13",
       "c.numc02.1"
     ],

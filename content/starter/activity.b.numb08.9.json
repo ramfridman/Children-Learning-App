@@ -39,22 +39,17 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 20,
-        "label": "עֶשְׂרִים"
-      },
-      {
-        "id": "o2",
         "numeral": 2,
         "label": "שְׁתַּיִם",
         "misconception": "M-NUM-REV"
       },
       {
-        "id": "o3",
-        "numeral": 19,
-        "label": "תְּשַׁע עֶשְׂרֵה"
+        "id": "o2",
+        "numeral": 20,
+        "label": "עֶשְׂרִים"
       }
     ],
-    "correct": "o1",
+    "correct": "o2",
     "shuffle": false,
     "unsureAllowed": true
   },

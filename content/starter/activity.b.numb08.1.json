@@ -47,11 +47,6 @@
         "numeral": 21,
         "label": "עֶשְׂרִים וְאַחַת",
         "misconception": "M-NUM-REV"
-      },
-      {
-        "id": "o3",
-        "numeral": 13,
-        "label": "שְׁלֹשׁ עֶשְׂרֵה"
       }
     ],
     "correct": "o1",

@@ -102,9 +102,12 @@ RECUTS = {
     'b.numb10.1': bigger(7, 4, 'big'),
     'b.numb10.2': bigger(5, 9, 'big'),
     'b.numb10.3': bigger(8, 6, 'big'),
-    'b.numb10.5': bigger(6, 3, 'small'),
-    'b.numb10.6': bigger(9, 2, 'small'),
+    'b.numb10.5': dict(bigger(6, 3, 'small'), check='reverse'),  # which is smaller: the reverse question, the understanding check it was
+    'b.numb10.6': dict(bigger(9, 2, 'small'), check='reverse'),
     'b.numb10.8': bigger(7, 8, 'big'),
+    # third pass (V6): the four taps whose smaller number showed no catalogued error are on the line too
+    'b.numb10.4': bigger(9, 10, 'big'), 'b.numb10.7': dict(bigger(10, 7, 'small'), check='reverse'),
+    # b.numb10.9 and .10 stay taps: the skill's symbolic form (a core skill needs two representations); their waivers say why
     # ---- NUM-B-11: one more is one hop right, one less one hop left
     'b.numb11.7': jump(0, 10, 3, [1], [0, 3, 10], 'M-CNT-SEQ', text='%s! עוֹד אַחַת.' % F[4]),
     'b.numb11.9': jump(0, 10, 8, [1], [0, 8, 10], 'M-CNT-SEQ', text='%s! עוֹד אַחַת.' % F[9]),
@@ -147,6 +150,7 @@ def pay(n, item):
     tens = ', '.join(F[10 * k] for k in range(1, t + 1))
     rest = '' if not o else (', וְעוֹד שֶׁקֶל אֶחָד' if o == 1 else ', וְעוֹד %s שְׁקָלִים' % M[o])
     return {'kind': 'pay', 'price': n * 100, 'item': item, 'purse': [['s10', min(8, t + 2)], ['s1', min(8, o + 3)]], 'tag': 'M-MONEY-COUNT',
+            'classifiers': {'paid_digits': 'M-PV-FACE', **({'paid_reversed': 'M-NUM-REV'} if o else {})},
             'prompt': 'הַמְּחִיר הוּא %s שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַוִּי.' % M[n],
             'h3': 'סוֹפְרִים בַּעֲשָׂרוֹת: %s%s. עַכְשָׁו תּוֹרְכֶם.' % (tens, rest),
             'correct_text': 'כֵּן! שִׁלַּמְתֶּם בְּדִיּוּק %s שְׁקָלִים.' % M[n]}
@@ -164,8 +168,11 @@ def compare(a, b, ask):
     right = max(a, b) if ask == 'big' else min(a, b)
     lo = min(a, b) // 10 * 10
     hi = lo + 20
+    # M11 Stage 2 (V6): a line where the mirror of the answer is neither number, so a touch read from the right is M-NL-DIR of its own
+    if lo + hi - right in (a, b):
+        hi = lo + 30
     word = 'גָּדוֹל' if ask == 'big' else 'קָטָן'
-    return place(lo, hi, right, [lo, a, b, hi], 'M-PV-FACE', mirror=False,
+    return place(lo, hi, right, [lo, a, b, hi], 'M-PV-FACE', mirror=True,
                  prompt='מִי %s יוֹתֵר, %s אוֹ %s? שָׂמִים אֶת הַצְּפַרְדֵּעַ עַל %s.' % (word, F[a], F[b], THE[word]),
                  text='כֵּן! %s. מַשְׁוִים קֹדֶם אֶת הָעֲשָׂרוֹת.' % F[right],
                  h3='%s %s יוֹתֵר: יֵשׁ בּוֹ %s עֲשָׂרוֹת. עַכְשָׁו תּוֹרְכֶם.' % (F[right], word, 'יוֹתֵר' if ask == 'big' else 'פָּחוֹת'))
@@ -185,8 +192,8 @@ RECUTS.update({
     'c.numc01.2': jump(60, 75, 69, [1], [60, 69, 75], 'M-CNT-DECADE'),
     'c.numc01.3': jump(40, 55, 49, [1], [40, 49, 55], 'M-CNT-DECADE'),
     'c.numc01.4': jump(70, 85, 79, [1], [70, 79, 85], 'M-CNT-DECADE'),
-    'c.numc01.6': jump(30, 45, 40, [-1], [30, 40, 45], 'M-CNT-SEQ'),
-    'c.numc01.7': jump(60, 75, 70, [-1], [60, 70, 75], 'M-CNT-SEQ'),
+    'c.numc01.6': dict(jump(30, 45, 40, [-1], [30, 40, 45], 'M-CNT-SEQ'), check='reverse'),  # what comes before: the reverse of counting on
+    'c.numc01.7': dict(jump(60, 75, 70, [-1], [60, 70, 75], 'M-CNT-SEQ'), check='reverse'),
     # NUM-C-02: the number read, then placed between its tens
     'c.numc02.2': place(40, 60, 47, [40, 50, 60], 'M-NL-SPACE'),
     'c.numc02.3': place(30, 50, 32, [30, 40, 50], 'M-NL-SPACE'),
@@ -205,8 +212,8 @@ RECUTS.update({
     'c.numc04.2': compare(59, 62, 'big'),
     'c.numc04.3': compare(68, 73, 'big'),
     'c.numc04.4': compare(85, 79, 'big'),
-    'c.numc04.5': compare(41, 38, 'small'),
-    'c.numc04.6': compare(61, 56, 'small'),
+    'c.numc04.5': dict(compare(41, 38, 'small'), check='reverse'),  # which is smaller: the reverse of the skill's question
+    'c.numc04.6': dict(compare(61, 56, 'small'), check='reverse'),
     # NUM-C-09: a hop of ten. Landing one place on (35 for 34 + 10) is the hundred-chart row slip, M-HC-ROW
     'c.numc09.1': ten(34, 10),
     'c.numc09.2': ten(57, 10),
@@ -358,6 +365,7 @@ def tens_pay(a, b=None, paid=None, item='fish'):
         text = 'כֵּן! שִׁלַּמְתֶּם בְּדִיּוּק %s שְׁקָלִים.' % M[a]
     t = price // 10
     return {'kind': 'pay', 'price': price * 100, 'item': item, 'purse': [['s10', min(8, t + 2)], ['s1', 4]], 'tag': 'M-MONEY-COUNT',
+            'classifiers': {'paid_digits': 'M-PV-FACE'},
             'prompt': prompt, 'h3': 'סוֹפְרִים בַּעֲשָׂרוֹת: %s. עַכְשָׁו תּוֹרְכֶם.' % ', '.join(F[10 * k] for k in range(1, t + 1)),
             'correct_text': text}
 
@@ -406,7 +414,8 @@ RECUTS.update({
     # MATH-B-14: the days laid in order
     'b.mathb14.1': week(3, 6), 'b.mathb14.2': week(5, 2), 'b.mathb14.3': week(1, 5), 'b.mathb14.4': week(2, 6), 'b.mathb14.6': week(4, 1),
     # MATH-B-16: agorot and shekels
-    'x.mathb16.7': coins_sort(['coin_s1', 'coin_s2']), 'x.mathb16.8': coins_sort(['coin_s5', 'coin_s10']),
+    # the transfer checks they were (new coins), kept
+    'x.mathb16.7': dict(coins_sort(['coin_s1', 'coin_s2']), check='transfer'), 'x.mathb16.8': dict(coins_sort(['coin_s5', 'coin_s10']), check='transfer'),
     # MATH-B-18: the missing number on the balance (adding both numbers is M-EQ-OPER)
     **{i: missing(p, w, 'M-EQ-OPER') for i, (p, w) in (('b.mathb18.1', (3, 7)), ('b.mathb18.2', (2, 6)), ('b.mathb18.3', (4, 9)),
                                                        ('b.mathb18.4', (5, 8)))},

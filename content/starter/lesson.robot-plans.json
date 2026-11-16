@@ -15,9 +15,9 @@
   ],
   "items": [
     "cs.robot.plan.1",
+    "b15.csa04.1",
     "cs.robot.plan.2",
-    "cs.robot.plan.3",
-    "b15.csa04.1"
+    "cs.robot.plan.3"
   ],
   "estimatedMinutes": 5,
   "sequence": 3,
@@ -51,9 +51,9 @@
       }
     ],
     "alone": [
+      "b15.csa04.1",
       "cs.robot.plan.2",
-      "cs.robot.plan.3",
-      "b15.csa04.1"
+      "cs.robot.plan.3"
     ],
     "handover": {
       "vo": "vo:host.tzaadon.handover.3",

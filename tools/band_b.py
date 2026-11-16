@@ -13,7 +13,8 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.argv = sys.argv[:1] + ['-']  # author.py is imported, never run
 from author import F, M, TURN, count_short, count_words, counts, from_, hint_fit, place, prefix, qty, vav  # noqa: E402
-from band_b_recuts import RECUTS  # noqa: E402  M11 Stage 2: the taps of Band B re-cut to hands-on templates (data)
+from band_b_recuts import RECUTS  # noqa: E402
+from author import CARD_ADD, CARD_TAKE  # noqa: E402  M11 Stage 2: the lines of M-CNT-CARD in a number sentence  M11 Stage 2: the taps of Band B re-cut to hands-on templates (data)
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 UNITS = os.path.join(ROOT, 'content', 'units')
@@ -267,15 +268,19 @@ def numbers():
         ans = n + 1 if d == 'after' else n - 1
         skip = ans + 1 if d == 'after' else ans - 1
         # "what comes before" is the reverse of the skill's counting on (B-15 addendum A3)
-        u.act('NUM-B-01', 'next_number', n=n, dir=d, options=tri(ans, i, [skip, n]), **({'check': 'reverse'} if d == 'before' else {}))
+        # M11 Stage 2 (V6): the other neighbour (after and before swapped) instead of the number itself: an order slip, M-CNT-SEQ
+        other = n - 1 if d == 'after' else n + 1
+        u.act('NUM-B-01', 'next_number', n=n, dir=d, options=tri(ans, i, [skip, other]), tags={str(other): 'M-CNT-SEQ'},
+              **({'check': 'reverse'} if d == 'before' else {}))
     for i, (n, d) in enumerate([(19, 'after'), (29, 'after'), (20, 'after'), (24, 'after'), (28, 'after'), (21, 'before'),
                                 (30, 'before'), (26, 'after'), (27, 'after')]):
         ans = n + 1 if d == 'after' else n - 1
         restart = n - 9 if (d == 'after' and n % 10 == 9) else (ans + 1 if d == 'after' else ans - 1)
-        u.act('NUM-B-02', 'next_number', n=n, dir=d, decade=True, options=tri(ans, i, [restart, n]),
+        other = n - 1 if d == 'after' else n + 1  # M11 Stage 2 (V6): the other neighbour, M-CNT-SEQ
+        u.act('NUM-B-02', 'next_number', n=n, dir=d, decade=True, options=tri(ans, i, [restart, other]), tags={str(other): 'M-CNT-SEQ'},
               **({'check': 'reverse'} if d == 'before' else {}))
     for i, n in enumerate([10, 8, 6, 9, 7, 5, 4, 3]):
-        u.act('NUM-B-03', 'next_number', n=n, dir='before', options=tri(n - 1, i, [n - 2, n]))
+        u.act('NUM-B-03', 'next_number', n=n, dir='before', options=tri(n - 1, i, [n - 2, n + 1]), tags={str(n + 1): 'M-CNT-SEQ'})
 
     # B-15 §1: a count backwards with a mistake in it (X4b: the row counts down)
     for shown, w in (([10, 9, 7, 7, 6], 2), ([8, 7, 6, 4, 4], 3)):
@@ -292,7 +297,8 @@ def numbers():
     u.skill('NUM-B-05', 'נותנים עד 20', 'נוֹתְנִים בְּדִיּוּק כַּמָּה שֶׁמְּבַקְשִׁים', 'cone-tree', ['NUM-B-04', 'NUM-A-06'],
             ['concrete'], ['M-CNT-CARD'])
     for i, (obj, n) in enumerate([('apple', 12), ('star', 14), ('fish', 13), ('duck', 16), ('ladybug', 15), ('bird', 17),
-                                  ('apple', 18), ('fish', 19), ('star', 20)]):
+                                  ('apple', 18), ('fish', 19), ('star', 18)]):
+        # M11 Stage 2 (V6): every count has both neighbours (a tile shows at most 20, so the last count is 18, not 20)
         u.act('NUM-B-04', 'count_tap', obj=obj, count=n, options=tri(n, i, [n - 1, n + 1] if n < 20 else [n - 1, n - 2]), seed=20 + i)
     for i, (obj, n) in enumerate([('apple', 13), ('star', 15), ('fish', 14), ('duck', 17), ('ladybug', 16), ('bird', 18),
                                   ('apple', 19), ('fish', 19)]):
@@ -311,17 +317,19 @@ def numbers():
             ['M-NUM-REV'])
     for i, n in enumerate([12, 13, 14, 15, 16, 17, 18, 19]):
         rev = int(str(n)[::-1])
-        numpick(u, 'NUM-B-08', 'אֵיפֹה הַמִּסְפָּר %s?' % F[n], n, [rev, n + 1 if n < 19 else n - 2], i, tags={rev: 'M-NUM-REV'},
-                text='כֵּן! זֶה %s.' % F[n])
+        # M11 Stage 2 (V6): the right numeral and its reversal only; the neighbour showed no catalogued error
+        u.act('NUM-B-08', 'pick', prompt='אֵיפֹה הַמִּסְפָּר %s?' % F[n], options=['n:%d' % n, 'n:%d' % rev] if i % 2 == 0 else ['n:%d' % rev, 'n:%d' % n],
+              correct='n:%d' % n, tags={'n:%d' % rev: 'M-NUM-REV'}, correct_text='כֵּן! זֶה %s.' % F[n])
     for i, n in enumerate([20, 11, 18, 12]):
         if n == 11:  # its digits read the same both ways: the trap is the "one" heard first (B-15 §3)
             # 1 is not what M-NUM-TEEN gives (§5.2: "as heard", 110), so it stays untagged until the catalogue has a tag
             # for hearing only the ones (check-2026-11-06 §4, a proposal to the curriculum-expert)
-            numpick(u, 'NUM-B-08', 'אֵיפֹה הַמִּסְפָּר %s?' % F[n], n, [1, 12], i, tags={12: 'M-CNT-SEQ'},
-                    text='כֵּן! זֶה %s.' % F[n])
+            u.act('NUM-B-08', 'pick', prompt='אֵיפֹה הַמִּסְפָּר %s?' % F[n], options=['n:12', 'n:11'], correct='n:11', tags={'n:12': 'M-CNT-SEQ'},
+                  correct_text='כֵּן! זֶה %s.' % F[n])
             continue
-        numpick(u, 'NUM-B-08', 'אֵיפֹה הַמִּסְפָּר %s?' % F[n], n, [int(str(n)[::-1]) if n % 10 else 2, n - 1], i,
-                tags={int(str(n)[::-1]) if n % 10 else 2: 'M-NUM-REV'}, text='כֵּן! זֶה %s.' % F[n])
+        rv = int(str(n)[::-1]) if n % 10 else 2
+        u.act('NUM-B-08', 'pick', prompt='אֵיפֹה הַמִּסְפָּר %s?' % F[n], options=['n:%d' % n, 'n:%d' % rv] if i % 2 else ['n:%d' % rv, 'n:%d' % n],
+              correct='n:%d' % n, tags={'n:%d' % rv: 'M-NUM-REV'}, correct_text='כֵּן! זֶה %s.' % F[n])
 
     # B-15 §1: the number missing from a row of numerals
     for i, (seq, ans, rev, nxt) in enumerate([([11, 12, None, 14], 13, 31, 15), ([16, None, 18], 17, 71, 18)]):
@@ -356,22 +364,22 @@ def numbers():
               h3='הַמִּסְפָּרִים גְּדֵלִים בְּאֶחָד כׇּל פַּעַם. אֶחָד מֵהֶם לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת %s.' % F[start + w])
     for i, n in enumerate([3, 6, 8, 11, 14, 17]):
-        numpick(u, 'NUM-B-11', 'הוֹסִיפוּ עוֹד אַחַת אֶל %s. כַּמָּה יֵשׁ עַכְשָׁו?' % F[n], n + 1, [n, n + 2], i,
-                tags={n + 2: 'M-CNT-SEQ'}, text='%s! עוֹד אַחַת.' % F[n + 1])
+        numpick(u, 'NUM-B-11', 'הוֹסִיפוּ עוֹד אַחַת אֶל %s. כַּמָּה יֵשׁ עַכְשָׁו?' % F[n], n + 1, [n - 1, n + 2], i,
+                tags={n + 2: 'M-CNT-SEQ', n - 1: 'M-CNT-SEQ'}, text='%s! עוֹד אַחַת.' % F[n + 1])
     for i, n in enumerate([4, 7, 9, 12, 15, 18]):
-        numpick(u, 'NUM-B-11', 'קְחוּ אַחַת מִתּוֹךְ %s. כַּמָּה נִשְׁאֲרוּ?' % F[n], n - 1, [n, n - 2], i,
-                tags={n - 2: 'M-CNT-SEQ'}, text='%s! אַחַת פָּחוֹת.' % F[n - 1])
+        numpick(u, 'NUM-B-11', 'קְחוּ אַחַת מִתּוֹךְ %s. כַּמָּה נִשְׁאֲרוּ?' % F[n], n - 1, [n + 1, n - 2], i,
+                tags={n - 2: 'M-CNT-SEQ', n + 1: 'M-CNT-SEQ'}, text='%s! אַחַת פָּחוֹת.' % F[n - 1])
 
     # ---- NUM-B-13: the number line
     u.skill('NUM-B-13', 'ציר המספרים', 'קוֹפְצִים עַל צִיר הַמִּסְפָּרִים', 'dock', ['NUM-B-11'], ['embodied', 'symbolic'],
             ['M-NL-SPACE', 'M-NL-DIR'])
-    for n in (3, 7, 5, 8, 2, 9):
+    for n in (3, 7, 4, 8, 2, 9):  # M11 Stage 2 (V6): no target in the middle of the line, so the mirror tick is a place of its own
         u.act('NUM-B-13', 'numline', mode='place', to=10, target=n, labels=list(range(0, 11)),
               prompt='הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל %s. נוֹגְעִים בַּמָּקוֹם.' % F[n])
     for n in (13, 6, 17, 15, 9, 18):
         u.act('NUM-B-13', 'numline', mode='place', to=20, target=n, labels=[0, 5, 10, 15, 20],
               prompt='הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל %s. נוֹגְעִים בַּמָּקוֹם.' % F[n])
-    for start, hops, d in [(2, [3], 'f'), (4, [2], 'f'), (1, [5], 'f'), (7, [-3], 'b'), (9, [-4], 'b'), (3, [2, 3], 'f'), (8, [-2, -3], 'b')]:
+    for start, hops, d in [(2, [4], 'f'), (4, [2], 'f'), (1, [5], 'f'), (7, [-3], 'b'), (9, [-3], 'b'), (3, [2, 3], 'f'), (8, [-2, -3], 'b')]:
         end = start + sum(hops)
         k = abs(sum(hops))
         way = 'קָדִימָה' if d == 'f' else 'אֲחוֹרָה'
@@ -380,7 +388,7 @@ def numbers():
               prompt='הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל %s וְקוֹפֶצֶת %s %s. עַל אֵיזֶה מִסְפָּר הִיא תִּנְחַת?' % (F[start], steps(k), way),
               h3='מַתְחִילִים %s וְקוֹפְצִים %s %s. עַכְשָׁו תּוֹרְכֶם.' % (from_(F[start]), steps(k), way))
 
-    for n in (5, 8):  # B-15 §1: the transfer to a line with only its two ends marked
+    for n in (4, 8):  # B-15 §1: the transfer to a line with only its two ends marked (not 5: the middle has no mirror)
         u.act('NUM-B-13', 'numline', mode='place', to=10, target=n, labels=[0, 10], check='transfer', difficulty=0.6,
               prompt='הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל %s. נוֹגְעִים בַּמָּקוֹם.' % F[n])
 
@@ -392,7 +400,7 @@ def numbers():
         o = OBJECTS[obj]
         rest = total - part
         numpick(u, 'NUM-B-14', 'יֵשׁ %s. מַכְנִיסִים %s לַסַּל. כַּמָּה נִשְׁאֲרוּ בַּחוּץ?' % (qty(total, o), qty(part, o)), rest,
-                [total, part] if rest not in (total, part) else [total + 1, part + 1], i, tags={total: 'M-PART-MISS'},
+                [total, rest + 1], i, tags={total: 'M-PART-MISS', rest + 1: 'M-CNT-DOUBLE'},
                 group={'sprite': obj, 'count': total},
                 text='%s! %s וְעוֹד %s הֵם %s.' % (F[rest], F[rest], F[part], F[total]),
                 h3=hint_fit(*['%s. הִכְנַסְנוּ %s, אָז נִשְׁאֲרוּ %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (c, F[part], F[rest], F[rest])
@@ -446,7 +454,7 @@ def numbers():
                                         ((2, 4, 6), 8, 'בִּשְׁתַּיִם'), ((4, 6, 8), 10, 'בִּשְׁתַּיִם'), ((6, 8, 10), 12, 'בִּשְׁתַּיִם')]):
         step = seq[1] - seq[0]
         numpick(u, 'NUM-B-17', 'סוֹפְרִים %s: %s. מַה בָּא אַחַר כָּךְ?' % (nm, ', '.join(F[x] for x in seq)), nxt,
-                [seq[-1] + 1, nxt + step], i, tags={seq[-1] + 1: 'M-CNT-DECADE' if step == 10 else 'M-CNT-SEQ'},
+                [seq[-1] + 1, nxt + step], i, tags={seq[-1] + 1: 'M-CNT-DECADE' if step == 10 else 'M-CNT-SEQ', nxt + step: 'M-CNT-SEQ'},
                 text='%s! %s.' % (F[nxt], ', '.join(F[x] for x in seq + (nxt,))))
 
     # ---- NUM-B-18: even and odd
@@ -572,7 +580,8 @@ def math():
         others = [max(x, y) if op == '+' else x, near]
         u.act('MATH-B-03', 'pick', prompt='%s %s %s. כַּמָּה זֶה?' % (F[x], word, F[y]),
               row=['n:%d' % x, opcell, 'n:%d' % y, 'op:=', '?'], options=tri('n:%d' % r, i, ['n:%d' % o for o in others]),
-              correct='n:%d' % r, tags={'n:%d' % near: 'M-CNT-SKIP' if op == '+' else 'M-CNT-DOUBLE'},
+              correct='n:%d' % r, tags={'n:%d' % near: 'M-CNT-SKIP' if op == '+' else 'M-CNT-DOUBLE', 'n:%d' % others[0]: 'M-CNT-CARD'},
+              tag_lines={'M-CNT-CARD': list(CARD_ADD if op == '+' else CARD_TAKE)},
               correct_text='%s! %s %s %s שָׁוֶה %s.' % (F[r], F[x], word, F[y], F[r]),
               h3=hint_fit(*['%s %s %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], word, F[y], c, F[r]) for c in counts(r)]))
     for x, op, y, r, bad, w in [(3, '+', 4, 7, 8, 4), (6, '+', 2, 8, 9, 4), (9, '-', 4, 5, 6, 4), (7, '-', 2, 5, 4, 4)]:
@@ -589,8 +598,8 @@ def math():
         r = x + y if op == '+' else x - y
         word = 'וְעוֹד' if op == '+' else 'פָּחוֹת'
         numpick3(u, 'MATH-B-03', 'כַּמָּה שָׁוֶה %s %s %s?' % (F[x], word, F[y]), r,
-                 {max(x, y) if op == '+' else x: None, r - 1 if op == '+' else r + 1: 'M-CNT-SKIP' if op == '+' else 'M-CNT-DOUBLE'}, i,
-                 check='reverse', difficulty=0.6,
+                 {max(x, y) if op == '+' else x: 'M-CNT-CARD', r - 1 if op == '+' else r + 1: 'M-CNT-SKIP' if op == '+' else 'M-CNT-DOUBLE'}, i,
+                 check='reverse', difficulty=0.6, tag_lines={'M-CNT-CARD': list(CARD_ADD if op == '+' else CARD_TAKE)},
                  row=['?', 'op:=', 'n:%d' % x, 'op:' + op, 'n:%d' % y], correct_text='%s! %s %s %s שָׁוֶה %s.' % (F[r], F[x], word, F[y], F[r]),
                  h3=hint_fit(*['%s %s %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], word, F[y], c, F[r]) for c in counts(r)]))
 
@@ -642,12 +651,14 @@ def math():
     for i, (x, y) in enumerate([(8, 5), (9, 4), (7, 6), (8, 7), (9, 6), (6, 9), (7, 8), (9, 9)]):
         r = x + y
         # B-15 §3 as MATH-B-03: the larger addend or the start (untagged), and counting the start too
-        numpick(u, 'MATH-B-08', '%s וְעוֹד %s. כַּמָּה זֶה?' % (F[x], F[y]), r, [max(x, y), r - 1], i, tags={r - 1: 'M-CNT-SKIP'}, row=['n:%d' % x, 'op:+', 'n:%d' % y, 'op:=', '?'],
+        numpick(u, 'MATH-B-08', '%s וְעוֹד %s. כַּמָּה זֶה?' % (F[x], F[y]), r, [max(x, y), r - 1], i, tags={r - 1: 'M-CNT-SKIP', max(x, y): 'M-CNT-CARD'},
+                tag_lines={'M-CNT-CARD': list(CARD_ADD)}, row=['n:%d' % x, 'op:+', 'n:%d' % y, 'op:=', '?'],
                 text='%s! %s וְעוֹד %s הֵם עֶשֶׂר, וְעוֹד %s.' % (F[r], F[x], F[10 - x], F[r - 10]),
                 h3='%s וְעוֹד %s הֵם עֶשֶׂר. נִשְׁאֲרוּ עוֹד %s, אָז %s. עַכְשָׁו תּוֹרְכֶם.' % (F[x], F[10 - x], F[y - (10 - x)], F[r]))
     for i, (x, y) in enumerate([(13, 4), (15, 3), (12, 5), (17, 2)]):
         r = x - y
-        numpick(u, 'MATH-B-08', '%s פָּחוֹת %s. כַּמָּה זֶה?' % (F[x], F[y]), r, [x, r + 1], i, tags={r + 1: 'M-CNT-DOUBLE'}, row=['n:%d' % x, 'op:-', 'n:%d' % y, 'op:=', '?'],
+        numpick(u, 'MATH-B-08', '%s פָּחוֹת %s. כַּמָּה זֶה?' % (F[x], F[y]), r, [x, r + 1], i, tags={r + 1: 'M-CNT-DOUBLE', x: 'M-CNT-CARD'},
+                tag_lines={'M-CNT-CARD': list(CARD_TAKE)}, row=['n:%d' % x, 'op:-', 'n:%d' % y, 'op:=', '?'],
                 text='%s! %s פָּחוֹת %s שָׁוֶה %s.' % (F[r], F[x], F[y], F[r]))
 
     # B-15 §1: the missing addend when the sum reaches past ten
@@ -743,9 +754,11 @@ def math():
     # ---- MATH-B-15: the clock, whole hours
     u.skill('MATH-B-15', 'קוראים שעון', 'קוֹרְאִים שָׁעוֹת עֲגֻלּוֹת', 'pool', ['NUM-B-08'], ['pictorial', 'symbolic'], ['M-CLOCK-HANDS'])
     for i, h in enumerate([3, 6, 9, 1, 4, 8, 11, 2, 5, 7]):
-        wrong = [12, h + 1 if h < 11 else 2]
-        numpick(u, 'MATH-B-15', 'מָה הַשָּׁעָה?', h, wrong, i, tags={12: 'M-CLOCK-HANDS'}, group={'sprite': 'clock_%d' % h, 'count': 1},
-                text='כֵּן! הַשָּׁעָה %s.' % F[h], h3='הַמַּחֲוָג הַקָּצָר וְהָעָבֶה אוֹמֵר אֶת הַשָּׁעָה: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[h], F[h]))
+        # M11 Stage 2 (V6): two tiles, the hour and twelve (the minute hand read as the hour); the next hour showed no catalogued error
+        u.act('MATH-B-15', 'pick', prompt='מָה הַשָּׁעָה?', options=['n:%d' % h, 'n:12'] if i % 2 else ['n:12', 'n:%d' % h], correct='n:%d' % h,
+              tags={'n:12': 'M-CLOCK-HANDS'}, group={'sprite': 'clock_%d' % h, 'count': 1}, correct_text='כֵּן! הַשָּׁעָה %s.' % F[h],
+              h3='הַמַּחֲוָג הַקָּצָר וְהָעָבֶה אוֹמֵר אֶת הַשָּׁעָה: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[h], F[h]))
+
 
     # ---- MATH-B-18: the missing number
     u.skill('MATH-B-18', 'מוצאים מספר חסר', 'מוֹצְאִים אֶת הַמִּסְפָּר הֶחָסֵר', 'dock', ['MATH-B-02', 'MATH-B-03'], ['symbolic'], ['M-EQ-OPER'])

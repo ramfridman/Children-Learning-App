@@ -2695,25 +2695,19 @@
    "together": [
     {
      "id": "count.butterflies.3",
-     "lead": 0,
-     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
     "count.butterflies.4",
     "count.butterflies.5",
     "give.butterflies.4",
+    "b15.cola02.1",
     "pick.red.flower",
     "b15.numa03.1",
-    "b15.numa04.1",
-    "b15.cola02.1"
+    "b15.numa04.1"
    ],
    "use": [],
-   "borrowed": [
-    "b15.numa03.1",
-    "b15.numa04.1",
-    "b15.cola02.1"
-   ],
    "poolRungs": [
     0,
     1
@@ -2735,23 +2729,19 @@
    },
    "together": [
     {
-     "id": "next.after.1",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "id": "b15.numa01.1",
+     "lead": 1
     }
    ],
    "alone": [
+    "next.after.1",
     "next.after.4",
     "next.after.6",
     "next.after.8",
     "next.after.2",
-    "next.before.7",
-    "b15.numa01.1",
-    "b15.numa02.1"
+    "next.before.7"
    ],
-   "use": [],
-   "borrowed": [
-    "b15.numa01.1",
+   "use": [
     "b15.numa02.1"
    ],
    "poolRungs": [
@@ -2770,21 +2760,17 @@
    "show": "show.num-a-05",
    "together": [
     {
-     "id": "flash.dice.1",
-     "lead": 0,
-     "note": "flash has no lead player yet: the host says its line and the child does the whole item"
+     "id": "flash.frame.3",
+     "lead": 1
     }
    ],
    "alone": [
+    "flash.dice.1",
     "flash.dice.2",
     "flash.dice.3",
-    "flash.scatter.3",
-    "flash.frame.3"
+    "flash.scatter.3"
    ],
    "use": [],
-   "borrowed": [
-    "flash.frame.3"
-   ],
    "poolRungs": [
     0,
     1
@@ -2803,8 +2789,7 @@
    "together": [
     {
      "id": "give.ladybugs.2",
-     "lead": 0,
-     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -2830,8 +2815,7 @@
    "together": [
     {
      "id": "numeral.apples.2",
-     "lead": 0,
-     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -2861,8 +2845,7 @@
    "together": [
     {
      "id": "pick.numeral.3",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -2895,8 +2878,7 @@
    "together": [
     {
      "id": "count.ladybugs.6",
-     "lead": 0,
-     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -2923,8 +2905,7 @@
    "together": [
     {
      "id": "flash.frame.4",
-     "lead": 0,
-     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -2951,8 +2932,7 @@
    "together": [
     {
      "id": "more.apples.2v4",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -2979,8 +2959,7 @@
    "together": [
     {
      "id": "more.big.apples",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -3005,8 +2984,7 @@
    "together": [
     {
      "id": "ordinal.first",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -3033,8 +3011,7 @@
    "together": [
     {
      "id": "zero.nest",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -3064,24 +3041,20 @@
    "together": [
     {
      "id": "next.after.3",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
+    "b15.numa02.1",
     "next.after.5",
     "next.before.4",
     "next.before.5",
     "next.after.9",
     "next.before.9",
-    "next.before.10",
-    "b15.numa02.1"
+    "next.before.10"
    ],
    "use": [
     "b15.numa01.1"
-   ],
-   "borrowed": [
-    "b15.numa02.1"
    ],
    "poolRungs": [
     0,
@@ -3108,8 +3081,7 @@
    "together": [
     {
      "id": "count.ladybugs.3",
-     "lead": 0,
-     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -3124,10 +3096,6 @@
     "b15.numa04.1"
    ],
    "use": [],
-   "borrowed": [
-    "b15.numa03.1",
-    "b15.numa04.1"
-   ],
    "poolRungs": [
     0,
     1
@@ -3150,8 +3118,7 @@
    "together": [
     {
      "id": "flash.scatter.2",
-     "lead": 0,
-     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -3183,8 +3150,7 @@
    "together": [
     {
      "id": "give.cats.2",
-     "lead": 0,
-     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -3212,8 +3178,7 @@
    "together": [
     {
      "id": "pick.numeral.2b",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -3244,8 +3209,7 @@
    "together": [
     {
      "id": "count.cats.7",
-     "lead": 0,
-     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -3279,8 +3243,7 @@
    "together": [
     {
      "id": "more.ducks.5v3",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -3317,8 +3280,7 @@
    "together": [
     {
      "id": "ordinal.first.of4",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -3353,8 +3315,7 @@
    "together": [
     {
      "id": "b15.numa01.2",
-     "lead": 0,
-     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -3362,17 +3323,13 @@
     "b15.numa02.1",
     "b15.numa02.2",
     "b15.numa02.3",
-    "b15.numa01.4",
-    "b15.numa01.5",
     "next.after.1",
-    "next.after.5"
+    "next.after.5",
+    "b15.numa01.4",
+    "b15.numa01.5"
    ],
    "use": [
     "b15.numa02.4"
-   ],
-   "borrowed": [
-    "next.after.1",
-    "next.after.5"
    ],
    "poolRungs": [
     0,
@@ -3394,17 +3351,17 @@
     "kind": "reminder",
     "before": "the first item of NUM-A-02"
    },
-   "together": [],
+   "together": [
+    {
+     "id": "b15.numa02.1",
+     "lead": 1
+    }
+   ],
    "alone": [
-    "b15.numa02.5",
-    "b15.numa02.1",
-    "next.after.5"
+    "next.after.5",
+    "b15.numa02.5"
    ],
    "use": [],
-   "borrowed": [
-    "b15.numa02.1",
-    "next.after.5"
-   ],
    "poolRungs": [
     0,
     1,
@@ -3430,8 +3387,7 @@
    "together": [
     {
      "id": "b15.numa03.3",
-     "lead": 0,
-     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -3467,15 +3423,16 @@
     "kind": "reminder",
     "before": "the first item of NUM-A-04"
    },
-   "together": [],
+   "together": [
+    {
+     "id": "b15.numa04.4",
+     "lead": 1
+    }
+   ],
    "alone": [
-    "b15.numa04.4",
     "b15.numa04.1"
    ],
    "use": [],
-   "borrowed": [
-    "b15.numa04.1"
-   ],
    "poolRungs": [
     0,
     1
@@ -3500,8 +3457,7 @@
    "together": [
     {
      "id": "b15.numa12.1",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -3524,21 +3480,17 @@
    "show": "show.num-a-07",
    "together": [
     {
-     "id": "x.numa07.1",
-     "lead": 0,
-     "note": "match_pairs has no lead player yet: the host says its line and the child does the whole item"
+     "id": "numeral.apples.2",
+     "lead": 1
     }
    ],
    "alone": [
+    "x.numa07.1",
     "x.numa07.2",
     "x.numa07.3",
-    "x.numa07.4",
-    "numeral.apples.2"
+    "x.numa07.4"
    ],
    "use": [],
-   "borrowed": [
-    "numeral.apples.2"
-   ],
    "poolRungs": [
     0,
     1
@@ -3556,20 +3508,16 @@
    "show": "show.num-a-07",
    "together": [
     {
-     "id": "x.numa07.5",
-     "lead": 0,
-     "note": "match_pairs has no lead player yet: the host says its line and the child does the whole item"
+     "id": "numeral.apples.2",
+     "lead": 1
     }
    ],
    "alone": [
+    "x.numa07.5",
     "x.numa07.6",
-    "x.numa07.7",
-    "numeral.apples.2"
+    "x.numa07.7"
    ],
    "use": [],
-   "borrowed": [
-    "numeral.apples.2"
-   ],
    "poolRungs": [
     0,
     1
@@ -3588,8 +3536,7 @@
    "together": [
     {
      "id": "b.numb01.1",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -3616,21 +3563,17 @@
    "show": "show.num-b-01",
    "together": [
     {
-     "id": "b.numb01.6",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "id": "b.numb01.1",
+     "lead": 0
     }
    ],
    "alone": [
+    "b.numb01.6",
     "b.numb01.7",
     "b.numb01.8",
-    "b.numb01.9",
-    "b.numb01.1"
+    "b.numb01.9"
    ],
    "use": [],
-   "borrowed": [
-    "b.numb01.1"
-   ],
    "poolRungs": [
     1,
     2
@@ -3649,8 +3592,7 @@
    "together": [
     {
      "id": "b.numb02.1",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -3678,8 +3620,7 @@
    "together": [
     {
      "id": "b.numb02.6",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -3706,8 +3647,7 @@
    "together": [
     {
      "id": "b.numb03.1",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -3741,8 +3681,7 @@
    "together": [
     {
      "id": "b.numb04.1",
-     "lead": 0,
-     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -3769,8 +3708,7 @@
    "together": [
     {
      "id": "b.numb04.6",
-     "lead": 0,
-     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -3799,8 +3737,7 @@
    "together": [
     {
      "id": "b.numb05.1",
-     "lead": 0,
-     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -3833,8 +3770,7 @@
    "together": [
     {
      "id": "b.numb08.2",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -3863,8 +3799,7 @@
    "together": [
     {
      "id": "b.numb08.7",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -3896,15 +3831,15 @@
    "together": [
     {
      "id": "b.numb10.1",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
     "b.numb10.2",
     "b.numb10.3",
     "b.numb10.5",
-    "b.numb10.4"
+    "b.numb10.4",
+    "b.numb10.10"
    ],
    "use": [],
    "poolRungs": [
@@ -3925,8 +3860,7 @@
    "together": [
     {
      "id": "b.numb10.6",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -3953,23 +3887,19 @@
    "show": "show.num-b-11",
    "together": [
     {
-     "id": "b.numb11.1",
-     "lead": 0,
-     "note": "spot_error has no lead player yet: the host says its line and the child does the whole item"
+     "id": "b.numb11.10",
+     "lead": 0
     }
    ],
    "alone": [
+    "b.numb11.1",
     "b.numb11.2",
     "b.numb11.3",
     "b.numb11.4",
-    "b.numb11.5",
-    "b.numb11.10"
+    "b.numb11.5"
    ],
    "use": [
     "b.numb11.6"
-   ],
-   "borrowed": [
-    "b.numb11.10"
    ],
    "poolRungs": [
     1,
@@ -3989,8 +3919,7 @@
    "together": [
     {
      "id": "b.numb11.7",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4025,8 +3954,7 @@
    "together": [
     {
      "id": "b.numb13.1",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4054,8 +3982,7 @@
    "together": [
     {
      "id": "b.numb13.7",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4082,17 +4009,16 @@
    "show": "show.num-b-13",
    "together": [
     {
-     "id": "b.numb13.13",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "id": "b.numb13.18",
+     "lead": 1
     }
    ],
    "alone": [
+    "b.numb13.13",
     "b.numb13.14",
     "b.numb13.15",
     "b.numb13.16",
     "b.numb13.17",
-    "b.numb13.18",
     "b.numb13.19",
     "b.numb13.20"
    ],
@@ -4116,8 +4042,7 @@
    "together": [
     {
      "id": "b.numb14.1",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -4128,6 +4053,7 @@
    ],
    "use": [],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -4143,12 +4069,12 @@
    "show": "show.num-b-14",
    "together": [
     {
-     "id": "b.numb14.6",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "id": "b.numb14.1",
+     "lead": 1
     }
    ],
    "alone": [
+    "b.numb14.6",
     "b.numb14.7",
     "b.numb14.8",
     "b.numb14.9",
@@ -4156,6 +4082,7 @@
    ],
    "use": [],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -4172,8 +4099,7 @@
    "together": [
     {
      "id": "b.numb16.1",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4201,8 +4127,7 @@
    "together": [
     {
      "id": "b.numb16.6",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4214,9 +4139,6 @@
     "b.numb16.4"
    ],
    "use": [],
-   "borrowed": [
-    "b.numb16.4"
-   ],
    "poolRungs": [
     1,
     2
@@ -4235,8 +4157,7 @@
    "together": [
     {
      "id": "b.numb17.7",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4272,8 +4193,7 @@
    "together": [
     {
      "id": "b.numb18.1",
-     "lead": 0,
-     "note": "a share has no lead player yet: the host says its line and the child deals every card"
+     "lead": 1
     }
    ],
    "alone": [
@@ -4416,25 +4336,21 @@
    "show": "show.num-b-06",
    "together": [
     {
-     "id": "c.numb06.1",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "id": "c.numb06.15",
+     "lead": 1
     }
    ],
    "alone": [
+    "c.numb06.1",
     "c.numb06.3",
     "c.numb06.5",
     "c.numb06.2",
     "c.numb06.4",
     "c.numb06.6",
-    "c.numb06.7",
-    "c.numb06.15"
+    "c.numb06.7"
    ],
    "use": [
     "c.numb06.8"
-   ],
-   "borrowed": [
-    "c.numb06.15"
    ],
    "poolRungs": [
     0,
@@ -4455,8 +4371,7 @@
    "together": [
     {
      "id": "c.numb06.15",
-     "lead": 0,
-     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -4471,9 +4386,6 @@
    ],
    "use": [
     "c.numb06.16"
-   ],
-   "borrowed": [
-    "c.numb06.2"
    ],
    "poolRungs": [
     0,
@@ -4494,8 +4406,7 @@
    "together": [
     {
      "id": "c.numb09.1",
-     "lead": 0,
-     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -4509,9 +4420,6 @@
    ],
    "use": [
     "c.numb09.8"
-   ],
-   "borrowed": [
-    "c.numb09.12"
    ],
    "poolRungs": [
     0,
@@ -4532,8 +4440,7 @@
    "together": [
     {
      "id": "c.numb09.15",
-     "lead": 0,
-     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -4541,6 +4448,7 @@
     "c.numb09.9",
     "c.numb09.10",
     "c.numb09.11",
+    "c.numb09.3",
     "c.numb09.12",
     "c.numb09.13",
     "c.numb09.14"
@@ -4571,8 +4479,7 @@
    "together": [
     {
      "id": "c.numb01.1",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4587,10 +4494,6 @@
    ],
    "use": [
     "c.numb10.2"
-   ],
-   "borrowed": [
-    "b.numb01.4",
-    "b.numb10.10"
    ],
    "poolRungs": [
     1,
@@ -4610,8 +4513,7 @@
    "together": [
     {
      "id": "c.numc01.1",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4646,8 +4548,7 @@
    "together": [
     {
      "id": "c.numc02.2",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4683,8 +4584,7 @@
    "together": [
     {
      "id": "c.numc03.1",
-     "lead": 0,
-     "note": "shop_pay has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -4694,11 +4594,9 @@
     "c.numc03.5",
     "c.numc03.6",
     "c.numc03.7",
-    "c.numc03.8",
-    "c.numc03.10"
+    "c.numc03.8"
    ],
-   "use": [],
-   "borrowed": [
+   "use": [
     "c.numc03.10"
    ],
    "poolRungs": [
@@ -4720,8 +4618,7 @@
    "together": [
     {
      "id": "c.numc03.14",
-     "lead": 0,
-     "note": "shop_pay has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -4758,8 +4655,7 @@
    "together": [
     {
      "id": "c.numc04.1",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4790,8 +4686,7 @@
    "together": [
     {
      "id": "c.numc04.13",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4823,8 +4718,7 @@
    "together": [
     {
      "id": "c.numc06.1",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4838,9 +4732,6 @@
    ],
    "use": [
     "c.numc06.8"
-   ],
-   "borrowed": [
-    "c.numc06.14"
    ],
    "poolRungs": [
     1,
@@ -4860,8 +4751,7 @@
    "together": [
     {
      "id": "c.numc06.9",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4894,8 +4784,7 @@
    "together": [
     {
      "id": "c.numc09.1",
-     "lead": 0,
-     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4936,29 +4825,23 @@
    },
    "together": [
     {
-     "id": "c.numc03.18",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "id": "c.numc03.1",
+     "lead": 1
     }
    ],
    "alone": [
+    "c.numc03.18",
     "c.numc03.19",
     "c.numc03.20",
     "c.numc03.24",
     "c.numc03.25",
     "c.numc02.18",
     "c.numc02.19",
-    "c.numc03.1",
     "c.numc03.13",
     "c.numc02.1"
    ],
    "use": [
     "c.numc02.20"
-   ],
-   "borrowed": [
-    "c.numc03.1",
-    "c.numc03.13",
-    "c.numc02.1"
    ],
    "poolRungs": [
     0,
@@ -4985,8 +4868,7 @@
    "together": [
     {
      "id": "c.numc09.13",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -4998,13 +4880,10 @@
     "c.numc01.14",
     "c.numc01.15",
     "c.numc01.16",
-    "c.numc09.10",
     "c.numc01.10"
    ],
-   "use": [],
-   "borrowed": [
-    "c.numc09.10",
-    "c.numc01.10"
+   "use": [
+    "c.numc09.10"
    ],
    "poolRungs": [
     1,
@@ -5029,12 +4908,13 @@
    },
    "together": [
     {
-     "id": "c.numc02.13",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "id": "c.numc02.18",
+     "lead": 0
     }
    ],
    "alone": [
+    "c.numc03.1",
+    "c.numc02.13",
     "c.numc02.14",
     "c.numc02.15",
     "c.numc02.16",
@@ -5042,15 +4922,9 @@
     "c.numc03.21",
     "c.numc03.22",
     "c.numc03.23",
-    "c.numc02.21",
-    "c.numc02.18",
-    "c.numc03.1",
-    "c.numc03.10"
+    "c.numc02.21"
    ],
-   "use": [],
-   "borrowed": [
-    "c.numc02.18",
-    "c.numc03.1",
+   "use": [
     "c.numc03.10"
    ],
    "poolRungs": [

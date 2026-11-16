@@ -14,6 +14,7 @@
     "NUM-B-06"
   ],
   "items": [
+    "c.numb06.15",
     "c.numb06.1",
     "c.numb06.3",
     "c.numb06.5",
@@ -21,7 +22,6 @@
     "c.numb06.4",
     "c.numb06.6",
     "c.numb06.7",
-    "c.numb06.15",
     "c.numb06.8"
   ],
   "estimatedMinutes": 6,
@@ -42,27 +42,27 @@
     ],
     "together": [
       {
-        "id": "c.numb06.1",
-        "lead": 0,
+        "id": "c.numb06.15",
+        "lead": 1,
         "line": {
-          "vo": "vo:host.nekudi.together.line",
+          "vo": "vo:host.nekudi.together.count",
           "caption": [
             {
               "t": "he",
-              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+              "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת."
             }
           ]
         }
       }
     ],
     "alone": [
+      "c.numb06.1",
       "c.numb06.3",
       "c.numb06.5",
       "c.numb06.2",
       "c.numb06.4",
       "c.numb06.6",
-      "c.numb06.7",
-      "c.numb06.15"
+      "c.numb06.7"
     ],
     "use": [
       "c.numb06.8"

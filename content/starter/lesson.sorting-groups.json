@@ -52,7 +52,9 @@
     ],
     "alone": [
       "log.sort.balloon",
-      "log.sort.animal",
+      "log.sort.animal"
+    ],
+    "use": [
       "b15.loga03.1"
     ],
     "handover": {

@@ -67,7 +67,9 @@
       "col.find.blue.ball",
       "col.find.yellow.flower",
       "col.find.green.balloon",
-      "col.sort.pink",
+      "col.sort.pink"
+    ],
+    "use": [
       "b15.cola07.1"
     ],
     "handover": {

@@ -14,12 +14,12 @@
     "MATH-B-15"
   ],
   "items": [
+    "x.mathb15.1",
     "b.mathb15.6",
     "b.mathb15.7",
     "b.mathb15.8",
     "b.mathb15.9",
-    "b.mathb15.10",
-    "x.mathb15.1"
+    "b.mathb15.10"
   ],
   "estimatedMinutes": 5,
   "sequence": 48,
@@ -39,25 +39,25 @@
     ],
     "together": [
       {
-        "id": "b.mathb15.6",
+        "id": "x.mathb15.1",
         "lead": 0,
         "line": {
-          "vo": "vo:host.pnina.together.tap",
+          "vo": "vo:host.pnina.together.clock",
           "caption": [
             {
               "t": "he",
-              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+              "v": "מִסְתַּכְּלִים עַל הַמַּחֲוָג הַקָּצָר."
             }
           ]
         }
       }
     ],
     "alone": [
+      "b.mathb15.6",
       "b.mathb15.7",
       "b.mathb15.8",
       "b.mathb15.9",
-      "b.mathb15.10",
-      "x.mathb15.1"
+      "b.mathb15.10"
     ],
     "handover": {
       "vo": "vo:host.pnina.handover.1",

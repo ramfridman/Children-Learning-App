@@ -35,7 +35,7 @@
     "objects": {
       "sprite": "asset:star",
       "litSprite": "asset:star_lit",
-      "count": 20,
+      "count": 18,
       "arrangement": "scatter",
       "onTap": "glow",
       "seed": 28
@@ -49,16 +49,17 @@
     "options": [
       {
         "id": "o1",
-        "value": 19,
+        "value": 17,
         "misconception": "M-CNT-SKIP"
       },
       {
         "id": "o2",
-        "value": 18
+        "value": 19,
+        "misconception": "M-CNT-DOUBLE"
       },
       {
         "id": "o3",
-        "value": 20
+        "value": 18
       }
     ],
     "correct": "o3",
@@ -81,11 +82,21 @@
       "caption": [
         {
           "t": "he",
-          "v": "עֶשְׂרִים! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת."
+          "v": "שְׁמוֹנֶה עֶשְׂרֵה! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "misconception:M-CNT-SKIP",
         "vo": "vo:fb.skip_set",
@@ -147,7 +158,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "מֵאַחַת עַד עֶשְׂרִים. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: עֶשְׂרִים! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל עֶשְׂרִים."
+          "v": "מֵאַחַת עַד שְׁמוֹנֶה עֶשְׂרֵה. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: שְׁמוֹנֶה עֶשְׂרֵה! עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }

@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "cs.routine.teeth.middle",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "cs",
@@ -46,7 +46,8 @@
       {
         "id": "o2",
         "sprite": "asset:step_paste",
-        "label": "מִשְׁחָה"
+        "label": "מִשְׁחָה",
+        "misconception": "M-SEQ-CAUSE"
       },
       {
         "id": "o3",

@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "b15.loga10.2",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "logic",
@@ -45,7 +45,8 @@
       {
         "id": "o1",
         "sprite": "asset:tower_3",
-        "label": "מִגְדָּל שֶׁל שָׁלוֹשׁ קֻבִּיּוֹת"
+        "label": "מִגְדָּל שֶׁל שָׁלוֹשׁ קֻבִּיּוֹת",
+        "misconception": "M-SER-ENDS"
       },
       {
         "id": "o2",
@@ -82,6 +83,16 @@
           {
             "t": "he",
             "v": "בַּהַתְחָלָה בָּא הֲכִי נָמוּךְ. בּוֹאוּ נַשְׁוֶה."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SER-ENDS",
+        "vo": "vo:fb.ser_ends",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל."
           }
         ]
       },

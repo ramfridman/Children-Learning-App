@@ -46,22 +46,17 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 3,
-        "label": "שָׁלוֹשׁ"
-      },
-      {
-        "id": "o2",
         "numeral": 12,
         "label": "שְׁתֵּים עֶשְׂרֵה",
         "misconception": "M-CLOCK-HANDS"
       },
       {
-        "id": "o3",
-        "numeral": 4,
-        "label": "אַרְבַּע"
+        "id": "o2",
+        "numeral": 3,
+        "label": "שָׁלוֹשׁ"
       }
     ],
-    "correct": "o1",
+    "correct": "o2",
     "shuffle": false,
     "unsureAllowed": true
   },

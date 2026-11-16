@@ -60,7 +60,9 @@
       "col.match.yellow",
       "col.name.red.ball",
       "col.name.blue.balloon",
-      "col.match.green",
+      "col.match.green"
+    ],
+    "use": [
       "b15.cola02.3"
     ],
     "handover": {

@@ -469,7 +469,8 @@ def logic():
         others = [e for e in dict.fromkeys(unit + [z, x, y]) if e != right][:2]
         # B-15 §3: the last one shown, repeated; another element of the core, in the wrong place
         last = seq[shown - 1]
-        tags = {e: 'M-PAT-NEXT' if e == last else 'M-PAT-UNIT' for e in others if e == last or e in unit}
+        # M11 Stage 2 (V6): a picture from outside the unit is M-PAT-UNIT too (the repeating part was not seen)
+        tags = {e: 'M-PAT-NEXT' if e == last else 'M-PAT-UNIT' for e in others}
         u.act('LOG-B-01', 'pick', prompt='מַה בָּא אַחַר כָּךְ?', row=row, options=place(right, others, i % 3), correct=right,
               tags=tags, domain='logic',
               correct_text='כֵּן! הַסֵּדֶר חוֹזֵר.', h3='הַחֵלֶק שֶׁחוֹזֵר הוּא: %s. עַכְשָׁו תּוֹרְכֶם.' % ', '.join(NAMES[e]['one'] for e in unit), **kw)
@@ -503,7 +504,9 @@ def logic():
         others = ['tower_%d' % (gap - 1 if gap > 1 else gap + 1), 'tower_%d' % (gap + 1 if gap < 6 else gap - 2)]
         if gap == 1:
             others = ['tower_2', 'tower_5']
-        u.act('LOG-B-04', 'pick', prompt='הַמִּגְדָּלִים גְּדֵלִים. אֵיזֶה מִגְדָּל חָסֵר?', row=row, options=place('tower_%d' % gap, others, i % 3),
+        # M11 Stage 2 (V6): the far tower carried no honest tag (D44), so the tap offers the right tower and the repeated one only
+        others = others[:1]
+        u.act('LOG-B-04', 'pick', prompt='הַמִּגְדָּלִים גְּדֵלִים. אֵיזֶה מִגְדָּל חָסֵר?', row=row, options=place('tower_%d' % gap, others, i % 2),
               correct='tower_%d' % gap, tags={others[0]: 'M-PAT-GROW'}, domain='logic',
               correct_text='כֵּן! כׇּל מִגְדָּל גָּבוֹהַּ בְּקֻבִּיָּה אַחַת.', h3='כׇּל מִגְדָּל גָּבוֹהַּ בְּקֻבִּיָּה אַחַת מֵהַמִּגְדָּל שֶׁלְּפָנָיו. עַכְשָׁו תּוֹרְכֶם.')
 
@@ -517,7 +520,7 @@ def logic():
         row = ['?' if v is None else 'tower_%d' % v for v in shown]
         repeat, plus_one = 'tower_%d' % (gap - 2), 'tower_%d' % (gap - 1)
         u.act('LOG-B-04', 'pick', prompt='הַמִּגְדָּלִים גְּדֵלִים. אֵיזֶה מִגְדָּל חָסֵר?', row=row,
-              options=place('tower_%d' % gap, [repeat, plus_one], i + 1), correct='tower_%d' % gap,
+              options=place('tower_%d' % gap, [repeat], i), correct='tower_%d' % gap,  # M11 Stage 2 (V6): the untagged +1 tower left out
               tags={repeat: 'M-PAT-GROW'}, tag_lines=two, domain='logic', check='transfer', difficulty=0.6,
               correct_text='כֵּן! כׇּל פַּעַם עוֹד שְׁתֵּי קֻבִּיּוֹת.',
               h3='כׇּל מִגְדָּל גָּבוֹהַּ בִּשְׁתֵּי קֻבִּיּוֹת מֵהַמִּגְדָּל שֶׁלְּפָנָיו. עַכְשָׁו תּוֹרְכֶם.')

@@ -15,6 +15,7 @@
     "LOG-A-06"
   ],
   "items": [
+    "log.next.animals",
     "b15.loga06.2"
   ],
   "estimatedMinutes": 4,
@@ -28,5 +29,41 @@
       }
     ]
   },
-  "partsWait": "show.log-a-04 waits: waits for the pattern-strip sprites (design-director) to sort them"
+  "parts": {
+    "show": "show.log-a-04",
+    "secondShow": {
+      "id": "show.log-a-06",
+      "before": "b15.loga06.2"
+    },
+    "recall": [
+      "b15.loga01.3"
+    ],
+    "together": [
+      {
+        "id": "log.next.animals",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.timi.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אוֹמְרִים אֶת הַסֵּדֶר בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b15.loga06.2"
+    ],
+    "handover": {
+      "vo": "vo:host.timi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חוֹשְׁבִים לְאַט. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
+  }
 }

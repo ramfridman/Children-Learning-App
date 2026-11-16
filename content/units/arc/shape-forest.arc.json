@@ -1657,15 +1657,15 @@
    "steps": [
     {
      "by": "host",
-     "item": "i1",
-     "bin": "b2",
-     "turn": "point"
+     "item": "i2",
+     "bin": "b3",
+     "turn": "corners"
     },
     {
      "by": "host",
-     "item": "i2",
-     "bin": "b3",
-     "turn": "corners",
+     "item": "i1",
+     "bin": "b2",
+     "turn": "point",
      "say": "key"
     },
     {
@@ -1707,7 +1707,7 @@
     "חָרוּט",
     "תֵּבָה"
    ],
-   "picture": "the party hat turns slowly, point up, and goes to the cone; the gift box turns to show its corners and goes to the תֵּבָה; the child puts the can, whose two circles the hand-over line names. QA round 2026-11-16 (M11-stage2 §11.4)",
+   "picture": "the party hat turns slowly, point up, and goes to the cone; the gift box turns to show its corners and goes to the תֵּבָה; the child puts the can, whose two circles the hand-over line names. QA round 2026-11-16 (M11-stage2 §11.4) Third pass (2026-11-16): the box goes first, so the opening line (\"תֵּבָה — כְּמוֹ קֻפְסָה\") is said over the box; the key line follows on the cone.",
    "status": "buildable on today's template once 2.1 lands"
   },
   {

@@ -64,7 +64,9 @@
       "col.name.pink",
       "b15.cola02.1",
       "b15.cola02.2",
-      "col.name.red.near",
+      "col.name.red.near"
+    ],
+    "use": [
       "b15.cola03.3"
     ],
     "handover": {

@@ -46,7 +46,8 @@
       {
         "id": "o2",
         "numeral": 14,
-        "label": "אַרְבַּע עֶשְׂרֵה"
+        "label": "אַרְבַּע עֶשְׂרֵה",
+        "misconception": "M-CNT-SEQ"
       },
       {
         "id": "o3",

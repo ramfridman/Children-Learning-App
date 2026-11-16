@@ -159,18 +159,18 @@
     "steps": [
       {
         "by": "host",
-        "item": "i1",
-        "bin": "b2",
+        "item": "i2",
+        "bin": "b3",
         "motion": "turn",
-        "detail": "point"
+        "detail": "corners"
       },
       {
         "by": "host",
-        "item": "i2",
-        "bin": "b3",
+        "item": "i1",
+        "bin": "b2",
         "say": "key",
         "motion": "turn",
-        "detail": "corners"
+        "detail": "point"
       },
       {
         "by": "child",

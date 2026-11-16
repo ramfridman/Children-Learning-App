@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "next.after.2",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "numbers",
@@ -38,8 +38,9 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 2,
-        "label": "שְׁתַּיִם"
+        "numeral": 1,
+        "label": "אַחַת",
+        "misconception": "M-CNT-SEQ"
       },
       {
         "id": "o2",

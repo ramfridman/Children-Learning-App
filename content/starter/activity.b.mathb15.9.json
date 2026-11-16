@@ -52,16 +52,11 @@
       },
       {
         "id": "o2",
-        "numeral": 6,
-        "label": "שֵׁשׁ"
-      },
-      {
-        "id": "o3",
         "numeral": 5,
         "label": "חָמֵשׁ"
       }
     ],
-    "correct": "o3",
+    "correct": "o2",
     "shuffle": false,
     "unsureAllowed": true
   },

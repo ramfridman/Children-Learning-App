@@ -15,6 +15,8 @@
     "NUM-C-03"
   ],
   "items": [
+    "c.numc02.18",
+    "c.numc03.1",
     "c.numc02.13",
     "c.numc02.14",
     "c.numc02.15",
@@ -24,8 +26,6 @@
     "c.numc03.22",
     "c.numc03.23",
     "c.numc02.21",
-    "c.numc02.18",
-    "c.numc03.1",
     "c.numc03.10"
   ],
   "estimatedMinutes": 6,
@@ -43,14 +43,14 @@
     "show": "show.num-c-02",
     "secondShow": {
       "id": "show.num-c-03",
-      "before": "c.numc03.21"
+      "before": "c.numc03.1"
     },
     "recall": [
       "c.numc01.1"
     ],
     "together": [
       {
-        "id": "c.numc02.13",
+        "id": "c.numc02.18",
         "lead": 0,
         "line": {
           "vo": "vo:host.nekudi.together.tap",
@@ -64,6 +64,8 @@
       }
     ],
     "alone": [
+      "c.numc03.1",
+      "c.numc02.13",
       "c.numc02.14",
       "c.numc02.15",
       "c.numc02.16",
@@ -71,9 +73,9 @@
       "c.numc03.21",
       "c.numc03.22",
       "c.numc03.23",
-      "c.numc02.21",
-      "c.numc02.18",
-      "c.numc03.1",
+      "c.numc02.21"
+    ],
+    "use": [
       "c.numc03.10"
     ],
     "handover": {

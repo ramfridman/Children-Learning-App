@@ -39,8 +39,9 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 14,
-        "label": "אַרְבַּע עֶשְׂרֵה"
+        "numeral": 13,
+        "label": "שְׁלֹשׁ עֶשְׂרֵה",
+        "misconception": "M-CNT-SEQ"
       },
       {
         "id": "o2",

@@ -17,7 +17,8 @@
     "b.logb01.1",
     "b.logb01.2",
     "b.logb01.3",
-    "b.logb01.4"
+    "b.logb01.4",
+    "b.logb01.10"
   ],
   "estimatedMinutes": 5,
   "sequence": 30,
@@ -30,5 +31,42 @@
       }
     ]
   },
-  "partsWait": "show.log-b-01 waits: show.log-b-01: a place of the row is neither given nor laid by a step (the arc gives no `scene.given` for the cells the host does not lay)"
+  "parts": {
+    "show": "show.log-b-01",
+    "recall": [
+      "b15.loga06.1"
+    ],
+    "together": [
+      {
+        "id": "b.logb01.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.timi.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אוֹמְרִים אֶת הַסֵּדֶר בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.logb01.2",
+      "b.logb01.3",
+      "b.logb01.4"
+    ],
+    "use": [
+      "b.logb01.10"
+    ],
+    "handover": {
+      "vo": "vo:host.timi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  }
 }

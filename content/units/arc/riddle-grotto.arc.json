@@ -340,11 +340,61 @@
    "skill": "LOG-A-04",
    "band": "A",
    "purpose": "show",
-   "template": null,
-   "representation": "pictorial",
+   "template": "sort_drag",
+   "representation": "concrete",
    "handOver": "last",
-   "scene": null,
-   "steps": [],
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:tick",
+      "count": 1,
+      "label": "חוֹזֵר"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:cross",
+      "count": 1,
+      "label": "לֹא חוֹזֵר"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:strip_red_blue",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:strip_mixed_balls",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:strip_cat_dog",
+      "bin": "b1"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "child",
+     "item": "i3",
+     "bin": "b1"
+    }
+   ],
    "lines": [
     {
      "role": "open",
@@ -366,10 +416,10 @@
     }
    ],
    "predict": {
-    "line": "האם זה חוזר?",
+    "line": "הַאִם זֶה חוֹזֵר?",
     "choices": [
-     "כן",
-     "לא"
+     "כֵּן",
+     "לֹא"
     ]
    },
    "reminder": {
@@ -379,8 +429,8 @@
    "teaches": [
     "חוֹזֵר"
    ],
-   "picture": "strips of tiles; Timi claps each tile; a strip that repeats goes to \"repeats\", one that does not to \"does not\"",
-   "status": "waits for the pattern-strip sprites (design-director) to sort them"
+   "picture": "pattern strips; Timi claps each tile of the red-blue strip (\"repeats\"), then of the mixed strip (\"does not\"); the child sorts the cat-dog strip",
+   "status": "buildable on the sort player of today"
   },
   {
    "id": "show.log-a-05",
@@ -471,6 +521,28 @@
      "asset:cat",
      "asset:dog",
      "asset:duck"
+    ],
+    "given": [
+     {
+      "cell": 0,
+      "face": "asset:cat"
+     },
+     {
+      "cell": 1,
+      "face": "asset:dog"
+     },
+     {
+      "cell": 2,
+      "face": "asset:cat"
+     },
+     {
+      "cell": 3,
+      "face": "asset:dog"
+     },
+     {
+      "cell": 4,
+      "face": "asset:cat"
+     }
     ]
    },
    "steps": [
@@ -507,10 +579,10 @@
     }
    ],
    "predict": {
-    "line": "מה בא אחר כך?",
+    "line": "מַה בָּא אַחַר כָּךְ?",
     "choices": [
-     "כלב",
-     "חתול"
+     "כֶּלֶב",
+     "חָתוּל"
     ]
    },
    "reminder": {
@@ -519,7 +591,7 @@
    },
    "teaches": [],
    "picture": "cat, dog, cat, dog, cat are given; Timi claps the unit and lays the dog; the child lays the cat",
-   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need) and for the given cells of step 2.2",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need)",
    "note": "the first five cells are given (step 2.2); not written into the scene"
   },
   {
@@ -536,6 +608,32 @@
     "palette": [
      "asset:ball_red",
      "asset:ball_blue"
+    ],
+    "given": [
+     {
+      "cell": 0,
+      "face": "asset:ball_red"
+     },
+     {
+      "cell": 1,
+      "face": "asset:ball_blue"
+     },
+     {
+      "cell": 2,
+      "face": "asset:ball_red"
+     },
+     {
+      "cell": 3,
+      "face": "asset:ball_red"
+     },
+     {
+      "cell": 4,
+      "face": "asset:ball_red"
+     },
+     {
+      "cell": 5,
+      "face": "asset:ball_red"
+     }
     ]
    },
    "steps": [
@@ -572,7 +670,7 @@
     }
    ],
    "predict": {
-    "line": "איפה הטעות?",
+    "line": "אֵיפֹה הַטָּעוּת?",
     "choices": []
    },
    "reminder": {
@@ -581,7 +679,7 @@
    },
    "teaches": [],
    "picture": "red, blue, red, red, red, red: Timi claps along, stops at the wrong red and swaps it for blue; the child fixes the other",
-   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need) and for the given cells of step 2.2"
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need)"
   },
   {
    "id": "show.log-a-08",
@@ -639,8 +737,11 @@
     }
    ],
    "predict": {
-    "line": "מה קרה קודם?",
-    "choices": []
+    "line": "מַה קָּרָה קֹדֶם?",
+    "choices": [
+     "בֵּיצָה",
+     "אֶפְרוֹחַ"
+    ]
    },
    "reminder": {
     "line": "key",
@@ -828,19 +929,45 @@
      "asset:star",
      "asset:apple",
      "asset:fish"
+    ],
+    "given": [
+     {
+      "cell": 0,
+      "face": "asset:star"
+     },
+     {
+      "cell": 1,
+      "face": "asset:apple"
+     },
+     {
+      "cell": 2,
+      "face": "asset:fish"
+     },
+     {
+      "cell": 3,
+      "face": "asset:star"
+     },
+     {
+      "cell": 4,
+      "face": "asset:apple"
+     },
+     {
+      "cell": 5,
+      "face": "asset:fish"
+     }
     ]
    },
    "steps": [
     {
      "by": "host",
      "cell": 6,
-     "piece": "asset:apple",
+     "piece": "asset:star",
      "say": "key"
     },
     {
      "by": "child",
      "cell": 7,
-     "piece": "asset:fish"
+     "piece": "asset:apple"
     }
    ],
    "lines": [
@@ -864,17 +991,20 @@
     }
    ],
    "predict": {
-    "line": "מה בא אחר כך?",
-    "choices": []
+    "line": "מַה בָּא אַחַר כָּךְ?",
+    "choices": [
+     "כּוֹכָב",
+     "תַּפּוּחַ",
+     "דָּג"
+    ]
    },
    "reminder": {
     "line": "key",
     "maxSeconds": 8
    },
    "teaches": [],
-   "picture": "star, apple, fish, star, apple, fish, star are given; Timi brackets the unit of three and lays the apple; the child the fish",
-   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need) and for the given cells of step 2.2",
-   "note": "given cells (step 2.2)"
+   "picture": "star, apple, fish, star, apple, fish are given; Timi brackets the unit of three and lays the star; the child the apple",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need)"
   },
   {
    "id": "show.log-b-02",
@@ -977,7 +1107,7 @@
     }
    ],
    "predict": {
-    "line": "כמה קוביות יהיו במגדל הבא?",
+    "line": "כַּמָּה קֻבִּיּוֹת יִהְיוּ בַּמִּגְדָּל הַבָּא?",
     "choices": []
    },
    "reminder": {
@@ -1025,11 +1155,6 @@
      },
      {
       "id": "i3",
-      "sprite": "asset:shape_triangle_red",
-      "bin": "b1"
-     },
-     {
-      "id": "i4",
       "sprite": "asset:shape_square_blue",
       "bin": "b2"
      }
@@ -1044,17 +1169,12 @@
     {
      "by": "host",
      "item": "i2",
-     "bin": "b2"
-    },
-    {
-     "by": "host",
-     "item": "i3",
-     "bin": "b1",
+     "bin": "b2",
      "say": "key"
     },
     {
      "by": "child",
-     "item": "i4",
+     "item": "i3",
      "bin": "b2"
     }
    ],
@@ -1062,7 +1182,7 @@
     {
      "role": "open",
      "vo": "vo:host.timi.show.log_b_06.open",
-     "text": "אֵיךְ מִיַּנְתִּי? מִסְתַּכְּלִים עַל הַדֻּגְמָאוֹת.",
+     "text": "אֵיךְ מִיַּנְתִּי?",
      "review": "needs-editor"
     },
     {
@@ -1079,10 +1199,10 @@
     }
    ],
    "predict": {
-    "line": "איך מיינתי?",
+    "line": "אֵיךְ מִיַּנְתִּי?",
     "choices": [
-     "לפי הצבע",
-     "לפי הצורה"
+     "לְפִי הַצֶּבַע",
+     "לְפִי הַצּוּרָה"
     ]
    },
    "reminder": {
@@ -1442,14 +1562,13 @@
    "alone": [
     "log.same.cat",
     "log.same.duck",
+    "log.odd.ball",
     "log.odd.colour",
     "log.odd.animal",
-    "log.odd.thing",
-    "log.odd.ball"
+    "log.odd.thing"
    ],
-   "use": [],
-   "borrowed": [
-    "log.odd.ball"
+   "use": [
+    "b15.loga01.3"
    ],
    "poolRungs": [
     0,
@@ -1469,17 +1588,14 @@
    "together": [
     {
      "id": "log.sort.colour",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
     "log.sort.balloon",
-    "log.sort.animal",
-    "b15.loga03.1"
+    "log.sort.animal"
    ],
-   "use": [],
-   "borrowed": [
+   "use": [
     "b15.loga03.1"
    ],
    "poolRungs": [
@@ -1506,18 +1622,21 @@
    "together": [
     {
      "id": "log.pat.yes.colours",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
     "log.pat.no.mixed",
     "log.pat.yes.animals",
     "log.next.colours",
-    "log.next.animals"
+    "log.next.animals",
+    "b15.loga04.1"
    ],
-   "use": [],
+   "use": [
+    "b15.loga06.1"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -1540,18 +1659,21 @@
    "together": [
     {
      "id": "log.next.balloons",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
     "log.next.stars",
     "log.fix.colours",
     "log.fix.animals",
-    "log.fix.balloons"
+    "log.fix.balloons",
+    "b15.loga06.1"
    ],
-   "use": [],
+   "use": [
+    "b15.loga07.1"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -1574,8 +1696,7 @@
    "together": [
     {
      "id": "log.story.plant.first",
-     "lead": 0,
-     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -1604,8 +1725,7 @@
    "together": [
     {
      "id": "log.size.last",
-     "lead": 0,
-     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -1643,9 +1763,6 @@
    "use": [
     "b15.loga03.2"
    ],
-   "borrowed": [
-    "log.sort.animal"
-   ],
    "poolRungs": [
     0,
     1
@@ -1664,8 +1781,7 @@
    "together": [
     {
      "id": "log.copy.colours",
-     "lead": 0,
-     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -1710,11 +1826,9 @@
     "log.odd.fruit",
     "b15.loga01.1",
     "b15.loga01.2",
-    "log.odd.bird",
-    "b15.loga01.3"
+    "log.odd.bird"
    ],
-   "use": [],
-   "borrowed": [
+   "use": [
     "b15.loga01.3"
    ],
    "poolRungs": [
@@ -1741,11 +1855,11 @@
    "together": [
     {
      "id": "log.pat.yes.green",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
+    "log.next.animals",
     "log.pat.no.things",
     "log.pat.yes.fish",
     "log.next.pets",
@@ -1757,6 +1871,7 @@
     "b15.loga06.1"
    ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -1773,8 +1888,7 @@
    "together": [
     {
      "id": "log.fix.balls",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -1786,6 +1900,7 @@
     "b15.loga07.2"
    ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -1808,8 +1923,7 @@
    "together": [
     {
      "id": "log.story.weather.last",
-     "lead": 0,
-     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -1840,8 +1954,7 @@
    "together": [
     {
      "id": "log.size.stars",
-     "lead": 0,
-     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -1873,25 +1986,20 @@
    },
    "together": [
     {
-     "id": "b15.loga01.3",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "id": "b15.loga01.1",
+     "lead": 1
     }
    ],
    "alone": [
+    "log.odd.ball",
+    "b15.loga01.3",
     "b15.loga01.4",
     "b15.loga01.5",
     "b15.loga01.6",
-    "b15.loga02.1",
-    "b15.loga01.1",
-    "log.odd.ball"
+    "b15.loga02.1"
    ],
    "use": [
     "b15.loga02.2"
-   ],
-   "borrowed": [
-    "b15.loga01.1",
-    "log.odd.ball"
    ],
    "poolRungs": [
     0,
@@ -1914,12 +2022,18 @@
     "kind": "reminder",
     "before": "the first item of LOG-A-06"
    },
-   "together": [],
+   "together": [
+    {
+     "id": "log.next.animals",
+     "lead": 1
+    }
+   ],
    "alone": [
     "b15.loga06.2"
    ],
    "use": [],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -1941,19 +2055,15 @@
    },
    "together": [
     {
-     "id": "b15.loga09.1",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "id": "log.pair.bowl",
+     "lead": 1
     }
    ],
    "alone": [
-    "b15.loga09.2",
-    "log.pair.bowl"
+    "b15.loga09.1",
+    "b15.loga09.2"
    ],
    "use": [],
-   "borrowed": [
-    "log.pair.bowl"
-   ],
    "poolRungs": [
     0,
     1
@@ -1972,8 +2082,7 @@
    "together": [
     {
      "id": "b.logb01.1",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -1981,8 +2090,11 @@
     "b.logb01.3",
     "b.logb01.4"
    ],
-   "use": [],
+   "use": [
+    "b.logb01.10"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -1999,8 +2111,7 @@
    "together": [
     {
      "id": "b.logb01.5",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -2013,6 +2124,7 @@
     "b.logb01.10"
    ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -2023,14 +2135,13 @@
     "LOG-B-02"
    ],
    "recall": [
-    "b.logb01.1"
+    "b.logb01.10"
    ],
    "show": "show.log-b-02",
    "together": [
     {
      "id": "b.logb02.1",
-     "lead": 0,
-     "note": "spot_error has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -2053,14 +2164,13 @@
     "LOG-B-04"
    ],
    "recall": [
-    "b.logb01.1"
+    "b.logb01.10"
    ],
    "show": "show.log-b-04",
    "together": [
     {
      "id": "b.logb04.1",
-     "lead": 0,
-     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -2185,8 +2295,7 @@
    "together": [
     {
      "id": "b.logb11.1",
-     "lead": 0,
-     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [

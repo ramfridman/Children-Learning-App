@@ -39,22 +39,17 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 41,
-        "label": "אַרְבָּעִים וְאַחַת",
-        "misconception": "M-NUM-REV"
+        "numeral": 14,
+        "label": "אַרְבַּע עֶשְׂרֵה"
       },
       {
         "id": "o2",
-        "numeral": 15,
-        "label": "חֲמֵשׁ עֶשְׂרֵה"
-      },
-      {
-        "id": "o3",
-        "numeral": 14,
-        "label": "אַרְבַּע עֶשְׂרֵה"
+        "numeral": 41,
+        "label": "אַרְבָּעִים וְאַחַת",
+        "misconception": "M-NUM-REV"
       }
     ],
-    "correct": "o3",
+    "correct": "o1",
     "shuffle": false,
     "unsureAllowed": true
   },

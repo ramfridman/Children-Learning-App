@@ -15,9 +15,9 @@
   ],
   "items": [
     "b15.cola05.1",
-    "b15.cola05.2",
     "col.world.apple.red",
-    "col.world.banana.ripe"
+    "col.world.banana.ripe",
+    "b15.cola05.2"
   ],
   "estimatedMinutes": 2,
   "sequence": 9,
@@ -51,9 +51,11 @@
       }
     ],
     "alone": [
-      "b15.cola05.2",
       "col.world.apple.red",
       "col.world.banana.ripe"
+    ],
+    "use": [
+      "b15.cola05.2"
     ],
     "handover": {
       "vo": "vo:host.goni.handover.2",

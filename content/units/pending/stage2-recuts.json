@@ -1,7 +1,7 @@
 {
  "schema": "stage2-pending-recuts/v0",
  "review": "needs-editor",
- "status": "M11 Stage 2, second content pass (curriculum-expert, 2026-11-16). Data only: no generator reads this file yet. `patch` holds the second honest tag of Band B taps that stay (V6), merged into the item the Band B generator makes; it needs only a loader. `replace` holds the 29 swaps that waited for a template feature (step 2.2: prefilled frames and given cells; LOG-A-04: the pattern-strip sprites). Each keeps its id, is revision 2, and says in `waitsFor` what it needs. Hebrew is a pointed draft (the pack's own pointing where the words already exist).",
+ "status": "M11 Stage 2, second content pass (curriculum-expert, 2026-11-16). Data only: no generator reads this file yet. `patch` holds the second honest tag of Band B taps that stay (V6), merged into the item the Band B generator makes; it needs only a loader. `replace` holds the 29 swaps that waited for a template feature (step 2.2: prefilled frames and given cells; LOG-A-04: the pattern-strip sprites). Each keeps its id, is revision 2, and says in `waitsFor` what it needs. Hebrew is a pointed draft (the pack's own pointing where the words already exist). Third pass (2026-11-16): c.numc06.13 is patched to a line from 20 to 50 (30 was the middle of 20 to 40, so it had no mirror tick).",
  "spec": "docs/milestones/M11-stage2.md §2.2 (step 2.2), §4.2, §11.5",
  "howToRead": [
   "patch: {activity id: fields}. The fields replace the generated item's own (tools/band_b.py makes the item as today, then `item.update(patch)`), so `options` and `tags` are given whole.",
@@ -12,32 +12,82 @@
  ],
  "patch": {
   "b.colb03.4": {
-   "options": ["shade_green_1", "shade_red_3", "shade_blue_2"],
-   "tags": {"shade_red_3": "M-COL-SHADE", "shade_blue_2": "M-COL-NAME"}
+   "options": [
+    "shade_green_1",
+    "shade_red_3",
+    "shade_blue_2"
+   ],
+   "tags": {
+    "shade_red_3": "M-COL-SHADE",
+    "shade_blue_2": "M-COL-NAME"
+   }
   },
   "b.colb03.7": {
-   "options": ["shade_purple_3", "shade_green_1", "shade_blue_2"],
-   "tags": {"shade_green_1": "M-COL-SHADE", "shade_blue_2": "M-COL-NAME"}
+   "options": [
+    "shade_purple_3",
+    "shade_green_1",
+    "shade_blue_2"
+   ],
+   "tags": {
+    "shade_green_1": "M-COL-SHADE",
+    "shade_blue_2": "M-COL-NAME"
+   }
   },
   "b.colb03.8": {
-   "tags": {"shade_blue_3": "M-COL-SHADE", "shade_blue_2": "M-COL-NAME"}
+   "tags": {
+    "shade_blue_3": "M-COL-SHADE",
+    "shade_blue_2": "M-COL-NAME"
+   }
   },
   "x.mathb19.7": {
-   "tags": {"n:5": "M-COMP-DIFF", "n:3": "M-COMP-DIFF"}
+   "tags": {
+    "n:5": "M-COMP-DIFF",
+    "n:3": "M-COMP-DIFF"
+   }
   },
   "x.mathb19.8": {
-   "options": ["n:6", "n:4", "n:2"],
-   "tags": {"n:6": "M-COMP-DIFF", "n:2": "M-COMP-DIFF"}
+   "options": [
+    "n:6",
+    "n:4",
+    "n:2"
+   ],
+   "tags": {
+    "n:6": "M-COMP-DIFF",
+    "n:2": "M-COMP-DIFF"
+   }
   },
   "x.mathb19.9": {
-   "tags": {"n:7": "M-COMP-DIFF", "n:4": "M-COMP-DIFF"}
+   "tags": {
+    "n:7": "M-COMP-DIFF",
+    "n:4": "M-COMP-DIFF"
+   }
+  },
+  "c.numc06.13": {
+   "to": 50,
+   "labels": [
+    20,
+    50
+   ]
   }
  },
  "replace": {
   "c.numb09.9": {
-   "kind": "give", "skill": "NUM-B-09", "band": "B", "waitsFor": "step 2.2 (give_n prefilled frame)",
-   "obj": "apple", "n": 3, "prefilled": 7, "source": 10, "frame": true, "variantGroup": "fill-frame", "check": "practice",
-   "classifiers": {"took_all": "M-PART-MISS", "took_more": "M-CNT-DOUBLE", "took_fewer": "M-CNT-SKIP"},
+   "kind": "give",
+   "skill": "NUM-B-09",
+   "band": "B",
+   "waitsFor": "step 2.2 (give_n prefilled frame)",
+   "obj": "apple",
+   "n": 3,
+   "prefilled": 7,
+   "source": 10,
+   "frame": true,
+   "variantGroup": "fill-frame",
+   "check": "practice",
+   "classifiers": {
+    "took_all": "M-PART-MISS",
+    "took_more": "M-CNT-DOUBLE",
+    "took_fewer": "M-CNT-SKIP"
+   },
    "prompt": "בַּמִּסְגֶּרֶת כְּבָר יֵשׁ שִׁבְעָה תַּפּוּחִים. מַשְׁלִימִים עַד עֶשֶׂר.",
    "h1": "שָׂמִים תַּפּוּחַ בְּכׇל מִשְׁבֶּצֶת רֵיקָה, וְסוֹפְרִים.",
    "h2": "סוֹפְרִים אֶת הַמִּשְׁבָּצוֹת הָרֵיקוֹת.",
@@ -45,9 +95,22 @@
    "correct_text": "כֵּן! שֶׁבַע וְעוֹד שָׁלוֹשׁ שָׁוֶה עֶשֶׂר."
   },
   "c.numb09.10": {
-   "kind": "give", "skill": "NUM-B-09", "band": "B", "waitsFor": "step 2.2 (give_n prefilled frame)",
-   "obj": "star", "n": 4, "prefilled": 6, "source": 10, "frame": true, "variantGroup": "fill-frame", "check": "practice",
-   "classifiers": {"took_all": "M-PART-MISS", "took_more": "M-CNT-DOUBLE", "took_fewer": "M-CNT-SKIP"},
+   "kind": "give",
+   "skill": "NUM-B-09",
+   "band": "B",
+   "waitsFor": "step 2.2 (give_n prefilled frame)",
+   "obj": "star",
+   "n": 4,
+   "prefilled": 6,
+   "source": 10,
+   "frame": true,
+   "variantGroup": "fill-frame",
+   "check": "practice",
+   "classifiers": {
+    "took_all": "M-PART-MISS",
+    "took_more": "M-CNT-DOUBLE",
+    "took_fewer": "M-CNT-SKIP"
+   },
    "prompt": "בַּמִּסְגֶּרֶת כְּבָר יֵשׁ שִׁשָּׁה כּוֹכָבִים. מַשְׁלִימִים עַד עֶשֶׂר.",
    "h1": "שָׂמִים כּוֹכָב בְּכׇל מִשְׁבֶּצֶת רֵיקָה, וְסוֹפְרִים.",
    "h2": "סוֹפְרִים אֶת הַמִּשְׁבָּצוֹת הָרֵיקוֹת.",
@@ -55,9 +118,22 @@
    "correct_text": "כֵּן! שֵׁשׁ וְעוֹד אַרְבַּע שָׁוֶה עֶשֶׂר."
   },
   "c.numb09.11": {
-   "kind": "give", "skill": "NUM-B-09", "band": "B", "waitsFor": "step 2.2 (give_n prefilled frame)",
-   "obj": "fish", "n": 2, "prefilled": 8, "source": 10, "frame": true, "variantGroup": "fill-frame", "check": "practice",
-   "classifiers": {"took_all": "M-PART-MISS", "took_more": "M-CNT-DOUBLE", "took_fewer": "M-CNT-SKIP"},
+   "kind": "give",
+   "skill": "NUM-B-09",
+   "band": "B",
+   "waitsFor": "step 2.2 (give_n prefilled frame)",
+   "obj": "fish",
+   "n": 2,
+   "prefilled": 8,
+   "source": 10,
+   "frame": true,
+   "variantGroup": "fill-frame",
+   "check": "practice",
+   "classifiers": {
+    "took_all": "M-PART-MISS",
+    "took_more": "M-CNT-DOUBLE",
+    "took_fewer": "M-CNT-SKIP"
+   },
    "prompt": "בַּמִּסְגֶּרֶת כְּבָר יֵשׁ שְׁמוֹנָה דָּגִים. מַשְׁלִימִים עַד עֶשֶׂר.",
    "h1": "שָׂמִים דָּג בְּכׇל מִשְׁבֶּצֶת רֵיקָה, וְסוֹפְרִים.",
    "h2": "סוֹפְרִים אֶת הַמִּשְׁבָּצוֹת הָרֵיקוֹת.",
@@ -65,9 +141,21 @@
    "correct_text": "כֵּן! שְׁמוֹנֶה וְעוֹד שְׁתַּיִם שָׁוֶה עֶשֶׂר."
   },
   "b.numb14.1": {
-   "kind": "give", "skill": "NUM-B-14", "waitsFor": "step 2.2 (give_n prefilled frame)",
-   "obj": "apple", "n": 3, "prefilled": 2, "source": 6, "frame": true, "variantGroup": "fill-frame", "check": "practice",
-   "classifiers": {"took_more": "M-PART-MISS", "took_fewer": "M-CNT-SKIP", "took_all": "M-CNT-CARD"},
+   "kind": "give",
+   "skill": "NUM-B-14",
+   "waitsFor": "step 2.2 (give_n prefilled frame)",
+   "obj": "apple",
+   "n": 3,
+   "prefilled": 2,
+   "source": 6,
+   "frame": true,
+   "variantGroup": "fill-frame",
+   "check": "practice",
+   "classifiers": {
+    "took_more": "M-PART-MISS",
+    "took_fewer": "M-CNT-SKIP",
+    "took_all": "M-CNT-CARD"
+   },
    "prompt": "יֵשׁ חֲמִשָּׁה תַּפּוּחִים בְּסַךְ הַכֹּל. שְׁנֵי תַּפּוּחִים כְּבָר בַּמִּסְגֶּרֶת. שָׂמִים אֶת הַשְּׁאָר.",
    "h1": "סוֹפְרִים מִשְּׁתַּיִם וּמַמְשִׁיכִים עַד חָמֵשׁ.",
    "h2": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ.",
@@ -75,9 +163,21 @@
    "correct_text": "שָׁלוֹשׁ! שְׁתַּיִם וְעוֹד שָׁלוֹשׁ הֵם חָמֵשׁ."
   },
   "b.numb14.2": {
-   "kind": "give", "skill": "NUM-B-14", "waitsFor": "step 2.2 (give_n prefilled frame)",
-   "obj": "star", "n": 2, "prefilled": 4, "source": 7, "frame": true, "variantGroup": "fill-frame", "check": "practice",
-   "classifiers": {"took_more": "M-PART-MISS", "took_fewer": "M-CNT-SKIP", "took_all": "M-CNT-CARD"},
+   "kind": "give",
+   "skill": "NUM-B-14",
+   "waitsFor": "step 2.2 (give_n prefilled frame)",
+   "obj": "star",
+   "n": 2,
+   "prefilled": 4,
+   "source": 7,
+   "frame": true,
+   "variantGroup": "fill-frame",
+   "check": "practice",
+   "classifiers": {
+    "took_more": "M-PART-MISS",
+    "took_fewer": "M-CNT-SKIP",
+    "took_all": "M-CNT-CARD"
+   },
    "prompt": "יֵשׁ שִׁשָּׁה כּוֹכָבִים בְּסַךְ הַכֹּל. אַרְבָּעָה כּוֹכָבִים כְּבָר בַּמִּסְגֶּרֶת. שָׂמִים אֶת הַשְּׁאָר.",
    "h1": "סוֹפְרִים מֵאַרְבַּע וּמַמְשִׁיכִים עַד שֵׁשׁ.",
    "h2": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: חָמֵשׁ, שֵׁשׁ.",
@@ -85,9 +185,21 @@
    "correct_text": "שְׁתַּיִם! אַרְבַּע וְעוֹד שְׁתַּיִם הֵם שֵׁשׁ."
   },
   "b.numb14.3": {
-   "kind": "give", "skill": "NUM-B-14", "waitsFor": "step 2.2 (give_n prefilled frame)",
-   "obj": "fish", "n": 4, "prefilled": 3, "source": 8, "frame": true, "variantGroup": "fill-frame", "check": "practice",
-   "classifiers": {"took_more": "M-PART-MISS", "took_fewer": "M-CNT-SKIP", "took_all": "M-CNT-CARD"},
+   "kind": "give",
+   "skill": "NUM-B-14",
+   "waitsFor": "step 2.2 (give_n prefilled frame)",
+   "obj": "fish",
+   "n": 4,
+   "prefilled": 3,
+   "source": 8,
+   "frame": true,
+   "variantGroup": "fill-frame",
+   "check": "practice",
+   "classifiers": {
+    "took_more": "M-PART-MISS",
+    "took_fewer": "M-CNT-SKIP",
+    "took_all": "M-CNT-CARD"
+   },
    "prompt": "יֵשׁ שִׁבְעָה דָּגִים בְּסַךְ הַכֹּל. שְׁלוֹשָׁה דָּגִים כְּבָר בַּמִּסְגֶּרֶת. שָׂמִים אֶת הַשְּׁאָר.",
    "h1": "סוֹפְרִים מִשָּׁלוֹשׁ וּמַמְשִׁיכִים עַד שֶׁבַע.",
    "h2": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע.",
@@ -95,9 +207,21 @@
    "correct_text": "אַרְבַּע! שָׁלוֹשׁ וְעוֹד אַרְבַּע הֵם שֶׁבַע."
   },
   "b.numb14.4": {
-   "kind": "give", "skill": "NUM-B-14", "waitsFor": "step 2.2 (give_n prefilled frame)",
-   "obj": "duck", "n": 3, "prefilled": 5, "source": 9, "frame": true, "variantGroup": "fill-frame", "check": "practice",
-   "classifiers": {"took_more": "M-PART-MISS", "took_fewer": "M-CNT-SKIP", "took_all": "M-CNT-CARD"},
+   "kind": "give",
+   "skill": "NUM-B-14",
+   "waitsFor": "step 2.2 (give_n prefilled frame)",
+   "obj": "duck",
+   "n": 3,
+   "prefilled": 5,
+   "source": 9,
+   "frame": true,
+   "variantGroup": "fill-frame",
+   "check": "practice",
+   "classifiers": {
+    "took_more": "M-PART-MISS",
+    "took_fewer": "M-CNT-SKIP",
+    "took_all": "M-CNT-CARD"
+   },
    "prompt": "יֵשׁ שְׁמוֹנָה בַּרְוָזִים בְּסַךְ הַכֹּל. חֲמִשָּׁה בַּרְוָזִים כְּבָר בַּמִּסְגֶּרֶת. שָׂמִים אֶת הַשְּׁאָר.",
    "h1": "סוֹפְרִים מֵחָמֵשׁ וּמַמְשִׁיכִים עַד שְׁמוֹנֶה.",
    "h2": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה.",
@@ -105,9 +229,21 @@
    "correct_text": "שָׁלוֹשׁ! חָמֵשׁ וְעוֹד שָׁלוֹשׁ הֵם שְׁמוֹנֶה."
   },
   "b.mathb06.1": {
-   "kind": "give", "skill": "MATH-B-06", "waitsFor": "step 2.2 (give_n prefilled frame)",
-   "obj": "apple", "n": 5, "prefilled": 5, "source": 10, "frame": true, "variantGroup": "fill-frame", "check": "practice",
-   "classifiers": {"took_all": "M-PART-MISS", "took_more": "M-CNT-DOUBLE", "took_fewer": "M-CNT-SKIP"},
+   "kind": "give",
+   "skill": "MATH-B-06",
+   "waitsFor": "step 2.2 (give_n prefilled frame)",
+   "obj": "apple",
+   "n": 5,
+   "prefilled": 5,
+   "source": 10,
+   "frame": true,
+   "variantGroup": "fill-frame",
+   "check": "practice",
+   "classifiers": {
+    "took_all": "M-PART-MISS",
+    "took_more": "M-CNT-DOUBLE",
+    "took_fewer": "M-CNT-SKIP"
+   },
    "prompt": "יֵשׁ חֲמִשָּׁה תַּפּוּחִים בַּמִּסְגֶּרֶת. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?",
    "h1": "שָׂמִים תַּפּוּחַ בְּכׇל מִשְׁבֶּצֶת רֵיקָה, וְסוֹפְרִים.",
    "h2": "סוֹפְרִים אֶת הַמִּשְׁבָּצוֹת הָרֵיקוֹת.",
@@ -115,9 +251,21 @@
    "correct_text": "כֵּן! חָמֵשׁ וְעוֹד חָמֵשׁ שָׁוֶה עֶשֶׂר."
   },
   "b.mathb06.2": {
-   "kind": "give", "skill": "MATH-B-06", "waitsFor": "step 2.2 (give_n prefilled frame)",
-   "obj": "star", "n": 3, "prefilled": 7, "source": 10, "frame": true, "variantGroup": "fill-frame", "check": "practice",
-   "classifiers": {"took_all": "M-PART-MISS", "took_more": "M-CNT-DOUBLE", "took_fewer": "M-CNT-SKIP"},
+   "kind": "give",
+   "skill": "MATH-B-06",
+   "waitsFor": "step 2.2 (give_n prefilled frame)",
+   "obj": "star",
+   "n": 3,
+   "prefilled": 7,
+   "source": 10,
+   "frame": true,
+   "variantGroup": "fill-frame",
+   "check": "practice",
+   "classifiers": {
+    "took_all": "M-PART-MISS",
+    "took_more": "M-CNT-DOUBLE",
+    "took_fewer": "M-CNT-SKIP"
+   },
    "prompt": "יֵשׁ שִׁבְעָה כּוֹכָבִים בַּמִּסְגֶּרֶת. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?",
    "h1": "שָׂמִים כּוֹכָב בְּכׇל מִשְׁבֶּצֶת רֵיקָה, וְסוֹפְרִים.",
    "h2": "סוֹפְרִים אֶת הַמִּשְׁבָּצוֹת הָרֵיקוֹת.",
@@ -125,9 +273,21 @@
    "correct_text": "כֵּן! שֶׁבַע וְעוֹד שָׁלוֹשׁ שָׁוֶה עֶשֶׂר."
   },
   "b.mathb06.3": {
-   "kind": "give", "skill": "MATH-B-06", "waitsFor": "step 2.2 (give_n prefilled frame)",
-   "obj": "fish", "n": 2, "prefilled": 8, "source": 10, "frame": true, "variantGroup": "fill-frame", "check": "practice",
-   "classifiers": {"took_all": "M-PART-MISS", "took_more": "M-CNT-DOUBLE", "took_fewer": "M-CNT-SKIP"},
+   "kind": "give",
+   "skill": "MATH-B-06",
+   "waitsFor": "step 2.2 (give_n prefilled frame)",
+   "obj": "fish",
+   "n": 2,
+   "prefilled": 8,
+   "source": 10,
+   "frame": true,
+   "variantGroup": "fill-frame",
+   "check": "practice",
+   "classifiers": {
+    "took_all": "M-PART-MISS",
+    "took_more": "M-CNT-DOUBLE",
+    "took_fewer": "M-CNT-SKIP"
+   },
    "prompt": "יֵשׁ שְׁמוֹנָה דָּגִים בַּמִּסְגֶּרֶת. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?",
    "h1": "שָׂמִים דָּג בְּכׇל מִשְׁבֶּצֶת רֵיקָה, וְסוֹפְרִים.",
    "h2": "סוֹפְרִים אֶת הַמִּשְׁבָּצוֹת הָרֵיקוֹת.",
@@ -135,9 +295,21 @@
    "correct_text": "כֵּן! שְׁמוֹנֶה וְעוֹד שְׁתַּיִם שָׁוֶה עֶשֶׂר."
   },
   "b.mathb06.4": {
-   "kind": "give", "skill": "MATH-B-06", "waitsFor": "step 2.2 (give_n prefilled frame)",
-   "obj": "duck", "n": 4, "prefilled": 6, "source": 10, "frame": true, "variantGroup": "fill-frame", "check": "practice",
-   "classifiers": {"took_all": "M-PART-MISS", "took_more": "M-CNT-DOUBLE", "took_fewer": "M-CNT-SKIP"},
+   "kind": "give",
+   "skill": "MATH-B-06",
+   "waitsFor": "step 2.2 (give_n prefilled frame)",
+   "obj": "duck",
+   "n": 4,
+   "prefilled": 6,
+   "source": 10,
+   "frame": true,
+   "variantGroup": "fill-frame",
+   "check": "practice",
+   "classifiers": {
+    "took_all": "M-PART-MISS",
+    "took_more": "M-CNT-DOUBLE",
+    "took_fewer": "M-CNT-SKIP"
+   },
    "prompt": "יֵשׁ שִׁשָּׁה בַּרְוָזִים בַּמִּסְגֶּרֶת. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?",
    "h1": "שָׂמִים בַּרְוָז בְּכׇל מִשְׁבֶּצֶת רֵיקָה, וְסוֹפְרִים.",
    "h2": "סוֹפְרִים אֶת הַמִּשְׁבָּצוֹת הָרֵיקוֹת.",
@@ -145,9 +317,21 @@
    "correct_text": "כֵּן! שֵׁשׁ וְעוֹד אַרְבַּע שָׁוֶה עֶשֶׂר."
   },
   "b.mathb06.6": {
-   "kind": "give", "skill": "MATH-B-06", "waitsFor": "step 2.2 (give_n prefilled frame)",
-   "obj": "bird", "n": 6, "prefilled": 4, "source": 10, "frame": true, "variantGroup": "fill-frame", "check": "practice",
-   "classifiers": {"took_all": "M-PART-MISS", "took_more": "M-CNT-DOUBLE", "took_fewer": "M-CNT-SKIP"},
+   "kind": "give",
+   "skill": "MATH-B-06",
+   "waitsFor": "step 2.2 (give_n prefilled frame)",
+   "obj": "bird",
+   "n": 6,
+   "prefilled": 4,
+   "source": 10,
+   "frame": true,
+   "variantGroup": "fill-frame",
+   "check": "practice",
+   "classifiers": {
+    "took_all": "M-PART-MISS",
+    "took_more": "M-CNT-DOUBLE",
+    "took_fewer": "M-CNT-SKIP"
+   },
    "prompt": "יֵשׁ אַרְבַּע צִפֳּרִים בַּמִּסְגֶּרֶת. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?",
    "h1": "שָׂמִים צִפּוֹר בְּכׇל מִשְׁבֶּצֶת רֵיקָה, וְסוֹפְרִים.",
    "h2": "סוֹפְרִים אֶת הַמִּשְׁבָּצוֹת הָרֵיקוֹת.",
@@ -155,150 +339,612 @@
    "correct_text": "כֵּן! אַרְבַּע וְעוֹד שֵׁשׁ שָׁוֶה עֶשֶׂר."
   },
   "log.next.colours": {
-   "kind": "build", "skill": "LOG-A-06", "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
-   "sequence": ["ball_red", "ball_blue", "ball_red", "ball_blue", "ball_red", "ball_blue", "ball_red"],
-   "given": ["ball_red", "ball_blue", "ball_red", "ball_blue", "ball_red", null, null],
-   "palette": ["ball_red", "ball_blue", "ball_green"], "tag": "M-PAT-NEXT", "palette_tags": {"ball_green": "M-PAT-UNIT"},
+   "kind": "build",
+   "skill": "LOG-A-06",
+   "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
+   "sequence": [
+    "ball_red",
+    "ball_blue",
+    "ball_red",
+    "ball_blue",
+    "ball_red",
+    "ball_blue",
+    "ball_red"
+   ],
+   "given": [
+    "ball_red",
+    "ball_blue",
+    "ball_red",
+    "ball_blue",
+    "ball_red",
+    null,
+    null
+   ],
+   "palette": [
+    "ball_red",
+    "ball_blue",
+    "ball_green"
+   ],
+   "tag": "M-PAT-NEXT",
+   "palette_tags": {
+    "ball_green": "M-PAT-UNIT"
+   },
    "prompt": "מַה בָּא אַחַר כָּךְ? מַמְשִׁיכִים אֶת הַסֵּדֶר.",
    "h3": "אָדֹם, כָּחֹל, אָדֹם, כָּחֹל, אָדֹם — וְאָז כָּחֹל, וְאָז אָדֹם. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! אָדֹם, כָּחֹל, אָדֹם, כָּחֹל, אָדֹם, כָּחֹל, אָדֹם."
   },
   "log.next.animals": {
-   "kind": "build", "skill": "LOG-A-06", "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
-   "sequence": ["cat", "dog", "cat", "dog", "cat", "dog", "cat"],
-   "given": ["cat", "dog", "cat", "dog", "cat", null, null],
-   "palette": ["dog", "cat", "duck"], "tag": "M-PAT-NEXT", "palette_tags": {"duck": "M-PAT-UNIT"},
+   "kind": "build",
+   "skill": "LOG-A-06",
+   "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
+   "sequence": [
+    "cat",
+    "dog",
+    "cat",
+    "dog",
+    "cat",
+    "dog",
+    "cat"
+   ],
+   "given": [
+    "cat",
+    "dog",
+    "cat",
+    "dog",
+    "cat",
+    null,
+    null
+   ],
+   "palette": [
+    "dog",
+    "cat",
+    "duck"
+   ],
+   "tag": "M-PAT-NEXT",
+   "palette_tags": {
+    "duck": "M-PAT-UNIT"
+   },
    "prompt": "מַה בָּא אַחַר כָּךְ? מַמְשִׁיכִים אֶת הַסֵּדֶר.",
    "h3": "חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב, חָתוּל — וְאָז כֶּלֶב, וְאָז חָתוּל. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב, חָתוּל."
   },
   "log.next.balloons": {
-   "kind": "build", "skill": "LOG-A-06", "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
-   "sequence": ["balloon_yellow", "balloon_green", "balloon_yellow", "balloon_green", "balloon_yellow", "balloon_green"],
-   "given": ["balloon_yellow", "balloon_green", "balloon_yellow", "balloon_green", null, null],
-   "palette": ["balloon_green", "balloon_yellow", "balloon_red"], "tag": "M-PAT-NEXT", "palette_tags": {"balloon_red": "M-PAT-UNIT"},
+   "kind": "build",
+   "skill": "LOG-A-06",
+   "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
+   "sequence": [
+    "balloon_yellow",
+    "balloon_green",
+    "balloon_yellow",
+    "balloon_green",
+    "balloon_yellow",
+    "balloon_green"
+   ],
+   "given": [
+    "balloon_yellow",
+    "balloon_green",
+    "balloon_yellow",
+    "balloon_green",
+    null,
+    null
+   ],
+   "palette": [
+    "balloon_green",
+    "balloon_yellow",
+    "balloon_red"
+   ],
+   "tag": "M-PAT-NEXT",
+   "palette_tags": {
+    "balloon_red": "M-PAT-UNIT"
+   },
    "prompt": "מַה בָּא אַחַר כָּךְ? מַמְשִׁיכִים אֶת הַסֵּדֶר.",
    "h3": "צָהֹב, יָרֹק, צָהֹב, יָרֹק — וְאָז צָהֹב, וְאָז יָרֹק. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! צָהֹב, יָרֹק, צָהֹב, יָרֹק, צָהֹב, יָרֹק."
   },
   "log.next.stars": {
-   "kind": "build", "skill": "LOG-A-06", "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
-   "sequence": ["star", "apple", "star", "apple", "star", "apple", "star"],
-   "given": ["star", "apple", "star", "apple", "star", null, null],
-   "palette": ["star", "fish", "apple"], "tag": "M-PAT-NEXT", "palette_tags": {"fish": "M-PAT-UNIT"},
+   "kind": "build",
+   "skill": "LOG-A-06",
+   "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
+   "sequence": [
+    "star",
+    "apple",
+    "star",
+    "apple",
+    "star",
+    "apple",
+    "star"
+   ],
+   "given": [
+    "star",
+    "apple",
+    "star",
+    "apple",
+    "star",
+    null,
+    null
+   ],
+   "palette": [
+    "star",
+    "fish",
+    "apple"
+   ],
+   "tag": "M-PAT-NEXT",
+   "palette_tags": {
+    "fish": "M-PAT-UNIT"
+   },
    "prompt": "מַה בָּא אַחַר כָּךְ? מַמְשִׁיכִים אֶת הַסֵּדֶר.",
    "h3": "כּוֹכָב, תַּפּוּחַ, כּוֹכָב, תַּפּוּחַ, כּוֹכָב — וְאָז תַּפּוּחַ, וְאָז כּוֹכָב. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! כּוֹכָב, תַּפּוּחַ, כּוֹכָב, תַּפּוּחַ, כּוֹכָב, תַּפּוּחַ, כּוֹכָב."
   },
   "log.fix.colours": {
-   "kind": "build", "skill": "LOG-A-07", "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
-   "sequence": ["ball_red", "ball_blue", "ball_red", "ball_blue", "ball_red", "ball_blue"],
-   "given": ["ball_red", "ball_blue", null, "ball_blue", "ball_red", "ball_blue"],
-   "palette": ["ball_blue", "ball_green", "ball_red"], "tag": "M-PAT-NEXT", "palette_tags": {"ball_green": "M-PAT-UNIT"},
+   "kind": "build",
+   "skill": "LOG-A-07",
+   "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
+   "sequence": [
+    "ball_red",
+    "ball_blue",
+    "ball_red",
+    "ball_blue",
+    "ball_red",
+    "ball_blue"
+   ],
+   "given": [
+    "ball_red",
+    "ball_blue",
+    null,
+    "ball_blue",
+    "ball_red",
+    "ball_blue"
+   ],
+   "palette": [
+    "ball_blue",
+    "ball_green",
+    "ball_red"
+   ],
+   "tag": "M-PAT-NEXT",
+   "palette_tags": {
+    "ball_green": "M-PAT-UNIT"
+   },
    "prompt": "חָסֵר אֶחָד בַּסֵּדֶר. מַה צָּרִיךְ לָבוֹא כָּאן?",
    "h3": "אָדֹם, כָּחֹל, אָדֹם, כָּחֹל — בַּמָּקוֹם הֶחָסֵר בָּא אָדֹם. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! אָדֹם, כָּחֹל, אָדֹם, כָּחֹל, אָדֹם, כָּחֹל."
   },
   "log.fix.animals": {
-   "kind": "build", "skill": "LOG-A-07", "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
-   "sequence": ["fish", "bird", "fish", "bird", "fish", "bird"],
-   "given": ["fish", "bird", "fish", null, "fish", "bird"],
-   "palette": ["fish", "bird", "star"], "tag": "M-PAT-NEXT", "palette_tags": {"star": "M-PAT-UNIT"},
+   "kind": "build",
+   "skill": "LOG-A-07",
+   "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
+   "sequence": [
+    "fish",
+    "bird",
+    "fish",
+    "bird",
+    "fish",
+    "bird"
+   ],
+   "given": [
+    "fish",
+    "bird",
+    "fish",
+    null,
+    "fish",
+    "bird"
+   ],
+   "palette": [
+    "fish",
+    "bird",
+    "star"
+   ],
+   "tag": "M-PAT-NEXT",
+   "palette_tags": {
+    "star": "M-PAT-UNIT"
+   },
    "prompt": "חָסֵר אֶחָד בַּסֵּדֶר. מַה צָּרִיךְ לָבוֹא כָּאן?",
    "h3": "דָּג, צִפּוֹר, דָּג — בַּמָּקוֹם הֶחָסֵר בָּאָה צִפּוֹר. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! דָּג, צִפּוֹר, דָּג, צִפּוֹר, דָּג, צִפּוֹר."
   },
   "log.fix.balloons": {
-   "kind": "build", "skill": "LOG-A-07", "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
-   "sequence": ["balloon_yellow", "balloon_green", "balloon_yellow", "balloon_green", "balloon_yellow", "balloon_green"],
-   "given": ["balloon_yellow", "balloon_green", "balloon_yellow", "balloon_green", null, "balloon_green"],
-   "palette": ["balloon_green", "balloon_yellow", "balloon_red"], "tag": "M-PAT-NEXT", "palette_tags": {"balloon_red": "M-PAT-UNIT"},
+   "kind": "build",
+   "skill": "LOG-A-07",
+   "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
+   "sequence": [
+    "balloon_yellow",
+    "balloon_green",
+    "balloon_yellow",
+    "balloon_green",
+    "balloon_yellow",
+    "balloon_green"
+   ],
+   "given": [
+    "balloon_yellow",
+    "balloon_green",
+    "balloon_yellow",
+    "balloon_green",
+    null,
+    "balloon_green"
+   ],
+   "palette": [
+    "balloon_green",
+    "balloon_yellow",
+    "balloon_red"
+   ],
+   "tag": "M-PAT-NEXT",
+   "palette_tags": {
+    "balloon_red": "M-PAT-UNIT"
+   },
    "prompt": "חָסֵר אֶחָד בַּסֵּדֶר. מַה צָּרִיךְ לָבוֹא כָּאן?",
    "h3": "צָהֹב, יָרֹק, צָהֹב, יָרֹק — בַּמָּקוֹם הֶחָסֵר בָּא צָהֹב. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! צָהֹב, יָרֹק, צָהֹב, יָרֹק, צָהֹב, יָרֹק."
   },
   "log.fix.balls": {
-   "kind": "build", "skill": "LOG-A-07", "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
-   "sequence": ["ball_yellow", "ball_blue", "ball_yellow", "ball_blue", "ball_yellow", "ball_blue"],
-   "given": ["ball_yellow", "ball_blue", "ball_yellow", null, "ball_yellow", "ball_blue"],
-   "palette": ["ball_yellow", "ball_blue", "ball_green"], "tag": "M-PAT-NEXT", "palette_tags": {"ball_green": "M-PAT-UNIT"},
+   "kind": "build",
+   "skill": "LOG-A-07",
+   "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
+   "sequence": [
+    "ball_yellow",
+    "ball_blue",
+    "ball_yellow",
+    "ball_blue",
+    "ball_yellow",
+    "ball_blue"
+   ],
+   "given": [
+    "ball_yellow",
+    "ball_blue",
+    "ball_yellow",
+    null,
+    "ball_yellow",
+    "ball_blue"
+   ],
+   "palette": [
+    "ball_yellow",
+    "ball_blue",
+    "ball_green"
+   ],
+   "tag": "M-PAT-NEXT",
+   "palette_tags": {
+    "ball_green": "M-PAT-UNIT"
+   },
    "prompt": "חָסֵר אֶחָד בַּסֵּדֶר. מַה צָּרִיךְ לָבוֹא כָּאן?",
    "h3": "צָהֹב, כָּחֹל, צָהֹב — בַּמָּקוֹם הֶחָסֵר בָּא כָּחֹל. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! צָהֹב, כָּחֹל, צָהֹב, כָּחֹל, צָהֹב, כָּחֹל."
   },
   "b.logb01.1": {
-   "kind": "build", "skill": "LOG-B-01", "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
-   "sequence": ["ball_red", "ball_red", "ball_blue", "ball_red", "ball_red", "ball_blue", "ball_red", "ball_red"],
-   "given": ["ball_red", "ball_red", "ball_blue", "ball_red", "ball_red", "ball_blue", "ball_red", null],
-   "palette": ["ball_red", "ball_blue", "ball_yellow"], "tag": "M-PAT-NEXT", "palette_tags": {"ball_yellow": "M-PAT-UNIT"},
+   "kind": "build",
+   "skill": "LOG-B-01",
+   "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
+   "sequence": [
+    "ball_red",
+    "ball_red",
+    "ball_blue",
+    "ball_red",
+    "ball_red",
+    "ball_blue",
+    "ball_red",
+    "ball_red"
+   ],
+   "given": [
+    "ball_red",
+    "ball_red",
+    "ball_blue",
+    "ball_red",
+    "ball_red",
+    "ball_blue",
+    "ball_red",
+    null
+   ],
+   "palette": [
+    "ball_red",
+    "ball_blue",
+    "ball_yellow"
+   ],
+   "tag": "M-PAT-NEXT",
+   "palette_tags": {
+    "ball_yellow": "M-PAT-UNIT"
+   },
    "prompt": "מַה בָּא אַחַר כָּךְ?",
    "h3": "אָדֹם, אָדֹם, כָּחֹל — וְשׁוּב אָדֹם, אָדֹם. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! אָדֹם, אָדֹם, כָּחֹל, וְשׁוּב מֵהַהַתְחָלָה."
   },
   "b.logb01.2": {
-   "kind": "build", "skill": "LOG-B-01", "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
-   "sequence": ["cat", "dog", "dog", "cat", "dog", "dog", "cat", "dog"],
-   "given": ["cat", "dog", "dog", "cat", "dog", "dog", "cat", null],
-   "palette": ["cat", "dog", "star"], "tag": "M-PAT-NEXT", "palette_tags": {"star": "M-PAT-UNIT"},
+   "kind": "build",
+   "skill": "LOG-B-01",
+   "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
+   "sequence": [
+    "cat",
+    "dog",
+    "dog",
+    "cat",
+    "dog",
+    "dog",
+    "cat",
+    "dog"
+   ],
+   "given": [
+    "cat",
+    "dog",
+    "dog",
+    "cat",
+    "dog",
+    "dog",
+    "cat",
+    null
+   ],
+   "palette": [
+    "cat",
+    "dog",
+    "star"
+   ],
+   "tag": "M-PAT-NEXT",
+   "palette_tags": {
+    "star": "M-PAT-UNIT"
+   },
    "prompt": "מַה בָּא אַחַר כָּךְ?",
    "h3": "חָתוּל, כֶּלֶב, כֶּלֶב — וְשׁוּב חָתוּל, כֶּלֶב. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! חָתוּל, כֶּלֶב, כֶּלֶב, וְשׁוּב מֵהַהַתְחָלָה."
   },
   "b.logb01.3": {
-   "kind": "build", "skill": "LOG-B-01", "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
-   "sequence": ["apple", "fish", "star", "apple", "fish", "star", "apple", "fish"],
-   "given": ["apple", "fish", "star", "apple", "fish", "star", "apple", null],
-   "palette": ["apple", "star", "fish"], "tag": "M-PAT-NEXT", "palette_tags": {"star": "M-PAT-UNIT"},
+   "kind": "build",
+   "skill": "LOG-B-01",
+   "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
+   "sequence": [
+    "apple",
+    "fish",
+    "star",
+    "apple",
+    "fish",
+    "star",
+    "apple",
+    "fish"
+   ],
+   "given": [
+    "apple",
+    "fish",
+    "star",
+    "apple",
+    "fish",
+    "star",
+    "apple",
+    null
+   ],
+   "palette": [
+    "apple",
+    "star",
+    "fish"
+   ],
+   "tag": "M-PAT-NEXT",
+   "palette_tags": {
+    "star": "M-PAT-UNIT"
+   },
    "prompt": "מַה בָּא אַחַר כָּךְ?",
    "h3": "תַּפּוּחַ, דָּג, כּוֹכָב — וְשׁוּב תַּפּוּחַ, דָּג. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! תַּפּוּחַ, דָּג, כּוֹכָב, וְשׁוּב מֵהַהַתְחָלָה."
   },
   "b.logb01.4": {
-   "kind": "build", "skill": "LOG-B-01", "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
-   "sequence": ["ball_green", "ball_green", "ball_red", "ball_green", "ball_green", "ball_red", "ball_green", "ball_green"],
-   "given": ["ball_green", "ball_green", "ball_red", "ball_green", "ball_green", "ball_red", "ball_green", null],
-   "palette": ["ball_green", "ball_red", "ball_blue"], "tag": "M-PAT-NEXT", "palette_tags": {"ball_blue": "M-PAT-UNIT"},
+   "kind": "build",
+   "skill": "LOG-B-01",
+   "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
+   "sequence": [
+    "ball_green",
+    "ball_green",
+    "ball_red",
+    "ball_green",
+    "ball_green",
+    "ball_red",
+    "ball_green",
+    "ball_green"
+   ],
+   "given": [
+    "ball_green",
+    "ball_green",
+    "ball_red",
+    "ball_green",
+    "ball_green",
+    "ball_red",
+    "ball_green",
+    null
+   ],
+   "palette": [
+    "ball_green",
+    "ball_red",
+    "ball_blue"
+   ],
+   "tag": "M-PAT-NEXT",
+   "palette_tags": {
+    "ball_blue": "M-PAT-UNIT"
+   },
    "prompt": "מַה בָּא אַחַר כָּךְ?",
    "h3": "יָרֹק, יָרֹק, אָדֹם — וְשׁוּב יָרֹק, יָרֹק. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! יָרֹק, יָרֹק, אָדֹם, וְשׁוּב מֵהַהַתְחָלָה."
   },
   "b.logb01.5": {
-   "kind": "build", "skill": "LOG-B-01", "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
-   "sequence": ["ball_red", "ball_blue", "ball_blue", "ball_red", "ball_blue", "ball_blue", "ball_red", "ball_blue"],
-   "given": ["ball_red", "ball_blue", "ball_blue", "ball_red", "ball_blue", "ball_blue", "ball_red", null],
-   "palette": ["ball_red", "ball_blue", "ball_yellow"], "tag": "M-PAT-NEXT", "palette_tags": {"ball_yellow": "M-PAT-UNIT"},
+   "kind": "build",
+   "skill": "LOG-B-01",
+   "waitsFor": "step 2.2 (build_pattern given cells and palette tags)",
+   "sequence": [
+    "ball_red",
+    "ball_blue",
+    "ball_blue",
+    "ball_red",
+    "ball_blue",
+    "ball_blue",
+    "ball_red",
+    "ball_blue"
+   ],
+   "given": [
+    "ball_red",
+    "ball_blue",
+    "ball_blue",
+    "ball_red",
+    "ball_blue",
+    "ball_blue",
+    "ball_red",
+    null
+   ],
+   "palette": [
+    "ball_red",
+    "ball_blue",
+    "ball_yellow"
+   ],
+   "tag": "M-PAT-NEXT",
+   "palette_tags": {
+    "ball_yellow": "M-PAT-UNIT"
+   },
    "prompt": "מַה בָּא אַחַר כָּךְ?",
    "h3": "אָדֹם, כָּחֹל, כָּחֹל — וְשׁוּב אָדֹם, כָּחֹל. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! אָדֹם, כָּחֹל, כָּחֹל, וְשׁוּב מֵהַהַתְחָלָה."
   },
   "log.pat.yes.colours": {
-   "kind": "sort", "skill": "LOG-A-04", "waitsFor": "the pattern-strip sprites (design-director)", "rule": "kind", "tag": "M-PAT-UNIT",
-   "bins": [{"sprite": "tick", "label": "חוֹזֵר"}, {"sprite": "cross", "label": "לֹא חוֹזֵר"}],
-   "items": [["strip_red_blue", 1], ["strip_mixed_balls", 2], ["strip_cat_dog", 1], ["strip_red_blue_slip", 2, "M-PAT-UNIT"]],
+   "kind": "sort",
+   "skill": "LOG-A-04",
+   "waitsFor": "the pattern-strip sprites (design-director)",
+   "rule": "kind",
+   "tag": "M-PAT-UNIT",
+   "bins": [
+    {
+     "sprite": "tick",
+     "label": "חוֹזֵר"
+    },
+    {
+     "sprite": "cross",
+     "label": "לֹא חוֹזֵר"
+    }
+   ],
+   "items": [
+    [
+     "strip_red_blue",
+     1
+    ],
+    [
+     "strip_mixed_balls",
+     2
+    ],
+    [
+     "strip_cat_dog",
+     1
+    ],
+    [
+     "strip_red_blue_slip",
+     2,
+     "M-PAT-UNIT"
+    ]
+   ],
    "prompt": "הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב? מְמַיְּנִים.",
    "h3": "מוֹחֲאִים כַּף עִם כׇּל אֶחָד: אִם הַחֵלֶק חוֹזֵר, זֶה סֵדֶר שֶׁחוֹזֵר. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! מְצָאתֶם מָה חוֹזֵר."
   },
   "log.pat.no.mixed": {
-   "kind": "sort", "skill": "LOG-A-04", "waitsFor": "the pattern-strip sprites (design-director)", "rule": "kind", "tag": "M-PAT-UNIT",
-   "bins": [{"sprite": "tick", "label": "חוֹזֵר"}, {"sprite": "cross", "label": "לֹא חוֹזֵר"}],
-   "items": [["strip_mixed_things", 2], ["strip_green_yellow", 1], ["strip_cat_dog_slip", 2, "M-PAT-UNIT"], ["strip_fish_bird", 1]],
+   "kind": "sort",
+   "skill": "LOG-A-04",
+   "waitsFor": "the pattern-strip sprites (design-director)",
+   "rule": "kind",
+   "tag": "M-PAT-UNIT",
+   "bins": [
+    {
+     "sprite": "tick",
+     "label": "חוֹזֵר"
+    },
+    {
+     "sprite": "cross",
+     "label": "לֹא חוֹזֵר"
+    }
+   ],
+   "items": [
+    [
+     "strip_mixed_things",
+     2
+    ],
+    [
+     "strip_green_yellow",
+     1
+    ],
+    [
+     "strip_cat_dog_slip",
+     2,
+     "M-PAT-UNIT"
+    ],
+    [
+     "strip_fish_bird",
+     1
+    ]
+   ],
    "prompt": "הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב? מְמַיְּנִים.",
    "h3": "מוֹחֲאִים כַּף עִם כׇּל אֶחָד: אִם הַחֵלֶק חוֹזֵר, זֶה סֵדֶר שֶׁחוֹזֵר. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! מְצָאתֶם מָה חוֹזֵר."
   },
   "log.pat.yes.animals": {
-   "kind": "sort", "skill": "LOG-A-04", "waitsFor": "the pattern-strip sprites (design-director)", "rule": "kind", "tag": "M-PAT-UNIT",
-   "bins": [{"sprite": "tick", "label": "חוֹזֵר"}, {"sprite": "cross", "label": "לֹא חוֹזֵר"}],
-   "items": [["strip_cat_dog", 1], ["strip_red_blue_slip", 2, "M-PAT-UNIT"], ["strip_fish_bird", 1], ["strip_mixed_balls", 2]],
+   "kind": "sort",
+   "skill": "LOG-A-04",
+   "waitsFor": "the pattern-strip sprites (design-director)",
+   "rule": "kind",
+   "tag": "M-PAT-UNIT",
+   "bins": [
+    {
+     "sprite": "tick",
+     "label": "חוֹזֵר"
+    },
+    {
+     "sprite": "cross",
+     "label": "לֹא חוֹזֵר"
+    }
+   ],
+   "items": [
+    [
+     "strip_cat_dog",
+     1
+    ],
+    [
+     "strip_red_blue_slip",
+     2,
+     "M-PAT-UNIT"
+    ],
+    [
+     "strip_fish_bird",
+     1
+    ],
+    [
+     "strip_mixed_balls",
+     2
+    ]
+   ],
    "prompt": "הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב? מְמַיְּנִים.",
    "h3": "מוֹחֲאִים כַּף עִם כׇּל אֶחָד: אִם הַחֵלֶק חוֹזֵר, זֶה סֵדֶר שֶׁחוֹזֵר. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! מְצָאתֶם מָה חוֹזֵר."
   },
   "log.pat.yes.green": {
-   "kind": "sort", "skill": "LOG-A-04", "waitsFor": "the pattern-strip sprites (design-director)", "rule": "kind", "tag": "M-PAT-UNIT",
-   "bins": [{"sprite": "tick", "label": "חוֹזֵר"}, {"sprite": "cross", "label": "לֹא חוֹזֵר"}],
-   "items": [["strip_green_yellow", 1], ["strip_mixed_things", 2], ["strip_red_blue", 1], ["strip_cat_dog_slip", 2, "M-PAT-UNIT"]],
+   "kind": "sort",
+   "skill": "LOG-A-04",
+   "waitsFor": "the pattern-strip sprites (design-director)",
+   "rule": "kind",
+   "tag": "M-PAT-UNIT",
+   "bins": [
+    {
+     "sprite": "tick",
+     "label": "חוֹזֵר"
+    },
+    {
+     "sprite": "cross",
+     "label": "לֹא חוֹזֵר"
+    }
+   ],
+   "items": [
+    [
+     "strip_green_yellow",
+     1
+    ],
+    [
+     "strip_mixed_things",
+     2
+    ],
+    [
+     "strip_red_blue",
+     1
+    ],
+    [
+     "strip_cat_dog_slip",
+     2,
+     "M-PAT-UNIT"
+    ]
+   ],
    "prompt": "הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב? מְמַיְּנִים.",
    "h3": "מוֹחֲאִים כַּף עִם כׇּל אֶחָד: אִם הַחֵלֶק חוֹזֵר, זֶה סֵדֶר שֶׁחוֹזֵר. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! מְצָאתֶם מָה חוֹזֵר."
@@ -328,6 +974,20 @@
   "math.graph.fish": "as math.graph.apples",
   "math.graph.stars": "as math.graph.apples",
   "math.graph.stars2": "as math.graph.apples",
-  "pick.red.flower": "the hand-made butterflies file (content/starter, no unit spec): the yellow flower shows no catalogued error"
+  "pick.red.flower": "the hand-made butterflies file (content/starter, no unit spec): the yellow flower shows no catalogued error",
+  "b.numb08.2": "a numeral found among the labelled ticks of a line: the reversal it would show is not on the line (13 and 31 are not on one line from 10 to 20), so the line item checks recognition and the skill's taps carry M-NUM-REV",
+  "b.numb08.5": "a numeral found among the labelled ticks of a line: the reversal it would show is not on the line (13 and 31 are not on one line from 10 to 20), so the line item checks recognition and the skill's taps carry M-NUM-REV",
+  "b.numb08.7": "a numeral found among the labelled ticks of a line: the reversal it would show is not on the line (13 and 31 are not on one line from 10 to 20), so the line item checks recognition and the skill's taps carry M-NUM-REV",
+  "c.numb06.1": "a numeral found among the labelled ticks of a line: the reversal it would show is not on the line (6 and 9 are a turn, not a reversal the line classifiers read), so the line item checks recognition and the skill's taps carry M-NUM-REV",
+  "c.numb06.3": "a numeral found among the labelled ticks of a line: the reversal it would show is not on the line (6 and 9 are a turn, not a reversal the line classifiers read), so the line item checks recognition and the skill's taps carry M-NUM-REV",
+  "c.numb06.5": "a numeral found among the labelled ticks of a line: the reversal it would show is not on the line (6 and 9 are a turn, not a reversal the line classifiers read), so the line item checks recognition and the skill's taps carry M-NUM-REV",
+  "b.numb10.9": "the symbolic form of NUM-B-10 (two numerals, which is bigger), kept so the core skill has two representations; picking the smaller shows no catalogued error",
+  "b.numb10.10": "the symbolic form of NUM-B-10 (two numerals, which is bigger), kept so the core skill has two representations; picking the smaller shows no catalogued error",
+  "c.mathc01.32": "a weighing ends level by construction (the child adds blocks until the scale is level), so a wrong move cannot be told apart: the item carries the idea of \"the same as\" as a concrete rung, and the skill's diagnosis is in its typed and tap items (third pass decision, M11-stage2 §11.7)",
+  "c.mathc01.33": "a weighing ends level by construction (the child adds blocks until the scale is level), so a wrong move cannot be told apart: the item carries the idea of \"the same as\" as a concrete rung, and the skill's diagnosis is in its typed and tap items (third pass decision, M11-stage2 §11.7)",
+  "c.mathc02.11": "a weighing ends level by construction (the child adds blocks until the scale is level), so a wrong move cannot be told apart: the item carries the idea of \"the same as\" as a concrete rung, and the skill's diagnosis is in its typed and tap items (third pass decision, M11-stage2 §11.7)",
+  "c.mathc02.12": "a weighing ends level by construction (the child adds blocks until the scale is level), so a wrong move cannot be told apart: the item carries the idea of \"the same as\" as a concrete rung, and the skill's diagnosis is in its typed and tap items (third pass decision, M11-stage2 §11.7)",
+  "c.mathc02.4": "a weighing ends level by construction (the child adds blocks until the scale is level), so a wrong move cannot be told apart: the item carries the idea of \"the same as\" as a concrete rung, and the skill's diagnosis is in its typed and tap items (third pass decision, M11-stage2 §11.7)",
+  "c.mathc02.5": "a weighing ends level by construction (the child adds blocks until the scale is level), so a wrong move cannot be told apart: the item carries the idea of \"the same as\" as a concrete rung, and the skill's diagnosis is in its typed and tap items (third pass decision, M11-stage2 §11.7)"
  }
 }

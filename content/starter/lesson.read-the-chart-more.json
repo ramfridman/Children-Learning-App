@@ -14,12 +14,12 @@
     "MATH-B-19"
   ],
   "items": [
+    "x.mathb19.1",
     "x.mathb19.7",
     "x.mathb19.8",
     "x.mathb19.9",
     "x.mathb19.10",
-    "x.mathb19.11",
-    "x.mathb19.1"
+    "x.mathb19.11"
   ],
   "estimatedMinutes": 5,
   "sequence": 65,
@@ -39,25 +39,25 @@
     ],
     "together": [
       {
-        "id": "x.mathb19.7",
-        "lead": 0,
+        "id": "x.mathb19.1",
+        "lead": 1,
         "line": {
-          "vo": "vo:host.pnina.together.tap",
+          "vo": "vo:host.pnina.together.sort",
           "caption": [
             {
               "t": "he",
-              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+              "v": "אֲנִי שָׂמָה אֶת הָרִאשׁוֹן. אַתֶּם מַמְשִׁיכִים."
             }
           ]
         }
       }
     ],
     "alone": [
+      "x.mathb19.7",
       "x.mathb19.8",
       "x.mathb19.9",
       "x.mathb19.10",
-      "x.mathb19.11",
-      "x.mathb19.1"
+      "x.mathb19.11"
     ],
     "handover": {
       "vo": "vo:host.pnina.handover.2",

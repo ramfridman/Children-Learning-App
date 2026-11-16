@@ -1023,6 +1023,38 @@
     {
       "id": "pyramid_egypt",
       "file": "pyramid_egypt.svg"
+    },
+    {
+      "id": "strip_cat_dog",
+      "file": "strip_cat_dog.svg"
+    },
+    {
+      "id": "strip_mixed_balls",
+      "file": "strip_mixed_balls.svg"
+    },
+    {
+      "id": "strip_red_blue",
+      "file": "strip_red_blue.svg"
+    },
+    {
+      "id": "strip_red_blue_slip",
+      "file": "strip_red_blue_slip.svg"
+    },
+    {
+      "id": "strip_cat_dog_slip",
+      "file": "strip_cat_dog_slip.svg"
+    },
+    {
+      "id": "strip_fish_bird",
+      "file": "strip_fish_bird.svg"
+    },
+    {
+      "id": "strip_green_yellow",
+      "file": "strip_green_yellow.svg"
+    },
+    {
+      "id": "strip_mixed_things",
+      "file": "strip_mixed_things.svg"
     }
   ],
   "vo": []

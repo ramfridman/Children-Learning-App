@@ -16,14 +16,14 @@
     "COL-A-06"
   ],
   "items": [
-    "b15.cola01.1",
+    "col.match.blue",
     "b15.cola03.1",
     "b15.cola03.2",
+    "b15.cola01.1",
     "b15.cola01.2",
     "b15.cola03.3",
     "b15.cola03.4",
     "b15.cola03.5",
-    "col.match.blue",
     "b15.cola03.6"
   ],
   "estimatedMinutes": 6,
@@ -45,14 +45,14 @@
     },
     "together": [
       {
-        "id": "b15.cola01.1",
-        "lead": 0,
+        "id": "col.match.blue",
+        "lead": 1,
         "line": {
-          "vo": "vo:host.goni.together.tap",
+          "vo": "vo:host.goni.together.sort",
           "caption": [
             {
               "t": "he",
-              "v": "נִסְתַּכֵּל יַחַד. אַתֶּם בּוֹחֲרִים."
+              "v": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים."
             }
           ]
         }
@@ -61,11 +61,11 @@
     "alone": [
       "b15.cola03.1",
       "b15.cola03.2",
+      "b15.cola01.1",
       "b15.cola01.2",
       "b15.cola03.3",
       "b15.cola03.4",
-      "b15.cola03.5",
-      "col.match.blue"
+      "b15.cola03.5"
     ],
     "use": [
       "b15.cola03.6"

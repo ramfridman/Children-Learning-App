@@ -18,10 +18,11 @@
     "log.same.star",
     "log.same.cat",
     "log.same.duck",
+    "log.odd.ball",
     "log.odd.colour",
     "log.odd.animal",
     "log.odd.thing",
-    "log.odd.ball"
+    "b15.loga01.3"
   ],
   "estimatedMinutes": 4,
   "sequence": 1,
@@ -38,7 +39,7 @@
     "show": "show.log-a-01",
     "secondShow": {
       "id": "show.log-a-02",
-      "before": "log.odd.colour"
+      "before": "log.odd.ball"
     },
     "together": [
       {
@@ -58,10 +59,13 @@
     "alone": [
       "log.same.cat",
       "log.same.duck",
+      "log.odd.ball",
       "log.odd.colour",
       "log.odd.animal",
-      "log.odd.thing",
-      "log.odd.ball"
+      "log.odd.thing"
+    ],
+    "use": [
+      "b15.loga01.3"
     ],
     "handover": {
       "vo": "vo:host.timi.handover.1",

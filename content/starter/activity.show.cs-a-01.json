@@ -150,9 +150,35 @@
         "cell": 2
       }
     ],
-    "teaches": [],
+    "teaches": [
+      "מִשְׁחָה",
+      "מִבְרֶשֶׁת",
+      "כּוֹס מַיִם"
+    ],
     "predict": {
-      "choices": []
+      "choices": [
+        {
+          "id": "o1",
+          "label": "מִשְׁחָה"
+        },
+        {
+          "id": "o2",
+          "label": "מִבְרֶשֶׁת"
+        },
+        {
+          "id": "o3",
+          "label": "שׁוֹטְפִים"
+        }
+      ],
+      "line": {
+        "vo": "vo:host.tzaadon.show.cs_a_01.predict",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מָה עוֹשִׂים קֹדֶם?"
+          }
+        ]
+      }
     }
   }
 }

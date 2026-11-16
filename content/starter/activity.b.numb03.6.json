@@ -44,8 +44,9 @@
       },
       {
         "id": "o2",
-        "numeral": 5,
-        "label": "חָמֵשׁ"
+        "numeral": 6,
+        "label": "שֵׁשׁ",
+        "misconception": "M-CNT-SEQ"
       },
       {
         "id": "o3",

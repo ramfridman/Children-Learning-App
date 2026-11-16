@@ -157,7 +157,16 @@
     ],
     "teaches": [],
     "predict": {
-      "choices": []
+      "choices": [],
+      "line": {
+        "vo": "vo:host.tzaadon.show.cs_a_03.predict",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אֵיפֹה הָרוֹבּוֹט יַעֲצֹר?"
+          }
+        ]
+      }
     }
   }
 }

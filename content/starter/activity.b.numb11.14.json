@@ -39,8 +39,9 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 7,
-        "label": "שֶׁבַע"
+        "numeral": 8,
+        "label": "שְׁמוֹנֶה",
+        "misconception": "M-CNT-SEQ"
       },
       {
         "id": "o2",

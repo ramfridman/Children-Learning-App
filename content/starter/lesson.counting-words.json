@@ -15,13 +15,13 @@
     "NUM-A-02"
   ],
   "items": [
+    "b15.numa01.1",
     "next.after.1",
     "next.after.4",
     "next.after.6",
     "next.after.8",
     "next.after.2",
     "next.before.7",
-    "b15.numa01.1",
     "b15.numa02.1"
   ],
   "estimatedMinutes": 4,
@@ -43,26 +43,28 @@
     },
     "together": [
       {
-        "id": "next.after.1",
-        "lead": 0,
+        "id": "b15.numa01.1",
+        "lead": 1,
         "line": {
-          "vo": "vo:host.nekudi.together.line",
+          "vo": "vo:host.nekudi.together.count",
           "caption": [
             {
               "t": "he",
-              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+              "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת."
             }
           ]
         }
       }
     ],
     "alone": [
+      "next.after.1",
       "next.after.4",
       "next.after.6",
       "next.after.8",
       "next.after.2",
-      "next.before.7",
-      "b15.numa01.1",
+      "next.before.7"
+    ],
+    "use": [
       "b15.numa02.1"
     ],
     "handover": {

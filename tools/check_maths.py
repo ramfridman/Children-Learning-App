@@ -1998,6 +1998,17 @@ def check_sort(f, it):
         return []
     # M11 Stage 2, Colour Bay: "X / not X" with a crossed bin. The fruit whatever its colour (COL-A-05) matches the sample's kind; "only a blue
     # ball" (COL-A-07, the caption says רק) matches its kind and its colour
+    # M11 Stage 2, LOG-A-04: pattern strips sorted to "repeats" (the tick) and "does not repeat" (the cross); a strip named mixed or slip does not
+    # repeat (the design-director's strips: docs of content/units/pending/stage2-recuts.json `sprites`)
+    if items and all((x.get('sprite') or '').startswith('asset:strip_') for x in items) and len(bins) == 2:
+        yes_bin = [b for b in bins if b.get('sprite') == 'asset:tick'][0]['id']
+        no_bin = [b for b in bins if b.get('sprite') == 'asset:cross'][0]['id']
+        for x in items:
+            repeats = not any(w in x['sprite'] for w in ('mixed', 'slip'))
+            want = yes_bin if repeats else no_bin
+            if x.get('bin') != want:
+                f.add('WRONG', it, 'answer', '%s (%s) belongs in %s, the item puts it in %s' % (x['id'], x['sprite'], want, x.get('bin')))
+        return []
     crossed = [b for b in bins if b.get('sprite') == 'asset:cross']
     if len(bins) == 2 and len(crossed) == 1 and not prop:
         yes = [b for b in bins if b is not crossed[0]][0]

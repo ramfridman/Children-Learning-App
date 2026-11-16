@@ -52,7 +52,9 @@
     ],
     "alone": [
       "math.graph.fish",
-      "math.graph.stars",
+      "math.graph.stars"
+    ],
+    "use": [
       "b15.matha07.1"
     ],
     "handover": {

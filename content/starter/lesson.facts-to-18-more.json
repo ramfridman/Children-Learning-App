@@ -14,6 +14,7 @@
     "MATH-C-01"
   ],
   "items": [
+    "c.mathc01.32",
     "c.mathc01.13",
     "c.mathc01.17",
     "c.mathc01.10",
@@ -22,8 +23,7 @@
     "c.mathc01.14",
     "c.mathc01.15",
     "c.mathc01.16",
-    "c.mathc01.18",
-    "c.mathc01.32"
+    "c.mathc01.18"
   ],
   "estimatedMinutes": 7,
   "sequence": 102,
@@ -43,20 +43,21 @@
     ],
     "together": [
       {
-        "id": "c.mathc01.13",
+        "id": "c.mathc01.32",
         "lead": 1,
         "line": {
-          "vo": "vo:host.pnina.together.line",
+          "vo": "vo:host.pnina.together.scale",
           "caption": [
             {
               "t": "he",
-              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+              "v": "מִסְתַּכְּלִים עַל הַמֹּאזְנַיִם, וּמוֹסִיפִים לְאַט."
             }
           ]
         }
       }
     ],
     "alone": [
+      "c.mathc01.13",
       "c.mathc01.17",
       "c.mathc01.10",
       "c.mathc01.11",
@@ -64,8 +65,7 @@
       "c.mathc01.14",
       "c.mathc01.15",
       "c.mathc01.16",
-      "c.mathc01.18",
-      "c.mathc01.32"
+      "c.mathc01.18"
     ],
     "handover": {
       "vo": "vo:host.pnina.handover.1",

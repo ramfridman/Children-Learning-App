@@ -18,7 +18,8 @@
     "b.numb10.2",
     "b.numb10.3",
     "b.numb10.5",
-    "b.numb10.4"
+    "b.numb10.4",
+    "b.numb10.10"
   ],
   "estimatedMinutes": 5,
   "sequence": 40,
@@ -55,7 +56,8 @@
       "b.numb10.2",
       "b.numb10.3",
       "b.numb10.5",
-      "b.numb10.4"
+      "b.numb10.4",
+      "b.numb10.10"
     ],
     "handover": {
       "vo": "vo:host.nekudi.handover.2",

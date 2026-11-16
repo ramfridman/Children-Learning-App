@@ -18,11 +18,11 @@
     "col.sort.orange",
     "b15.cola04.1",
     "b15.cola04.2",
+    "col.find.blue.ball",
     "col.sort.yellow",
     "col.sort.pink",
     "col.find.red.ball",
     "col.find.yellow.balloon",
-    "col.find.blue.ball",
     "b15.cola07.1"
   ],
   "estimatedMinutes": 4,
@@ -40,7 +40,7 @@
     "show": "show.col-a-04",
     "secondShow": {
       "id": "show.col-a-07",
-      "before": "col.find.red.ball"
+      "before": "col.find.blue.ball"
     },
     "recall": [
       "b15.cola01.1"
@@ -63,11 +63,11 @@
     "alone": [
       "b15.cola04.1",
       "b15.cola04.2",
+      "col.find.blue.ball",
       "col.sort.yellow",
       "col.sort.pink",
       "col.find.red.ball",
-      "col.find.yellow.balloon",
-      "col.find.blue.ball"
+      "col.find.yellow.balloon"
     ],
     "use": [
       "b15.cola07.1"

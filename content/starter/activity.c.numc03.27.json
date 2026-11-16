@@ -4,7 +4,7 @@
   "review": "needs-editor",
   "revision": 1,
   "template": "shop_pay",
-  "templateVersion": "1.0",
+  "templateVersion": "1.1",
   "domain": "numbers",
   "band": "C",
   "skills": [
@@ -48,7 +48,17 @@
   },
   "answer": {
     "type": "pay",
-    "countMisconception": "M-MONEY-COUNT"
+    "countMisconception": "M-MONEY-COUNT",
+    "classifiers": [
+      {
+        "when": "paid_digits",
+        "misconception": "M-PV-FACE"
+      },
+      {
+        "when": "paid_reversed",
+        "misconception": "M-NUM-REV"
+      }
+    ]
   },
   "voiceAnswer": false,
   "feedback": {
@@ -69,6 +79,26 @@
           {
             "t": "he",
             "v": "כׇּל מַטְבֵּעַ שָׁוֶה כַּמָּה שֶׁכָּתוּב עָלָיו. בּוֹאוּ נְחַבֵּר אֶת מַה שֶּׁכָּתוּב."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-NUM-REV",
+        "vo": "vo:fb.num_rev",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PV-FACE",
+        "vo": "vo:fb.pv_face",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַסִּפְרָה הַזֹּאת עוֹמֶדֶת בַּמָּקוֹם שֶׁל הָעֲשָׂרוֹת. בּוֹאוּ נִבְדֹּק כַּמָּה עֲשָׂרוֹת יֵשׁ."
           }
         ]
       },

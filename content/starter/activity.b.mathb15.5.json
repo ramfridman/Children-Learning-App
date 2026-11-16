@@ -54,11 +54,6 @@
         "id": "o2",
         "numeral": 4,
         "label": "אַרְבַּע"
-      },
-      {
-        "id": "o3",
-        "numeral": 5,
-        "label": "חָמֵשׁ"
       }
     ],
     "correct": "o2",

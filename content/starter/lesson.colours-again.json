@@ -16,16 +16,16 @@
     "COL-A-06"
   ],
   "items": [
-    "col.match.green2",
+    "col.match.blue",
     "col.name.brown2",
     "col.name.grey2",
+    "b15.cola03.1",
+    "col.match.green2",
     "col.match.red2",
     "col.name.orange2",
     "col.name.pink2",
     "col.name.purple2",
-    "col.name.brown3",
-    "col.match.blue",
-    "b15.cola03.1"
+    "col.name.brown3"
   ],
   "estimatedMinutes": 6,
   "sequence": 7,
@@ -42,18 +42,18 @@
     "show": "show.col-a-01",
     "secondShow": {
       "id": "show.col-a-03",
-      "before": "col.name.orange2"
+      "before": "b15.cola03.1"
     },
     "together": [
       {
-        "id": "col.match.green2",
-        "lead": 0,
+        "id": "col.match.blue",
+        "lead": 1,
         "line": {
-          "vo": "vo:host.goni.together.tap",
+          "vo": "vo:host.goni.together.sort",
           "caption": [
             {
               "t": "he",
-              "v": "נִסְתַּכֵּל יַחַד. אַתֶּם בּוֹחֲרִים."
+              "v": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים."
             }
           ]
         }
@@ -62,13 +62,13 @@
     "alone": [
       "col.name.brown2",
       "col.name.grey2",
+      "b15.cola03.1",
+      "col.match.green2",
       "col.match.red2",
       "col.name.orange2",
       "col.name.pink2",
       "col.name.purple2",
-      "col.name.brown3",
-      "col.match.blue",
-      "b15.cola03.1"
+      "col.name.brown3"
     ],
     "handover": {
       "vo": "vo:host.goni.handover.3",

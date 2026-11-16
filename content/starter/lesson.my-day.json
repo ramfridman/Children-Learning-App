@@ -16,10 +16,10 @@
   "items": [
     "math.time.evening",
     "math.time.after",
-    "math.time.before",
     "math.time.night",
     "math.time.morning",
-    "math.time.noon"
+    "math.time.noon",
+    "math.time.before"
   ],
   "estimatedMinutes": 4,
   "sequence": 4,
@@ -54,10 +54,12 @@
     ],
     "alone": [
       "math.time.after",
-      "math.time.before",
       "math.time.night",
       "math.time.morning",
       "math.time.noon"
+    ],
+    "use": [
+      "math.time.before"
     ],
     "handover": {
       "vo": "vo:host.pnina.handover.1",

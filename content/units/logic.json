@@ -481,20 +481,43 @@
   ],
   "activities": [
     {
-      "kind": "pick",
+      "kind": "sort",
       "id": "log.same.cat",
       "skill": "LOG-A-01",
-      "prompt": "אֵיפֹה עוֹד חָתוּל?",
-      "group": {
-        "sprite": "cat",
-        "count": 1
-      },
-      "options": [
-        "dog",
-        "cat"
+      "difficulty": 0.05,
+      "revision": 2,
+      "rule": "kind",
+      "check": "practice",
+      "bins": [
+        {
+          "sprite": "bin_basket",
+          "label": "הַסַּל"
+        },
+        {
+          "sprite": "bin_grass",
+          "label": "הַדֶּשֶׁא"
+        }
       ],
-      "correct": "cat",
-      "difficulty": 0.05
+      "items": [
+        [
+          "cat",
+          1
+        ],
+        [
+          "dog",
+          2
+        ],
+        [
+          "cat",
+          1
+        ],
+        [
+          "duck",
+          2
+        ]
+      ],
+      "prompt": "שָׂמִים כׇּל חָתוּל בַּסַּל, וְאֶת כׇּל הַשְּׁאָר עַל הַדֶּשֶׁא.",
+      "h3": "הַחֲתוּלִים בַּסַּל, וְכׇל הַשְּׁאָר עַל הַדֶּשֶׁא. עַכְשָׁו תּוֹרְכֶם."
     },
     {
       "kind": "sort",
@@ -538,29 +561,44 @@
       "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "sort",
       "id": "log.same.duck",
       "skill": "LOG-A-01",
-      "prompt": "אֵיפֹה עוֹד בַּרְוָז?",
-      "group": {
-        "sprite": "duck",
-        "count": 1
-      },
-      "options": [
-        "duck",
-        "ball_yellow"
-      ],
-      "correct": "duck",
       "difficulty": 0.1,
-      "tags": {
-        "ball_yellow": "M-COL-ONEATTR"
-      },
-      "tag_lines": {
-        "M-COL-ONEATTR": [
-          "vo:fb.sort_shift.kind",
-          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+      "revision": 2,
+      "rule": "kind",
+      "check": "practice",
+      "bins": [
+        {
+          "sprite": "bin_basket",
+          "label": "הַסַּל"
+        },
+        {
+          "sprite": "bin_grass",
+          "label": "הַדֶּשֶׁא"
+        }
+      ],
+      "items": [
+        [
+          "duck",
+          1
+        ],
+        [
+          "ball_yellow",
+          2,
+          "M-COL-ONEATTR"
+        ],
+        [
+          "duck",
+          1
+        ],
+        [
+          "bird",
+          2
         ]
-      }
+      ],
+      "prompt": "שָׂמִים כׇּל בַּרְוָז בַּסַּל, וְאֶת כׇּל הַשְּׁאָר עַל הַדֶּשֶׁא.",
+      "h3": "הַבַּרְוָזִים בַּסַּל, וְכׇל הַשְּׁאָר עַל הַדֶּשֶׁא. עַכְשָׁו תּוֹרְכֶם."
     },
     {
       "kind": "pick",
@@ -985,7 +1023,8 @@
       ],
       "correct": "plant_flower",
       "tags": {
-        "plant_seed": "M-SEQ-CAUSE"
+        "plant_seed": "M-SEQ-CAUSE",
+        "plant_sprout": "M-SEQ-CAUSE"
       },
       "difficulty": 0.3,
       "rep": "story",
@@ -995,7 +1034,8 @@
         "plant_seed",
         "plant_sprout",
         "?"
-      ]
+      ],
+      "revision": 2
     },
     {
       "kind": "build",
@@ -2480,7 +2520,8 @@
       ],
       "correct": "tower_3",
       "tags": {
-        "tower_2": "M-PAT-NEXT"
+        "tower_2": "M-PAT-NEXT",
+        "tower_1": "M-SER-ENDS"
       },
       "difficulty": 0.45,
       "tag_lines": {
@@ -2488,7 +2529,8 @@
           "vo:fb.ser.last_tallest",
           "בַּסּוֹף בָּא הֲכִי גָּבוֹהַּ. בּוֹאוּ נַשְׁוֶה."
         ]
-      }
+      },
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -2508,7 +2550,8 @@
       ],
       "correct": "tower_1",
       "tags": {
-        "tower_2": "M-PAT-NEXT"
+        "tower_2": "M-PAT-NEXT",
+        "tower_3": "M-SER-ENDS"
       },
       "difficulty": 0.45,
       "tag_lines": {
@@ -2516,7 +2559,8 @@
           "vo:fb.ser.first_shortest",
           "בַּהַתְחָלָה בָּא הֲכִי נָמוּךְ. בּוֹאוּ נַשְׁוֶה."
         ]
-      }
+      },
+      "revision": 2
     }
   ],
   "firstSequence": 1,

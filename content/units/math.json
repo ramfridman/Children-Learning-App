@@ -932,7 +932,7 @@
       "h3": "קֹדֶם צָהֳרַיִם, אַחַר כָּךְ עֶרֶב, וְאָז לַיְלָה. עַכְשָׁו תּוֹרְכֶם.",
       "correct_text": "כֵּן! כָּכָה עוֹבֵר הַיּוֹם.",
       "goal": "child lays the parts of the day in order",
-      "check": "practice",
+      "check": "transfer",
       "revision": 2
     },
     {
@@ -1156,7 +1156,7 @@
       "skill": "MATH-A-04",
       "difficulty": 0.3,
       "rule": "size",
-      "check": "practice",
+      "check": "transfer",
       "prompt": "מְמַיְּנִים: גְּדוֹלִים לְכָאן, וּקְטַנִּים לְכָאן.",
       "bins": [
         {
@@ -1195,7 +1195,7 @@
       "skill": "MATH-A-04",
       "difficulty": 0.3,
       "rule": "size",
-      "check": "practice",
+      "check": "transfer",
       "prompt": "מְמַיְּנִים: גְּדוֹלִים לְכָאן, וּקְטַנִּים לְכָאן.",
       "bins": [
         {
@@ -1286,7 +1286,7 @@
       "skill": "MATH-A-07",
       "difficulty": 0.4,
       "rule": "kind",
-      "check": "practice",
+      "check": "transfer",
       "prompt": "שָׂמִים כׇּל אֶחָד עִם הַדּוֹמִים לוֹ.",
       "bins": [
         {
@@ -1335,7 +1335,7 @@
       "skill": "MATH-A-07",
       "difficulty": 0.45,
       "rule": "kind",
-      "check": "practice",
+      "check": "transfer",
       "prompt": "שָׂמִים כׇּל אֶחָד עִם הַדּוֹמִים לוֹ.",
       "bins": [
         {

@@ -152,7 +152,25 @@
     ],
     "teaches": [],
     "predict": {
-      "choices": []
+      "choices": [
+        {
+          "id": "o1",
+          "label": "בֵּיצָה"
+        },
+        {
+          "id": "o2",
+          "label": "אֶפְרוֹחַ"
+        }
+      ],
+      "line": {
+        "vo": "vo:host.timi.show.log_a_08.predict",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מַה קָּרָה קֹדֶם?"
+          }
+        ]
+      }
     }
   }
 }

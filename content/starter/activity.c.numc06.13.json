@@ -33,18 +33,19 @@
   "scene": {
     "background": "asset:meadow",
     "from": 20,
-    "to": 40,
+    "to": 50,
     "markerSprite": "asset:frog",
     "labels": [
       20,
-      40
+      50
     ]
   },
   "answer": {
     "type": "line",
     "mode": "place",
     "target": 30,
-    "misconception": "M-NL-SPACE"
+    "misconception": "M-NL-SPACE",
+    "mirrorMisconception": "M-NL-DIR"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -58,6 +59,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-NL-DIR",
+        "vo": "vo:fb.nl_dir",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמִּסְפָּרִים הַקְּטַנִּים בַּצַּד הַשְּׂמָאלִי, וְהֵם גְּדֵלִים לְכִוּוּן הַחֵץ."
+          }
+        ]
+      },
       {
         "when": "misconception:M-NL-SPACE",
         "vo": "vo:fb.nl_space",

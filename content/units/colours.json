@@ -2034,7 +2034,7 @@
       "skill": "COL-A-05",
       "difficulty": 0.4,
       "rule": "kind",
-      "check": "practice",
+      "check": "transfer",
       "tag": "M-COL-OBJECT",
       "bins": [
         {
@@ -2077,7 +2077,7 @@
       "skill": "COL-A-05",
       "difficulty": 0.4,
       "rule": "kind",
-      "check": "practice",
+      "check": "transfer",
       "tag": "M-COL-OBJECT",
       "bins": [
         {

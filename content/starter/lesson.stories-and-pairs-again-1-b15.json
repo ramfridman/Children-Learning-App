@@ -15,9 +15,9 @@
     "LOG-A-09"
   ],
   "items": [
+    "log.pair.bowl",
     "b15.loga09.1",
-    "b15.loga09.2",
-    "log.pair.bowl"
+    "b15.loga09.2"
   ],
   "estimatedMinutes": 4,
   "sequence": 16,
@@ -34,29 +34,29 @@
     "show": "show.log-a-08",
     "secondShow": {
       "id": "show.log-a-09",
-      "before": "b15.loga09.2"
+      "before": "b15.loga09.1"
     },
     "recall": [
       "b15.numa13.1"
     ],
     "together": [
       {
-        "id": "b15.loga09.1",
-        "lead": 0,
+        "id": "log.pair.bowl",
+        "lead": 1,
         "line": {
-          "vo": "vo:host.timi.together.tap",
+          "vo": "vo:host.timi.together.sort",
           "caption": [
             {
               "t": "he",
-              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+              "v": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים."
             }
           ]
         }
       }
     ],
     "alone": [
-      "b15.loga09.2",
-      "log.pair.bowl"
+      "b15.loga09.1",
+      "b15.loga09.2"
     ],
     "handover": {
       "vo": "vo:host.timi.handover.1",

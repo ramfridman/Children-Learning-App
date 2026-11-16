@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "log.pat.no.mixed",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "logic",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.3
   },
@@ -25,40 +25,55 @@
     "caption": [
       {
         "t": "he",
-        "v": "הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב?"
+        "v": "הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב? מְמַיְּנִים."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
-      "asset:ball_red",
-      "asset:ball_blue",
-      "asset:ball_green",
-      "asset:ball_red",
-      "asset:ball_yellow",
-      "asset:ball_blue"
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:tick",
+        "count": 1,
+        "label": "חוֹזֵר"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:cross",
+        "count": 1,
+        "label": "לֹא חוֹזֵר"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:strip_mixed_things",
+        "bin": "b2"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:strip_green_yellow",
+        "bin": "b1"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:strip_cat_dog_slip",
+        "bin": "b2",
+        "misconception": "M-PAT-UNIT"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:strip_fish_bird",
+        "bin": "b1"
+      }
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:tick",
-        "label": "כֵּן"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:cross",
-        "label": "לֹא"
-      }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-PAT-UNIT"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -67,11 +82,21 @@
       "caption": [
         {
           "t": "he",
-          "v": "לֹא, כָּאן הַסֵּדֶר לֹא חוֹזֵר."
+          "v": "כֵּן! מְצָאתֶם מָה חוֹזֵר."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-PAT-UNIT",
+        "vo": "vo:fb.pat_unit",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -108,11 +133,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.log_pattern.h2",
+      "vo": "vo:hint.sort.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִמְחָא כַּפַּיִם עִם כׇּל אֶחָד."
+          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
         }
       ]
     },
@@ -123,7 +148,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אָדֹם, כָּחֹל, יָרֹק, אָדֹם, צָהֹב — לֹא, הוּא לֹא חוֹזֵר. עַכְשָׁו תּוֹרְכֶם."
+          "v": "מוֹחֲאִים כַּף עִם כׇּל אֶחָד: אִם הַחֵלֶק חוֹזֵר, זֶה סֵדֶר שֶׁחוֹזֵר. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -139,10 +164,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב?"
+    "altText": "הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב? מְמַיְּנִים."
   }
 }

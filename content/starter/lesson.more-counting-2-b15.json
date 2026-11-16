@@ -33,13 +33,27 @@
     "show": "show.num-a-03",
     "secondShow": {
       "id": "show.num-a-04",
-      "before": "b15.numa04.4"
+      "before": "b15.numa04.1"
     },
     "recall": [
       "next.after.1"
     ],
+    "together": [
+      {
+        "id": "b15.numa04.4",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.count",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת."
+            }
+          ]
+        }
+      }
+    ],
     "alone": [
-      "b15.numa04.4",
       "b15.numa04.1"
     ],
     "handover": {

@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "cs.routine.wash.middle",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "cs",
@@ -40,7 +40,8 @@
       {
         "id": "o1",
         "sprite": "asset:step_tap",
-        "label": "בָּרֶז"
+        "label": "בָּרֶז",
+        "misconception": "M-SEQ-CAUSE"
       },
       {
         "id": "o2",

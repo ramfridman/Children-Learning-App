@@ -16,13 +16,13 @@
   ],
   "items": [
     "next.after.3",
+    "b15.numa02.1",
     "next.after.5",
     "next.before.4",
     "next.before.5",
     "next.after.9",
     "next.before.9",
     "next.before.10",
-    "b15.numa02.1",
     "b15.numa01.1"
   ],
   "estimatedMinutes": 5,
@@ -40,7 +40,7 @@
     "show": "show.num-a-01",
     "secondShow": {
       "id": "show.num-a-02",
-      "before": "next.after.5"
+      "before": "b15.numa02.1"
     },
     "together": [
       {
@@ -58,13 +58,13 @@
       }
     ],
     "alone": [
+      "b15.numa02.1",
       "next.after.5",
       "next.before.4",
       "next.before.5",
       "next.after.9",
       "next.before.9",
-      "next.before.10",
-      "b15.numa02.1"
+      "next.before.10"
     ],
     "use": [
       "b15.numa01.1"

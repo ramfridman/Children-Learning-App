@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.numb10.4",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "number_line",
+  "templateVersion": "1.0",
   "domain": "numbers",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "symbolic",
-  "variantGroup": "pick",
+  "representation": "pictorial",
+  "variantGroup": "numline",
   "difficulty": {
     "authored": 0.58
   },
@@ -25,45 +25,50 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר?"
+        "v": "מִי גָּדוֹל יוֹתֵר, תֵּשַׁע אוֹ עֶשֶׂר? שָׂמִים אֶת הַצְּפַרְדֵּעַ עַל הַגָּדוֹל."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+      0,
+      9,
+      10
+    ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "numeral": 9,
-        "label": "תֵּשַׁע"
-      },
-      {
-        "id": "o2",
-        "numeral": 10,
-        "label": "עֶשֶׂר"
-      }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "line",
+    "mode": "place",
+    "target": 10,
+    "misconception": "M-NL-DIR"
   },
-  "voiceAnswer": true,
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.numb10.4.correct",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! עֶשֶׂר."
+          "v": "כֵּן! עֶשֶׂר. עַל הַצִּיר הַמִּסְפָּרִים גְּדֵלִים לְכִוּוּן הַחֵץ."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-NL-DIR",
+        "vo": "vo:fb.nl_dir",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמִּסְפָּרִים הַקְּטַנִּים בַּצַּד הַשְּׂמָאלִי, וְהֵם גְּדֵלִים לְכִוּוּן הַחֵץ."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -100,11 +105,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.line.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
         }
       ]
     },
@@ -131,10 +136,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child finds the number on the line",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר?"
+    "altText": "מִי גָּדוֹל יוֹתֵר, תֵּשַׁע אוֹ עֶשֶׂר? שָׂמִים אֶת הַצְּפַרְדֵּעַ עַל הַגָּדוֹל."
   }
 }

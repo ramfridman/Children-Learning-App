@@ -20,10 +20,10 @@
     "b15.numa02.1",
     "b15.numa02.2",
     "b15.numa02.3",
-    "b15.numa01.4",
-    "b15.numa01.5",
     "next.after.1",
     "next.after.5",
+    "b15.numa01.4",
+    "b15.numa01.5",
     "b15.numa02.4"
   ],
   "estimatedMinutes": 5,
@@ -63,10 +63,10 @@
       "b15.numa02.1",
       "b15.numa02.2",
       "b15.numa02.3",
-      "b15.numa01.4",
-      "b15.numa01.5",
       "next.after.1",
-      "next.after.5"
+      "next.after.5",
+      "b15.numa01.4",
+      "b15.numa01.5"
     ],
     "use": [
       "b15.numa02.4"

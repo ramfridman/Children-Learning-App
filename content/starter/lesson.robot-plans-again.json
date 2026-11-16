@@ -14,9 +14,9 @@
     "CS-A-04"
   ],
   "items": [
+    "cs.robot.plan.4",
     "b15.csa04.1",
     "b15.csa04.2",
-    "cs.robot.plan.4",
     "cs.robot.plan.5",
     "cs.robot.plan.6"
   ],
@@ -38,22 +38,22 @@
     ],
     "together": [
       {
-        "id": "b15.csa04.1",
-        "lead": 0,
+        "id": "cs.robot.plan.4",
+        "lead": 1,
         "line": {
-          "vo": "vo:host.tzaadon.together.tap",
+          "vo": "vo:host.tzaadon.together.robot",
           "caption": [
             {
               "t": "he",
-              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+              "v": "סוֹפְרִים כׇּל מִשְׁבֶּצֶת בְּקוֹל."
             }
           ]
         }
       }
     ],
     "alone": [
+      "b15.csa04.1",
       "b15.csa04.2",
-      "cs.robot.plan.4",
       "cs.robot.plan.5",
       "cs.robot.plan.6"
     ],

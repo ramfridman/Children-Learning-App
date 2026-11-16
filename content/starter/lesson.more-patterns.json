@@ -19,7 +19,9 @@
     "log.next.stars",
     "log.fix.colours",
     "log.fix.animals",
-    "log.fix.balloons"
+    "log.fix.balloons",
+    "b15.loga06.1",
+    "b15.loga07.1"
   ],
   "estimatedMinutes": 4,
   "sequence": 4,
@@ -32,5 +34,48 @@
       }
     ]
   },
-  "partsWait": "show.log-a-06 waits: show.log-a-06: a place of the row is neither given nor laid by a step (the arc gives no `scene.given` for the cells the host does not lay)"
+  "parts": {
+    "show": "show.log-a-06",
+    "secondShow": {
+      "id": "show.log-a-07",
+      "before": "log.fix.colours"
+    },
+    "recall": [
+      "b15.loga04.1"
+    ],
+    "together": [
+      {
+        "id": "log.next.balloons",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.timi.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אוֹמְרִים אֶת הַסֵּדֶר בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "log.next.stars",
+      "log.fix.colours",
+      "log.fix.animals",
+      "log.fix.balloons",
+      "b15.loga06.1"
+    ],
+    "use": [
+      "b15.loga07.1"
+    ],
+    "handover": {
+      "vo": "vo:host.timi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו הַחִידָה שֶׁלָּכֶם."
+        }
+      ]
+    }
+  }
 }

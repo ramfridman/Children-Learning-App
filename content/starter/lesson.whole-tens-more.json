@@ -14,10 +14,10 @@
     "MATH-C-03"
   ],
   "items": [
+    "c.mathc03.9",
     "c.mathc03.15",
     "c.mathc03.16",
     "c.mathc03.17",
-    "c.mathc03.9",
     "c.mathc03.1",
     "c.mathc03.18"
   ],
@@ -49,23 +49,23 @@
     ],
     "together": [
       {
-        "id": "c.mathc03.15",
-        "lead": 0,
+        "id": "c.mathc03.9",
+        "lead": 1,
         "line": {
-          "vo": "vo:host.pnina.together.tap",
+          "vo": "vo:host.pnina.together.pay",
           "caption": [
             {
               "t": "he",
-              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+              "v": "סוֹפְרִים אֶת הַמַּטְבְּעוֹת בְּקוֹל."
             }
           ]
         }
       }
     ],
     "alone": [
+      "c.mathc03.15",
       "c.mathc03.16",
       "c.mathc03.17",
-      "c.mathc03.9",
       "c.mathc03.1"
     ],
     "use": [

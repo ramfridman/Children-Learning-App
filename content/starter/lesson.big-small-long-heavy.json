@@ -17,11 +17,11 @@
     "math.size.big",
     "math.size.small",
     "b15.matha04.1",
-    "b15.matha04.2",
     "math.size.long",
     "math.size.short",
     "math.size.heavy",
-    "math.size.light"
+    "math.size.light",
+    "b15.matha04.2"
   ],
   "estimatedMinutes": 4,
   "sequence": 3,
@@ -54,11 +54,13 @@
     "alone": [
       "math.size.small",
       "b15.matha04.1",
-      "b15.matha04.2",
       "math.size.long",
       "math.size.short",
       "math.size.heavy",
       "math.size.light"
+    ],
+    "use": [
+      "b15.matha04.2"
     ],
     "handover": {
       "vo": "vo:host.pnina.handover.3",

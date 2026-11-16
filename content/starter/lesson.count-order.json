@@ -14,12 +14,12 @@
     "NUM-B-11"
   ],
   "items": [
+    "b.numb11.10",
     "b.numb11.1",
     "b.numb11.2",
     "b.numb11.3",
     "b.numb11.4",
     "b.numb11.5",
-    "b.numb11.10",
     "b.numb11.6"
   ],
   "estimatedMinutes": 5,
@@ -40,25 +40,25 @@
     ],
     "together": [
       {
-        "id": "b.numb11.1",
+        "id": "b.numb11.10",
         "lead": 0,
         "line": {
-          "vo": "vo:host.nekudi.together.tap",
+          "vo": "vo:host.nekudi.together.line",
           "caption": [
             {
               "t": "he",
-              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
             }
           ]
         }
       }
     ],
     "alone": [
+      "b.numb11.1",
       "b.numb11.2",
       "b.numb11.3",
       "b.numb11.4",
-      "b.numb11.5",
-      "b.numb11.10"
+      "b.numb11.5"
     ],
     "use": [
       "b.numb11.6"

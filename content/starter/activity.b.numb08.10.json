@@ -39,19 +39,14 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 1,
-        "label": "אַחַת"
+        "numeral": 12,
+        "label": "שְׁתֵּים עֶשְׂרֵה",
+        "misconception": "M-CNT-SEQ"
       },
       {
         "id": "o2",
         "numeral": 11,
         "label": "אַחַת עֶשְׂרֵה"
-      },
-      {
-        "id": "o3",
-        "numeral": 12,
-        "label": "שְׁתֵּים עֶשְׂרֵה",
-        "misconception": "M-CNT-SEQ"
       }
     ],
     "correct": "o2",

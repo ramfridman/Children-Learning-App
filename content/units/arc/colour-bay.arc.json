@@ -779,8 +779,12 @@
     }
    ],
    "predict": {
-    "line": "מה יקרה אם נערבב?",
-    "choices": []
+    "line": "מַה יִּקְרֶה אִם נְעַרְבֵּב?",
+    "choices": [
+     "כָּתֹם",
+     "סָגֹל",
+     "יָרֹק"
+    ]
    },
    "reminder": {
     "line": "key",
@@ -1205,11 +1209,9 @@
     "col.match.yellow",
     "col.name.red.ball",
     "col.name.blue.balloon",
-    "col.match.green",
-    "b15.cola02.3"
+    "col.match.green"
    ],
-   "use": [],
-   "borrowed": [
+   "use": [
     "b15.cola02.3"
    ],
    "poolRungs": [
@@ -1244,11 +1246,9 @@
     "col.name.pink",
     "b15.cola02.1",
     "b15.cola02.2",
-    "col.name.red.near",
-    "b15.cola03.3"
+    "col.name.red.near"
    ],
-   "use": [],
-   "borrowed": [
+   "use": [
     "b15.cola03.3"
    ],
    "poolRungs": [
@@ -1319,12 +1319,9 @@
     "col.find.blue.ball",
     "col.find.yellow.flower",
     "col.find.green.balloon",
-    "col.sort.pink",
-    "b15.cola07.1"
+    "col.sort.pink"
    ],
-   "use": [],
-   "borrowed": [
-    "col.sort.pink",
+   "use": [
     "b15.cola07.1"
    ],
    "poolRungs": [
@@ -1376,27 +1373,22 @@
    },
    "together": [
     {
-     "id": "col.match.green2",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "id": "col.match.blue",
+     "lead": 1
     }
    ],
    "alone": [
     "col.name.brown2",
     "col.name.grey2",
+    "b15.cola03.1",
+    "col.match.green2",
     "col.match.red2",
     "col.name.orange2",
     "col.name.pink2",
     "col.name.purple2",
-    "col.name.brown3",
-    "col.match.blue",
-    "b15.cola03.1"
+    "col.name.brown3"
    ],
    "use": [],
-   "borrowed": [
-    "col.match.blue",
-    "b15.cola03.1"
-   ],
    "poolRungs": [
     0,
     1
@@ -1427,17 +1419,14 @@
    "alone": [
     "b15.cola04.1",
     "b15.cola04.2",
+    "col.find.blue.ball",
     "col.sort.yellow",
     "col.sort.pink",
     "col.find.red.ball",
-    "col.find.yellow.balloon",
-    "col.find.blue.ball"
+    "col.find.yellow.balloon"
    ],
    "use": [
     "b15.cola07.1"
-   ],
-   "borrowed": [
-    "col.find.blue.ball"
    ],
    "poolRungs": [
     0,
@@ -1461,11 +1450,12 @@
     }
    ],
    "alone": [
-    "b15.cola05.2",
     "col.world.apple.red",
     "col.world.banana.ripe"
    ],
-   "use": [],
+   "use": [
+    "b15.cola05.2"
+   ],
    "poolRungs": [
     0,
     1
@@ -1487,21 +1477,17 @@
    },
    "together": [
     {
-     "id": "b15.cola02.3",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "id": "b15.cola02.1",
+     "lead": 1
     }
    ],
    "alone": [
+    "b15.cola02.3",
     "b15.cola02.4",
-    "b15.cola02.5",
-    "b15.cola02.1"
+    "b15.cola02.5"
    ],
    "use": [
     "b15.cola02.6"
-   ],
-   "borrowed": [
-    "b15.cola02.1"
    ],
    "poolRungs": [
     0,
@@ -1525,25 +1511,21 @@
    },
    "together": [
     {
-     "id": "b15.cola01.1",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "id": "col.match.blue",
+     "lead": 1
     }
    ],
    "alone": [
     "b15.cola03.1",
     "b15.cola03.2",
+    "b15.cola01.1",
     "b15.cola01.2",
     "b15.cola03.3",
     "b15.cola03.4",
-    "b15.cola03.5",
-    "col.match.blue"
+    "b15.cola03.5"
    ],
    "use": [
     "b15.cola03.6"
-   ],
-   "borrowed": [
-    "col.match.blue"
    ],
    "poolRungs": [
     0,
@@ -1567,19 +1549,15 @@
    },
    "together": [
     {
-     "id": "b15.cola06.1",
-     "lead": 0,
-     "note": "spot_error has no lead player yet: the host says its line and the child does the whole item"
+     "id": "col.name.brown",
+     "lead": 1
     }
    ],
    "alone": [
-    "b15.cola06.2",
-    "col.name.brown"
+    "b15.cola06.1",
+    "b15.cola06.2"
    ],
    "use": [],
-   "borrowed": [
-    "col.name.brown"
-   ],
    "poolRungs": [
     0,
     1
@@ -1601,15 +1579,16 @@
     "kind": "reminder",
     "before": "the first item of COL-A-07"
    },
-   "together": [],
+   "together": [
+    {
+     "id": "col.find.blue.ball",
+     "lead": 1
+    }
+   ],
    "alone": [
-    "b15.cola07.2",
-    "col.find.blue.ball"
+    "b15.cola07.2"
    ],
    "use": [],
-   "borrowed": [
-    "col.find.blue.ball"
-   ],
    "poolRungs": [
     0,
     1
@@ -1628,8 +1607,7 @@
    "together": [
     {
      "id": "b.colb01.1",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -1654,8 +1632,7 @@
    "together": [
     {
      "id": "b.colb01.4",
-     "lead": 0,
-     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 0
     }
    ],
    "alone": [
@@ -1683,8 +1660,7 @@
    "together": [
     {
      "id": "b.colb02.1",
-     "lead": 0,
-     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -1713,8 +1689,7 @@
    "together": [
     {
      "id": "b.colb02.7",
-     "lead": 0,
-     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [
@@ -1831,8 +1806,7 @@
    "together": [
     {
      "id": "b.colb06.1",
-     "lead": 0,
-     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+     "lead": 1
     }
    ],
    "alone": [

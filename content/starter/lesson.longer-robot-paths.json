@@ -16,9 +16,9 @@
   "items": [
     "b.csb01.2",
     "b.csb01.4",
+    "b.csb01.10",
     "b.csb01.1",
-    "b.csb01.3",
-    "b.csb01.10"
+    "b.csb01.3"
   ],
   "estimatedMinutes": 5,
   "sequence": 30,
@@ -53,9 +53,9 @@
     ],
     "alone": [
       "b.csb01.4",
+      "b.csb01.10",
       "b.csb01.1",
-      "b.csb01.3",
-      "b.csb01.10"
+      "b.csb01.3"
     ],
     "handover": {
       "vo": "vo:host.tzaadon.handover.2",

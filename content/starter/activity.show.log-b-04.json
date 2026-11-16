@@ -159,7 +159,16 @@
     ],
     "teaches": [],
     "predict": {
-      "choices": []
+      "choices": [],
+      "line": {
+        "vo": "vo:host.timi.show.log_b_04.predict",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כַּמָּה קֻבִּיּוֹת יִהְיוּ בַּמִּגְדָּל הַבָּא?"
+          }
+        ]
+      }
     }
   }
 }

@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "count.ladybugs.10",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "count_tap",
   "templateVersion": "1.0",
   "domain": "numbers",
@@ -58,7 +58,8 @@
       },
       {
         "id": "o3",
-        "value": 8
+        "value": 11,
+        "misconception": "M-CNT-DOUBLE"
       }
     ],
     "correct": "o2",
@@ -86,6 +87,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "misconception:M-CNT-SKIP",
         "vo": "vo:fb.skip_set",

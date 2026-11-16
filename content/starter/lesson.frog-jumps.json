@@ -14,12 +14,12 @@
     "NUM-B-13"
   ],
   "items": [
+    "b.numb13.18",
     "b.numb13.13",
     "b.numb13.14",
     "b.numb13.15",
     "b.numb13.16",
     "b.numb13.17",
-    "b.numb13.18",
     "b.numb13.19",
     "b.numb13.20",
     "b.numb13.21"
@@ -42,8 +42,8 @@
     ],
     "together": [
       {
-        "id": "b.numb13.13",
-        "lead": 0,
+        "id": "b.numb13.18",
+        "lead": 1,
         "line": {
           "vo": "vo:host.nekudi.together.line",
           "caption": [
@@ -56,11 +56,11 @@
       }
     ],
     "alone": [
+      "b.numb13.13",
       "b.numb13.14",
       "b.numb13.15",
       "b.numb13.16",
       "b.numb13.17",
-      "b.numb13.18",
       "b.numb13.19",
       "b.numb13.20"
     ],

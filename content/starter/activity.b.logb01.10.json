@@ -61,7 +61,8 @@
       {
         "id": "o3",
         "sprite": "asset:bird",
-        "label": "צִפּוֹר"
+        "label": "צִפּוֹר",
+        "misconception": "M-PAT-UNIT"
       }
     ],
     "correct": "o1",

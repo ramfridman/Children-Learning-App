@@ -14,6 +14,7 @@
     "NUM-B-14"
   ],
   "items": [
+    "b.numb14.1",
     "b.numb14.6",
     "b.numb14.7",
     "b.numb14.8",
@@ -38,20 +39,21 @@
     ],
     "together": [
       {
-        "id": "b.numb14.6",
-        "lead": 0,
+        "id": "b.numb14.1",
+        "lead": 1,
         "line": {
-          "vo": "vo:host.nekudi.together.tap",
+          "vo": "vo:host.nekudi.together.give",
           "caption": [
             {
               "t": "he",
-              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+              "v": "סוֹפְרִים בִּזְמַן שֶׁנּוֹתְנִים, וְעוֹצְרִים."
             }
           ]
         }
       }
     ],
     "alone": [
+      "b.numb14.6",
       "b.numb14.7",
       "b.numb14.8",
       "b.numb14.9",

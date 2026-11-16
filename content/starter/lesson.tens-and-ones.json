@@ -62,7 +62,9 @@
       "c.numc03.5",
       "c.numc03.6",
       "c.numc03.7",
-      "c.numc03.8",
+      "c.numc03.8"
+    ],
+    "use": [
       "c.numc03.10"
     ],
     "handover": {

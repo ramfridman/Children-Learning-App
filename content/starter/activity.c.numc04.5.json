@@ -14,7 +14,7 @@
     }
   ],
   "purpose": "practice",
-  "checkType": "practice",
+  "checkType": "reverse",
   "representation": "pictorial",
   "variantGroup": "numline",
   "difficulty": {
@@ -46,7 +46,8 @@
     "type": "line",
     "mode": "place",
     "target": 38,
-    "misconception": "M-PV-FACE"
+    "misconception": "M-PV-FACE",
+    "mirrorMisconception": "M-NL-DIR"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -60,6 +61,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-NL-DIR",
+        "vo": "vo:fb.nl_dir",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמִּסְפָּרִים הַקְּטַנִּים בַּצַּד הַשְּׂמָאלִי, וְהֵם גְּדֵלִים לְכִוּוּן הַחֵץ."
+          }
+        ]
+      },
       {
         "when": "misconception:M-PV-FACE",
         "vo": "vo:fb.pv_face",

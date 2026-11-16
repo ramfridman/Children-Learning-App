@@ -54,11 +54,6 @@
         "numeral": 12,
         "label": "שְׁתֵּים עֶשְׂרֵה",
         "misconception": "M-CLOCK-HANDS"
-      },
-      {
-        "id": "o3",
-        "numeral": 2,
-        "label": "שְׁתַּיִם"
       }
     ],
     "correct": "o1",

@@ -162,7 +162,29 @@
     ],
     "teaches": [],
     "predict": {
-      "choices": []
+      "choices": [
+        {
+          "id": "o1",
+          "label": "שְׁלוֹשָׁה"
+        },
+        {
+          "id": "o2",
+          "label": "אַרְבָּעָה"
+        },
+        {
+          "id": "o3",
+          "label": "חֲמִשָּׁה"
+        }
+      ],
+      "line": {
+        "vo": "vo:host.tzaadon.show.cs_b_01.predict",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כַּמָּה צְעָדִים עַד הַדֶּגֶל?"
+          }
+        ]
+      }
     }
   }
 }

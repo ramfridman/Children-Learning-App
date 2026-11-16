@@ -48,11 +48,11 @@
         "id": "b.mathb01.13",
         "lead": 1,
         "line": {
-          "vo": "vo:host.pnina.together.tap",
+          "vo": "vo:host.pnina.together.count",
           "caption": [
             {
               "t": "he",
-              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+              "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת."
             }
           ]
         }

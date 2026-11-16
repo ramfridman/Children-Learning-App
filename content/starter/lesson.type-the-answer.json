@@ -16,6 +16,11 @@
     "MATH-C-03"
   ],
   "items": [
+    "c.mathc01.32",
+    "c.mathc02.11",
+    "c.mathc03.9",
+    "c.mathc01.1",
+    "c.mathc02.16",
     "c.mathc01.27",
     "c.mathc01.28",
     "c.mathc01.29",
@@ -26,11 +31,6 @@
     "c.mathc02.15",
     "c.mathc03.13",
     "c.mathc03.14",
-    "c.mathc01.32",
-    "c.mathc01.1",
-    "c.mathc02.11",
-    "c.mathc02.16",
-    "c.mathc03.9",
     "c.mathc03.10"
   ],
   "estimatedMinutes": 7,
@@ -48,27 +48,32 @@
     "show": "show.math-c-01",
     "secondShow": {
       "id": "show.math-c-02",
-      "before": "c.mathc02.13"
+      "before": "c.mathc02.11"
     },
     "recall": [
       "b.mathb08.1"
     ],
     "together": [
       {
-        "id": "c.mathc01.27",
-        "lead": 0,
+        "id": "c.mathc01.32",
+        "lead": 1,
         "line": {
-          "vo": "vo:host.pnina.together.tap",
+          "vo": "vo:host.pnina.together.scale",
           "caption": [
             {
               "t": "he",
-              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+              "v": "מִסְתַּכְּלִים עַל הַמֹּאזְנַיִם, וּמוֹסִיפִים לְאַט."
             }
           ]
         }
       }
     ],
     "alone": [
+      "c.mathc02.11",
+      "c.mathc03.9",
+      "c.mathc01.1",
+      "c.mathc02.16",
+      "c.mathc01.27",
       "c.mathc01.28",
       "c.mathc01.29",
       "c.mathc01.30",
@@ -77,12 +82,9 @@
       "c.mathc02.14",
       "c.mathc02.15",
       "c.mathc03.13",
-      "c.mathc03.14",
-      "c.mathc01.32",
-      "c.mathc01.1",
-      "c.mathc02.11",
-      "c.mathc02.16",
-      "c.mathc03.9",
+      "c.mathc03.14"
+    ],
+    "use": [
       "c.mathc03.10"
     ],
     "handover": {

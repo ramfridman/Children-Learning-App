@@ -51,16 +51,11 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:tower_7",
-        "label": "מִגְדָּל שֶׁל שֶׁבַע קֻבִּיּוֹת"
-      },
-      {
-        "id": "o3",
         "sprite": "asset:tower_8",
         "label": "מִגְדָּל שֶׁל שְׁמוֹנֶה קֻבִּיּוֹת"
       }
     ],
-    "correct": "o3",
+    "correct": "o2",
     "shuffle": false,
     "unsureAllowed": true
   },

@@ -26,7 +26,7 @@ import 'response_code.dart';
 import 'template_session.dart';
 
 /// The heights of the parts of a bin's inside, and the side of a picture that lies in it (see [SortDragSession.binBands]).
-typedef BinBands = ({double sample, double label, double items, double itemSide});
+typedef BinBands = ({double sample, double label, double items, double itemSide, double itemWidth});
 
 /// The sort-and-drag template (T03). Pictures wait below the stage; the bins stand on the stage. A picture is dragged into
 /// a bin, or touched and then the bin is touched (the same move, for a hand that does not drag yet). A wrong bin is a gentle
@@ -118,17 +118,37 @@ class SortDragSession extends TemplateSession {
   /// The label's strip grows with the size its text is drawn at ([scale], the system's text size up to 1.3, see [labelScale]): the strip is
   /// 17 points for a text of 13, which is a strip of 1.3 times its font, and it keeps that proportion, so a larger text is never cut at its
   /// top (QA-1). The sample gives up what the strip takes.
-  static BinBands binBands(Rect bin, int most, {double scale = 1}) {
+  static BinBands binBands(Rect bin, int most, {double scale = 1, bool wide = false}) {
     final double inner = bin.height - 6 - 2 * _binMargin;
     final bool low = inner < 90;
-    final double itemSide = low ? 22 : 26;
+    double itemSide = low ? 22 : 26;
     final double label = (low ? 15 : 17) * scale;
-    final int perLine = math.max(1, ((bin.width - 6 - 2 * _binMargin + 2) / (itemSide + 2)).floor());
-    final double items = math.min(3, math.max(1, (most / perLine).ceil())) * (itemSide + 2);
-    return (sample: math.max(0, inner - label - items), label: label, items: items, itemSide: itemSide);
+    // A wide picture (a pattern strip, 120 by 48) lies in the bin [wideItem] times its height wide, so that two stand side by side in a phone's bin.
+    double itemWidth = wide ? itemSide * wideItem : itemSide;
+    int perLine = math.max(1, ((bin.width - 6 - 2 * _binMargin + 2) / (itemWidth + 2)).floor());
+    int lines = math.min(3, math.max(1, (most / perLine).ceil()));
+    if (wide && lines * (itemSide + 2) > inner - label) {
+      // The wider cards take more lines than the room under the label has (a small phone at a large text size): they are drawn smaller (not under
+      // 16 high) rather than spilling out of the bin.
+      itemSide = math.max(16, (inner - label) / lines - 2);
+      itemWidth = itemSide * wideItem;
+      perLine = math.max(1, ((bin.width - 6 - 2 * _binMargin + 2) / (itemWidth + 2)).floor());
+      lines = math.min(3, math.max(1, (most / perLine).ceil()));
+    }
+    final double items = lines * (itemSide + 2);
+    return (
+      sample: math.max(0, inner - label - items),
+      label: label,
+      items: items,
+      itemSide: itemSide,
+      itemWidth: itemWidth,
+    );
   }
 
   static const double _binMargin = 4;
+
+  /// How many times its height a wide picture is drawn wide where it lies sorted in a bin.
+  static const double wideItem = 2.5;
 
   /// The most pictures any bin takes: those that belong in it, or an equal share of them where any bin takes any picture.
   int get mostPerBin => activity.share
@@ -169,9 +189,9 @@ class SortDragSession extends TemplateSession {
   static TextStyle _labelStyle(double font) => AppText.fixed(size: font, weight: 700);
 
   /// The middle of the sample picture of bin [i] of [n] (a bin that takes [most] pictures), with the labels drawn at [scale].
-  static Offset sampleCentre(Size size, int n, int i, {int most = 1, double scale = 1}) {
+  static Offset sampleCentre(Size size, int n, int i, {int most = 1, double scale = 1, bool wide = false}) {
     final Rect r = binRect(size, n, i);
-    final BinBands band = binBands(r, most, scale: scale);
+    final BinBands band = binBands(r, most, scale: scale, wide: wide);
     return Offset(r.center.dx, r.top + 3 + _binMargin + band.label + band.sample / 2);
   }
 
@@ -191,9 +211,30 @@ class SortDragSession extends TemplateSession {
   double _traySide(ActivitySpec spec) =>
       math.max(44, math.min(84, spec.tilesWidth / math.max(1, activity.items.length) - 10));
 
+  /// The cards are wide pictures (a pattern strip, whose viewBox is not square): the tile stays 84 tall (the touch target does not change) and is
+  /// wider, so that the animals of a strip can be told apart; and in a bin a card is drawn [SortDragSession.wideItem] times its height wide.
+  late final bool wide = activity.items.any((SortItem i) {
+    final double? aspect = i.sprite == null ? null : viewBoxAspect(activity.assets.svg(i.sprite!));
+    return aspect != null && aspect > 1.3;
+  });
+
+  /// The tray tile's height and width: the square side, or for wide pictures 84 tall and `tilesWidth / n - 10` wide, between 84 and 200.
+  double _trayHeight(ActivitySpec spec) => wide ? 84 : _traySide(spec);
+  double _trayWidth(ActivitySpec spec) =>
+      wide ? (spec.tilesWidth / math.max(1, activity.items.length) - 10).clamp(84.0, 200.0) : _traySide(spec);
+
+  /// The width over the height of a picture's `viewBox`, or null when it has none.
+  static double? viewBoxAspect(String svg) {
+    final RegExpMatch? m = RegExp(r'viewBox="\s*[-\d.]+[ ,]+[-\d.]+[ ,]+([\d.]+)[ ,]+([\d.]+)')
+        .firstMatch(svg);
+    if (m == null) return null;
+    final double w = double.parse(m.group(1)!), h = double.parse(m.group(2)!);
+    return h == 0 ? null : w / h;
+  }
+
   Offset _trayTip(int n, int i) {
     final ActivitySpec spec = _spec!;
-    return spec.tileTip(n, i, slot: _traySide(spec) + 8, slop: 4);
+    return spec.tileTip(n, i, slot: _trayWidth(spec) + 8, slop: 4);
   }
 
   /// How much of its room the sample picture of each bin takes (see [sampleBoxSharesOf]): the small sample of a size rule is drawn larger
@@ -208,7 +249,7 @@ class SortDragSession extends TemplateSession {
   /// that lie in the bin leave on a phone (see [binBands]); the tray stands lower by what it takes.
   @override
   ActivitySpec layoutFor(ActivitySpec base) =>
-      withStageAtLeast(base, ActivitySpec.phone.stage.height, tilesBox: _traySide(base) + 8);
+      withStageAtLeast(base, ActivitySpec.phone.stage.height, tilesBox: _trayHeight(base) + 8);
 
   /// The tray's tiles have a tap margin of 4 and the row starts `tileSlop` above the tiles' place, so the drawn tiles stand 12 or 8 above it.
   @override
@@ -408,7 +449,7 @@ class SortDragSession extends TemplateSession {
         spot: spot,
         into: into,
         onto: Rect.fromCenter(
-          center: sampleCentre(_size, bins, binAt, most: mostPerBin, scale: _labelScale),
+          center: sampleCentre(_size, bins, binAt, most: mostPerBin, scale: _labelScale, wide: wide),
           width: 40,
           height: 40,
         ),
@@ -593,7 +634,8 @@ class SortDragSession extends TemplateSession {
               CopyMark(
                 Rect.fromCenter(
                   center:
-                      sampleCentre(_size, n, i, most: mostPerBin, scale: _labelScale) - Offset(0, side * 0.2),
+                      sampleCentre(_size, n, i, most: mostPerBin, scale: _labelScale, wide: wide) -
+                      Offset(0, side * 0.2),
                   width: side,
                   height: side,
                 ),
@@ -746,7 +788,8 @@ class SortDragSession extends TemplateSession {
     listenable: this,
     builder: (BuildContext c, Widget? _) {
       final List<SortItem> left = tray;
-      final double side = _traySide(spec);
+      final double side = _trayHeight(spec);
+      final double across = _trayWidth(spec);
       return Row(
         key: const Key('sort-tray'),
         mainAxisAlignment: MainAxisAlignment.center,
@@ -757,25 +800,26 @@ class SortDragSession extends TemplateSession {
               data: i.id,
               maxSimultaneousDrags: _busy || demoRunning || hosting ? 0 : 1,
               feedback: SizedBox(
-                width: side,
+                width: across,
                 height: side,
                 child: Opacity(opacity: 0.9, child: PackSvg(activity.assets.svg(i.sprite!))),
               ),
-              childWhenDragging: Opacity(opacity: 0.25, child: _tile(i, side)),
-              child: _tile(i, side),
+              childWhenDragging: Opacity(opacity: 0.25, child: _tile(i, side, across)),
+              child: _tile(i, side, across),
             ),
         ],
       );
     },
   );
 
-  Widget _tile(SortItem i, double side) => AnswerTile(
+  Widget _tile(SortItem i, double side, double across) => AnswerTile(
     semanticLabel: i.id,
     size: side,
+    width: wide ? across : null,
     slop: 4,
     state: selected == i.id || hintItem == i.id ? AnswerState.selected : AnswerState.idle,
     onPressed: () => select(i.id),
-    child: Padding(padding: const EdgeInsets.all(6), child: PackSvg(activity.assets.svg(i.sprite!))),
+    child: Padding(padding: EdgeInsets.all(wide ? 3 : 6), child: PackSvg(activity.assets.svg(i.sprite!))),
   );
 }
 
@@ -795,6 +839,7 @@ class _SortStage extends StatelessWidget {
       SortDragSession.binRect(size, a.bins.length, 0),
       s.mostPerBin,
       scale: s._labelScale,
+      wide: s.wide,
     );
     return Semantics(
       container: true,
@@ -913,7 +958,7 @@ class _SortStage extends StatelessWidget {
                       children: <Widget>[
                         for (final SortItem i in inside)
                           SizedBox(
-                            width: band.itemSide,
+                            width: band.itemWidth,
                             height: band.itemSide,
                             child: PackSvg(a.assets.svg(i.sprite!)),
                           ),

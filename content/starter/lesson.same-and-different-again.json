@@ -64,7 +64,9 @@
       "log.odd.fruit",
       "b15.loga01.1",
       "b15.loga01.2",
-      "log.odd.bird",
+      "log.odd.bird"
+    ],
+    "use": [
       "b15.loga01.3"
     ],
     "handover": {

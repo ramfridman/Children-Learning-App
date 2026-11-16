@@ -39,22 +39,17 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 15,
-        "label": "חֲמֵשׁ עֶשְׂרֵה"
-      },
-      {
-        "id": "o2",
         "numeral": 51,
         "label": "חֲמִשִּׁים וְאַחַת",
         "misconception": "M-NUM-REV"
       },
       {
-        "id": "o3",
-        "numeral": 16,
-        "label": "שֵׁשׁ עֶשְׂרֵה"
+        "id": "o2",
+        "numeral": 15,
+        "label": "חֲמֵשׁ עֶשְׂרֵה"
       }
     ],
-    "correct": "o1",
+    "correct": "o2",
     "shuffle": false,
     "unsureAllowed": true
   },

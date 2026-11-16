@@ -1,0 +1,190 @@
+{
+  "schema": "activity/v1",
+  "id": "show.log-a-07",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "build_pattern",
+  "templateVersion": "1.2",
+  "domain": "logic",
+  "band": "A",
+  "skills": [
+    {
+      "id": "LOG-A-07",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.timi.show.log_a_07.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מִישֶׁהוּ טָעָה בַּסֵּדֶר."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "slots": 6,
+    "palette": [
+      "asset:ball_red",
+      "asset:ball_blue"
+    ],
+    "given": [
+      {
+        "cell": 0,
+        "face": "asset:ball_red"
+      },
+      {
+        "cell": 1,
+        "face": "asset:ball_blue"
+      },
+      {
+        "cell": 2,
+        "face": "asset:ball_red"
+      },
+      {
+        "cell": 3,
+        "face": "asset:ball_red"
+      },
+      {
+        "cell": 4,
+        "face": "asset:ball_red"
+      },
+      {
+        "cell": 5,
+        "face": "asset:ball_red"
+      }
+    ]
+  },
+  "answer": {
+    "type": "build",
+    "sequence": [
+      "asset:ball_red",
+      "asset:ball_blue",
+      "asset:ball_red",
+      "asset:ball_blue",
+      "asset:ball_red",
+      "asset:ball_blue"
+    ]
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.timi.show.log_a_07.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אָדֹם, כָּחֹל. כָּאן צָרִיךְ כָּחֹל."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "מִישֶׁהוּ טָעָה בַּסֵּדֶר."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.timi.show.log_a_07.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מִישֶׁהוּ טָעָה בַּסֵּדֶר."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.timi.show.log_a_07.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אָדֹם, כָּחֹל. כָּאן צָרִיךְ כָּחֹל."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.timi.show.log_a_07.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: תַּקְּנוּ אֶת הַשֵּׁנִי."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "piece": "asset:ball_blue",
+        "cell": 3,
+        "say": "key"
+      },
+      {
+        "by": "child",
+        "piece": "asset:ball_blue",
+        "cell": 5
+      }
+    ],
+    "teaches": [],
+    "predict": {
+      "choices": [],
+      "line": {
+        "vo": "vo:host.timi.show.log_a_07.predict",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אֵיפֹה הַטָּעוּת?"
+          }
+        ]
+      }
+    }
+  }
+}

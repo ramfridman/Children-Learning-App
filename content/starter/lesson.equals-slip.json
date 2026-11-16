@@ -14,10 +14,10 @@
     "MATH-B-09"
   ],
   "items": [
+    "b.mathb09.1",
     "b.mathb09.9",
     "b.mathb09.10",
     "b.mathb09.11",
-    "b.mathb09.1",
     "b.mathb09.12"
   ],
   "estimatedMinutes": 5,
@@ -38,23 +38,23 @@
     ],
     "together": [
       {
-        "id": "b.mathb09.9",
+        "id": "b.mathb09.1",
         "lead": 0,
         "line": {
-          "vo": "vo:host.pnina.together.tap",
+          "vo": "vo:host.pnina.together.scale",
           "caption": [
             {
               "t": "he",
-              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+              "v": "מִסְתַּכְּלִים עַל הַמֹּאזְנַיִם, וּמוֹסִיפִים לְאַט."
             }
           ]
         }
       }
     ],
     "alone": [
+      "b.mathb09.9",
       "b.mathb09.10",
-      "b.mathb09.11",
-      "b.mathb09.1"
+      "b.mathb09.11"
     ],
     "use": [
       "b.mathb09.12"

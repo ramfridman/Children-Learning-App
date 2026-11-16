@@ -31,5 +31,42 @@
       }
     ]
   },
-  "partsWait": "show.log-a-07 waits: show.log-a-07: a place of the row is neither given nor laid by a step (the arc gives no `scene.given` for the cells the host does not lay)"
+  "parts": {
+    "show": "show.log-a-07",
+    "recall": [
+      "b15.loga06.1"
+    ],
+    "together": [
+      {
+        "id": "log.fix.balls",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.timi.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אוֹמְרִים אֶת הַסֵּדֶר בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "log.fix.things",
+      "log.fix.pets",
+      "b15.loga07.1"
+    ],
+    "use": [
+      "b15.loga07.2"
+    ],
+    "handover": {
+      "vo": "vo:host.timi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  }
 }

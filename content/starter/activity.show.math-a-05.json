@@ -32,9 +32,10 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "slots": 3,
+    "slots": 4,
     "palette": [
       "asset:time_evening",
+      "asset:time_night",
       "asset:time_morning",
       "asset:time_noon"
     ]
@@ -44,7 +45,8 @@
     "sequence": [
       "asset:time_morning",
       "asset:time_noon",
-      "asset:time_evening"
+      "asset:time_evening",
+      "asset:time_night"
     ]
   },
   "voiceAnswer": false,
@@ -145,15 +147,21 @@
         "cell": 1
       },
       {
-        "by": "child",
+        "by": "host",
         "piece": "asset:time_evening",
         "cell": 2
+      },
+      {
+        "by": "child",
+        "piece": "asset:time_night",
+        "cell": 3
       }
     ],
     "teaches": [
       "בֹּקֶר",
       "צָהֳרַיִם",
-      "עֶרֶב"
+      "עֶרֶב",
+      "לַיְלָה"
     ]
   }
 }

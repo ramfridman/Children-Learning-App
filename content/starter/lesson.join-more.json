@@ -14,13 +14,13 @@
     "MATH-B-01"
   ],
   "items": [
+    "b.mathb01.13",
     "b.mathb01.1",
     "b.mathb01.2",
     "b.mathb01.3",
     "b.mathb01.4",
     "b.mathb01.5",
-    "b.mathb01.6",
-    "b.mathb01.13"
+    "b.mathb01.6"
   ],
   "estimatedMinutes": 5,
   "sequence": 30,
@@ -40,26 +40,26 @@
     ],
     "together": [
       {
-        "id": "b.mathb01.1",
-        "lead": 0,
+        "id": "b.mathb01.13",
+        "lead": 1,
         "line": {
-          "vo": "vo:host.pnina.together.line",
+          "vo": "vo:host.pnina.together.count",
           "caption": [
             {
               "t": "he",
-              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+              "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת."
             }
           ]
         }
       }
     ],
     "alone": [
+      "b.mathb01.1",
       "b.mathb01.2",
       "b.mathb01.3",
       "b.mathb01.4",
       "b.mathb01.5",
-      "b.mathb01.6",
-      "b.mathb01.13"
+      "b.mathb01.6"
     ],
     "handover": {
       "vo": "vo:host.pnina.handover.1",

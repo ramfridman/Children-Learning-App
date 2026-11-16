@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "log.story.plant.last",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "logic",
@@ -56,7 +56,8 @@
       {
         "id": "o3",
         "sprite": "asset:plant_sprout",
-        "label": "נֵבֶט"
+        "label": "נֵבֶט",
+        "misconception": "M-SEQ-CAUSE"
       }
     ],
     "correct": "o2",

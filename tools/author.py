@@ -430,7 +430,8 @@ def activity(a, template, skills, purpose, check, scene, answer, fb_tags, h, goa
         'scene': scene, 'answer': answer, 'voiceAnswer': voice,
     }
     if prompt_math:
-        assert template == 'tap_answer' and not scene.get('row'), '%s: a number sentence in the bubble is for a tap_answer with no row' % i
+        # a tap with no row, or (M11 Stage 2) the numeral a give_n asks for (NUM-A-07, numeral to set)
+        assert (template == 'tap_answer' and not scene.get('row')) or template == 'give_n',             '%s: a number sentence in the bubble is for a tap_answer with no row, or a give_n' % i
         d['prompt']['math'] = list(prompt_math)
     if answer_prompt:
         d['answerPrompt'] = say('vo:%s.how_many' % i, answer_prompt)
@@ -1090,13 +1091,13 @@ def k_pat(a, ctx):
         row = [x, y, x, y, x, '?']
         full = [x, y, x, y, x, y]
         return k_pick(pick_spec(a, prompt='מַה בָּא אַחַר כָּךְ?', row=row, options=place(y, [x, a['c']], a.get('pos', 1)), correct=y,
-                                tags={x: 'M-PAT-NEXT', **a.get('tags', {})}, correct_text='כֵּן! ' + seq_words(ctx, full) + '.',
+                                tags={x: 'M-PAT-NEXT', a['c']: 'M-PAT-UNIT', **a.get('tags', {})}, correct_text='כֵּן! ' + seq_words(ctx, full) + '.',
                                 h3=hint_fit(*['%s — וְאָז %s. עַכְשָׁו תּוֹרְכֶם.' % (seq_words(ctx, full[k:5]), n(y)) for k in (0, 1)])), ctx)
     if mode == 'fix':
         row = [x, y, '?', y, x, y]
         full = [x, y, x, y, x, y]
         return k_pick(pick_spec(a, prompt='חָסֵר אֶחָד בַּסֵּדֶר. מַה צָּרִיךְ לָבוֹא כָּאן?', row=row, options=place(x, [y, a['c']], a.get('pos', 1)),
-                                correct=x, tags={y: 'M-PAT-NEXT'}, correct_text='כֵּן! ' + seq_words(ctx, full) + '.',
+                                correct=x, tags={y: 'M-PAT-NEXT', a['c']: 'M-PAT-UNIT'}, correct_text='כֵּן! ' + seq_words(ctx, full) + '.',
                                 h3='%s — בַּמָּקוֹם הֶחָסֵר בָּא %s. עַכְשָׁו תּוֹרְכֶם.' % (seq_words(ctx, [x, y]), n(x))), ctx)
     if mode == 'yes':
         row = [x, y, x, y, x, y]
@@ -1355,6 +1356,12 @@ def k_spot(a, ctx):
 
 
 
+# M11 Stage 2: the lines of M-CNT-CARD in a number sentence: one of the numbers given as the answer (Band C's line, one text for its id), and the start
+# of a take-away given back (a draft, needs-editor)
+CARD_ADD = ('vo:fb.sum_card', 'זֶה רַק אֶחָד מֵהַמִּסְפָּרִים. בּוֹאוּ נוֹסִיף גַּם אֶת הַמִּסְפָּר הַשֵּׁנִי.')
+CARD_TAKE = ('vo:fb.take_card', 'זֶה הַמִּסְפָּר שֶׁהִתְחַלְנוּ בּוֹ. עַכְשָׁו מוֹרִידִים מִמֶּנּוּ.')
+
+
 def k_sum(a, ctx):
     """A small story with a number: add (join), take (take away) or missing (the part that is not in the basket)."""
     obj = ctx['objects'][a['obj']]
@@ -1367,7 +1374,9 @@ def k_sum(a, ctx):
         text = '%s! %s וְעוֹד %s שָׁוֶה %s.' % (F[r], F[x], F[y], F[r])
         h3 = hint_fit(*['%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], F[y], c, F[r]) for c in counts(r)])
         others = [x, r + 1] if x != r + 1 else [r + 1, r + 2]
-        tags = {'n:%d' % (r + 1): 'M-CNT-DOUBLE'}  # x is M-CNT-CARD, untagged as in k_madd
+        # M11 Stage 2: the start alone is M-CNT-CARD, with the line of its own that Band C gave it (one of the numbers, not the sum)
+        tags = {'n:%d' % (r + 1): 'M-CNT-DOUBLE', **({'n:%d' % x: 'M-CNT-CARD'} if x != r + 1 else {})}
+        a = dict(a, tag_lines={**a.get('tag_lines', {}), 'M-CNT-CARD': list(CARD_ADD)})
     elif mode == 'take':
         r = x - y
         prompt = 'יֵשׁ %s. לוֹקְחִים %s. כַּמָּה נִשְׁאֲרוּ?' % (qty(x, obj), qty(y, obj))
@@ -1377,6 +1386,8 @@ def k_sum(a, ctx):
         # B-15 §3: the start (M-CNT-CARD, untagged as in k_madd) and the part taken away
         others = [x, y] if y not in (r, x) else [x, r + 1]
         tags = {'n:%d' % y: 'M-PART-MISS'} if y in others else {'n:%d' % (r + 1): 'M-CNT-DOUBLE'}
+        tags['n:%d' % x] = 'M-CNT-CARD'  # M11 Stage 2: the start, nothing taken away (its own line)
+        a = dict(a, tag_lines={**a.get('tag_lines', {}), 'M-CNT-CARD': list(CARD_TAKE)})
     else:
         r = x - y
         prompt = 'יֵשׁ %s בְּסַךְ הַכֹּל. %s בַּסַּל. כַּמָּה בַּחוּץ?' % (qty(x, obj), qty(y, obj))
@@ -1385,7 +1396,7 @@ def k_sum(a, ctx):
         h3 = '%s בְּסַךְ הַכֹּל, %s בַּסַּל. מַה שֶּׁנִּשְׁאַר בַּחוּץ: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
             F[x], F[y], F[r], F[r])
         others = [x, r + 1] if x != r + 1 else [r + 1, r + 2]
-        tags = {'n:%d' % x: 'M-PART-MISS'}
+        tags = {'n:%d' % x: 'M-PART-MISS', 'n:%d' % others[1]: 'M-CNT-DOUBLE'}
     return k_pick(pick_spec(a, prompt=prompt, options=['n:%d' % v for v in place(r, others, a.get('pos', 1))], correct='n:%d' % r,
                             tags=tags, correct_text=text, h3=h3, **extra), ctx)
 
@@ -1431,7 +1442,10 @@ def k_pay(a, ctx):
         a, 'shop_pay', skills_of(a), 'practice', 'practice',
         {'background': 'asset:meadow', 'itemSprite': 'asset:' + a['item'], 'itemCount': a.get('itemCount', 1), 'price': a['price'],
          'purse': [{'kind': k, 'count': c} for k, c in a['purse']]},
-        {'type': 'pay', 'countMisconception': a['tag']}, {a['tag']},
+        dict({'type': 'pay', 'countMisconception': a['tag']},
+             # M11 Stage 2: the digits of the price paid as shekels (M-PV-FACE), the price paid reversed (M-NUM-REV): `classifiers` {when: tag}
+             **({'classifiers': [{'when': w, 'misconception': t} for w, t in sorted(a['classifiers'].items())]} if a.get('classifiers') else {})),
+        {a['tag']} | set(a.get('classifiers', {}).values()),
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'כׇּל מַטְבֵּעַ שָׁוֶה כַּמָּה שֶׁכָּתוּב עָלָיו.', a['h3'],
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'), shared=('pick', 'pay')),
         'child pays the exact price by adding the values of the coins', prompt=a['prompt'], correct=a['correct_text'])
@@ -1577,6 +1591,7 @@ def apply_pending(spec):
             continue
         spec['activities'][k] = {'id': i, 'difficulty': a['difficulty'], 'revision': 2, **({'band': a['band']} if 'band' in a else {}),
                                  **{key: v for key, v in new.items() if key != 'waitsFor'}}
+        spec.setdefault('assets', []).extend(sorted(s for s in sprites if s.startswith('strip_')))  # the cards join the pack's asset list
 
 
 def main(path):
