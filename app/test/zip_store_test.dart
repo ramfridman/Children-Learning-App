@@ -68,13 +68,12 @@ Uint8List _random(Random rnd, int length) =>
     Uint8List.fromList(<int>[for (int i = 0; i < length; i++) rnd.nextInt(256)]);
 
 /// The bundled starter pack, whatever its version.
-Uint8List _realPack() => File(
-  Directory('assets/packs')
-      .listSync()
-      .whereType<File>()
-      .map((File f) => f.path)
-      .singleWhere((String p) => RegExp(r'starter-[0-9.]+\.nnpack$').hasMatch(p)),
-).readAsBytesSync();
+Uint8List _realPack() =>
+    Directory('assets/packs')
+        .listSync()
+        .whereType<File>()
+        .singleWhere((File f) => RegExp(r'^starter-[0-9.]+\.nnpack$').hasMatch(f.uri.pathSegments.last))
+        .readAsBytesSync();
 
 void main() {
   group('writing and reading', () {

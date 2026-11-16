@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Nekudi, pose "celebrate" (M11 step 1.2 sample): a hop with both hands up, her shell halves lifted a little and her thin wings
+     peeking out, as a ladybird does just before it flies. Original drawing in plain shapes, in the style and palette of
+     design/assets/nekudi.svg (tokens color.character.nekudi; the wing is paper white over a sky-tint rim, no new hue).
+     Pose sheet: docs/design/m11-rooms.md section 7. Artboard 512, baseline y 472 (the feet hop 22 above it), faces front.
+     References looked at (2026-11-14), nothing traced: Wikipedia "Coccinellidae" (hard elytra that cover the folded membranous hind
+     wings; springy veins that stiffen in flight); photographs of seven-spot ladybirds taking off, the two red elytra lifted up and
+     apart and the clear wings unfolding behind them (Bing image search "seven spot ladybird walking side view legs macro", the
+     take-off frames among the results).
+     2026-11-15: the whole pose is scaled to 0.915 about the baseline's middle (group "fit") so the antennae stay inside the
+     celebration card's window (everything at y >= 72, docs/design/m11-rooms.md section 7.2); burst anchor 256, 104. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="נְקוּדִי חוֹגֶגֶת">
+<g id="fit" transform="translate(256 472) scale(0.915) translate(-256 -472)">
+  <ellipse cx="256" cy="466" rx="94" ry="9" fill="rgba(43,35,80,0.11)"/>
+  <g id="sparks">
+    <path d="M136 120 Q139 131 150 134 Q139 137 136 148 Q133 137 122 134 Q133 131 136 120 Z" fill="#FFC83D"/>
+    <path d="M384 104 Q386 112 394 114 Q386 116 384 124 Q382 116 374 114 Q382 112 384 104 Z" fill="#FFC83D"/>
+  </g>
+  <g id="body" transform="translate(0 -22)">
+    <g id="wings">
+      <path d="M248 286 C196 236 118 222 92 258 C88 292 156 318 248 304 Z" fill="#FFFFFF" opacity="0.92" stroke="#BFE3F5" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M240 292 C190 270 140 262 106 266 M236 300 C196 296 150 292 120 290" fill="none" stroke="#BFE3F5" stroke-width="3" stroke-linecap="round"/>
+      <path d="M268 286 C320 236 398 222 424 258 C428 292 360 318 268 304 Z" fill="#FFFFFF" opacity="0.92" stroke="#BFE3F5" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M276 292 C326 270 376 262 410 266 M280 300 C320 296 366 292 396 290" fill="none" stroke="#BFE3F5" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <g id="antennae">
+      <path d="M228 158 Q204 108 176 80" fill="none" stroke="#3F3A7A" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="173" cy="76" r="15" fill="#FFC83D"/>
+      <path d="M286 158 Q310 108 338 80" fill="none" stroke="#3F3A7A" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="341" cy="76" r="15" fill="#FFC83D"/>
+    </g>
+    <g id="feet">
+      <ellipse cx="216" cy="460" rx="22" ry="10" fill="#3F3A7A" transform="rotate(12 216 460)"/>
+      <ellipse cx="296" cy="460" rx="22" ry="10" fill="#3F3A7A" transform="rotate(-12 296 460)"/>
+    </g>
+    <g id="arms">
+      <path d="M170 318 L128 262 L112 214" fill="none" stroke="#3F3A7A" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="110" cy="208" r="13" fill="#3F3A7A"/>
+      <path d="M346 318 L388 262 L404 214" fill="none" stroke="#3F3A7A" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="406" cy="208" r="13" fill="#3F3A7A"/>
+    </g>
+    <!-- the body under the shell shows in the gap between the lifted halves -->
+    <ellipse cx="257" cy="362" rx="64" ry="96" fill="#3F3A7A"/>
+    <g id="shell-end" transform="rotate(9 258 246)">
+      <path d="M248 246 A112 112 0 0 0 248 468 Z" fill="#D94E44"/>
+      <path d="M256 238 A110 110 0 0 0 256 458 Z" fill="#F46A5E"/>
+      <circle cx="198" cy="316" r="17" fill="#3F3A7A"/>
+      <circle cx="178" cy="372" r="15" fill="#3F3A7A"/>
+      <circle cx="216" cy="414" r="16" fill="#3F3A7A"/>
+    </g>
+    <g id="shell-start" transform="rotate(-9 258 246)">
+      <path d="M256 246 A111 111 0 0 1 256 468 Z" fill="#D94E44"/>
+      <path d="M260 238 A110 110 0 0 1 260 458 Z" fill="#F46A5E"/>
+      <circle cx="314" cy="316" r="17" fill="#3F3A7A"/>
+      <circle cx="334" cy="372" r="15" fill="#3F3A7A"/>
+      <circle cx="296" cy="414" r="16" fill="#3F3A7A"/>
+      <ellipse cx="304" cy="286" rx="22" ry="10" fill="#FFFFFF" opacity="0.35" transform="rotate(-30 304 286)"/>
+    </g>
+    <g id="head">
+      <circle cx="256" cy="216" r="76" fill="#3F3A7A"/>
+      <path d="M202 214 Q222 188 242 214" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
+      <path d="M270 214 Q290 188 310 214" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
+      <ellipse cx="194" cy="244" rx="14" ry="9" fill="#F4A7B4"/>
+      <ellipse cx="318" cy="244" rx="14" ry="9" fill="#F4A7B4"/>
+      <g id="mouth">
+        <path d="M226 240 Q256 244 286 240 Q282 284 256 286 Q230 284 226 240 Z" fill="#F4A7B4"/>
+        <path d="M234 247 Q256 250 278 247 Q274 276 256 278 Q238 276 234 247 Z" fill="#2B2350"/>
+        <ellipse cx="256" cy="270" rx="12" ry="6" fill="#F27D8E"/>
+      </g>
+    </g>
+  </g>
+</g>
+</svg>

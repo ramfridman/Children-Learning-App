@@ -117,14 +117,17 @@ class ActivitySpec {
   /// The room the progress trail has on a board [boardWidth] wide (QA-L7-2): between the header's buttons (home at the start, "show me" and
   /// the lamp at the end), each with its tap margin, and [trailClear] from them. The same on every lesson, whether the buttons are shown or not,
   /// so the trail does not jump when a step has none.
-  ({double left, double right}) trailRoom(double boardWidth) => (
+  ///
+  /// [endReserve] is a width kept free at the room's end, between the trail and the home button, for a landmark that stands in the header
+  /// (M11, `LandmarkSlot`): the room is that much shorter and the trail keeps clear of the landmark too.
+  ({double left, double right}) trailRoom(double boardWidth, {double endReserve = 0}) => (
     left: math.max(eyeLeft, hintLeft) + _pebble + _slop + trailClear,
-    right: boardWidth - homeRight - _pebble - _slop - trailClear,
+    right: boardWidth - homeRight - _pebble - _slop - trailClear - endReserve,
   );
 
   /// Where the trail's pill [trail] starts: centred where the board puts it, moved only as far as it must be to stay in [trailRoom].
-  double trailPillLeft(TrailLayout trail, double boardWidth) {
-    final ({double left, double right}) room = trailRoom(boardWidth);
+  double trailPillLeft(TrailLayout trail, double boardWidth, {double endReserve = 0}) {
+    final ({double left, double right}) room = trailRoom(boardWidth, endReserve: endReserve);
     final double centred = trailLeft + (trailWidth - trail.width) / 2;
     return math.max(room.left, math.min(centred, room.right - trail.width));
   }

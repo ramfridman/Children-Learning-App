@@ -41,6 +41,14 @@ import '../parent/alert_scan.dart';
 import '../parent/language_settings.dart';
 import '../parent/parent_rules.dart';
 import '../parent/time_rules.dart';
+import '../rooms/goni_skin.dart';
+import '../rooms/host_hello.dart';
+import '../rooms/host_view.dart';
+import '../rooms/moments.dart';
+import '../rooms/room_activity.dart';
+import '../rooms/room_scene.dart';
+import '../rooms/room_spec.dart';
+import '../rooms/rooms_provider.dart';
 import '../speech/voice_answer.dart';
 import '../speech/word_matcher.dart';
 import '../strings/he.dart';
@@ -63,6 +71,7 @@ import 'ls01_sequence_session.dart';
 import 'ls01_sort_session.dart';
 import 'ls01_spot_session.dart';
 import 'ls01_tap_session.dart';
+import 'goni_moment.dart';
 import 'lesson_controller.dart';
 import 'name_options.dart';
 import 'clock_set_session.dart';
@@ -178,6 +187,15 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   bool _ring = false;
   Timer? _ringTimer;
   bool _ladderBusy = false;
+
+  /// The room this lesson is played in and its host (M11), found once when the lesson opens; null for a lesson with no room (the placement
+  /// game, a skill that no room claims, rooms switched off).
+  RoomSpec? _room;
+  HostSpec? _host;
+  Timer? _greetTimer;
+
+  /// How long the host's greeting stays at least: long enough to read while it has no voice, and it waits for its voice to end.
+  static const Duration _greetingPause = Duration(seconds: 3);
 
   @override
   void initState() {
@@ -417,6 +435,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     }
     _ladder?.stop();
     _ringTimer?.cancel();
+    _greetTimer?.cancel();
     _director.removeListener(_idleHold);
     _voice?.dispose();
     _session?.dispose();
@@ -551,6 +570,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       childName: ref.read(activeProfileProvider)?.name,
       companionName: guide.character.nameHe,
     );
+    final RoomSpec? room = _room = _roomFor(content, widget.mission ?? content.lessons[widget.lessonId]!);
+    final HostSpec? host = _host = room == null ? null : HostSpec.byId(room.hostId);
     final LessonController made = _controller = LessonController(
       content: content,
       captionsShown: look.captionsShown,
@@ -574,13 +595,81 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       echoOnly: () => _quiet.echoOnly,
       // The child's first name goes on the tiles of an own-name item on this phone and nowhere else (decision 25).
       // The look's cap on answer options comes after it (B-29): at most 3, 3, 4 or 5 are shown, the right one always among them.
-      personalise: (Activity a) => capChoices(ownName.apply(a), maxChoices),
+      personalise: (Activity a) {
+        final Activity made = capChoices(ownName.apply(a), maxChoices);
+        return room == null ? made : inRoom(made);
+      },
+      // The host of the room greets before the first item (text with a clip that is still pending, M11 step 1.3).
+      hostGreeting: host == null || room == null ? null : _greetingOf(host, room),
+      hostCheer: host == null
+          ? null
+          : Spoken(vo: HostHe.clip(host.id, 'cheer'), caption: HostHe.cheers[host.id]!.text),
     );
     made.addListener(_speak);
+    // Colour Bay: Goni's colours are parsed now, so that a change of skin never shows an empty frame.
+    if (room?.id == RoomId.colors) unawaited(precacheGoni(skinsForLesson(askedItems(made.items))));
     _startIdle(made);
-    // The first question is spoken as soon as the lesson opens.
-    SchedulerBinding.instance.addPostFrameCallback((_) => _speak());
+    // The first line is spoken as soon as the lesson opens: the host's greeting, or the first question when the lesson has no host.
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _speak();
+      _holdGreeting(made);
+    });
     return made;
+  }
+
+  /// What [host] says when the lesson opens. The two foreign-language hosts first say their greeting word in the course's own language, then the
+  /// Hebrew greeting (`hostHello`): the word's clip goes first in the line and the Hebrew clip follows it, a clip that is not in the pack is
+  /// skipped, and the word is written (in its chip) only where a Meet screen may write a word (the letters rule).
+  Spoken _greetingOf(HostSpec host, RoomSpec room) {
+    final Spoken hebrew = Spoken(
+      vo: HostHe.clip(host.id, 'greeting'),
+      caption: HostHe.greetings[host.id]!.text,
+    );
+    final String? hello = hostHello[host.id]?.text;
+    if (hello == null) return hebrew;
+    final String course = room.name;
+    return Spoken(
+      vo: HostHe.clip(host.id, 'hello'),
+      caption: hebrew.caption,
+      target: hebrew.vo,
+      show:
+          meetShowsWord(
+            look: _bandIn(course),
+            lettersOpen: ref.read(meetLettersOpenProvider)(widget.profileId, course),
+          )
+          ? hello
+          : null,
+    );
+  }
+
+  /// The course host's "let's say it together" in a Meet (its text, and its own clip once it is voiced; until then the clip of the companion's
+  /// line, which says the same sentence), or null where the lesson has no course host.
+  Spoken? _hostTogether(SayItActivity a) {
+    final HostSpec? host = _host;
+    final Str? line = host == null ? null : HostHe.togethers[host.id];
+    if (host == null || line == null) return null;
+    final String own = HostHe.clip(host.id, 'together');
+    return Spoken(vo: _director.bank?.clip(own) != null ? own : a.together.vo, caption: line.text);
+  }
+
+  /// The room of [lesson]: its skill's land, or the language course. None for the placement game (an adaptive visit, not a lesson), for a
+  /// skill no room claims, and when rooms are off.
+  RoomSpec? _roomFor(PackContent content, Lesson lesson) {
+    if (widget.flow != null || !ref.read(roomsEnabledProvider)) return null;
+    final String? skill = _lessonSkill(content, lesson);
+    return skill == null ? null : RoomSpec.of(content.skills[skill]);
+  }
+
+  /// The greeting ends by itself, once it has been there for [_greetingPause] and its voice (when it has one) has ended, or at a touch.
+  void _holdGreeting(LessonController c) {
+    if (c.moment != Moment.greeting) return;
+    _greetTimer = Timer(_greetingPause, () {
+      unawaited(
+        _director.untilQuiet().then((_) {
+          if (mounted) c.endGreeting();
+        }),
+      );
+    });
   }
 
   /// What the tutor may know: ids and enums, from the child's profile (the band and the address form) and the guide.
@@ -675,9 +764,11 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
 
   /// The presentation band of the child in the activity's course (docs/design/languages-l5-ls01.md section 3): the sizes of a tile and of a
   /// text face follow it, not the band letter of the skill.
-  Band _presentationBand(Activity a) {
+  Band _presentationBand(Activity a) => _bandIn(a.course);
+
+  Band _bandIn(String course) {
     final LanguageSwitches s =
-        ref.read(languagesProvider).value?.of(widget.profileId, a.course) ?? const LanguageSwitches();
+        ref.read(languagesProvider).value?.of(widget.profileId, course) ?? const LanguageSwitches();
     final int ageBand = ref.read(activeProfileProvider)?.ageBand ?? 1;
     return Band.values[s.presentationBand(ageBand)];
   }
@@ -812,6 +903,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             lettersOpen: ref.read(meetLettersOpenProvider)(widget.profileId, a.course),
           ),
           breath: _breathOf(_stageSpec!.stage),
+          hostTogether: _hostTogether(a),
         ),
         SayItActivity() => SayItSession(c, a, say: _makeSayStep(c, a)),
       };
@@ -967,6 +1059,59 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     );
   }
 
+  /// What the frame draws of the room: its look, the host (in front in a host beat: the greeting and a Meet screen), and the landmark that
+  /// reacts once the item is solved. Null where the lesson has no room.
+  RoomScene? _scene(LessonController c, {bool greeting = false, MeetSession? meet}) {
+    final RoomSpec? room = _room;
+    final HostSpec? host = _host;
+    if (room == null || host == null) return null;
+    final HostPose pose = greeting ? HostPose.talk : meet?.hostPose ?? HostPose.idle;
+    return RoomScene(
+      room: room,
+      hostView: HostView(
+        host: host,
+        pose: pose,
+        // The host is announced once, at the greeting.
+        semanticLabel: greeting ? HostHe.names[host.id]!.text : null,
+        // Goni takes the colour the child just found after a right answer, and only then (a host on screen in a turn: the Show's last step).
+        skin: goniSkinFor(c, room),
+      ),
+      hostMouth: host.mouthShare(pose),
+      hostBeat: greeting || meet != null,
+      companionSpeaks: meet?.companionSpeaks ?? false,
+      // A Meet screen right after the greeting finds the host in front already: it does not walk in again.
+      hostStays: !greeting && c.index == 0,
+      solved: c.solved && !c.finished,
+    );
+  }
+
+  /// The greeting: the host in front with its line in the bubble, the companion behind it listening, the room's stage empty. A touch anywhere
+  /// goes on to the first item.
+  Widget _greeting(LessonController controller, Guide guide, ActivitySpec board) => Listener(
+    behavior: HitTestBehavior.translucent,
+    onPointerDown: (_) => controller.endGreeting(),
+    child: ActivityFrame(
+      spec: board,
+      scene: _scene(controller, greeting: true),
+      guide: SpeakingCharacter(
+        character: guide.character,
+        director: _director,
+        resting: CharacterState.listen,
+        // The host's voice is not the companion's: the companion's mouth stays still while the host speaks.
+        voiceOf: 'host',
+      ),
+      bubbleText: controller.bubble,
+      bubbleTarget: controller.bubbleShow == null
+          ? null
+          : (text: controller.bubbleShow!, course: _room!.name),
+      trailTotal: controller.trailLength,
+      trailDone: 0,
+      onHome: _home,
+      showHelp: false,
+      stage: (Size room) => const SizedBox.shrink(),
+    ),
+  );
+
   Widget _lessonBody(
     PackContent c,
     Guide guide,
@@ -977,6 +1122,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     return ListenableBuilder(
       listenable: Listenable.merge(<Listenable?>[controller, _voice?.answer, _sayTick]),
       builder: (BuildContext ctx, Widget? _) {
+        // The host's greeting is a screen of its own before the first item: no item, no session, no help.
+        if (controller.moment == Moment.greeting) return _greeting(controller, guide, board);
         final TemplateSession session = _sessionFor(controller);
         session.bubbleScaler = ActivityFrame.bubbleScaler(ctx);
         session.praise = stageSpec.praise;
@@ -1001,6 +1148,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             controller.errors >= 1 &&
             controller.hintLevel < controller.current.hints.length;
         final MicState? heard = _voice?.answer.state;
+        // A Meet screen in a course's room: the course host teaches in front, and the companion listens behind it.
+        final MeetSession? meet = controller.moment == Moment.meet && session is MeetSession ? session : null;
         final CharacterState resting = controller.tutorThinking
             ? CharacterState.think
             : heard == MicState.listening
@@ -1017,6 +1166,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             ? CharacterState.sleepy
             : _idleStep == IdleStep.secondPrompt
             ? CharacterState.talk
+            : meet != null
+            ? meet.companionPose
             : session is MeetSession
             ? session.pose
             : CharacterState.idle;
@@ -1032,11 +1183,13 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             },
             child: ActivityFrame(
               spec: spec,
+              scene: _scene(controller, meet: meet),
               guide: SpeakingCharacter(
                 character: guide.character,
                 director: _director,
                 resting: resting,
-                voiceOf: guide.character.id,
+                // The host's voice is not the companion's: the companion's mouth stays still while the host speaks.
+                voiceOf: meet != null && !meet.companionSpeaks ? 'host' : guide.character.id,
               ),
               bubbleText: controller.bubble,
               bubbleMath: controller.bubbleMath,
@@ -1085,6 +1238,17 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
                           : controller.lesson.celebration.caption,
                       sticker: controller.endedForRest ? null : _sticker,
                       onDone: _home,
+                      room: _room,
+                      host: _host == null
+                          ? null
+                          : HostView(
+                              host: _host!,
+                              pose: controller.endedForRest ? HostPose.idle : HostPose.celebrate,
+                              // In Colour Bay Goni takes the lesson's colour, or the rainbow when it had no one colour.
+                              skin: goniCardSkin(controller, _room),
+                            ),
+                      cheer: _host == null ? null : HostHe.cheers[_host!.id]?.text,
+                      finished: !controller.endedForRest,
                       cameo: SpeakingCharacter(
                         character: guide.character,
                         director: _director,

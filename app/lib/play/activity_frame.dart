@@ -11,8 +11,18 @@ import '../design/layout.dart';
 import '../design/stage_spec.dart';
 import '../design/tokens.g.dart';
 import '../design/trail_layout.dart';
+import '../design/trail_shape.dart';
 import '../rewards/sticker_design.dart';
+import '../rooms/host_pair.dart';
+import '../rooms/host_places.dart';
+import '../rooms/landmark_slot.dart';
+import '../rooms/room_backdrop.dart';
+import '../rooms/room_celebration.dart';
+import '../rooms/room_scene.dart';
+import '../rooms/room_spec.dart';
+import '../rooms/stage_reaction.dart';
 import '../strings/he.dart';
+import 'bubble_tail.dart';
 import 'math_run.dart';
 import 'math_signs.dart';
 
@@ -47,7 +57,12 @@ class ActivityFrame extends StatelessWidget {
     this.boardLayer,
     this.promptRing = false,
     this.idleHand,
+    this.scene,
   });
+
+  /// The lesson's room (M11): its screen, rim and backdrop, the landmark that reacts, its trail's shape, and the host standing beside the
+  /// companion in a host beat. Null for the default frame (the cream screen, the meadow, the guide alone).
+  final RoomScene? scene;
 
   /// The idle prompt's first step rings the place the question is said from (the speaker bubble, or the caption bubble) once, in the sky
   /// colour, and (B-29 D5) the hand of the idle prompt points into the stage: a layer over the stage that takes no touch, or null.
@@ -80,6 +95,9 @@ class ActivityFrame extends StatelessWidget {
   /// frame has answer tiles (a hint's longer line must never lie over one, in any land); this switch is for a bubble over something
   /// else, and for the items of a language course.
   final bool bubbleAboveTiles;
+
+  /// How far the bubble keeps from a phone's stage in a room: the rim's 4 points and 2 more.
+  static const double roomRimClear = 6;
 
   /// How far above the top of the drawn tiles the bubble ends, so that it keeps clear of a tile and of the shadow it casts (the tiles'
   /// box, with its 12 point tap margin, starts 12 higher).
@@ -176,6 +194,7 @@ class ActivityFrame extends StatelessWidget {
     double? room,
     double? widest,
     double? spill,
+    double spillSkip = 0,
     double longFloor = 14,
     TextScaler scaler = TextScaler.noScaling,
   }) {
@@ -210,6 +229,8 @@ class ActivityFrame extends StatelessWidget {
       end = math.max(wide, spill);
       final double at = math.min(floor, longFloor / factor);
       for (double width = wide + 4; width <= end; width += 4) {
+        // The [spillSkip] after [wide] is a band that stays free (a room's rim beside the stage): the bubble goes over it, or not at all.
+        if (width <= wide + spillSkip) continue;
         final double height = heightAt(at, width);
         if (height <= wall) return (font: at, height: height, width: width);
       }
@@ -225,7 +246,27 @@ class ActivityFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BoardClass board = AppLayout.of(context).board;
-    final ActivitySpec s = spec ?? ActivitySpec.of(board);
+    final RoomScene? sc = scene;
+    final ActivitySpec base = spec ?? ActivitySpec.of(board);
+    // In a host beat the pair stands in the corner and the bubble is a little narrower (docs/design/m11-rooms.md section 2.2).
+    final HostPlaces places = HostPlaces.of(board);
+    final ActivitySpec s = sc != null && sc.hostBeat ? base.forHostBeat(places) : base;
+    // The bubble's tail points at the speaker's mouth: the host's in a host beat, else the guide's.
+    final bool hostBeat = sc != null && sc.hostBeat;
+    final bool tailAtMouth = s.tailAtMouth || hostBeat;
+    // A companion line inside a host beat (the microphone's feedback in a Meet) is said from the back place; the tail reaches past the host.
+    final bool behind = hostBeat && sc.companionSpeaks;
+    final Rect speaker = behind
+        ? places.back
+        : hostBeat
+        ? places.front
+        : Rect.fromLTWH(s.nitziLeft, s.nitziTop, s.nitziSize, s.nitziSize);
+    final Offset mouth = behind
+        ? Offset(speaker.center.dx, speaker.top + ActivitySpec.mouthShare * speaker.height)
+        : hostBeat
+        ? speaker.topLeft + Offset(sc.hostMouth.dx * speaker.width, sc.hostMouth.dy * speaker.height)
+        : Offset(speaker.center.dx, s.mouthY);
+    final double mouthY = mouth.dy;
     final StageScope? look = StageScope.maybeOf(context);
     final SizeClass sizeClass = AppLayout.of(context).sizeClass;
     // With captions hidden (B-29 D2) the Hebrew words of the question are not drawn: a speaker stands in their place. A number sentence or a
@@ -254,9 +295,11 @@ class ActivityFrame extends StatelessWidget {
     // A phone board (a stage that is not a card, a tail that does not move to the guide's mouth): the bubble widens only to the stage's
     // right edge, so the scene is never covered; what does not fit there goes smaller, and only then into the stage (`spill`).
     final bool phoneBoard = !s.stageIsCard && !s.tailAtMouth;
+    // The room's rim stands 4 points outside the phone's stage: the bubble keeps clear of it too, with 2 points to spare.
+    final double rimClear = sc != null && phoneBoard && s.stageDrawn ? roomRimClear : 0;
     final double? widest = clear
         ? phoneBoard
-              ? rightEdge - s.stage.right
+              ? rightEdge - s.stage.right - rimClear
               : rightEdge - s.stage.left - (s.stageIsCard ? 0 : keep)
         : null;
     final double? spill = clear && phoneBoard ? rightEdge - s.stage.left - keep : null;
@@ -268,6 +311,7 @@ class ActivityFrame extends StatelessWidget {
       room: ceiling - floorTop,
       widest: widest,
       spill: spill,
+      spillSkip: rimClear,
       scaler: scaler,
       // The caption keeps its stage's size down to two points under it, drawn; only then does the bubble widen (B-29 D1).
       // (A layout whose tail must meet the guide's mouth wherever the bubble stands, the blocks', keeps the old floor of 14.)
@@ -277,9 +321,44 @@ class ActivityFrame extends StatelessWidget {
     final double bubbleTop = clear
         ? math.max(floorTop, math.min(s.bubbleTop, ceiling - fit.height))
         : s.bubbleTop;
+    // A bubble held by its left edge keeps its right edge (the guide's side) when it widens. In a room it holds the right edge, the speaker's
+    // side, always: a short line then stays beside the speaker, and the tail ends at the speaker whatever the line's width.
+    final bool holdsRight = s.bubbleLeft == null || sc != null;
+    final double? leftEdge = holdsRight ? null : s.bubbleLeft! - (fit.width - s.bubbleMaxWidth);
+    final double? rightHold = s.bubbleLeft == null
+        ? s.bubbleRight
+        : (holdsRight ? board.size.width - rightEdge : null);
     final Size room = s.stageIsCard ? Size(s.stage.width - 32, s.stage.height - 32) : s.stage.size;
+    // The landmark's place: on a phone it is in the header, and the trail keeps clear of it.
+    final LandmarkPlace? mark = sc == null ? null : LandmarkSlot.of(board, base);
+    final double endReserve = mark != null && mark.inHeader ? LandmarkSlot.reserve(mark.box) : 0;
     // The trail fits the room between the header's buttons (QA-L7-2); the pill is then put where it stays inside it.
-    final ({double left, double right}) trailRoom = s.trailRoom(board.size.width);
+    final ({double left, double right}) trailRoom = s.trailRoom(board.size.width, endReserve: endReserve);
+    // The tail of the bubble (or of the speaker's pebble when the words are not drawn) points at the speaker's mouth. In a room it reaches down to
+    // a speaker who stands lower than the bubble; the default frame keeps its pointer.
+    final double? pointerAt = tailAtMouth
+        ? (mouthY - bubbleTop).clamp(24.0, math.max(24.0, fit.height - 24))
+        : null;
+    final BubbleTail tail = sc == null
+        ? BubbleTail.pointer(pointerAt)
+        : BubbleTail.toward(
+            bubble: Rect.fromLTRB(rightEdge - fit.width, bubbleTop, rightEdge, bubbleTop + fit.height),
+            speaker: speaker,
+            mouth: mouth,
+            pointerAt: pointerAt,
+            behind: behind,
+          );
+    final double pebble = look == null ? 0 : look.stage.speaker(sizeClass);
+    final double? speakerPointerAt = tailAtMouth ? (mouthY - s.bubbleTop).clamp(24.0, 200.0) : null;
+    final BubbleTail speakerTail = sc == null || target != null || run != null
+        ? BubbleTail.pointer(speakerPointerAt)
+        : BubbleTail.toward(
+            bubble: Rect.fromLTWH(rightEdge - pebble, s.bubbleTop, pebble, pebble),
+            speaker: speaker,
+            mouth: mouth,
+            pointerAt: speakerPointerAt,
+            behind: behind,
+          );
     final TrailLayout trail = TrailLayout.fit(
       total: trailTotal,
       done: trailDone,
@@ -287,12 +366,13 @@ class ActivityFrame extends StatelessWidget {
     );
     return Scaffold(
       body: BoardCanvas(
-        background: TokenColors.cream,
+        background: sc?.room.screen ?? TokenColors.cream,
         board: board,
         children: <Widget>[
           if (mic != null) Positioned(left: s.micLeft, top: s.micTop, child: mic!),
           if (mic != null && onConfirmYes != null && onConfirmAgain != null) ..._confirmButtons(board, s),
-          _stage(s, room),
+          _stage(s, room, sc),
+          if (mark != null) _landmarkLayer(mark.box, sc!),
           // The bubble and the guide are drawn after the stage, so a hint's hand that reaches over the stage's edge goes under
           // them (the bubble first, so that the guide stands in front of its tail).
           // The celebration says its own line; the bubble stays quiet behind it.
@@ -318,7 +398,8 @@ class ActivityFrame extends StatelessWidget {
                     math: run == null
                         ? null
                         : MathRun(run, size: scaler.scale(s.bubbleFont), division: MathSigns.of(context)),
-                    pointerAt: s.tailAtMouth ? (s.mouthY - s.bubbleTop).clamp(24.0, 200.0) : null,
+                    pointerAt: speakerTail.pointerAt,
+                    tailTip: speakerTail.tip,
                   ),
                 ),
               ),
@@ -326,8 +407,8 @@ class ActivityFrame extends StatelessWidget {
           else if (overlay == null && bubbleText.isNotEmpty) ...<Widget>[
             if (promptRing)
               Positioned(
-                left: s.bubbleLeft == null ? null : s.bubbleLeft! - (fit.width - s.bubbleMaxWidth) - 6,
-                right: s.bubbleLeft == null ? (s.bubbleRight ?? 0) - 6 : null,
+                left: leftEdge == null ? null : leftEdge - 6,
+                right: leftEdge == null ? (rightHold ?? 0) - 6 : null,
                 top: bubbleTop - 6,
                 width: fit.width + 12,
                 height: fit.height + 12,
@@ -342,9 +423,8 @@ class ActivityFrame extends StatelessWidget {
                 ),
               ),
             Positioned(
-              // A bubble held by its left edge keeps its right edge (the guide's side) when it widens.
-              left: s.bubbleLeft == null ? null : s.bubbleLeft! - (fit.width - s.bubbleMaxWidth),
-              right: s.bubbleRight,
+              left: leftEdge,
+              right: rightHold,
               top: bubbleTop,
               child: BoardBubble(
                 key: const Key('lesson-bubble'),
@@ -357,29 +437,45 @@ class ActivityFrame extends StatelessWidget {
                 math: run == null
                     ? null
                     : MathRun(run, size: scaler.scale(s.bubbleFont), division: MathSigns.of(context)),
-                // A bubble that stands off its board's place points at the guide's mouth: the tail meets it from the top.
-                pointerAt: s.tailAtMouth
-                    ? (s.mouthY - bubbleTop).clamp(24.0, math.max(24.0, fit.height - 24))
-                    : null,
+                // A bubble that stands off its board's place points at the speaker's mouth: the tail meets it from the top, or reaches
+                // down to it when the speaker stands lower than the bubble.
+                pointerAt: tail.pointerAt,
+                tailTip: tail.tip,
+                tailAtEnd: tail.isWedge,
               ),
             ),
           ],
-          Positioned(
-            left: s.nitziLeft,
-            top: s.nitziTop,
-            width: s.nitziSize,
-            height: s.nitziSize,
-            child: Semantics(
-              button: true,
-              label: He.replaySemantics.text,
-              child: GestureDetector(
-                key: const Key('lesson-replay'),
-                behavior: HitTestBehavior.opaque,
-                onTap: onReplay,
-                child: SizedBox(key: const Key('activity-nitzi'), child: guide),
+          if (sc != null)
+            Positioned.fill(
+              // Keyed: the children before it come and go (the microphone, the bubble), and the pair must keep its state (where the host
+              // stands, and the move that brings it in) across the screens of a set.
+              key: const Key('room-pair'),
+              child: HostPair(
+                present: sc.hostBeat,
+                settled: sc.hostStays,
+                alone: Rect.fromLTWH(s.nitziLeft, s.nitziTop, s.nitziSize, s.nitziSize),
+                host: sc.hostView,
+                companion: guide ?? const SizedBox.shrink(),
+                onReplay: onReplay,
+              ),
+            )
+          else
+            Positioned(
+              left: s.nitziLeft,
+              top: s.nitziTop,
+              width: s.nitziSize,
+              height: s.nitziSize,
+              child: Semantics(
+                button: true,
+                label: He.replaySemantics.text,
+                child: GestureDetector(
+                  key: const Key('lesson-replay'),
+                  behavior: HitTestBehavior.opaque,
+                  onTap: onReplay,
+                  child: SizedBox(key: const Key('activity-nitzi'), child: guide),
+                ),
               ),
             ),
-          ),
           if (tiles != null)
             // The row starts the tile's slop above where the tiles are drawn.
             Positioned(left: s.tilesLeft, top: s.tilesTop - s.tileSlop, width: s.tilesWidth, child: tiles!),
@@ -388,12 +484,13 @@ class ActivityFrame extends StatelessWidget {
           // The hand is drawn after the answer tiles (and the stage, the bubble and the guide), so it is never behind what it points at.
           if (hands != null) _handLayer(s, room),
           Positioned(
-            left: s.trailPillLeft(trail, board.size.width),
+            left: s.trailPillLeft(trail, board.size.width, endReserve: endReserve),
             top: s.trailTop,
             child: ProgressTrail(
               total: trailTotal,
               done: trailDone,
               maxWidth: trailRoom.right - trailRoom.left,
+              shape: sc?.room.trail ?? TrailShape.circle,
             ),
           ),
           boardAt(
@@ -495,35 +592,98 @@ class ActivityFrame extends StatelessWidget {
     );
   }
 
-  Widget _stage(ActivitySpec s, Size room) {
+  Widget _stage(ActivitySpec s, Size room, RoomScene? sc) {
     final Widget content = SizedBox(
       key: const Key('lesson-stage'),
       width: room.width,
       height: room.height,
       child: stage(room),
     );
-    if (!s.stageIsCard) return Positioned.fromRect(rect: s.stage, child: content);
+    final RoomSpec? place = s.stageDrawn ? sc?.room : null;
+    final Widget? scenery = place == null
+        ? null
+        : RoomBackdrop(room: place, size: room, radius: s.stageIsCard ? 16 : TokenRadius.lg);
+    final Widget inside = scenery == null ? content : Stack(children: <Widget>[scenery, content]);
+    if (!s.stageIsCard) {
+      if (place == null) return Positioned.fromRect(rect: s.stage, child: content);
+      // The room's 4 point rim around the phone's stage.
+      return Positioned.fromRect(
+        rect: s.stage.inflate(4),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: place.rim,
+            borderRadius: BorderRadius.circular(TokenRadius.lg + 4),
+            boxShadow: const <BoxShadow>[
+              BoxShadow(color: Color.fromRGBO(43, 35, 80, 0.10), blurRadius: 6, offset: Offset(0, 2)),
+            ],
+          ),
+          child: Padding(padding: const EdgeInsets.all(4), child: inside),
+        ),
+      );
+    }
     return Positioned.fromRect(
       rect: s.stage,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        // The card's 4 point rim is part of its 16 point margin, so the stage inside it keeps the room it has always had.
+        padding: EdgeInsets.all(place == null ? 16 : 12),
         // A board whose stage is not drawn (the tiles took its room) keeps the box, and its margin, for what a hint draws in it: no card.
         decoration: s.stageDrawn
             ? BoxDecoration(
                 color: TokenColors.paper,
                 borderRadius: BorderRadius.circular(TokenRadius.xl),
-                boxShadow: clayShadows(TokenColors.cardLip, soft16: true),
+                border: place == null ? null : Border.all(color: place.rim, width: 4),
+                boxShadow: clayShadows(place?.lip ?? TokenColors.cardLip, soft16: true),
               )
             : null,
-        child: content,
+        child: inside,
       ),
     );
   }
+
+  /// The landmark of the room, in the place `LandmarkSlot` gave it: always drawn, whole, clear of everything else, and where the stage reacts.
+  /// A land's stands on a ground shadow; a course's window hangs on its own. It takes no touch.
+  Widget _landmarkLayer(Rect box, RoomScene sc) => Positioned.fromRect(
+    rect: box,
+    child: Stack(
+      clipBehavior: Clip.none,
+      fit: StackFit.expand,
+      children: <Widget>[
+        if (!sc.room.isCourse)
+          Positioned(
+            left: box.width * 0.07,
+            right: box.width * 0.07,
+            bottom: -3,
+            height: box.height * 0.1,
+            child: const DecoratedBox(
+              decoration: ShapeDecoration(color: TokenColors.worldShadow, shape: StadiumBorder()),
+            ),
+          ),
+        StageReaction(key: const Key('stage-reaction'), room: sc.room, solved: sc.solved),
+      ],
+    ),
+  );
 }
 
 /// The calm end of a lesson: the line that praises what the child did, a spark, and one way home.
 class LessonCelebration extends StatelessWidget {
-  const LessonCelebration({super.key, required this.text, required this.onDone, this.cameo, this.sticker});
+  const LessonCelebration({
+    super.key,
+    required this.text,
+    required this.onDone,
+    this.cameo,
+    this.sticker,
+    this.room,
+    this.host,
+    this.cheer,
+    this.finished = true,
+  });
+
+  /// In a room (M11): the card is the room's window, with its landmark gaining a piece, the [host] and the companion ([cameo]) side by side
+  /// and the host's [cheer] above the praise line (which is left out when it only repeats the cheer). Null for the plain card. A lesson that [finished] not (a rest) gets no piece and no cheer.
+  final RoomSpec? room;
+  final Widget? host;
+  final String? cheer;
+  final bool finished;
 
   final String text;
 
@@ -538,50 +698,62 @@ class LessonCelebration extends StatelessWidget {
   Widget build(BuildContext context) {
     final BoardClass board = AppLayout.of(context).board;
     final double w = math.min(board.size.width - 80, 520);
+    final RoomSpec? place = room;
     return Positioned.fill(
       child: ColoredBox(
         key: const Key('lesson-celebration'),
         color: TokenColors.scrim,
         child: Center(
-          child: Container(
-            width: w,
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: TokenColors.paper,
-              borderRadius: BorderRadius.circular(TokenRadius.xl),
-              boxShadow: clayShadows(TokenColors.cardLip, soft16: true),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    if (cameo != null)
-                      SizedBox(key: const Key('lesson-cameo'), width: 112, height: 112, child: cameo)
-                    else
-                      const BoardSvg('assets/art/ui/spark.svg', width: 64, height: 64),
-                    if (sticker != null) ...<Widget>[
-                      const SizedBox(width: 16),
-                      _StickerPop(stickerKey: sticker!),
+          child: place != null && host != null && cameo != null
+              ? RoomCelebrationCard(
+                  room: place,
+                  host: host!,
+                  companion: cameo!,
+                  praise: text,
+                  cheer: finished ? cheer : null,
+                  sticker: sticker == null ? null : _StickerPop(stickerKey: sticker!),
+                  finished: finished,
+                  onDone: onDone,
+                )
+              : Container(
+                  width: w,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: TokenColors.paper,
+                    borderRadius: BorderRadius.circular(TokenRadius.xl),
+                    boxShadow: clayShadows(TokenColors.cardLip, soft16: true),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          if (cameo != null)
+                            SizedBox(key: const Key('lesson-cameo'), width: 112, height: 112, child: cameo)
+                          else
+                            const BoardSvg('assets/art/ui/spark.svg', width: 64, height: 64),
+                          if (sticker != null) ...<Widget>[
+                            const SizedBox(width: 16),
+                            _StickerPop(stickerKey: sticker!),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(text, textAlign: TextAlign.center, style: AppText.fixed(size: 26, weight: 600)),
+                      const SizedBox(height: 12),
+                      PebbleButton(
+                        key: const Key('lesson-done'),
+                        semanticLabel: He.lessonDoneSemantics.text,
+                        size: 80,
+                        fill: TokenColors.spark,
+                        lip: TokenColors.sparkDeep,
+                        onPressed: onDone,
+                        child: const BoardSvg('assets/art/ui/home_palm.svg', width: 36, height: 36),
+                      ),
                     ],
-                  ],
+                  ),
                 ),
-                const SizedBox(height: 8),
-                Text(text, textAlign: TextAlign.center, style: AppText.fixed(size: 26, weight: 600)),
-                const SizedBox(height: 12),
-                PebbleButton(
-                  key: const Key('lesson-done'),
-                  semanticLabel: He.lessonDoneSemantics.text,
-                  size: 80,
-                  fill: TokenColors.spark,
-                  lip: TokenColors.sparkDeep,
-                  onPressed: onDone,
-                  child: const BoardSvg('assets/art/ui/home_palm.svg', width: 36, height: 36),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );

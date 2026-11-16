@@ -85,6 +85,14 @@ String generateTokens(Map<String, Object?> t) {
       );
     }
   }
+  for (final MapEntry<String, Object?> d in _map(color['course']).entries) {
+    if (d.key.startsWith(r'$')) continue;
+    for (final String part in <String>['fill', 'deep', 'tint']) {
+      o.writeln(
+        '  static const Color ${_camel('course_${d.key}_$part')} = ${_color(_map(d.value)[part]! as String)};',
+      );
+    }
+  }
   for (final MapEntry<String, Object?> e in _map(color['teach']).entries) {
     if (e.key.startsWith(r'$')) continue;
     final Map<String, Object?> c = _map(e.value);

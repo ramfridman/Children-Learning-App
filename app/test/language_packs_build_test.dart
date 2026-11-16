@@ -37,6 +37,16 @@ void _change(Directory dir, String file, void Function(Map<String, Object?> doc)
   f.writeAsStringSync('${const JsonEncoder.withIndent('  ').convert(doc)}\n');
 }
 
+/// The name of a language pack in the app's `assets/packs`, matched whole (the voice packs end the same way).
+final RegExp bundledLanguagePackName = RegExp(r'^lang-(eng|heb|rus)-(\d+\.\d+\.\d+)\.nnpack$');
+
+/// The language packs in [folder] (none when it is not there).
+List<File> languagePacksIn(Directory folder) => <File>[
+  if (folder.existsSync())
+    for (final File f in folder.listSync().whereType<File>())
+      if (bundledLanguagePackName.hasMatch(f.uri.pathSegments.last)) f,
+];
+
 void main() {
   late PackKey key;
 
@@ -267,13 +277,29 @@ void main() {
   });
 
   group('the packs bundled in the app', () {
-    final RegExp name = RegExp(r'lang-(eng|heb|rus)-(\d+\.\d+\.\d+)\.nnpack$');
     final Directory folder = Directory('assets/packs');
-    final List<File> bundled = <File>[
-      if (folder.existsSync())
-        for (final File f in folder.listSync().whereType<File>())
-          if (name.hasMatch(f.path)) f,
-    ];
+    final List<File> bundled = languagePacksIn(folder);
+    final RegExp name = bundledLanguagePackName;
+
+    // The folder also holds the voice packs (`voice-lang-eng-1.2.0.nnpack`, git-ignored on a PC that has them): their names end like a
+    // language pack's, so the name is matched whole, never found inside another.
+    test('a voice pack whose name ends like a language pack is not counted as one', () {
+      final Directory dir = Directory.systemTemp.createTempSync('bundled-names');
+      addTearDown(() => dir.deleteSync(recursive: true));
+      for (final String n in <String>[
+        'lang-eng-1.0.0.nnpack',
+        'voice-lang-eng-1.2.0.nnpack',
+        'voice-lang-eng-2-1.0.0.nnpack',
+        'old-lang-rus-1.0.0.nnpack',
+        'lang-heb-1.0.0.nnpack.part',
+      ]) {
+        File('${dir.path}${Platform.pathSeparator}$n').writeAsBytesSync(<int>[0]);
+      }
+      expect(
+        <String>[for (final File f in languagePacksIn(dir)) f.uri.pathSegments.last],
+        <String>['lang-eng-1.0.0.nnpack'],
+      );
+    });
 
     test(
       'each is signed by the key of the app, is named for what it holds, is the only one of its course, and is built from the committed sources',
@@ -281,7 +307,7 @@ void main() {
         final Uint8List publicKey = readPublicKeyFile('assets/pack_signing_public_key.txt');
         final Set<String> courses = <String>{};
         for (final File f in bundled) {
-          final RegExpMatch m = name.firstMatch(f.path)!;
+          final RegExpMatch m = name.firstMatch(f.uri.pathSegments.last)!;
           final String course = m.group(1)!;
           expect(courses.add(course), isTrue, reason: 'two bundled packs of $course');
           final VerifiedPack pack = await verifyPack(f.readAsBytesSync(), publicKey: publicKey);

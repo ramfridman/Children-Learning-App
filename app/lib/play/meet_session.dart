@@ -9,6 +9,7 @@ import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import '../rooms/host_view.dart' show HostPose;
 import '../strings/he.dart';
 import 'choice_row.dart' show withMeetStage;
 import 'meet_layout.dart';
@@ -23,6 +24,10 @@ import 'template_session.dart';
 ///   opener (first word of a set) - the word - its Hebrew meaning, said once (or the Hebrew explaining sentence) - the word again -
 ///   "let's say it together" and the word - the child's turn
 ///
+/// In a course's room the course host is the one who introduces the word (docs/design/m11-rooms.md section 6): the opener, the word and "let's say
+/// it together" are its lines, with its own poses; the companion stands behind it listening, and says only the microphone's feedback at the close.
+/// The teaching rules are the same with or without the host.
+///
 /// "I said it" and the microphone arrive with "let's say it together" and go on to close the screen; touching the picture plays the word and
 /// never moves on (during the first beats it only squishes, so that no beat is cut and the meaning is never lost). The words met before it in
 /// the set stand in a strip at the side and say their words when touched. A teach screen of the old kind (no `say.meet`) says its one line,
@@ -34,8 +39,11 @@ class MeetSession extends TemplateSession {
     this.say,
     this.showWord = false,
     this.breath = const Duration(milliseconds: 400),
+    this.hostTogether,
   }) {
     controller.replayQuiet = true;
+    // The beat the screen starts at is set at once, so that not even its first frame shows the next beat's host pose.
+    _beat = (_meet?.first ?? false) && _meet?.opener != null ? MeetBeat.opening : MeetBeat.hearing;
     say?.addListener(_onSay);
     // The voice and the lesson screen are given to the session just after it is made: start after that.
     later(Duration.zero, () => unawaited(_run()));
@@ -52,6 +60,10 @@ class MeetSession extends TemplateSession {
   /// The pause between two beats: the look's (400, 300 or 250 ms).
   final Duration breath;
 
+  /// The course host's "let's say it together" line, in its room (its text and its clip, `HostHe.togethers`); null with no room, where the
+  /// companion says the activity's own line.
+  final Spoken? hostTogether;
+
   /// A beat lasts at least this long, so that a line that is not voiced yet (pending) still has its pause, as every pending line has.
   static const Duration beatLeast = Duration(milliseconds: 1200);
 
@@ -66,12 +78,13 @@ class MeetSession extends TemplateSession {
 
   MeetData? get _meet => activity.meet;
 
-  MeetBeat _beat = MeetBeat.hearing;
+  late MeetBeat _beat;
   bool _acted = false;
   bool _closing = false;
   bool _rim = false;
   bool _pressed = false;
   bool _breathing = false;
+  bool _companionLine = false;
 
   /// The picture (-1), or the strip's thumbnail with that index, is saying its word now (the speaking badge shows on it).
   int? _speaking;
@@ -94,6 +107,22 @@ class MeetSession extends TemplateSession {
   int? get speaking => _speaking;
 
   bool get rim => _rim;
+
+  /// In a room the course host speaks every line of the screen except the microphone's "I heard you", which is the companion's (the design's
+  /// section 2.1, rule 3): then the bubble's tail goes to the companion in the back place.
+  bool get companionSpeaks => _companionLine;
+
+  /// The host's pose in a room: presenting (`show`, the hand held out toward the picture, no pointer) while the word is said, `talk` for its other
+  /// lines, and still while the child's turn waits or the companion speaks.
+  HostPose get hostPose => _companionLine || _closing || touchSpeaks
+      ? HostPose.idle
+      : switch (_beat) {
+          MeetBeat.hearing || MeetBeat.again => HostPose.show,
+          _ => HostPose.talk,
+        };
+
+  /// The companion's pose behind the host: listening, glad only while it says its own line.
+  CharacterState get companionPose => _companionLine ? CharacterState.encourage : CharacterState.listen;
 
   /// The guide's pose: waving at the opener, talking through the beats, listening at the child's turn, glad at the close.
   CharacterState get pose => _closing
@@ -182,7 +211,14 @@ class MeetSession extends TemplateSession {
   /// "Let's say it together" and the word, with the chip when the rule allows it.
   Spoken _together() {
     final Spoken t = activity.together;
-    return Spoken(vo: t.vo, caption: t.caption, target: t.target, target2: t.target2, show: _written);
+    final Spoken? h = hostTogether;
+    return Spoken(
+      vo: h?.vo ?? t.vo,
+      caption: h?.caption ?? t.caption,
+      target: t.target,
+      target2: t.target2,
+      show: _written,
+    );
   }
 
   String? get _written => showWord ? (_meet?.written ?? _plain) : null;
@@ -213,6 +249,7 @@ class MeetSession extends TemplateSession {
     if (s != SayState.heard && s != SayState.together) return;
     if (_acted || _closing) return;
     _acted = true;
+    _companionLine = true;
     notify();
     if (touchSpeaks) unawaited(_close(afterLine: true));
   }

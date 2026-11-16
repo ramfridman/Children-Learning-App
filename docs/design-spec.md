@@ -145,7 +145,7 @@ Each land has its own **silhouette, colour, glyph and character**, so a land is 
 - **Key poses:** waving; counting (one leg pointing at her spots); hopping; spot‑shuffle.
 
 ### 4.3 Goni (גּוֹנִי): Colours host (he/him)
-- **Look:** a chubby, side‑view chameleon with rainbow bands across his back, a spiral tail, a turret eye and a little magenta artist's beret. Silhouette: a teardrop body with a spiral tail.
+- **Look:** a chubby, side‑view chameleon in mint with darker teal bands across his back and a teal outline (2026-11-15; his bands turn rainbow only when he is happy, and after a right answer in Colour Bay he takes the colour found: docs/design/m11-rooms.md section 5.2), a spiral tail, a turret eye and a little magenta artist's beret. Silhouette: a teardrop body with a spiral tail.
 - **Personality:** a dreamy, gentle artist who gasps at beautiful colours and loves "what if we mix…?"
 - **Voice:** a soft male tenor, unhurried and wonder‑filled.
 - **Catchphrases:** "וָאוּ, אֵיזֶה צֶבַע!", "מָה יִקְרֶה אִם נְעַרְבֵּב?"

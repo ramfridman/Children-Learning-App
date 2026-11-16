@@ -9,6 +9,7 @@ import 'stage_spec.dart';
 import 'token_types.dart';
 import 'tokens.g.dart';
 import 'trail_layout.dart';
+import 'trail_shape.dart';
 
 // Every number in this file is taken from the CSS of the design boards (05, 10, 13, 22, 23): sizes,
 // radii, the clay lip under a button, shadows and font sizes.
@@ -138,6 +139,7 @@ class BoardBubble extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.maxWidth,
     this.tailTip,
+    this.tailAtEnd = false,
     this.chip,
     this.math,
     this.pointerAt,
@@ -171,6 +173,11 @@ class BoardBubble extends StatelessWidget {
   /// The tip stays put when the bubble grows; only the wedge gets shorter. Null: the small tail on the right edge.
   final Offset? tailTip;
 
+  /// The wedge stands at the bubble's end (right) edge instead of its left one, for a speaker to the right of the bubble and below it (the
+  /// lessons' guide and hosts on a tablet). Its [tailTip] is then from the body's top-right corner, so that it stays on the speaker
+  /// whatever width the line gives the body.
+  final bool tailAtEnd;
+
   Widget get _line => Text(
     text,
     textScaler: textScaler,
@@ -185,7 +192,10 @@ class BoardBubble extends StatelessWidget {
       if (tailTip != null)
         Positioned.fill(
           child: IgnorePointer(
-            child: CustomPaint(key: const Key('bubble-tail'), painter: _WedgeTailPainter(tailTip!)),
+            child: CustomPaint(
+              key: const Key('bubble-tail'),
+              painter: _WedgeTailPainter(tailTip!, atEnd: tailAtEnd),
+            ),
           ),
         )
       else
@@ -227,7 +237,10 @@ class BoardBubble extends StatelessWidget {
       if (tailTip != null)
         Positioned.fill(
           child: IgnorePointer(
-            child: CustomPaint(key: const Key('bubble-outline'), painter: _BubbleOutlinePainter(tailTip!)),
+            child: CustomPaint(
+              key: const Key('bubble-outline'),
+              painter: _BubbleOutlinePainter(tailTip!, atEnd: tailAtEnd),
+            ),
           ),
         ),
     ],
@@ -244,6 +257,7 @@ class SpeakerBubble extends StatelessWidget {
     this.math,
     this.chip,
     this.pointerAt,
+    this.tailTip,
     this.ring = false,
   });
 
@@ -252,6 +266,10 @@ class SpeakerBubble extends StatelessWidget {
   final Widget? math;
   final Widget? chip;
   final double? pointerAt;
+
+  /// A wedge tail from the pebble's bottom, at its end, to this point (from the pebble's top-right corner): for a speaker standing lower
+  /// than the pebble. Replaces the pointer.
+  final Offset? tailTip;
   final bool ring;
 
   @override
@@ -261,20 +279,30 @@ class SpeakerBubble extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: <Widget>[
-        Positioned(
-          right: -10,
-          top: pointerAt == null ? null : pointerAt! - 11,
-          bottom: pointerAt == null ? (plain ? size / 2 - 11 : 18) : null,
-          child: Transform.rotate(
-            angle: 0.785398,
-            child: Container(
-              key: const Key('speaker-pointer'),
-              width: 22,
-              height: 22,
-              decoration: BoxDecoration(color: TokenColors.paper, borderRadius: BorderRadius.circular(4)),
+        if (tailTip != null)
+          Positioned.fill(
+            child: IgnorePointer(
+              child: CustomPaint(
+                key: const Key('speaker-tail'),
+                painter: _WedgeTailPainter(tailTip!, atEnd: true),
+              ),
+            ),
+          )
+        else
+          Positioned(
+            right: -10,
+            top: pointerAt == null ? null : pointerAt! - 11,
+            bottom: pointerAt == null ? (plain ? size / 2 - 11 : 18) : null,
+            child: Transform.rotate(
+              angle: 0.785398,
+              child: Container(
+                key: const Key('speaker-pointer'),
+                width: 22,
+                height: 22,
+                decoration: BoxDecoration(color: TokenColors.paper, borderRadius: BorderRadius.circular(4)),
+              ),
             ),
           ),
-        ),
         if (ring)
           Positioned(
             left: -8,
@@ -324,20 +352,22 @@ const double bubbleOutlineWidth = 1.5;
 
 /// The outline of a [BoardBubble] body of [body] size with its wedge tail ending at [tip]: the union of the two shapes.
 @visibleForTesting
-Path bubbleOutline(Size body, Offset tip) => Path.combine(
+Path bubbleOutline(Size body, Offset tip, {bool atEnd = false}) => Path.combine(
   PathOperation.union,
   Path()..addRRect(RRect.fromRectAndRadius(Offset.zero & body, const Radius.circular(TokenRadius.lg))),
-  bubbleWedgeTail(body, tip),
+  bubbleWedgeTail(body, tip, atEnd: atEnd),
 );
 
 class _BubbleOutlinePainter extends CustomPainter {
-  const _BubbleOutlinePainter(this.tip);
+  const _BubbleOutlinePainter(this.tip, {this.atEnd = false});
 
+  /// From the body's top-left corner, or from its top-right one with [atEnd].
   final Offset tip;
+  final bool atEnd;
 
   @override
   void paint(Canvas canvas, Size size) => canvas.drawPath(
-    bubbleOutline(size, tip),
+    bubbleOutline(size, atEnd ? Offset(size.width + tip.dx, tip.dy) : tip, atEnd: atEnd),
     Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = bubbleOutlineWidth
@@ -345,17 +375,18 @@ class _BubbleOutlinePainter extends CustomPainter {
   );
 
   @override
-  bool shouldRepaint(_BubbleOutlinePainter old) => old.tip != tip;
+  bool shouldRepaint(_BubbleOutlinePainter old) => old.tip != tip || old.atEnd != atEnd;
 }
 
 /// The wedge tail of a [BoardBubble] with a body of [body] size, ending at [tip] (both from the body's top left): a
 /// triangle whose base lies on the bottom edge from 24 to 52 in from the left, reaching 4 up into the body so no seam
-/// shows, its tip rounded with a radius of 3 (B-26, nitzi-home.md section 3, "Bubble tail").
+/// shows, its tip rounded with a radius of 3 (B-26, nitzi-home.md section 3, "Bubble tail"). With [atEnd] the base lies the same way in from
+/// the right edge instead (a speaker to the right of the bubble).
 @visibleForTesting
-Path bubbleWedgeTail(Size body, Offset tip) {
+Path bubbleWedgeTail(Size body, Offset tip, {bool atEnd = false}) {
   const double r = 3;
-  final Offset a = Offset(24, body.height - 4);
-  final Offset b = Offset(52, body.height - 4);
+  final Offset a = Offset(atEnd ? body.width - 52 : 24, body.height - 4);
+  final Offset b = Offset(atEnd ? body.width - 24 : 52, body.height - 4);
   // The rounded end is a circle of radius 3 whose far side is the tip itself; the sides run from the base's ends to
   // where they touch that circle.
   final Offset toBase = Offset((a.dx + b.dx) / 2, a.dy) - tip;
@@ -385,13 +416,14 @@ Path bubbleWedgeTail(Size body, Offset tip) {
 
 /// Paints the wedge with the bubble body's paper and soft shadow, under the body.
 class _WedgeTailPainter extends CustomPainter {
-  const _WedgeTailPainter(this.tip);
+  const _WedgeTailPainter(this.tip, {this.atEnd = false});
 
   final Offset tip;
+  final bool atEnd;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final Path wedge = bubbleWedgeTail(size, tip);
+    final Path wedge = bubbleWedgeTail(size, atEnd ? Offset(size.width + tip.dx, tip.dy) : tip, atEnd: atEnd);
     for (final BoxShadow shadow in softShadow) {
       canvas.drawPath(wedge.shift(shadow.offset), shadow.toPaint());
     }
@@ -399,7 +431,7 @@ class _WedgeTailPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_WedgeTailPainter old) => old.tip != tip;
+  bool shouldRepaint(_WedgeTailPainter old) => old.tip != tip || old.atEnd != atEnd;
 }
 
 /// A row of answer tiles, centred, as wide as its tiles need. With the look's tile margins a full row of the oldest look (five tiles) is 20
@@ -533,11 +565,20 @@ Color answerBorderColor(AnswerState state) => switch (state) {
 /// start side (the right in Hebrew). In a [maxWidth] that is too small for the sockets it tightens, shrinks and then shows a window
 /// around the current socket (see [TrailLayout]).
 class ProgressTrail extends StatelessWidget {
-  const ProgressTrail({super.key, required this.total, required this.done, this.maxWidth});
+  const ProgressTrail({
+    super.key,
+    required this.total,
+    required this.done,
+    this.maxWidth,
+    this.shape = TrailShape.circle,
+  });
 
   final int total;
   final int done;
   final double? maxWidth;
+
+  /// The shape of the sockets: the room's own (M11), a round socket by default. Done still reads by the gold spark in every shape.
+  final TrailShape shape;
 
   @override
   Widget build(BuildContext context) {
@@ -559,13 +600,108 @@ class ProgressTrail extends StatelessWidget {
           children: <Widget>[
             for (final int i in layout.shown) ...<Widget>[
               if (i > layout.first) SizedBox(width: layout.gap),
-              _Socket(size: layout.socket, done: i < done, current: i == done, faded: layout.faded(i)),
+              if (shape == TrailShape.circle)
+                _Socket(size: layout.socket, done: i < done, current: i == done, faded: layout.faded(i))
+              else
+                // The stair climbs 1.4 points a socket from the start side, like the staircase of its room.
+                Transform.translate(
+                  offset: shape == TrailShape.stair ? Offset(0, 3.5 - 1.4 * (i - layout.first)) : Offset.zero,
+                  child: _ShapeSocket(
+                    shape: shape,
+                    size: layout.socket,
+                    done: i < done,
+                    current: i == done,
+                    faded: layout.faded(i),
+                  ),
+                ),
             ],
           ],
         ),
       ),
     );
   }
+}
+
+/// A socket in a room's shape: a well in `mist` to come, outlined in ink for the current one, `sparkTint` with the gold spark when done.
+class _ShapeSocket extends StatelessWidget {
+  const _ShapeSocket({
+    required this.shape,
+    required this.size,
+    required this.done,
+    required this.current,
+    required this.faded,
+  });
+
+  final TrailShape shape;
+  final double size;
+  final bool done;
+  final bool current;
+
+  /// The last socket shown at the end of a window that goes on: smaller and pale, as for the round socket.
+  final bool faded;
+
+  @override
+  Widget build(BuildContext context) {
+    final double side = faded ? size * 0.7 : size;
+    return Opacity(
+      opacity: faded ? 0.45 : 1,
+      child: CustomPaint(
+        size: Size(side, side),
+        painter: _SocketPainter(shape: shape, done: done, current: current),
+      ),
+    );
+  }
+}
+
+class _SocketPainter extends CustomPainter {
+  const _SocketPainter({required this.shape, required this.done, required this.current});
+
+  final TrailShape shape;
+  final bool done;
+  final bool current;
+
+  static final Path _spark = Path()
+    ..moveTo(10, 3.5)
+    ..quadraticBezierTo(11, 9, 16.5, 10)
+    ..quadraticBezierTo(11, 11, 10, 16.5)
+    ..quadraticBezierTo(9, 11, 3.5, 10)
+    ..quadraticBezierTo(9, 9, 10, 3.5)
+    ..close();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Path outline = shape.path;
+    canvas.save();
+    canvas.scale(size.width / 20, size.height / 20);
+    canvas.drawPath(
+      outline,
+      Paint()
+        ..color = done
+            ? TokenColors.sparkTint
+            : current
+            ? TokenColors.paper
+            : TokenColors.mist,
+    );
+    if (done || current) {
+      canvas.drawPath(
+        outline,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeJoin = StrokeJoin.round
+          ..strokeWidth = done ? 1.2 : 2.2
+          ..color = done ? TokenColors.sparkDeep : TokenColors.ink,
+      );
+    }
+    if (done) {
+      canvas.translate(2, 2);
+      canvas.scale(0.8, 0.8);
+      canvas.drawPath(_spark, Paint()..color = TokenColors.spark);
+    }
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(_SocketPainter old) => old.shape != shape || old.done != done || old.current != current;
 }
 
 class _Socket extends StatelessWidget {

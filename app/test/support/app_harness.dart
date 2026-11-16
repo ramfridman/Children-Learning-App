@@ -17,6 +17,7 @@ import 'package:nitznutz/tutor/tutor.dart';
 import 'package:nitznutz/characters/character_source.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/play/lesson_screen.dart';
+import 'package:nitznutz/rooms/rooms_provider.dart';
 import 'package:nitznutz/app/providers.dart';
 import 'package:nitznutz/app/state.dart';
 import 'package:nitznutz/core/errors.dart';
@@ -129,6 +130,7 @@ class AppRig {
     this.content,
     this.butterfliesFirst = false,
     this.sayReleased = const <String>{},
+    this.rooms = false,
     int? clockMs,
   }) : player = player ?? FakePlayer(),
        speech = speech ?? FakeSpeechEngine(),
@@ -142,6 +144,10 @@ class AppRig {
   }
 
   final bool dev;
+
+  /// Lessons are played in their room (M11: the host's greeting, the room's look, the landmark that reacts). Off by default: the tests that
+  /// predate the rooms are about the frame and the templates, and the room tests (`m11_*`) turn it on.
+  final bool rooms;
 
   /// The languages whose say-it has passed its release gate in this test (none in the real app until the owner says so): a test
   /// that wants the microphone of a say-it step names its course here.
@@ -233,6 +239,7 @@ class AppRig {
 
   List<Override> get overrides => <Override>[
     configProvider.overrideWithValue(testConfig(dev: dev)),
+    roomsEnabledProvider.overrideWithValue(rooms),
     hostsProvider.overrideWithValue(testHosts()),
     secureStoreProvider.overrideWithValue(store),
     deviceKeysProvider.overrideWithValue(FakeKeys()),
