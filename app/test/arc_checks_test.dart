@@ -70,7 +70,33 @@ void main() {
       for (final String p in run(tagWaived: const <String, String>{}))
         if (RegExp(r'activity\.(.+)\.json ').firstMatch(p) case final RegExpMatch m) m.group(1)!,
     };
-    expect(failing, tagWaivers.keys.toSet());
+    // the lands that are under the rules: the waivers are exactly the failing items
+    final Set<String> inShapes = <String>{
+      for (final String id in tagWaivers.keys)
+        if (id.startsWith('b.shpb') || id.startsWith('shp')) id,
+    };
+    expect(failing, inShapes);
+    // the lands that are not yet: each waiver of theirs (M11-stage2 section 11.5) is a tap that fails the rule without it
+    final Set<String> failingEverywhere = <String>{};
+    final List<String> found = <String>[];
+    checkArc(
+      activities: activities,
+      lessons: lessons,
+      skills: skills,
+      say: (String file, String path, String message) => found.add('$file $path $message'),
+      tagWaived: const <String, String>{},
+      domains: allArcDomains,
+    );
+    for (final String p in found) {
+      if (RegExp(r'activity\.(.+)\.json ').firstMatch(p) case final RegExpMatch m) {
+        failingEverywhere.add(m.group(1)!);
+      }
+    }
+    expect(
+      failingEverywhere.containsAll(tagWaivers.keys),
+      isTrue,
+      reason: 'a waived tap that no longer fails comes off the list',
+    );
   });
 
   test('V5: the waived hint 2s are exactly those whose family draws the own question representation', () {
@@ -123,17 +149,23 @@ void main() {
     expect(run(a: a).where((String m) => m.contains('activity.$id.json')), isNotEmpty);
   });
 
-  test('V1: a lesson of a land in a room without parts is refused, unless it is named as waiting', () {
-    final Map<String, Map<String, Object?>> l = <String, Map<String, Object?>>{
-      for (final MapEntry<String, Map<String, Object?>> e in lessons.entries) e.key: _copy(e.value),
-    };
-    l['any-shape']!.remove('parts');
-    expect(run(l: l).single, contains('V1'));
-    expect(arcLessonsWaiting.keys, containsAll(<String>['where-is-it', 'where-is-it-again']));
-    for (final String id in arcLessonsWaiting.keys) {
-      expect(lessons[id]!['parts'], isNull, reason: id);
-    }
-  });
+  test(
+    'V1: a lesson of a land in a room without parts is refused, unless it says what its Show waits for',
+    () {
+      final Map<String, Map<String, Object?>> l = <String, Map<String, Object?>>{
+        for (final MapEntry<String, Map<String, Object?>> e in lessons.entries) e.key: _copy(e.value),
+      };
+      l['any-shape']!.remove('parts');
+      expect(run(l: l).single, contains('V1'));
+      l['any-shape']!['partsWait'] = 'its Show waits for a drawing';
+      expect(run(l: l), isEmpty);
+      // the lessons of SHP-A-08 wait by themselves (written by the arc build from the Show it could not build), no hand list names them
+      expect(lessonsWaiting(lessons).keys, containsAll(<String>['where-is-it', 'where-is-it-again']));
+      for (final String id in lessonsWaiting(lessons).keys) {
+        expect(lessons[id]!['parts'], isNull, reason: id);
+      }
+    },
+  );
 
   test('V1 (QA-2): a lesson in parts with an empty Alone pool is refused, because the planner has nothing to serve', () {
     final Map<String, Map<String, Object?>> l = <String, Map<String, Object?>>{
@@ -345,6 +377,49 @@ void main() {
     final List<String> warnings = metBeforeAsked(activities: a, lessons: lessons, skills: skills);
     expect(warnings.where((String w) => w.contains('SHP-B-01')), isNotEmpty);
     expect(warnings, everyElement(startsWith('W1:')));
+  });
+
+  test('the five lands under the rules: what is left before they join arcDomains (the pinned count falls to 0, then the switch is one line)', () {
+    final List<String> found = <String>[];
+    checkArc(
+      activities: activities,
+      lessons: lessons,
+      skills: skills,
+      say: (String file, String path, String message) => found.add('$file $path $message'),
+      domains: allArcDomains,
+    );
+    for (final MapEntry<String, Map<String, Object?>> e in activities.entries) {
+      checkShowActivity(
+        'activity.${e.key}.json',
+        e.value,
+        (String file, String path, String message) => found.add('$file $path $message'),
+      );
+    }
+    found.addAll(
+      metBeforeAsked(activities: activities, lessons: lessons, skills: skills, domains: allArcDomains),
+    );
+    final Map<String, int> byRule = <String, int>{};
+    for (final String f in found) {
+      final String rule = <String>[
+        'V1',
+        'V2',
+        'V3',
+        'V4',
+        'V5',
+        'V6',
+        'V7',
+        'W1',
+      ].firstWhere((String r) => f.contains('$r:'), orElse: () => 'other');
+      byRule[rule] = (byRule[rule] ?? 0) + 1;
+    }
+    // ignore: avoid_print
+    print('FIVE LANDS ${byRule.entries.map((MapEntry<String, int> e) => '${e.key}=${e.value}').join(' ')}');
+    // ignore: avoid_print
+    print(found.take(400).join('\n'));
+    // 2026-11-16: V4 2 (LOG-A-04 is all picks until its strips are drawn; Riddle Grotto A is over 50%), V6 124 (taps that stay with one tagged distractor, hands-on
+    // items with one honest tag: curriculum-expert), V7 2 (NUM-B-14 and NUM-B-09 pools), W1 381 (number words and shade words no Show teaches: curriculum-expert).
+    // V1, V2, V3 and V5 are clean. When this is empty the five lands join `arcDomains`.
+    expect(byRule, <String, int>{'V4': 2, 'V6': 124, 'V7': 2, 'W1': 381});
   });
 }
 

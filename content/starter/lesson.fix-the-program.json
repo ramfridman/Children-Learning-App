@@ -31,5 +31,6 @@
         "v": "כׇּל הַכָּבוֹד! תִּקַּנְתֶּם אֶת הַצַּעַד."
       }
     ]
-  }
+  },
+  "partsWait": "show.cs-b-04 waits: waits for step 2.2c (robot_path with given steps), as the exempt list says"
 }

@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.logb01.2",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.2",
   "domain": "logic",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.44
   },
@@ -32,41 +32,62 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
+    "slots": 8,
+    "palette": [
       "asset:cat",
       "asset:dog",
-      "asset:dog",
-      "asset:cat",
-      "asset:dog",
-      "asset:dog",
-      "asset:cat",
-      "?"
+      "asset:star"
+    ],
+    "given": [
+      {
+        "cell": 0,
+        "face": "asset:cat"
+      },
+      {
+        "cell": 1,
+        "face": "asset:dog"
+      },
+      {
+        "cell": 2,
+        "face": "asset:dog"
+      },
+      {
+        "cell": 3,
+        "face": "asset:cat"
+      },
+      {
+        "cell": 4,
+        "face": "asset:dog"
+      },
+      {
+        "cell": 5,
+        "face": "asset:dog"
+      },
+      {
+        "cell": 6,
+        "face": "asset:cat"
+      }
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:cat",
-        "label": "חָתוּל",
-        "misconception": "M-PAT-NEXT"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:dog",
-        "label": "כֶּלֶב"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:star",
-        "label": "כּוֹכָב"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:cat",
+      "asset:dog",
+      "asset:dog",
+      "asset:cat",
+      "asset:dog",
+      "asset:dog",
+      "asset:cat",
+      "asset:dog"
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-PAT-NEXT",
+    "pieceTags": [
+      {
+        "piece": "asset:star",
+        "misconception": "M-PAT-UNIT"
+      }
+    ]
   },
   "voiceAnswer": false,
   "feedback": {
@@ -75,7 +96,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! הַסֵּדֶר חוֹזֵר."
+          "v": "כֵּן! חָתוּל, כֶּלֶב, כֶּלֶב, וְשׁוּב מֵהַהַתְחָלָה."
         }
       ]
     },
@@ -87,6 +108,16 @@
           {
             "t": "he",
             "v": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PAT-UNIT",
+        "vo": "vo:fb.pat_unit",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ."
           }
         ]
       },
@@ -141,7 +172,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הַחֵלֶק שֶׁחוֹזֵר הוּא: חָתוּל, כֶּלֶב, כֶּלֶב. עַכְשָׁו תּוֹרְכֶם."
+          "v": "חָתוּל, כֶּלֶב, כֶּלֶב — וְשׁוּב חָתוּל, כֶּלֶב. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -157,7 +188,7 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child copies the pattern in the same order",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {

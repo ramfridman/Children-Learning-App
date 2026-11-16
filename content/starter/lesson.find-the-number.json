@@ -14,8 +14,8 @@
     "NUM-A-08"
   ],
   "items": [
-    "pick.numeral.2",
     "pick.numeral.3",
+    "pick.numeral.2",
     "pick.numeral.4",
     "pick.numeral.5"
   ],
@@ -29,5 +29,40 @@
         "v": "יָפֶה מְאֹד! הִכַּרְתֶּם אֶת הַמִּסְפָּרִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-a-08",
+    "recall": [
+      "next.after.1"
+    ],
+    "together": [
+      {
+        "id": "pick.numeral.3",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "pick.numeral.2",
+      "pick.numeral.4",
+      "pick.numeral.5"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

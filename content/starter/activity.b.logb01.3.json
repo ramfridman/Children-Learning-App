@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.logb01.3",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.2",
   "domain": "logic",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.51
   },
@@ -32,42 +32,62 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
+    "slots": 8,
+    "palette": [
       "asset:apple",
-      "asset:fish",
       "asset:star",
-      "asset:apple",
-      "asset:fish",
-      "asset:star",
-      "asset:apple",
-      "?"
+      "asset:fish"
+    ],
+    "given": [
+      {
+        "cell": 0,
+        "face": "asset:apple"
+      },
+      {
+        "cell": 1,
+        "face": "asset:fish"
+      },
+      {
+        "cell": 2,
+        "face": "asset:star"
+      },
+      {
+        "cell": 3,
+        "face": "asset:apple"
+      },
+      {
+        "cell": 4,
+        "face": "asset:fish"
+      },
+      {
+        "cell": 5,
+        "face": "asset:star"
+      },
+      {
+        "cell": 6,
+        "face": "asset:apple"
+      }
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:apple",
-        "label": "תַּפּוּחַ",
-        "misconception": "M-PAT-NEXT"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:star",
-        "label": "כּוֹכָב",
-        "misconception": "M-PAT-UNIT"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:fish",
-        "label": "דָּג"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:apple",
+      "asset:fish",
+      "asset:star",
+      "asset:apple",
+      "asset:fish",
+      "asset:star",
+      "asset:apple",
+      "asset:fish"
     ],
-    "correct": "o3",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-PAT-NEXT",
+    "pieceTags": [
+      {
+        "piece": "asset:star",
+        "misconception": "M-PAT-UNIT"
+      }
+    ]
   },
   "voiceAnswer": false,
   "feedback": {
@@ -76,7 +96,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! הַסֵּדֶר חוֹזֵר."
+          "v": "כֵּן! תַּפּוּחַ, דָּג, כּוֹכָב, וְשׁוּב מֵהַהַתְחָלָה."
         }
       ]
     },
@@ -152,7 +172,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הַחֵלֶק שֶׁחוֹזֵר הוּא: תַּפּוּחַ, דָּג, כּוֹכָב. עַכְשָׁו תּוֹרְכֶם."
+          "v": "תַּפּוּחַ, דָּג, כּוֹכָב — וְשׁוּב תַּפּוּחַ, דָּג. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -168,7 +188,7 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child copies the pattern in the same order",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {

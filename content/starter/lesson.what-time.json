@@ -18,7 +18,8 @@
     "b.mathb15.2",
     "b.mathb15.3",
     "b.mathb15.4",
-    "b.mathb15.5"
+    "b.mathb15.5",
+    "x.mathb15.1"
   ],
   "estimatedMinutes": 5,
   "sequence": 47,
@@ -30,5 +31,42 @@
         "v": "כׇּל הַכָּבוֹד! קְרָאתֶם שָׁעוֹן."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-15",
+    "recall": [
+      "b.numb08.2"
+    ],
+    "together": [
+      {
+        "id": "b.mathb15.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb15.2",
+      "b.mathb15.3",
+      "b.mathb15.4",
+      "b.mathb15.5",
+      "x.mathb15.1"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מִסְתַּכֶּלֶת. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

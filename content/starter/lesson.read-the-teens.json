@@ -14,11 +14,11 @@
     "NUM-B-08"
   ],
   "items": [
-    "b.numb08.1",
     "b.numb08.2",
+    "b.numb08.5",
+    "b.numb08.1",
     "b.numb08.3",
     "b.numb08.4",
-    "b.numb08.5",
     "b.numb08.6"
   ],
   "estimatedMinutes": 5,
@@ -31,5 +31,42 @@
         "v": "כׇּל הַכָּבוֹד! אַתֶּם קוֹרְאִים מִסְפָּרִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-08",
+    "recall": [
+      "b15.numa08.1"
+    ],
+    "together": [
+      {
+        "id": "b.numb08.2",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb08.5",
+      "b.numb08.1",
+      "b.numb08.3",
+      "b.numb08.4",
+      "b.numb08.6"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

@@ -33,5 +33,46 @@
         "v": "מְצֻיָּן! הַסִּפְרוֹת בַּמָּקוֹם הַנָּכוֹן."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-08",
+    "recall": [
+      "b15.numa08.1"
+    ],
+    "together": [
+      {
+        "id": "b.numb08.7",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb08.8",
+      "b.numb08.9",
+      "b.numb08.10",
+      "b.numb08.11",
+      "b.numb08.12",
+      "b.numb08.13"
+    ],
+    "use": [
+      "b.numb08.14"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

@@ -576,12 +576,14 @@
       "options": [
         "balloon_orange",
         "balloon_red",
-        "balloon_blue"
+        "balloon_pink"
       ],
       "correct": "balloon_red",
       "tags": {
-        "balloon_orange": "M-COL-NAME"
+        "balloon_orange": "M-COL-NAME",
+        "balloon_pink": "M-COL-NAME"
       },
+      "revision": 2,
       "difficulty": 0.3
     },
     {
@@ -759,13 +761,15 @@
       "prompt": "אֵיפֹה הַבָּלוֹן הַלָּבָן?",
       "options": [
         "balloon_white",
-        "balloon_yellow",
+        "ball_white",
         "balloon_grey"
       ],
       "correct": "balloon_white",
       "tags": {
-        "balloon_grey": "M-COL-NAME"
+        "balloon_grey": "M-COL-NAME",
+        "ball_white": "M-COL-ONEATTR"
       },
+      "revision": 2,
       "difficulty": 0.3
     },
     {
@@ -861,13 +865,15 @@
       "prompt": "אֵיפֹה הַפֶּרַח הָאָפֹר?",
       "options": [
         "bloom_brown",
-        "bloom_blue",
+        "bloom_white",
         "bloom_grey"
       ],
       "correct": "bloom_grey",
       "tags": {
-        "bloom_brown": "M-COL-NAME"
+        "bloom_brown": "M-COL-NAME",
+        "bloom_white": "M-COL-NAME"
       },
+      "revision": 2,
       "difficulty": 0.35
     },
     {
@@ -1371,13 +1377,15 @@
       },
       "options": [
         "ball_green",
-        "bloom_blue",
+        "bloom_orange",
         "balloon_yellow"
       ],
       "correct": "balloon_yellow",
       "tags": {
-        "ball_green": "M-SORT-SHIFT"
+        "ball_green": "M-SORT-SHIFT",
+        "bloom_orange": "M-COL-NAME"
       },
+      "revision": 2,
       "difficulty": 0.35
     },
     {
@@ -1435,12 +1443,14 @@
       "options": [
         "ball_pink",
         "bloom_blue",
-        "ball_yellow"
+        "ball_purple"
       ],
       "correct": "ball_pink",
       "tags": {
-        "bloom_blue": "M-SORT-SHIFT"
+        "bloom_blue": "M-SORT-SHIFT",
+        "ball_purple": "M-COL-NAME"
       },
+      "revision": 2,
       "difficulty": 0.4
     },
     {
@@ -1580,8 +1590,9 @@
       "colour": "brown",
       "others": [
         "orange",
-        "grey"
+        "black"
       ],
+      "revision": 2,
       "pos": 1,
       "difficulty": 0.4
     },
@@ -1592,8 +1603,9 @@
       "thing": "ball",
       "colour": "red",
       "others": [
-        "blue"
+        "orange"
       ],
+      "revision": 2,
       "otherThing": "balloon",
       "pos": 2,
       "difficulty": 0.4
@@ -1605,8 +1617,9 @@
       "thing": "balloon",
       "colour": "yellow",
       "others": [
-        "green"
+        "orange"
       ],
+      "revision": 2,
       "otherThing": "bloom",
       "pos": 1,
       "difficulty": 0.45

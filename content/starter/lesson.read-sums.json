@@ -17,10 +17,10 @@
     "b.mathb03.1",
     "b.mathb03.2",
     "b.mathb03.3",
-    "b.mathb03.4",
     "b.mathb03.5",
-    "b.mathb03.6",
     "b.mathb03.7",
+    "b.mathb03.4",
+    "b.mathb03.6",
     "b.mathb03.8"
   ],
   "estimatedMinutes": 5,
@@ -33,5 +33,44 @@
         "v": "כׇּל הַכָּבוֹד! קְרָאתֶם תַּרְגִּילִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-03",
+    "recall": [
+      "b.mathb01.1"
+    ],
+    "together": [
+      {
+        "id": "b.mathb03.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb03.2",
+      "b.mathb03.3",
+      "b.mathb03.5",
+      "b.mathb03.7",
+      "b.mathb03.4",
+      "b.mathb03.6",
+      "b.mathb03.8"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

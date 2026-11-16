@@ -15,7 +15,9 @@
     "NUM-A-02"
   ],
   "items": [
-    "b15.numa02.5"
+    "b15.numa02.5",
+    "b15.numa02.1",
+    "next.after.5"
   ],
   "estimatedMinutes": 5,
   "sequence": 22,
@@ -27,5 +29,26 @@
         "v": "חֲכָמִים! מְצָאתֶם אֶת הַטָּעוּת בַּסְּפִירָה."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-a-01",
+    "secondShow": {
+      "id": "show.num-a-02",
+      "before": "b15.numa02.5"
+    },
+    "alone": [
+      "b15.numa02.5",
+      "b15.numa02.1",
+      "next.after.5"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

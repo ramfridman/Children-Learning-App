@@ -1,0 +1,167 @@
+{
+  "schema": "activity/v1",
+  "id": "show.math-b-14",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "build_pattern",
+  "templateVersion": "1.2",
+  "domain": "math",
+  "band": "B",
+  "skills": [
+    {
+      "id": "MATH-B-14",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.pnina.show.math_b_14.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַיָּמִים בַּשָּׁבוּעַ לְפִי הַסֵּדֶר."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "slots": 4,
+    "palette": [
+      "asset:day_3",
+      "asset:day_1",
+      "asset:day_4",
+      "asset:day_2"
+    ]
+  },
+  "answer": {
+    "type": "build",
+    "sequence": [
+      "asset:day_1",
+      "asset:day_2",
+      "asset:day_3",
+      "asset:day_4"
+    ]
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.pnina.show.math_b_14.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "רִאשׁוֹן, שֵׁנִי, שְׁלִישִׁי."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "הַיָּמִים בַּשָּׁבוּעַ לְפִי הַסֵּדֶר."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.pnina.show.math_b_14.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַיָּמִים בַּשָּׁבוּעַ לְפִי הַסֵּדֶר."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.pnina.show.math_b_14.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "רִאשׁוֹן, שֵׁנִי, שְׁלִישִׁי."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.pnina.show.math_b_14.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: מַה בָּא אַחַר כָּךְ?"
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "piece": "asset:day_1",
+        "cell": 0,
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "piece": "asset:day_2",
+        "cell": 1
+      },
+      {
+        "by": "host",
+        "piece": "asset:day_3",
+        "cell": 2
+      },
+      {
+        "by": "child",
+        "piece": "asset:day_4",
+        "cell": 3
+      }
+    ],
+    "teaches": [
+      "יוֹם רִאשׁוֹן",
+      "יוֹם שֵׁנִי",
+      "יוֹם שְׁלִישִׁי",
+      "יוֹם רְבִיעִי"
+    ]
+  }
+}

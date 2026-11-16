@@ -31,5 +31,42 @@
         "v": "מְצֻיָּן! הַכֹּל שָׁלֵם."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-02",
+    "recall": [
+      "b.numb14.1"
+    ],
+    "together": [
+      {
+        "id": "b.mathb02.7",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.scale",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מִסְתַּכְּלִים עַל הַמֹּאזְנַיִם, וּמוֹסִיפִים לְאַט."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb02.8",
+      "b.mathb02.9",
+      "b.mathb02.10",
+      "b.mathb02.11",
+      "b.mathb02.12"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק."
+        }
+      ]
+    }
   }
 }

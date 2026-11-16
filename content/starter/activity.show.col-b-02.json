@@ -1,0 +1,158 @@
+{
+  "schema": "activity/v1",
+  "id": "show.col-b-02",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "build_pattern",
+  "templateVersion": "1.2",
+  "domain": "colors",
+  "band": "B",
+  "skills": [
+    {
+      "id": "COL-B-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.goni.show.col_b_02.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מֵהַבָּהִיר אֶל הַכֵּהֶה."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "slots": 3,
+    "palette": [
+      "asset:shade_blue_3",
+      "asset:shade_blue_1",
+      "asset:shade_blue_2"
+    ]
+  },
+  "answer": {
+    "type": "build",
+    "sequence": [
+      "asset:shade_blue_1",
+      "asset:shade_blue_2",
+      "asset:shade_blue_3"
+    ]
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.goni.show.col_b_02.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בָּהִיר, וְאַחַר כָּךְ כֵּהֶה יוֹתֵר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "מֵהַבָּהִיר אֶל הַכֵּהֶה."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.goni.show.col_b_02.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מֵהַבָּהִיר אֶל הַכֵּהֶה."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.goni.show.col_b_02.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בָּהִיר, וְאַחַר כָּךְ כֵּהֶה יוֹתֵר."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.goni.show.col_b_02.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַכֵּהֶה."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "piece": "asset:shade_blue_1",
+        "cell": 0
+      },
+      {
+        "by": "host",
+        "piece": "asset:shade_blue_2",
+        "cell": 1,
+        "say": "key"
+      },
+      {
+        "by": "child",
+        "piece": "asset:shade_blue_3",
+        "cell": 2
+      }
+    ],
+    "teaches": [
+      "בָּהִיר",
+      "כֵּהֶה"
+    ]
+  }
+}

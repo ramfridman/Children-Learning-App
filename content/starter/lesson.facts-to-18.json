@@ -15,14 +15,15 @@
   ],
   "items": [
     "c.mathc01.1",
+    "c.mathc01.5",
+    "c.mathc01.9",
     "c.mathc01.2",
     "c.mathc01.3",
     "c.mathc01.4",
-    "c.mathc01.5",
     "c.mathc01.6",
     "c.mathc01.7",
     "c.mathc01.8",
-    "c.mathc01.9"
+    "c.mathc01.32"
   ],
   "estimatedMinutes": 7,
   "sequence": 101,
@@ -34,5 +35,46 @@
         "v": "כׇּל הַכָּבוֹד! הִשְׁלַמְתֶּם לְעֶשֶׂר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-c-01",
+    "recall": [
+      "b.mathb08.1"
+    ],
+    "together": [
+      {
+        "id": "c.mathc01.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.mathc01.5",
+      "c.mathc01.9",
+      "c.mathc01.2",
+      "c.mathc01.3",
+      "c.mathc01.4",
+      "c.mathc01.6",
+      "c.mathc01.7",
+      "c.mathc01.8",
+      "c.mathc01.32"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מִסְתַּכֶּלֶת. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

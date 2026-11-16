@@ -17,7 +17,8 @@
   ],
   "items": [
     "b15.cola06.1",
-    "b15.cola06.2"
+    "b15.cola06.2",
+    "col.name.brown"
   ],
   "estimatedMinutes": 6,
   "sequence": 12,
@@ -48,7 +49,8 @@
       }
     ],
     "alone": [
-      "b15.cola06.2"
+      "b15.cola06.2",
+      "col.name.brown"
     ],
     "handover": {
       "vo": "vo:host.goni.handover.2",

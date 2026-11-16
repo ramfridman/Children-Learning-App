@@ -2703,9 +2703,17 @@
     "count.butterflies.4",
     "count.butterflies.5",
     "give.butterflies.4",
-    "pick.red.flower"
+    "pick.red.flower",
+    "b15.numa03.1",
+    "b15.numa04.1",
+    "b15.cola02.1"
    ],
    "use": [],
+   "borrowed": [
+    "b15.numa03.1",
+    "b15.numa04.1",
+    "b15.cola02.1"
+   ],
    "poolRungs": [
     0,
     1
@@ -2737,10 +2745,17 @@
     "next.after.6",
     "next.after.8",
     "next.after.2",
-    "next.before.7"
+    "next.before.7",
+    "b15.numa01.1",
+    "b15.numa02.1"
    ],
    "use": [],
+   "borrowed": [
+    "b15.numa01.1",
+    "b15.numa02.1"
+   ],
    "poolRungs": [
+    0,
     1,
     2
    ]
@@ -2763,10 +2778,15 @@
    "alone": [
     "flash.dice.2",
     "flash.dice.3",
-    "flash.scatter.3"
+    "flash.scatter.3",
+    "flash.frame.3"
    ],
    "use": [],
+   "borrowed": [
+    "flash.frame.3"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -3054,10 +3074,14 @@
     "next.before.5",
     "next.after.9",
     "next.before.9",
-    "next.before.10"
+    "next.before.10",
+    "b15.numa02.1"
    ],
    "use": [
     "b15.numa01.1"
+   ],
+   "borrowed": [
+    "b15.numa02.1"
    ],
    "poolRungs": [
     0,
@@ -3095,11 +3119,18 @@
     "count.apples.5",
     "count.ducks.5",
     "count.stars.4",
-    "count.fish.5"
+    "count.fish.5",
+    "b15.numa03.1",
+    "b15.numa04.1"
    ],
    "use": [],
+   "borrowed": [
+    "b15.numa03.1",
+    "b15.numa04.1"
+   ],
    "poolRungs": [
-    0
+    0,
+    1
    ]
   },
   {
@@ -3332,13 +3363,20 @@
     "b15.numa02.2",
     "b15.numa02.3",
     "b15.numa01.4",
-    "b15.numa01.5"
+    "b15.numa01.5",
+    "next.after.1",
+    "next.after.5"
    ],
    "use": [
     "b15.numa02.4"
    ],
+   "borrowed": [
+    "next.after.1",
+    "next.after.5"
+   ],
    "poolRungs": [
     0,
+    1,
     2
    ]
   },
@@ -3358,10 +3396,18 @@
    },
    "together": [],
    "alone": [
-    "b15.numa02.5"
+    "b15.numa02.5",
+    "b15.numa02.1",
+    "next.after.5"
    ],
    "use": [],
+   "borrowed": [
+    "b15.numa02.1",
+    "next.after.5"
+   ],
    "poolRungs": [
+    0,
+    1,
     2
    ]
   },
@@ -3423,11 +3469,16 @@
    },
    "together": [],
    "alone": [
-    "b15.numa04.4"
+    "b15.numa04.4",
+    "b15.numa04.1"
    ],
    "use": [],
+   "borrowed": [
+    "b15.numa04.1"
+   ],
    "poolRungs": [
-    0
+    0,
+    1
    ]
   },
   {
@@ -3481,10 +3532,15 @@
    "alone": [
     "x.numa07.2",
     "x.numa07.3",
-    "x.numa07.4"
+    "x.numa07.4",
+    "numeral.apples.2"
    ],
    "use": [],
+   "borrowed": [
+    "numeral.apples.2"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -3507,10 +3563,15 @@
    ],
    "alone": [
     "x.numa07.6",
-    "x.numa07.7"
+    "x.numa07.7",
+    "numeral.apples.2"
    ],
    "use": [],
+   "borrowed": [
+    "numeral.apples.2"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -3563,10 +3624,15 @@
    "alone": [
     "b.numb01.7",
     "b.numb01.8",
-    "b.numb01.9"
+    "b.numb01.9",
+    "b.numb01.1"
    ],
    "use": [],
+   "borrowed": [
+    "b.numb01.1"
+   ],
    "poolRungs": [
+    1,
     2
    ]
   },
@@ -3896,12 +3962,17 @@
     "b.numb11.2",
     "b.numb11.3",
     "b.numb11.4",
-    "b.numb11.5"
+    "b.numb11.5",
+    "b.numb11.10"
    ],
    "use": [
     "b.numb11.6"
    ],
+   "borrowed": [
+    "b.numb11.10"
+   ],
    "poolRungs": [
+    1,
     2
    ]
   },
@@ -4139,11 +4210,16 @@
     "b.numb16.8",
     "b.numb16.9",
     "b.numb16.10",
-    "b.numb16.11"
+    "b.numb16.11",
+    "b.numb16.4"
    ],
    "use": [],
+   "borrowed": [
+    "b.numb16.4"
+   ],
    "poolRungs": [
-    1
+    1,
+    2
    ]
   },
   {
@@ -4351,12 +4427,17 @@
     "c.numb06.2",
     "c.numb06.4",
     "c.numb06.6",
-    "c.numb06.7"
+    "c.numb06.7",
+    "c.numb06.15"
    ],
    "use": [
     "c.numb06.8"
    ],
+   "borrowed": [
+    "c.numb06.15"
+   ],
    "poolRungs": [
+    0,
     1,
     2
    ]
@@ -4385,14 +4466,19 @@
     "c.numb06.11",
     "c.numb06.12",
     "c.numb06.13",
-    "c.numb06.14"
+    "c.numb06.14",
+    "c.numb06.2"
    ],
    "use": [
     "c.numb06.16"
    ],
+   "borrowed": [
+    "c.numb06.2"
+   ],
    "poolRungs": [
     0,
-    1
+    1,
+    2
    ]
   },
   {
@@ -4418,14 +4504,19 @@
     "c.numb09.4",
     "c.numb09.5",
     "c.numb09.6",
-    "c.numb09.7"
+    "c.numb09.7",
+    "c.numb09.12"
    ],
    "use": [
     "c.numb09.8"
    ],
+   "borrowed": [
+    "c.numb09.12"
+   ],
    "poolRungs": [
     0,
-    1
+    1,
+    2
    ]
   },
   {
@@ -4490,13 +4581,20 @@
     "c.numb01.3",
     "c.numb01.4",
     "c.numb10.3",
-    "c.numb10.4"
+    "c.numb10.4",
+    "b.numb01.4",
+    "b.numb10.10"
    ],
    "use": [
     "c.numb10.2"
    ],
+   "borrowed": [
+    "b.numb01.4",
+    "b.numb10.10"
+   ],
    "poolRungs": [
-    1
+    1,
+    2
    ]
   },
   {
@@ -4596,11 +4694,16 @@
     "c.numc03.5",
     "c.numc03.6",
     "c.numc03.7",
-    "c.numc03.8"
+    "c.numc03.8",
+    "c.numc03.10"
    ],
    "use": [],
+   "borrowed": [
+    "c.numc03.10"
+   ],
    "poolRungs": [
     0,
+    1,
     2
    ]
   },
@@ -4730,13 +4833,18 @@
     "c.numc06.3",
     "c.numc06.4",
     "c.numc06.5",
-    "c.numc06.6"
+    "c.numc06.6",
+    "c.numc06.14"
    ],
    "use": [
     "c.numc06.8"
    ],
+   "borrowed": [
+    "c.numc06.14"
+   ],
    "poolRungs": [
-    1
+    1,
+    2
    ]
   },
   {
@@ -4839,13 +4947,23 @@
     "c.numc03.24",
     "c.numc03.25",
     "c.numc02.18",
-    "c.numc02.19"
+    "c.numc02.19",
+    "c.numc03.1",
+    "c.numc03.13",
+    "c.numc02.1"
    ],
    "use": [
     "c.numc02.20"
    ],
+   "borrowed": [
+    "c.numc03.1",
+    "c.numc03.13",
+    "c.numc02.1"
+   ],
    "poolRungs": [
-    1
+    0,
+    1,
+    2
    ]
   },
   {
@@ -4879,11 +4997,18 @@
     "c.numc01.13",
     "c.numc01.14",
     "c.numc01.15",
-    "c.numc01.16"
+    "c.numc01.16",
+    "c.numc09.10",
+    "c.numc01.10"
    ],
    "use": [],
+   "borrowed": [
+    "c.numc09.10",
+    "c.numc01.10"
+   ],
    "poolRungs": [
-    1
+    1,
+    2
    ]
   },
   {
@@ -4917,10 +5042,20 @@
     "c.numc03.21",
     "c.numc03.22",
     "c.numc03.23",
-    "c.numc02.21"
+    "c.numc02.21",
+    "c.numc02.18",
+    "c.numc03.1",
+    "c.numc03.10"
    ],
    "use": [],
+   "borrowed": [
+    "c.numc02.18",
+    "c.numc03.1",
+    "c.numc03.10"
+   ],
    "poolRungs": [
+    0,
+    1,
     2
    ]
   }

@@ -504,6 +504,90 @@
                 "type": "integer",
                 "minimum": 1,
                 "maximum": 12
+              },
+              "hop": {
+                "type": "integer",
+                "minimum": -20,
+                "maximum": 20
+              },
+              "point": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "place": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "move": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 20
+              },
+              "touch": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 20
+              },
+              "cell": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 7
+              },
+              "block": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 20
+              },
+              "to": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 12
+              },
+              "put": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 40,
+                "pattern": "^(?:[a-z0-9_]{2,40})$"
+              },
+              "pan": {
+                "type": "string",
+                "enum": [
+                  "left",
+                  "right"
+                ]
+              },
+              "coin": {
+                "type": "string",
+                "enum": [
+                  "a10",
+                  "h50",
+                  "s1",
+                  "s2",
+                  "s5",
+                  "s10",
+                  "n20",
+                  "n50",
+                  "n100",
+                  "n200"
+                ]
+              },
+              "arrow": {
+                "type": "string",
+                "enum": [
+                  "up",
+                  "down",
+                  "left",
+                  "right"
+                ]
+              },
+              "hand": {
+                "type": "string",
+                "enum": [
+                  "short",
+                  "long"
+                ]
               }
             },
             "required": [
@@ -523,6 +607,97 @@
           },
           "minItems": 0,
           "maxItems": 12
+        },
+        "predict": {
+          "type": "object",
+          "properties": {
+            "line": {
+              "type": "object",
+              "properties": {
+                "vo": {
+                  "type": "string",
+                  "minLength": 4,
+                  "maxLength": 83,
+                  "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+                },
+                "caption": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "t": {
+                        "const": "he"
+                      },
+                      "v": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 240
+                      }
+                    },
+                    "required": [
+                      "t",
+                      "v"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "minItems": 1,
+                  "maxItems": 1
+                },
+                "target": {
+                  "type": "string",
+                  "minLength": 4,
+                  "maxLength": 83,
+                  "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+                },
+                "target2": {
+                  "type": "string",
+                  "minLength": 4,
+                  "maxLength": 83,
+                  "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+                },
+                "show": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                }
+              },
+              "required": [
+                "vo",
+                "caption"
+              ],
+              "additionalProperties": false
+            },
+            "choices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 3,
+                    "pattern": "^(?:o[0-9]{1,2})$"
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  }
+                },
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 0,
+              "maxItems": 3
+            }
+          },
+          "required": [
+            "choices"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [

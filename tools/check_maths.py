@@ -1874,8 +1874,10 @@ def check_give(f, it):
     n = it.answer.get('n')
     nums = numbers(it.caption)
     src = (it.scene.get('source') or {}).get('count')
-    if nums and nums[-1] != n:
-        f.add('WRONG', it, 'answer', 'the caption asks for %s, the item wants %s' % (nums[-1], n))
+    # a frame that starts with objects (step 2.2: "there are seven, fill it up to ten") asks for the total; the child adds `n` to the `prefilled` ones
+    total = (it.scene.get('prefilled') or 0) + n
+    if nums and not {n, total} & set(nums):
+        f.add('WRONG', it, 'answer', 'the caption asks for %s, the item wants %s' % (nums[-1], total))
     if src is not None and src <= n:
         f.add('AMBIG', it, 'take-all', 'the pile has %s, so taking the whole pile is also right: M-CNT-CARD cannot show, '
               'and a child who grabs everything is marked right' % src)
@@ -2176,7 +2178,8 @@ def check_docs(docs, records, skills, catalogue, svg, band=None, ids=None):
     f = Findings()
     counts = Counter()
     for doc in docs:
-        if doc.get('domain') not in MATHS_DOMAINS:
+        # a Show (M11 Stage 2) is the host's example, a few steps of a sum its lines say in their own words: it asks nothing, so no caption of it is a question
+        if doc.get('domain') not in MATHS_DOMAINS or doc.get('purpose') == 'show':
             continue
         it = Item(doc)
         if not selected(it, band, ids):
@@ -2339,7 +2342,8 @@ def coverage(folder=STARTER, band=None, ids=None, docs=None, skills=None):
     svg = Svg(folder)
     out, can = {}, set()
     for doc in docs:
-        if doc.get('domain') not in MATHS_DOMAINS:
+        # a Show (M11 Stage 2) is the host's example, a few steps of a sum its lines say in their own words: it asks nothing, so no caption of it is a question
+        if doc.get('domain') not in MATHS_DOMAINS or doc.get('purpose') == 'show':
             continue
         it = Item(doc)
         if not selected(it, band, ids):

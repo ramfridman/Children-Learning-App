@@ -19,6 +19,7 @@
     "b.numb11.3",
     "b.numb11.4",
     "b.numb11.5",
+    "b.numb11.10",
     "b.numb11.6"
   ],
   "estimatedMinutes": 5,
@@ -31,5 +32,45 @@
         "v": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַטָּעֻיּוֹת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-11",
+    "recall": [
+      "b.numb10.1"
+    ],
+    "together": [
+      {
+        "id": "b.numb11.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb11.2",
+      "b.numb11.3",
+      "b.numb11.4",
+      "b.numb11.5",
+      "b.numb11.10"
+    ],
+    "use": [
+      "b.numb11.6"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

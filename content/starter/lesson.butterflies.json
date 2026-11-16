@@ -16,11 +16,14 @@
     "COL-A-02"
   ],
   "items": [
-    "pick.red.flower",
     "count.butterflies.3",
     "count.butterflies.4",
     "count.butterflies.5",
-    "give.butterflies.4"
+    "give.butterflies.4",
+    "pick.red.flower",
+    "b15.numa03.1",
+    "b15.numa04.1",
+    "b15.cola02.1"
   ],
   "estimatedMinutes": 4,
   "sequence": 1,
@@ -32,5 +35,48 @@
         "v": "כׇּל הַכָּבוֹד! סְפַרְתֶּם לְאַט וּבְדַקְתֶּם כׇּל פַּרְפַּר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-a-03",
+    "secondShow": {
+      "id": "show.num-a-04",
+      "before": "give.butterflies.4"
+    },
+    "recall": [
+      "next.after.1"
+    ],
+    "together": [
+      {
+        "id": "count.butterflies.3",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.count",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "count.butterflies.4",
+      "count.butterflies.5",
+      "give.butterflies.4",
+      "pick.red.flower",
+      "b15.numa03.1",
+      "b15.numa04.1",
+      "b15.cola02.1"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

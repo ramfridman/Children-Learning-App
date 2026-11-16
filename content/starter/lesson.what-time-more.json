@@ -18,7 +18,8 @@
     "b.mathb15.7",
     "b.mathb15.8",
     "b.mathb15.9",
-    "b.mathb15.10"
+    "b.mathb15.10",
+    "x.mathb15.1"
   ],
   "estimatedMinutes": 5,
   "sequence": 48,
@@ -30,5 +31,42 @@
         "v": "מְצֻיָּן! הַמַּחֲוָג הַקָּצָר אוֹמֵר אֶת הַשָּׁעָה."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-15",
+    "recall": [
+      "b.numb08.2"
+    ],
+    "together": [
+      {
+        "id": "b.mathb15.6",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb15.7",
+      "b.mathb15.8",
+      "b.mathb15.9",
+      "b.mathb15.10",
+      "x.mathb15.1"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק."
+        }
+      ]
+    }
   }
 }

@@ -14,13 +14,13 @@
     "NUM-C-04"
   ],
   "items": [
+    "c.numc04.13",
+    "c.numc04.14",
+    "c.numc04.15",
     "c.numc04.9",
     "c.numc04.10",
     "c.numc04.11",
     "c.numc04.12",
-    "c.numc04.13",
-    "c.numc04.14",
-    "c.numc04.15",
     "c.numc04.16"
   ],
   "estimatedMinutes": 8,
@@ -43,5 +43,46 @@
         "v": "עֶשֶׂר קֻבִּיּוֹת הֵן מוֹט אֶחָד."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-c-04",
+    "recall": [
+      "c.numc03.10"
+    ],
+    "together": [
+      {
+        "id": "c.numc04.13",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.numc04.14",
+      "c.numc04.15",
+      "c.numc04.9",
+      "c.numc04.10",
+      "c.numc04.11",
+      "c.numc04.12"
+    ],
+    "use": [
+      "c.numc04.16"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

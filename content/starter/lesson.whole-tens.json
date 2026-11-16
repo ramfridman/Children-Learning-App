@@ -21,7 +21,9 @@
     "c.mathc03.5",
     "c.mathc03.6",
     "c.mathc03.7",
-    "c.mathc03.8"
+    "c.mathc03.8",
+    "c.mathc03.9",
+    "c.mathc03.10"
   ],
   "estimatedMinutes": 8,
   "sequence": 106,
@@ -33,5 +35,46 @@
         "v": "מְצֻיָּן! חֲשַׁבְתֶּם בַּעֲשָׂרוֹת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-c-03",
+    "recall": [
+      "c.mathc01.1"
+    ],
+    "together": [
+      {
+        "id": "c.mathc03.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.mathc03.2",
+      "c.mathc03.3",
+      "c.mathc03.4",
+      "c.mathc03.5",
+      "c.mathc03.6",
+      "c.mathc03.7",
+      "c.mathc03.8",
+      "c.mathc03.9",
+      "c.mathc03.10"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

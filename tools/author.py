@@ -380,13 +380,22 @@ def template_version(template, scene, answer):
     """The version of the template an item needs: the oldest that has everything the item uses (the validator makes an item say
     this or more). tap_answer: 1.1 numerals and sets, 1.2 charts, 1.4 stage pictures, the number answer, five choices, the signs
     < > ( ) and numbers to 10,000, a row of more than eight cells. spot_error: 1.0, or 1.1 for the signs and numbers of 1.4.
-    number_line: 1.1 for `tickStep` or `tolerance`. give_n: 1.1 for `frame`."""
+    number_line: 1.1 for `tickStep` or `tolerance`, 1.2 for `classifiers`. give_n: 1.1 for `frame`, 1.2 for `prefilled`. build_pattern: 1.2 for
+    `given` or `pieceTags`. shop_pay: 1.1 for `classifiers` (M11 Stage 2)."""
     if template == 'spot_error':
         return '1.1' if any(is_new_cell(c) for c in scene['cells']) else '1.0'
     if template == 'number_line':  # 1.1: ticks at every tickStep-th number, a tolerance for a line placed by estimate (M10 X5)
+        if answer.get('classifiers'):
+            return '1.2'
         return '1.1' if 'tickStep' in scene or 'tolerance' in answer else '1.0'
-    if template == 'give_n':  # 1.1: the target is a ten-frame (M10, NUM-B-09)
+    if template == 'give_n':  # 1.1: the target is a ten-frame (M10, NUM-B-09); 1.2: a frame that starts with objects in it (M11 step 2.2)
+        if scene.get('prefilled'):
+            return '1.2'
         return '1.1' if scene.get('frame') else '1.0'
+    if template == 'build_pattern':  # 1.2: given cells and a tag for a picture put where it does not belong (M11 step 2.2)
+        return '1.2' if scene.get('given') or answer.get('pieceTags') else '1.0'
+    if template == 'shop_pay':  # 1.1: a tag for a price read by its digits or written the other way round (M11 Stage 2)
+        return '1.1' if answer.get('classifiers') else '1.0'
     if template != 'tap_answer':
         return '1.0'
     row = scene.get('row', [])
@@ -523,6 +532,10 @@ def k_give(a, ctx):
              'target': {'sprite': 'asset:' + a.get('target', 'basket_target')}}
     if a.get('frame'):
         scene['frame'] = True
+    if a.get('prefilled'):
+        # step 2.2: the frame starts with `prefilled` objects that stay; `n` is how many the child adds, `source` the pile it takes them from
+        assert a.get('frame'), '%s: prefilled needs a frame' % a['id']
+        scene['prefilled'] = a['prefilled']
     classifiers = {'took_all': 'M-CNT-CARD', **a.get('classifiers', {})}
     return activity(
         a, 'give_n', skills_of(a), 'check', 'reverse', scene,
@@ -534,7 +547,10 @@ def k_give(a, ctx):
         'child gives exactly the number asked for, not the whole pile',
         extra={'contradicts': 'M-CNT-CARD'},
         prompt=a.get('prompt') or 'תְּנוּ לִי %s.' % qty(n, obj),
-        correct=a.get('correct_text') or '%s! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁתִּי.' % F[n])
+        correct=a.get('correct_text') or '%s! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁתִּי.' % F[n],
+        # M11 Stage 2 (NUM-A-07, numerals to the set, U4): the numeral asked for is shown in the bubble under the question, as digits; an item may say
+        # `numeral: false` (or true for another skill's). With a prefilled frame the numeral is the total the frame is filled up to
+        prompt_math=['n:%d' % (n + a.get('prefilled', 0))] if a.get('numeral', a['skill'] == 'NUM-A-07') else None)
 
 
 def k_count_tap(a, ctx):
@@ -886,12 +902,23 @@ def k_build(a, ctx):
     scene = {'background': 'asset:meadow', 'slots': len(seq), 'palette': ['asset:' + p for p in a['palette']]}
     if a.get('model'):
         scene['model'] = ['asset:' + m for m in a['model']]
+    answer = {'type': 'build', 'sequence': ['asset:' + p for p in seq]}
     # an ordering item (no model) names its own tag: D38 of the logic sweep, ordering towers is not copying
     tag = a.get('tag', 'M-PAT-COPY')
+    answer['misconception'] = tag
+    tags = {tag}
+    if a.get('given'):
+        # step 2.2: `given` has one entry for each place, a sprite for a place that is filled from the start and null for one the child fills (a
+        # given place that differs from `sequence` is a mistake to fix); `palette_tags` (sprite: tag) is what putting that card in a wrong place records
+        assert len(a['given']) == len(seq), '%s: given has an entry for each place' % a['id']
+        scene['given'] = [{'cell': i, 'face': 'asset:' + g} for i, g in enumerate(a['given']) if g]
+    if a.get('palette_tags'):
+        answer['pieceTags'] = [{'piece': 'asset:' + p, 'misconception': t} for p, t in sorted(a['palette_tags'].items())]
+        tags |= set(a['palette_tags'].values())
     h2, h2_shared = family_h2(a, 'נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד.', 'build')
     return activity(
         a, 'build_pattern', skills_of(a), 'practice', 'practice',
-        scene, {'type': 'build', 'sequence': ['asset:' + p for p in seq], 'misconception': tag}, {tag},
+        scene, answer, tags,
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', h2,
               a.get('h3') or 'נַעֲתִיק אֶת הַסֵּדֶר מֵהַהַתְחָלָה, תְּמוּנָה אַחַר תְּמוּנָה. עַכְשָׁו תּוֹרְכֶם.',
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
@@ -1254,9 +1281,15 @@ def k_numline(a, ctx):
     # M11 Stage 2: `tag: null` gives the line no tag of its own (a numeral found among labelled ticks shows no catalogued error), and
     # `mirror: false` no mirror tag (with every tick labelled, the mirror tick is a misread label, not a line read from the right)
     answer = {'type': 'line', 'mode': a['mode'], 'target': target}
-    if a.get('tag', 'M-NL-SPACE'):
-        answer['misconception'] = a.get('tag', 'M-NL-SPACE')
-    tags = {answer['misconception']} if 'misconception' in answer else set()
+    own_tag = a.get('tag', 'M-NL-SPACE')
+    if own_tag:
+        answer['misconception'] = own_tag
+    tags = {own_tag} if own_tag else set()
+    # M11 Stage 2, step 6: a tag for each kind of wrong touch the item can tell (`classifiers`, {when: tag}: reversed_number, restart_at_ten,
+    # plus_one_for_ten; NumberLineActivity.wrongTagFor reads them, the mirror first)
+    if a.get('classifiers'):
+        answer['classifiers'] = [{'when': w, 'misconception': t} for w, t in sorted(a['classifiers'].items())]
+        tags |= set(a['classifiers'].values())
     tol = a.get('tolerance', 0)
     if a.get('tickStep'):  # X5: ticks only at every tickStep-th number (0 to 100 in tens); the line must end on a tick
         assert (to - frm) % a['tickStep'] == 0, '%s: a line from %d to %d does not end on a tick of %d' % (a['id'], frm, to, a['tickStep'])
@@ -1519,8 +1552,36 @@ def write(name, doc):
         fh.write('\n')
 
 
+PENDING_PATH = os.path.join(ROOT, 'content', 'units', 'pending', 'stage2-recuts.json')
+
+
+def apply_pending(spec):
+    """M11 Stage 2 (curriculum-expert, second pass; content/units/pending/stage2-recuts.json): `patch` is merged into the item the generator made
+    (a second honest tag of a tap that stays: item.update(patch)); `replace` is a whole item in this file's form that takes the place of the generated
+    one (the same id, its band and difficulty, revision 2), as band_b_recuts.py RECUTS does. A `replace` that needs pictures that are not drawn yet (the
+    `strip_*` sprites of LOG-A-04, the design-director's) is left out, and its tap stays as it is: a stand-in is never shipped."""
+    if not os.path.exists(PENDING_PATH):
+        return
+    pending = json.load(open(PENDING_PATH, encoding='utf-8'))
+    for k, a in enumerate(spec['activities']):
+        i = a['id']
+        if i in pending.get('patch', {}):
+            a.update(pending['patch'][i])
+        new = pending.get('replace', {}).get(i)
+        if new is None:
+            continue
+        sprites = {x[0] for x in new.get('items', [])} | {b['sprite'] for b in new.get('bins', [])}
+        missing = sorted(s for s in sprites if s.startswith('strip_') and not os.path.exists(os.path.join(OUT, s + '.svg')))
+        if missing:
+            print('  pending: %s waits for pictures: %s' % (i, ', '.join(missing)))
+            continue
+        spec['activities'][k] = {'id': i, 'difficulty': a['difficulty'], 'revision': 2, **({'band': a['band']} if 'band' in a else {}),
+                                 **{key: v for key, v in new.items() if key != 'waitsFor'}}
+
+
 def main(path):
     spec = json.load(open(path, encoding='utf-8'))
+    apply_pending(spec)
     for sk in spec['skills']:
         sk.setdefault('domain', spec.get('domain', 'numbers'))
         sk.setdefault('band', spec.get('band', 'A'))

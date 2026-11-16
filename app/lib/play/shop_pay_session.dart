@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../child/activity_shell.dart';
 import '../content/hint_ladder.dart';
 import '../content/models.dart';
+import '../content/pay_way.dart';
 import '../content/schemas.dart' show coinSprites, coinValues;
 import '../design/app_text.dart';
 import '../design/components.dart';
@@ -15,6 +17,8 @@ import 'hints/hint_pictures.dart' show hintScale;
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
+import 'host_moves.dart';
+import 'lesson_arc.dart' show ArcPart, ArcStep;
 import 'sprite_group.dart';
 import 'template_session.dart';
 
@@ -84,10 +88,94 @@ class ShopPaySession extends TemplateSession {
     controller.demoDone();
   }
 
+  // ---- the host's part (a Show, the lead of a Together item) ----
+
+  /// The first coin of [kind] that is still in the purse, or null.
+  PurseCoin? _coinOfKind(String kind) {
+    for (final PurseCoin c in purse) {
+      if (c.kind == kind && !onCounter.contains(c.id)) return c;
+    }
+    return null;
+  }
+
+  /// The host lays a coin of [kind] on the counter: its hand presses the coin in the purse, the coin goes, and in a Show the counter says the sum
+  /// so far (a Show is where the sum is shown; the item itself never shows it).
+  HostMove _coinMove(String kind) {
+    final PurseCoin? coin = _coinOfKind(kind);
+    final List<String> kinds = _purseKinds;
+    final bool draw = coin != null && !_size.isEmpty;
+    return HostMove(draw ? _coinTip(kinds, kinds.indexOf(kind)) : null, () {
+      if (coin == null) return;
+      onCounter.add(coin.id);
+      if (activity.isShow) demoTotal = total;
+    }, rest: 700);
+  }
+
+  @override
+  void startHost() {
+    final ArcStep? step = controller.step;
+    if (step == null || hosting) return;
+    if (activity.isShow) {
+      unawaited(
+        playShow(
+          activity.show!,
+          move: (ShowStep s, {required bool fast}) =>
+              hostTour(_hint, <HostMove>[_coinMove(s.coin!)], fast: fast),
+        ),
+      );
+    } else if (step.part == ArcPart.together && controller.leading && step.lead > 0) {
+      final List<String> way = fewestCoinWay(activity.price, <String>[
+        for (final PurseCoin c in purse) c.kind,
+      ]);
+      unawaited(
+        playLead(<Future<void> Function()>[
+          for (final String k in way.take(step.lead)) () => hostTour(_hint, <HostMove>[_coinMove(k)]),
+        ]),
+      );
+    }
+  }
+
+  /// A touch on a reminder skips what the host still has to do: its coins are on the counter, and the child's step is left.
+  @override
+  void onScreenTouch() {
+    if (!activity.isShow) return;
+    skipHost(() {
+      _hint.clear();
+      for (final ShowStep s in activity.show!.hostSteps) {
+        _coinMove(s.coin!).act();
+      }
+    });
+  }
+
+  /// A Show, and the child touches a coin of the purse: the kind the host left ends the Show; any other is "let's look again". Nothing is written.
+  void _showCoin(String id) {
+    final String want = activity.show!.childStep.coin!;
+    if (kindOf(id) != want) {
+      _busy = true;
+      lookAgain(activity);
+      notify();
+      later(TemplateSession.notYetPause, () {
+        _busy = false;
+        notify();
+      });
+      return;
+    }
+    _busy = true;
+    onCounter.add(id);
+    demoTotal = total;
+    ring = AnswerState.correct;
+    notify();
+    finishShow();
+  }
+
   void toggle(String id) {
     _endDemo();
     _hint.clear();
-    if (_busy || ring == AnswerState.correct) return;
+    if (_busy || hosting || ring == AnswerState.correct) return;
+    if (activity.isShow) {
+      if (!onCounter.contains(id)) _showCoin(id);
+      return;
+    }
     if (onCounter.contains(id)) {
       onCounter.remove(id);
     } else {
@@ -101,18 +189,14 @@ class ShopPaySession extends TemplateSession {
   Future<void> pay() async {
     _endDemo();
     _hint.clear();
-    if (_busy || ring == AnswerState.correct || onCounter.isEmpty) return;
+    if (_busy || hosting || activity.isShow || ring == AnswerState.correct || onCounter.isEmpty) return;
     final bool right = total == activity.price;
     if (controller.guided && !right) {
       if (controller.answerShown) _showWay();
       return;
     }
     _busy = true;
-    String tag = '';
-    if (!right) {
-      final bool countedCoins = onCounter.length * 100 == activity.price;
-      tag = (countedCoins && activity.countTag != null) ? activity.countTag! : (activity.wrongTag ?? '');
-    }
+    final String tag = right ? '' : (activity.wrongTagFor(total, onCounter.length) ?? '');
     await controller.submitPlacement(right: right, tag: tag, response: '$total');
     if (disposed) return;
     if (right) {
@@ -165,6 +249,15 @@ class ShopPaySession extends TemplateSession {
     _run++;
     _hint.clear();
     onCounter.clear();
+    // The coins the host laid in the lead of a Together item stay on the counter.
+    if (controller.step?.part == ArcPart.together && !controller.leading) {
+      final List<String> way = fewestCoinWay(activity.price, <String>[
+        for (final PurseCoin c in purse) c.kind,
+      ]);
+      for (final String k in way.take(controller.step!.lead)) {
+        _coinMove(k).act();
+      }
+    }
     hinted = <String>{};
     lightPrice = false;
     demoRunning = false;
@@ -363,15 +456,19 @@ class ShopPaySession extends TemplateSession {
             ),
           ),
           const SizedBox(width: 12),
-          AnswerTile(
-            key: const Key('pay'),
-            semanticLabel: 'pay',
-            size: 72,
-            state: ring == AnswerState.notYet
-                ? AnswerState.notYet
-                : (ring == AnswerState.correct ? AnswerState.correct : AnswerState.idle),
-            onPressed: pay,
-            child: const Icon(Icons.check_rounded, size: 44, color: TokenColors.ink),
+          // A Show has no paying (it ends on the child's last coin): the tile stands where it always does, so the row keeps its shape, but faded.
+          Opacity(
+            opacity: activity.isShow ? 0.35 : 1,
+            child: AnswerTile(
+              key: const Key('pay'),
+              semanticLabel: 'pay',
+              size: 72,
+              state: ring == AnswerState.notYet
+                  ? AnswerState.notYet
+                  : (ring == AnswerState.correct ? AnswerState.correct : AnswerState.idle),
+              onPressed: activity.isShow ? null : pay,
+              child: const Icon(Icons.check_rounded, size: 44, color: TokenColors.ink),
+            ),
           ),
         ],
       ),

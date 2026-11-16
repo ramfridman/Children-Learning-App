@@ -315,10 +315,17 @@ class ArcPlan {
     };
     final ArcPlan plan = ArcPlan._(<ArcStep>[], pool, fade, standings, checks);
     final List<Activity> picked = <Activity>[];
+    // An item that is the visit's Together, Use or Recall item is never also served from the Alone pool (an item may stand in two parts of a lesson, and
+    // in the lessons of a skill that borrow it from each other): one screen, one attempt.
+    final List<Activity> served = <Activity>[
+      for (final ArcStep t in together) t.activity,
+      ?(useIt ? use : null),
+      ?(recallIt ? recall : null),
+    ];
     for (int k = 0; k < alone; k++) {
       // The skills take turns, the first first; a skill with nothing left lets the next one have the place.
       for (int j = 0; j < order.length; j++) {
-        final Activity? a = plan._pick(order[(k + j) % order.length], picked);
+        final Activity? a = plan._pick(order[(k + j) % order.length], <Activity>[...served, ...picked]);
         if (a != null) {
           picked.add(a);
           break;
@@ -383,9 +390,12 @@ class ArcPlan {
     if (step.part != ArcPart.alone) return const <int>[];
     final String skill = step.activity.skillId;
     _fade[skill]?.answered(slipped: slipped, clean: clean);
+    // what the visit serves besides the Alone items, and the Alone items so far, are not served again
     final List<Activity> taken = <Activity>[
-      for (int i = 0; i <= index; i++)
-        if (steps[i].part == ArcPart.alone) steps[i].activity,
+      for (int i = 0; i < steps.length; i++)
+        if (steps[i].part != ArcPart.alone && steps[i].part != ArcPart.show ||
+            (i <= index && steps[i].part == ArcPart.alone))
+          steps[i].activity,
     ];
     final List<int> changed = <int>[];
     for (int i = index + 1; i < steps.length; i++) {

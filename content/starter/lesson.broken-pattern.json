@@ -31,5 +31,6 @@
         "v": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַשּׁוֹנֶה."
       }
     ]
-  }
+  },
+  "partsWait": "show.log-b-02 waits: waits for step 2.2c (build_pattern with a model longer than its places), as the exempt list says"
 }

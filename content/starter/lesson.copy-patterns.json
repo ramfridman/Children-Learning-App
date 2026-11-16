@@ -33,5 +33,46 @@
         "v": "כׇּל הַכָּבוֹד! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.log-a-05",
+    "recall": [
+      "b15.loga04.1"
+    ],
+    "together": [
+      {
+        "id": "log.copy.colours",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.timi.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אוֹמְרִים אֶת הַסֵּדֶר בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "log.copy.animals",
+      "log.copy.balloons",
+      "log.copy.three",
+      "log.copy.pets",
+      "log.copy.green",
+      "b15.loga05.1"
+    ],
+    "use": [
+      "b15.loga05.2"
+    ],
+    "handover": {
+      "vo": "vo:host.timi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

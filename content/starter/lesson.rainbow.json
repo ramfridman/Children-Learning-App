@@ -30,5 +30,43 @@
         "v": "וַאוּ! בְּנִיתֶם קֶשֶׁת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.col-b-06",
+    "recall": [
+      "b.colb01.1"
+    ],
+    "together": [
+      {
+        "id": "b.colb06.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.goni.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מִסְתַּכְּלִים עַל הַצְּבָעִים לְאַט."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.colb06.2",
+      "b.colb06.3",
+      "b.colb06.4"
+    ],
+    "use": [
+      "b.colb06.5"
+    ],
+    "handover": {
+      "vo": "vo:host.goni.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

@@ -14,12 +14,12 @@
     "MATH-A-05"
   ],
   "items": [
-    "math.time.night",
-    "math.time.morning",
-    "math.time.noon",
     "math.time.evening",
     "math.time.after",
-    "math.time.before"
+    "math.time.before",
+    "math.time.night",
+    "math.time.morning",
+    "math.time.noon"
   ],
   "estimatedMinutes": 4,
   "sequence": 4,
@@ -31,5 +31,42 @@
         "v": "וַאוּ! הִכַּרְתֶּם אֶת הַיּוֹם: בֹּקֶר, צָהֳרַיִם, עֶרֶב וְלַיְלָה."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-a-05",
+    "recall": [
+      "b15.loga08.1"
+    ],
+    "together": [
+      {
+        "id": "math.time.evening",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מַה קֹּדֶם, וּמָה אַחַר כָּךְ?"
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "math.time.after",
+      "math.time.before",
+      "math.time.night",
+      "math.time.morning",
+      "math.time.noon"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק."
+        }
+      ]
+    }
   }
 }

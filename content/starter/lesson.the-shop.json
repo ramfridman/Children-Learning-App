@@ -16,7 +16,8 @@
   "items": [
     "math.shop.fish",
     "math.shop.apples",
-    "math.shop.stars"
+    "math.shop.stars",
+    "b15.matha06.1"
   ],
   "estimatedMinutes": 4,
   "sequence": 5,
@@ -28,5 +29,40 @@
         "v": "כׇּל הַכָּבוֹד! שִׁלַּמְתֶּם מַטְבֵּעַ אֶחָד לְכׇל דָּבָר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-a-06",
+    "recall": [
+      "b15.numa03.1"
+    ],
+    "together": [
+      {
+        "id": "math.shop.fish",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.give",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מַטְבֵּעַ אֶחָד לְכׇל תַּפּוּחַ."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "math.shop.apples",
+      "math.shop.stars",
+      "b15.matha06.1"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

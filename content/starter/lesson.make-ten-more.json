@@ -30,5 +30,43 @@
         "v": "יָפֶה! עֶשֶׂר כׇּל פַּעַם."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-06",
+    "recall": [
+      "b.mathb02.1"
+    ],
+    "together": [
+      {
+        "id": "b.mathb06.6",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.give",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מַטְבֵּעַ אֶחָד לְכׇל תַּפּוּחַ."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb06.7",
+      "b.mathb06.8",
+      "b.mathb06.9"
+    ],
+    "use": [
+      "b.mathb06.10"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

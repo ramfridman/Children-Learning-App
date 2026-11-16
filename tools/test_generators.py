@@ -190,6 +190,21 @@ class PartTwoPiecesTest(unittest.TestCase):
         self.assertEqual(said, 'יֵשׁ אַרְבָּעָה תַּפּוּחִים בַּסַּל, וּשְׁנֵי תַּפּוּחִים בַּחוּץ.')
 
 
+class RecutsTest(unittest.TestCase):
+    def test_every_recut_and_every_pending_swap_is_an_item_of_the_pack_at_revision_2(self):
+        """A re-cut (band_b_recuts.RECUTS) or a pending swap (content/units/pending/stage2-recuts.json) for an id that no unit makes would be dropped
+        without a word: each must come out as the item of that id at revision 2 (a swap that waits for pictures that are not drawn is the exception)."""
+        import band_b_recuts
+        pending = json.load(open(os.path.join(ROOT, 'content', 'units', 'pending', 'stage2-recuts.json'), encoding='utf-8'))
+        acts = {a['id']: a for a in load('activity.*.json')}
+        waits = {i for i, r in pending['replace'].items() if r['kind'] == 'sort'}
+        for i in list(band_b_recuts.RECUTS) + [i for i in pending['replace'] if i not in waits]:
+            self.assertIn(i, acts, i)
+            self.assertEqual(acts[i]['revision'], 2, i)
+        for i in pending['patch']:
+            self.assertIn(i, acts, i)
+
+
 class StarterPackTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -199,6 +214,8 @@ class StarterPackTest(unittest.TestCase):
     def test_every_activity_follows_the_label_rule(self):
         bad = []
         for a in self.acts:
+            if a.get('purpose') == 'show':
+                continue  # a Show's representation is what the host's example is made of, set by its arc source
             if a['representation'] == 'story' or a['skills'][0]['id'] == 'MATH-B-14':
                 continue  # the two exceptions of §2: authored stories, and the day cards that are symbols
             want = author.representation(a['template'], a['scene'], a['answer'])

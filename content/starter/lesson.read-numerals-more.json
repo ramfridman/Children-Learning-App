@@ -14,15 +14,16 @@
     "NUM-B-06"
   ],
   "items": [
+    "c.numb06.15",
+    "c.numb06.17",
     "c.numb06.9",
     "c.numb06.10",
     "c.numb06.11",
     "c.numb06.12",
     "c.numb06.13",
     "c.numb06.14",
-    "c.numb06.15",
-    "c.numb06.16",
-    "c.numb06.17"
+    "c.numb06.2",
+    "c.numb06.16"
   ],
   "estimatedMinutes": 6,
   "sequence": 101,
@@ -34,5 +35,48 @@
         "v": "מְצֻיָּן! הַמִּסְפָּרִים כְּבָר מוּכָּרִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-06",
+    "recall": [
+      "b15.numa08.1"
+    ],
+    "together": [
+      {
+        "id": "c.numb06.15",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.count",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.numb06.17",
+      "c.numb06.9",
+      "c.numb06.10",
+      "c.numb06.11",
+      "c.numb06.12",
+      "c.numb06.13",
+      "c.numb06.14",
+      "c.numb06.2"
+    ],
+    "use": [
+      "c.numb06.16"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

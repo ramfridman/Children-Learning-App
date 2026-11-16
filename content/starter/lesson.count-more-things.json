@@ -30,5 +30,43 @@
         "v": "וַאוּ! סְפַרְתֶּם עַד עֶשֶׂר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-a-09",
+    "recall": [
+      "next.after.5"
+    ],
+    "together": [
+      {
+        "id": "count.cats.7",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.count",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "count.dogs.8",
+      "count.ladybugs.10",
+      "b15.numa09.1"
+    ],
+    "use": [
+      "b15.numa09.2"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

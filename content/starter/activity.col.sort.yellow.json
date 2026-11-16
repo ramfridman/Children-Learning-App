@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "col.sort.yellow",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "colors",
@@ -52,8 +52,9 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:bloom_blue",
-        "label": "פֶּרַח כָּחֹל"
+        "sprite": "asset:bloom_orange",
+        "label": "פֶּרַח כָּתֹם",
+        "misconception": "M-COL-NAME"
       },
       {
         "id": "o3",
@@ -77,6 +78,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-NAME",
+        "vo": "vo:fb.col_name",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַצְּבָעִים דּוֹמִים. בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט."
+          }
+        ]
+      },
       {
         "when": "misconception:M-SORT-SHIFT",
         "vo": "vo:fb.sort_shift",

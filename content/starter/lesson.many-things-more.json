@@ -31,5 +31,44 @@
         "v": "מְצֻיָּן! כׇּל אֶחָד פַּעַם אַחַת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-04",
+    "recall": [
+      "b15.numa09.1"
+    ],
+    "together": [
+      {
+        "id": "b.numb04.6",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.count",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb04.7",
+      "b.numb04.8",
+      "b.numb04.9",
+      "b.numb04.10"
+    ],
+    "use": [
+      "b.numb04.11"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

@@ -16,7 +16,8 @@
   "items": [
     "math.graph.apples",
     "math.graph.fish",
-    "math.graph.stars"
+    "math.graph.stars",
+    "b15.matha07.1"
   ],
   "estimatedMinutes": 3,
   "sequence": 6,
@@ -51,7 +52,8 @@
     ],
     "alone": [
       "math.graph.fish",
-      "math.graph.stars"
+      "math.graph.stars",
+      "b15.matha07.1"
     ],
     "handover": {
       "vo": "vo:host.pnina.handover.3",

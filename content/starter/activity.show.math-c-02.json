@@ -1,0 +1,163 @@
+{
+  "schema": "activity/v1",
+  "id": "show.math-c-02",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "balance",
+  "templateVersion": "1.0",
+  "domain": "math",
+  "band": "C",
+  "skills": [
+    {
+      "id": "MATH-C-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.pnina.show.math_c_02.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "חֲמֵשׁ עֶשְׂרֵה פָּחוֹת כַּמָּה שָׁוֶה תֵּשַׁע?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "left": {
+      "groups": [
+        {
+          "sprite": "asset:block",
+          "count": 10,
+          "weight": 1
+        },
+        {
+          "sprite": "asset:block",
+          "count": 5,
+          "weight": 1
+        }
+      ]
+    },
+    "right": {
+      "groups": [
+        {
+          "sprite": "asset:block",
+          "count": 9,
+          "weight": 1
+        }
+      ]
+    },
+    "blockSprite": "asset:block"
+  },
+  "answer": {
+    "type": "scale",
+    "mode": "balance",
+    "result": "6"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.pnina.show.math_c_02.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "תֵּשַׁע וְעוֹד כַּמָּה שָׁוֶה חֲמֵשׁ עֶשְׂרֵה."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "חֲמֵשׁ עֶשְׂרֵה פָּחוֹת כַּמָּה שָׁוֶה תֵּשַׁע?"
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.pnina.show.math_c_02.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "חֲמֵשׁ עֶשְׂרֵה פָּחוֹת כַּמָּה שָׁוֶה תֵּשַׁע?"
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.pnina.show.math_c_02.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "תֵּשַׁע וְעוֹד כַּמָּה שָׁוֶה חֲמֵשׁ עֶשְׂרֵה."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.pnina.show.math_c_02.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: עוֹד שָׁלוֹשׁ."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "block": 3,
+        "say": "key"
+      },
+      {
+        "by": "child",
+        "block": 3
+      }
+    ],
+    "teaches": []
+  }
+}

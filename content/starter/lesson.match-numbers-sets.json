@@ -17,7 +17,8 @@
     "x.numa07.1",
     "x.numa07.2",
     "x.numa07.3",
-    "x.numa07.4"
+    "x.numa07.4",
+    "numeral.apples.2"
   ],
   "estimatedMinutes": 5,
   "sequence": 64,
@@ -29,5 +30,41 @@
         "v": "כׇּל הַכָּבוֹד! הִתְאַמְתֶּם מִסְפָּרִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-a-07",
+    "recall": [
+      "b15.numa04.1"
+    ],
+    "together": [
+      {
+        "id": "x.numa07.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "x.numa07.2",
+      "x.numa07.3",
+      "x.numa07.4",
+      "numeral.apples.2"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

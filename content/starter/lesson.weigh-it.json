@@ -19,7 +19,8 @@
     "b.mathb13.3",
     "b.mathb13.4",
     "b.mathb13.5",
-    "b.mathb13.6"
+    "b.mathb13.6",
+    "b.mathb13.10"
   ],
   "estimatedMinutes": 5,
   "sequence": 44,
@@ -31,5 +32,43 @@
         "v": "כׇּל הַכָּבוֹד! אַתֶּם יוֹדְעִים לִשְׁקֹל."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-13",
+    "recall": [
+      "math.size.heavy"
+    ],
+    "together": [
+      {
+        "id": "b.mathb13.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.scale",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מִסְתַּכְּלִים עַל הַמֹּאזְנַיִם, וּמוֹסִיפִים לְאַט."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb13.2",
+      "b.mathb13.3",
+      "b.mathb13.4",
+      "b.mathb13.5",
+      "b.mathb13.6",
+      "b.mathb13.10"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מִסְתַּכֶּלֶת. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

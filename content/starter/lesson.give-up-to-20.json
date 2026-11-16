@@ -35,5 +35,48 @@
         "v": "יָפֶה! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁתִּי."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-05",
+    "recall": [
+      "b.numb04.1"
+    ],
+    "together": [
+      {
+        "id": "b.numb05.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.give",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים בִּזְמַן שֶׁנּוֹתְנִים, וְעוֹצְרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb05.2",
+      "b.numb05.3",
+      "b.numb05.4",
+      "b.numb05.5",
+      "b.numb05.6",
+      "b.numb05.7",
+      "b.numb05.8",
+      "b.numb05.9"
+    ],
+    "use": [
+      "b.numb05.10"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

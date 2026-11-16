@@ -14,14 +14,14 @@
     "MATH-B-03"
   ],
   "items": [
+    "b.mathb03.13",
+    "b.mathb03.14",
     "b.mathb03.9",
     "b.mathb03.10",
     "b.mathb03.11",
-    "b.mathb03.12",
-    "b.mathb03.13",
-    "b.mathb03.14",
     "b.mathb03.15",
-    "b.mathb03.16"
+    "b.mathb03.16",
+    "b.mathb03.12"
   ],
   "estimatedMinutes": 5,
   "sequence": 35,
@@ -33,5 +33,46 @@
         "v": "מְצֻיָּן! מְצָאתֶם אֶת הַטָּעוּת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-03",
+    "recall": [
+      "b.mathb01.1"
+    ],
+    "together": [
+      {
+        "id": "b.mathb03.13",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb03.14",
+      "b.mathb03.9",
+      "b.mathb03.10",
+      "b.mathb03.11",
+      "b.mathb03.15",
+      "b.mathb03.16"
+    ],
+    "use": [
+      "b.mathb03.12"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מִסְתַּכֶּלֶת. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

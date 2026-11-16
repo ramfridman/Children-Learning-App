@@ -30,5 +30,43 @@
         "v": "כׇּל הַכָּבוֹד! הָרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל."
       }
     ]
+  },
+  "parts": {
+    "show": "show.cs-a-03",
+    "recall": [
+      "b15.shpa08.1"
+    ],
+    "together": [
+      {
+        "id": "cs.robot.direct.4",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.tzaadon.together.robot",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל מִשְׁבֶּצֶת בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "cs.robot.direct.5",
+      "cs.robot.direct.6",
+      "b15.csa03.1"
+    ],
+    "use": [
+      "b15.csa03.2"
+    ],
+    "handover": {
+      "vo": "vo:host.tzaadon.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

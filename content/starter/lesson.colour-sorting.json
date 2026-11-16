@@ -21,7 +21,9 @@
     "col.find.red.balloon",
     "col.find.blue.ball",
     "col.find.yellow.flower",
-    "col.find.green.balloon"
+    "col.find.green.balloon",
+    "col.sort.pink",
+    "b15.cola07.1"
   ],
   "estimatedMinutes": 5,
   "sequence": 5,
@@ -64,7 +66,9 @@
       "col.find.red.balloon",
       "col.find.blue.ball",
       "col.find.yellow.flower",
-      "col.find.green.balloon"
+      "col.find.green.balloon",
+      "col.sort.pink",
+      "b15.cola07.1"
     ],
     "handover": {
       "vo": "vo:host.goni.handover.1",

@@ -20,6 +20,8 @@
     "b15.loga01.5",
     "b15.loga01.6",
     "b15.loga02.1",
+    "b15.loga01.1",
+    "log.odd.ball",
     "b15.loga02.2"
   ],
   "estimatedMinutes": 4,
@@ -58,7 +60,9 @@
       "b15.loga01.4",
       "b15.loga01.5",
       "b15.loga01.6",
-      "b15.loga02.1"
+      "b15.loga02.1",
+      "b15.loga01.1",
+      "log.odd.ball"
     ],
     "use": [
       "b15.loga02.2"

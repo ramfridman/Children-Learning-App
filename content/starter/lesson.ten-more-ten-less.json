@@ -19,13 +19,13 @@
     "c.numc09.3",
     "c.numc09.4",
     "c.numc09.5",
+    "c.numc09.11",
+    "c.numc09.12",
     "c.numc09.6",
     "c.numc09.7",
     "c.numc09.8",
     "c.numc09.9",
-    "c.numc09.10",
-    "c.numc09.11",
-    "c.numc09.12"
+    "c.numc09.10"
   ],
   "estimatedMinutes": 8,
   "sequence": 113,
@@ -37,5 +37,50 @@
         "v": "מְצֻיָּן! שׁוּרָה לְמַטָּה, שׁוּרָה לְמַעְלָה."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-c-09",
+    "recall": [
+      "c.numc03.10"
+    ],
+    "together": [
+      {
+        "id": "c.numc09.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.numc09.2",
+      "c.numc09.3",
+      "c.numc09.4",
+      "c.numc09.5",
+      "c.numc09.11",
+      "c.numc09.12",
+      "c.numc09.6",
+      "c.numc09.7",
+      "c.numc09.8",
+      "c.numc09.9"
+    ],
+    "use": [
+      "c.numc09.10"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

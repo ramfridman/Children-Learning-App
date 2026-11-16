@@ -1,0 +1,168 @@
+{
+  "schema": "activity/v1",
+  "id": "show.cs-a-04",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "robot_path",
+  "templateVersion": "1.0",
+  "domain": "cs",
+  "band": "A",
+  "skills": [
+    {
+      "id": "CS-A-04",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "symbolic",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.tzaadon.show.cs_a_04.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְתַכְנְנִים קֹדֶם, וְאָז הוֹלְכִים."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "cols": 3,
+    "rows": 3,
+    "robot": {
+      "col": 0,
+      "row": 2
+    },
+    "goal": {
+      "col": 2,
+      "row": 0
+    },
+    "robotSprite": "asset:robot",
+    "goalSprite": "asset:flag"
+  },
+  "answer": {
+    "type": "path",
+    "mode": "plan",
+    "maxSteps": 4,
+    "solution": [
+      "up",
+      "up",
+      "right",
+      "right"
+    ]
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.tzaadon.show.cs_a_04.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁנֵי צְעָדִים לְמַעְלָה, וְאָז לַדֶּגֶל."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "מְתַכְנְנִים קֹדֶם, וְאָז הוֹלְכִים."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.tzaadon.show.cs_a_04.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מְתַכְנְנִים קֹדֶם, וְאָז הוֹלְכִים."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.tzaadon.show.cs_a_04.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "שְׁנֵי צְעָדִים לְמַעְלָה, וְאָז לַדֶּגֶל."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.tzaadon.show.cs_a_04.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַחֵץ הָאַחֲרוֹן."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "arrow": "up"
+      },
+      {
+        "by": "host",
+        "arrow": "up"
+      },
+      {
+        "by": "host",
+        "arrow": "right",
+        "say": "key"
+      },
+      {
+        "by": "child",
+        "arrow": "right"
+      }
+    ],
+    "teaches": [],
+    "predict": {
+      "choices": []
+    }
+  }
+}

@@ -31,5 +31,42 @@
         "v": "יָפֶה מְאֹד! הַצִּיר אָרֹךְ יוֹתֵר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-13",
+    "recall": [
+      "b.numb11.10"
+    ],
+    "together": [
+      {
+        "id": "b.numb13.7",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb13.8",
+      "b.numb13.9",
+      "b.numb13.10",
+      "b.numb13.11",
+      "b.numb13.12"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

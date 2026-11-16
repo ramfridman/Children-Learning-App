@@ -74,6 +74,7 @@ import 'ls01_spot_session.dart';
 import 'ls01_tap_session.dart';
 import 'goni_moment.dart';
 import 'lesson_arc.dart';
+import 'show_predict.dart';
 import 'show_stage.dart';
 import 'lesson_controller.dart';
 import 'name_options.dart';
@@ -731,6 +732,18 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     return done.future;
   }
 
+  /// The template's own tiles, or, while the host of a predict-then-watch Show waits for a guess, the answers of its question in their place.
+  Widget? _tilesOf(BuildContext ctx, TemplateSession session, ActivitySpec spec, Activity current) {
+    final Widget? own = session.buildTiles(ctx, spec);
+    if (!(current.show?.predict?.asksForGuess ?? false)) return own;
+    return ValueListenableBuilder<ShowPredict?>(
+      valueListenable: session.predicting,
+      builder: (BuildContext c, ShowPredict? asked, Widget? _) => asked == null
+          ? (own ?? const SizedBox.shrink())
+          : GuessTiles(session: session, predict: asked, spec: spec),
+    );
+  }
+
   /// A host's line that leads no steps (the lead-in of a tap or a tracing, the hand-over to the companion) ends by itself, once it has been there
   /// for [_greetingPause] and its voice (when it has one) has ended, or at a touch.
   void _holdLead(LessonController c) {
@@ -1005,7 +1018,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           still: MediaQuery.disableAnimationsOf(context),
         );
       }
-      _session!.untilQuiet = _director.untilQuiet;
+      _session!
+        ..untilQuiet = _director.untilQuiet
+        ..slowHost = _look?.stage == PresentationStage.p1 || _look?.stage == PresentationStage.p2
+        ..stillHost = MediaQuery.disableAnimationsOf(context);
       _sessionIndex = c.index;
       // The old stage is still on screen for this frame; let it go afterwards.
       if (old != null) SchedulerBinding.instance.addPostFrameCallback((_) => old.dispose());
@@ -1346,7 +1362,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
               hands: controller.finished
                   ? null
                   : (Size room) => session.buildHands(ctx, room, spec) ?? const SizedBox(),
-              tiles: controller.finished ? null : session.buildTiles(ctx, spec),
+              tiles: controller.finished ? null : _tilesOf(ctx, session, spec, controller.current),
               boardLayer: controller.finished ? null : session.buildBoardLayer(ctx, spec),
               overlay: controller.finished
                   ? LessonCelebration(

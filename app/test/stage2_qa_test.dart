@@ -159,10 +159,11 @@ void main() {
 
   // Criterion 12 (nothing else moves) and "rooms off": a lesson of another land has no parts, and an activity of the lands that is a Show is never in a
   // lesson's own list of items (which is what a visit with the rooms off plays).
-  test('only Shape Forest lessons are in parts; no flat list holds a Show; a Show is never an item of the engine', () {
+  test('only the lessons of the lands are in parts; no flat list holds a Show; a Show is never an item of the engine', () {
     for (final Lesson l in content.lessons.values) {
-      final bool shapes = l.skillIds.any((String s) => s.startsWith('SHP-'));
-      if (!shapes) expect(l.parts, isNull, reason: '${l.id} is not of Shape Forest and must stay as it was');
+      // the six lands of the rooms (shapes, numbers, math, colours, logic, robots); a lesson of a language course is never in parts
+      final bool land = l.skillIds.every((String s) => RegExp(r'^(SHP|NUM|MATH|COL|LOG|CS)-').hasMatch(s));
+      if (!land) expect(l.parts, isNull, reason: '${l.id} is not of a land and must stay as it was');
       for (final String id in l.itemIds) {
         expect(content.activities[id]!.isShow, isFalse, reason: '${l.id} lists a Show among its items');
       }

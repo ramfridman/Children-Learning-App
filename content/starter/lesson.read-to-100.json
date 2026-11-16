@@ -14,14 +14,14 @@
     "NUM-C-02"
   ],
   "items": [
-    "c.numc02.1",
     "c.numc02.2",
     "c.numc02.3",
-    "c.numc02.4",
     "c.numc02.5",
+    "c.numc02.8",
+    "c.numc02.1",
+    "c.numc02.4",
     "c.numc02.6",
     "c.numc02.7",
-    "c.numc02.8",
     "c.numc02.9",
     "c.numc02.10",
     "c.numc02.11",
@@ -37,5 +37,50 @@
         "v": "מְצֻיָּן! כׇּל סִפְרָה בִּמְקוֹמָהּ."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-c-02",
+    "recall": [
+      "c.numc01.1"
+    ],
+    "together": [
+      {
+        "id": "c.numc02.2",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.numc02.3",
+      "c.numc02.5",
+      "c.numc02.8",
+      "c.numc02.1",
+      "c.numc02.4",
+      "c.numc02.6",
+      "c.numc02.7",
+      "c.numc02.9",
+      "c.numc02.10",
+      "c.numc02.11"
+    ],
+    "use": [
+      "c.numc02.12"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

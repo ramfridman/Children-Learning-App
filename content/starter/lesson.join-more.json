@@ -19,7 +19,8 @@
     "b.mathb01.3",
     "b.mathb01.4",
     "b.mathb01.5",
-    "b.mathb01.6"
+    "b.mathb01.6",
+    "b.mathb01.13"
   ],
   "estimatedMinutes": 5,
   "sequence": 30,
@@ -31,5 +32,43 @@
         "v": "כׇּל הַכָּבוֹד! הוֹסַפְתֶּם וְחִשַּׁבְתֶּם."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-01",
+    "recall": [
+      "b15.matha01.1"
+    ],
+    "together": [
+      {
+        "id": "b.mathb01.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb01.2",
+      "b.mathb01.3",
+      "b.mathb01.4",
+      "b.mathb01.5",
+      "b.mathb01.6",
+      "b.mathb01.13"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק."
+        }
+      ]
+    }
   }
 }

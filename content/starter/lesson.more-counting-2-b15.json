@@ -15,7 +15,8 @@
     "NUM-A-04"
   ],
   "items": [
-    "b15.numa04.4"
+    "b15.numa04.4",
+    "b15.numa04.1"
   ],
   "estimatedMinutes": 6,
   "sequence": 24,
@@ -27,5 +28,28 @@
         "v": "וַאוּ! סְפַרְתֶּם חִפּוּשִׁיּוֹת, אַחַת אַחַת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-a-03",
+    "secondShow": {
+      "id": "show.num-a-04",
+      "before": "b15.numa04.4"
+    },
+    "recall": [
+      "next.after.1"
+    ],
+    "alone": [
+      "b15.numa04.4",
+      "b15.numa04.1"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

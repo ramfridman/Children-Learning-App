@@ -60,8 +60,9 @@
       },
       {
         "id": "o3",
-        "numeral": 5,
-        "label": "חָמֵשׁ"
+        "numeral": 2,
+        "label": "שְׁתַּיִם",
+        "misconception": "M-COMP-DIFF"
       }
     ],
     "correct": "o2",

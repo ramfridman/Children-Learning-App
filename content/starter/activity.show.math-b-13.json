@@ -1,0 +1,162 @@
+{
+  "schema": "activity/v1",
+  "id": "show.math-b-13",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "balance",
+  "templateVersion": "1.0",
+  "domain": "math",
+  "band": "B",
+  "skills": [
+    {
+      "id": "MATH-B-13",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.pnina.show.math_b_13.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מַה כָּבֵד יוֹתֵר?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "left": {
+      "groups": [
+        {
+          "sprite": "asset:feather",
+          "count": 1,
+          "weight": 1
+        }
+      ]
+    },
+    "right": {
+      "groups": [
+        {
+          "sprite": "asset:stone",
+          "count": 1,
+          "weight": 4
+        }
+      ]
+    }
+  },
+  "answer": {
+    "type": "scale",
+    "mode": "compare",
+    "result": "right"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.pnina.show.math_b_13.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַצַּד הַכָּבֵד יוֹרֵד לְמַטָּה."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "מַה כָּבֵד יוֹתֵר?"
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.pnina.show.math_b_13.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מַה כָּבֵד יוֹתֵר?"
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.pnina.show.math_b_13.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַצַּד הַכָּבֵד יוֹרֵד לְמַטָּה."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.pnina.show.math_b_13.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: שִׂימוּ אֶת הָאֶבֶן."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "put": "feather",
+        "pan": "left",
+        "say": "key"
+      },
+      {
+        "by": "child",
+        "put": "stone",
+        "pan": "right"
+      }
+    ],
+    "teaches": [
+      "כָּבֵד",
+      "קַל"
+    ]
+  }
+}

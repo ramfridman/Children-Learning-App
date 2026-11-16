@@ -34,5 +34,47 @@
         "v": "נִפְלָא! מְצָאתֶם אֶת הַמִּסְפָּר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-18",
+    "recall": [
+      "b.mathb02.1"
+    ],
+    "together": [
+      {
+        "id": "b.mathb18.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.scale",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מִסְתַּכְּלִים עַל הַמֹּאזְנַיִם, וּמוֹסִיפִים לְאַט."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb18.2",
+      "b.mathb18.3",
+      "b.mathb18.4",
+      "b.mathb18.5",
+      "b.mathb18.6",
+      "b.mathb18.7",
+      "b.mathb18.8"
+    ],
+    "use": [
+      "b.mathb18.9"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

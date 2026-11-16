@@ -30,5 +30,43 @@
         "v": "כׇּל הַכָּבוֹד! הַמִּגְדָּלִים בַּסֵּדֶר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.log-b-11",
+    "recall": [
+      "b15.loga10.1"
+    ],
+    "together": [
+      {
+        "id": "b.logb11.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.timi.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אוֹמְרִים אֶת הַסֵּדֶר בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.logb11.2",
+      "b.logb11.3",
+      "b.logb11.4"
+    ],
+    "use": [
+      "b.logb11.5"
+    ],
+    "handover": {
+      "vo": "vo:host.timi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חוֹשְׁבִים לְאַט. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

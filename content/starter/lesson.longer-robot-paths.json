@@ -14,10 +14,11 @@
     "CS-B-01"
   ],
   "items": [
-    "b.csb01.1",
     "b.csb01.2",
+    "b.csb01.4",
+    "b.csb01.1",
     "b.csb01.3",
-    "b.csb01.4"
+    "b.csb01.10"
   ],
   "estimatedMinutes": 5,
   "sequence": 30,
@@ -29,5 +30,41 @@
         "v": "כׇּל הַכָּבוֹד! תִּכְנַנְתֶּם דֶּרֶךְ אֲרֻכָּה."
       }
     ]
+  },
+  "parts": {
+    "show": "show.cs-b-01",
+    "recall": [
+      "b15.csa04.1"
+    ],
+    "together": [
+      {
+        "id": "b.csb01.2",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.tzaadon.together.robot",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל מִשְׁבֶּצֶת בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.csb01.4",
+      "b.csb01.1",
+      "b.csb01.3",
+      "b.csb01.10"
+    ],
+    "handover": {
+      "vo": "vo:host.tzaadon.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

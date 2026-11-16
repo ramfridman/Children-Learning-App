@@ -1,0 +1,164 @@
+{
+  "schema": "activity/v1",
+  "id": "show.num-c-09",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "number_line",
+  "templateVersion": "1.2",
+  "domain": "numbers",
+  "band": "C",
+  "skills": [
+    {
+      "id": "NUM-C-09",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.nekudi.show.num_c_09.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "קוֹפְצִים עֶשֶׂר קָדִימָה."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "from": 20,
+    "to": 60,
+    "markerSprite": "asset:frog",
+    "labels": [
+      20,
+      30,
+      40,
+      50,
+      60
+    ],
+    "start": 23,
+    "hops": [
+      10,
+      10,
+      10
+    ]
+  },
+  "answer": {
+    "type": "line",
+    "mode": "jump",
+    "target": 53
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.nekudi.show.num_c_09.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עֶשֶׂר יוֹתֵר: הַיְּחִידוֹת נִשְׁאָרוֹת."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "קוֹפְצִים עֶשֶׂר קָדִימָה."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.nekudi.show.num_c_09.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "קוֹפְצִים עֶשֶׂר קָדִימָה."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.nekudi.show.num_c_09.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עֶשֶׂר יוֹתֵר: הַיְּחִידוֹת נִשְׁאָרוֹת."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.nekudi.show.num_c_09.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: עוֹד עֶשֶׂר."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "hop": 10,
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "hop": 10
+      },
+      {
+        "by": "child",
+        "hop": 10
+      }
+    ],
+    "teaches": [
+      "עֶשְׂרִים וְשָׁלוֹשׁ",
+      "שְׁלוֹשִׁים וְשָׁלוֹשׁ",
+      "אַרְבָּעִים וְשָׁלוֹשׁ",
+      "חֲמִשִּׁים וְשָׁלוֹשׁ"
+    ]
+  }
+}

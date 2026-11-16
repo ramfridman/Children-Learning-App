@@ -14,9 +14,9 @@
     "NUM-A-10"
   ],
   "items": [
+    "flash.frame.4",
     "flash.dice.4",
     "flash.dice.5",
-    "flash.frame.4",
     "flash.frame.5"
   ],
   "estimatedMinutes": 3,
@@ -29,5 +29,40 @@
         "v": "מַדְהִים! רְאִיתֶם אַרְבַּע וְחָמֵשׁ בְּמַבָּט אֶחָד."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-a-10",
+    "recall": [
+      "b15.numa05.1"
+    ],
+    "together": [
+      {
+        "id": "flash.frame.4",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.give",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים בִּזְמַן שֶׁנּוֹתְנִים, וְעוֹצְרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "flash.dice.4",
+      "flash.dice.5",
+      "flash.frame.5"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

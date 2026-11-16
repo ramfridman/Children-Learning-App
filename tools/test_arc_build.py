@@ -23,12 +23,20 @@ def arcs():
             yield json.load(fh)
 
 
+import sys
+
+sys.path.insert(0, os.path.join(ROOT, 'tools'))
+import arc_build  # noqa: E402
+
+
 class ArcBuildTest(unittest.TestCase):
     def test_every_buildable_show_is_a_unscored_activity(self):
         built = 0
         for arc in arcs():
             for show in arc['shows']:
-                if show['template'] not in ('sort_drag', 'shape_builder', 'trace'):
+                if show['template'] not in arc_build.LEAD_TEMPLATES or not os.path.exists(os.path.join(STARTER, 'activity.%s.json' % show['id'])):
+                    # a Show that waits (a Stage 3 template, step 2.2c, or the arc source gives cells the row needs) is not built
+                    self.assertTrue(show['template'] not in arc_build.LEAD_TEMPLATES or show['template'] == 'build_pattern', show['id'])
                     self.assertFalse(os.path.exists(os.path.join(STARTER, 'activity.%s.json' % show['id'])), show['id'])
                     continue
                 d = load('activity.%s.json' % show['id'])
@@ -61,13 +69,14 @@ class ArcBuildTest(unittest.TestCase):
                 self.assertTrue(os.path.exists(os.path.join(STARTER, 'activity.%s.json' % parts['show'])))
                 for t in parts.get('together', []):
                     a = load('activity.%s.json' % t['id'])
-                    # a share has no lead player (arc_checks.dart leadableSteps): its Together item is led 0, as every other template's
-                    if a['template'] in ('sort_drag', 'shape_builder', 'trace') and a['answer'].get('mode') != 'share':
-                        steps = {'sort_drag': lambda: len(a['scene']['items']), 'shape_builder': lambda: len(a['scene']['slots']),
-                                 'trace': lambda: sum(len(s) - 1 if len(s) <= 8 else 4 for s in a['scene']['strokes'])}[a['template']]()
-                        self.assertTrue(1 <= t['lead'] < steps, t)
-                    else:
+                    # the lead is what arc_build.lead_of says: at least one and fewer than all the steps the host can lead, or 0 where it has none
+                    steps = arc_build.leadable_steps(a)
+                    if a['template'] == 'trace':
+                        self.assertTrue(1 <= t['lead'] < sum(len(s) - 1 if len(s) <= 8 else 4 for s in a['scene']['strokes']), t)
+                    elif steps is None or steps < 2:
                         self.assertEqual(t['lead'], 0, t)
+                    else:
+                        self.assertTrue(1 <= t['lead'] < steps, t)
         self.assertGreaterEqual(n, 20)
 
     def test_a_lesson_with_an_empty_alone_pool_is_refused(self):

@@ -23,7 +23,10 @@
     "c.numc03.21",
     "c.numc03.22",
     "c.numc03.23",
-    "c.numc02.21"
+    "c.numc02.21",
+    "c.numc02.18",
+    "c.numc03.1",
+    "c.numc03.10"
   ],
   "estimatedMinutes": 6,
   "sequence": 116,
@@ -35,5 +38,52 @@
         "v": "כׇּל הַכָּבוֹד! כׇּל סִפְרָה בִּמְקוֹמָהּ."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-c-02",
+    "secondShow": {
+      "id": "show.num-c-03",
+      "before": "c.numc03.21"
+    },
+    "recall": [
+      "c.numc01.1"
+    ],
+    "together": [
+      {
+        "id": "c.numc02.13",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.numc02.14",
+      "c.numc02.15",
+      "c.numc02.16",
+      "c.numc02.17",
+      "c.numc03.21",
+      "c.numc03.22",
+      "c.numc03.23",
+      "c.numc02.21",
+      "c.numc02.18",
+      "c.numc03.1",
+      "c.numc03.10"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

@@ -1,0 +1,170 @@
+{
+  "schema": "activity/v1",
+  "id": "show.num-a-01",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "number_line",
+  "templateVersion": "1.2",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-01",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.nekudi.show.num_a_01.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "סוֹפְרִים יַחַד עִם הַצְּפַרְדֵּעַ."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "from": 1,
+    "to": 5,
+    "markerSprite": "asset:frog",
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "start": 1,
+    "hops": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  "answer": {
+    "type": "line",
+    "mode": "jump",
+    "target": 5
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.nekudi.show.num_a_01.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "קְפִיצָה אַחַת, מִסְפָּר אֶחָד."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "סוֹפְרִים יַחַד עִם הַצְּפַרְדֵּעַ."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.nekudi.show.num_a_01.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "סוֹפְרִים יַחַד עִם הַצְּפַרְדֵּעַ."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.nekudi.show.num_a_01.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "קְפִיצָה אַחַת, מִסְפָּר אֶחָד."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.nekudi.show.num_a_01.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַקְּפִיצָה הָאַחֲרוֹנָה."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "hop": 1,
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "hop": 1
+      },
+      {
+        "by": "host",
+        "hop": 1
+      },
+      {
+        "by": "child",
+        "hop": 1
+      }
+    ],
+    "teaches": [
+      "אַחַת",
+      "שְׁתַּיִם",
+      "שָׁלוֹשׁ",
+      "אַרְבַּע",
+      "חָמֵשׁ"
+    ]
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "schema": "activity/v1",
+  "id": "show.num-a-07",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "count_tap",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-07",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.nekudi.show.num_a_07.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה תַּפּוּחִים? וְאֵיזֶה מִסְפָּר?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "objects": {
+      "sprite": "asset:apple",
+      "litSprite": "asset:apple_lit",
+      "count": 3,
+      "arrangement": "line",
+      "onTap": "glow",
+      "seed": 7
+    },
+    "target": {
+      "sprite": "asset:basket_target"
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "value": 3
+      },
+      {
+        "id": "o2",
+        "value": 4,
+        "misconception": "M-CNT-SKIP"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.nekudi.show.num_a_07.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁלוֹשָׁה תַּפּוּחִים. זֶה הַמִּסְפָּר שָׁלוֹשׁ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "כַּמָּה תַּפּוּחִים? וְאֵיזֶה מִסְפָּר?"
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.nekudi.show.num_a_07.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כַּמָּה תַּפּוּחִים? וְאֵיזֶה מִסְפָּר?"
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.nekudi.show.num_a_07.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "שְׁלוֹשָׁה תַּפּוּחִים. זֶה הַמִּסְפָּר שָׁלוֹשׁ."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.nekudi.show.num_a_07.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הָאַחֲרוֹן."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "touch": 1,
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "touch": 1
+      },
+      {
+        "by": "child",
+        "touch": 1
+      }
+    ],
+    "teaches": [
+      "אַחַת",
+      "שְׁתַּיִם",
+      "שָׁלוֹשׁ"
+    ]
+  },
+  "answerPrompt": {
+    "vo": "vo:host.nekudi.show.num_a_07.key",
+    "caption": [
+      {
+        "t": "he",
+        "v": "שְׁלוֹשָׁה תַּפּוּחִים. זֶה הַמִּסְפָּר שָׁלוֹשׁ."
+      }
+    ]
+  },
+  "traceClassifiers": []
+}

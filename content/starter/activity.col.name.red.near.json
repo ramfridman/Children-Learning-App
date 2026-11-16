@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "col.name.red.near",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "colors",
@@ -50,8 +50,9 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:balloon_blue",
-        "label": "בָּלוֹן כָּחֹל"
+        "sprite": "asset:balloon_pink",
+        "label": "בָּלוֹן וָרֹד",
+        "misconception": "M-COL-NAME"
       }
     ],
     "correct": "o2",

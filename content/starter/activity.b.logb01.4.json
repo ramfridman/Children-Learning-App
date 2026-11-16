@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.logb01.4",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.2",
   "domain": "logic",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.58
   },
@@ -32,41 +32,62 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
-      "asset:ball_green",
-      "asset:ball_green",
-      "asset:ball_red",
-      "asset:ball_green",
+    "slots": 8,
+    "palette": [
       "asset:ball_green",
       "asset:ball_red",
-      "asset:ball_green",
-      "?"
+      "asset:ball_blue"
+    ],
+    "given": [
+      {
+        "cell": 0,
+        "face": "asset:ball_green"
+      },
+      {
+        "cell": 1,
+        "face": "asset:ball_green"
+      },
+      {
+        "cell": 2,
+        "face": "asset:ball_red"
+      },
+      {
+        "cell": 3,
+        "face": "asset:ball_green"
+      },
+      {
+        "cell": 4,
+        "face": "asset:ball_green"
+      },
+      {
+        "cell": 5,
+        "face": "asset:ball_red"
+      },
+      {
+        "cell": 6,
+        "face": "asset:ball_green"
+      }
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:ball_green",
-        "label": "כַּדּוּר יָרֹק"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:ball_red",
-        "label": "כַּדּוּר אָדֹם",
-        "misconception": "M-PAT-UNIT"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:ball_blue",
-        "label": "כַּדּוּר כָּחֹל"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:ball_green",
+      "asset:ball_green",
+      "asset:ball_red",
+      "asset:ball_green",
+      "asset:ball_green",
+      "asset:ball_red",
+      "asset:ball_green",
+      "asset:ball_green"
     ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-PAT-NEXT",
+    "pieceTags": [
+      {
+        "piece": "asset:ball_blue",
+        "misconception": "M-PAT-UNIT"
+      }
+    ]
   },
   "voiceAnswer": false,
   "feedback": {
@@ -75,11 +96,21 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! הַסֵּדֶר חוֹזֵר."
+          "v": "כֵּן! יָרֹק, יָרֹק, אָדֹם, וְשׁוּב מֵהַהַתְחָלָה."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-PAT-NEXT",
+        "vo": "vo:fb.pat_next",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא."
+          }
+        ]
+      },
       {
         "when": "misconception:M-PAT-UNIT",
         "vo": "vo:fb.pat_unit",
@@ -141,7 +172,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הַחֵלֶק שֶׁחוֹזֵר הוּא: כַּדּוּר יָרֹק, כַּדּוּר יָרֹק, כַּדּוּר אָדֹם. עַכְשָׁו תּוֹרְכֶם."
+          "v": "יָרֹק, יָרֹק, אָדֹם — וְשׁוּב יָרֹק, יָרֹק. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -157,7 +188,7 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child copies the pattern in the same order",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {

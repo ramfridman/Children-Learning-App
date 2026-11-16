@@ -14,9 +14,9 @@
     "LOG-A-10"
   ],
   "items": [
+    "log.size.last",
     "log.size.middle",
-    "log.size.middle.down",
-    "log.size.last"
+    "log.size.middle.down"
   ],
   "estimatedMinutes": 3,
   "sequence": 6,
@@ -28,5 +28,39 @@
         "v": "יָפֶה מְאֹד! סִדַּרְתֶּם לְפִי גֹּדֶל."
       }
     ]
+  },
+  "parts": {
+    "show": "show.log-a-10",
+    "recall": [
+      "b15.loga01.3"
+    ],
+    "together": [
+      {
+        "id": "log.size.last",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.timi.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אוֹמְרִים אֶת הַסֵּדֶר בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "log.size.middle",
+      "log.size.middle.down"
+    ],
+    "handover": {
+      "vo": "vo:host.timi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חוֹשְׁבִים לְאַט. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

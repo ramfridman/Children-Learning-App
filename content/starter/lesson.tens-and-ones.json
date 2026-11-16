@@ -16,12 +16,13 @@
   "items": [
     "c.numc03.1",
     "c.numc03.2",
-    "c.numc03.3",
     "c.numc03.4",
+    "c.numc03.3",
     "c.numc03.5",
     "c.numc03.6",
     "c.numc03.7",
-    "c.numc03.8"
+    "c.numc03.8",
+    "c.numc03.10"
   ],
   "estimatedMinutes": 7,
   "sequence": 107,
@@ -33,5 +34,45 @@
         "v": "כׇּל הַכָּבוֹד! פֵּרַקְתֶּם לַעֲשָׂרוֹת וְלִיחִידוֹת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-c-03",
+    "recall": [
+      "c.numc02.18"
+    ],
+    "together": [
+      {
+        "id": "c.numc03.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.pay",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים אֶת הַמַּטְבְּעוֹת בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.numc03.2",
+      "c.numc03.4",
+      "c.numc03.3",
+      "c.numc03.5",
+      "c.numc03.6",
+      "c.numc03.7",
+      "c.numc03.8",
+      "c.numc03.10"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

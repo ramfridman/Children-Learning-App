@@ -33,5 +33,44 @@
         "v": "יָפֶה מְאֹד! הַסִּימָן פּוֹנֶה לַגָּדוֹל."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-c-04",
+    "recall": [
+      "c.numc03.10"
+    ],
+    "together": [
+      {
+        "id": "c.numc04.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.numc04.2",
+      "c.numc04.3",
+      "c.numc04.4",
+      "c.numc04.5",
+      "c.numc04.6",
+      "c.numc04.7",
+      "c.numc04.8"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

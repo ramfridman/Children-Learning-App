@@ -14,11 +14,11 @@
     "CS-A-04"
   ],
   "items": [
+    "b15.csa04.1",
+    "b15.csa04.2",
     "cs.robot.plan.4",
     "cs.robot.plan.5",
-    "cs.robot.plan.6",
-    "b15.csa04.1",
-    "b15.csa04.2"
+    "cs.robot.plan.6"
   ],
   "estimatedMinutes": 5,
   "sequence": 6,
@@ -30,5 +30,41 @@
         "v": "וַאוּ! תִּכְנַנְתֶּם אֶת הַדֶּרֶךְ."
       }
     ]
+  },
+  "parts": {
+    "show": "show.cs-a-04",
+    "recall": [
+      "b15.csa03.1"
+    ],
+    "together": [
+      {
+        "id": "b15.csa04.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.tzaadon.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b15.csa04.2",
+      "cs.robot.plan.4",
+      "cs.robot.plan.5",
+      "cs.robot.plan.6"
+    ],
+    "handover": {
+      "vo": "vo:host.tzaadon.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הָרוֹבּוֹט מְחַכֶּה לָכֶם."
+        }
+      ]
+    }
   }
 }

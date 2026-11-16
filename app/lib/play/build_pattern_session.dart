@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -15,6 +16,8 @@ import 'hints/hint_pictures.dart' show hintScale;
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
+import 'host_moves.dart';
+import 'lesson_arc.dart' show ArcPart, ArcStep;
 import 'lesson_controller.dart';
 import 'response_code.dart';
 import 'size_scale.dart';
@@ -29,12 +32,20 @@ import 'template_session.dart';
 ///
 /// A pattern is read from the left, whatever the language, so the rows are drawn left to right.
 class BuildPatternSession extends TemplateSession {
-  BuildPatternSession(super.controller, this.activity) : filled = List<String?>.filled(activity.slots, null);
+  BuildPatternSession(super.controller, this.activity)
+    : filled = <String?>[for (int i = 0; i < activity.slots; i++) activity.given[i]];
 
   final BuildPatternActivity activity;
 
-  /// What stands in each place now (an asset reference), or null.
+  /// What stands in each place now (an asset reference), or null. An item with given cells opens with them in place (step 2.2).
   final List<String?> filled;
+
+  /// Every place as the item opens: the given cells in place and the others empty.
+  void _clearToGiven() {
+    for (int i = 0; i < filled.length; i++) {
+      filled[i] = activity.given[i];
+    }
+  }
 
   /// The palette picture and the place that the help points at. A place alone is "where", a picture is "what": the picture is
   /// pointed at only at the end of the worked example.
@@ -146,19 +157,21 @@ class BuildPatternSession extends TemplateSession {
   void _endDemo() {
     if (!demoRunning) return;
     _stopHint();
-    for (int i = 0; i < filled.length; i++) {
-      filled[i] = null;
-    }
+    _clearToGiven();
     demoRunning = false;
     controller.demoDone();
   }
 
-  /// Puts [sprite] in place [at], or in the next empty place.
+  /// Puts [sprite] in place [at], or in the next empty place (in a Show, the place the child's step names: a row to fix has none empty).
   Future<void> place(String sprite, {int? at}) async {
     _endDemo();
-    if (_busy || ring == AnswerState.correct) return;
-    final int? target = at ?? _firstEmpty;
-    if (target == null) return;
+    if (_busy || hosting || ring == AnswerState.correct) return;
+    final int? target = at ?? (activity.isShow ? activity.show!.childStep.cell : _firstEmpty);
+    if (target == null || activity.isLocked(target)) return;
+    if (activity.isShow) {
+      _showPlace(sprite, target);
+      return;
+    }
     // With only the right picture left, another one is not taken; the help shows the right one.
     if (controller.guided && sprite != activity.sequence[target]) {
       if (controller.answerShown) _point(target);
@@ -174,9 +187,17 @@ class BuildPatternSession extends TemplateSession {
 
   void clear(int i) {
     _endDemo();
-    if (_busy || ring == AnswerState.correct || filled[i] == null) return;
+    if (_busy || hosting || ring == AnswerState.correct || filled[i] == null || activity.isLocked(i)) return;
     filled[i] = null;
     notify();
+  }
+
+  /// The tag of a wrong pattern: that of the picture in its first wrong place when the item says one (the cat laid where the dog goes), else the
+  /// item's own.
+  String _tagOfWrong() {
+    final int wrong = <int>[for (int i = 0; i < filled.length; i++) i]
+        .indexWhere((int i) => filled[i] != activity.sequence[i]);
+    return (wrong < 0 ? null : activity.pieceTags[filled[wrong]]) ?? activity.wrongTag ?? '';
   }
 
   Future<void> _check() async {
@@ -185,7 +206,7 @@ class BuildPatternSession extends TemplateSession {
         .every((int i) => filled[i] == activity.sequence[i]);
     final Outcome o = await controller.submitPlacement(
       right: right,
-      tag: right ? '' : (activity.wrongTag ?? ''),
+      tag: right ? '' : _tagOfWrong(),
       response: ResponseCode.pattern(<int?>[
         for (final String? f in filled) f == null ? null : activity.palette.indexOf(f),
       ]),
@@ -200,9 +221,7 @@ class BuildPatternSession extends TemplateSession {
       notify();
       later(TemplateSession.notYetPause, () {
         ring = AnswerState.idle;
-        for (int i = 0; i < filled.length; i++) {
-          filled[i] = null;
-        }
+        _clearToGiven();
         _busy = false;
         if (controller.answerShown) _point(0);
         notify();
@@ -219,8 +238,12 @@ class BuildPatternSession extends TemplateSession {
   @override
   void onReset() {
     _stopHint();
-    for (int i = 0; i < filled.length; i++) {
-      filled[i] = null;
+    _clearToGiven();
+    // The places the host filled in the lead of a Together item stay filled.
+    if (controller.step?.part == ArcPart.together && !controller.leading) {
+      for (final int i in _toFill.take(controller.step!.lead)) {
+        filled[i] = activity.sequence[i];
+      }
     }
     ring = AnswerState.idle;
     _busy = false;
@@ -342,9 +365,7 @@ class BuildPatternSession extends TemplateSession {
     _stopHint();
     final int run = _run;
     demoRunning = true;
-    for (int i = 0; i < filled.length; i++) {
-      filled[i] = null;
-    }
+    _clearToGiven();
     const int step = 900; // the hand takes a picture (half) and puts it in its place (half)
     const int tail = 1200;
     final ActivitySpec? spec = _spec;
@@ -380,15 +401,94 @@ class BuildPatternSession extends TemplateSession {
     }
     later(Duration(milliseconds: step * activity.slots + tail), () {
       if (run != _run) return;
-      for (int i = 0; i < filled.length; i++) {
-        filled[i] = null;
-      }
+      _clearToGiven();
       litModel = null;
       demoRunning = false;
       _point(0);
       controller.demoDone();
     });
     notify();
+  }
+
+  // ---- the host's part (a Show, the lead of a Together item) ----
+
+  /// The places the child has to fill, in order: the empty ones, and the given ones that are wrong (a row to fix).
+  List<int> get _toFill => <int>[
+    for (int i = 0; i < activity.slots; i++)
+      if (activity.given[i] != activity.sequence[i]) i,
+  ];
+
+  /// The host's hand takes [piece] from the palette (the picture is lit) and puts it in place [cell]: two moves, the second is the one that fills it.
+  List<HostMove> _placeMoves(int cell, String piece) {
+    final ActivitySpec? spec = _spec;
+    final bool draw = spec != null && _canDraw;
+    final bool hasModel = activity.model.isNotEmpty;
+    return <HostMove>[
+      HostMove(draw ? _paletteTip(spec, piece) : null, () => hintSprite = piece, rest: 350),
+      HostMove(draw ? slotCell(_size, activity.slots, cell, hasModel: hasModel).center : null, () {
+        filled[cell] = piece;
+        hintSprite = null;
+        hintSlot = null;
+      }, rest: 650),
+    ];
+  }
+
+  @override
+  void startHost() {
+    final ArcStep? step = controller.step;
+    if (step == null || hosting) return;
+    if (activity.isShow) {
+      unawaited(
+        playShow(
+          activity.show!,
+          move: (ShowStep s, {required bool fast}) =>
+              hostTour(_hint, _placeMoves(s.cell!, s.piece!), fast: fast),
+        ),
+      );
+    } else if (step.part == ArcPart.together && controller.leading && step.lead > 0) {
+      unawaited(
+        playLead(<Future<void> Function()>[
+          for (final int i in _toFill.take(step.lead))
+            () => hostTour(_hint, _placeMoves(i, activity.sequence[i])),
+        ]),
+      );
+    }
+  }
+
+  /// A touch on a reminder skips what the host still has to do: its places are filled at once, and the child's step is left.
+  @override
+  void onScreenTouch() {
+    if (!activity.isShow) return;
+    skipHost(() {
+      _stopHint();
+      for (final ShowStep s in activity.show!.hostSteps) {
+        filled[s.cell!] = s.piece;
+      }
+    });
+  }
+
+  /// A Show, and the child puts [sprite] in [target]: the step the host left ends the Show; any other picture is "let's look again". Nothing is written.
+  void _showPlace(String sprite, int target) {
+    final ShowStep child = activity.show!.childStep;
+    if (target == child.cell && sprite == child.piece) {
+      _busy = true;
+      filled[target] = sprite;
+      hintSprite = null;
+      hintSlot = null;
+      ring = AnswerState.correct;
+      notify();
+      finishShow();
+      return;
+    }
+    _busy = true;
+    lookAgain(activity);
+    hintSlot = child.cell;
+    notify();
+    later(TemplateSession.notYetPause, () {
+      _busy = false;
+      hintSlot = null;
+      notify();
+    });
   }
 
   // ---- drawing ----

@@ -14,15 +14,16 @@
     "MATH-C-01"
   ],
   "items": [
+    "c.mathc01.13",
+    "c.mathc01.17",
     "c.mathc01.10",
     "c.mathc01.11",
     "c.mathc01.12",
-    "c.mathc01.13",
     "c.mathc01.14",
     "c.mathc01.15",
     "c.mathc01.16",
-    "c.mathc01.17",
-    "c.mathc01.18"
+    "c.mathc01.18",
+    "c.mathc01.32"
   ],
   "estimatedMinutes": 7,
   "sequence": 102,
@@ -34,5 +35,46 @@
         "v": "מְצֻיָּן! עֲשִׂיתֶם הַרְבֵּה תַּרְגִּילִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-c-01",
+    "recall": [
+      "b.mathb08.1"
+    ],
+    "together": [
+      {
+        "id": "c.mathc01.13",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.mathc01.17",
+      "c.mathc01.10",
+      "c.mathc01.11",
+      "c.mathc01.12",
+      "c.mathc01.14",
+      "c.mathc01.15",
+      "c.mathc01.16",
+      "c.mathc01.18",
+      "c.mathc01.32"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק."
+        }
+      ]
+    }
   }
 }

@@ -17,7 +17,8 @@
     "b.numb01.6",
     "b.numb01.7",
     "b.numb01.8",
-    "b.numb01.9"
+    "b.numb01.9",
+    "b.numb01.1"
   ],
   "estimatedMinutes": 5,
   "sequence": 31,
@@ -29,5 +30,41 @@
         "v": "יָפֶה מְאֹד! הַסְּפִירָה מַמְשִׁיכָה."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-01",
+    "recall": [
+      "next.after.5"
+    ],
+    "together": [
+      {
+        "id": "b.numb01.6",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb01.7",
+      "b.numb01.8",
+      "b.numb01.9",
+      "b.numb01.1"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

@@ -32,5 +32,43 @@
         "v": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַמִּסְפָּר הַנָּכוֹן."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-a-07",
+    "recall": [
+      "b15.numa04.1"
+    ],
+    "together": [
+      {
+        "id": "numeral.apples.2",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.count",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "numeral.stars.3",
+      "numeral.fish.4",
+      "numeral.bugs.5",
+      "show.apples.3",
+      "show.birds.4",
+      "show.stars.5"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

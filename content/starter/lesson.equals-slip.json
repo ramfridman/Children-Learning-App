@@ -17,6 +17,7 @@
     "b.mathb09.9",
     "b.mathb09.10",
     "b.mathb09.11",
+    "b.mathb09.1",
     "b.mathb09.12"
   ],
   "estimatedMinutes": 5,
@@ -29,5 +30,43 @@
         "v": "יָפֶה! הַצְּדָדִים מְאֻזָּנִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-09",
+    "recall": [
+      "b.mathb03.1"
+    ],
+    "together": [
+      {
+        "id": "b.mathb09.9",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb09.10",
+      "b.mathb09.11",
+      "b.mathb09.1"
+    ],
+    "use": [
+      "b.mathb09.12"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק."
+        }
+      ]
+    }
   }
 }

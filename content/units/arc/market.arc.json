@@ -2177,11 +2177,16 @@
    ],
    "alone": [
     "math.shop.apples",
-    "math.shop.stars"
+    "math.shop.stars",
+    "b15.matha06.1"
    ],
    "use": [],
+   "borrowed": [
+    "b15.matha06.1"
+   ],
    "poolRungs": [
-    0
+    0,
+    1
    ]
   },
   {
@@ -2203,10 +2208,15 @@
    ],
    "alone": [
     "math.graph.fish",
-    "math.graph.stars"
+    "math.graph.stars",
+    "b15.matha07.1"
    ],
    "use": [],
+   "borrowed": [
+    "b15.matha07.1"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -2401,10 +2411,15 @@
     "b.mathb01.3",
     "b.mathb01.4",
     "b.mathb01.5",
-    "b.mathb01.6"
+    "b.mathb01.6",
+    "b.mathb01.13"
    ],
    "use": [],
+   "borrowed": [
+    "b.mathb01.13"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -2744,11 +2759,16 @@
     "b.mathb09.5",
     "b.mathb09.6",
     "b.mathb09.7",
-    "b.mathb09.8"
+    "b.mathb09.8",
+    "b.mathb09.10"
    ],
    "use": [],
+   "borrowed": [
+    "b.mathb09.10"
+   ],
    "poolRungs": [
-    1
+    1,
+    2
    ]
   },
   {
@@ -2770,12 +2790,17 @@
    ],
    "alone": [
     "b.mathb09.10",
-    "b.mathb09.11"
+    "b.mathb09.11",
+    "b.mathb09.1"
    ],
    "use": [
     "b.mathb09.12"
    ],
+   "borrowed": [
+    "b.mathb09.1"
+   ],
    "poolRungs": [
+    1,
     2
    ]
   },
@@ -2833,10 +2858,15 @@
     "b.mathb13.3",
     "b.mathb13.4",
     "b.mathb13.5",
-    "b.mathb13.6"
+    "b.mathb13.6",
+    "b.mathb13.10"
    ],
    "use": [],
+   "borrowed": [
+    "b.mathb13.10"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -2926,10 +2956,15 @@
     "b.mathb15.2",
     "b.mathb15.3",
     "b.mathb15.4",
-    "b.mathb15.5"
+    "b.mathb15.5",
+    "x.mathb15.1"
    ],
    "use": [],
+   "borrowed": [
+    "x.mathb15.1"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -2954,10 +2989,15 @@
     "b.mathb15.7",
     "b.mathb15.8",
     "b.mathb15.9",
-    "b.mathb15.10"
+    "b.mathb15.10",
+    "x.mathb15.1"
    ],
    "use": [],
+   "borrowed": [
+    "x.mathb15.1"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -3014,10 +3054,15 @@
    ],
    "alone": [
     "x.mathb16.2",
-    "x.mathb16.3"
+    "x.mathb16.3",
+    "x.mathb16.7"
    ],
    "use": [],
+   "borrowed": [
+    "x.mathb16.7"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -3157,10 +3202,15 @@
     "x.mathb19.8",
     "x.mathb19.9",
     "x.mathb19.10",
-    "x.mathb19.11"
+    "x.mathb19.11",
+    "x.mathb19.1"
    ],
    "use": [],
+   "borrowed": [
+    "x.mathb19.1"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -3184,11 +3234,16 @@
    "alone": [
     "x.mathb15.2",
     "x.mathb15.3",
-    "x.mathb15.4"
+    "x.mathb15.4",
+    "b.mathb15.1"
    ],
    "use": [],
+   "borrowed": [
+    "b.mathb15.1"
+   ],
    "poolRungs": [
-    0
+    0,
+    1
    ]
   },
   {
@@ -3211,11 +3266,16 @@
    "alone": [
     "x.mathb15.6",
     "x.mathb15.7",
-    "x.mathb15.8"
+    "x.mathb15.8",
+    "b.mathb15.1"
    ],
    "use": [],
+   "borrowed": [
+    "b.mathb15.1"
+   ],
    "poolRungs": [
-    0
+    0,
+    1
    ]
   },
   {
@@ -3279,10 +3339,15 @@
     "c.mathc01.4",
     "c.mathc01.6",
     "c.mathc01.7",
-    "c.mathc01.8"
+    "c.mathc01.8",
+    "c.mathc01.32"
    ],
    "use": [],
+   "borrowed": [
+    "c.mathc01.32"
+   ],
    "poolRungs": [
+    0,
     1,
     2
    ]
@@ -3312,10 +3377,15 @@
     "c.mathc01.14",
     "c.mathc01.15",
     "c.mathc01.16",
-    "c.mathc01.18"
+    "c.mathc01.18",
+    "c.mathc01.32"
    ],
    "use": [],
+   "borrowed": [
+    "c.mathc01.32"
+   ],
    "poolRungs": [
+    0,
     1,
     2
    ]
@@ -3380,11 +3450,16 @@
     "c.mathc02.3",
     "c.mathc02.6",
     "c.mathc02.7",
-    "c.mathc02.8"
+    "c.mathc02.8",
+    "c.mathc02.16"
    ],
    "use": [],
+   "borrowed": [
+    "c.mathc02.16"
+   ],
    "poolRungs": [
     0,
+    1,
     2
    ]
   },
@@ -3408,14 +3483,19 @@
    "alone": [
     "c.mathc02.16",
     "c.mathc02.17",
-    "c.mathc02.18"
+    "c.mathc02.18",
+    "c.mathc02.1"
    ],
    "use": [
     "c.mathc02.19"
    ],
+   "borrowed": [
+    "c.mathc02.1"
+   ],
    "poolRungs": [
     0,
-    1
+    1,
+    2
    ]
   },
   {
@@ -3442,10 +3522,18 @@
     "c.mathc03.5",
     "c.mathc03.6",
     "c.mathc03.7",
-    "c.mathc03.8"
+    "c.mathc03.8",
+    "c.mathc03.9",
+    "c.mathc03.10"
    ],
    "use": [],
+   "borrowed": [
+    "c.mathc03.9",
+    "c.mathc03.10"
+   ],
    "poolRungs": [
+    0,
+    1,
     2
    ]
   },
@@ -3468,13 +3556,21 @@
    ],
    "alone": [
     "c.mathc03.16",
-    "c.mathc03.17"
+    "c.mathc03.17",
+    "c.mathc03.9",
+    "c.mathc03.1"
    ],
    "use": [
     "c.mathc03.18"
    ],
+   "borrowed": [
+    "c.mathc03.9",
+    "c.mathc03.1"
+   ],
    "poolRungs": [
-    1
+    0,
+    1,
+    2
    ]
   },
   {
@@ -3510,10 +3606,26 @@
     "c.mathc02.14",
     "c.mathc02.15",
     "c.mathc03.13",
-    "c.mathc03.14"
+    "c.mathc03.14",
+    "c.mathc01.32",
+    "c.mathc01.1",
+    "c.mathc02.11",
+    "c.mathc02.16",
+    "c.mathc03.9",
+    "c.mathc03.10"
    ],
    "use": [],
+   "borrowed": [
+    "c.mathc01.32",
+    "c.mathc01.1",
+    "c.mathc02.11",
+    "c.mathc02.16",
+    "c.mathc03.9",
+    "c.mathc03.10"
+   ],
    "poolRungs": [
+    0,
+    1,
     2
    ]
   }

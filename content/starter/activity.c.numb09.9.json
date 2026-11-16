@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "c.numb09.9",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "give_n",
+  "templateVersion": "1.2",
   "domain": "numbers",
   "band": "B",
   "skills": [
@@ -13,10 +13,10 @@
       "weight": 1
     }
   ],
-  "purpose": "practice",
-  "checkType": "reverse",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "purpose": "check",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "fill-frame",
   "difficulty": {
     "authored": 0.9
   },
@@ -25,46 +25,40 @@
     "caption": [
       {
         "t": "he",
-        "v": "כַּמָּה חֲסֵרִים כְּדֵי שֶׁיִּהְיוּ עֶשֶׂר?"
+        "v": "בַּמִּסְגֶּרֶת כְּבָר יֵשׁ שִׁבְעָה תַּפּוּחִים. מַשְׁלִימִים עַד עֶשֶׂר."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "group": {
+    "source": {
       "sprite": "asset:apple",
-      "count": 7,
-      "arrangement": "ten_frame",
-      "seed": 3,
-      "scale": 1
-    }
+      "count": 10
+    },
+    "target": {
+      "sprite": "asset:basket_target"
+    },
+    "frame": true,
+    "prefilled": 7
   },
   "answer": {
-    "type": "choice",
-    "options": [
+    "type": "give",
+    "n": 3,
+    "classifiers": [
       {
-        "id": "o1",
-        "numeral": 3,
-        "label": "שָׁלוֹשׁ"
+        "when": "took_all",
+        "misconception": "M-PART-MISS"
       },
       {
-        "id": "o2",
-        "numeral": 2,
-        "label": "שְׁתַּיִם",
-        "misconception": "M-CNT-SKIP"
-      },
-      {
-        "id": "o3",
-        "numeral": 4,
-        "label": "אַרְבַּע",
+        "when": "took_more",
         "misconception": "M-CNT-DOUBLE"
+      },
+      {
+        "when": "took_fewer",
+        "misconception": "M-CNT-SKIP"
       }
-    ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    ]
   },
   "voiceAnswer": false,
   "feedback": {
@@ -73,7 +67,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "שָׁלוֹשׁ! שֶׁבַע וְעוֹד שָׁלוֹשׁ הֵם עֶשֶׂר."
+          "v": "כֵּן! שֶׁבַע וְעוֹד שָׁלוֹשׁ שָׁוֶה עֶשֶׂר."
         }
       ]
     },
@@ -95,6 +89,16 @@
           {
             "t": "he",
             "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PART-MISS",
+        "vo": "vo:fb.part_miss",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ הַרְבֵּה בְּסַךְ הַכֹּל, וְחֵלֶק מֵהֶם כְּבָר רָאִינוּ. כַּמָּה חָסֵר?"
           }
         ]
       },
@@ -123,22 +127,22 @@
     {
       "level": 1,
       "action": "replay_prompt_slow",
-      "vo": "vo:hint.pick.h1",
+      "vo": "vo:c.numb09.9.h1",
       "caption": [
         {
           "t": "he",
-          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+          "v": "שָׂמִים תַּפּוּחַ בְּכׇל מִשְׁבֶּצֶת רֵיקָה, וְסוֹפְרִים."
         }
       ]
     },
     {
       "level": 2,
-      "action": "highlight_objects_sequentially",
+      "action": "show_fingers",
       "vo": "vo:c.numb09.9.h2",
       "caption": [
         {
           "t": "he",
-          "v": "בַּמִּסְגֶּרֶת יֵשׁ עֶשֶׂר מִשְׁבָּצוֹת. נִסְפֹּר רַק אֶת הַמִּשְׁבָּצוֹת הָרֵיקוֹת."
+          "v": "סוֹפְרִים אֶת הַמִּשְׁבָּצוֹת הָרֵיקוֹת."
         }
       ]
     },
@@ -149,7 +153,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "שֶׁבַע… שְׁמוֹנֶה, תֵּשַׁע, עֶשֶׂר. הוֹסַפְנוּ שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ."
+          "v": "שֶׁבַע, וְעוֹד: שְׁמוֹנֶה, תֵּשַׁע, עֶשֶׂר. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -165,10 +169,11 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child gives exactly the number asked for, not the whole pile",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "כַּמָּה חֲסֵרִים כְּדֵי שֶׁיִּהְיוּ עֶשֶׂר?"
-  }
+    "altText": "בַּמִּסְגֶּרֶת כְּבָר יֵשׁ שִׁבְעָה תַּפּוּחִים. מַשְׁלִימִים עַד עֶשֶׂר."
+  },
+  "contradicts": "M-CNT-CARD"
 }

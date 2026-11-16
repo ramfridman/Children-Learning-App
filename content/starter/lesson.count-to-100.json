@@ -18,14 +18,14 @@
     "c.numc01.2",
     "c.numc01.3",
     "c.numc01.4",
-    "c.numc01.5",
     "c.numc01.6",
     "c.numc01.7",
+    "c.numc01.11",
+    "c.numc01.12",
+    "c.numc01.5",
     "c.numc01.8",
     "c.numc01.9",
-    "c.numc01.10",
-    "c.numc01.11",
-    "c.numc01.12"
+    "c.numc01.10"
   ],
   "estimatedMinutes": 8,
   "sequence": 105,
@@ -37,5 +37,48 @@
         "v": "כׇּל הַכָּבוֹד! עֲבַרְתֶּם אֶת הָעֲשָׂרוֹת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-c-01",
+    "recall": [
+      "b.numb02.1"
+    ],
+    "together": [
+      {
+        "id": "c.numc01.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.numc01.2",
+      "c.numc01.3",
+      "c.numc01.4",
+      "c.numc01.6",
+      "c.numc01.7",
+      "c.numc01.11",
+      "c.numc01.12",
+      "c.numc01.5",
+      "c.numc01.8",
+      "c.numc01.9",
+      "c.numc01.10"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

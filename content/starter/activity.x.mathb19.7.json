@@ -61,7 +61,8 @@
       {
         "id": "o3",
         "numeral": 3,
-        "label": "שָׁלוֹשׁ"
+        "label": "שָׁלוֹשׁ",
+        "misconception": "M-COMP-DIFF"
       }
     ],
     "correct": "o1",

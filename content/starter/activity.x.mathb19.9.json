@@ -56,7 +56,8 @@
       {
         "id": "o2",
         "numeral": 4,
-        "label": "אַרְבַּע"
+        "label": "אַרְבַּע",
+        "misconception": "M-COMP-DIFF"
       },
       {
         "id": "o3",

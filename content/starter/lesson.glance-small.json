@@ -17,7 +17,8 @@
     "flash.dice.1",
     "flash.dice.2",
     "flash.dice.3",
-    "flash.scatter.3"
+    "flash.scatter.3",
+    "flash.frame.3"
   ],
   "estimatedMinutes": 3,
   "sequence": 3,
@@ -29,5 +30,38 @@
         "v": "וַאוּ! רְאִיתֶם כַּמָּה בְּלִי לִסְפֹּר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-a-05",
+    "together": [
+      {
+        "id": "flash.dice.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "flash.dice.2",
+      "flash.dice.3",
+      "flash.scatter.3",
+      "flash.frame.3"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

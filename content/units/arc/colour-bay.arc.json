@@ -1205,9 +1205,13 @@
     "col.match.yellow",
     "col.name.red.ball",
     "col.name.blue.balloon",
-    "col.match.green"
+    "col.match.green",
+    "b15.cola02.3"
    ],
    "use": [],
+   "borrowed": [
+    "b15.cola02.3"
+   ],
    "poolRungs": [
     0,
     1
@@ -1240,9 +1244,13 @@
     "col.name.pink",
     "b15.cola02.1",
     "b15.cola02.2",
-    "col.name.red.near"
+    "col.name.red.near",
+    "b15.cola03.3"
    ],
    "use": [],
+   "borrowed": [
+    "b15.cola03.3"
+   ],
    "poolRungs": [
     0,
     1
@@ -1310,11 +1318,18 @@
     "col.find.red.balloon",
     "col.find.blue.ball",
     "col.find.yellow.flower",
-    "col.find.green.balloon"
+    "col.find.green.balloon",
+    "col.sort.pink",
+    "b15.cola07.1"
    ],
    "use": [],
+   "borrowed": [
+    "col.sort.pink",
+    "b15.cola07.1"
+   ],
    "poolRungs": [
-    0
+    0,
+    1
    ]
   },
   {
@@ -1373,9 +1388,15 @@
     "col.name.orange2",
     "col.name.pink2",
     "col.name.purple2",
-    "col.name.brown3"
+    "col.name.brown3",
+    "col.match.blue",
+    "b15.cola03.1"
    ],
    "use": [],
+   "borrowed": [
+    "col.match.blue",
+    "b15.cola03.1"
+   ],
    "poolRungs": [
     0,
     1
@@ -1409,10 +1430,14 @@
     "col.sort.yellow",
     "col.sort.pink",
     "col.find.red.ball",
-    "col.find.yellow.balloon"
+    "col.find.yellow.balloon",
+    "col.find.blue.ball"
    ],
    "use": [
     "b15.cola07.1"
+   ],
+   "borrowed": [
+    "col.find.blue.ball"
    ],
    "poolRungs": [
     0,
@@ -1469,12 +1494,17 @@
    ],
    "alone": [
     "b15.cola02.4",
-    "b15.cola02.5"
+    "b15.cola02.5",
+    "b15.cola02.1"
    ],
    "use": [
     "b15.cola02.6"
    ],
+   "borrowed": [
+    "b15.cola02.1"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -1506,10 +1536,14 @@
     "b15.cola01.2",
     "b15.cola03.3",
     "b15.cola03.4",
-    "b15.cola03.5"
+    "b15.cola03.5",
+    "col.match.blue"
    ],
    "use": [
     "b15.cola03.6"
+   ],
+   "borrowed": [
+    "col.match.blue"
    ],
    "poolRungs": [
     0,
@@ -1539,10 +1573,15 @@
     }
    ],
    "alone": [
-    "b15.cola06.2"
+    "b15.cola06.2",
+    "col.name.brown"
    ],
    "use": [],
+   "borrowed": [
+    "col.name.brown"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -1564,10 +1603,15 @@
    },
    "together": [],
    "alone": [
-    "b15.cola07.2"
+    "b15.cola07.2",
+    "col.find.blue.ball"
    ],
    "use": [],
+   "borrowed": [
+    "col.find.blue.ball"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },

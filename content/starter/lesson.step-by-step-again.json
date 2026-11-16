@@ -34,5 +34,48 @@
         "v": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה בָּא קֹדֶם וּמָה בַּסּוֹף."
       }
     ]
+  },
+  "parts": {
+    "show": "show.cs-a-01",
+    "secondShow": {
+      "id": "show.cs-a-05",
+      "before": "cs.wrong.wash2"
+    },
+    "recall": [
+      "b15.loga08.1"
+    ],
+    "together": [
+      {
+        "id": "cs.routine.wash.middle",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.tzaadon.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "cs.routine.teeth.middle",
+      "cs.wrong.wash2",
+      "cs.wrong.teeth2",
+      "cs.wrong.wash3",
+      "cs.wrong.teeth3",
+      "b15.csa01.1",
+      "b15.csa01.2"
+    ],
+    "handover": {
+      "vo": "vo:host.tzaadon.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בִּיפּ בּוּפּ! עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

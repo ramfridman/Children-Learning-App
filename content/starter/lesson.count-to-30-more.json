@@ -29,5 +29,40 @@
         "v": "נִפְלָא! הָעֲשָׂרוֹת כְּבָר מוּכָּרוֹת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-02",
+    "recall": [
+      "b.numb01.1"
+    ],
+    "together": [
+      {
+        "id": "b.numb02.6",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb02.7",
+      "b.numb02.8",
+      "b.numb02.9"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

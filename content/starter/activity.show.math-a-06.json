@@ -1,0 +1,150 @@
+{
+  "schema": "activity/v1",
+  "id": "show.math-a-06",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "give_n",
+  "templateVersion": "1.2",
+  "domain": "math",
+  "band": "A",
+  "skills": [
+    {
+      "id": "MATH-A-06",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.pnina.show.math_a_06.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל תַּפּוּחַ עוֹלֶה מַטְבֵּעַ אֶחָד."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "source": {
+      "sprite": "asset:coin",
+      "count": 6
+    },
+    "target": {
+      "sprite": "asset:basket_target"
+    }
+  },
+  "answer": {
+    "type": "give",
+    "n": 3,
+    "classifiers": []
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.pnina.show.math_a_06.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁלוֹשָׁה תַּפּוּחִים, שְׁלוֹשָׁה מַטְבְּעוֹת."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "כׇּל תַּפּוּחַ עוֹלֶה מַטְבֵּעַ אֶחָד."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.pnina.show.math_a_06.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כׇּל תַּפּוּחַ עוֹלֶה מַטְבֵּעַ אֶחָד."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.pnina.show.math_a_06.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "שְׁלוֹשָׁה תַּפּוּחִים, שְׁלוֹשָׁה מַטְבְּעוֹת."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.pnina.show.math_a_06.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַמַּטְבֵּעַ הַשְּׁלִישִׁי."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "move": 1,
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "move": 1
+      },
+      {
+        "by": "child",
+        "move": 1
+      }
+    ],
+    "teaches": []
+  }
+}

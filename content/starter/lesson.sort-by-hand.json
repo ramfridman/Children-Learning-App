@@ -18,6 +18,7 @@
     "log.sortdrag.animals",
     "log.sortdrag.three",
     "b15.loga03.1",
+    "log.sort.animal",
     "b15.loga03.2"
   ],
   "estimatedMinutes": 4,
@@ -54,7 +55,8 @@
     "alone": [
       "log.sortdrag.animals",
       "log.sortdrag.three",
-      "b15.loga03.1"
+      "b15.loga03.1",
+      "log.sort.animal"
     ],
     "use": [
       "b15.loga03.2"

@@ -1,0 +1,158 @@
+{
+  "schema": "activity/v1",
+  "id": "show.num-b-09",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "give_n",
+  "templateVersion": "1.2",
+  "domain": "numbers",
+  "band": "B",
+  "skills": [
+    {
+      "id": "NUM-B-09",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.nekudi.show.num_b_09.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מִסְגֶּרֶת שֶׁל עֶשֶׂר מִשְׁבָּצוֹת."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "source": {
+      "sprite": "asset:apple",
+      "count": 12
+    },
+    "target": {
+      "sprite": "asset:basket_target"
+    },
+    "frame": true
+  },
+  "answer": {
+    "type": "give",
+    "n": 8,
+    "classifiers": []
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.nekudi.show.num_b_09.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שׁוּרָה מְלֵאָה חָמֵשׁ, וְעוֹד שָׁלוֹשׁ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "מִסְגֶּרֶת שֶׁל עֶשֶׂר מִשְׁבָּצוֹת."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.nekudi.show.num_b_09.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מִסְגֶּרֶת שֶׁל עֶשֶׂר מִשְׁבָּצוֹת."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.nekudi.show.num_b_09.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "שׁוּרָה מְלֵאָה חָמֵשׁ, וְעוֹד שָׁלוֹשׁ."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.nekudi.show.num_b_09.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַשְּׁמִינִי."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "move": 5,
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "move": 1
+      },
+      {
+        "by": "host",
+        "move": 1
+      },
+      {
+        "by": "child",
+        "move": 1
+      }
+    ],
+    "teaches": [
+      "חָמֵשׁ",
+      "שְׁמוֹנֶה"
+    ]
+  }
+}

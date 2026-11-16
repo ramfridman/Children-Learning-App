@@ -1,0 +1,154 @@
+{
+  "schema": "activity/v1",
+  "id": "show.math-b-17",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "shop_pay",
+  "templateVersion": "1.1",
+  "domain": "math",
+  "band": "B",
+  "skills": [
+    {
+      "id": "MATH-B-17",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.pnina.show.math_b_17.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַתַּפּוּחַ עוֹלֶה שִׁבְעָה שְׁקָלִים."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "itemSprite": "asset:apple",
+    "itemCount": 1,
+    "price": 700,
+    "purse": [
+      {
+        "kind": "s5",
+        "count": 1
+      },
+      {
+        "kind": "s2",
+        "count": 2
+      },
+      {
+        "kind": "s1",
+        "count": 3
+      }
+    ]
+  },
+  "answer": {
+    "type": "pay"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.pnina.show.math_b_17.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חֲמִשָּׁה, וְעוֹד שְׁנַיִם: שִׁבְעָה."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "הַתַּפּוּחַ עוֹלֶה שִׁבְעָה שְׁקָלִים."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.pnina.show.math_b_17.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַתַּפּוּחַ עוֹלֶה שִׁבְעָה שְׁקָלִים."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.pnina.show.math_b_17.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "חֲמִשָּׁה, וְעוֹד שְׁנַיִם: שִׁבְעָה."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.pnina.show.math_b_17.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: שְׁנֵי שְׁקָלִים."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "coin": "s5",
+        "say": "key"
+      },
+      {
+        "by": "child",
+        "coin": "s2"
+      }
+    ],
+    "teaches": []
+  }
+}

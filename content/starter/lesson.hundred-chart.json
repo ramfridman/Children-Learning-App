@@ -23,7 +23,9 @@
     "c.numc01.13",
     "c.numc01.14",
     "c.numc01.15",
-    "c.numc01.16"
+    "c.numc01.16",
+    "c.numc09.10",
+    "c.numc01.10"
   ],
   "estimatedMinutes": 6,
   "sequence": 115,
@@ -35,5 +37,51 @@
         "v": "מְצֻיָּן! מְצָאתֶם אֶת הַמִּשְׁבָּצוֹת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-c-09",
+    "secondShow": {
+      "id": "show.num-c-01",
+      "before": "c.numc01.13"
+    },
+    "recall": [
+      "c.numc03.10"
+    ],
+    "together": [
+      {
+        "id": "c.numc09.13",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.numc09.14",
+      "c.numc09.15",
+      "c.numc09.16",
+      "c.numc09.17",
+      "c.numc01.13",
+      "c.numc01.14",
+      "c.numc01.15",
+      "c.numc01.16",
+      "c.numc09.10",
+      "c.numc01.10"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

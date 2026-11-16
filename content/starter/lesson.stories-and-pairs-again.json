@@ -17,10 +17,10 @@
   "items": [
     "log.story.weather.last",
     "log.story.egg.first",
-    "log.story.plant.mid",
     "log.pair.bowl",
-    "log.pair.pencil",
     "log.pair.shoe",
+    "log.story.plant.mid",
+    "log.pair.pencil",
     "b15.loga08.1",
     "b15.loga08.2"
   ],
@@ -34,5 +34,48 @@
         "v": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה קּוֹרֶה קֹדֶם וּמָה הוֹלֵךְ יַחַד."
       }
     ]
+  },
+  "parts": {
+    "show": "show.log-a-08",
+    "secondShow": {
+      "id": "show.log-a-09",
+      "before": "log.pair.bowl"
+    },
+    "recall": [
+      "b15.numa13.1"
+    ],
+    "together": [
+      {
+        "id": "log.story.weather.last",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.timi.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אוֹמְרִים אֶת הַסֵּדֶר בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "log.story.egg.first",
+      "log.pair.bowl",
+      "log.pair.shoe",
+      "log.story.plant.mid",
+      "log.pair.pencil",
+      "b15.loga08.1",
+      "b15.loga08.2"
+    ],
+    "handover": {
+      "vo": "vo:host.timi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חוֹשְׁבִים לְאַט. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

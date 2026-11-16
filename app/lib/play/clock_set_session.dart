@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'hints/hint_marks.dart';
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
+import 'host_moves.dart';
 import 'response_code.dart';
 import 'template_session.dart';
 
@@ -72,10 +74,48 @@ class ClockSetSession extends TemplateSession {
 
   void _set(int h) {
     _endDemo();
-    if (_busy || ring == AnswerState.correct) return;
+    if (_busy || hosting || ring == AnswerState.correct) return;
     hour = h;
     ghost = false;
     notify();
+    // A Show ends when the child has turned the short hand to the hour the host left for it: nothing is checked or written.
+    if (activity.isShow && hour == activity.show!.childStep.to) {
+      _busy = true;
+      ring = AnswerState.correct;
+      notify();
+      finishShow();
+    }
+  }
+
+  // ---- the host's part (a Show) ----
+
+  /// The host turns the short hand one hour: its pointing hand presses the plus tile, and the hand of the clock goes to [to].
+  HostMove _turnMove(int to) {
+    final Offset? tip = _size.isEmpty
+        ? null
+        : _spec.tileTip(allowHalf ? 4 : 3, 1, slot: 96, slop: 12, rtl: false);
+    return HostMove(tip, () => hour = to, rest: 750);
+  }
+
+  @override
+  void startHost() {
+    if (controller.step == null || hosting || !activity.isShow) return;
+    unawaited(
+      playShow(
+        activity.show!,
+        move: (ShowStep s, {required bool fast}) => hostTour(_hint, <HostMove>[_turnMove(s.to!)], fast: fast),
+      ),
+    );
+  }
+
+  /// A touch on a reminder skips what the host still has to do: the short hand stands where the host left it, and the child's step is left.
+  @override
+  void onScreenTouch() {
+    if (!activity.isShow) return;
+    skipHost(() {
+      _hint.clear();
+      hour = activity.show!.hostSteps.last.to!;
+    });
   }
 
   void toggleHalf() {
@@ -98,7 +138,7 @@ class ClockSetSession extends TemplateSession {
 
   Future<void> check() async {
     _endDemo();
-    if (_busy || ring == AnswerState.correct) return;
+    if (_busy || hosting || activity.isShow || ring == AnswerState.correct) return;
     final bool right = hour == activity.hour && half == activity.half;
     if (controller.guided && !right) {
       if (controller.answerShown) ghost = true;
@@ -346,15 +386,19 @@ class ClockSetSession extends TemplateSession {
               onPressed: toggleHalf,
               child: Text('½', style: AppText.fixed(size: 40, weight: 800, lineHeight: 1)),
             ),
-          AnswerTile(
-            key: const Key('clock-ok'),
-            semanticLabel: 'check',
-            size: 72,
-            state: ring == AnswerState.notYet
-                ? AnswerState.notYet
-                : (ring == AnswerState.correct ? AnswerState.correct : AnswerState.idle),
-            onPressed: check,
-            child: const Icon(Icons.check_rounded, size: 44, color: TokenColors.ink),
+          // A Show has no check (it ends when the short hand is at the child's hour): the tile stands where it always does, but faded.
+          Opacity(
+            opacity: activity.isShow ? 0.35 : 1,
+            child: AnswerTile(
+              key: const Key('clock-ok'),
+              semanticLabel: 'check',
+              size: 72,
+              state: ring == AnswerState.notYet
+                  ? AnswerState.notYet
+                  : (ring == AnswerState.correct ? AnswerState.correct : AnswerState.idle),
+              onPressed: activity.isShow ? null : check,
+              child: const Icon(Icons.check_rounded, size: 44, color: TokenColors.ink),
+            ),
           ),
         ],
       ),

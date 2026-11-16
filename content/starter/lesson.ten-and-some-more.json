@@ -19,7 +19,8 @@
     "b.numb16.8",
     "b.numb16.9",
     "b.numb16.10",
-    "b.numb16.11"
+    "b.numb16.11",
+    "b.numb16.4"
   ],
   "estimatedMinutes": 5,
   "sequence": 50,
@@ -31,5 +32,43 @@
         "v": "נִפְלָא! הַמִּסְפָּרִים הַגְּדוֹלִים כְּבָר מוּכָּרִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-16",
+    "recall": [
+      "b.numb08.2"
+    ],
+    "together": [
+      {
+        "id": "b.numb16.6",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb16.7",
+      "b.numb16.8",
+      "b.numb16.9",
+      "b.numb16.10",
+      "b.numb16.11",
+      "b.numb16.4"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

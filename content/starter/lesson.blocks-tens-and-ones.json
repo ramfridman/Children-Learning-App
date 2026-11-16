@@ -22,6 +22,9 @@
     "c.numc03.25",
     "c.numc02.18",
     "c.numc02.19",
+    "c.numc03.1",
+    "c.numc03.13",
+    "c.numc02.1",
     "c.numc02.20"
   ],
   "estimatedMinutes": 6,
@@ -44,5 +47,53 @@
         "v": "עֶשֶׂר קֻבִּיּוֹת הֵן מוֹט אֶחָד."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-c-03",
+    "secondShow": {
+      "id": "show.num-c-02",
+      "before": "c.numc02.18"
+    },
+    "recall": [
+      "c.numc02.2"
+    ],
+    "together": [
+      {
+        "id": "c.numc03.18",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.numc03.19",
+      "c.numc03.20",
+      "c.numc03.24",
+      "c.numc03.25",
+      "c.numc02.18",
+      "c.numc02.19",
+      "c.numc03.1",
+      "c.numc03.13",
+      "c.numc02.1"
+    ],
+    "use": [
+      "c.numc02.20"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

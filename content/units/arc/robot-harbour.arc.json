@@ -563,10 +563,15 @@
    ],
    "alone": [
     "cs.robot.plan.2",
-    "cs.robot.plan.3"
+    "cs.robot.plan.3",
+    "b15.csa04.1"
    ],
    "use": [],
+   "borrowed": [
+    "b15.csa04.1"
+   ],
    "poolRungs": [
+    1,
     2
    ]
   },
@@ -716,11 +721,16 @@
    "alone": [
     "b.csb01.4",
     "b.csb01.1",
-    "b.csb01.3"
+    "b.csb01.3",
+    "b.csb01.10"
    ],
    "use": [],
+   "borrowed": [
+    "b.csb01.10"
+   ],
    "poolRungs": [
     0,
+    1,
     2
    ]
   },

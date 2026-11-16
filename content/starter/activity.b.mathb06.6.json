@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.mathb06.6",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "give_n",
+  "templateVersion": "1.2",
   "domain": "math",
   "band": "B",
   "skills": [
@@ -13,10 +13,10 @@
       "weight": 1
     }
   ],
-  "purpose": "practice",
+  "purpose": "check",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "fill-frame",
   "difficulty": {
     "authored": 0.72
   },
@@ -25,58 +25,73 @@
     "caption": [
       {
         "t": "he",
-        "v": "יֵשׁ אַרְבַּע צִפֳּרִים. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?"
+        "v": "יֵשׁ אַרְבַּע צִפֳּרִים בַּמִּסְגֶּרֶת. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?"
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "group": {
+    "source": {
       "sprite": "asset:bird",
-      "count": 4,
-      "arrangement": "line",
-      "seed": 3,
-      "scale": 1
-    }
+      "count": 10
+    },
+    "target": {
+      "sprite": "asset:basket_target"
+    },
+    "frame": true,
+    "prefilled": 4
   },
   "answer": {
-    "type": "choice",
-    "options": [
+    "type": "give",
+    "n": 6,
+    "classifiers": [
       {
-        "id": "o1",
-        "numeral": 10,
-        "label": "עֶשֶׂר",
+        "when": "took_all",
         "misconception": "M-PART-MISS"
       },
       {
-        "id": "o2",
-        "numeral": 4,
-        "label": "אַרְבַּע"
+        "when": "took_more",
+        "misconception": "M-CNT-DOUBLE"
       },
       {
-        "id": "o3",
-        "numeral": 6,
-        "label": "שֵׁשׁ"
+        "when": "took_fewer",
+        "misconception": "M-CNT-SKIP"
       }
-    ],
-    "correct": "o3",
-    "shuffle": false,
-    "unsureAllowed": true
+    ]
   },
-  "voiceAnswer": true,
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.mathb06.6.correct",
       "caption": [
         {
           "t": "he",
-          "v": "שֵׁשׁ! אַרְבַּע וְעוֹד שֵׁשׁ הֵם עֶשֶׂר."
+          "v": "כֵּן! אַרְבַּע וְעוֹד שֵׁשׁ שָׁוֶה עֶשֶׂר."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-CNT-SKIP",
+        "vo": "vo:fb.skip_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "misconception:M-PART-MISS",
         "vo": "vo:fb.part_miss",
@@ -112,22 +127,22 @@
     {
       "level": 1,
       "action": "replay_prompt_slow",
-      "vo": "vo:hint.pick.h1",
+      "vo": "vo:b.mathb06.6.h1",
       "caption": [
         {
           "t": "he",
-          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+          "v": "שָׂמִים צִפּוֹר בְּכׇל מִשְׁבֶּצֶת רֵיקָה, וְסוֹפְרִים."
         }
       ]
     },
     {
       "level": 2,
-      "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "action": "show_fingers",
+      "vo": "vo:b.mathb06.6.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "סוֹפְרִים אֶת הַמִּשְׁבָּצוֹת הָרֵיקוֹת."
         }
       ]
     },
@@ -138,7 +153,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אַרְבַּע, וְעוֹד שֵׁשׁ: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… עֶשֶׂר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שֵׁשׁ."
+          "v": "אַרְבַּע, וְעוֹד: חָמֵשׁ, שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה, תֵּשַׁע, עֶשֶׂר. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -154,10 +169,11 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child gives exactly the number asked for, not the whole pile",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "יֵשׁ אַרְבַּע צִפֳּרִים. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?"
-  }
+    "altText": "יֵשׁ אַרְבַּע צִפֳּרִים בַּמִּסְגֶּרֶת. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?"
+  },
+  "contradicts": "M-CNT-CARD"
 }

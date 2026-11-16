@@ -30,5 +30,6 @@
         "v": "חֲכָמִים! תִּקַּנְתֶּם אֶת הַסֵּדֶר."
       }
     ]
-  }
+  },
+  "partsWait": "show.log-a-07 waits: show.log-a-07: a place of the row is neither given nor laid by a step (the arc gives no `scene.given` for the cells the host does not lay)"
 }

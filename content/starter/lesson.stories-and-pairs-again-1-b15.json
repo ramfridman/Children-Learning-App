@@ -16,7 +16,8 @@
   ],
   "items": [
     "b15.loga09.1",
-    "b15.loga09.2"
+    "b15.loga09.2",
+    "log.pair.bowl"
   ],
   "estimatedMinutes": 4,
   "sequence": 16,
@@ -28,5 +29,43 @@
         "v": "כׇּל הַכָּבוֹד! מְצָאתֶם מָה הוֹלֵךְ יַחַד."
       }
     ]
+  },
+  "parts": {
+    "show": "show.log-a-08",
+    "secondShow": {
+      "id": "show.log-a-09",
+      "before": "b15.loga09.2"
+    },
+    "recall": [
+      "b15.numa13.1"
+    ],
+    "together": [
+      {
+        "id": "b15.loga09.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.timi.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b15.loga09.2",
+      "log.pair.bowl"
+    ],
+    "handover": {
+      "vo": "vo:host.timi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו הַחִידָה שֶׁלָּכֶם."
+        }
+      ]
+    }
   }
 }

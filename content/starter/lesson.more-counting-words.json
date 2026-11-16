@@ -16,12 +16,13 @@
   ],
   "items": [
     "next.after.3",
+    "next.after.5",
     "next.before.4",
     "next.before.5",
-    "next.after.5",
     "next.after.9",
     "next.before.9",
     "next.before.10",
+    "b15.numa02.1",
     "b15.numa01.1"
   ],
   "estimatedMinutes": 5,
@@ -34,5 +35,48 @@
         "v": "כׇּל הַכָּבוֹד! סְפַרְתֶּם עוֹד, לְפִי הַסֵּדֶר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-a-01",
+    "secondShow": {
+      "id": "show.num-a-02",
+      "before": "next.after.5"
+    },
+    "together": [
+      {
+        "id": "next.after.3",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "next.after.5",
+      "next.before.4",
+      "next.before.5",
+      "next.after.9",
+      "next.before.9",
+      "next.before.10",
+      "b15.numa02.1"
+    ],
+    "use": [
+      "b15.numa01.1"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

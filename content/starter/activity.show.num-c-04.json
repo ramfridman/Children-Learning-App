@@ -1,0 +1,155 @@
+{
+  "schema": "activity/v1",
+  "id": "show.num-c-04",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "number_line",
+  "templateVersion": "1.2",
+  "domain": "numbers",
+  "band": "C",
+  "skills": [
+    {
+      "id": "NUM-C-04",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.nekudi.show.num_c_04.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מִי גָּדוֹל יוֹתֵר?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "from": 30,
+    "to": 50,
+    "markerSprite": "asset:frog",
+    "labels": [
+      30,
+      39,
+      41,
+      50
+    ]
+  },
+  "answer": {
+    "type": "line",
+    "mode": "place",
+    "target": 41
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.nekudi.show.num_c_04.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מַשְׁוִים קֹדֶם אֶת הָעֲשָׂרוֹת."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "מִי גָּדוֹל יוֹתֵר?"
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.nekudi.show.num_c_04.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מִי גָּדוֹל יוֹתֵר?"
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.nekudi.show.num_c_04.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מַשְׁוִים קֹדֶם אֶת הָעֲשָׂרוֹת."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.nekudi.show.num_c_04.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: שִׂימוּ עַל הַגָּדוֹל."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "point": 39
+      },
+      {
+        "by": "host",
+        "point": 41,
+        "say": "key"
+      },
+      {
+        "by": "child",
+        "place": 41
+      }
+    ],
+    "teaches": [
+      "שְׁלוֹשִׁים וְתֵשַׁע",
+      "אַרְבָּעִים וְאַחַת"
+    ]
+  }
+}

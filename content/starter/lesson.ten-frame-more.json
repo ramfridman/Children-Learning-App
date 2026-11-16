@@ -14,14 +14,14 @@
     "NUM-B-09"
   ],
   "items": [
+    "c.numb09.15",
+    "c.numb09.16",
     "c.numb09.9",
     "c.numb09.10",
     "c.numb09.11",
     "c.numb09.12",
     "c.numb09.13",
-    "c.numb09.14",
-    "c.numb09.15",
-    "c.numb09.16"
+    "c.numb09.14"
   ],
   "estimatedMinutes": 6,
   "sequence": 103,
@@ -33,5 +33,44 @@
         "v": "כׇּל הַכָּבוֹד! הַמִּסְגֶּרֶת מְלֵאָה."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-09",
+    "recall": [
+      "b15.numa10.1"
+    ],
+    "together": [
+      {
+        "id": "c.numb09.15",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.give",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים בִּזְמַן שֶׁנּוֹתְנִים, וְעוֹצְרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.numb09.16",
+      "c.numb09.9",
+      "c.numb09.10",
+      "c.numb09.11",
+      "c.numb09.12",
+      "c.numb09.13",
+      "c.numb09.14"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

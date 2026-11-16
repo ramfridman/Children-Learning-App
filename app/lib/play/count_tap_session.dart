@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -17,6 +18,8 @@ import '../strings/he.dart';
 import 'hint_widgets.dart';
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
+import 'host_moves.dart';
+import 'lesson_arc.dart' show ArcPart, ArcStep;
 import 'choice_row.dart' show withTallStage;
 import 'lesson_controller.dart';
 import 'listen_do_session.dart' show ListenDoSession;
@@ -169,8 +172,63 @@ class CountTapSession extends TemplateSession {
       _tallWhileCounting && !answering && !base.stageIsCard ? withTallStage(base) : base;
   int get counter => counted.length;
 
+  // ---- the host's part (a Show, the lead of a Together item) ----
+
+  /// The host touches the next [count] objects not yet counted, one after the other, in one run: each lights (or flies to the flower) and the
+  /// counter keeps the number.
+  List<HostMove> _hostTouches(int count) {
+    final CountLayout? l = _size.isEmpty ? null : CountLayout(_size, activity);
+    final List<int> next = <int>[
+      for (int i = 0; i < activity.count; i++)
+        if (!counted.contains(i)) i,
+    ].take(count).toList();
+    return <HostMove>[
+      for (final int i in next) HostMove(l?.centers[i], () => _count(i), rest: count > 4 ? 380 : 650),
+    ];
+  }
+
+  void _count(int i) {
+    counted.add(i);
+    if (flies) {
+      later(const Duration(milliseconds: 600), () {
+        arrived.add(i);
+        notify();
+      });
+    }
+  }
+
+  @override
+  void startHost() {
+    final ArcStep? step = controller.step;
+    if (step == null || hosting) return;
+    if (activity.isShow) {
+      unawaited(
+        playShow(
+          activity.show!,
+          move: (ShowStep s, {required bool fast}) => hostTour(_hint, _hostTouches(s.touch ?? 1), fast: fast),
+        ),
+      );
+    } else if (step.part == ArcPart.together && controller.leading && step.lead > 0) {
+      unawaited(playLead(<Future<void> Function()>[() => hostTour(_hint, _hostTouches(step.lead))]));
+    }
+  }
+
+  /// A touch on a reminder skips what the host still has to do: its objects are counted, and the child's step is left.
+  @override
+  void onScreenTouch() {
+    if (!activity.isShow) return;
+    skipHost(() {
+      _hint.clear();
+      for (final ShowStep s in activity.show!.hostSteps) {
+        for (final HostMove m in _hostTouches(s.touch ?? 1)) {
+          m.act();
+        }
+      }
+    });
+  }
+
   void tapObject(int i) {
-    if (answering || _recounting || (demoRunning && !_demoStep)) return;
+    if (hosting || answering || _recounting || (demoRunning && !_demoStep)) return;
     seen.clear();
     if (counted.contains(i) && activity.isLanguage) {
       _countAgain(i);
@@ -197,8 +255,15 @@ class CountTapSession extends TemplateSession {
         notify();
       });
     }
-    if (counted.length == activity.count) {
-      if (!demoRunning) _finishCounting();
+    if (counted.length == activity.count && !demoRunning) {
+      // The last object of a Show is the child's: the Show ends there (its key line is the praise); nothing is asked or written.
+      if (activity.isShow) {
+        _busy = true;
+        notify();
+        finishShow();
+        return;
+      }
+      _finishCounting();
     }
     notify();
   }
@@ -280,6 +345,13 @@ class CountTapSession extends TemplateSession {
   void onReset() {
     counted.clear();
     arrived.clear();
+    // The objects the host counted in the lead of a Together item stay counted.
+    if (controller.step?.part == ArcPart.together && !controller.leading) {
+      for (int i = 0; i < controller.step!.lead; i++) {
+        counted.add(i);
+        if (flies) arrived.add(i);
+      }
+    }
     touchedTwice = false;
     answering = false;
     chosenId = null;

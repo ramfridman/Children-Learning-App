@@ -31,5 +31,44 @@
         "v": "מְצֻיָּן! הַחֶשְׁבּוֹן יוֹצֵא."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-17",
+    "recall": [
+      "x.mathb16.1"
+    ],
+    "together": [
+      {
+        "id": "x.mathb17.6",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.pay",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים אֶת הַמַּטְבְּעוֹת בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "x.mathb17.7",
+      "x.mathb17.8",
+      "x.mathb17.9",
+      "x.mathb17.10"
+    ],
+    "use": [
+      "x.mathb17.11"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מִסְתַּכֶּלֶת. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

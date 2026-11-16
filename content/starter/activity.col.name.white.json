@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "col.name.white",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "colors",
@@ -44,8 +44,9 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:balloon_yellow",
-        "label": "בָּלוֹן צָהֹב"
+        "sprite": "asset:ball_white",
+        "label": "כַּדּוּר לָבָן",
+        "misconception": "M-COL-ONEATTR"
       },
       {
         "id": "o3",
@@ -77,6 +78,16 @@
           {
             "t": "he",
             "v": "הַצְּבָעִים דּוֹמִים. בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.col_oneattr",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע."
           }
         ]
       },

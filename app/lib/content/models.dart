@@ -95,6 +95,19 @@ class ShowStep {
     this.motion,
     this.detail,
     this.segment,
+    this.hop,
+    this.point,
+    this.place,
+    this.move,
+    this.touch,
+    this.cell,
+    this.block,
+    this.to,
+    this.put,
+    this.pan,
+    this.coin,
+    this.arrow,
+    this.hand,
   });
 
   factory ShowStep.fromJson(Map<String, Object?> m) => ShowStep(
@@ -107,6 +120,19 @@ class ShowStep {
     motion: m['motion'] as String?,
     detail: m['detail'] as String?,
     segment: m['segment'] as int?,
+    hop: m['hop'] as int?,
+    point: m['point'] as int?,
+    place: m['place'] as int?,
+    move: m['move'] as int?,
+    touch: m['touch'] as int?,
+    cell: m['cell'] as int?,
+    block: m['block'] as int?,
+    to: m['to'] as int?,
+    put: m['put'] as String?,
+    pan: m['pan'] as String?,
+    coin: m['coin'] as String?,
+    arrow: m['arrow'] as String?,
+    hand: m['hand'] as String?,
   );
 
   final bool byHost;
@@ -126,6 +152,45 @@ class ShowStep {
 
   /// A tracing: the side of the path this move draws, counted from 1 (`traceSides`).
   final int? segment;
+
+  // The move words of the other templates (M11 Stage 2, the lands' Shows): one of them names what the host (or the child) does in this step.
+  // number_line: `hop` (the marker jumps by that many, negative to the left), `point` (the host's finger rests on that tick and says its
+  // number), `place` (the child touches that tick). give_n: `move` (that many objects go to the target, counted aloud). count_tap: `touch`
+  // (that many objects are touched in one run). build_pattern: `cell` (the place, from 0) with the `piece` (its picture). balance: `block`
+  // (that many blocks, or the group of that many things), `put` (the thing, by its picture's name) and `pan` (`left` or `right`).
+  // shop_pay: `coin` (the kind laid on the counter). robot_path: `arrow` (a direction). clock_set: `hand` (`short` or `long`) turned `to` an hour.
+  final int? hop;
+  final int? point;
+  final int? place;
+  final int? move;
+  final int? touch;
+  final int? cell;
+  final int? block;
+  final int? to;
+  final String? put;
+  final String? pan;
+  final String? coin;
+  final String? arrow;
+  final String? hand;
+}
+
+/// The host's question before it runs an example ("what will happen?", M11-stage2 section 2.1, White and Gunstone 1992): the line it asks, and
+/// the answers the child may touch as a guess. A question with fewer than two answers is only asked: the host waits a moment and goes on. A guess
+/// is never scored, written or told right or wrong: the example that follows is the answer.
+class ShowPredict {
+  ShowPredict._(Map<String, Object?> json)
+    : line = json['line'] == null ? null : Spoken.fromJson(json['line']),
+      choices = <({String id, String label})>[
+        for (final Map<String, Object?> c in _maps(json['choices']))
+          (id: c['id']! as String, label: c['label']! as String),
+      ];
+
+  /// The question as a line of its own, or null: the Show's opening line is then the question (a Show whose question is already said there).
+  final Spoken? line;
+  final List<({String id, String label})> choices;
+
+  /// The child may touch a guess.
+  bool get asksForGuess => choices.length >= 2;
 }
 
 /// What a Show says and does (`purpose: show`, M11 Stage 2): the host's lines, and the moves it makes one after another before it stops, so
@@ -136,11 +201,15 @@ class ShowScript {
         for (final Map<String, Object?> l in _maps(json['lines'])) l['role']! as String: Spoken.fromJson(l),
       },
       steps = <ShowStep>[for (final Map<String, Object?> s in _maps(json['steps'])) ShowStep.fromJson(s)],
-      teaches = <String>[for (final Object? t in json['teaches']! as List<Object?>) t! as String];
+      teaches = <String>[for (final Object? t in json['teaches']! as List<Object?>) t! as String],
+      predict = json['predict'] == null ? null : ShowPredict._(_map(json['predict']));
 
   /// The host's lines by role (`open`, `key`, `handover`).
   final Map<String, Spoken> lines;
   final List<ShowStep> steps;
+
+  /// The question the host asks before it runs the example (predict, then watch), or null: the child's guess is a touch and is never scored.
+  final ShowPredict? predict;
 
   /// The words the Show says, as the skill's items label them.
   final List<String> teaches;
@@ -1394,7 +1463,26 @@ class BuildPatternActivity extends Activity {
           c! as String,
       ],
       wrongTag = _map(json['answer'])['misconception'] as String?,
+      given = <int, String>{
+        for (final Map<String, Object?> g in _maps(_map(json['scene'])['given']))
+          g['cell']! as int: g['face']! as String,
+      },
+      pieceTags = <String, String>{
+        for (final Map<String, Object?> t in _maps(_map(json['answer'])['pieceTags']))
+          t['piece']! as String: t['misconception']! as String,
+      },
       super._();
+
+  /// Places that are filled when the item opens (step 2.2): the cells of a pattern to extend, or a row with a mistake in it to fix. A given
+  /// cell that is right stays; a wrong one may be replaced (the child touches it, or drops a picture on it). Cell number to picture.
+  final Map<int, String> given;
+
+  /// The tag of a picture put in a place where it does not belong (`answer.pieceTags`, the way a shape builder has it): the cat laid first where
+  /// the dog goes is M-PAT-NEXT. A wrong pattern is written with the tag of the picture in its first wrong place, else the item's own.
+  final Map<String, String> pieceTags;
+
+  /// A given cell that is as the pattern needs it: it cannot be taken out.
+  bool isLocked(int cell) => given[cell] != null && cell < sequence.length && given[cell] == sequence[cell];
 
   /// The pattern to copy (may be empty), the number of places, the pictures to choose from and the right order.
   /// A face is `asset:id` (a picture) or, in a language course, `txt:` and a letter, a unit or a word (LS01 order tiles).
@@ -1416,7 +1504,7 @@ class BuildPatternActivity extends Activity {
   int get optionCount => 0;
 
   @override
-  Set<String> get engineTags => <String>{?wrongTag};
+  Set<String> get engineTags => <String>{?wrongTag, ...pieceTags.values};
 }
 
 /// The number-line template (T09): put a marker on a number, or say where it lands after its hops.
@@ -1437,6 +1525,10 @@ class NumberLineActivity extends Activity {
       tickStep = (_map(json['scene'])['tickStep'] as int?) ?? 1,
       wrongTag = _map(json['answer'])['misconception'] as String?,
       mirrorTag = _map(json['answer'])['mirrorMisconception'] as String?,
+      classifiers = <String, String>{
+        for (final Map<String, Object?> c in _maps(_map(json['answer'])['classifiers']))
+          c['when']! as String: c['misconception']! as String,
+      },
       super._();
 
   final int from;
@@ -1468,11 +1560,50 @@ class NumberLineActivity extends Activity {
   /// The tag for the mirror of the right answer: the child who runs the line from right to left.
   final String? mirrorTag;
 
+  /// The tag of each kind of wrong touch the item can tell (`reversed_number`, `restart_at_ten`, `plus_one_for_ten`; see [wrongTagFor]).
+  final Map<String, String> classifiers;
+
+  /// Whether a touch goes to the nearest drawn tick: a line with ticks of ten whose right answer is on a tick (a hop of ten, a number of tens).
+  /// A line whose answer is between its ticks (an estimate, "a little after 20") is touched anywhere.
+  bool get snapsToTicks => tickStep > 1 && (target - from) % tickStep == 0 && tolerance == 0;
+
+  /// The number a touch at [n] means: the nearest drawn tick on a line that [snapsToTicks], else [n] itself.
+  int snapped(int n) {
+    if (!snapsToTicks) return n;
+    final int k = ((n - from) / tickStep).round();
+    return (from + k * tickStep).clamp(from, to);
+  }
+
+  /// The tag a wrong touch at [n] shows, the most exact first: the mirror of the right tick (the line read from the right), the number written
+  /// the other way round (13 for 31), counting on past a ten as if the count began again (19 and one more is ten), one step for a hop of ten;
+  /// else the item's own. Null when the item has no tag for it.
+  String? wrongTagFor(int n) {
+    if ((n - (from + to - target)).abs() <= tolerance && mirrorTag != null) return mirrorTag;
+    String? tag(String when) => classifiers[when];
+    final int? first = start;
+    if (target >= 10 && target != reverseOf(target) && n == reverseOf(target)) {
+      final String? t = tag('reversed_number');
+      if (t != null) return t;
+    }
+    if (jump && first != null && target % 10 == 0 && first % 10 != 0 && (n == 10 || n == target - 10)) {
+      final String? t = tag('restart_at_ten');
+      if (t != null) return t;
+    }
+    if (jump && first != null && hops.length == 1 && hops.first.abs() == 10 && n == first + hops.first.sign) {
+      final String? t = tag('plus_one_for_ten');
+      if (t != null) return t;
+    }
+    return wrongTag;
+  }
+
+  /// A two-digit number written the other way round (31 for 13); a number of three digits or more is left as it is.
+  static int reverseOf(int n) => n >= 10 && n < 100 ? (n % 10) * 10 + n ~/ 10 : n;
+
   @override
   int get optionCount => 0;
 
   @override
-  Set<String> get engineTags => <String>{?wrongTag, ?mirrorTag};
+  Set<String> get engineTags => <String>{?wrongTag, ?mirrorTag, ...classifiers.values};
 }
 
 /// One kind of thing on a pan of a balance, how many there are and what one weighs (in blocks).
@@ -1659,6 +1790,10 @@ class ShopPayActivity extends Activity {
       ],
       wrongTag = _map(json['answer'])['misconception'] as String?,
       countTag = _map(json['answer'])['countMisconception'] as String?,
+      classifiers = <String, String>{
+        for (final Map<String, Object?> c in _maps(_map(json['answer'])['classifiers']))
+          c['when']! as String: c['misconception']! as String,
+      },
       super._();
 
   final String itemSprite;
@@ -1670,11 +1805,33 @@ class ShopPayActivity extends Activity {
   final String? wrongTag;
   final String? countTag;
 
+  /// The tag of a wrong payment that shows how the child read the price (`paid_digits`, `paid_reversed`; see [wrongTagFor]).
+  final Map<String, String> classifiers;
+
+  /// The tag a payment of [paid] agorot with [coins] coins shows when it is wrong: as many coins as the price says (M-MONEY-COUNT), the digits
+  /// of the price paid as if each were a shekel (34 paid as 3 and 4: 7 shekels), the price written the other way round (43 for 34); else the
+  /// item's own. Only a price of whole shekels with two digits has a digit to misread.
+  String? wrongTagFor(int paid, int coins) {
+    if (coins * 100 == price && countTag != null) return countTag;
+    if (price % 100 == 0 && price >= 1000 && price < 10000) {
+      final int shekels = price ~/ 100;
+      final int digits = shekels ~/ 10 + shekels % 10;
+      if (paid % 100 == 0 && paid ~/ 100 == digits && classifiers['paid_digits'] != null) {
+        return classifiers['paid_digits'];
+      }
+      final int reversed = (shekels % 10) * 10 + shekels ~/ 10;
+      if (reversed != shekels && paid == reversed * 100 && classifiers['paid_reversed'] != null) {
+        return classifiers['paid_reversed'];
+      }
+    }
+    return wrongTag;
+  }
+
   @override
   int get optionCount => 0;
 
   @override
-  Set<String> get engineTags => <String>{?wrongTag, ?countTag};
+  Set<String> get engineTags => <String>{?wrongTag, ?countTag, ...classifiers.values};
 }
 
 /// The clock template (T18): set the hands to a time.
@@ -2259,14 +2416,22 @@ class GiveNActivity extends Activity {
       sourceSprite = _map(_map(json['scene'])['source'])['sprite']! as String,
       targetSprite = _map(_map(json['scene'])['target'])['sprite']! as String,
       frame = _map(json['scene'])['frame'] == true,
+      prefilled = (_map(json['scene'])['prefilled'] as int?) ?? 0,
       classifiers = <String, String>{
         for (final Map<String, Object?> c in _maps(_map(json['answer'])['classifiers']))
           c['when']! as String: c['misconception']! as String,
       },
       super._();
 
-  /// How many the child must give.
+  /// How many the child must give: the ones taken from the pile, not those already in the frame ([prefilled]).
   final int n;
+
+  /// A frame that starts with this many objects already in its first cells (step 2.2: "ten and how many more?", "five and three"): they cannot
+  /// be taken out, the child adds to them, and [n] is how many it adds. The pile holds [sourceCount] to take from.
+  final int prefilled;
+
+  /// The objects the stage draws: the ones in the frame to begin with and the ones in the pile.
+  int get cellCount => prefilled + sourceCount;
   final int sourceCount;
   final String sourceSprite;
   final String targetSprite;

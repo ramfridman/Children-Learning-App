@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "col.name.grey.flower",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "colors",
@@ -45,8 +45,9 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:bloom_blue",
-        "label": "פֶּרַח כָּחֹל"
+        "sprite": "asset:bloom_white",
+        "label": "פֶּרַח לָבָן",
+        "misconception": "M-COL-NAME"
       },
       {
         "id": "o3",

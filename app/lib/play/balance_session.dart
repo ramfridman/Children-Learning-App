@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ import 'hints/tap_plans.dart' show inkedSvg;
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
+import 'host_moves.dart';
+import 'lesson_arc.dart' show ArcPart, ArcStep;
 import 'template_session.dart';
 
 /// The balance template (T08). A scale with two pans. In `compare` mode the child says which pan is heavier, or that they are the
@@ -53,8 +56,16 @@ class BalanceSession extends TemplateSession {
   Size _size = Size.zero;
   ActivitySpec _spec = ActivitySpec.phone;
 
-  int get leftWeight => BalanceActivity.weightOf(activity.left);
-  int get rightWeight => BalanceActivity.weightOf(activity.right) + added;
+  /// A Show that compares two pans puts their things on one group at a time (the host's, then the child's): how many groups of each pan are on it
+  /// now. Any other activity has all of them from the start.
+  int leftGroups = 0;
+  int rightGroups = 0;
+  bool get _reveals => activity.isShow && !activity.weigh;
+  List<PanGroup> get leftShown => _reveals ? activity.left.take(leftGroups).toList() : activity.left;
+  List<PanGroup> get rightShown => _reveals ? activity.right.take(rightGroups).toList() : activity.right;
+
+  int get leftWeight => BalanceActivity.weightOf(leftShown);
+  int get rightWeight => BalanceActivity.weightOf(rightShown) + added;
 
   /// How far the beam leans, in radians (negative: the left pan is lower). Clamped at about 18 degrees, so that a heavy pan
   /// never looks like it falls off.
@@ -121,10 +132,89 @@ class BalanceSession extends TemplateSession {
     });
   }
 
+  // ---- the host's part (a Show, the lead of a Together item) ----
+
+  /// The fingertip place on the plus tile of a Show (its only tile) or of a weighing.
+  Offset _plusTip() =>
+      _spec.tileTip(activity.isShow ? 1 : 2, activity.isShow ? 0 : 1, slot: 96, slop: 12, rtl: false);
+
+  bool get _canDraw => !_size.isEmpty;
+
+  /// One thing the host puts on a pan: a block on the light pan of a weighing, or the next group of a pan that a Show compares.
+  HostMove _putMove(ShowStep? step) => HostMove(_canDraw ? _plusTip() : null, () {
+    if (activity.weigh) {
+      added++;
+    } else if (step?.pan == 'left') {
+      leftGroups++;
+    } else {
+      rightGroups++;
+    }
+  }, rest: 650);
+
+  /// The blocks of a weighing step: one move for each block, a hand that presses the plus tile.
+  List<HostMove> _movesOf(ShowStep s) => <HostMove>[
+    for (int i = 0; i < (activity.weigh ? (s.block ?? 1) : 1); i++) _putMove(s),
+  ];
+
+  @override
+  void startHost() {
+    final ArcStep? step = controller.step;
+    if (step == null || hosting) return;
+    if (activity.isShow) {
+      unawaited(
+        playShow(
+          activity.show!,
+          move: (ShowStep s, {required bool fast}) => hostTour(_hint, _movesOf(s), fast: fast),
+        ),
+      );
+    } else if (step.part == ArcPart.together && controller.leading && step.lead > 0 && activity.weigh) {
+      unawaited(
+        playLead(<Future<void> Function()>[
+          for (int i = 0; i < step.lead; i++) () => hostTour(_hint, <HostMove>[_putMove(null)]),
+        ]),
+      );
+    }
+  }
+
+  /// A touch on a reminder skips what the host still has to do: its blocks (or groups) are on the pans, and the child's step is left.
+  @override
+  void onScreenTouch() {
+    if (!activity.isShow) return;
+    skipHost(() {
+      _hint.clear();
+      for (final ShowStep s in activity.show!.hostSteps) {
+        for (final HostMove m in _movesOf(s)) {
+          m.act();
+        }
+      }
+    });
+  }
+
+  /// A Show, and the child presses the plus tile: its block (or group) goes on and the Show ends. Nothing is written.
+  void _showPut() {
+    final ShowStep child = activity.show!.childStep;
+    _busy = true;
+    if (activity.weigh) {
+      added += child.block ?? 1;
+    } else if (child.pan == 'left') {
+      leftGroups++;
+    } else {
+      rightGroups++;
+    }
+    ring = AnswerState.correct;
+    notify();
+    finishShow();
+  }
+
   Future<void> addBlock() async {
     _endDemo();
     _clearHint();
-    if (_busy || ring == AnswerState.correct || !activity.weigh) return;
+    if (_busy || hosting || ring == AnswerState.correct) return;
+    if (activity.isShow) {
+      _showPut();
+      return;
+    }
+    if (!activity.weigh) return;
     added++;
     notify();
     final int need = int.parse(activity.result);
@@ -141,7 +231,7 @@ class BalanceSession extends TemplateSession {
   void removeBlock() {
     _endDemo();
     _clearHint();
-    if (_busy || ring == AnswerState.correct || added == 0) return;
+    if (_busy || hosting || ring == AnswerState.correct || added == 0) return;
     added--;
     notify();
   }
@@ -150,7 +240,12 @@ class BalanceSession extends TemplateSession {
   void onReset() {
     _run++;
     _clearHint();
-    added = 0;
+    leftGroups = 0;
+    rightGroups = 0;
+    // The blocks the host put on in the lead of a Together item stay on.
+    added = activity.weigh && controller.step?.part == ArcPart.together && !controller.leading
+        ? controller.step!.lead
+        : 0;
     chosen = null;
     revealed = false;
     litPan = null;
@@ -378,7 +473,18 @@ class BalanceSession extends TemplateSession {
       textDirection: TextDirection.ltr,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: activity.weigh
+        children: activity.isShow
+            // A Show has one tile: "put it on" (the child's last block, or the group of the pan that is still empty).
+            ? <Widget>[
+                AnswerTile(
+                  key: const Key('balance-plus'),
+                  semanticLabel: 'plus',
+                  size: 72,
+                  onPressed: addBlock,
+                  child: const Icon(Icons.add_rounded, size: 44, color: TokenColors.ink),
+                ),
+              ]
+            : activity.weigh
             ? <Widget>[
                 AnswerTile(
                   key: const Key('balance-minus'),
@@ -431,8 +537,8 @@ class _ScaleStage extends StatelessWidget {
     final _ScaleBox g = _ScaleBox(size);
     // What lies on each pan, in order, and one size for every picture of both pans (the most a pan will hold), so that a thing is
     // as big on one pan as on the other: the size of a picture never says how heavy it is.
-    final List<String> left = _things(a.left, 0);
-    final List<String> right = _things(a.right, s.added);
+    final List<String> left = _things(s.leftShown, 0);
+    final List<String> right = _things(s.rightShown, s.added);
     final int most = math.max(
       left.length,
       _things(a.right, 0).length + (a.weigh ? int.tryParse(a.result) ?? 0 : 0),

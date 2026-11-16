@@ -17,11 +17,13 @@
   "items": [
     "b15.numa01.2",
     "b15.numa01.3",
-    "b15.numa01.4",
-    "b15.numa01.5",
     "b15.numa02.1",
     "b15.numa02.2",
     "b15.numa02.3",
+    "b15.numa01.4",
+    "b15.numa01.5",
+    "next.after.1",
+    "next.after.5",
     "b15.numa02.4"
   ],
   "estimatedMinutes": 5,
@@ -34,5 +36,49 @@
         "v": "כׇּל הַכָּבוֹד! סְפַרְתֶּם מֵאַחַת עַד עֶשֶׂר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-a-01",
+    "secondShow": {
+      "id": "show.num-a-02",
+      "before": "b15.numa02.1"
+    },
+    "together": [
+      {
+        "id": "b15.numa01.2",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.count",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b15.numa01.3",
+      "b15.numa02.1",
+      "b15.numa02.2",
+      "b15.numa02.3",
+      "b15.numa01.4",
+      "b15.numa01.5",
+      "next.after.1",
+      "next.after.5"
+    ],
+    "use": [
+      "b15.numa02.4"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

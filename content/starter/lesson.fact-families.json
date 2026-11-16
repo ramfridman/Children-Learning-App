@@ -14,14 +14,15 @@
     "MATH-C-02"
   ],
   "items": [
+    "c.mathc02.4",
+    "c.mathc02.5",
     "c.mathc02.1",
     "c.mathc02.2",
     "c.mathc02.3",
-    "c.mathc02.4",
-    "c.mathc02.5",
     "c.mathc02.6",
     "c.mathc02.7",
-    "c.mathc02.8"
+    "c.mathc02.8",
+    "c.mathc02.16"
   ],
   "estimatedMinutes": 8,
   "sequence": 104,
@@ -33,5 +34,45 @@
         "v": "כׇּל הַכָּבוֹד! חִבּוּר וְחִסּוּר הֵם מִשְׁפָּחָה."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-c-02",
+    "recall": [
+      "c.mathc01.1"
+    ],
+    "together": [
+      {
+        "id": "c.mathc02.4",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.scale",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מִסְתַּכְּלִים עַל הַמֹּאזְנַיִם, וּמוֹסִיפִים לְאַט."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.mathc02.5",
+      "c.mathc02.1",
+      "c.mathc02.2",
+      "c.mathc02.3",
+      "c.mathc02.6",
+      "c.mathc02.7",
+      "c.mathc02.8",
+      "c.mathc02.16"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מִסְתַּכֶּלֶת. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

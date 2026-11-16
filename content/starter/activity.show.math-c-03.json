@@ -1,0 +1,156 @@
+{
+  "schema": "activity/v1",
+  "id": "show.math-c-03",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "shop_pay",
+  "templateVersion": "1.1",
+  "domain": "math",
+  "band": "C",
+  "skills": [
+    {
+      "id": "MATH-C-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.pnina.show.math_c_03.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "itemSprite": "asset:duck",
+    "itemCount": 1,
+    "price": 7000,
+    "purse": [
+      {
+        "kind": "s10",
+        "count": 8
+      }
+    ]
+  },
+  "answer": {
+    "type": "pay"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.pnina.show.math_c_03.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַרְבַּע עֲשָׂרוֹת וְעוֹד שָׁלוֹשׁ עֲשָׂרוֹת."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.pnina.show.math_c_03.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.pnina.show.math_c_03.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אַרְבַּע עֲשָׂרוֹת וְעוֹד שָׁלוֹשׁ עֲשָׂרוֹת."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.pnina.show.math_c_03.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: עוֹד עֲשָׂרָה."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "coin": "s10",
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "coin": "s10"
+      },
+      {
+        "by": "host",
+        "coin": "s10"
+      },
+      {
+        "by": "child",
+        "coin": "s10"
+      }
+    ],
+    "teaches": [
+      "עֲשָׂרוֹת"
+    ]
+  }
+}

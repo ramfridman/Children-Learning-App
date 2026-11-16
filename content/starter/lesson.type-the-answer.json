@@ -25,7 +25,13 @@
     "c.mathc02.14",
     "c.mathc02.15",
     "c.mathc03.13",
-    "c.mathc03.14"
+    "c.mathc03.14",
+    "c.mathc01.32",
+    "c.mathc01.1",
+    "c.mathc02.11",
+    "c.mathc02.16",
+    "c.mathc03.9",
+    "c.mathc03.10"
   ],
   "estimatedMinutes": 7,
   "sequence": 108,
@@ -37,5 +43,56 @@
         "v": "כׇּל הַכָּבוֹד! כְּתַבְתֶּם אֶת הַתְּשׁוּבוֹת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-c-01",
+    "secondShow": {
+      "id": "show.math-c-02",
+      "before": "c.mathc02.13"
+    },
+    "recall": [
+      "b.mathb08.1"
+    ],
+    "together": [
+      {
+        "id": "c.mathc01.27",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.mathc01.28",
+      "c.mathc01.29",
+      "c.mathc01.30",
+      "c.mathc01.31",
+      "c.mathc02.13",
+      "c.mathc02.14",
+      "c.mathc02.15",
+      "c.mathc03.13",
+      "c.mathc03.14",
+      "c.mathc01.32",
+      "c.mathc01.1",
+      "c.mathc02.11",
+      "c.mathc02.16",
+      "c.mathc03.9",
+      "c.mathc03.10"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק."
+        }
+      ]
+    }
   }
 }

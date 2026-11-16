@@ -72,20 +72,22 @@ const Map<String, String> supportedTemplates = <String, String>{
   // 1.1: the `boxes` mode of LS03 (L5-3): a counter for each unit, then the colour, stress and which-box steps.
   'sound_boxes': '1.1',
   'count_tap': '1.1',
-  // 1.1: `scene.frame`, the target as a ten-frame (M10).
-  'give_n': '1.1',
+  // 1.1: `scene.frame`, the target as a ten-frame (M10). 1.2: `scene.prefilled`, a frame that starts with objects in it (M11 Stage 2, step 2.2).
+  'give_n': '1.2',
   'flash': '1.0',
   'sort_drag': '1.1',
-  'build_pattern': '1.1',
+  // 1.2: `scene.given` (places filled when the item opens) and `answer.pieceTags` (M11 Stage 2, step 2.2).
+  'build_pattern': '1.2',
   'robot_path': '1.0',
   'shape_builder': '1.0',
-  // 1.1: `tickStep` and a `tolerance` for a line placed by estimate (M10, X5).
-  'number_line': '1.1',
+  // 1.1: `tickStep` and a `tolerance` for a line placed by estimate (M10, X5). 1.2: `answer.classifiers`, a tag for each kind of wrong touch.
+  'number_line': '1.2',
   'balance': '1.0',
   // 1.1: the language fields of L5-1 (text cells, the model picture) and, for M10, the signs `<` `>` `(` `)` and numbers to 10,000 in a cell.
   'spot_error': '1.1',
   'match_pairs': '1.1',
-  'shop_pay': '1.0',
+  // 1.1: `answer.classifiers`, a tag for a price read by its digits or written the other way round (M11 Stage 2).
+  'shop_pay': '1.1',
   'clock_set': '1.0',
   'trace': '2.0',
   'say_it': '1.0',
@@ -662,7 +664,9 @@ const SObject _lessonParts = SObject(<String, SField>{
     ),
     required: false,
   ),
-  'alone': SField(SArray(_id, maxItems: 12)),
+  // The pool: a visit serves at most 9 of it, the rest wait for the next lesson and for revisits (M11-stage2 section 2.5), so it may be longer than a
+  // flat lesson (16: the keypad lesson of Band C).
+  'alone': SField(SArray(_id, maxItems: 16)),
   'use': SField(SArray(_id, maxItems: 2), required: false),
   // What the host says as the companion takes over, when Alone begins.
   'handover': SField(_spoken, required: false),
@@ -677,7 +681,8 @@ const SObject lessonSchema = SObject(<String, SField>{
   'band': SField(SEnum(bands)),
   'title': SField(_caption),
   'skills': SField(SArray(_skill, minItems: 1, maxItems: 10)),
-  'items': SField(SArray(_id, minItems: 1, maxItems: 12)),
+  // 12 for a flat lesson; a lesson in parts lists its pool too (up to 16, see `_lessonParts`), which the validator keeps to its parts.
+  'items': SField(SArray(_id, minItems: 1, maxItems: 16)),
   'estimatedMinutes': SField(SInt(min: 1, max: 30)),
   'celebration': SField(_spoken),
   // The demonstration the lesson opens with, for a lesson whose items have base-ten blocks, and the line said at its end. Optional.
@@ -693,6 +698,9 @@ const SObject lessonSchema = SObject(<String, SField>{
   // Use. `items` still lists the lesson's own items (together, alone, use) for a reader that does not know the parts, and a Show is never among
   // them. `alone` is a pool: how many of it a visit serves, and in which order, is the app's (the child's level and look decide).
   'parts': SField(_lessonParts, required: false),
+  // A lesson of a land in a room that is not in parts yet says why: its Show waits for something (a template, a drawing, a Stage 3 feature). The
+  // arc build writes it; V1 asks for either `parts` or this (M11-stage2 section 11.5).
+  'partsWait': SField(SString(minLength: 8, maxLength: 200), required: false),
   // The place of the lesson on the path of its land (M9): the island plays the first lesson, in this order, that the
   // child has not finished yet. Lessons without one come last.
   'sequence': SField(SInt(min: 1, max: 500), required: false),
@@ -1133,6 +1141,42 @@ const SObject _showStep = SObject(<String, SField>{
   'detail': SField(SString(minLength: 2, maxLength: 12, pattern: r'[a-z]{2,12}'), required: false),
   // A tracing: the side of the path the move draws, counted from 1 (see `traceSideCount`: corner to corner, or a quarter of a circle).
   'segment': SField(SInt(min: 1, max: 12), required: false),
+  // The move words of the other templates (see `ShowStep`): a number line's `hop` (negative to the left), `point` and `place`; give N's `move`
+  // and count and tap's `touch` (how many things in one run); a pattern's `cell` (with its `piece`); a balance's `block`, `put` and `pan`; a
+  // shop's `coin`; a robot's `arrow`; a clock's `hand` turned `to` an hour.
+  'hop': SField(SInt(min: -20, max: 20), required: false),
+  'point': SField(SInt(min: 0, max: 100), required: false),
+  'place': SField(SInt(min: 0, max: 100), required: false),
+  'move': SField(SInt(min: 1, max: 20), required: false),
+  'touch': SField(SInt(min: 1, max: 20), required: false),
+  'cell': SField(SInt(min: 0, max: 7), required: false),
+  'block': SField(SInt(min: 1, max: 20), required: false),
+  'to': SField(SInt(min: 1, max: 12), required: false),
+  'put': SField(SString(minLength: 2, maxLength: 40, pattern: r'[a-z0-9_]{2,40}'), required: false),
+  'pan': SField(SEnum(<String>['left', 'right']), required: false),
+  'coin': SField(
+    SEnum(<String>['a10', 'h50', 's1', 's2', 's5', 's10', 'n20', 'n50', 'n100', 'n200']),
+    required: false,
+  ),
+  'arrow': SField(SEnum(<String>['up', 'down', 'left', 'right']), required: false),
+  'hand': SField(SEnum(<String>['short', 'long']), required: false),
+});
+
+/// What the host asks before it runs an example (M11-stage2 section 2.1, "predict, then watch"): its line, and at most three answers the child may
+/// touch as a guess. A guess is never scored. A Show of a pattern, a robot or a count that asks "what comes next?" has two or three of them.
+const SObject _predict = SObject(<String, SField>{
+  // The question as a line of its own, or none: the Show's opening line is then the question.
+  'line': SField(_spoken, required: false),
+  'choices': SField(
+    SArray(
+      SObject(<String, SField>{
+        'id': SField(_optionId),
+        'label': SField(SString(minLength: 1, maxLength: 40)),
+      }),
+      maxItems: 3,
+      uniqueKey: 'id',
+    ),
+  ),
 });
 
 /// A Show: an activity with `purpose: show` that plays on the skill's hands-on template, unscored. The host does the `steps` one after
@@ -1154,6 +1198,8 @@ const SObject _show = SObject(<String, SField>{
   ),
   'steps': SField(SArray(_showStep, minItems: 2, maxItems: 8)),
   'teaches': SField(SArray(SString(minLength: 1, maxLength: 40), maxItems: 12)),
+  // A predict-then-watch skill: the host asks first, the child may guess, then the host runs the example.
+  'predict': SField(_predict, required: false),
 });
 
 Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>{
@@ -1478,6 +1524,7 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
       // Asked once every object has been touched: "how many?".
       'answerPrompt': const SField(_spoken),
       'traceClassifiers': const SField(_traceClassifiers),
+      'show': const SField(_show, required: false),
     }),
   ),
   // T14: a group is shown for a moment and covered; the child says how many without counting. Every option is a numeral.
@@ -1563,7 +1610,8 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
         SObject(<String, SField>{
           'background': SField(_asset, required: false),
           'cols': SField(SInt(min: 3, max: 6)),
-          'rows': SField(SInt(min: 2, max: 4)),
+          // One row is a line of squares (direct control, "one arrow, one square": CS-A-03).
+          'rows': SField(SInt(min: 1, max: 4)),
           'robot': SField(
             SObject(<String, SField>{
               'col': SField(SInt(min: 0, max: 5)),
@@ -1591,6 +1639,7 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'misconception': SField(_tag, required: false),
         }),
       ),
+      'show': const SField(_show, required: false),
     }),
   ),
   // T09: a number line from `from` to `to`, drawn left to right whatever the language. `place`: put the marker on a number.
@@ -1624,8 +1673,22 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'misconception': SField(_tag, required: false),
           // The tag for a child who runs the line from right to left (the mirror of the right answer).
           'mirrorMisconception': SField(_tag, required: false),
+          // The tag of each kind of wrong touch the item can tell: the number written the other way round (13 for 31), a count that starts again
+          // at the ten (19 and one more is ten), one step for a hop of ten. The most exact that fits wins; `misconception` is the rest.
+          'classifiers': SField(
+            SArray(
+              SObject(<String, SField>{
+                'when': SField(SEnum(<String>['reversed_number', 'restart_at_ten', 'plus_one_for_ten'])),
+                'misconception': SField(_tag),
+              }),
+              maxItems: 3,
+              uniqueKey: 'when',
+            ),
+            required: false,
+          ),
         }),
       ),
+      'show': const SField(_show, required: false),
     }),
   ),
   // T08: a balance scale. `compare`: which pan is heavier, or are they the same? `balance`: add blocks to the empty pan until
@@ -1652,6 +1715,7 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'misconception': SField(_tag, required: false),
         }),
       ),
+      'show': const SField(_show, required: false),
     }),
   ),
   // T21: a row made by a friend that has one mistake in it; the child touches the mistake.
@@ -1757,6 +1821,17 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'palette': SField(SArray(_cellFace, minItems: 2, maxItems: 6)),
           // A story line (1.1): the line of each picture as a clip, in the order of the palette (hint level 1 plays them as it lights them).
           'clips': SField(SArray(_vo, minItems: 2, maxItems: 6), required: false),
+          // Places that are filled when the item opens (step 2.2): the cells of a pattern to extend, or a row with a mistake in it to fix. A
+          // given cell that is right stays; a wrong one may be replaced. `cell` counts from 0.
+          'given': SField(
+            SArray(
+              SObject(<String, SField>{'cell': SField(SInt(min: 0, max: 7)), 'face': SField(_cellFace)}),
+              minItems: 1,
+              maxItems: 8,
+              uniqueKey: 'cell',
+            ),
+            required: false,
+          ),
         }),
       ),
       'answer': const SField(
@@ -1767,8 +1842,19 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           // of each place's picture in the right order.
           'order': SField(SArray(SInt(min: 0, max: 5), minItems: 2, maxItems: 6), required: false),
           'misconception': SField(_tag, required: false),
+          // The tag of a picture put where it does not belong (step 2.2, the way a shape builder has it): the cat laid first where the dog goes.
+          // A wrong pattern is written with the tag of the picture in its first wrong place; the item's own tag is the rest.
+          'pieceTags': SField(
+            SArray(
+              SObject(<String, SField>{'piece': SField(_cellFace), 'misconception': SField(_tag)}),
+              maxItems: 6,
+              uniqueKey: 'piece',
+            ),
+            required: false,
+          ),
         }),
       ),
+      'show': const SField(_show, required: false),
     }),
   ),
   'give_n' => SObject(
@@ -1783,6 +1869,9 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           // The target is a ten-frame (two for more than ten) instead of the picture: the objects given sit in its cells, row by row
           // from the left (M10, NUM-B-09: fill the ten-frame). The `target` picture is then only the frame's name for the pack.
           'frame': SField(SBool(), required: false),
+          // A frame that starts with this many objects in its first cells (step 2.2: "ten and how many more?"): the pile holds the ones to
+          // add, and `answer.n` is the count in all. Only with a frame.
+          'prefilled': SField(SInt(min: 1, max: 19), required: false),
         }),
       ),
       'answer': const SField(
@@ -1800,6 +1889,7 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           ),
         }),
       ),
+      'show': const SField(_show, required: false),
     }),
   ),
   // T16: two rows of faces; the child touches one in the top row and one in the bottom row, and a right pair stays together.
@@ -1849,7 +1939,8 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
                 ),
                 'count': SField(SInt(min: 1, max: 8)),
               }),
-              minItems: 2,
+              // One kind is enough to pay with (eight ten-shekel coins: whole tens, MATH-C-03).
+              minItems: 1,
               maxItems: 8,
               uniqueKey: 'kind',
             ),
@@ -1862,8 +1953,22 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'misconception': SField(_tag, required: false),
           // The tag for a child who puts as many coins as the price says (three coins for three shekels).
           'countMisconception': SField(_tag, required: false),
+          // The tag of a wrong payment that shows how the price was read: the digits paid as if each were a shekel (34 paid as 3 and 4), the
+          // price written the other way round (43 for 34). The count tag comes first; `misconception` is the rest.
+          'classifiers': SField(
+            SArray(
+              SObject(<String, SField>{
+                'when': SField(SEnum(<String>['paid_digits', 'paid_reversed'])),
+                'misconception': SField(_tag),
+              }),
+              maxItems: 2,
+              uniqueKey: 'when',
+            ),
+            required: false,
+          ),
         }),
       ),
+      'show': const SField(_show, required: false),
     }),
   ),
   // T18: set the hands of an analog clock to a time. Whole hours (`minute` 0) or half hours (30); the long hand follows.
@@ -1886,6 +1991,7 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'handsMisconception': SField(_tag, required: false),
         }),
       ),
+      'show': const SField(_show, required: false),
     }),
   ),
   // T04: trace a numeral or a shape. Points are in a 100 x 100 box; a stroke is read from its first point to its last.

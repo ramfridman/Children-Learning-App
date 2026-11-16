@@ -1,0 +1,155 @@
+{
+  "schema": "activity/v1",
+  "id": "show.col-b-06",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "build_pattern",
+  "templateVersion": "1.2",
+  "domain": "colors",
+  "band": "B",
+  "skills": [
+    {
+      "id": "COL-B-06",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.goni.show.col_b_06.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַצְּבָעִים שֶׁל הַקֶּשֶׁת."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "slots": 3,
+    "palette": [
+      "asset:ball_orange",
+      "asset:ball_red",
+      "asset:ball_yellow"
+    ]
+  },
+  "answer": {
+    "type": "build",
+    "sequence": [
+      "asset:ball_red",
+      "asset:ball_orange",
+      "asset:ball_yellow"
+    ]
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.goni.show.col_b_06.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אָדֹם, כָּתֹם, צָהֹב."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "הַצְּבָעִים שֶׁל הַקֶּשֶׁת."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.goni.show.col_b_06.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַצְּבָעִים שֶׁל הַקֶּשֶׁת."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.goni.show.col_b_06.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אָדֹם, כָּתֹם, צָהֹב."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.goni.show.col_b_06.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַצָּהֹב."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "piece": "asset:ball_red",
+        "cell": 0,
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "piece": "asset:ball_orange",
+        "cell": 1
+      },
+      {
+        "by": "child",
+        "piece": "asset:ball_yellow",
+        "cell": 2
+      }
+    ],
+    "teaches": []
+  }
+}

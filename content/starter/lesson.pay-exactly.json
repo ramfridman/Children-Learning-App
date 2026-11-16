@@ -30,5 +30,41 @@
         "v": "כׇּל הַכָּבוֹד! שִׁלַּמְתֶּם בְּדִיּוּק."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-17",
+    "recall": [
+      "x.mathb16.1"
+    ],
+    "together": [
+      {
+        "id": "x.mathb17.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.pay",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים אֶת הַמַּטְבְּעוֹת בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "x.mathb17.2",
+      "x.mathb17.3",
+      "x.mathb17.4",
+      "x.mathb17.5"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

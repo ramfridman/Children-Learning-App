@@ -18,6 +18,7 @@
     "c.mathc02.16",
     "c.mathc02.17",
     "c.mathc02.18",
+    "c.mathc02.1",
     "c.mathc02.19"
   ],
   "estimatedMinutes": 8,
@@ -30,5 +31,44 @@
         "v": "כׇּל הַכָּבוֹד! בְּחִסּוּר הַסֵּדֶר חָשׁוּב."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-c-02",
+    "recall": [
+      "c.mathc01.1"
+    ],
+    "together": [
+      {
+        "id": "c.mathc02.12",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.scale",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מִסְתַּכְּלִים עַל הַמֹּאזְנַיִם, וּמוֹסִיפִים לְאַט."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.mathc02.16",
+      "c.mathc02.17",
+      "c.mathc02.18",
+      "c.mathc02.1"
+    ],
+    "use": [
+      "c.mathc02.19"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק."
+        }
+      ]
+    }
   }
 }

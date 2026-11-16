@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "col.find.yellow.balloon",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "colors",
@@ -39,8 +39,9 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:balloon_green",
-        "label": "בָּלוֹן יָרֹק"
+        "sprite": "asset:balloon_orange",
+        "label": "בָּלוֹן כָּתֹם",
+        "misconception": "M-COL-NAME"
       },
       {
         "id": "o2",
@@ -70,6 +71,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-NAME",
+        "vo": "vo:fb.col_name",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַצְּבָעִים דּוֹמִים. בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט."
+          }
+        ]
+      },
       {
         "when": "misconception:M-COL-ONEATTR",
         "vo": "vo:fb.col_oneattr",

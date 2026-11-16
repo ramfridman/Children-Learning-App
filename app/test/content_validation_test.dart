@@ -507,11 +507,11 @@ final List<Broken> _cases = <Broken>[
     'neither recorded nor listed in voPending',
   ),
   Broken(
-    'lesson: thirteen items',
+    'lesson: seventeen items',
     (SamplePack p) =>
-        p.doc(lessonFile)['items'] = <Object?>[for (int i = 0; i < 13; i++) 'count.butterflies.3'],
+        p.doc(lessonFile)['items'] = <Object?>[for (int i = 0; i < 17; i++) 'count.butterflies.3'],
     '$lessonFile › items',
-    '13 items is outside 1 to 12',
+    '17 items is outside 1 to 16',
   ),
   Broken(
     'lesson: a skill that is not in the pack',

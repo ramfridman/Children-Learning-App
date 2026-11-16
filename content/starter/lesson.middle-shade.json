@@ -15,8 +15,8 @@
   ],
   "items": [
     "b.colb02.7",
-    "b.colb02.8",
     "b.colb02.9",
+    "b.colb02.8",
     "b.colb02.10",
     "b.colb02.11",
     "b.colb02.12"
@@ -31,5 +31,44 @@
         "v": "מְצֻיָּן! מְצָאתֶם אֶת הָאֶמְצַע."
       }
     ]
+  },
+  "parts": {
+    "show": "show.col-b-02",
+    "recall": [
+      "b15.cola03.3"
+    ],
+    "together": [
+      {
+        "id": "b.colb02.7",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.goni.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מִסְתַּכְּלִים עַל הַצְּבָעִים לְאַט."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.colb02.9",
+      "b.colb02.8",
+      "b.colb02.10",
+      "b.colb02.11"
+    ],
+    "use": [
+      "b.colb02.12"
+    ],
+    "handover": {
+      "vo": "vo:host.goni.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם רוֹאִים צְבָעִים לְבַד."
+        }
+      ]
+    }
   }
 }

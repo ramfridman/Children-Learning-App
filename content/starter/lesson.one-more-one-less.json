@@ -15,17 +15,17 @@
   ],
   "items": [
     "b.numb11.7",
-    "b.numb11.8",
     "b.numb11.9",
     "b.numb11.10",
-    "b.numb11.11",
     "b.numb11.12",
     "b.numb11.13",
-    "b.numb11.14",
     "b.numb11.15",
     "b.numb11.16",
-    "b.numb11.17",
-    "b.numb11.18"
+    "b.numb11.18",
+    "b.numb11.8",
+    "b.numb11.11",
+    "b.numb11.14",
+    "b.numb11.17"
   ],
   "estimatedMinutes": 5,
   "sequence": 43,
@@ -37,5 +37,48 @@
         "v": "נִפְלָא! אֶחָד יוֹתֵר וְאֶחָד פָּחוֹת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-11",
+    "recall": [
+      "b.numb10.1"
+    ],
+    "together": [
+      {
+        "id": "b.numb11.7",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb11.9",
+      "b.numb11.10",
+      "b.numb11.12",
+      "b.numb11.13",
+      "b.numb11.15",
+      "b.numb11.16",
+      "b.numb11.18",
+      "b.numb11.8",
+      "b.numb11.11",
+      "b.numb11.14",
+      "b.numb11.17"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

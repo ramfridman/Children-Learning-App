@@ -30,5 +30,41 @@
         "v": "כׇּל הַכָּבוֹד! הִגַּעְתֶּם לְעֶשֶׂר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-06",
+    "recall": [
+      "b.mathb02.1"
+    ],
+    "together": [
+      {
+        "id": "b.mathb06.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.give",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מַטְבֵּעַ אֶחָד לְכׇל תַּפּוּחַ."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb06.2",
+      "b.mathb06.3",
+      "b.mathb06.4",
+      "b.mathb06.5"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק."
+        }
+      ]
+    }
   }
 }

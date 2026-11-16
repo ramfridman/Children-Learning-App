@@ -17,8 +17,8 @@
     "b.numb10.1",
     "b.numb10.2",
     "b.numb10.3",
-    "b.numb10.4",
-    "b.numb10.5"
+    "b.numb10.5",
+    "b.numb10.4"
   ],
   "estimatedMinutes": 5,
   "sequence": 40,
@@ -30,5 +30,41 @@
         "v": "יָפֶה! הִשְׁוִיתֶם מִסְפָּרִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-10",
+    "recall": [
+      "b15.numa12.1"
+    ],
+    "together": [
+      {
+        "id": "b.numb10.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb10.2",
+      "b.numb10.3",
+      "b.numb10.5",
+      "b.numb10.4"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

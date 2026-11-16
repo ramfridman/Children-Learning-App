@@ -1,0 +1,168 @@
+{
+  "schema": "activity/v1",
+  "id": "show.num-b-08",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "number_line",
+  "templateVersion": "1.2",
+  "domain": "numbers",
+  "band": "B",
+  "skills": [
+    {
+      "id": "NUM-B-08",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.nekudi.show.num_b_08.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "קוֹרְאִים מִסְפָּרִים אַחֲרֵי עֶשֶׂר."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "from": 10,
+    "to": 20,
+    "markerSprite": "asset:frog",
+    "labels": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ]
+  },
+  "answer": {
+    "type": "line",
+    "mode": "place",
+    "target": 14
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.nekudi.show.num_b_08.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַחַת עֶשְׂרֵה, שְׁתֵּים עֶשְׂרֵה, שְׁלֹשׁ עֶשְׂרֵה."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "קוֹרְאִים מִסְפָּרִים אַחֲרֵי עֶשֶׂר."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.nekudi.show.num_b_08.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "קוֹרְאִים מִסְפָּרִים אַחֲרֵי עֶשֶׂר."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.nekudi.show.num_b_08.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אַחַת עֶשְׂרֵה, שְׁתֵּים עֶשְׂרֵה, שְׁלֹשׁ עֶשְׂרֵה."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.nekudi.show.num_b_08.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: אֵיפֹה אַרְבַּע עֶשְׂרֵה?"
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "point": 11
+      },
+      {
+        "by": "host",
+        "point": 12
+      },
+      {
+        "by": "host",
+        "point": 13,
+        "say": "key"
+      },
+      {
+        "by": "child",
+        "place": 14
+      }
+    ],
+    "teaches": [
+      "אַחַת עֶשְׂרֵה",
+      "שְׁתֵּים עֶשְׂרֵה",
+      "שְׁלֹשׁ עֶשְׂרֵה",
+      "אַרְבַּע עֶשְׂרֵה"
+    ]
+  }
+}

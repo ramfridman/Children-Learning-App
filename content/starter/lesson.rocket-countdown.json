@@ -35,5 +35,48 @@
         "v": "שָׁלוֹשׁ, שְׁתַּיִם, אַחַת… הַחֲלָלִית טָסָה!"
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-03",
+    "recall": [
+      "next.after.5"
+    ],
+    "together": [
+      {
+        "id": "b.numb03.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb03.2",
+      "b.numb03.3",
+      "b.numb03.4",
+      "b.numb03.5",
+      "b.numb03.6",
+      "b.numb03.7",
+      "b.numb03.8",
+      "b.numb03.9"
+    ],
+    "use": [
+      "b.numb03.10"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

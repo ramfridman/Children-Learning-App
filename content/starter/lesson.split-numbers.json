@@ -30,5 +30,41 @@
         "v": "כׇּל הַכָּבוֹד! אַתֶּם יוֹדְעִים לְפָרֵק."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-14",
+    "recall": [
+      "b15.numa10.1"
+    ],
+    "together": [
+      {
+        "id": "b.numb14.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.give",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים בִּזְמַן שֶׁנּוֹתְנִים, וְעוֹצְרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb14.2",
+      "b.numb14.3",
+      "b.numb14.4",
+      "b.numb14.5"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

@@ -31,5 +31,42 @@
         "v": "יָפֶה מְאֹד! הַמֹּאזְנַיִם מְאֻזָּנִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-13",
+    "recall": [
+      "math.size.heavy"
+    ],
+    "together": [
+      {
+        "id": "b.mathb13.7",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.scale",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מִסְתַּכְּלִים עַל הַמֹּאזְנַיִם, וּמוֹסִיפִים לְאַט."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb13.8",
+      "b.mathb13.9",
+      "b.mathb13.10",
+      "b.mathb13.11",
+      "b.mathb13.12"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק."
+        }
+      ]
+    }
   }
 }

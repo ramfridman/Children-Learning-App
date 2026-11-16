@@ -69,7 +69,8 @@ String _expectedRepresentation(Map<String, Object?> a) {
 }
 
 /// Items spec section 2 lets keep `story` (a tale told in words) and the one skill whose day cards stay symbols.
-const Set<String> _storySkills = <String>{'CS-A-01', 'LOG-A-08', 'MATH-A-05', 'NUM-A-14'};
+// (CS-A-05: the routine cards of "what got here by mistake", laid in order, are a story as CS-A-01's are)
+const Set<String> _storySkills = <String>{'CS-A-01', 'CS-A-05', 'LOG-A-08', 'MATH-A-05', 'NUM-A-14'};
 const String _symbolCardSkill = 'MATH-B-14';
 
 String _skill(Map<String, Object?> a) => _m(_l(a['skills']).first)['id']! as String;
@@ -106,7 +107,6 @@ const Map<String, String> _knownNewGaps = <String, String>{
   'b15.matha02.2': 'M-CNT-CARD',
   'b15.numa14.1': 'M-CNT-CARD',
   'b15.numa14.2': 'M-CNT-CARD',
-  'b.mathb10.7': 'E2',
   'b.mathb10.8': 'E2',
   'b15.loga09.1': 'E2',
   'b15.loga09.2': 'E2',
@@ -124,13 +124,16 @@ void main() {
   test('the sources are the 967 activities and 100 skills of pack 0.11.0, and the 239 and 12 of M10 batch C1 (170 of the first sessions, 58 for the block, chart, keypad and tolerance modes, 5 for the line by estimate and the true-or-false card, 4 lucky-right items, and 2 hidden-basket count-on items)', () {
     // + 14 skills and 48 items of the Shape Forest pilot (M11 Stage 2): SHP-B-05 and SHP-B-06, 8 new shape builders, and the 16 Shows
     // + 8 after the QA round of the pilot (2026-11-16): 7 new items (shp.rect.sort, shp.solid.real, shp.match.oval, shp.match.trapezoid, shp.world.clock, shp.line.shapes, shp.line.shapes2) and the tracing Show
-    expect(acts.length, 967 + 239 + 8 + 16 + 8);
+    // + 83 for the other five lands (M11 Stage 2, 2.4b to 2.4e): 83 Shows (the lands' own 235 swaps re-cut items in place and add none)
+    expect(acts.length, 967 + 239 + 8 + 16 + 8 + 83);
     expect(skills.length, 100 + 12 + 2);
   });
 
   test('the representation label of every activity follows the rule of spec section 2', () {
     final List<String> wrong = <String>[];
     acts.forEach((String id, Map<String, Object?> a) {
+      // a Show's representation is what the host's example is made of, set by its arc source: no item is read against it
+      if (a['purpose'] == 'show') return;
       final String want = _expectedRepresentation(a);
       final String got = a['representation']! as String;
       if (got == want) return;
@@ -181,7 +184,7 @@ void main() {
   group('section 5.3: two tagged wrong answers on an item with three or more options', () {
     final List<String> gaps = _tagGaps(acts);
 
-    test('the 19 new items B-15 added with a gap are exactly the explained ones', () {
+    test('the 18 new items B-15 added with a gap are exactly the explained ones', () {
       final Set<String> newGaps = gaps.where(_knownNewGaps.containsKey).toSet();
       expect(
         newGaps,
@@ -189,7 +192,7 @@ void main() {
         reason: 'a gap on this list got fixed (take it off), or the item changed its id',
       );
       // 19 since the QA round of the pilot (2026-11-16): b15.shpa02.1 has two tags (the oval)
-      expect(_knownNewGaps.length, 19);
+      expect(_knownNewGaps.length, 18);
     });
 
     // 320 since the maths check fixes of 2026-11-06 (docs/knowledge/maths/check-2026-11-06-fixes.md): +14 where a second
@@ -201,13 +204,14 @@ void main() {
     // tag, M-SER-DIR, is proposed to the curriculum-expert), +2 where the false M-PAT-UNIT lure became an untagged
     // same-size lure (b15.loga06.1, .2), +2 for the "+1" tower of b.logb04.7 and .8 (growth by two; no honest
     // tag yet), -2 where LOG-B-06 .5 and .6 now offer two options
-    test('no other new item falls short: the old gaps are pinned at 297', () {
+    test('no other new item falls short: the old gaps are pinned at 158', () {
       final List<String> older = gaps.where((String id) => !_knownNewGaps.containsKey(id)).toList();
       expect(
         older.length,
         // 297 since the Shape Forest pilot (M11 Stage 2): 29 taps were re-cut to hands-on templates or got an honest second tag
         // 292 since the QA round of the pilot (2026-11-16): the oval and the trapezoid gave five taps their second honest tag
-        292,
+        // 158 since the other five lands' swaps and second tags (M11 Stage 2, 2.4b to 2.4e): 134 taps became hands-on items or got an honest tag
+        158,
         reason: 'a new gap, or an old one fixed: update the pin with the curriculum-expert',
       );
     });

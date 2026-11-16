@@ -1,0 +1,163 @@
+{
+  "schema": "activity/v1",
+  "id": "show.cs-a-03",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "robot_path",
+  "templateVersion": "1.0",
+  "domain": "cs",
+  "band": "A",
+  "skills": [
+    {
+      "id": "CS-A-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.tzaadon.show.cs_a_03.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בִּיפּ! אֵיפֹה אֶעֱצֹר?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "cols": 4,
+    "rows": 1,
+    "robot": {
+      "col": 0,
+      "row": 0
+    },
+    "goal": {
+      "col": 3,
+      "row": 0
+    },
+    "robotSprite": "asset:robot",
+    "goalSprite": "asset:flag"
+  },
+  "answer": {
+    "type": "path",
+    "mode": "direct",
+    "maxSteps": 4,
+    "solution": [
+      "right",
+      "right",
+      "right"
+    ]
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.tzaadon.show.cs_a_03.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חֵץ אֶחָד, צַעַד אֶחָד."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "בִּיפּ! אֵיפֹה אֶעֱצֹר?"
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.tzaadon.show.cs_a_03.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בִּיפּ! אֵיפֹה אֶעֱצֹר?"
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.tzaadon.show.cs_a_03.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "חֵץ אֶחָד, צַעַד אֶחָד."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.tzaadon.show.cs_a_03.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַצַּעַד הָאַחֲרוֹן."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "arrow": "right",
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "arrow": "right"
+      },
+      {
+        "by": "child",
+        "arrow": "right"
+      }
+    ],
+    "teaches": [],
+    "predict": {
+      "choices": []
+    }
+  }
+}

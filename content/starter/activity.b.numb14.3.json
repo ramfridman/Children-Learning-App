@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.numb14.3",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "give_n",
+  "templateVersion": "1.2",
   "domain": "numbers",
   "band": "B",
   "skills": [
@@ -13,10 +13,10 @@
       "weight": 1
     }
   ],
-  "purpose": "practice",
+  "purpose": "check",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "fill-frame",
   "difficulty": {
     "authored": 0.51
   },
@@ -25,58 +25,73 @@
     "caption": [
       {
         "t": "he",
-        "v": "יֵשׁ שִׁבְעָה דָּגִים. מַכְנִיסִים שְׁלוֹשָׁה דָּגִים לַסַּל. כַּמָּה נִשְׁאֲרוּ בַּחוּץ?"
+        "v": "יֵשׁ שִׁבְעָה דָּגִים בְּסַךְ הַכֹּל. שְׁלוֹשָׁה דָּגִים כְּבָר בַּמִּסְגֶּרֶת. שָׂמִים אֶת הַשְּׁאָר."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "group": {
+    "source": {
       "sprite": "asset:fish",
-      "count": 7,
-      "arrangement": "line",
-      "seed": 3,
-      "scale": 1
-    }
+      "count": 8
+    },
+    "target": {
+      "sprite": "asset:basket_target"
+    },
+    "frame": true,
+    "prefilled": 3
   },
   "answer": {
-    "type": "choice",
-    "options": [
+    "type": "give",
+    "n": 4,
+    "classifiers": [
       {
-        "id": "o1",
-        "numeral": 7,
-        "label": "שֶׁבַע",
+        "when": "took_all",
+        "misconception": "M-CNT-CARD"
+      },
+      {
+        "when": "took_more",
         "misconception": "M-PART-MISS"
       },
       {
-        "id": "o2",
-        "numeral": 3,
-        "label": "שָׁלוֹשׁ"
-      },
-      {
-        "id": "o3",
-        "numeral": 4,
-        "label": "אַרְבַּע"
+        "when": "took_fewer",
+        "misconception": "M-CNT-SKIP"
       }
-    ],
-    "correct": "o3",
-    "shuffle": false,
-    "unsureAllowed": true
+    ]
   },
-  "voiceAnswer": true,
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.numb14.3.correct",
       "caption": [
         {
           "t": "he",
-          "v": "אַרְבַּע! אַרְבַּע וְעוֹד שָׁלוֹשׁ הֵם שֶׁבַע."
+          "v": "אַרְבַּע! שָׁלוֹשׁ וְעוֹד אַרְבַּע הֵם שֶׁבַע."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לָקַחְנוּ אֶת כֻּלָּם. בּוֹאוּ נִסְפֹּר וְנַעֲצֹר בַּמִּסְפָּר שֶׁצָּרִיךְ."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-CNT-SKIP",
+        "vo": "vo:fb.skip_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "misconception:M-PART-MISS",
         "vo": "vo:fb.part_miss",
@@ -112,22 +127,22 @@
     {
       "level": 1,
       "action": "replay_prompt_slow",
-      "vo": "vo:hint.pick.h1",
+      "vo": "vo:b.numb14.3.h1",
       "caption": [
         {
           "t": "he",
-          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+          "v": "סוֹפְרִים מִשָּׁלוֹשׁ וּמַמְשִׁיכִים עַד שֶׁבַע."
         }
       ]
     },
     {
       "level": 2,
-      "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "action": "show_fingers",
+      "vo": "vo:b.numb14.3.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע."
         }
       ]
     },
@@ -138,7 +153,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… שֶׁבַע. הִכְנַסְנוּ שָׁלוֹשׁ, אָז נִשְׁאֲרוּ אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע."
+          "v": "שָׁלוֹשׁ כְּבָר יֵשׁ. אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע: עוֹד אַרְבַּע. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -154,10 +169,11 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child gives exactly the number asked for, not the whole pile",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "יֵשׁ שִׁבְעָה דָּגִים. מַכְנִיסִים שְׁלוֹשָׁה דָּגִים לַסַּל. כַּמָּה נִשְׁאֲרוּ בַּחוּץ?"
-  }
+    "altText": "יֵשׁ שִׁבְעָה דָּגִים בְּסַךְ הַכֹּל. שְׁלוֹשָׁה דָּגִים כְּבָר בַּמִּסְגֶּרֶת. שָׂמִים אֶת הַשְּׁאָר."
+  },
+  "contradicts": "M-CNT-CARD"
 }

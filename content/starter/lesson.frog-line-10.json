@@ -31,5 +31,42 @@
         "v": "כׇּל הַכָּבוֹד! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-13",
+    "recall": [
+      "b.numb11.10"
+    ],
+    "together": [
+      {
+        "id": "b.numb13.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb13.2",
+      "b.numb13.3",
+      "b.numb13.4",
+      "b.numb13.5",
+      "b.numb13.6"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

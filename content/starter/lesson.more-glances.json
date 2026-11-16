@@ -17,8 +17,8 @@
   "items": [
     "flash.scatter.2",
     "flash.frame.3",
-    "flash.dice.4b",
     "flash.frame.5b",
+    "flash.dice.4b",
     "b15.numa05.1",
     "b15.numa05.2",
     "b15.numa10.1",
@@ -34,5 +34,47 @@
         "v": "מַדְהִים! רְאִיתֶם כַּמָּה בְּלִי לִסְפֹּר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-a-05",
+    "secondShow": {
+      "id": "show.num-a-10",
+      "before": "flash.frame.5b"
+    },
+    "together": [
+      {
+        "id": "flash.scatter.2",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.give",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים בִּזְמַן שֶׁנּוֹתְנִים, וְעוֹצְרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "flash.frame.3",
+      "flash.frame.5b",
+      "flash.dice.4b",
+      "b15.numa05.1",
+      "b15.numa05.2",
+      "b15.numa10.1"
+    ],
+    "use": [
+      "b15.numa10.2"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

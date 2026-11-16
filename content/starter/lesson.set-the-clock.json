@@ -17,7 +17,8 @@
     "x.mathb15.1",
     "x.mathb15.2",
     "x.mathb15.3",
-    "x.mathb15.4"
+    "x.mathb15.4",
+    "b.mathb15.1"
   ],
   "estimatedMinutes": 5,
   "sequence": 66,
@@ -29,5 +30,41 @@
         "v": "כׇּל הַכָּבוֹד! הַשָּׁעוֹן מְכֻוָּן."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-15",
+    "recall": [
+      "b.numb08.2"
+    ],
+    "together": [
+      {
+        "id": "x.mathb15.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.clock",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מִסְתַּכְּלִים עַל הַמַּחֲוָג הַקָּצָר."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "x.mathb15.2",
+      "x.mathb15.3",
+      "x.mathb15.4",
+      "b.mathb15.1"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מִסְתַּכֶּלֶת. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

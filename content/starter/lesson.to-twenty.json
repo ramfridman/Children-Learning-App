@@ -33,5 +33,44 @@
         "v": "כׇּל הַכָּבוֹד! חִבַּרְתֶּם עַד עֶשְׂרִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-08",
+    "recall": [
+      "b.mathb06.1"
+    ],
+    "together": [
+      {
+        "id": "b.mathb08.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb08.2",
+      "b.mathb08.3",
+      "b.mathb08.4",
+      "b.mathb08.5",
+      "b.mathb08.6",
+      "b.mathb08.7",
+      "b.mathb08.8"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק."
+        }
+      ]
+    }
   }
 }

@@ -1444,9 +1444,13 @@
     "log.same.duck",
     "log.odd.colour",
     "log.odd.animal",
-    "log.odd.thing"
+    "log.odd.thing",
+    "log.odd.ball"
    ],
    "use": [],
+   "borrowed": [
+    "log.odd.ball"
+   ],
    "poolRungs": [
     0,
     1
@@ -1471,10 +1475,15 @@
    ],
    "alone": [
     "log.sort.balloon",
-    "log.sort.animal"
+    "log.sort.animal",
+    "b15.loga03.1"
    ],
    "use": [],
+   "borrowed": [
+    "b15.loga03.1"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -1628,13 +1637,18 @@
    "alone": [
     "log.sortdrag.animals",
     "log.sortdrag.three",
-    "b15.loga03.1"
+    "b15.loga03.1",
+    "log.sort.animal"
    ],
    "use": [
     "b15.loga03.2"
    ],
+   "borrowed": [
+    "log.sort.animal"
+   ],
    "poolRungs": [
-    0
+    0,
+    1
    ]
   },
   {
@@ -1696,9 +1710,13 @@
     "log.odd.fruit",
     "b15.loga01.1",
     "b15.loga01.2",
-    "log.odd.bird"
+    "log.odd.bird",
+    "b15.loga01.3"
    ],
    "use": [],
+   "borrowed": [
+    "b15.loga01.3"
+   ],
    "poolRungs": [
     0,
     1
@@ -1864,12 +1882,19 @@
     "b15.loga01.4",
     "b15.loga01.5",
     "b15.loga01.6",
-    "b15.loga02.1"
+    "b15.loga02.1",
+    "b15.loga01.1",
+    "log.odd.ball"
    ],
    "use": [
     "b15.loga02.2"
    ],
+   "borrowed": [
+    "b15.loga01.1",
+    "log.odd.ball"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },
@@ -1922,10 +1947,15 @@
     }
    ],
    "alone": [
-    "b15.loga09.2"
+    "b15.loga09.2",
+    "log.pair.bowl"
    ],
    "use": [],
+   "borrowed": [
+    "log.pair.bowl"
+   ],
    "poolRungs": [
+    0,
     1
    ]
   },

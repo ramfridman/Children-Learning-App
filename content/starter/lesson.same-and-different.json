@@ -20,7 +20,8 @@
     "log.same.duck",
     "log.odd.colour",
     "log.odd.animal",
-    "log.odd.thing"
+    "log.odd.thing",
+    "log.odd.ball"
   ],
   "estimatedMinutes": 4,
   "sequence": 1,
@@ -59,7 +60,8 @@
       "log.same.duck",
       "log.odd.colour",
       "log.odd.animal",
-      "log.odd.thing"
+      "log.odd.thing",
+      "log.odd.ball"
     ],
     "handover": {
       "vo": "vo:host.timi.handover.1",

@@ -1,0 +1,161 @@
+{
+  "schema": "activity/v1",
+  "id": "show.num-b-02",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "number_line",
+  "templateVersion": "1.2",
+  "domain": "numbers",
+  "band": "B",
+  "skills": [
+    {
+      "id": "NUM-B-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.nekudi.show.num_b_02.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "קוֹפְצִים מֵעַל עֶשְׂרִים."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "from": 10,
+    "to": 30,
+    "markerSprite": "asset:frog",
+    "labels": [
+      10,
+      20,
+      30
+    ],
+    "start": 18,
+    "hops": [
+      1,
+      1,
+      1
+    ]
+  },
+  "answer": {
+    "type": "line",
+    "mode": "jump",
+    "target": 21
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.nekudi.show.num_b_02.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַחֲרֵי תְּשַׁע עֶשְׂרֵה בָּא עֶשְׂרִים."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "קוֹפְצִים מֵעַל עֶשְׂרִים."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.nekudi.show.num_b_02.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "קוֹפְצִים מֵעַל עֶשְׂרִים."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.nekudi.show.num_b_02.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אַחֲרֵי תְּשַׁע עֶשְׂרֵה בָּא עֶשְׂרִים."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.nekudi.show.num_b_02.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: מָה אַחֲרֵי עֶשְׂרִים?"
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "hop": 1
+      },
+      {
+        "by": "host",
+        "hop": 1,
+        "say": "key"
+      },
+      {
+        "by": "child",
+        "hop": 1
+      }
+    ],
+    "teaches": [
+      "תְּשַׁע עֶשְׂרֵה",
+      "עֶשְׂרִים",
+      "עֶשְׂרִים וְאַחַת"
+    ]
+  }
+}

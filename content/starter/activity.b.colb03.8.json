@@ -58,7 +58,8 @@
       {
         "id": "o3",
         "sprite": "asset:shade_blue_2",
-        "label": "כָּחֹל"
+        "label": "כָּחֹל",
+        "misconception": "M-COL-NAME"
       }
     ],
     "correct": "o2",
@@ -77,6 +78,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-NAME",
+        "vo": "vo:fb.col_name",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַצְּבָעִים דּוֹמִים. בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט."
+          }
+        ]
+      },
       {
         "when": "misconception:M-COL-SHADE",
         "vo": "vo:fb.col_shade",

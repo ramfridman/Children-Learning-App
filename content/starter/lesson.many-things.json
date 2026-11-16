@@ -30,5 +30,41 @@
         "v": "כׇּל הַכָּבוֹד! סְפַרְתֶּם הַרְבֵּה דְּבָרִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-04",
+    "recall": [
+      "b15.numa09.1"
+    ],
+    "together": [
+      {
+        "id": "b.numb04.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.count",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb04.2",
+      "b.numb04.3",
+      "b.numb04.4",
+      "b.numb04.5"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

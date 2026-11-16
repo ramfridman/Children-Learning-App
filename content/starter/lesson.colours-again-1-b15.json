@@ -23,6 +23,7 @@
     "b15.cola03.3",
     "b15.cola03.4",
     "b15.cola03.5",
+    "col.match.blue",
     "b15.cola03.6"
   ],
   "estimatedMinutes": 6,
@@ -63,7 +64,8 @@
       "b15.cola01.2",
       "b15.cola03.3",
       "b15.cola03.4",
-      "b15.cola03.5"
+      "b15.cola03.5",
+      "col.match.blue"
     ],
     "use": [
       "b15.cola03.6"

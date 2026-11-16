@@ -23,7 +23,9 @@
     "col.name.orange2",
     "col.name.pink2",
     "col.name.purple2",
-    "col.name.brown3"
+    "col.name.brown3",
+    "col.match.blue",
+    "b15.cola03.1"
   ],
   "estimatedMinutes": 6,
   "sequence": 7,
@@ -64,7 +66,9 @@
       "col.name.orange2",
       "col.name.pink2",
       "col.name.purple2",
-      "col.name.brown3"
+      "col.name.brown3",
+      "col.match.blue",
+      "b15.cola03.1"
     ],
     "handover": {
       "vo": "vo:host.goni.handover.3",

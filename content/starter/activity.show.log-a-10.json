@@ -1,0 +1,155 @@
+{
+  "schema": "activity/v1",
+  "id": "show.log-a-10",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "build_pattern",
+  "templateVersion": "1.2",
+  "domain": "logic",
+  "band": "A",
+  "skills": [
+    {
+      "id": "LOG-A-10",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.timi.show.log_a_10.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְסַדְּרִים מֵהַקָּטָן אֶל הַגָּדוֹל."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "slots": 3,
+    "palette": [
+      "asset:ball_size_m",
+      "asset:ball_size_l",
+      "asset:ball_size_s"
+    ]
+  },
+  "answer": {
+    "type": "build",
+    "sequence": [
+      "asset:ball_size_s",
+      "asset:ball_size_m",
+      "asset:ball_size_l"
+    ]
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.timi.show.log_a_10.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "קָטָן, וְאַחַר כָּךְ גָּדוֹל יוֹתֵר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "מְסַדְּרִים מֵהַקָּטָן אֶל הַגָּדוֹל."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.timi.show.log_a_10.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מְסַדְּרִים מֵהַקָּטָן אֶל הַגָּדוֹל."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.timi.show.log_a_10.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "קָטָן, וְאַחַר כָּךְ גָּדוֹל יוֹתֵר."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.timi.show.log_a_10.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַגָּדוֹל."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "piece": "asset:ball_size_s",
+        "cell": 0,
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "piece": "asset:ball_size_m",
+        "cell": 1
+      },
+      {
+        "by": "child",
+        "piece": "asset:ball_size_l",
+        "cell": 2
+      }
+    ],
+    "teaches": []
+  }
+}

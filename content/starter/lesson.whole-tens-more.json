@@ -17,6 +17,8 @@
     "c.mathc03.15",
     "c.mathc03.16",
     "c.mathc03.17",
+    "c.mathc03.9",
+    "c.mathc03.1",
     "c.mathc03.18"
   ],
   "estimatedMinutes": 8,
@@ -39,5 +41,44 @@
         "v": "עֶשֶׂר קֻבִּיּוֹת הֵן מוֹט אֶחָד."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-c-03",
+    "recall": [
+      "c.mathc01.1"
+    ],
+    "together": [
+      {
+        "id": "c.mathc03.15",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.mathc03.16",
+      "c.mathc03.17",
+      "c.mathc03.9",
+      "c.mathc03.1"
+    ],
+    "use": [
+      "c.mathc03.18"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מִסְתַּכֶּלֶת. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

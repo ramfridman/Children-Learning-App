@@ -20,7 +20,8 @@
     "col.match.yellow",
     "col.name.red.ball",
     "col.name.blue.balloon",
-    "col.match.green"
+    "col.match.green",
+    "b15.cola02.3"
   ],
   "estimatedMinutes": 4,
   "sequence": 2,
@@ -59,7 +60,8 @@
       "col.match.yellow",
       "col.name.red.ball",
       "col.name.blue.balloon",
-      "col.match.green"
+      "col.match.green",
+      "b15.cola02.3"
     ],
     "handover": {
       "vo": "vo:host.goni.handover.1",

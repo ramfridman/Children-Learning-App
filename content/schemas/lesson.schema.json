@@ -85,7 +85,7 @@
         "pattern": "^(?:[a-z0-9][a-z0-9._-]{2,80})$"
       },
       "minItems": 1,
-      "maxItems": 12
+      "maxItems": 16
     },
     "estimatedMinutes": {
       "type": "integer",
@@ -328,7 +328,7 @@
             "pattern": "^(?:[a-z0-9][a-z0-9._-]{2,80})$"
           },
           "minItems": 0,
-          "maxItems": 12
+          "maxItems": 16
         },
         "use": {
           "type": "array",
@@ -403,6 +403,11 @@
         "alone"
       ],
       "additionalProperties": false
+    },
+    "partsWait": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 200
     },
     "sequence": {
       "type": "integer",

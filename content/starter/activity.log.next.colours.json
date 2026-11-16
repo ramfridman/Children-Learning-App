@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "log.next.colours",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.2",
   "domain": "logic",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.25
   },
@@ -25,46 +25,60 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה בָּא אַחַר כָּךְ?"
+        "v": "מַה בָּא אַחַר כָּךְ? מַמְשִׁיכִים אֶת הַסֵּדֶר."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
+    "slots": 7,
+    "palette": [
       "asset:ball_red",
       "asset:ball_blue",
-      "asset:ball_red",
-      "asset:ball_blue",
-      "asset:ball_red",
-      "?"
+      "asset:ball_green"
+    ],
+    "given": [
+      {
+        "cell": 0,
+        "face": "asset:ball_red"
+      },
+      {
+        "cell": 1,
+        "face": "asset:ball_blue"
+      },
+      {
+        "cell": 2,
+        "face": "asset:ball_red"
+      },
+      {
+        "cell": 3,
+        "face": "asset:ball_blue"
+      },
+      {
+        "cell": 4,
+        "face": "asset:ball_red"
+      }
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:ball_red",
-        "label": "כַּדּוּר אָדֹם",
-        "misconception": "M-PAT-NEXT"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:ball_blue",
-        "label": "כַּדּוּר כָּחֹל"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:ball_green",
-        "label": "כַּדּוּר יָרֹק"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:ball_red",
+      "asset:ball_blue",
+      "asset:ball_red",
+      "asset:ball_blue",
+      "asset:ball_red",
+      "asset:ball_blue",
+      "asset:ball_red"
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-PAT-NEXT",
+    "pieceTags": [
+      {
+        "piece": "asset:ball_green",
+        "misconception": "M-PAT-UNIT"
+      }
+    ]
   },
   "voiceAnswer": false,
   "feedback": {
@@ -73,7 +87,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! אָדֹם, כָּחֹל, אָדֹם, כָּחֹל, אָדֹם, כָּחֹל."
+          "v": "כֵּן! אָדֹם, כָּחֹל, אָדֹם, כָּחֹל, אָדֹם, כָּחֹל, אָדֹם."
         }
       ]
     },
@@ -85,6 +99,16 @@
           {
             "t": "he",
             "v": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PAT-UNIT",
+        "vo": "vo:fb.pat_unit",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ."
           }
         ]
       },
@@ -139,7 +163,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אָדֹם, כָּחֹל, אָדֹם, כָּחֹל, אָדֹם — וְאָז כָּחֹל. עַכְשָׁו תּוֹרְכֶם."
+          "v": "אָדֹם, כָּחֹל, אָדֹם, כָּחֹל, אָדֹם — וְאָז כָּחֹל, וְאָז אָדֹם. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -155,10 +179,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child copies the pattern in the same order",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה בָּא אַחַר כָּךְ?"
+    "altText": "מַה בָּא אַחַר כָּךְ? מַמְשִׁיכִים אֶת הַסֵּדֶר."
   }
 }

@@ -1,0 +1,166 @@
+{
+  "schema": "activity/v1",
+  "id": "show.num-b-17",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "number_line",
+  "templateVersion": "1.2",
+  "domain": "numbers",
+  "band": "B",
+  "skills": [
+    {
+      "id": "NUM-B-17",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.nekudi.show.num_b_17.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "קוֹפְצִים בִּשְׁתַּיִם."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+      0,
+      10
+    ],
+    "start": 0,
+    "hops": [
+      2,
+      2,
+      2,
+      2
+    ]
+  },
+  "answer": {
+    "type": "line",
+    "mode": "jump",
+    "target": 8
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.nekudi.show.num_b_17.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁתַּיִם, אַרְבַּע, שֵׁשׁ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "קוֹפְצִים בִּשְׁתַּיִם."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.nekudi.show.num_b_17.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "קוֹפְצִים בִּשְׁתַּיִם."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.nekudi.show.num_b_17.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "שְׁתַּיִם, אַרְבַּע, שֵׁשׁ."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.nekudi.show.num_b_17.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: עוֹד שְׁתַּיִם."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "hop": 2,
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "hop": 2
+      },
+      {
+        "by": "host",
+        "hop": 2
+      },
+      {
+        "by": "child",
+        "hop": 2
+      }
+    ],
+    "teaches": [
+      "שְׁתַּיִם",
+      "אַרְבַּע",
+      "שֵׁשׁ",
+      "שְׁמוֹנֶה"
+    ]
+  }
+}

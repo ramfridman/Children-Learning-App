@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ import 'hint_widgets.dart';
 import 'hints/hint_marks.dart';
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
+import 'host_moves.dart';
+import 'lesson_arc.dart' show ArcPart, ArcStep;
 import 'template_session.dart';
 
 /// The number-line template (T09). The line always runs from the small number on the left to the large number on the right,
@@ -73,8 +76,14 @@ class NumberLineSession extends TemplateSession {
     return activity.from + (share * (activity.to - activity.from)).round();
   }
 
-  Future<void> choose(int n) async {
-    if (_busy || ring == AnswerState.correct) return;
+  Future<void> choose(int touched) async {
+    if (_busy || hosting || ring == AnswerState.correct) return;
+    // A line with ticks of ten whose answer is a tick takes a touch to the nearest drawn tick: between two ticks there is no number to mean.
+    final int n = activity.snapped(touched);
+    if (activity.isShow) {
+      _showTouch(n);
+      return;
+    }
     _stopWay();
     if (controller.guided && !activity.isRight(n)) {
       _showWay();
@@ -86,11 +95,7 @@ class NumberLineSession extends TemplateSession {
     trail.clear();
     notify();
     final bool right = activity.isRight(n);
-    String tag = '';
-    if (!right) {
-      final bool mirror = (n - (activity.from + activity.to - activity.target)).abs() <= activity.tolerance;
-      tag = (mirror && activity.mirrorTag != null) ? activity.mirrorTag! : (activity.wrongTag ?? '');
-    }
+    final String tag = right ? '' : (activity.wrongTagFor(n) ?? '');
     await controller.submitPlacement(right: right, tag: tag, response: '$n');
     if (disposed) return;
     if (right) {
@@ -105,9 +110,113 @@ class NumberLineSession extends TemplateSession {
     later(TemplateSession.notYetPause, () {
       wrongTick = null;
       ring = AnswerState.idle;
-      markerAt = activity.start;
+      markerAt = _restAt;
       _busy = false;
       if (controller.guided) _showWay();
+      notify();
+    });
+  }
+
+  // ---- the host's part (a Show, the lead of a Together item) ----
+
+  /// The hops the host made in the lead of a Together item stay made: the marker stands where they left it, with their arcs and numbers.
+  int get _led =>
+      controller.step?.part == ArcPart.together && !controller.leading ? controller.step!.lead : 0;
+
+  /// Where the marker stands when the child's turn begins: where the host's hops left it, else on its start (null on a line to put it on).
+  int? get _restAt => _led > 0 ? _landingAfter(_led) : activity.start;
+
+  int _landingAfter(int hops) =>
+      (activity.start ?? activity.from) + activity.hops.take(hops).fold(0, (int a, int h) => a + h);
+
+  /// The arcs and numbers the host has drawn, which stay while it goes on (see [HostMove.marks]).
+  List<HintMark> _drawn = const <HintMark>[];
+
+  bool get _canDraw => !_size.isEmpty;
+
+  /// The host hops the marker by [by] from where it stands: its hand presses the marker's tick, the marker goes, an arc and the number it lands
+  /// on are drawn.
+  HostMove _hopMove(int by) {
+    final int from = markerAt ?? activity.from;
+    final int to = from + by;
+    // The arcs and numbers of the hops stay while there is room for them: on a dense line (a hop is under 30 points wide) the numbers would lie on each
+    // other, so only the hop just made is drawn.
+    final bool room = _canDraw && (_tickX(_size, to) - _tickX(_size, from)).abs() >= 30;
+    final List<HintMark> marks = !_canDraw
+        ? _drawn
+        : <HintMark>[if (room) ..._drawn, ..._hop(_size, from, to, to)];
+    return HostMove(_canDraw ? _tickTop(_size, from) : null, () {
+      markerAt = to;
+      trail.add(to);
+      _drawn = marks;
+    }, marks: marks);
+  }
+
+  /// The host points at a tick of the line and says its number: the tick is lit and its number drawn above it.
+  HostMove _pointMove(int tick) {
+    final List<HintMark> marks = _canDraw
+        ? <HintMark>[..._drawn, BadgeMark(Offset(_tickX(_size, tick), _lineY(_size) - 12 - 9 - 14), tick)]
+        : _drawn;
+    return HostMove(_canDraw ? _tickTop(_size, tick) : null, () {
+      trail.add(tick);
+      _drawn = marks;
+    }, marks: marks);
+  }
+
+  Future<void> _hostStep(ShowStep step, {required bool fast}) {
+    final HostMove move = step.hop != null ? _hopMove(step.hop!) : _pointMove(step.point ?? activity.from);
+    return hostTour(_hint, <HostMove>[move], fast: fast, before: _drawn);
+  }
+
+  @override
+  void startHost() {
+    final ArcStep? step = controller.step;
+    if (step == null || hosting) return;
+    if (activity.isShow) {
+      unawaited(
+        playShow(activity.show!, move: (ShowStep s, {required bool fast}) => _hostStep(s, fast: fast)),
+      );
+    } else if (step.part == ArcPart.together && controller.leading && step.lead > 0 && activity.jump) {
+      unawaited(
+        playLead(<Future<void> Function()>[
+          for (final int h in activity.hops.take(step.lead))
+            () => hostTour(_hint, <HostMove>[_hopMove(h)], before: _drawn),
+        ]),
+      );
+    }
+  }
+
+  /// A touch on a reminder skips what the host still has to do: the marker stands where its hops end, and the child's step is left.
+  @override
+  void onScreenTouch() {
+    if (!activity.isShow) return;
+    skipHost(() {
+      _hint.clear();
+      for (final ShowStep s in activity.show!.hostSteps) {
+        if (s.hop != null) markerAt = (markerAt ?? activity.from) + s.hop!;
+        trail.add(s.hop != null ? markerAt! : s.point ?? activity.from);
+      }
+    });
+  }
+
+  /// A Show, and the child touches a tick: the right one ends the Show; any other is "let's look again", written nowhere.
+  void _showTouch(int n) {
+    if (activity.isRight(n)) {
+      _busy = true;
+      markerAt = activity.target;
+      trail.clear();
+      ring = AnswerState.correct;
+      notify();
+      finishShow();
+      return;
+    }
+    _busy = true;
+    wrongTick = n;
+    notify();
+    lookAgain(activity);
+    later(TemplateSession.notYetPause, () {
+      wrongTick = null;
+      _busy = false;
       notify();
     });
   }
@@ -251,7 +360,8 @@ class NumberLineSession extends TemplateSession {
 
   @override
   void onReset() {
-    markerAt = activity.start;
+    markerAt = _restAt;
+    if (_led == 0) _drawn = const <HintMark>[];
     _stopWay();
     wrongTick = null;
     ring = AnswerState.idle;

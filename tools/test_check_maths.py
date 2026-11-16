@@ -707,16 +707,17 @@ class C1Last(BatchC1):
     def test_the_content_has_them(self):
         """The five estimates of NUM-C-06, the four cards of MATH-C-02 and the two ten-frames of NUM-B-09 are on disk and pass."""
         docs, records, skills = cm.load(cm.STARTER)
-        by = {d['id']: d for d in docs}
+        by = {d['id']: d for d in docs if d.get('purpose') != 'show'}  # a Show is the host's example, not an item of the content
         x5 = [i for i, d in by.items() if d['template'] == 'number_line' and d['answer'].get('tolerance')]
         cards = [i for i, d in by.items() if d.get('variantGroup') == 'true-or-false']
         frames = [i for i, d in by.items() if d['template'] == 'give_n' and d['scene'].get('frame')]
         self.assertEqual(sorted(x5), ['c.numc06.17', 'c.numc06.3', 'c.numc06.4', 'c.numc06.5', 'c.numc06.6'])
         self.assertEqual(sorted(cards), ['c.mathc02.16', 'c.mathc02.17', 'c.mathc02.18', 'c.mathc02.19'])
         # M11 Stage 2 (Counting Hills): four flashes of NUM-A-05 and A-10 and two of NUM-B-09 are re-cut to frames built by hand
-        self.assertEqual(sorted(frames), ['c.numb09.1', 'c.numb09.15', 'c.numb09.16', 'c.numb09.2', 'flash.frame.3', 'flash.frame.4',
-                                          'flash.frame.5b', 'flash.scatter.2'])
-        self.assertTrue(all(by[i]['templateVersion'] == '1.1' for i in x5 + frames))
+        # (the later swaps of the lands are frames too: the six are among them)
+        self.assertLessEqual({'c.numb09.1', 'c.numb09.15', 'c.numb09.16', 'c.numb09.2', 'flash.frame.3', 'flash.frame.4',
+                              'flash.frame.5b', 'flash.scatter.2'}, set(frames))
+        self.assertTrue(all(by[i]['templateVersion'] >= '1.1' for i in x5 + frames))
         f, _ = cm.check_docs([by[i] for i in x5 + cards + frames], records, skills, CATALOGUE, cm.Svg(cm.STARTER))
         self.assertEqual([r for r in f.rows if r[0] in cm.STRICT_FAILING], [])
 
@@ -945,7 +946,7 @@ class RealPack(unittest.TestCase):
         missed = []
         for d in docs:
             a = d.get('answer') or {}
-            if d.get('domain') not in cm.MATHS_DOMAINS or not a.get('options') or d['id'] in already:
+            if d.get('domain') not in cm.MATHS_DOMAINS or d.get('purpose') == 'show' or not a.get('options') or d['id'] in already:
                 continue
             for o in a['options']:
                 if o['id'] == a.get('correct'):

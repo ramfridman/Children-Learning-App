@@ -16,10 +16,10 @@
   ],
   "items": [
     "log.story.plant.first",
-    "log.story.plant.last",
     "log.story.egg.then",
     "log.pair.sock",
     "log.pair.key",
+    "log.story.plant.last",
     "log.pair.brush"
   ],
   "estimatedMinutes": 4,
@@ -32,5 +32,46 @@
         "v": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה קּוֹרֶה קֹדֶם וּמָה הוֹלֵךְ יַחַד."
       }
     ]
+  },
+  "parts": {
+    "show": "show.log-a-08",
+    "secondShow": {
+      "id": "show.log-a-09",
+      "before": "log.pair.sock"
+    },
+    "recall": [
+      "b15.numa13.1"
+    ],
+    "together": [
+      {
+        "id": "log.story.plant.first",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.timi.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אוֹמְרִים אֶת הַסֵּדֶר בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "log.story.egg.then",
+      "log.pair.sock",
+      "log.pair.key",
+      "log.story.plant.last",
+      "log.pair.brush"
+    ],
+    "handover": {
+      "vo": "vo:host.timi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

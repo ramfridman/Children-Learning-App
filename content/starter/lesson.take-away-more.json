@@ -14,14 +14,14 @@
     "MATH-B-01"
   ],
   "items": [
+    "b.mathb01.13",
+    "b.mathb01.14",
     "b.mathb01.7",
     "b.mathb01.8",
     "b.mathb01.9",
     "b.mathb01.10",
     "b.mathb01.11",
     "b.mathb01.12",
-    "b.mathb01.13",
-    "b.mathb01.14",
     "b.mathb01.15",
     "b.mathb01.16",
     "b.mathb01.17",
@@ -37,5 +37,50 @@
         "v": "יָפֶה מְאֹד! לְקַחְתֶּם וְחִשַּׁבְתֶּם."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-01",
+    "recall": [
+      "b15.matha01.1"
+    ],
+    "together": [
+      {
+        "id": "b.mathb01.13",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb01.14",
+      "b.mathb01.7",
+      "b.mathb01.8",
+      "b.mathb01.9",
+      "b.mathb01.10",
+      "b.mathb01.11",
+      "b.mathb01.12",
+      "b.mathb01.15",
+      "b.mathb01.16",
+      "b.mathb01.17"
+    ],
+    "use": [
+      "b.mathb01.18"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

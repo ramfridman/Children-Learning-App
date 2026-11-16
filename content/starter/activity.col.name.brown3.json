@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "col.name.brown3",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "colors",
@@ -50,8 +50,9 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:bloom_grey",
-        "label": "פֶּרַח אָפֹר"
+        "sprite": "asset:bloom_black",
+        "label": "פֶּרַח שָׁחֹר",
+        "misconception": "M-COL-NAME"
       }
     ],
     "correct": "o2",

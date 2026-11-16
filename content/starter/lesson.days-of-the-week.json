@@ -18,8 +18,8 @@
     "b.mathb14.2",
     "b.mathb14.3",
     "b.mathb14.4",
-    "b.mathb14.5",
     "b.mathb14.6",
+    "b.mathb14.5",
     "b.mathb14.7",
     "b.mathb14.8",
     "b.mathb14.9",
@@ -36,5 +36,47 @@
         "v": "כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים אֶת הַיָּמִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-14",
+    "recall": [
+      "math.time.morning"
+    ],
+    "together": [
+      {
+        "id": "b.mathb14.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מַה קֹּדֶם, וּמָה אַחַר כָּךְ?"
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb14.2",
+      "b.mathb14.3",
+      "b.mathb14.4",
+      "b.mathb14.6",
+      "b.mathb14.5",
+      "b.mathb14.7",
+      "b.mathb14.8",
+      "b.mathb14.9",
+      "b.mathb14.10",
+      "b.mathb14.11"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

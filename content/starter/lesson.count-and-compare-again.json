@@ -18,11 +18,13 @@
     "c.numb01.1",
     "c.numb01.2",
     "c.numb10.1",
-    "c.numb10.2",
     "c.numb01.3",
     "c.numb01.4",
     "c.numb10.3",
-    "c.numb10.4"
+    "c.numb10.4",
+    "b.numb01.4",
+    "b.numb10.10",
+    "c.numb10.2"
   ],
   "estimatedMinutes": 3,
   "sequence": 104,
@@ -34,5 +36,52 @@
         "v": "יָפֶה מְאֹד! סְפַרְתֶּם וְהִשְׁוִיתֶם."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-01",
+    "secondShow": {
+      "id": "show.num-b-10",
+      "before": "c.numb10.1"
+    },
+    "recall": [
+      "next.after.5"
+    ],
+    "together": [
+      {
+        "id": "c.numb01.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.numb01.2",
+      "c.numb10.1",
+      "c.numb01.3",
+      "c.numb01.4",
+      "c.numb10.3",
+      "c.numb10.4",
+      "b.numb01.4",
+      "b.numb10.10"
+    ],
+    "use": [
+      "c.numb10.2"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

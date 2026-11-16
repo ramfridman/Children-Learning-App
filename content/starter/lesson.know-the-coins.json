@@ -16,7 +16,8 @@
   "items": [
     "x.mathb16.1",
     "x.mathb16.2",
-    "x.mathb16.3"
+    "x.mathb16.3",
+    "x.mathb16.7"
   ],
   "estimatedMinutes": 5,
   "sequence": 60,
@@ -51,7 +52,8 @@
     ],
     "alone": [
       "x.mathb16.2",
-      "x.mathb16.3"
+      "x.mathb16.3",
+      "x.mathb16.7"
     ],
     "handover": {
       "vo": "vo:host.pnina.handover.3",

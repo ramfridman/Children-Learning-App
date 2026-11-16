@@ -16,7 +16,8 @@
   "items": [
     "log.sort.colour",
     "log.sort.balloon",
-    "log.sort.animal"
+    "log.sort.animal",
+    "b15.loga03.1"
   ],
   "estimatedMinutes": 3,
   "sequence": 2,
@@ -51,7 +52,8 @@
     ],
     "alone": [
       "log.sort.balloon",
-      "log.sort.animal"
+      "log.sort.animal",
+      "b15.loga03.1"
     ],
     "handover": {
       "vo": "vo:host.timi.handover.2",

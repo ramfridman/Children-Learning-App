@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "log.next.animals",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.2",
   "domain": "logic",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.3
   },
@@ -25,46 +25,60 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה בָּא אַחַר כָּךְ?"
+        "v": "מַה בָּא אַחַר כָּךְ? מַמְשִׁיכִים אֶת הַסֵּדֶר."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
-      "asset:cat",
+    "slots": 7,
+    "palette": [
       "asset:dog",
       "asset:cat",
-      "asset:dog",
-      "asset:cat",
-      "?"
+      "asset:duck"
+    ],
+    "given": [
+      {
+        "cell": 0,
+        "face": "asset:cat"
+      },
+      {
+        "cell": 1,
+        "face": "asset:dog"
+      },
+      {
+        "cell": 2,
+        "face": "asset:cat"
+      },
+      {
+        "cell": 3,
+        "face": "asset:dog"
+      },
+      {
+        "cell": 4,
+        "face": "asset:cat"
+      }
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:dog",
-        "label": "כֶּלֶב"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:cat",
-        "label": "חָתוּל",
-        "misconception": "M-PAT-NEXT"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:duck",
-        "label": "בַּרְוָז"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:cat",
+      "asset:dog",
+      "asset:cat",
+      "asset:dog",
+      "asset:cat",
+      "asset:dog",
+      "asset:cat"
     ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-PAT-NEXT",
+    "pieceTags": [
+      {
+        "piece": "asset:duck",
+        "misconception": "M-PAT-UNIT"
+      }
+    ]
   },
   "voiceAnswer": false,
   "feedback": {
@@ -73,7 +87,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב."
+          "v": "כֵּן! חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב, חָתוּל."
         }
       ]
     },
@@ -85,6 +99,16 @@
           {
             "t": "he",
             "v": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PAT-UNIT",
+        "vo": "vo:fb.pat_unit",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ."
           }
         ]
       },
@@ -139,7 +163,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב, חָתוּל — וְאָז כֶּלֶב. עַכְשָׁו תּוֹרְכֶם."
+          "v": "חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב, חָתוּל — וְאָז כֶּלֶב, וְאָז חָתוּל. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -155,10 +179,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child copies the pattern in the same order",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה בָּא אַחַר כָּךְ?"
+    "altText": "מַה בָּא אַחַר כָּךְ? מַמְשִׁיכִים אֶת הַסֵּדֶר."
   }
 }

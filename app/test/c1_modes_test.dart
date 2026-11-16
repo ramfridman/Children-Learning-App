@@ -46,7 +46,7 @@ void main() {
         WidgetTester t,
       ) async {
         await startOn(t, content, size);
-        for (final String id in <String>['c.mathc01.1', 'c.mathc01.5', 'c.mathc01.9', 'c.mathc01.13']) {
+        for (final String id in <String>['c.mathc01.1', 'c.mathc01.17', 'c.mathc01.21']) {
           await openOne(t, content, tap(id));
           final Rect stage = t.getRect(find.byKey(const Key('lesson-stage')));
           final Rect groups = t.getRect(find.byKey(const Key('tap-groups')));
@@ -75,11 +75,13 @@ void main() {
       ) async {
         await startOn(t, content, size);
         await collectErrors((List<dynamic> sink) async {
-          for (final String id in <String>['c.numc02.1', 'c.numc03.1', 'c.numc01.5', 'c.mathc03.1']) {
+          for (final String id in <String>['c.numc02.1', 'c.numc03.3', 'c.numc01.5', 'c.mathc03.14']) {
             await openOne(t, content, tap(id));
             for (final Element e in find.byKey(const Key('answer-tile')).evaluate()) {
               final Rect tile = t.getRect(find.byWidget(e.widget));
               final Finder digits = find.descendant(of: find.byWidget(e.widget), matching: find.byType(Text));
+              // (a tile that is a picture or a set of dots has no numeral to read)
+              if (digits.evaluate().isEmpty) continue;
               final Rect text = t.getRect(digits.first);
               // One line: the text is no taller than a single line of the tile's numeral, and inside the tile.
               expect(text.height, lessThan(tile.height * 0.7), reason: id);
@@ -98,8 +100,8 @@ void main() {
 
     test('dots stand under 1 to 10 only, and never under the answers of the facts', () {
       final TapAnswerActivity facts = tap('c.mathc01.4');
-      final TapAnswerActivity other = tap('c.numc03.1');
-      final TapAnswerActivity bridge = tap('c.numb06.1');
+      final TapAnswerActivity other = tap('c.numc03.18');
+      final TapAnswerActivity bridge = tap('c.numb06.2');
       expect(numeralHasDots(bridge, 7), isTrue);
       expect(numeralHasDots(bridge, 10), isTrue);
       expect(numeralHasDots(bridge, 11), isFalse);
@@ -117,8 +119,8 @@ void main() {
       await openOne(t, content, tap('c.mathc01.4'));
       expect(find.byType(Dots), findsNothing);
       await closeOne(t);
-      await openOne(t, content, tap('c.numb06.1'));
-      expect(find.byType(Dots), findsNWidgets(tap('c.numb06.1').options.length));
+      await openOne(t, content, tap('c.numb06.2'));
+      expect(find.byType(Dots), findsNWidgets(tap('c.numb06.2').options.length));
       await closeOne(t);
     });
   });
@@ -358,7 +360,7 @@ void main() {
       expect(drawnStagePictureKinds, <String>{'base_ten', 'hundred_chart'});
       expect(tap('c.numc03.18').drawnPictureKind, 'base_ten');
       expect(tap('c.numc09.13').drawnPictureKind, 'hundred_chart');
-      expect(tap('c.numc03.1').drawnPictureKind, isNull);
+      expect(tap('c.numc03.13').drawnPictureKind, isNull);
       expect(content.activities.containsKey('c.numc03.18'), isTrue);
       expect(content.activities.containsKey('c.numc02.13'), isTrue, reason: 'a number answer is played');
     });

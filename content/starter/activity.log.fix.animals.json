@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "log.fix.animals",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.2",
   "domain": "logic",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.4
   },
@@ -32,39 +32,52 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
+    "slots": 6,
+    "palette": [
       "asset:fish",
       "asset:bird",
-      "asset:fish",
-      "?",
-      "asset:fish",
-      "asset:bird"
+      "asset:star"
+    ],
+    "given": [
+      {
+        "cell": 0,
+        "face": "asset:fish"
+      },
+      {
+        "cell": 1,
+        "face": "asset:bird"
+      },
+      {
+        "cell": 2,
+        "face": "asset:fish"
+      },
+      {
+        "cell": 4,
+        "face": "asset:fish"
+      },
+      {
+        "cell": 5,
+        "face": "asset:bird"
+      }
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:fish",
-        "label": "דָּג",
-        "misconception": "M-PAT-NEXT"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:bird",
-        "label": "צִפּוֹר"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:star",
-        "label": "כּוֹכָב"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:fish",
+      "asset:bird",
+      "asset:fish",
+      "asset:bird",
+      "asset:fish",
+      "asset:bird"
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-PAT-NEXT",
+    "pieceTags": [
+      {
+        "piece": "asset:star",
+        "misconception": "M-PAT-UNIT"
+      }
+    ]
   },
   "voiceAnswer": false,
   "feedback": {
@@ -85,6 +98,16 @@
           {
             "t": "he",
             "v": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PAT-UNIT",
+        "vo": "vo:fb.pat_unit",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ."
           }
         ]
       },
@@ -155,7 +178,7 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child copies the pattern in the same order",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {

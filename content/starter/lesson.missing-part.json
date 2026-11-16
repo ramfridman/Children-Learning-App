@@ -14,8 +14,8 @@
     "MATH-B-02"
   ],
   "items": [
-    "b.mathb02.1",
     "b.mathb02.2",
+    "b.mathb02.1",
     "b.mathb02.3",
     "b.mathb02.4",
     "b.mathb02.5",
@@ -31,5 +31,42 @@
         "v": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַחֵלֶק."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-02",
+    "recall": [
+      "b.numb14.1"
+    ],
+    "together": [
+      {
+        "id": "b.mathb02.2",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.scale",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מִסְתַּכְּלִים עַל הַמֹּאזְנַיִם, וּמוֹסִיפִים לְאַט."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb02.1",
+      "b.mathb02.3",
+      "b.mathb02.4",
+      "b.mathb02.5",
+      "b.mathb02.6"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מִסְתַּכֶּלֶת. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

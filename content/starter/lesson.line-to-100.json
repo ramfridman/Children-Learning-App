@@ -17,11 +17,12 @@
     "c.numc06.1",
     "c.numc06.2",
     "c.numc06.7",
-    "c.numc06.8",
     "c.numc06.3",
     "c.numc06.4",
     "c.numc06.5",
-    "c.numc06.6"
+    "c.numc06.6",
+    "c.numc06.14",
+    "c.numc06.8"
   ],
   "estimatedMinutes": 8,
   "sequence": 111,
@@ -33,5 +34,47 @@
         "v": "כׇּל הַכָּבוֹד! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-c-06",
+    "recall": [
+      "c.numc03.10"
+    ],
+    "together": [
+      {
+        "id": "c.numc06.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.line",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.numc06.2",
+      "c.numc06.7",
+      "c.numc06.3",
+      "c.numc06.4",
+      "c.numc06.5",
+      "c.numc06.6",
+      "c.numc06.14"
+    ],
+    "use": [
+      "c.numc06.8"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

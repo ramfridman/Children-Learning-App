@@ -16,7 +16,8 @@
   "items": [
     "cs.robot.plan.1",
     "cs.robot.plan.2",
-    "cs.robot.plan.3"
+    "cs.robot.plan.3",
+    "b15.csa04.1"
   ],
   "estimatedMinutes": 5,
   "sequence": 3,
@@ -28,5 +29,40 @@
         "v": "וַאוּ! תִּכְנַנְתֶּם אֶת הַדֶּרֶךְ."
       }
     ]
+  },
+  "parts": {
+    "show": "show.cs-a-04",
+    "recall": [
+      "b15.csa03.1"
+    ],
+    "together": [
+      {
+        "id": "cs.robot.plan.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.tzaadon.together.robot",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים כׇּל מִשְׁבֶּצֶת בְּקוֹל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "cs.robot.plan.2",
+      "cs.robot.plan.3",
+      "b15.csa04.1"
+    ],
+    "handover": {
+      "vo": "vo:host.tzaadon.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הָרוֹבּוֹט מְחַכֶּה לָכֶם."
+        }
+      ]
+    }
   }
 }

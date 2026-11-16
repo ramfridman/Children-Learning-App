@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ import '../strings/he.dart';
 import 'hint_widgets.dart';
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
+import 'host_moves.dart';
+import 'lesson_arc.dart' show ArcPart, ArcStep;
 import 'lesson_controller.dart';
 import 'template_session.dart';
 
@@ -36,14 +39,16 @@ class GiveLayout {
         Offset(tray.left + (i % cols + 0.5) * cw, tray.top + (i ~/ cols + 0.5) * ch),
     ];
     if (a.frame) {
-      // The places are the cells of the frame (two, one above the other, for more than ten), row by row from the left.
-      final int frames = math.max(1, (n / 10).ceil());
+      // The places are the cells of the frame (two, one above the other, for more than ten), row by row from the left; the objects the frame
+      // starts with are in the first ones, and the pile's go in the places after them.
+      final int cells = a.cellCount;
+      final int frames = math.max(1, (cells / 10).ceil());
       cell = math.min((flower.width - 9) / 5, (flower.height - 9 * frames - 6 * (frames - 1)) / (2 * frames));
       final double left = flower.center.dx - (5 * cell + 9) / 2;
       final double top = flower.center.dy - (frames * (2 * cell + 9) + 6 * (frames - 1)) / 2;
       slotSize = cell * 0.9;
       slots = <Offset>[
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < cells; i++)
           Offset(
             left + 4.5 + (i % 5 + 0.5) * cell,
             top + (i ~/ 10) * (2 * cell + 15) + 4.5 + ((i % 10) ~/ 5 + 0.5) * cell,
@@ -115,11 +120,62 @@ class GiveNSession extends TemplateSession {
   late final HintPlayer _hint = HintPlayer(this);
 
   void _place(int i) {
-    if (placed.contains(i) || demoRunning) return;
+    if (placed.contains(i) || demoRunning || hosting) return;
+    // A Show takes what the host left for the child and no more: the last object ends it.
+    if (activity.isShow && placed.length >= activity.n) return;
     placed.add(i);
     selected = null;
     goal = false;
     notify();
+    if (activity.isShow && placed.length == activity.n) {
+      _busy = true;
+      ringState = AnswerState.correct;
+      finishShow();
+    }
+  }
+
+  // ---- the host's part (a Show, the lead of a Together item) ----
+
+  /// The host's hand takes the next pile object and puts it on the target: the object goes to its place, and the hand presses where it was.
+  List<HostMove> _hostGives(int count) {
+    final GiveLayout? l = _stage.isEmpty ? null : GiveLayout(_stage, activity);
+    final List<int> next = <int>[
+      for (int i = 0; i < activity.sourceCount; i++)
+        if (!placed.contains(i)) i,
+    ].take(count).toList();
+    return <HostMove>[
+      for (final int i in next) HostMove(l?.pile[i], () => placed.add(i), rest: count > 4 ? 350 : 600),
+    ];
+  }
+
+  @override
+  void startHost() {
+    final ArcStep? step = controller.step;
+    if (step == null || hosting) return;
+    if (activity.isShow) {
+      unawaited(
+        playShow(
+          activity.show!,
+          move: (ShowStep s, {required bool fast}) => hostTour(_hint, _hostGives(s.move ?? 1), fast: fast),
+        ),
+      );
+    } else if (step.part == ArcPart.together && controller.leading && step.lead > 0) {
+      unawaited(playLead(<Future<void> Function()>[() => hostTour(_hint, _hostGives(step.lead))]));
+    }
+  }
+
+  /// A touch on a reminder skips what the host still has to do: its objects are on the target, and the child's step is left.
+  @override
+  void onScreenTouch() {
+    if (!activity.isShow) return;
+    skipHost(() {
+      _hint.clear();
+      for (final ShowStep s in activity.show!.hostSteps) {
+        for (final HostMove m in _hostGives(s.move ?? 1)) {
+          m.act();
+        }
+      }
+    });
   }
 
   void _giveBack() {
@@ -138,7 +194,7 @@ class GiveNSession extends TemplateSession {
   }
 
   void _tapAt(Offset p) {
-    if (_busy || demoRunning || ringState == AnswerState.correct) return;
+    if (_busy || hosting || demoRunning || ringState == AnswerState.correct) return;
     final GiveLayout l = GiveLayout(_stage, activity);
     final int? hit = _pileAt(l, p);
     if (hit != null) {
@@ -157,7 +213,7 @@ class GiveNSession extends TemplateSession {
   }
 
   void _panStart(Offset p) {
-    if (_busy || demoRunning || ringState == AnswerState.correct) return;
+    if (_busy || hosting || demoRunning || ringState == AnswerState.correct) return;
     final int? hit = _pileAt(GiveLayout(_stage, activity), p);
     if (hit == null) return;
     dragging = hit;
@@ -186,7 +242,7 @@ class GiveNSession extends TemplateSession {
   }
 
   Future<void> submit() async {
-    if (_busy || placed.isEmpty || demoRunning || ringState == AnswerState.correct) return;
+    if (_busy || activity.isShow || placed.isEmpty || demoRunning || ringState == AnswerState.correct) return;
     _busy = true;
     final Outcome o = await controller.giveN(placed.length);
     if (disposed) return;
@@ -210,6 +266,10 @@ class GiveNSession extends TemplateSession {
   @override
   void onReset() {
     placed.clear();
+    // The objects the host gave in the lead of a Together item stay given.
+    if (controller.step?.part == ArcPart.together && !controller.leading) {
+      placed.addAll(<int>[for (int i = 0; i < controller.step!.lead; i++) i]);
+    }
     selected = null;
     dragging = null;
     dragAt = null;
@@ -282,7 +342,12 @@ class GiveNSession extends TemplateSession {
     if (!_stage.isEmpty) {
       // The hand takes each one from the pile and puts it on the flower, with its badge, as the guide gives it.
       final GiveLayout l = GiveLayout(_stage, activity);
-      _hint.play(pointerGivePlan(l.pile.take(activity.n).toList(), l.slots.take(activity.n).toList()));
+      _hint.play(
+        pointerGivePlan(
+          l.pile.take(activity.n).toList(),
+          l.slots.skip(activity.prefilled).take(activity.n).toList(),
+        ),
+      );
     }
     for (int i = 0; i < activity.n; i++) {
       later(Duration(milliseconds: 300 + CountDemo.stepMs * i), () {
@@ -312,50 +377,57 @@ class GiveNSession extends TemplateSession {
   Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
 
   @override
-  Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
-    listenable: this,
-    builder: (BuildContext c, Widget? _) => Directionality(
-      textDirection: TextDirection.ltr,
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.topCenter,
-        children: <Widget>[
-          // The answer area has room beside the button: the goal card (hint 1) or the counting aid (hint 2) opens there, its
-          // top under the stage, and the button stays where it is.
-          if (goal || fingers > 0)
-            Positioned(
-              top: AnswerAreaCard.place(spec).top,
-              left: 0,
-              // The card's end is 16 from the button's edge (the button's tile is 96 wide with a 12 tap margin on each side).
-              right: spec.tilesWidth / 2 + 60 + 16,
-              height: AnswerAreaCard.place(spec).height,
-              child: IgnorePointer(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: goal
-                      ? FittedBox(
-                          fit: BoxFit.scaleDown,
-                          alignment: Alignment.centerRight,
-                          child: GoalCard(n: activity.n),
-                        )
-                      : CountingAid(n: activity.n, shown: fingers, scale: AnswerAreaCard.scaleOf(spec)),
+  Widget? buildTiles(BuildContext context, ActivitySpec spec) => activity.isShow
+      // a Show has no check: it ends on the child's last object
+      ? null
+      : ListenableBuilder(
+          listenable: this,
+          builder: (BuildContext c, Widget? _) => Directionality(
+            textDirection: TextDirection.ltr,
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: <Widget>[
+                // The answer area has room beside the button: the goal card (hint 1) or the counting aid (hint 2) opens there, its
+                // top under the stage, and the button stays where it is.
+                if (goal || fingers > 0)
+                  Positioned(
+                    top: AnswerAreaCard.place(spec).top,
+                    left: 0,
+                    // The card's end is 16 from the button's edge (the button's tile is 96 wide with a 12 tap margin on each side).
+                    right: spec.tilesWidth / 2 + 60 + 16,
+                    height: AnswerAreaCard.place(spec).height,
+                    child: IgnorePointer(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: goal
+                            ? FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerRight,
+                                child: GoalCard(n: activity.n),
+                              )
+                            : CountingAid(n: activity.n, shown: fingers, scale: AnswerAreaCard.scaleOf(spec)),
+                      ),
+                    ),
+                  ),
+                Opacity(
+                  opacity: placed.isEmpty ? 0.4 : 1,
+                  child: AnswerTile(
+                    key: const Key('give-done'),
+                    semanticLabel: He.giveDoneSemantics.text,
+                    state: ringState == AnswerState.correct ? AnswerState.correct : AnswerState.idle,
+                    onPressed: placed.isEmpty ? null : submit,
+                    child: const SizedBox(
+                      width: 56,
+                      height: 56,
+                      child: CustomPaint(painter: _CheckPainter()),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          Opacity(
-            opacity: placed.isEmpty ? 0.4 : 1,
-            child: AnswerTile(
-              key: const Key('give-done'),
-              semanticLabel: He.giveDoneSemantics.text,
-              state: ringState == AnswerState.correct ? AnswerState.correct : AnswerState.idle,
-              onPressed: placed.isEmpty ? null : submit,
-              child: const SizedBox(width: 56, height: 56, child: CustomPaint(painter: _CheckPainter())),
+              ],
             ),
           ),
-        ],
-      ),
-    ),
-  );
+        );
 }
 
 /// The pause between the steps of a worked example.
@@ -452,7 +524,7 @@ class _GiveStage extends StatelessWidget {
                       key: const Key('give-frame'),
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        for (int f = 0; f < math.max(1, (a.sourceCount / 10).ceil()); f++) ...<Widget>[
+                        for (int f = 0; f < math.max(1, (a.cellCount / 10).ceil()); f++) ...<Widget>[
                           if (f > 0) const SizedBox(height: 6),
                           TenFrames(total: 10, filled: 0, cell: l.cell),
                         ],
@@ -465,13 +537,23 @@ class _GiveStage extends StatelessWidget {
                   rect: l.flower,
                   child: PackSvg(a.assets.svg(a.targetSprite), key: const Key('give-flower')),
                 ),
+              // The objects the frame starts with stand in its first cells and stay.
+              for (int j = 0; j < a.prefilled; j++)
+                Positioned(
+                  key: Key('give-prefilled-$j'),
+                  left: l.slots[j].dx - l.slotSize / 2,
+                  top: l.slots[j].dy - l.slotSize / 2,
+                  width: l.slotSize,
+                  height: l.slotSize,
+                  child: IgnorePointer(child: PackSvg(a.assets.svg(a.sourceSprite))),
+                ),
               for (int i = 0; i < a.sourceCount; i++) _butterfly(a, l, i),
               Positioned.fill(child: s._hint.body(size)),
               Positioned(
                 left: l.flower.left,
                 top: l.flower.bottom - 30,
                 width: l.flower.width,
-                child: s.placed.isEmpty
+                child: s.placed.isEmpty && a.prefilled == 0
                     ? const SizedBox.shrink()
                     : Center(
                         child: Container(
@@ -485,7 +567,7 @@ class _GiveStage extends StatelessWidget {
                           child: Directionality(
                             textDirection: TextDirection.ltr,
                             child: Text(
-                              '${s.placed.length}',
+                              '${a.prefilled + s.placed.length}',
                               style: const TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w800,
@@ -508,7 +590,7 @@ class _GiveStage extends StatelessWidget {
     final int slot = s.placed.indexOf(i);
     final bool onFlower = slot >= 0;
     final bool dragged = s.dragging == i && s.dragAt != null;
-    final Offset c = dragged ? s.dragAt! : (onFlower ? l.slots[slot] : l.pile[i]);
+    final Offset c = dragged ? s.dragAt! : (onFlower ? l.slots[a.prefilled + slot] : l.pile[i]);
     final double size = onFlower ? l.slotSize : l.pileSize;
     final bool picked = s.selected == i;
     final bool wiggle = s.wiggling == i;

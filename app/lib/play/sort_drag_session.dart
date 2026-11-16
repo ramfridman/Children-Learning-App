@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
+import '../content/arc_checks.dart' show hintFamilyOf;
 import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
@@ -336,31 +337,35 @@ class SortDragSession extends TemplateSession {
 
   SortItem _itemOf(ShowStep step) => activity.items.firstWhere((SortItem i) => i.id == step.item);
 
+  /// The bin the host puts [item] in: its own, or in a share the next plate in turn (a deal: the first card to the first friend, the second to the
+  /// second, and round again).
+  String _binOf(SortItem item) =>
+      item.bin ?? activity.bins[activity.items.indexOf(item) % activity.bins.length].id;
+
   /// The host's hand takes [item] from the tray and puts it in its bin: the same path as the worked example of a hint, at the pace of the
   /// look ([fast]: a reminder). A step with a motion of its own (a finger along the sides, a count) rests on the picture first, as long as the
   /// motion would take; what it looks like is the design's (the hand's own motions are drawn by the design-director).
   Future<void> _hostMove(SortItem item, {required bool fast, bool rests = false}) async {
+    // With reduced movement no hand travels: the card is in its bin after its pause. (The pace is the same for every look: a full Show of a sort is
+    // 19 seconds or so, and the youngest looks have 25.)
     final int taken = fast ? 300 : 850;
     final int put = fast ? 550 : 1250;
     final int over = fast ? 900 : 2200;
     final int rest = rests && !fast ? 600 : 0;
     final List<SortItem> left = tray;
+    final String bin = _binOf(item);
     hintItem = item.id;
     notify();
-    if (_canDraw) {
+    if (_canDraw && !stillHost) {
       _hint.play(
         handTourPlan(<HandStop>[
           HandStop(_trayTip(left.length, left.indexWhere((SortItem i) => i.id == item.id)), taken + rest),
-          _dropStop(
-            activity.bins.length,
-            activity.bins.indexWhere((SortBin b) => b.id == item.bin),
-            over - taken,
-          ),
+          _dropStop(activity.bins.length, activity.bins.indexWhere((SortBin b) => b.id == bin), over - taken),
         ]),
       );
     }
     await pause(Duration(milliseconds: put + rest));
-    placed[item.id] = item.bin!;
+    placed[item.id] = bin;
     hintItem = null;
     notify();
     await pause(Duration(milliseconds: over - put));
@@ -416,6 +421,70 @@ class SortDragSession extends TemplateSession {
     placed[item.id] = item.bin!;
     _lifted = null;
     notify();
+  }
+
+  /// What hint 2 of a sort draws by the family of its line (`vo:hint.<family>.h2`, M11-stage2 section 11.4): the sticks lifting off the sides, the print
+  /// in the sand, the push, the turn, the same motions of the host's hand as the Show's, done on the next picture of the tray. The picture comes back to
+  /// the tray afterwards and goes to no bin: a hint shows how to look, never where to put it.
+  static const Map<String, ShowStep> _familyMotions = <String, ShowStep>{
+    'shp_equal': ShowStep(byHost: true, motion: 'sticks', detail: 'sides'),
+    'shp_face': ShowStep(byHost: true, motion: 'stamp', detail: 'face'),
+    'shp_roll': ShowStep(byHost: true, motion: 'push'),
+    'shp_solid_roll': ShowStep(byHost: true, motion: 'push'),
+    'shp_square_turn': ShowStep(byHost: true, motion: 'turn', detail: 'upright'),
+  };
+
+  /// Draws the picture of hint 2's family on the next picture of the tray; false when the host's art does not draw it here (a room with no hand art, a
+  /// picture with no outline), and the hint then lights the bins.
+  Future<bool> _familyHint() async {
+    final ShowStyle? style = showStyle;
+    final ShowStep? step =
+        _familyMotions[hintFamilyOf(activity.hints.length > 1 ? activity.hints[1].say.vo : null)];
+    final List<SortItem> left = tray;
+    if (style == null || step == null || left.isEmpty || !_canDraw || hosting) return false;
+    final SortItem item = left.first;
+    final bool solid = ShowDirector.solidMotions.contains(step.motion);
+    final ShowOutline? outline = item.sprite == null ? null : style.art.of(item.sprite!);
+    if (!solid && outline == null) return false;
+    if (solid && step.motion == 'stamp' && printKindOf(item.sprite!, detail: step.detail) == null) {
+      return false;
+    }
+    hosting = true;
+    final ShowDirector director = ShowDirector(this, style, showMarks);
+    final Offset tile = _trayTip(left.length, 0);
+    final double side = ShowDirector.spotSide(_size);
+    showMarks.scale = hintScale(_size);
+    final Rect spot = Rect.fromCenter(center: _size.center(Offset.zero), width: side, height: side);
+    // the thing goes nowhere in particular: along the middle of the stage, not into a bin
+    final Rect nowhere = Rect.fromCenter(
+      center: _size.center(Offset.zero) + Offset(side * 0.45, 0),
+      width: 40,
+      height: 40,
+    );
+    _lifted = item.id;
+    notify();
+    await director.lift(
+      from: Rect.fromCenter(center: tile + const Offset(0, 36), width: 44, height: 44),
+      spot: spot,
+      svg: activity.assets.svg(item.sprite!),
+    );
+    if (solid) {
+      await director.solid(
+        step,
+        sprite: item.sprite!,
+        spot: spot,
+        into: nowhere,
+        onto: nowhere,
+        stage: _size,
+      );
+    } else {
+      await director.motion(step, outline!, spot);
+    }
+    showMarks.clear();
+    _lifted = null;
+    hosting = false;
+    notify();
+    return true;
   }
 
   /// What the host does on this screen, if anything: a Show (it sorts every picture but the child's), or the lead of a Together item.
@@ -604,7 +673,7 @@ class SortDragSession extends TemplateSession {
         ? controller.step!.lead
         : 0;
     for (final SortItem i in activity.items.take(lead)) {
-      placed[i.id] = i.bin!;
+      placed[i.id] = _binOf(i);
     }
     selected = null;
     hintItem = null;
@@ -634,7 +703,12 @@ class SortDragSession extends TemplateSession {
       case HintPicture.eachPlace:
         _lightBins(withItem: false);
       case HintPicture.nextPicture:
-        _lightBins(withItem: true);
+        // the picture of hint 2's family when the host's art draws it (sticks, print, push, turn), else the light of the bins
+        unawaited(
+          _familyHint().then((bool drawn) {
+            if (!drawn && !disposed) _lightBins(withItem: true);
+          }),
+        );
       case HintPicture.firstRound:
         _dealDemo(firstRoundOnly: true);
       default:

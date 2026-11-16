@@ -14,16 +14,16 @@
     "MATH-C-01"
   ],
   "items": [
+    "c.mathc01.32",
+    "c.mathc01.33",
+    "c.mathc01.21",
+    "c.mathc01.25",
+    "c.mathc01.26",
     "c.mathc01.19",
     "c.mathc01.20",
-    "c.mathc01.21",
     "c.mathc01.22",
     "c.mathc01.23",
     "c.mathc01.24",
-    "c.mathc01.25",
-    "c.mathc01.26",
-    "c.mathc01.32",
-    "c.mathc01.33",
     "c.mathc01.34"
   ],
   "estimatedMinutes": 7,
@@ -36,5 +36,47 @@
         "v": "נִפְלָא! עֲבַרְתֶּם אֶת כׇּל הַמִּשְׁפָּחוֹת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-c-01",
+    "recall": [
+      "b.mathb08.1"
+    ],
+    "together": [
+      {
+        "id": "c.mathc01.32",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.scale",
+          "caption": [
+            {
+              "t": "he",
+              "v": "מִסְתַּכְּלִים עַל הַמֹּאזְנַיִם, וּמוֹסִיפִים לְאַט."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "c.mathc01.33",
+      "c.mathc01.21",
+      "c.mathc01.25",
+      "c.mathc01.26",
+      "c.mathc01.19",
+      "c.mathc01.20",
+      "c.mathc01.22",
+      "c.mathc01.23",
+      "c.mathc01.24",
+      "c.mathc01.34"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

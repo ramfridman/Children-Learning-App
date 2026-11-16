@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ import 'hints/hint_marks.dart';
 import 'hints/pointer_plans.dart';
 import 'hints/hint_player.dart';
 import 'hints/tile_points.dart';
+import 'host_moves.dart';
+import 'lesson_arc.dart' show ArcPart, ArcStep;
 import 'lesson_controller.dart';
 import 'response_code.dart';
 import 'template_session.dart';
@@ -151,8 +154,103 @@ class RobotPathSession extends TemplateSession {
     return null;
   }
 
+  // ---- the host's part (a Show, the lead of a Together item) ----
+
+  /// The host lays one arrow: in a plan the card goes in the row of steps, in direct control the robot moves one square.
+  void _lay(String dir) {
+    if (activity.plan) {
+      program.add(dir);
+      return;
+    }
+    final (int, int) next = _after(pos, dir);
+    if (_inside(next)) pos = next;
+  }
+
+  /// The host's hand presses the arrow [dir] (the tile of the pad) and lays it.
+  HostMove _arrowMove(String dir) {
+    final ActivitySpec? spec = _spec;
+    return HostMove(spec != null && _canDraw ? arrowTip(spec, dir) : null, () => _lay(dir), rest: 650);
+  }
+
+  @override
+  void startHost() {
+    final ArcStep? step = controller.step;
+    if (step == null || hosting) return;
+    if (activity.isShow) {
+      unawaited(
+        playShow(
+          activity.show!,
+          move: (ShowStep s, {required bool fast}) =>
+              hostTour(_hint, <HostMove>[_arrowMove(s.arrow!)], fast: fast),
+        ),
+      );
+    } else if (step.part == ArcPart.together && controller.leading && step.lead > 0) {
+      unawaited(
+        playLead(<Future<void> Function()>[
+          for (final String d in activity.solution.take(step.lead))
+            () => hostTour(_hint, <HostMove>[_arrowMove(d)]),
+        ]),
+      );
+    }
+  }
+
+  /// A touch on a reminder skips what the host still has to do: its arrows are laid, and the child's step is left.
+  @override
+  void onScreenTouch() {
+    if (!activity.isShow) return;
+    skipHost(() {
+      _hint.clear();
+      for (final ShowStep s in activity.show!.hostSteps) {
+        _lay(s.arrow!);
+      }
+    });
+  }
+
+  /// A Show, and the child lays an arrow: the one the host left ends the Show (a plan is run first, so that the child sees where it leads); any other
+  /// is "let's look again". Nothing is written.
+  Future<void> _showArrow(String dir) async {
+    final String want = activity.show!.childStep.arrow!;
+    if (dir != want) {
+      _busy = true;
+      hintStep = want;
+      lookAgain(activity);
+      notify();
+      later(TemplateSession.notYetPause, () {
+        hintStep = null;
+        _busy = false;
+        notify();
+      });
+      return;
+    }
+    _busy = true;
+    _lay(dir);
+    notify();
+    if (activity.plan) {
+      // The plan runs on its own: the robot walks the cards, one square for each.
+      running = true;
+      pos = activity.robotAt;
+      notify();
+      final List<String> steps = List<String>.of(program);
+      for (int i = 0; i < steps.length; i++) {
+        await pause(Duration(milliseconds: stillHost ? 300 : 450));
+        final (int, int) next = _after(pos, steps[i]);
+        if (_inside(next)) pos = next;
+        notify();
+      }
+      await pause(const Duration(milliseconds: 450));
+      running = false;
+    }
+    ring = AnswerState.correct;
+    notify();
+    finishShow();
+  }
+
   Future<void> arrow(String dir) async {
-    if (_busy || running || ring == AnswerState.correct) return;
+    if (_busy || hosting || running || ring == AnswerState.correct) return;
+    if (activity.isShow) {
+      await _showArrow(dir);
+      return;
+    }
     if (controller.guided && dir != _nextOfHelp) {
       if (controller.answerShown) hintStep = _nextOfHelp;
       notify();
@@ -183,7 +281,7 @@ class RobotPathSession extends TemplateSession {
   }
 
   void undo() {
-    if (_busy || running || program.isEmpty) return;
+    if (_busy || hosting || activity.isShow || running || program.isEmpty) return;
     program.removeLast();
     // The undo button stays lit until what is left of the plan is the start of the way (hint 2 lit it, see [_firstStep]).
     if (hintStep == 'undo' && _planOnWay != null) hintStep = null;
@@ -192,7 +290,8 @@ class RobotPathSession extends TemplateSession {
 
   /// Plan mode: the robot walks the program, one square at a time.
   Future<void> go() async {
-    if (_busy || running || program.isEmpty || ring == AnswerState.correct) return;
+    if (_busy || hosting || activity.isShow || running || program.isEmpty) return;
+    if (ring == AnswerState.correct) return;
     running = true;
     pos = activity.robotAt;
     hintStep = null;
@@ -400,6 +499,10 @@ class RobotPathSession extends TemplateSession {
     _hint.clear();
     pos = activity.robotAt;
     program.clear();
+    // The arrows the host laid in the lead of a Together item stay laid.
+    if (controller.step?.part == ArcPart.together && !controller.leading) {
+      activity.solution.take(controller.step!.lead).forEach(_lay);
+    }
     trail.clear();
     hintStep = null;
     spotlight = false;

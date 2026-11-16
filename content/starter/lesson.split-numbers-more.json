@@ -30,5 +30,41 @@
         "v": "מְצֻיָּן! כׇּל חֵלֶק בִּמְקוֹמוֹ."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-14",
+    "recall": [
+      "b15.numa10.1"
+    ],
+    "together": [
+      {
+        "id": "b.numb14.6",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.nekudi.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.numb14.7",
+      "b.numb14.8",
+      "b.numb14.9",
+      "b.numb14.10"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

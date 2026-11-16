@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../child/activity_shell.dart';
 import '../content/hint_ladder.dart';
-import '../content/models.dart' show Activity, ShowScript, ShowStep, Spoken;
+import '../content/models.dart' show Activity, ShowPredict, ShowScript, ShowStep, Spoken;
 import '../speech/answer_matcher.dart';
 import 'lesson_arc.dart' show ShowKind;
 import 'lesson_controller.dart';
@@ -102,6 +102,57 @@ abstract class TemplateSession extends ChangeNotifier {
   /// The Show on screen is a reminder (the child has met the skill): a touch skips what the host does.
   bool get reminder => controller.step?.show == ShowKind.reminder;
 
+  /// How the host's moves are paced and drawn for this child (set by the lesson screen): the youngest looks (P1, P2) are slower, and with
+  /// reduced movement no hand travels and nothing glides: each move is in its place after its pause.
+  bool slowHost = false;
+  bool stillHost = false;
+
+  /// The host's question of a predict-then-watch Show, while its answers are on offer (null otherwise): the lesson screen draws them in place of
+  /// the template's tiles. The child's touch is [guess]; it is never scored, written or told right or wrong.
+  final ValueNotifier<ShowPredict?> predicting = ValueNotifier<ShowPredict?>(null);
+  Completer<String>? _guessed;
+
+  /// The guess the child touched, as its id (a test reads it; it is kept for this screen only and goes nowhere).
+  String? guessedId;
+
+  /// The most the host waits for a guess: a child who does not touch goes on with the example (no timer is shown).
+  static const Duration guessCeiling = Duration(seconds: 20);
+
+  /// The child touched the answer [id] of the host's question.
+  void guess(String id) {
+    final Completer<String>? c = _guessed;
+    if (c == null || c.isCompleted) return;
+    guessedId = id;
+    notify();
+    c.complete(id);
+  }
+
+  /// The host asks its question and, when it has answers, waits for the child's guess (then they go, and the example runs). The line was
+  /// asked by the host's bubble; a question with no answers is asked, and the host holds a moment before it begins.
+  Future<void> ask(ShowPredict predict) async {
+    if (predict.line != null) await sayLine(predict.line!);
+    if (!predict.asksForGuess) {
+      await pause(const Duration(milliseconds: 1500));
+      return;
+    }
+    final Completer<String> c = _guessed = Completer<String>();
+    predicting.value = predict;
+    await Future.any(<Future<Object?>>[c.future, pause(guessCeiling)]);
+    // The guess stays lit for a moment, so that the child sees the touch was taken.
+    await pause(const Duration(milliseconds: 600));
+    predicting.value = null;
+  }
+
+  /// The child made the last step of a Show: the host's key line is said again as the praise, nothing is written, and the lesson goes on.
+  void finishShow() {
+    controller.completePractice();
+    notify();
+    later(praise, controller.next);
+  }
+
+  /// A move of the child in a Show that is not the step the host left: the host says "let's look again". Nothing is written or counted.
+  void lookAgain(Activity activity) => controller.speak(activity.feedback.forIncorrect(null));
+
   /// How the host's hand is drawn in a Show (its pointer, its marks, the lift to the middle of the stage), or null: the hand of the hints does the
   /// worked example. The lesson screen sets it when the host has the art for it (Kubi, M11 Stage 2); [showMarks] is what is drawn now.
   ShowStyle? showStyle;
@@ -170,6 +221,11 @@ abstract class TemplateSession extends ChangeNotifier {
     hosting = true;
     notify();
     await lineSaid(fast ? reminderLinePause : hostLinePause);
+    // Predict, then watch: the host asks what will happen before it runs the example (the full Show only; a reminder has the key line alone).
+    if (!fast && show.predict != null) {
+      await ask(show.predict!);
+      if (!alive()) return;
+    }
     for (final ShowStep step in show.hostSteps) {
       if (!alive()) return;
       if (!fast && step.saysKey) await sayLine(show.lines['key']!);
@@ -328,6 +384,7 @@ abstract class TemplateSession extends ChangeNotifier {
   void dispose() {
     _disposed = true;
     canMoveOn.dispose();
+    predicting.dispose();
     for (final Timer t in _timers) {
       t.cancel();
     }

@@ -15,7 +15,8 @@
     "COL-A-07"
   ],
   "items": [
-    "b15.cola07.2"
+    "b15.cola07.2",
+    "col.find.blue.ball"
   ],
   "estimatedMinutes": 4,
   "sequence": 13,
@@ -38,7 +39,8 @@
       "b15.cola01.1"
     ],
     "alone": [
-      "b15.cola07.2"
+      "b15.cola07.2",
+      "col.find.blue.ball"
     ],
     "handover": {
       "vo": "vo:host.goni.handover.3",

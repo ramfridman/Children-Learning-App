@@ -1,0 +1,152 @@
+{
+  "schema": "activity/v1",
+  "id": "show.math-b-01",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "number_line",
+  "templateVersion": "1.2",
+  "domain": "math",
+  "band": "B",
+  "skills": [
+    {
+      "id": "MATH-B-01",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.pnina.show.math_b_01.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "שָׁלוֹשׁ, וְעוֹד שְׁתַּיִם."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+      0,
+      3,
+      10
+    ],
+    "start": 3,
+    "hops": [
+      1,
+      1
+    ]
+  },
+  "answer": {
+    "type": "line",
+    "mode": "jump",
+    "target": 5
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.pnina.show.math_b_01.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מַתְחִילִים בְּשָׁלוֹשׁ וְקוֹפְצִים."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "שָׁלוֹשׁ, וְעוֹד שְׁתַּיִם."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.pnina.show.math_b_01.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "שָׁלוֹשׁ, וְעוֹד שְׁתַּיִם."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.pnina.show.math_b_01.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מַתְחִילִים בְּשָׁלוֹשׁ וְקוֹפְצִים."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.pnina.show.math_b_01.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַקְּפִיצָה הַשְּׁנִיָּה."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "hop": 1,
+        "say": "key"
+      },
+      {
+        "by": "child",
+        "hop": 1
+      }
+    ],
+    "teaches": []
+  }
+}

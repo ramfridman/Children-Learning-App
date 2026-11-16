@@ -30,5 +30,43 @@
         "v": "כׇּל הַכָּבוֹד! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁתִּי."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-a-06",
+    "recall": [
+      "b15.numa04.1"
+    ],
+    "together": [
+      {
+        "id": "give.cats.2",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.give",
+          "caption": [
+            {
+              "t": "he",
+              "v": "סוֹפְרִים בִּזְמַן שֶׁנּוֹתְנִים, וְעוֹצְרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "give.ducks.3",
+      "give.dogs.4",
+      "b15.numa06.1"
+    ],
+    "use": [
+      "b15.numa06.2"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

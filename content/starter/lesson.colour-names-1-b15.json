@@ -18,6 +18,7 @@
     "b15.cola02.3",
     "b15.cola02.4",
     "b15.cola02.5",
+    "b15.cola02.1",
     "b15.cola02.6"
   ],
   "estimatedMinutes": 4,
@@ -50,7 +51,8 @@
     ],
     "alone": [
       "b15.cola02.4",
-      "b15.cola02.5"
+      "b15.cola02.5",
+      "b15.cola02.1"
     ],
     "use": [
       "b15.cola02.6"

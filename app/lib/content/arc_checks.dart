@@ -10,6 +10,7 @@ import 'dart:math' as math;
 
 import '../strings/niqqud.dart';
 import 'hint_ladder.dart';
+import 'pay_way.dart';
 import 'w1_words.dart';
 
 typedef ArcSay = void Function(String file, String path, String message);
@@ -30,12 +31,19 @@ List<String> _strings(Object? v) => <String>[
 
 /// The domains whose lessons are played in parts. A land is added when its re-cut and its Shows are done (2.4a Shape Forest; 2.4b to 2.4e the
 /// others): from then on every rule below holds for all of its lessons and skills.
+///
+/// THE SWITCH: the five lands that are built but not yet asked for the rules are `numbers` (Counting Hills), `math` (Market), `colors` (Colour Bay), `logic`
+/// (Riddle Grotto) and `cs` (Robot Harbour); put them in this set (one line) once `arc_checks_test.dart` ("the five lands under the rules") says they are clean.
 const Set<String> arcDomains = <String>{'shapes'};
 
-/// Lessons of an arc domain that stay a flat list for now, and what each waits for (V1 names them; a lesson not here has parts).
-const Map<String, String> arcLessonsWaiting = <String, String>{
-  'where-is-it': 'SHP-A-08: its Show is a drag of a ball on, under, next to, in a box, which waits for step 2.2c (a drag in listen_do)',
-  'where-is-it-again': 'SHP-A-08: as where-is-it',
+/// Every land that has a room (the six): what the rules would see once all of them are switched in.
+const Set<String> allArcDomains = <String>{'shapes', 'numbers', 'math', 'colors', 'logic', 'cs'};
+
+/// The lessons of the arc domains that stay a flat list for now, each with what it waits for: a lesson whose Show waits says so itself (`partsWait`,
+/// written by the arc build from the Show it could not build), so no hand list is kept. V1 asks of a lesson of an arc domain either `parts` or this.
+Map<String, String> lessonsWaiting(Map<String, Map<String, Object?>> lessons) => <String, String>{
+  for (final MapEntry<String, Map<String, Object?>> l in lessons.entries)
+    if (l.value['parts'] == null && l.value['partsWait'] is String) l.key: l.value['partsWait']! as String,
 };
 
 /// Skills that wait for a template that does not exist yet (M11-stage2 section 4.4): their picking is not counted against the caps, and each
@@ -79,6 +87,22 @@ const Map<String, String> tagWaivers = <String, String>{
   'b.shpb03.1': 'a thin triangle shows no catalogued error: no tag is honest',
   'b.shpb03.3': 'a thin triangle shows no catalogued error: no tag is honest',
   'b.shpb03.5': 'a thin triangle shows no catalogued error: no tag is honest',
+  // The other five lands (M11-stage2 section 11.5, content/units/pending/stage2-recuts.json `waivers`): taps that stay with no second honest tag.
+  'b.colb03.6':
+      'light red asked; no shade of a hue near red exists; the plain purple shows no catalogued error',
+  'b.mathb10.4': 'equal groups, how many in all: one group\'s size or a wrong group count has no catalogue tag (a proposal: M-GRP-ONE)',
+  'b.mathb10.5': 'as b.mathb10.4',
+  'b.mathb10.6': 'as b.mathb10.4',
+  'b.mathb10.8': 'as b.mathb10.4 (how many plates)',
+  'col.world.banana.ripe':
+      'the colour of a ripe banana: green (unripe) shows world knowledge, not a catalogued colour error',
+  'col.world.grass': 'the colour of grass: red shows no catalogued error',
+  'col.world.sun': 'the colour of the sun: green shows no catalogued error',
+  'math.graph.apples': 'a picture graph of equal icons: the shorter column has no honest tag (bigger icons would teach a misleading graph)',
+  'math.graph.fish': 'as math.graph.apples',
+  'math.graph.stars': 'as math.graph.apples',
+  'math.graph.stars2': 'as math.graph.apples',
+  'pick.red.flower': 'a hand-made butterflies item: the yellow flower shows no catalogued error',
 };
 
 /// Skills whose hands-on items have no honest tag to record beyond the one they carry (M11-stage2 section 11.2 item 3).
@@ -123,8 +147,34 @@ const Set<String> handsOnTemplates = <String>{
   'trace',
 };
 
-/// The templates that have a lead player: the host does the first steps of the item itself (M11-stage2 section 2.1).
-const Set<String> leadTemplates = <String>{'sort_drag', 'shape_builder', 'trace'};
+/// The templates that have a Show player, and (but for the clock, which has nothing to lead) a lead player: the host does the first steps of the item
+/// itself (M11-stage2 section 2.1).
+const Set<String> leadTemplates = <String>{
+  'sort_drag',
+  'shape_builder',
+  'trace',
+  'number_line',
+  'give_n',
+  'count_tap',
+  'build_pattern',
+  'balance',
+  'shop_pay',
+  'robot_path',
+  'clock_set',
+};
+
+/// The move words of the steps of a Show on each template that has no side or place of its own to check (see `ShowStep`): a step carries one of
+/// them (a pattern's step carries both of its pair).
+const Map<String, List<String>> showMoveWords = <String, List<String>>{
+  'number_line': <String>['hop', 'point', 'place'],
+  'give_n': <String>['move'],
+  'count_tap': <String>['touch'],
+  'build_pattern': <String>['cell', 'piece'],
+  'balance': <String>['block', 'put'],
+  'shop_pay': <String>['coin'],
+  'robot_path': <String>['arrow'],
+  'clock_set': <String>['to'],
+};
 
 /// The most host lines of a Show.
 const int showMaxLines = 3;
@@ -325,6 +375,34 @@ void checkShowActivity(String file, Map<String, Object?> a, ArcSay say) {
         'the steps are every side of the path, so that the child\'s step finishes the tracing ($sides sides, ${steps.length} steps)',
       );
     }
+  } else if (showMoveWords.containsKey(template)) {
+    final List<String> words = showMoveWords[template]!;
+    for (final (int i, Map<String, Object?> s) in steps.indexed) {
+      final bool ok = template == 'build_pattern'
+          ? words.every(s.containsKey)
+          : words.any((String w) => s.containsKey(w));
+      if (!ok) {
+        say(file, 'show.steps[$i]', 'a step of a $template Show carries its move word (${words.join(', ')})');
+      }
+    }
+    if (template == 'build_pattern') {
+      final int slots = (scene['slots'] as int?) ?? 0;
+      final Set<int> laid = <int>{for (final Map<String, Object?> s in steps) ?(s['cell'] as int?)};
+      final Set<int> given = <int>{
+        for (final Map<String, Object?> g in _maps(scene['given'])) g['cell']! as int,
+      };
+      for (final (int i, Map<String, Object?> s) in steps.indexed) {
+        if (((s['cell'] as int?) ?? 0) >= slots) {
+          say(file, 'show.steps[$i].cell', 'must be a place of the row');
+        }
+      }
+      if (laid.union(given).length != slots) {
+        say(file, 'show.steps', 'the given cells and the steps fill every place of the row');
+      }
+    }
+    if (template == 'number_line' && steps.last['place'] == null && steps.last['hop'] == null) {
+      say(file, 'show.steps', 'the child\'s step on a line is a hop or a place');
+    }
   } else {
     final Map<String, String> spriteOf = <String, String>{
       for (final Map<String, Object?> s in _maps(scene['slots'])) s['id']! as String: s['sprite']! as String,
@@ -350,12 +428,40 @@ void checkShowActivity(String file, Map<String, Object?> a, ArcSay say) {
 
 /// The steps an item gives the host to lead (sort: its cards, shape builder: its places, trace: the sides of its path); null for a template with
 /// no lead player.
-int? leadableSteps(Map<String, Object?> a) => switch (a['template']) {
-  'sort_drag' => _map(a['answer'])['mode'] == 'share' ? null : _maps(_map(a['scene'])['items']).length,
-  'shape_builder' => _maps(_map(a['scene'])['slots']).length,
-  'trace' => traceSideCount(_list(_map(a['scene'])['strokes'])),
-  _ => null,
-};
+int? leadableSteps(Map<String, Object?> a) {
+  final Map<String, Object?> scene = _map(a['scene']);
+  final Map<String, Object?> answer = _map(a['answer']);
+  final int? steps = switch (a['template']) {
+    'sort_drag' => _maps(scene['items']).length,
+    'shape_builder' => _maps(scene['slots']).length,
+    'trace' => traceSideCount(_list(scene['strokes'])),
+    // the hops of a jump (a place on a line has none)
+    'number_line' => answer['mode'] == 'jump' ? _list(scene['hops']).length : null,
+    // the objects the child adds, the touches, the blocks of a weighing (a comparison has none), the arrows of the way
+    'give_n' => answer['n'] as int?,
+    'count_tap' => _map(scene['objects'])['count'] as int?,
+    'balance' => answer['mode'] == 'balance' ? int.tryParse('${answer['result']}') : null,
+    'robot_path' => _list(answer['solution']).length,
+    // the places of a pattern that the child fills: not the given ones that are right
+    'build_pattern' => () {
+      final Map<int, Object?> given = <int, Object?>{
+        for (final Map<String, Object?> g in _maps(scene['given'])) g['cell']! as int: g['face'],
+      };
+      final List<Object?> row = _list(answer['sequence']);
+      return <int>[
+        for (int i = 0; i < row.length; i++)
+          if (given[i] != row[i]) i,
+      ].length;
+    }(),
+    'shop_pay' => fewestCoinWay(_map(a['scene'])['price'] as int, <String>[
+      for (final Map<String, Object?> p in _maps(scene['purse']))
+        for (int i = 0; i < (p['count']! as int); i++) p['kind']! as String,
+    ]).length,
+    _ => null,
+  };
+  // One step cannot be led and still leave the child one.
+  return steps == null || steps < 2 ? null : steps;
+}
 
 /// How many sides the host draws one at a time on a tracing: for each stroke, its parts corner to corner when it has few points (a polygon: 8 at the
 /// most), else four parts of equal length (a circle in quarters). The app's `traceSides` makes the same parts from the same rule.
@@ -380,11 +486,12 @@ void checkArc({
   required Map<String, Map<String, Object?>> skills,
   required ArcSay say,
   Map<String, String> tagWaived = tagWaivers,
+  Set<String> domains = arcDomains,
 }) {
   // A pack made before the arc (no lesson in parts) is checked as it always was: the arc rules are for the packs that have it.
   if (!lessons.values.any((Map<String, Object?> l) => l['parts'] != null)) return;
   bool inArc(Map<String, Object?> lesson) =>
-      _strings(lesson['skills']).any((String s) => arcDomains.contains(skills[s]?['domain']));
+      _strings(lesson['skills']).any((String s) => domains.contains(skills[s]?['domain']));
   final List<String> arcLessons = <String>[
     for (final MapEntry<String, Map<String, Object?>> l in lessons.entries)
       if (inArc(l.value)) l.key,
@@ -407,11 +514,11 @@ void checkArc({
         ? l['parts']! as Map<String, Object?>
         : null;
     if (parts == null) {
-      if (!arcLessonsWaiting.containsKey(id)) {
+      if (l['partsWait'] is! String) {
         say(
           file,
           'parts',
-          'a lesson of a land in a room is in parts (V1): a Show first, then Together, Alone and Use; or it is named in arcLessonsWaiting',
+          'a lesson of a land in a room is in parts (V1): a Show first, then Together, Alone and Use; or it says what its Show waits for (partsWait)',
         );
       }
       continue;
@@ -512,7 +619,7 @@ void checkArc({
     }
   }
 
-  _pickCaps(activities, skills, say, arcLessons, lessons);
+  _pickCaps(activities, skills, say, arcLessons, lessons, domains);
   _tags(activities, lessons, arcLessons, skills, say, tagWaived);
   _hintTwo(activities, lessons, arcLessons, say);
   _rungs(activities, lessons, arcLessons, say);
@@ -541,10 +648,11 @@ void _pickCaps(
   ArcSay say,
   List<String> arcLessons,
   Map<String, Map<String, Object?>> lessons,
+  Set<String> domains,
 ) {
   final Set<String> domainSkills = <String>{
     for (final MapEntry<String, Map<String, Object?>> s in skills.entries)
-      if (arcDomains.contains(s.value['domain'])) s.key,
+      if (domains.contains(s.value['domain'])) s.key,
   };
   final Map<String, List<Map<String, Object?>>> by = _bySkill(activities, domainSkills);
   final Map<String, (int, int)> landBand = <String, (int, int)>{};
@@ -658,14 +766,23 @@ void _hintTwo(
   }
 }
 
-/// V7 (corrected): the pool of a lesson holds a rung-0 and a rung-1 item for each of its skills, and a rung-2 item where the skill has
-/// symbols; [rungWaivers] names the lessons where the skill has no such form.
+/// V7 (corrected, M11-stage2 sections 11.2 item 4 and 11.5): the pool of a lesson holds a rung-0 and a rung-1 item for each of its skills, and a rung-2
+/// item where the skill has symbols; a rung that the skill has no item of anywhere in the pack is not asked for (a shape builder is always concrete: it has
+/// no pictorial form), so no list of waivers is kept for it; [rungWaivers] names what is left.
 void _rungs(
   Map<String, Map<String, Object?>> activities,
   Map<String, Map<String, Object?>> lessons,
   List<String> arcLessons,
   ArcSay say,
 ) {
+  // the rungs each skill has an item of, anywhere in the pack
+  final Map<String, Set<int>> existing = <String, Set<int>>{};
+  for (final Map<String, Object?> a in activities.values) {
+    if (a['purpose'] == 'show') continue;
+    existing
+        .putIfAbsent(_map(_maps(a['skills']).first)['id']! as String, () => <int>{})
+        .add(rungOfRepresentation(a['representation'] as String?));
+  }
   for (final String id in arcLessons) {
     final Map<String, Object?> l = lessons[id]!;
     final Map<String, Object?>? parts = l['parts'] as Map<String, Object?>?;
@@ -684,7 +801,7 @@ void _rungs(
       };
       if (rungs.isEmpty) continue;
       for (final int need in <int>[0, 1, if (skillHasSymbols(skill)) 2]) {
-        if (!rungs.contains(need)) {
+        if (!rungs.contains(need) && (existing[skill] ?? const <int>{}).contains(need)) {
           say('lesson.$id.json', 'parts', 'V7: the pool of $skill has no rung-$need item');
         }
       }
@@ -700,6 +817,7 @@ List<String> metBeforeAsked({
   required Map<String, Map<String, Object?>> activities,
   required Map<String, Map<String, Object?>> lessons,
   required Map<String, Map<String, Object?>> skills,
+  Set<String> domains = arcDomains,
 }) {
   String plain(String w) => withoutNiqqud(w).trim();
   final Map<String, Set<String>> taught = <String, Set<String>>{};
@@ -719,7 +837,9 @@ List<String> metBeforeAsked({
 
   final Set<String> own = <String>{
     for (final Map<String, Object?> l in lessons.values)
-      if (l['parts'] != null) ..._strings(l['skills']),
+      if (l['parts'] != null)
+        for (final String s in _strings(l['skills']))
+          if (domains.contains(skills[s]?['domain'])) s,
   };
   final List<String> out = <String>[];
   for (final MapEntry<String, Map<String, Object?>> e in activities.entries) {
@@ -729,14 +849,20 @@ List<String> metBeforeAsked({
     if (!own.contains(skill)) continue;
     final Set<String> skillsKnown = closure(skill, <String>{});
     final Set<String> ok = <String>{for (final String s in skillsKnown) ...?taught[s]};
-    final bool counts = skillsKnown.contains(w1CountingSkill);
-    bool accepted(String label) {
+    final Set<String> knownWords = <String>{for (final String t in ok) ...t.split(RegExp(r'\s+'))};
+    // Counting words: one to ten when the skill's prerequisites hold counting to ten, one to five when they hold counting to five only.
+    final Set<String> countWords = skillsKnown.contains(w1CountingSkill)
+        ? w1CountingWords
+        : (skillsKnown.contains(w1CountingFiveSkill) ? w1CountingWordsToFive : const <String>{});
+    bool accepted(String label, {String? sprite}) {
       if (ok.contains(label) || w1YesNo.contains(label)) return true;
       final List<String> words = label.split(RegExp(r'\s+'));
       if (words.length > 1 && words.first == w1Not && accepted(words.skip(1).join(' '))) return true;
-      return counts &&
-          w1CountingWords.contains(words.first) &&
-          (words.length == 1 || accepted(words.skip(1).join(' ')));
+      if (countWords.contains(words.first) && (words.length == 1 || accepted(words.skip(1).join(' ')))) {
+        return true;
+      }
+      if (w1AcceptKnownWords && words.every(knownWords.contains)) return true;
+      return w1AcceptCardObjectName && w1NamesCardObject(sprite);
     }
 
     final Map<String, Object?> answer = _map(a['answer']);
@@ -744,18 +870,21 @@ List<String> metBeforeAsked({
     final Object? correct = answer['correct'];
     final bool numberTap =
         options.isNotEmpty && options.every((Map<String, Object?> o) => o['numeral'] != null);
-    final Set<String> labels = <String>{
+    // What the item asks for, with the picture each label stands under (a card's own picture is what a label that only names it is read against).
+    final Map<String, String?> labels = <String, String?>{
       for (final Map<String, Object?> o in options)
         if (o['label'] is String &&
             (numberTap || (correct is List ? correct.contains(o['id']) : o['id'] == correct)))
-          plain(o['label']! as String),
+          plain(o['label']! as String): o['sprite'] as String?,
       if (a['template'] == 'sort_drag')
         for (final Map<String, Object?> b in _maps(_map(a['scene'])['bins']))
-          if (b['label'] is String) plain(b['label']! as String),
+          if (b['label'] is String) plain(b['label']! as String): b['sprite'] as String?,
     };
-    for (final String w in labels.where((String l) => !accepted(l))) {
+    for (final MapEntry<String, String?> w in labels.entries.where(
+      (MapEntry<String, String?> l) => !accepted(l.key, sprite: l.value),
+    )) {
       out.add(
-        'W1: ${e.key} labels an option "$w" that the Show of $skill (and of its earlier skills) does not teach',
+        'W1: ${e.key} labels an option "${w.key}" that the Show of $skill (and of its earlier skills) does not teach',
       );
     }
   }
