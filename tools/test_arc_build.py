@@ -61,7 +61,8 @@ class ArcBuildTest(unittest.TestCase):
                 self.assertTrue(os.path.exists(os.path.join(STARTER, 'activity.%s.json' % parts['show'])))
                 for t in parts.get('together', []):
                     a = load('activity.%s.json' % t['id'])
-                    if a['template'] in ('sort_drag', 'shape_builder', 'trace'):
+                    # a share has no lead player (arc_checks.dart leadableSteps): its Together item is led 0, as every other template's
+                    if a['template'] in ('sort_drag', 'shape_builder', 'trace') and a['answer'].get('mode') != 'share':
                         steps = {'sort_drag': lambda: len(a['scene']['items']), 'shape_builder': lambda: len(a['scene']['slots']),
                                  'trace': lambda: sum(len(s) - 1 if len(s) <= 8 else 4 for s in a['scene']['strokes'])}[a['template']]()
                         self.assertTrue(1 <= t['lead'] < steps, t)

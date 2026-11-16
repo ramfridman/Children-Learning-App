@@ -29,5 +29,35 @@
         "v": "כׇּל הַכָּבוֹד! הִכַּרְתֶּם חוּם וְאָפֹר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.col-a-01",
+    "together": [
+      {
+        "id": "b15.cola06.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.goni.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נִסְתַּכֵּל יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b15.cola06.2"
+    ],
+    "handover": {
+      "vo": "vo:host.goni.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

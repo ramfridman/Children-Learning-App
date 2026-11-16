@@ -1,0 +1,789 @@
+{
+ "schema": "lesson-arc-source/v0",
+ "land": "cs",
+ "host": "tzaadon",
+ "review": "needs-editor",
+ "status": "M11 Stage 2, step 2.4b (Robot Harbour), authored by the curriculum-expert on 2026-11-16. Pointed drafts for the hebrew-text-editor. No Show plays yet: build_pattern and robot_path have no Show and lead player (step 2.1), and CS-B-04 waits for step 2.2c; every lesson stays a flat list until then. Every CS skill is predict-then-watch (§2.1): `predict` is written.",
+ "spec": "docs/milestones/M11-stage2.md §2, §3.6, §7.4 and §8",
+ "howToRead": [
+  "As counting-hills.arc.json and market.arc.json; robot_path `arrow` is one arrow card laid (plan) or one step pressed (direct), with the robot moving one square."
+ ],
+ "caps": {
+  "P1": {
+   "screens": 5,
+   "minutes": 3
+  },
+  "P2": {
+   "screens": 6,
+   "minutes": 4
+  },
+  "P3": {
+   "screens": 8,
+   "minutes": 5
+  },
+  "P4": {
+   "screens": 9,
+   "minutes": 6,
+   "scoredItems": 7
+  }
+ },
+ "shows": [
+  {
+   "id": "show.cs-a-01",
+   "skill": "CS-A-01",
+   "band": "A",
+   "purpose": "show",
+   "template": "build_pattern",
+   "representation": "story",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "slots": 3,
+    "palette": [
+     "asset:step_rinse",
+     "asset:step_paste",
+     "asset:step_brush"
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "cell": 0,
+     "piece": "asset:step_paste"
+    },
+    {
+     "by": "host",
+     "cell": 1,
+     "piece": "asset:step_brush",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "cell": 2,
+     "piece": "asset:step_rinse"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.tzaadon.show.cs_a_01.open",
+     "text": "בִּיפּ! מָה עוֹשִׂים קֹדֶם?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.tzaadon.show.cs_a_01.key",
+     "text": "קֹדֶם מִשְׁחָה, וְאָז מִבְרֶשֶׁת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.tzaadon.show.cs_a_01.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: מַה בַּסּוֹף?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": {
+    "line": "מה עושים קודם?",
+    "choices": []
+   },
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "the three toothbrushing cards; Tza'adon lays the paste on the start dot, then the brush; the child lays the rinse",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.cs-a-03",
+   "skill": "CS-A-03",
+   "band": "A",
+   "purpose": "show",
+   "template": "robot_path",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "cols": 4,
+    "rows": 1,
+    "robot": {
+     "col": 0,
+     "row": 0
+    },
+    "goal": {
+     "col": 3,
+     "row": 0
+    },
+    "robotSprite": "asset:robot",
+    "goalSprite": "asset:flag"
+   },
+   "steps": [
+    {
+     "by": "host",
+     "arrow": "right",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "arrow": "right"
+    },
+    {
+     "by": "child",
+     "arrow": "right"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.tzaadon.show.cs_a_03.open",
+     "text": "בִּיפּ! אֵיפֹה אֶעֱצֹר?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.tzaadon.show.cs_a_03.key",
+     "text": "חֵץ אֶחָד, צַעַד אֶחָד.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.tzaadon.show.cs_a_03.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַצַּעַד הָאַחֲרוֹן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": {
+    "line": "איפה הרובוט יעצור?",
+    "choices": []
+   },
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "a row of four squares; Tza'adon moves the robot one square per arrow, counting the squares, not the arrows; the child moves it onto the flag",
+   "status": "waits for the Show and lead player of robot_path (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.cs-a-04",
+   "skill": "CS-A-04",
+   "band": "A",
+   "purpose": "show",
+   "template": "robot_path",
+   "representation": "symbolic",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "cols": 3,
+    "rows": 3,
+    "robot": {
+     "col": 0,
+     "row": 2
+    },
+    "goal": {
+     "col": 2,
+     "row": 0
+    },
+    "robotSprite": "asset:robot",
+    "goalSprite": "asset:flag"
+   },
+   "steps": [
+    {
+     "by": "host",
+     "arrow": "up"
+    },
+    {
+     "by": "host",
+     "arrow": "up"
+    },
+    {
+     "by": "host",
+     "arrow": "right",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "arrow": "right"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.tzaadon.show.cs_a_04.open",
+     "text": "מְתַכְנְנִים קֹדֶם, וְאָז הוֹלְכִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.tzaadon.show.cs_a_04.key",
+     "text": "שְׁנֵי צְעָדִים לְמַעְלָה, וְאָז לַדֶּגֶל.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.tzaadon.show.cs_a_04.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַחֵץ הָאַחֲרוֹן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": {
+    "line": "איפה הרובוט יעצור?",
+    "choices": []
+   },
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "Tza'adon lays arrow cards in a row before the robot moves (up, up, towards the flag); the child lays the last card, then GO runs the plan",
+   "status": "waits for the Show and lead player of robot_path (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.cs-a-05",
+   "skill": "CS-A-05",
+   "band": "A",
+   "purpose": "show",
+   "template": "build_pattern",
+   "representation": "story",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "slots": 3,
+    "palette": [
+     "asset:step_brush",
+     "asset:step_soap",
+     "asset:step_paste",
+     "asset:step_rinse"
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "cell": 0,
+     "piece": "asset:step_paste"
+    },
+    {
+     "by": "host",
+     "cell": 1,
+     "piece": "asset:step_brush",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "cell": 2,
+     "piece": "asset:step_rinse"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.tzaadon.show.cs_a_05.open",
+     "text": "מַשֶּׁהוּ הִגִּיעַ לְכָאן בְּטָעוּת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.tzaadon.show.cs_a_05.key",
+     "text": "סַבּוֹן? לֹא בְּצִחְצוּחַ שִׁנַּיִם.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.tzaadon.show.cs_a_05.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַצַּעַד הָאַחֲרוֹן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "the toothbrushing cards and a soap card; Tza'adon lifts the soap, beeps \"oops\" and puts it aside, then lays paste and brush; the child lays the rinse",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.cs-b-01",
+   "skill": "CS-B-01",
+   "band": "B",
+   "purpose": "show",
+   "template": "robot_path",
+   "representation": "symbolic",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "cols": 4,
+    "rows": 4,
+    "robot": {
+     "col": 0,
+     "row": 3
+    },
+    "goal": {
+     "col": 1,
+     "row": 0
+    },
+    "robotSprite": "asset:robot",
+    "goalSprite": "asset:flag"
+   },
+   "steps": [
+    {
+     "by": "host",
+     "arrow": "up",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "arrow": "up"
+    },
+    {
+     "by": "host",
+     "arrow": "up"
+    },
+    {
+     "by": "child",
+     "arrow": "right"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.tzaadon.show.cs_b_01.open",
+     "text": "דֶּרֶךְ אֲרֻכָּה יוֹתֵר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.tzaadon.show.cs_b_01.key",
+     "text": "סוֹפְרִים אֶת הַמִּשְׁבָּצוֹת בְּכׇל כִּוּוּן.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.tzaadon.show.cs_b_01.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַחֵץ הַבָּא.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": {
+    "line": "כמה צעדים עד הדגל?",
+    "choices": []
+   },
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "a 4 by 4 grid; Tza'adon counts the squares up and lays three up-arrows; the child lays the first arrow towards the flag; the rest of the plan follows in the Together item",
+   "status": "waits for the Show and lead player of robot_path (step 2.1, the templates the pilot did not need)",
+   "note": "the scene goal is three right of the lead; the Show stops before the last arrow of its four"
+  },
+  {
+   "id": "show.cs-b-04",
+   "skill": "CS-B-04",
+   "band": "B",
+   "purpose": "show",
+   "template": null,
+   "representation": "symbolic",
+   "handOver": "last",
+   "scene": null,
+   "steps": [],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.tzaadon.show.cs_b_04.open",
+     "text": "בִּיפּ! הַתָּכְנִית לֹא הִגִּיעָה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.tzaadon.show.cs_b_04.key",
+     "text": "מוֹצְאִים אֶת הַחֵץ הַלֹּא נָכוֹן.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.tzaadon.show.cs_b_04.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: תַּקְּנוּ אוֹתוֹ.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": {
+    "line": "איפה הרובוט יעצור?",
+    "choices": []
+   },
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "the robot runs a given program and stops beside the flag; Tza'adon runs it again slowly, finger on each arrow, and stops at the wrong one",
+   "status": "waits for step 2.2c (robot_path with given steps), as the exempt list says"
+  }
+ ],
+ "hostLines": [
+  {
+   "role": "together_lead",
+   "template": "build_pattern",
+   "vo": "vo:host.tzaadon.together.build",
+   "text": "בִּיפּ! אוֹמְרִים כׇּל צַעַד בְּקוֹל.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "robot_path",
+   "vo": "vo:host.tzaadon.together.robot",
+   "text": "סוֹפְרִים כׇּל מִשְׁבֶּצֶת בְּקוֹל.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "tap_answer",
+   "vo": "vo:host.tzaadon.together.tap",
+   "text": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "spot_error",
+   "vo": "vo:host.tzaadon.together.spot",
+   "text": "בּוֹדְקִים כׇּל צַעַד, אֶחָד אֶחָד.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.tzaadon.handover.1",
+   "text": "בִּיפּ בּוּפּ! עַכְשָׁו אַתֶּם.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.tzaadon.handover.2",
+   "text": "יֹפִי. עַכְשָׁו תּוֹרְכֶם.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.tzaadon.handover.3",
+   "text": "הָרוֹבּוֹט מְחַכֶּה לָכֶם.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "show_me",
+   "vo": "vo:host.tzaadon.showme.1",
+   "text": "בִּיפּ! בּוֹאוּ נִרְאֶה שׁוּב, לְאַט.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "show_me",
+   "vo": "vo:host.tzaadon.showme.2",
+   "text": "נָרִיץ אֶת זֶה עוֹד פַּעַם יַחַד.",
+   "review": "needs-editor"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "step-by-step",
+   "band": "A",
+   "skills": [
+    "CS-A-01",
+    "CS-A-05"
+   ],
+   "recall": [
+    "b15.loga08.1"
+   ],
+   "show": "show.cs-a-01",
+   "secondShow": {
+    "id": "show.cs-a-05",
+    "kind": "reminder",
+    "before": "the first item of CS-A-05"
+   },
+   "together": [
+    {
+     "id": "cs.routine.wash.first",
+     "lead": 0,
+     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "cs.routine.wash.last",
+    "cs.routine.teeth.first",
+    "cs.routine.teeth.last",
+    "cs.wrong.wash",
+    "cs.wrong.teeth"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "robot-moves",
+   "band": "A",
+   "skills": [
+    "CS-A-03"
+   ],
+   "recall": [
+    "b15.shpa08.1"
+   ],
+   "show": "show.cs-a-03",
+   "together": [
+    {
+     "id": "cs.robot.direct.1",
+     "lead": 0,
+     "note": "robot_path has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "cs.robot.direct.2",
+    "cs.robot.direct.3"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "robot-plans",
+   "band": "A",
+   "skills": [
+    "CS-A-04"
+   ],
+   "recall": [
+    "b15.csa03.1"
+   ],
+   "show": "show.cs-a-04",
+   "together": [
+    {
+     "id": "cs.robot.plan.1",
+     "lead": 0,
+     "note": "robot_path has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "cs.robot.plan.2",
+    "cs.robot.plan.3"
+   ],
+   "use": [],
+   "poolRungs": [
+    2
+   ]
+  },
+  {
+   "id": "step-by-step-again",
+   "band": "A",
+   "skills": [
+    "CS-A-01",
+    "CS-A-05"
+   ],
+   "recall": [
+    "b15.loga08.1"
+   ],
+   "show": "show.cs-a-01",
+   "secondShow": {
+    "id": "show.cs-a-05",
+    "kind": "reminder",
+    "before": "the first item of CS-A-05"
+   },
+   "together": [
+    {
+     "id": "cs.routine.wash.middle",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "cs.routine.teeth.middle",
+    "cs.wrong.wash2",
+    "cs.wrong.teeth2",
+    "cs.wrong.wash3",
+    "cs.wrong.teeth3",
+    "b15.csa01.1",
+    "b15.csa01.2"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "robot-moves-again",
+   "band": "A",
+   "skills": [
+    "CS-A-03"
+   ],
+   "recall": [
+    "b15.shpa08.1"
+   ],
+   "show": "show.cs-a-03",
+   "together": [
+    {
+     "id": "cs.robot.direct.4",
+     "lead": 0,
+     "note": "robot_path has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "cs.robot.direct.5",
+    "cs.robot.direct.6",
+    "b15.csa03.1"
+   ],
+   "use": [
+    "b15.csa03.2"
+   ],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "robot-plans-again",
+   "band": "A",
+   "skills": [
+    "CS-A-04"
+   ],
+   "recall": [
+    "b15.csa03.1"
+   ],
+   "show": "show.cs-a-04",
+   "together": [
+    {
+     "id": "b15.csa04.1",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b15.csa04.2",
+    "cs.robot.plan.4",
+    "cs.robot.plan.5",
+    "cs.robot.plan.6"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "step-by-step-again-1-b15",
+   "band": "A",
+   "skills": [
+    "CS-A-01",
+    "CS-A-05"
+   ],
+   "recall": [
+    "b15.loga08.1"
+   ],
+   "show": "show.cs-a-01",
+   "secondShow": {
+    "id": "show.cs-a-05",
+    "kind": "reminder",
+    "before": "the first item of CS-A-05"
+   },
+   "together": [
+    {
+     "id": "b15.csa05.1",
+     "lead": 0,
+     "note": "spot_error has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b15.csa05.2"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "longer-robot-paths",
+   "band": "B",
+   "skills": [
+    "CS-B-01"
+   ],
+   "recall": [
+    "b15.csa04.1"
+   ],
+   "show": "show.cs-b-01",
+   "together": [
+    {
+     "id": "b.csb01.2",
+     "lead": 0,
+     "note": "robot_path has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.csb01.4",
+    "b.csb01.1",
+    "b.csb01.3"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    2
+   ]
+  },
+  {
+   "id": "longer-robot-paths-more",
+   "band": "B",
+   "skills": [
+    "CS-B-01"
+   ],
+   "recall": [
+    "b15.csa04.1"
+   ],
+   "show": "show.cs-b-01",
+   "together": [
+    {
+     "id": "b.csb01.6",
+     "lead": 0,
+     "note": "robot_path has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.csb01.8",
+    "b.csb01.9",
+    "b.csb01.10",
+    "b.csb01.5",
+    "b.csb01.7"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1,
+    2
+   ]
+  },
+  {
+   "id": "fix-the-program",
+   "band": "B",
+   "skills": [
+    "CS-B-04"
+   ],
+   "recall": [
+    "b.csb01.10"
+   ],
+   "show": "show.cs-b-04",
+   "together": [
+    {
+     "id": "b.csb04.1",
+     "lead": 0,
+     "note": "spot_error has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.csb04.2",
+    "b.csb04.3",
+    "b.csb04.4",
+    "b.csb04.5"
+   ],
+   "use": [
+    "b.csb04.6"
+   ],
+   "poolRungs": [
+    2
+   ]
+  }
+ ]
+}

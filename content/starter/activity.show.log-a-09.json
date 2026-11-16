@@ -1,0 +1,186 @@
+{
+  "schema": "activity/v1",
+  "id": "show.log-a-09",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
+  "domain": "logic",
+  "band": "A",
+  "skills": [
+    {
+      "id": "LOG-A-09",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.timi.show.log_a_09.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מָה הוֹלֵךְ עִם מַה?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:plate",
+        "count": 1,
+        "label": "צַלַּחַת"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:shoe",
+        "count": 1,
+        "label": "נַעַל"
+      },
+      {
+        "id": "b3",
+        "sprite": "asset:lock",
+        "count": 1,
+        "label": "מַנְעוּל"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:spoon",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:sock",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:key",
+        "bin": "b3"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.timi.show.log_a_09.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כַּף הוֹלֶכֶת עִם צַלַּחַת."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "מָה הוֹלֵךְ עִם מַה?"
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.timi.show.log_a_09.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מָה הוֹלֵךְ עִם מַה?"
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.timi.show.log_a_09.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כַּף הוֹלֶכֶת עִם צַלַּחַת."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.timi.show.log_a_09.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַמַּפְתֵּחַ."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "item": "i1",
+        "bin": "b1",
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "item": "i2",
+        "bin": "b2"
+      },
+      {
+        "by": "child",
+        "item": "i3",
+        "bin": "b3"
+      }
+    ],
+    "teaches": [
+      "צַלַּחַת",
+      "נַעַל",
+      "מַנְעוּל"
+    ]
+  }
+}

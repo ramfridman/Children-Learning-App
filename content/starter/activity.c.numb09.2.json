@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "c.numb09.2",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "flash",
-  "templateVersion": "1.0",
+  "revision": 2,
+  "template": "give_n",
+  "templateVersion": "1.1",
   "domain": "numbers",
   "band": "B",
   "skills": [
@@ -13,10 +13,10 @@
       "weight": 1
     }
   ],
-  "purpose": "learn",
+  "purpose": "check",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "flash",
+  "representation": "concrete",
+  "variantGroup": "fill-frame",
   "difficulty": {
     "authored": 0.44
   },
@@ -25,42 +25,39 @@
     "caption": [
       {
         "t": "he",
-        "v": "הִסְתַּכְּלוּ טוֹב… כַּמָּה כּוֹכָבִים?"
+        "v": "שִׂימוּ בַּמִּסְגֶּרֶת שִׁשָּׁה כּוֹכָבִים."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "group": {
+    "source": {
       "sprite": "asset:star",
-      "count": 6,
-      "arrangement": "ten_frame",
-      "seed": 61
+      "count": 10
     },
-    "flashMs": 2000
+    "target": {
+      "sprite": "asset:basket_target"
+    },
+    "frame": true
   },
   "answer": {
-    "type": "choice",
-    "options": [
+    "type": "give",
+    "n": 6,
+    "classifiers": [
       {
-        "id": "o1",
-        "numeral": 5,
+        "when": "took_all",
+        "misconception": "M-CNT-CARD"
+      },
+      {
+        "when": "took_fewer",
         "misconception": "M-CNT-SKIP"
       },
       {
-        "id": "o2",
-        "numeral": 6
-      },
-      {
-        "id": "o3",
-        "numeral": 7,
+        "when": "took_more",
         "misconception": "M-CNT-DOUBLE"
       }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    ]
   },
   "voiceAnswer": false,
   "feedback": {
@@ -69,11 +66,21 @@
       "caption": [
         {
           "t": "he",
-          "v": "שֵׁשׁ! רְאִיתֶם בְּלִי לִסְפֹּר."
+          "v": "שֵׁשׁ! עַכְשָׁו רוֹאִים שֵׁשׁ בְּלִי לִסְפֹּר."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לָקַחְנוּ אֶת כֻּלָּם. בּוֹאוּ נִסְפֹּר וְנַעֲצֹר בַּמִּסְפָּר שֶׁצָּרִיךְ."
+          }
+        ]
+      },
       {
         "when": "misconception:M-CNT-DOUBLE",
         "vo": "vo:fb.double_set",
@@ -119,11 +126,11 @@
     {
       "level": 1,
       "action": "replay_prompt_slow",
-      "vo": "vo:hint.flash.h1",
+      "vo": "vo:c.numb09.2.h1",
       "caption": [
         {
           "t": "he",
-          "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט."
+          "v": "שִׂימוּ שִׁשָּׁה כּוֹכָבִים, אֶחָד בְּכׇל מִשְׁבֶּצֶת. סוֹפְרִים בִּזְמַן שֶׁשָּׂמִים."
         }
       ]
     },
@@ -134,7 +141,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "נָרִים אֶצְבָּעוֹת וְנִסְפֹּר: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ."
+          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ."
         }
       ]
     },
@@ -145,7 +152,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אֵלֶּה שִׁשָּׁה כּוֹכָבִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שֵׁשׁ."
+          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ. עוֹצְרִים כְּשֶׁמַּגִּיעִים אֶל שֵׁשׁ. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -161,10 +168,11 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child sees the number at a glance, without counting one by one",
+    "goal": "child gives exactly the number asked for, not the whole pile",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "הִסְתַּכְּלוּ טוֹב. כַּמָּה כּוֹכָבִים?"
-  }
+    "altText": "שִׂימוּ בַּמִּסְגֶּרֶת שִׁשָּׁה כּוֹכָבִים."
+  },
+  "contradicts": "M-CNT-CARD"
 }

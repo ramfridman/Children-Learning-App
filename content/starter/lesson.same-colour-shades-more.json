@@ -31,5 +31,44 @@
         "v": "נִפְלָא! אַתֶּם רוֹאִים אֶת הַצֶּבַע."
       }
     ]
+  },
+  "parts": {
+    "show": "show.col-b-03",
+    "recall": [
+      "b.colb02.10"
+    ],
+    "together": [
+      {
+        "id": "b.colb03.5",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.goni.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.colb03.6",
+      "b.colb03.7",
+      "b.colb03.8",
+      "b.colb03.9"
+    ],
+    "use": [
+      "b.colb03.10"
+    ],
+    "handover": {
+      "vo": "vo:host.goni.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מִסְתַּכְּלִים טוֹב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

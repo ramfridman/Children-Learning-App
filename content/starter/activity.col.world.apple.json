@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "col.world.apple",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "colors",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.35
   },
@@ -25,39 +25,56 @@
     "caption": [
       {
         "t": "he",
-        "v": "תַּפּוּחַ יָכוֹל לִהְיוֹת גַּם יָרֹק. אֵיפֹה הַתַּפּוּחַ?"
+        "v": "שָׂמִים כָּאן אֶת כׇּל הַתַּפּוּחִים, גַּם אִם הַצֶּבַע שׁוֹנֶה."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:ball_green",
-        "label": "כַּדּוּר יָרֹק",
-        "misconception": "M-COL-ONEATTR"
+        "id": "b1",
+        "sprite": "asset:apple",
+        "count": 1,
+        "label": "תַּפּוּחִים"
       },
       {
-        "id": "o2",
-        "sprite": "asset:apple_green",
-        "label": "תַּפּוּחַ יָרֹק"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:ball_red",
-        "label": "כַּדּוּר אָדֹם",
-        "misconception": "M-COL-OBJECT"
+        "id": "b2",
+        "sprite": "asset:cross",
+        "count": 1,
+        "label": "לֹא תַּפּוּחִים"
       }
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:apple_green",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:ball_red",
+        "bin": "b2",
+        "misconception": "M-COL-OBJECT"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:apple",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:ball_green",
+        "bin": "b2",
+        "misconception": "M-COL-ONEATTR"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-COL-OBJECT"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -66,7 +83,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה תַּפּוּחַ יָרֹק."
+          "v": "כֵּן! גַּם בְּצֶבַע אַחֵר, זֶה אוֹתוֹ פְּרִי."
         }
       ]
     },
@@ -127,11 +144,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.sort.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
         }
       ]
     },
@@ -142,7 +159,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "זֶה תַּפּוּחַ יָרֹק. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+          "v": "תַּפּוּחַ יָרֹק הוּא עֲדַיִן תַּפּוּחַ. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -158,10 +175,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "תַּפּוּחַ יָכוֹל לִהְיוֹת גַּם יָרֹק. אֵיפֹה הַתַּפּוּחַ?"
+    "altText": "שָׂמִים כָּאן אֶת כׇּל הַתַּפּוּחִים, גַּם אִם הַצֶּבַע שׁוֹנֶה."
   }
 }

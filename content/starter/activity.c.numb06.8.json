@@ -62,7 +62,7 @@
   "voiceAnswer": false,
   "feedback": {
     "correct": {
-      "vo": "vo:c.numb06.3.correct",
+      "vo": "vo:c.numb06.8.correct",
       "caption": [
         {
           "t": "he",
@@ -127,7 +127,7 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:c.numb06.1.h2",
+      "vo": "vo:c.numb06.2.h2",
       "caption": [
         {
           "t": "he",
@@ -138,7 +138,7 @@
     {
       "level": 3,
       "action": "worked_example",
-      "vo": "vo:c.numb06.3.h3",
+      "vo": "vo:c.numb06.8.h3",
       "caption": [
         {
           "t": "he",

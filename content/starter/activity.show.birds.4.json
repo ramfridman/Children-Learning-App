@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "show.birds.4",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "count_tap",
+  "templateVersion": "1.0",
   "domain": "numbers",
   "band": "A",
   "skills": [
@@ -13,10 +13,10 @@
       "weight": 1
     }
   ],
-  "purpose": "practice",
-  "checkType": "reverse",
-  "representation": "pictorial",
-  "variantGroup": "numeral-to-set",
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "count-tap",
   "difficulty": {
     "authored": 0.4
   },
@@ -25,63 +25,64 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה יֵשׁ אַרְבַּע צִפֳּרִים?"
+        "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "numeral": 4
+    "objects": {
+      "sprite": "asset:bird",
+      "litSprite": "asset:bird_lit",
+      "count": 4,
+      "arrangement": "scatter",
+      "onTap": "glow",
+      "seed": 84
+    },
+    "target": {
+      "sprite": "asset:basket_target"
+    }
   },
   "answer": {
     "type": "choice",
     "options": [
       {
         "id": "o1",
-        "set": {
-          "sprite": "asset:bird",
-          "count": 3,
-          "arrangement": "line",
-          "seed": 3
-        },
-        "label": "שָׁלוֹשׁ צִפֳּרִים",
-        "misconception": "M-CNT-SKIP"
+        "value": 4
       },
       {
         "id": "o2",
-        "set": {
-          "sprite": "asset:bird",
-          "count": 4,
-          "arrangement": "line",
-          "seed": 4
-        },
-        "label": "אַרְבַּע צִפֳּרִים"
+        "value": 3,
+        "misconception": "M-CNT-SKIP"
       },
       {
         "id": "o3",
-        "set": {
-          "sprite": "asset:bird",
-          "count": 5,
-          "arrangement": "line",
-          "seed": 5
-        },
-        "label": "חָמֵשׁ צִפֳּרִים",
+        "value": 5,
         "misconception": "M-CNT-DOUBLE"
       }
     ],
-    "correct": "o2",
+    "correct": "o1",
     "shuffle": false,
     "unsureAllowed": true
   },
-  "voiceAnswer": false,
+  "voiceAnswer": true,
+  "answerPrompt": {
+    "vo": "vo:show.birds.4.how_many",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה צִפֳּרִים?"
+      }
+    ]
+  },
   "feedback": {
     "correct": {
       "vo": "vo:show.birds.4.correct",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! אֵלֶּה אַרְבַּע צִפֳּרִים."
+          "v": "אַרְבַּע! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת."
         }
       ]
     },
@@ -135,18 +136,18 @@
       "caption": [
         {
           "t": "he",
-          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַמִּסְפָּר."
+          "v": "נוֹגְעִים בְּצִפּוֹר אַחַת, וְאוֹמְרִים מִסְפָּר אֶחָד."
         }
       ]
     },
     {
       "level": 2,
       "action": "show_fingers",
-      "vo": "vo:show.birds.4.h2",
+      "vo": "vo:hint.ucount.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע."
+          "v": "בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ…"
         }
       ]
     },
@@ -157,7 +158,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. אֵלֶּה אַרְבַּע צִפֳּרִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה."
+          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: אַרְבַּע! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע."
         }
       ]
     }
@@ -173,10 +174,20 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child finds the group that has the number named",
+    "goal": "child touches each one once and answers with the last number counted",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה יֵשׁ אַרְבַּע צִפֳּרִים?"
-  }
+    "altText": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים."
+  },
+  "traceClassifiers": [
+    {
+      "when": "same_object_tapped_twice",
+      "misconception": "M-CNT-DOUBLE"
+    },
+    {
+      "when": "object_never_tapped",
+      "misconception": "M-CNT-SKIP"
+    }
+  ]
 }

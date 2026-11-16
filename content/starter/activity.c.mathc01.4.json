@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "c.mathc01.4",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
-  "templateVersion": "1.1",
+  "templateVersion": "1.4",
   "domain": "math",
   "band": "C",
   "skills": [
@@ -16,12 +16,12 @@
   "purpose": "practice",
   "checkType": "practice",
   "representation": "symbolic",
-  "variantGroup": "fact-9-5",
+  "variantGroup": "number",
   "difficulty": {
     "authored": 0.58
   },
   "prompt": {
-    "vo": "vo:c.mathb04.1.prompt",
+    "vo": "vo:c.mathb04.2.prompt",
     "caption": [
       {
         "t": "he",
@@ -32,7 +32,6 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
     "row": [
       "n:14",
       "op:-",
@@ -42,35 +41,23 @@
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
+    "type": "number",
+    "value": 9,
+    "expected": [
       {
-        "id": "o1",
-        "numeral": 19,
-        "label": "תְּשַׁע עֶשְׂרֵה",
-        "misconception": "M-OP-SWAP"
-      },
-      {
-        "id": "o2",
-        "numeral": 9,
-        "label": "תֵּשַׁע"
-      },
-      {
-        "id": "o3",
-        "numeral": 10,
-        "label": "עֶשֶׂר",
+        "value": 10,
         "misconception": "M-CNT-DOUBLE"
       },
       {
-        "id": "o4",
-        "numeral": 11,
-        "label": "אַחַת עֶשְׂרֵה",
+        "value": 11,
         "misconception": "M-SUB-SMALLBIG"
+      },
+      {
+        "value": 19,
+        "misconception": "M-OP-SWAP"
       }
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "rules": []
   },
   "voiceAnswer": false,
   "feedback": {
@@ -150,11 +137,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:c.mathc01.4.h2",
+      "vo": "vo:c.mathc01.3.h2",
       "caption": [
         {
           "t": "he",
-          "v": "יוֹרְדִים קֹדֶם לְעֶשֶׂר: אַרְבַּע עֶשְׂרֵה פָּחוֹת אַרְבַּע הֵם עֶשֶׂר, וּמוֹרִידִים עוֹד אַחַת."
+          "v": "עוֹבְרִים דֶּרֶךְ הָעֶשֶׂר: קֹדֶם עַד עֶשֶׂר, וְאַחַר כָּךְ מַה שֶּׁנִּשְׁאַר."
         }
       ]
     },
@@ -165,7 +152,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "עֶשֶׂר פָּחוֹת אַחַת הֵם תֵּשַׁע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל תֵּשַׁע."
+          "v": "אַרְבַּע עֶשְׂרֵה פָּחוֹת חָמֵשׁ שָׁוֶה תֵּשַׁע. כּוֹתְבִים תֵּשַׁע."
         }
       ]
     }
@@ -181,7 +168,7 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child types the number",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {

@@ -229,6 +229,10 @@
    "one": "מַטְבֵּעַ",
    "g": "m"
   },
+  "plate": {
+   "one": "צַלַּחַת",
+   "g": "f"
+  },
   "shade_blue_1": {
    "one": "כָּחֹל בָּהִיר",
    "g": "m"
@@ -1069,24 +1073,26 @@
    "h3": "אָדֹם וְכָחֹל נַעֲשִׂים סָגֹל. עַכְשָׁו תּוֹרְכֶם."
   },
   {
-   "kind": "pick",
    "id": "b.colb02.1",
    "skill": "COL-B-02",
    "difficulty": 0.37,
-   "prompt": "אֵיזֶה הֲכִי כֵּהֶה?",
-   "options": [
+   "revision": 2,
+   "kind": "build",
+   "sequence": [
     "shade_blue_1",
     "shade_blue_2",
     "shade_blue_3"
    ],
-   "correct": "shade_blue_3",
-   "tags": {
-    "shade_blue_2": "M-SER-ENDS",
-    "shade_blue_1": "M-COL-SHADE"
-   },
-   "domain": "colors",
-   "correct_text": "כֵּן! זֶה הֲכִי כֵּהֶה.",
-   "h3": "הַכֵּהֶה הוּא הֲכִי חָשׁוּךְ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+   "palette": [
+    "shade_blue_3",
+    "shade_green_2",
+    "shade_blue_1",
+    "shade_blue_2"
+   ],
+   "tag": "M-SER-ENDS",
+   "prompt": "מְסַדְּרִים מֵהַבָּהִיר אֶל הַכֵּהֶה.",
+   "h3": "כָּחֹל בָּהִיר, כָּחֹל, כָּחֹל כֵּהֶה. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! מֵהַבָּהִיר אֶל הַכֵּהֶה."
   },
   {
    "kind": "pick",
@@ -1109,24 +1115,26 @@
    "h3": "הַבָּהִיר הוּא הֲכִי קָרוֹב לְלָבָן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
   },
   {
-   "kind": "pick",
    "id": "b.colb02.3",
    "skill": "COL-B-02",
    "difficulty": 0.51,
-   "prompt": "אֵיזֶה הֲכִי כֵּהֶה?",
-   "options": [
+   "revision": 2,
+   "kind": "build",
+   "sequence": [
+    "shade_green_1",
     "shade_green_2",
-    "shade_green_3",
-    "shade_green_1"
+    "shade_green_3"
    ],
-   "correct": "shade_green_3",
-   "tags": {
-    "shade_green_2": "M-SER-ENDS",
-    "shade_green_1": "M-COL-SHADE"
-   },
-   "domain": "colors",
-   "correct_text": "כֵּן! זֶה הֲכִי כֵּהֶה.",
-   "h3": "הַכֵּהֶה הוּא הֲכִי חָשׁוּךְ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+   "palette": [
+    "shade_green_3",
+    "shade_red_2",
+    "shade_green_1",
+    "shade_green_2"
+   ],
+   "tag": "M-SER-ENDS",
+   "prompt": "מְסַדְּרִים מֵהַבָּהִיר אֶל הַכֵּהֶה.",
+   "h3": "יָרֹק בָּהִיר, יָרֹק, יָרֹק כֵּהֶה. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! מֵהַבָּהִיר אֶל הַכֵּהֶה."
   },
   {
    "kind": "pick",
@@ -1149,24 +1157,26 @@
    "h3": "הַבָּהִיר הוּא הֲכִי קָרוֹב לְלָבָן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
   },
   {
-   "kind": "pick",
    "id": "b.colb02.5",
    "skill": "COL-B-02",
    "difficulty": 0.65,
-   "prompt": "אֵיזֶה הֲכִי כֵּהֶה?",
-   "options": [
+   "revision": 2,
+   "kind": "build",
+   "sequence": [
+    "shade_red_1",
+    "shade_red_2",
+    "shade_red_3"
+   ],
+   "palette": [
     "shade_red_3",
+    "shade_purple_2",
     "shade_red_1",
     "shade_red_2"
    ],
-   "correct": "shade_red_3",
-   "tags": {
-    "shade_red_2": "M-SER-ENDS",
-    "shade_red_1": "M-COL-SHADE"
-   },
-   "domain": "colors",
-   "correct_text": "כֵּן! זֶה הֲכִי כֵּהֶה.",
-   "h3": "הַכֵּהֶה הוּא הֲכִי חָשׁוּךְ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+   "tag": "M-SER-ENDS",
+   "prompt": "מְסַדְּרִים מֵהַבָּהִיר אֶל הַכֵּהֶה.",
+   "h3": "אָדֹם בָּהִיר, אָדֹם, אָדֹם כֵּהֶה. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! מֵהַבָּהִיר אֶל הַכֵּהֶה."
   },
   {
    "kind": "pick",
@@ -1189,24 +1199,26 @@
    "h3": "הַבָּהִיר הוּא הֲכִי קָרוֹב לְלָבָן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
   },
   {
-   "kind": "pick",
    "id": "b.colb02.7",
    "skill": "COL-B-02",
    "difficulty": 0.79,
-   "prompt": "אֵיזֶה הֲכִי כֵּהֶה?",
-   "options": [
+   "revision": 2,
+   "kind": "build",
+   "sequence": [
     "shade_purple_1",
     "shade_purple_2",
     "shade_purple_3"
    ],
-   "correct": "shade_purple_3",
-   "tags": {
-    "shade_purple_2": "M-SER-ENDS",
-    "shade_purple_1": "M-COL-SHADE"
-   },
-   "domain": "colors",
-   "correct_text": "כֵּן! זֶה הֲכִי כֵּהֶה.",
-   "h3": "הַכֵּהֶה הוּא הֲכִי חָשׁוּךְ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+   "palette": [
+    "shade_purple_3",
+    "shade_blue_2",
+    "shade_purple_1",
+    "shade_purple_2"
+   ],
+   "tag": "M-SER-ENDS",
+   "prompt": "מְסַדְּרִים מֵהַבָּהִיר אֶל הַכֵּהֶה.",
+   "h3": "סָגֹל בָּהִיר, סָגֹל, סָגֹל כֵּהֶה. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! מֵהַבָּהִיר אֶל הַכֵּהֶה."
   },
   {
    "kind": "pick",
@@ -1229,29 +1241,26 @@
    "h3": "הַבָּהִיר הוּא הֲכִי קָרוֹב לְלָבָן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
   },
   {
-   "kind": "pick",
    "id": "b.colb02.9",
    "skill": "COL-B-02",
    "difficulty": 0.9,
-   "prompt": "מַה בָּאֶמְצַע, בֵּין הַבָּהִיר לַכֵּהֶה?",
-   "row": [
+   "revision": 2,
+   "kind": "build",
+   "sequence": [
     "shade_blue_1",
-    "?",
-    "shade_blue_3"
-   ],
-   "options": [
     "shade_blue_2",
-    "shade_blue_1",
     "shade_blue_3"
    ],
-   "correct": "shade_blue_2",
-   "tags": {
-    "shade_blue_1": "M-SER-ENDS",
-    "shade_blue_3": "M-SER-ENDS"
-   },
-   "domain": "colors",
-   "correct_text": "כֵּן! זֶה בָּאֶמְצַע.",
-   "h3": "מִבָּהִיר לְכֵהֶה: בָּהִיר, אֶמְצָעִי, כֵּהֶה. עַכְשָׁו תּוֹרְכֶם."
+   "palette": [
+    "shade_blue_3",
+    "shade_purple_1",
+    "shade_blue_1",
+    "shade_blue_2"
+   ],
+   "tag": "M-SER-ENDS",
+   "prompt": "מְסַדְּרִים מֵהַבָּהִיר אֶל הַכֵּהֶה.",
+   "h3": "כָּחֹל בָּהִיר, כָּחֹל, כָּחֹל כֵּהֶה. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! מֵהַבָּהִיר אֶל הַכֵּהֶה."
   },
   {
    "kind": "pick",
@@ -1330,73 +1339,136 @@
    "h3": "מִבָּהִיר לְכֵהֶה: בָּהִיר, אֶמְצָעִי, כֵּהֶה. עַכְשָׁו תּוֹרְכֶם."
   },
   {
-   "kind": "pick",
    "id": "b.colb03.1",
    "skill": "COL-B-03",
    "difficulty": 0.37,
-   "prompt": "אֵיפֹה עוֹד כָּחֹל?",
-   "group": {
-    "sprite": "shade_blue_1",
-    "count": 1
-   },
-   "options": [
-    "shade_blue_3",
-    "shade_red_1",
-    "shade_red_2"
+   "revision": 2,
+   "kind": "sort",
+   "rule": "colour",
+   "tag": "M-COL-SHADE",
+   "bins": [
+    {
+     "sprite": "shade_blue_2",
+     "label": "כָּחֹל"
+    },
+    {
+     "sprite": "shade_red_2",
+     "label": "אָדֹם"
+    }
    ],
-   "correct": "shade_blue_3",
-   "tags": {
-    "shade_red_1": "M-COL-SHADE"
-   },
-   "domain": "colors",
-   "correct_text": "כֵּן! גַּם זֶה כָּחֹל.",
-   "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא כָּחֹל. עַכְשָׁו תּוֹרְכֶם."
+   "items": [
+    [
+     "shade_blue_1",
+     1,
+     "M-COL-SHADE"
+    ],
+    [
+     "shade_red_3",
+     2,
+     "M-COL-SHADE"
+    ],
+    [
+     "shade_blue_3",
+     1,
+     "M-COL-SHADE"
+    ],
+    [
+     "shade_red_1",
+     2,
+     "M-COL-SHADE"
+    ]
+   ],
+   "prompt": "מְמַיְּנִים לְפִי צֶבַע: כָּחֹל לְכָאן, וְאָדֹם לְכָאן.",
+   "h3": "גַּם בָּהִיר וְגַם כֵּהֶה, זֶה אוֹתוֹ צֶבַע. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! בָּהִיר אוֹ כֵּהֶה, אוֹתוֹ צֶבַע."
   },
   {
-   "kind": "pick",
    "id": "b.colb03.2",
    "skill": "COL-B-03",
    "difficulty": 0.44,
-   "prompt": "אֵיפֹה עוֹד כָּחֹל?",
-   "group": {
-    "sprite": "shade_blue_3",
-    "count": 1
-   },
-   "options": [
-    "shade_green_3",
-    "shade_blue_1",
-    "shade_green_2"
+   "revision": 2,
+   "kind": "sort",
+   "rule": "colour",
+   "tag": "M-COL-SHADE",
+   "bins": [
+    {
+     "sprite": "shade_blue_2",
+     "label": "כָּחֹל"
+    },
+    {
+     "sprite": "shade_green_2",
+     "label": "יָרֹק"
+    }
    ],
-   "correct": "shade_blue_1",
-   "tags": {
-    "shade_green_3": "M-COL-SHADE"
-   },
-   "domain": "colors",
-   "correct_text": "כֵּן! גַּם זֶה כָּחֹל.",
-   "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא כָּחֹל. עַכְשָׁו תּוֹרְכֶם."
+   "items": [
+    [
+     "shade_blue_1",
+     1,
+     "M-COL-SHADE"
+    ],
+    [
+     "shade_green_3",
+     2,
+     "M-COL-SHADE"
+    ],
+    [
+     "shade_blue_3",
+     1,
+     "M-COL-SHADE"
+    ],
+    [
+     "shade_green_1",
+     2,
+     "M-COL-SHADE"
+    ]
+   ],
+   "prompt": "מְמַיְּנִים לְפִי צֶבַע: כָּחֹל לְכָאן, וְיָרֹק לְכָאן.",
+   "h3": "גַּם בָּהִיר וְגַם כֵּהֶה, זֶה אוֹתוֹ צֶבַע. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! בָּהִיר אוֹ כֵּהֶה, אוֹתוֹ צֶבַע."
   },
   {
-   "kind": "pick",
    "id": "b.colb03.3",
    "skill": "COL-B-03",
    "difficulty": 0.51,
-   "prompt": "אֵיפֹה עוֹד יָרֹק?",
-   "group": {
-    "sprite": "shade_green_1",
-    "count": 1
-   },
-   "options": [
-    "shade_purple_1",
-    "shade_purple_2",
-    "shade_green_3"
+   "revision": 2,
+   "kind": "sort",
+   "rule": "colour",
+   "tag": "M-COL-SHADE",
+   "bins": [
+    {
+     "sprite": "shade_green_2",
+     "label": "יָרֹק"
+    },
+    {
+     "sprite": "shade_purple_2",
+     "label": "סָגֹל"
+    }
    ],
-   "correct": "shade_green_3",
-   "tags": {
-    "shade_purple_1": "M-COL-SHADE"
-   },
-   "domain": "colors",
-   "correct_text": "כֵּן! גַּם זֶה יָרֹק.",
-   "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא יָרֹק. עַכְשָׁו תּוֹרְכֶם."
+   "items": [
+    [
+     "shade_green_1",
+     1,
+     "M-COL-SHADE"
+    ],
+    [
+     "shade_purple_3",
+     2,
+     "M-COL-SHADE"
+    ],
+    [
+     "shade_green_3",
+     1,
+     "M-COL-SHADE"
+    ],
+    [
+     "shade_purple_1",
+     2,
+     "M-COL-SHADE"
+    ]
+   ],
+   "prompt": "מְמַיְּנִים לְפִי צֶבַע: יָרֹק לְכָאן, וְסָגֹל לְכָאן.",
+   "h3": "גַּם בָּהִיר וְגַם כֵּהֶה, זֶה אוֹתוֹ צֶבַע. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! בָּהִיר אוֹ כֵּהֶה, אוֹתוֹ צֶבַע."
   },
   {
    "kind": "pick",
@@ -1422,27 +1494,48 @@
    "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא יָרֹק. עַכְשָׁו תּוֹרְכֶם."
   },
   {
-   "kind": "pick",
    "id": "b.colb03.5",
    "skill": "COL-B-03",
    "difficulty": 0.65,
-   "prompt": "אֵיפֹה עוֹד אָדֹם?",
-   "group": {
-    "sprite": "shade_red_1",
-    "count": 1
-   },
-   "options": [
-    "shade_blue_1",
-    "shade_red_3",
-    "shade_blue_2"
+   "revision": 2,
+   "kind": "sort",
+   "rule": "colour",
+   "tag": "M-COL-SHADE",
+   "bins": [
+    {
+     "sprite": "shade_red_2",
+     "label": "אָדֹם"
+    },
+    {
+     "sprite": "shade_blue_2",
+     "label": "כָּחֹל"
+    }
    ],
-   "correct": "shade_red_3",
-   "tags": {
-    "shade_blue_1": "M-COL-SHADE"
-   },
-   "domain": "colors",
-   "correct_text": "כֵּן! גַּם זֶה אָדֹם.",
-   "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא אָדֹם. עַכְשָׁו תּוֹרְכֶם."
+   "items": [
+    [
+     "shade_red_1",
+     1,
+     "M-COL-SHADE"
+    ],
+    [
+     "shade_blue_3",
+     2,
+     "M-COL-SHADE"
+    ],
+    [
+     "shade_red_3",
+     1,
+     "M-COL-SHADE"
+    ],
+    [
+     "shade_blue_1",
+     2,
+     "M-COL-SHADE"
+    ]
+   ],
+   "prompt": "מְמַיְּנִים לְפִי צֶבַע: אָדֹם לְכָאן, וְכָּחֹל לְכָאן.",
+   "h3": "גַּם בָּהִיר וְגַם כֵּהֶה, זֶה אוֹתוֹ צֶבַע. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! בָּהִיר אוֹ כֵּהֶה, אוֹתוֹ צֶבַע."
   },
   {
    "kind": "pick",

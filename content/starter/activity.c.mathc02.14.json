@@ -123,7 +123,7 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:c.mathc02.13.h2",
+      "vo": "vo:c.mathc02.1.h2",
       "caption": [
         {
           "t": "he",
@@ -134,7 +134,7 @@
     {
       "level": 3,
       "action": "worked_example",
-      "vo": "vo:c.mathc02.14.h3",
+      "vo": "vo:c.mathc02.6.h3",
       "caption": [
         {
           "t": "he",

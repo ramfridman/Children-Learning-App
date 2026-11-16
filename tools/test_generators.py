@@ -228,7 +228,9 @@ class StarterPackTest(unittest.TestCase):
 
     def test_math_b_10_draws_one_column_per_plate(self):
         for a in self.acts:
-            if a['skills'][0]['id'] == 'MATH-B-10':
+            # M11 Stage 2: four of MATH-B-10's taps are deals to plates now (sort_drag share, checked by tools/check_maths.py); the taps keep
+            # their chart
+            if a['skills'][0]['id'] == 'MATH-B-10' and a['template'] == 'tap_answer':
                 chart = a['scene']['chart']
                 self.assertEqual(len({c['count'] for c in chart}), 1, a['id'])
                 right = next(o['numeral'] for o in a['answer']['options'] if o['id'] == a['answer']['correct'])

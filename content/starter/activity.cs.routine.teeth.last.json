@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "cs.routine.teeth.last",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
   "domain": "cs",
   "band": "A",
   "skills": [
@@ -16,7 +16,7 @@
   "purpose": "practice",
   "checkType": "practice",
   "representation": "story",
-  "variantGroup": "pick",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.3
   },
@@ -25,38 +25,28 @@
     "caption": [
       {
         "t": "he",
-        "v": "מְצַחְצְחִים שִׁנַּיִם. מָה עוֹשִׂים בַּסּוֹף?"
+        "v": "מְצַחְצְחִים שִׁנַּיִם. מְסַדְּרִים אֶת הַצְּעָדִים לְפִי הַסֵּדֶר."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "slots": 3,
+    "palette": [
+      "asset:step_brush",
+      "asset:step_rinse",
+      "asset:step_paste"
+    ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:step_paste",
-        "label": "מִשְׁחָה",
-        "misconception": "M-SEQ-CAUSE"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:step_rinse",
-        "label": "כּוֹס מַיִם"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:step_brush",
-        "label": "מִבְרֶשֶׁת"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:step_paste",
+      "asset:step_brush",
+      "asset:step_rinse"
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-SEQ-CAUSE"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -65,7 +55,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! בַּסּוֹף שׁוֹטְפִים בְּמַיִם."
+          "v": "כֵּן! כָּךְ מְצַחְצְחִים שִׁנַּיִם."
         }
       ]
     },
@@ -116,11 +106,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.build.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד."
         }
       ]
     },
@@ -131,7 +121,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "קֹדֶם מִשְׁחָה, אַחַר כָּךְ מִבְרֶשֶׁת, וּבַסּוֹף כּוֹס מַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל כּוֹס הַמַּיִם."
+          "v": "קֹדֶם מִשְׁחָה, אַחַר כָּךְ מִבְרֶשֶׁת, וּבַסּוֹף שׁוֹטְפִים. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -147,10 +137,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child lays the steps of a routine in order",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מְצַחְצְחִים שִׁנַּיִם. מָה עוֹשִׂים בַּסּוֹף?"
+    "altText": "מְצַחְצְחִים שִׁנַּיִם. מְסַדְּרִים אֶת הַצְּעָדִים לְפִי הַסֵּדֶר."
   }
 }

@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b15.cola05.2",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "colors",
   "band": "A",
   "skills": [
@@ -14,9 +14,9 @@
     }
   ],
   "purpose": "practice",
-  "checkType": "transfer",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.4
   },
@@ -25,40 +25,56 @@
     "caption": [
       {
         "t": "he",
-        "v": "זֶה תַּפּוּחַ?"
+        "v": "שָׂמִים כָּאן אֶת כׇּל הַתַּפּוּחִים, גַּם אִם הַצֶּבַע שׁוֹנֶה."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "group": {
-      "sprite": "asset:apple_green",
-      "count": 1,
-      "arrangement": "line",
-      "seed": 3,
-      "scale": 1
-    }
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:tick",
-        "label": "כֵּן"
+        "id": "b1",
+        "sprite": "asset:apple",
+        "count": 1,
+        "label": "תַּפּוּחִים"
       },
       {
-        "id": "o2",
+        "id": "b2",
         "sprite": "asset:cross",
-        "label": "לֹא",
-        "misconception": "M-COL-OBJECT"
+        "count": 1,
+        "label": "לֹא תַּפּוּחִים"
       }
     ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:apple",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:balloon_red",
+        "bin": "b2",
+        "misconception": "M-COL-OBJECT"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:apple_green",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:balloon_green",
+        "bin": "b2",
+        "misconception": "M-COL-ONEATTR"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-COL-OBJECT"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -67,7 +83,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה תַּפּוּחַ יָרֹק."
+          "v": "כֵּן! גַּם בְּצֶבַע אַחֵר, זֶה אוֹתוֹ פְּרִי."
         }
       ]
     },
@@ -79,6 +95,16 @@
           {
             "t": "he",
             "v": "דְּבָרִים יְכוֹלִים לִהְיוֹת בְּכַמָּה צְבָעִים. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.col_oneattr",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע."
           }
         ]
       },
@@ -118,11 +144,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.sort.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
         }
       ]
     },
@@ -133,7 +159,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַוִּי."
+          "v": "תַּפּוּחַ יָרֹק הוּא עֲדַיִן תַּפּוּחַ. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -149,10 +175,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "זֶה תַּפּוּחַ?"
+    "altText": "שָׂמִים כָּאן אֶת כׇּל הַתַּפּוּחִים, גַּם אִם הַצֶּבַע שׁוֹנֶה."
   }
 }

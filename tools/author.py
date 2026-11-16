@@ -1251,8 +1251,12 @@ def k_numline(a, ctx):
     labels = a.get('labels') or [frm, to] + ([a['start']] if jump else [])
     scene = {'background': 'asset:meadow', 'from': frm, 'to': to, 'markerSprite': 'asset:' + a.get('marker', 'frog'),
              'labels': sorted(set(labels))}
-    answer = {'type': 'line', 'mode': a['mode'], 'target': target, 'misconception': a.get('tag', 'M-NL-SPACE')}
-    tags = {answer['misconception']}
+    # M11 Stage 2: `tag: null` gives the line no tag of its own (a numeral found among labelled ticks shows no catalogued error), and
+    # `mirror: false` no mirror tag (with every tick labelled, the mirror tick is a misread label, not a line read from the right)
+    answer = {'type': 'line', 'mode': a['mode'], 'target': target}
+    if a.get('tag', 'M-NL-SPACE'):
+        answer['misconception'] = a.get('tag', 'M-NL-SPACE')
+    tags = {answer['misconception']} if 'misconception' in answer else set()
     tol = a.get('tolerance', 0)
     if a.get('tickStep'):  # X5: ticks only at every tickStep-th number (0 to 100 in tens); the line must end on a tick
         assert (to - frm) % a['tickStep'] == 0, '%s: a line from %d to %d does not end on a tick of %d' % (a['id'], frm, to, a['tickStep'])
@@ -1260,7 +1264,7 @@ def k_numline(a, ctx):
     if tol:  # X5: a touch within `tolerance` of the target is right (an estimate); a place item only, narrower than the line
         assert not jump and 0 < tol < to - frm, '%s: a tolerance is for a place item and narrower than the line' % a['id']
         answer['tolerance'] = tol
-    if abs(frm + to - 2 * target) > 2 * tol:  # the mirror is a place of its own: outside the right region (its region too)
+    if a.get('mirror', True) and abs(frm + to - 2 * target) > 2 * tol:  # the mirror is a place of its own: outside the right region (its region too)
         answer['mirrorMisconception'] = 'M-NL-DIR'
         tags.add('M-NL-DIR')
     if jump:

@@ -16,12 +16,12 @@
   "items": [
     "math.size.big",
     "math.size.small",
+    "b15.matha04.1",
+    "b15.matha04.2",
     "math.size.long",
     "math.size.short",
     "math.size.heavy",
-    "math.size.light",
-    "b15.matha04.1",
-    "b15.matha04.2"
+    "math.size.light"
   ],
   "estimatedMinutes": 4,
   "sequence": 3,
@@ -33,5 +33,41 @@
         "v": "חֲכָמִים! הִשְׁוִיתֶם גָּדוֹל וְקָטָן, אָרֹךְ וְקָצָר, כָּבֵד וְקַל."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-a-04",
+    "together": [
+      {
+        "id": "math.size.big",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֲנִי שָׂמָה אֶת הָרִאשׁוֹן. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "math.size.small",
+      "b15.matha04.1",
+      "b15.matha04.2",
+      "math.size.long",
+      "math.size.short",
+      "math.size.heavy",
+      "math.size.light"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מִסְתַּכֶּלֶת. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

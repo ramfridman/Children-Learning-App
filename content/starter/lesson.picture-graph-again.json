@@ -15,10 +15,10 @@
   ],
   "items": [
     "math.graph.ducks",
-    "math.graph.stars2",
     "math.graph.apples2",
     "b15.matha07.1",
-    "b15.matha07.2"
+    "b15.matha07.2",
+    "math.graph.stars2"
   ],
   "estimatedMinutes": 3,
   "sequence": 12,
@@ -30,5 +30,41 @@
         "v": "יָפֶה מְאֹד! יְדַעְתֶּם אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-a-07",
+    "recall": [
+      "log.sort.animal"
+    ],
+    "together": [
+      {
+        "id": "math.graph.ducks",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֲנִי שָׂמָה אֶת הָרִאשׁוֹן. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "math.graph.apples2",
+      "b15.matha07.1",
+      "b15.matha07.2",
+      "math.graph.stars2"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מִסְתַּכֶּלֶת. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

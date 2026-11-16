@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "log.pair.shoe",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "logic",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pair",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.2
   },
@@ -25,44 +25,43 @@
     "caption": [
       {
         "t": "he",
-        "v": "מָה הוֹלֵךְ עִם הַנַּעַל?"
+        "v": "מָה הוֹלֵךְ עִם מָה? שָׂמִים כׇּל דָּבָר לְיַד הֶחָבֵר שֶׁלּוֹ."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "group": {
-      "sprite": "asset:shoe",
-      "count": 1,
-      "arrangement": "line",
-      "seed": 3,
-      "scale": 1.6
-    }
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:sock",
-        "label": "גֶּרֶב"
+        "id": "b1",
+        "sprite": "asset:shoe",
+        "count": 1,
+        "label": "נַעַל"
       },
       {
-        "id": "o2",
-        "sprite": "asset:paste",
-        "label": "מִשְׁחַת שִׁנַּיִם"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:bowl",
-        "label": "קְעָרָה"
+        "id": "b2",
+        "sprite": "asset:lock",
+        "count": 1,
+        "label": "מַנְעוּל"
       }
     ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:sock",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:key",
+        "bin": "b2"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -71,7 +70,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זוֹ גֶּרֶב."
+          "v": "כֵּן! כׇּל דָּבָר עִם הֶחָבֵר שֶׁלּוֹ."
         }
       ]
     },
@@ -112,11 +111,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.log_pairs.h2",
+      "vo": "vo:hint.sort.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נַחְשֹׁב: מָה עוֹשִׂים עִם זֶה?"
+          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
         }
       ]
     },
@@ -127,7 +126,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "נַעַל וְגֶרֶב הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם."
+          "v": "כַּף עִם צַלַּחַת, גֶּרֶב עִם נַעַל, מַפְתֵּחַ עִם מַנְעוּל. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -143,10 +142,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מָה הוֹלֵךְ עִם הַנַּעַל?"
+    "altText": "מָה הוֹלֵךְ עִם מָה? שָׂמִים כׇּל דָּבָר לְיַד הֶחָבֵר שֶׁלּוֹ."
   }
 }

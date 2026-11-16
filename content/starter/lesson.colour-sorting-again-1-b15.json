@@ -27,5 +27,27 @@
         "v": "יָפֶה! מְצָאתֶם אֶת הַדָּבָר הַנָּכוֹן לְפִי הַצֶּבַע."
       }
     ]
+  },
+  "parts": {
+    "show": "show.col-a-04",
+    "secondShow": {
+      "id": "show.col-a-07",
+      "before": "b15.cola07.2"
+    },
+    "recall": [
+      "b15.cola01.1"
+    ],
+    "alone": [
+      "b15.cola07.2"
+    ],
+    "handover": {
+      "vo": "vo:host.goni.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מִסְתַּכְּלִים טוֹב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

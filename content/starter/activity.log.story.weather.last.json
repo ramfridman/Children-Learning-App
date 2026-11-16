@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "log.story.weather.last",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
   "domain": "logic",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "story",
-  "variantGroup": "story",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.3
   },
@@ -25,43 +25,28 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה בָּא בַּסּוֹף?"
+        "v": "מְסַדְּרִים אֶת הַסִּפּוּר: מַה קֹּדֶם, וּמָה אַחַר כָּךְ?"
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
+    "slots": 3,
+    "palette": [
+      "asset:rainbow",
       "asset:cloud",
-      "asset:rain",
-      "?"
+      "asset:rain"
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:rainbow",
-        "label": "קֶשֶׁת"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:cloud",
-        "label": "עָנָן",
-        "misconception": "M-SEQ-CAUSE"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:rain",
-        "label": "גֶּשֶׁם"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:cloud",
+      "asset:rain",
+      "asset:rainbow"
     ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-SEQ-CAUSE"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -70,7 +55,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! בַּסּוֹף קֶשֶׁת."
+          "v": "כֵּן! כָּכָה זֶה קוֹרֶה."
         }
       ]
     },
@@ -121,11 +106,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.build.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד."
         }
       ]
     },
@@ -152,10 +137,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child lays the pictures of a story in the order they happen",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה בָּא בַּסּוֹף?"
+    "altText": "מְסַדְּרִים אֶת הַסִּפּוּר: מַה קֹּדֶם, וּמָה אַחַר כָּךְ?"
   }
 }

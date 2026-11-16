@@ -18,8 +18,8 @@
     "x.mathb19.2",
     "x.mathb19.3",
     "x.mathb19.4",
-    "x.mathb19.5",
-    "x.mathb19.6"
+    "x.mathb19.6",
+    "x.mathb19.5"
   ],
   "estimatedMinutes": 5,
   "sequence": 64,
@@ -31,5 +31,42 @@
         "v": "כׇּל הַכָּבוֹד! קְרָאתֶם תַּרְשִׁים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-19",
+    "recall": [
+      "math.graph.apples"
+    ],
+    "together": [
+      {
+        "id": "x.mathb19.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֲנִי שָׂמָה אֶת הָרִאשׁוֹן. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "x.mathb19.2",
+      "x.mathb19.3",
+      "x.mathb19.4",
+      "x.mathb19.6",
+      "x.mathb19.5"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק."
+        }
+      ]
+    }
   }
 }

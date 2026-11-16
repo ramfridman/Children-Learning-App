@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "log.odd.ball",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "logic",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "odd",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.25
   },
@@ -25,38 +25,53 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה שּׁוֹנֶה מֵהָאֲחֵרִים?"
+        "v": "שָׂמִים אֶת הַדּוֹמִים בַּסַּל, וְאֶת הַשּׁוֹנֶה עַל הַדֶּשֶׁא."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
-      "asset:balloon_red",
-      "asset:ball_red",
-      "asset:ball_red",
-      "asset:ball_red"
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:bin_basket",
+        "count": 1,
+        "label": "הַסַּל"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:bin_grass",
+        "count": 1,
+        "label": "הַדֶּשֶׁא"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:ball_red",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:balloon_red",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:ball_red",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:ball_red",
+        "bin": "b1"
+      }
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:ball_red",
-        "label": "כַּדּוּר אָדֹם"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:balloon_red",
-        "label": "בָּלוֹן אָדֹם"
-      }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "sort",
+    "mode": "sort"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -65,7 +80,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה בָּלוֹן אָדֹם."
+          "v": "כֵּן! מִיַּנְתֶּם אֶת כֻּלָּם."
         }
       ]
     },
@@ -106,11 +121,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.log_odd.h2",
+      "vo": "vo:hint.sort.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל עַל כֻּלָּם: מַה דּוֹמֶה, וּמַה שּׁוֹנֶה?"
+          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
         }
       ]
     },
@@ -121,7 +136,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הַבָּלוֹן הָאָדֹם שׁוֹנֶה מֵהָאֲחֵרִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+          "v": "שְׁלוֹשָׁה כַּדּוּרִים בַּסַּל, וְהַבָּלוֹן עַל הַדֶּשֶׁא. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -137,10 +152,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה שּׁוֹנֶה מֵהָאֲחֵרִים?"
+    "altText": "שָׂמִים אֶת הַדּוֹמִים בַּסַּל, וְאֶת הַשּׁוֹנֶה עַל הַדֶּשֶׁא."
   }
 }

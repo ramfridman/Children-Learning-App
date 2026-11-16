@@ -30,5 +30,41 @@
         "v": "יָפֶה! אַתֶּם יוֹדְעִים לְהַשְׁווֹת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-19",
+    "recall": [
+      "math.graph.apples"
+    ],
+    "together": [
+      {
+        "id": "x.mathb19.7",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "x.mathb19.8",
+      "x.mathb19.9",
+      "x.mathb19.10",
+      "x.mathb19.11"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

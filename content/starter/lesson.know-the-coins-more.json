@@ -14,11 +14,11 @@
     "MATH-B-16"
   ],
   "items": [
+    "x.mathb16.7",
+    "x.mathb16.8",
     "x.mathb16.4",
     "x.mathb16.5",
-    "x.mathb16.6",
-    "x.mathb16.7",
-    "x.mathb16.8"
+    "x.mathb16.6"
   ],
   "estimatedMinutes": 5,
   "sequence": 61,
@@ -30,5 +30,41 @@
         "v": "מְצֻיָּן! כׇּל מַטְבֵּעַ וְהַשֵּׁם שֶׁלּוֹ."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-16",
+    "recall": [
+      "b15.numa08.1"
+    ],
+    "together": [
+      {
+        "id": "x.mathb16.7",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.pnina.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֲנִי שָׂמָה אֶת הָרִאשׁוֹן. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "x.mathb16.8",
+      "x.mathb16.4",
+      "x.mathb16.5",
+      "x.mathb16.6"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק."
+        }
+      ]
+    }
   }
 }

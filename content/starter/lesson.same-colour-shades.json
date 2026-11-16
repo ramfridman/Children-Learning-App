@@ -29,5 +29,40 @@
         "v": "כׇּל הַכָּבוֹד! גְּוָנִים שׁוֹנִים, אוֹתוֹ צֶבַע."
       }
     ]
+  },
+  "parts": {
+    "show": "show.col-b-03",
+    "recall": [
+      "b.colb02.10"
+    ],
+    "together": [
+      {
+        "id": "b.colb03.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.goni.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.colb03.2",
+      "b.colb03.3",
+      "b.colb03.4"
+    ],
+    "handover": {
+      "vo": "vo:host.goni.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

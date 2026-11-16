@@ -17,9 +17,9 @@
   ],
   "items": [
     "b15.cola01.1",
-    "b15.cola01.2",
     "b15.cola03.1",
     "b15.cola03.2",
+    "b15.cola01.2",
     "b15.cola03.3",
     "b15.cola03.4",
     "b15.cola03.5",
@@ -35,5 +35,47 @@
         "v": "חֲכָמִים! הִכַּרְתֶּם כָּתֹם, אָדֹם, שָׁחֹר וְלָבָן."
       }
     ]
+  },
+  "parts": {
+    "show": "show.col-a-01",
+    "secondShow": {
+      "id": "show.col-a-03",
+      "before": "b15.cola03.1"
+    },
+    "together": [
+      {
+        "id": "b15.cola01.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.goni.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נִסְתַּכֵּל יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b15.cola03.1",
+      "b15.cola03.2",
+      "b15.cola01.2",
+      "b15.cola03.3",
+      "b15.cola03.4",
+      "b15.cola03.5"
+    ],
+    "use": [
+      "b15.cola03.6"
+    ],
+    "handover": {
+      "vo": "vo:host.goni.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם רוֹאִים צְבָעִים לְבַד."
+        }
+      ]
+    }
   }
 }

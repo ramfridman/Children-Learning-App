@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "next.after.6",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "number_line",
+  "templateVersion": "1.0",
   "domain": "numbers",
   "band": "A",
   "skills": [
@@ -13,10 +13,10 @@
       "weight": 1
     }
   ],
-  "purpose": "learn",
+  "purpose": "practice",
   "checkType": "practice",
-  "representation": "symbolic",
-  "variantGroup": "next-number",
+  "representation": "pictorial",
+  "variantGroup": "numline",
   "difficulty": {
     "authored": 0.3
   },
@@ -25,46 +25,47 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה בָּא אַחֲרֵי שֵׁשׁ?"
+        "v": "הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל שֵׁשׁ וְקוֹפֶצֶת צַעַד אֶחָד קָדִימָה. עַל אֵיזֶה מִסְפָּר הִיא תִּנְחַת?"
       }
     ],
     "replayButton": true
   },
   "scene": {
-    "background": "asset:meadow"
+    "background": "asset:meadow",
+    "from": 1,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "start": 6,
+    "hops": [
+      1
+    ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "numeral": 6,
-        "label": "שֵׁשׁ"
-      },
-      {
-        "id": "o2",
-        "numeral": 7,
-        "label": "שֶׁבַע"
-      },
-      {
-        "id": "o3",
-        "numeral": 8,
-        "label": "שְׁמוֹנֶה",
-        "misconception": "M-CNT-SEQ"
-      }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "line",
+    "mode": "jump",
+    "target": 7,
+    "misconception": "M-CNT-SEQ"
   },
-  "voiceAnswer": true,
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:next.after.6.correct",
       "caption": [
         {
           "t": "he",
-          "v": "שֶׁבַע! כָּךְ סוֹפְרִים."
+          "v": "שֶׁבַע! הַצְּפַרְדֵּעַ נָחֲתָה עַל שֶׁבַע."
         }
       ]
     },
@@ -104,22 +105,22 @@
     {
       "level": 1,
       "action": "replay_prompt_slow",
-      "vo": "vo:next.after.6.h1",
+      "vo": "vo:hint.pick.h1",
       "caption": [
         {
           "t": "he",
-          "v": "בּוֹאוּ נִסְפֹּר יַחַד מֵהַהַתְחָלָה: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ."
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
         }
       ]
     },
     {
       "level": 2,
-      "action": "show_fingers",
-      "vo": "vo:next.after.6.h2",
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.line.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ."
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
         }
       ]
     },
@@ -130,7 +131,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… שֵׁשׁ, וְאַחֲרֵי שֵׁשׁ בָּא שֶׁבַע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שֶׁבַע."
+          "v": "מַתְחִילִים מִשֵּׁשׁ וְקוֹפְצִים צַעַד אֶחָד קָדִימָה. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -146,10 +147,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child says the number that comes after 6",
+    "goal": "child finds the number on the line",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה בָּא אַחֲרֵי שֵׁשׁ?"
+    "altText": "הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל שֵׁשׁ וְקוֹפֶצֶת צַעַד אֶחָד קָדִימָה. עַל אֵיזֶה מִסְפָּר הִיא תִּנְחַת?"
   }
 }

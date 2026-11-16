@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "c.numc04.4",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "number_line",
+  "templateVersion": "1.0",
   "domain": "numbers",
   "band": "C",
   "skills": [
@@ -15,49 +15,38 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "symbolic",
-  "variantGroup": "pick",
+  "representation": "pictorial",
+  "variantGroup": "numline",
   "difficulty": {
     "authored": 0.58
   },
   "prompt": {
-    "vo": "vo:c.numc04.1.prompt",
+    "vo": "vo:c.numc04.4.prompt",
     "caption": [
       {
         "t": "he",
-        "v": "אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר?"
+        "v": "מִי גָּדוֹל יוֹתֵר, שְׁמוֹנִים וְחָמֵשׁ אוֹ שִׁבְעִים וְתֵשַׁע? שָׂמִים אֶת הַצְּפַרְדֵּעַ עַל הַגָּדוֹל."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "from": 70,
+    "to": 90,
+    "markerSprite": "asset:frog",
+    "labels": [
+      70,
+      79,
+      85,
+      90
+    ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "numeral": 85,
-        "label": "שְׁמוֹנִים וְחָמֵשׁ"
-      },
-      {
-        "id": "o2",
-        "numeral": 79,
-        "label": "שִׁבְעִים וְתֵשַׁע",
-        "misconception": "M-PV-FACE"
-      },
-      {
-        "id": "o3",
-        "numeral": 58,
-        "label": "חֲמִשִּׁים וּשְׁמוֹנֶה",
-        "misconception": "M-NUM-REV"
-      }
-    ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "line",
+    "mode": "place",
+    "target": 85,
+    "misconception": "M-PV-FACE"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -66,21 +55,11 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! שְׁמוֹנִים וְחָמֵשׁ גָּדוֹל יוֹתֵר."
+          "v": "כֵּן! שְׁמוֹנִים וְחָמֵשׁ. מַשְׁוִים קֹדֶם אֶת הָעֲשָׂרוֹת."
         }
       ]
     },
     "incorrect": [
-      {
-        "when": "misconception:M-NUM-REV",
-        "vo": "vo:fb.num_rev",
-        "caption": [
-          {
-            "t": "he",
-            "v": "הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
-          }
-        ]
-      },
       {
         "when": "misconception:M-PV-FACE",
         "vo": "vo:fb.pv_face",
@@ -127,11 +106,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:c.numc04.1.h2",
+      "vo": "vo:hint.line.h2",
       "caption": [
         {
           "t": "he",
-          "v": "מַשְׁוִים קֹדֶם אֶת הָעֲשָׂרוֹת. אִם הֵן שָׁווֹת, מַשְׁוִים אֶת הַיְּחִידוֹת."
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
         }
       ]
     },
@@ -142,7 +121,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "בִּשְׁמוֹנִים וְחָמֵשׁ יֵשׁ שְׁמוֹנֶה עֲשָׂרוֹת — הֲכִי הַרְבֵּה עֲשָׂרוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁמוֹנִים וְחָמֵשׁ."
+          "v": "שְׁמוֹנִים וְחָמֵשׁ גָּדוֹל יוֹתֵר: יֵשׁ בּוֹ יוֹתֵר עֲשָׂרוֹת. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -158,10 +137,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child finds the number on the line",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר?"
+    "altText": "מִי גָּדוֹל יוֹתֵר, שְׁמוֹנִים וְחָמֵשׁ אוֹ שִׁבְעִים וְתֵשַׁע? שָׂמִים אֶת הַצְּפַרְדֵּעַ עַל הַגָּדוֹל."
   }
 }

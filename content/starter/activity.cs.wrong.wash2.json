@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "cs.wrong.wash2",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
   "domain": "cs",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "story",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.3
   },
@@ -25,37 +25,29 @@
     "caption": [
       {
         "t": "he",
-        "v": "רוֹחֲצִים יָדַיִם. מָה הִגִּיעַ לְכָאן בְּטָעוּת?"
+        "v": "רוֹחֲצִים יָדַיִם. מְסַדְּרִים אֶת הַצְּעָדִים. אֶחָד מֵהֶם לֹא שַׁיָּךְ."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "slots": 3,
+    "palette": [
+      "asset:step_towel",
+      "asset:step_paste",
+      "asset:step_tap",
+      "asset:step_soap"
+    ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:step_tap",
-        "label": "בָּרֶז"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:step_soap",
-        "label": "סַבּוֹן"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:step_paste",
-        "label": "מִשְׁחָה"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:step_tap",
+      "asset:step_soap",
+      "asset:step_towel"
     ],
-    "correct": "o3",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-SEQ-CAUSE"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -64,11 +56,21 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! לִרְחִיצַת יָדַיִם לֹא צְרִיכָה מִשְׁחָה."
+          "v": "כֵּן! כָּךְ רוֹחֲצִים יָדַיִם."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SEQ-CAUSE",
+        "vo": "vo:fb.seq_cause",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נַחְשֹׁב: מַה קּוֹרֶה קֹדֶם, וּמָה אַחַר כָּךְ?"
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -105,11 +107,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.build.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד."
         }
       ]
     },
@@ -120,7 +122,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "לִרְחִיצַת יָדַיִם צְרִיכִים בָּרֶז, סַבּוֹן וּמַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּשְׁחָה."
+          "v": "קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -136,10 +138,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child lays the steps of a routine in order, leaving out the step that does not belong",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "רוֹחֲצִים יָדַיִם. מָה הִגִּיעַ לְכָאן בְּטָעוּת?"
+    "altText": "רוֹחֲצִים יָדַיִם. מְסַדְּרִים אֶת הַצְּעָדִים. אֶחָד מֵהֶם לֹא שַׁיָּךְ."
   }
 }

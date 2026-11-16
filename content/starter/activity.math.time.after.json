@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "math.time.after",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
   "domain": "math",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "story",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.4
   },
@@ -25,50 +25,51 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה בָּא אַחֲרֵי הַבֹּקֶר?"
+        "v": "מְסַדְּרִים אֶת הַיּוֹם: מַה קֹּדֶם, וּמָה אַחַר כָּךְ?"
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "slots": 3,
+    "palette": [
+      "asset:time_evening",
+      "asset:time_morning",
+      "asset:time_noon"
+    ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:time_night",
-        "label": "לַיְלָה"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:time_noon",
-        "label": "צָהֳרַיִם"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:time_morning",
-        "label": "בֹּקֶר"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:time_morning",
+      "asset:time_noon",
+      "asset:time_evening"
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-SEQ-CAUSE"
   },
-  "voiceAnswer": true,
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:math.time.after.correct",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! אַחֲרֵי הַבֹּקֶר בָּאִים הַצָּהֳרַיִם."
+          "v": "כֵּן! כָּכָה עוֹבֵר הַיּוֹם."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SEQ-CAUSE",
+        "vo": "vo:fb.seq_cause",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נַחְשֹׁב: מַה קּוֹרֶה קֹדֶם, וּמָה אַחַר כָּךְ?"
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -105,11 +106,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.build.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד."
         }
       ]
     },
@@ -120,7 +121,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "קֹדֶם בֹּקֶר, אַחַר כָּךְ צָהֳרַיִם, אַחַר כָּךְ עֶרֶב, וּבַסּוֹף לַיְלָה. עַכְשָׁו תּוֹרְכֶם."
+          "v": "קֹדֶם בֹּקֶר, אַחַר כָּךְ צָהֳרַיִם, וְאָז עֶרֶב. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -136,10 +137,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child lays the parts of the day in order",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה בָּא אַחֲרֵי הַבֹּקֶר?"
+    "altText": "מְסַדְּרִים אֶת הַיּוֹם: מַה קֹּדֶם, וּמָה אַחַר כָּךְ?"
   }
 }

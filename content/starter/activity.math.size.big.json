@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "math.size.big",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "math",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.1
   },
@@ -25,44 +25,54 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיזֶה כַּדּוּר גָּדוֹל?"
+        "v": "מְמַיְּנִים: גְּדוֹלִים לְכָאן, וּקְטַנִּים לְכָאן."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "set": {
-          "sprite": "asset:ball_red",
-          "count": 1,
-          "arrangement": "line",
-          "seed": 1,
-          "scale": 0.6
-        },
-        "label": "כַּדּוּר אָדֹם"
+        "id": "b1",
+        "sprite": "asset:ball_size_l",
+        "count": 1,
+        "label": "גְּדוֹלִים"
       },
       {
-        "id": "o2",
-        "set": {
-          "sprite": "asset:ball_red",
-          "count": 1,
-          "arrangement": "line",
-          "seed": 2,
-          "scale": 1.5
-        },
-        "label": "כַּדּוּר אָדֹם"
+        "id": "b2",
+        "sprite": "asset:ball_size_s",
+        "count": 1,
+        "label": "קְטַנִּים"
       }
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:ball_size_l",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:star_size_s",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:fish_size_l",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:apple_size_s",
+        "bin": "b2"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-SORT-SHIFT"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -71,11 +81,21 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה הַכַּדּוּר הַגָּדוֹל."
+          "v": "כֵּן! מִיַּנְתֶּם אֶת כֻּלָּם."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SORT-SHIFT",
+        "vo": "vo:fb.sort_shift.size",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַגֹּדֶל. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -112,11 +132,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.sort.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
         }
       ]
     },
@@ -127,7 +147,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הַכַּדּוּר הַגָּדוֹל תּוֹפֵס יוֹתֵר מָקוֹם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+          "v": "הַגְּדוֹלִים עִם הַגְּדוֹלִים, וְהַקְּטַנִּים עִם הַקְּטַנִּים. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -143,10 +163,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיזֶה כַּדּוּר גָּדוֹל?"
+    "altText": "מְמַיְּנִים: גְּדוֹלִים לְכָאן, וּקְטַנִּים לְכָאן."
   }
 }

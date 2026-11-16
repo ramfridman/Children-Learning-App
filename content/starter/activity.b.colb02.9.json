@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.colb02.9",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
   "domain": "colors",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.9
   },
@@ -25,44 +25,29 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה בָּאֶמְצַע, בֵּין הַבָּהִיר לַכֵּהֶה?"
+        "v": "מְסַדְּרִים מֵהַבָּהִיר אֶל הַכֵּהֶה."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
+    "slots": 3,
+    "palette": [
+      "asset:shade_blue_3",
+      "asset:shade_purple_1",
       "asset:shade_blue_1",
-      "?",
-      "asset:shade_blue_3"
+      "asset:shade_blue_2"
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:shade_blue_2",
-        "label": "כָּחֹל"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:shade_blue_1",
-        "label": "כָּחֹל בָּהִיר",
-        "misconception": "M-SER-ENDS"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:shade_blue_3",
-        "label": "כָּחֹל כֵּהֶה",
-        "misconception": "M-SER-ENDS"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:shade_blue_1",
+      "asset:shade_blue_2",
+      "asset:shade_blue_3"
     ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-SER-ENDS"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -71,7 +56,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה בָּאֶמְצַע."
+          "v": "כֵּן! מֵהַבָּהִיר אֶל הַכֵּהֶה."
         }
       ]
     },
@@ -122,11 +107,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.build.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד."
         }
       ]
     },
@@ -137,7 +122,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "מִבָּהִיר לְכֵהֶה: בָּהִיר, אֶמְצָעִי, כֵּהֶה. עַכְשָׁו תּוֹרְכֶם."
+          "v": "כָּחֹל בָּהִיר, כָּחֹל, כָּחֹל כֵּהֶה. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -153,10 +138,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child copies the pattern in the same order",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה בָּאֶמְצַע, בֵּין הַבָּהִיר לַכֵּהֶה?"
+    "altText": "מְסַדְּרִים מֵהַבָּהִיר אֶל הַכֵּהֶה."
   }
 }

@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "show.apples.3",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "count_tap",
+  "templateVersion": "1.0",
   "domain": "numbers",
   "band": "A",
   "skills": [
@@ -13,10 +13,10 @@
       "weight": 1
     }
   ],
-  "purpose": "practice",
-  "checkType": "reverse",
-  "representation": "pictorial",
-  "variantGroup": "numeral-to-set",
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "count-tap",
   "difficulty": {
     "authored": 0.3
   },
@@ -25,63 +25,64 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה יֵשׁ שְׁלוֹשָׁה תַּפּוּחִים?"
+        "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "numeral": 3
+    "objects": {
+      "sprite": "asset:apple",
+      "litSprite": "asset:apple_lit",
+      "count": 3,
+      "arrangement": "scatter",
+      "onTap": "glow",
+      "seed": 83
+    },
+    "target": {
+      "sprite": "asset:basket_target"
+    }
   },
   "answer": {
     "type": "choice",
     "options": [
       {
         "id": "o1",
-        "set": {
-          "sprite": "asset:apple",
-          "count": 2,
-          "arrangement": "line",
-          "seed": 2
-        },
-        "label": "שְׁנֵי תַּפּוּחִים",
+        "value": 2,
         "misconception": "M-CNT-SKIP"
       },
       {
         "id": "o2",
-        "set": {
-          "sprite": "asset:apple",
-          "count": 3,
-          "arrangement": "line",
-          "seed": 3
-        },
-        "label": "שְׁלוֹשָׁה תַּפּוּחִים"
+        "value": 4,
+        "misconception": "M-CNT-DOUBLE"
       },
       {
         "id": "o3",
-        "set": {
-          "sprite": "asset:apple",
-          "count": 4,
-          "arrangement": "line",
-          "seed": 4
-        },
-        "label": "אַרְבָּעָה תַּפּוּחִים",
-        "misconception": "M-CNT-DOUBLE"
+        "value": 3
       }
     ],
-    "correct": "o2",
+    "correct": "o3",
     "shuffle": false,
     "unsureAllowed": true
   },
-  "voiceAnswer": false,
+  "voiceAnswer": true,
+  "answerPrompt": {
+    "vo": "vo:show.apples.3.how_many",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה תַּפּוּחִים?"
+      }
+    ]
+  },
   "feedback": {
     "correct": {
       "vo": "vo:show.apples.3.correct",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! אֵלֶּה שְׁלוֹשָׁה תַּפּוּחִים."
+          "v": "שָׁלוֹשׁ! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת."
         }
       ]
     },
@@ -135,18 +136,18 @@
       "caption": [
         {
           "t": "he",
-          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַמִּסְפָּר."
+          "v": "נוֹגְעִים בְּתַפּוּחַ אֶחָד, וְאוֹמְרִים מִסְפָּר אֶחָד."
         }
       ]
     },
     {
       "level": 2,
       "action": "show_fingers",
-      "vo": "vo:show.apples.3.h2",
+      "vo": "vo:hint.ucount.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ."
+          "v": "בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ…"
         }
       ]
     },
@@ -157,7 +158,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. אֵלֶּה שְׁלוֹשָׁה תַּפּוּחִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה."
+          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: שָׁלוֹשׁ! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ."
         }
       ]
     }
@@ -173,10 +174,20 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child finds the group that has the number named",
+    "goal": "child touches each one once and answers with the last number counted",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה יֵשׁ שְׁלוֹשָׁה תַּפּוּחִים?"
-  }
+    "altText": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים."
+  },
+  "traceClassifiers": [
+    {
+      "when": "same_object_tapped_twice",
+      "misconception": "M-CNT-DOUBLE"
+    },
+    {
+      "when": "object_never_tapped",
+      "misconception": "M-CNT-SKIP"
+    }
+  ]
 }

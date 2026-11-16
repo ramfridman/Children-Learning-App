@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "c.mathb04.1",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "number_line",
+  "templateVersion": "1.0",
   "domain": "math",
   "band": "B",
   "skills": [
@@ -14,9 +14,9 @@
     }
   ],
   "purpose": "practice",
-  "checkType": "practice",
-  "representation": "symbolic",
-  "variantGroup": "pick",
+  "checkType": "predict",
+  "representation": "pictorial",
+  "variantGroup": "numline",
   "difficulty": {
     "authored": 0.37
   },
@@ -25,52 +25,32 @@
     "caption": [
       {
         "t": "he",
-        "v": "כַּמָּה זֶה?"
+        "v": "מַתְחִילִים מֵהַגָּדוֹל: הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל שֶׁבַע וְקוֹפֶצֶת שְׁנֵי צְעָדִים. אֵיפֹה הִיא תִּנְחַת?"
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
-      "n:2",
-      "op:+",
-      "n:7",
-      "op:=",
-      "?"
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+      0,
+      7,
+      10
+    ],
+    "start": 7,
+    "hops": [
+      2
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "numeral": 9,
-        "label": "תֵּשַׁע"
-      },
-      {
-        "id": "o2",
-        "numeral": 8,
-        "label": "שְׁמוֹנֶה",
-        "misconception": "M-CNT-DOUBLE"
-      },
-      {
-        "id": "o3",
-        "numeral": 7,
-        "label": "שֶׁבַע",
-        "misconception": "M-CNT-CARD"
-      },
-      {
-        "id": "o4",
-        "numeral": 10,
-        "label": "עֶשֶׂר",
-        "misconception": "M-CNT-DOUBLE"
-      }
-    ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "line",
+    "mode": "jump",
+    "target": 9,
+    "misconception": "M-NL-SPACE",
+    "mirrorMisconception": "M-NL-DIR"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -85,22 +65,22 @@
     },
     "incorrect": [
       {
-        "when": "misconception:M-CNT-CARD",
-        "vo": "vo:fb.sum_card",
+        "when": "misconception:M-NL-DIR",
+        "vo": "vo:fb.nl_dir",
         "caption": [
           {
             "t": "he",
-            "v": "זֶה רַק אֶחָד מֵהַמִּסְפָּרִים. בּוֹאוּ נוֹסִיף גַּם אֶת הַמִּסְפָּר הַשֵּׁנִי."
+            "v": "הַמִּסְפָּרִים הַקְּטַנִּים בַּצַּד הַשְּׂמָאלִי, וְהֵם גְּדֵלִים לְכִוּוּן הַחֵץ."
           }
         ]
       },
       {
-        "when": "misconception:M-CNT-DOUBLE",
-        "vo": "vo:fb.count_on_start",
+        "when": "misconception:M-NL-SPACE",
+        "vo": "vo:fb.nl_space",
         "caption": [
           {
             "t": "he",
-            "v": "כְּשֶׁמַּמְשִׁיכִים לִסְפֹּר, לֹא סוֹפְרִים שׁוּב אֶת הַמִּסְפָּר שֶׁמַּתְחִילִים מִמֶּנּוּ. בּוֹאוּ נִבְדֹּק."
+            "v": "כׇּל הַקְּפִיצוֹת בְּאוֹתוֹ אֹרֶךְ. בּוֹאוּ נִקְפֹּץ יַחַד וְנִסְפֹּר."
           }
         ]
       },
@@ -139,12 +119,12 @@
     },
     {
       "level": 2,
-      "action": "show_fingers",
-      "vo": "vo:c.mathb04.1.h2",
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.line.h2",
       "caption": [
         {
           "t": "he",
-          "v": "לֹא צָרִיךְ לִסְפֹּר הַכֹּל. מַתְחִילִים מֵהַמִּסְפָּר הַגָּדוֹל, שֶׁבַע, וּמוֹסִיפִים עוֹד שְׁתַּיִם עַל הָאֶצְבָּעוֹת."
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
         }
       ]
     },
@@ -155,7 +135,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "שֶׁבַע… שְׁמוֹנֶה, תֵּשַׁע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל תֵּשַׁע."
+          "v": "מַתְחִילִים מִשֶּׁבַע וְקוֹפְצִים שְׁנֵי צְעָדִים קָדִימָה. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -171,10 +151,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child finds the number on the line",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "כַּמָּה זֶה?"
+    "altText": "מַתְחִילִים מֵהַגָּדוֹל: הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל שֶׁבַע וְקוֹפֶצֶת שְׁנֵי צְעָדִים. אֵיפֹה הִיא תִּנְחַת?"
   }
 }

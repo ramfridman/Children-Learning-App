@@ -113,110 +113,150 @@
   ],
   "activities": [
     {
-      "kind": "pick",
+      "kind": "build",
       "id": "cs.routine.wash.first",
       "skill": "CS-A-01",
-      "prompt": "רוֹחֲצִים יָדַיִם. מָה עוֹשִׂים קֹדֶם?",
-      "options": [
-        "step_towel",
-        "step_tap",
-        "step_soap"
-      ],
-      "correct": "step_tap",
-      "tags": {
-        "step_towel": "M-SEQ-CAUSE"
-      },
       "difficulty": 0.2,
+      "sequence": [
+        "step_tap",
+        "step_soap",
+        "step_towel"
+      ],
+      "palette": [
+        "step_towel",
+        "step_soap",
+        "step_tap"
+      ],
+      "tag": "M-SEQ-CAUSE",
+      "check": "practice",
       "rep": "story",
-      "correct_text": "כֵּן! קֹדֶם פּוֹתְחִים אֶת הַבָּרֶז.",
-      "h3": "קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַבָּרֶז."
+      "prompt": "רוֹחֲצִים יָדַיִם. מְסַדְּרִים אֶת הַצְּעָדִים לְפִי הַסֵּדֶר.",
+      "h3": "קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כָּךְ רוֹחֲצִים יָדַיִם.",
+      "goal": "child lays the steps of a routine in order",
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "build",
       "id": "cs.routine.wash.last",
       "skill": "CS-A-01",
-      "prompt": "רוֹחֲצִים יָדַיִם. מָה עוֹשִׂים בַּסּוֹף?",
-      "options": [
-        "step_soap",
-        "step_towel",
-        "step_tap"
-      ],
-      "correct": "step_towel",
-      "tags": {
-        "step_tap": "M-SEQ-CAUSE"
-      },
       "difficulty": 0.25,
+      "sequence": [
+        "step_tap",
+        "step_soap",
+        "step_towel"
+      ],
+      "palette": [
+        "step_soap",
+        "step_tap",
+        "step_towel"
+      ],
+      "tag": "M-SEQ-CAUSE",
+      "check": "practice",
       "rep": "story",
-      "correct_text": "כֵּן! בַּסּוֹף מְיַבְּשִׁים בְּמַגֶּבֶת.",
-      "h3": "קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמַּגֶּבֶת."
+      "prompt": "רוֹחֲצִים יָדַיִם. מְסַדְּרִים אֶת הַצְּעָדִים לְפִי הַסֵּדֶר.",
+      "h3": "קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כָּךְ רוֹחֲצִים יָדַיִם.",
+      "goal": "child lays the steps of a routine in order",
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "build",
       "id": "cs.routine.teeth.first",
       "skill": "CS-A-01",
-      "prompt": "מְצַחְצְחִים שִׁנַּיִם. מָה עוֹשִׂים קֹדֶם?",
-      "options": [
-        "step_rinse",
-        "step_brush",
-        "step_paste"
-      ],
-      "correct": "step_paste",
-      "tags": {
-        "step_rinse": "M-SEQ-CAUSE"
-      },
       "difficulty": 0.25,
-      "rep": "story",
-      "correct_text": "כֵּן! קֹדֶם שָׂמִים מִשְׁחָה.",
-      "h3": "קֹדֶם מִשְׁחָה, אַחַר כָּךְ מִבְרֶשֶׁת, וּבַסּוֹף כּוֹס מַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּשְׁחָה."
-    },
-    {
-      "kind": "pick",
-      "id": "cs.routine.teeth.last",
-      "skill": "CS-A-01",
-      "prompt": "מְצַחְצְחִים שִׁנַּיִם. מָה עוֹשִׂים בַּסּוֹף?",
-      "options": [
+      "sequence": [
         "step_paste",
-        "step_rinse",
-        "step_brush"
-      ],
-      "correct": "step_rinse",
-      "tags": {
-        "step_paste": "M-SEQ-CAUSE"
-      },
-      "difficulty": 0.3,
-      "rep": "story",
-      "correct_text": "כֵּן! בַּסּוֹף שׁוֹטְפִים בְּמַיִם.",
-      "h3": "קֹדֶם מִשְׁחָה, אַחַר כָּךְ מִבְרֶשֶׁת, וּבַסּוֹף כּוֹס מַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל כּוֹס הַמַּיִם."
-    },
-    {
-      "kind": "pick",
-      "id": "cs.wrong.wash",
-      "skill": "CS-A-05",
-      "prompt": "רוֹחֲצִים יָדַיִם. מָה הִגִּיעַ לְכָאן בְּטָעוּת?",
-      "options": [
-        "step_soap",
-        "step_brush",
-        "step_tap"
-      ],
-      "correct": "step_brush",
-      "difficulty": 0.3,
-      "correct_text": "כֵּן! לִרְחִיצַת יָדַיִם לֹא צְרִיכָה מִבְרֶשֶׁת.",
-      "h3": "לִרְחִיצַת יָדַיִם צְרִיכִים בָּרֶז, סַבּוֹן וּמַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּבְרֶשֶׁת."
-    },
-    {
-      "kind": "pick",
-      "id": "cs.wrong.teeth",
-      "skill": "CS-A-05",
-      "prompt": "מְצַחְצְחִים שִׁנַּיִם. מָה הִגִּיעַ לְכָאן בְּטָעוּת?",
-      "options": [
-        "step_soap",
         "step_brush",
         "step_rinse"
       ],
-      "correct": "step_soap",
+      "palette": [
+        "step_rinse",
+        "step_paste",
+        "step_brush"
+      ],
+      "tag": "M-SEQ-CAUSE",
+      "check": "practice",
+      "rep": "story",
+      "prompt": "מְצַחְצְחִים שִׁנַּיִם. מְסַדְּרִים אֶת הַצְּעָדִים לְפִי הַסֵּדֶר.",
+      "h3": "קֹדֶם מִשְׁחָה, אַחַר כָּךְ מִבְרֶשֶׁת, וּבַסּוֹף שׁוֹטְפִים. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כָּךְ מְצַחְצְחִים שִׁנַּיִם.",
+      "goal": "child lays the steps of a routine in order",
+      "revision": 2
+    },
+    {
+      "kind": "build",
+      "id": "cs.routine.teeth.last",
+      "skill": "CS-A-01",
+      "difficulty": 0.3,
+      "sequence": [
+        "step_paste",
+        "step_brush",
+        "step_rinse"
+      ],
+      "palette": [
+        "step_brush",
+        "step_rinse",
+        "step_paste"
+      ],
+      "tag": "M-SEQ-CAUSE",
+      "check": "practice",
+      "rep": "story",
+      "prompt": "מְצַחְצְחִים שִׁנַּיִם. מְסַדְּרִים אֶת הַצְּעָדִים לְפִי הַסֵּדֶר.",
+      "h3": "קֹדֶם מִשְׁחָה, אַחַר כָּךְ מִבְרֶשֶׁת, וּבַסּוֹף שׁוֹטְפִים. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כָּךְ מְצַחְצְחִים שִׁנַּיִם.",
+      "goal": "child lays the steps of a routine in order",
+      "revision": 2
+    },
+    {
+      "kind": "build",
+      "id": "cs.wrong.wash",
+      "skill": "CS-A-05",
+      "difficulty": 0.3,
+      "sequence": [
+        "step_tap",
+        "step_soap",
+        "step_towel"
+      ],
+      "palette": [
+        "step_tap",
+        "step_brush",
+        "step_towel",
+        "step_soap"
+      ],
+      "tag": "M-SEQ-CAUSE",
+      "check": "practice",
+      "rep": "story",
+      "prompt": "רוֹחֲצִים יָדַיִם. מְסַדְּרִים אֶת הַצְּעָדִים. אֶחָד מֵהֶם לֹא שַׁיָּךְ.",
+      "h3": "קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כָּךְ רוֹחֲצִים יָדַיִם.",
+      "goal": "child lays the steps of a routine in order, leaving out the step that does not belong",
+      "revision": 2
+    },
+    {
+      "kind": "build",
+      "id": "cs.wrong.teeth",
+      "skill": "CS-A-05",
       "difficulty": 0.35,
-      "correct_text": "כֵּן! לְצִחְצוּחַ שִׁנַּיִם לֹא צָרִיךְ סַבּוֹן.",
-      "h3": "לְצִחְצוּחַ שִׁנַּיִם צְרִיכִים מִשְׁחָה, מִבְרֶשֶׁת וְכוֹס מַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַסַּבּוֹן."
+      "sequence": [
+        "step_paste",
+        "step_brush",
+        "step_rinse"
+      ],
+      "palette": [
+        "step_brush",
+        "step_soap",
+        "step_paste",
+        "step_rinse"
+      ],
+      "tag": "M-SEQ-CAUSE",
+      "check": "practice",
+      "rep": "story",
+      "prompt": "מְצַחְצְחִים שִׁנַּיִם. מְסַדְּרִים אֶת הַצְּעָדִים. אֶחָד מֵהֶם לֹא שַׁיָּךְ.",
+      "h3": "קֹדֶם מִשְׁחָה, אַחַר כָּךְ מִבְרֶשֶׁת, וּבַסּוֹף שׁוֹטְפִים. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כָּךְ מְצַחְצְחִים שִׁנַּיִם.",
+      "goal": "child lays the steps of a routine in order, leaving out the step that does not belong",
+      "revision": 2
     },
     {
       "kind": "robot",
@@ -394,34 +434,54 @@
       "h3": "קֹדֶם מִשְׁחָה, אַחַר כָּךְ מִבְרֶשֶׁת, וּבַסּוֹף כּוֹס מַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּבְרֶשֶׁת."
     },
     {
-      "kind": "pick",
+      "kind": "build",
       "id": "cs.wrong.wash2",
       "skill": "CS-A-05",
-      "prompt": "רוֹחֲצִים יָדַיִם. מָה הִגִּיעַ לְכָאן בְּטָעוּת?",
-      "options": [
+      "difficulty": 0.3,
+      "sequence": [
         "step_tap",
         "step_soap",
-        "step_paste"
+        "step_towel"
       ],
-      "correct": "step_paste",
-      "difficulty": 0.3,
-      "correct_text": "כֵּן! לִרְחִיצַת יָדַיִם לֹא צְרִיכָה מִשְׁחָה.",
-      "h3": "לִרְחִיצַת יָדַיִם צְרִיכִים בָּרֶז, סַבּוֹן וּמַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּשְׁחָה."
+      "palette": [
+        "step_towel",
+        "step_paste",
+        "step_tap",
+        "step_soap"
+      ],
+      "tag": "M-SEQ-CAUSE",
+      "check": "practice",
+      "rep": "story",
+      "prompt": "רוֹחֲצִים יָדַיִם. מְסַדְּרִים אֶת הַצְּעָדִים. אֶחָד מֵהֶם לֹא שַׁיָּךְ.",
+      "h3": "קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כָּךְ רוֹחֲצִים יָדַיִם.",
+      "goal": "child lays the steps of a routine in order, leaving out the step that does not belong",
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "build",
       "id": "cs.wrong.teeth2",
       "skill": "CS-A-05",
-      "prompt": "מְצַחְצְחִים שִׁנַּיִם. מָה הִגִּיעַ לְכָאן בְּטָעוּת?",
-      "options": [
+      "difficulty": 0.35,
+      "sequence": [
+        "step_paste",
         "step_brush",
+        "step_rinse"
+      ],
+      "palette": [
+        "step_rinse",
         "step_towel",
+        "step_brush",
         "step_paste"
       ],
-      "correct": "step_towel",
-      "difficulty": 0.35,
-      "correct_text": "כֵּן! לְצִחְצוּחַ שִׁנַּיִם לֹא צְרִיכָה מַגֶּבֶת.",
-      "h3": "לְצִחְצוּחַ שִׁנַּיִם צְרִיכִים מִשְׁחָה, מִבְרֶשֶׁת וְכוֹס מַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמַּגֶּבֶת."
+      "tag": "M-SEQ-CAUSE",
+      "check": "practice",
+      "rep": "story",
+      "prompt": "מְצַחְצְחִים שִׁנַּיִם. מְסַדְּרִים אֶת הַצְּעָדִים. אֶחָד מֵהֶם לֹא שַׁיָּךְ.",
+      "h3": "קֹדֶם מִשְׁחָה, אַחַר כָּךְ מִבְרֶשֶׁת, וּבַסּוֹף שׁוֹטְפִים. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כָּךְ מְצַחְצְחִים שִׁנַּיִם.",
+      "goal": "child lays the steps of a routine in order, leaving out the step that does not belong",
+      "revision": 2
     },
     {
       "kind": "robot",

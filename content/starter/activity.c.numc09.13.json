@@ -71,7 +71,7 @@
   "voiceAnswer": false,
   "feedback": {
     "correct": {
-      "vo": "vo:c.numc09.1.correct",
+      "vo": "vo:c.numc09.13.correct",
       "caption": [
         {
           "t": "he",

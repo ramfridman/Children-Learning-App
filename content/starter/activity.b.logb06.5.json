@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.logb06.5",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "logic",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.65
   },
@@ -25,38 +25,54 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה מְשֻׁתָּף לְכֻלָּם?"
+        "v": "אֵיךְ מִיַּנְתִּי? שָׂמִים כׇּל צוּרָה בַּקְּבוּצָה שֶׁלָּהּ."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
-      "asset:shape_triangle_green",
-      "asset:shape_square_green",
-      "asset:shape_circle_green"
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:shape_circle_green",
+        "count": 1,
+        "label": "יָרֹק"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:shape_circle_yellow",
+        "count": 1,
+        "label": "צָהֹב"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:shape_square_green",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:shape_triangle_yellow",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:shape_triangle_green",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:shape_square_yellow",
+        "bin": "b2"
+      }
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:rule_colour",
-        "label": "הַצֶּבַע"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:rule_shape",
-        "label": "הַצּוּרָה",
-        "misconception": "M-COL-ONEATTR"
-      }
-    ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-COL-ONEATTR"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -65,18 +81,18 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! כֻּלָּם אוֹתוֹ צֶבַע."
+          "v": "כֵּן! מִצֵּאתֶם אֶת הַכְּלָל."
         }
       ]
     },
     "incorrect": [
       {
         "when": "misconception:M-COL-ONEATTR",
-        "vo": "vo:fb.oneattr.rule_shape",
+        "vo": "vo:fb.col_oneattr",
         "caption": [
           {
             "t": "he",
-            "v": "כָּאן הַצּוּרוֹת שׁוֹנוֹת, אֲבָל מַה דּוֹמֶה אֵצֶל כֻּלָּם?"
+            "v": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע."
           }
         ]
       },
@@ -116,11 +132,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.sort.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
         }
       ]
     },
@@ -131,7 +147,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל עַל כֻּלָּם: כֻּלָּם אוֹתוֹ צֶבַע. עַכְשָׁו תּוֹרְכֶם."
+          "v": "הַקְּבוּצוֹת הֵן לְפִי הַצֶּבַע. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -147,10 +163,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה מְשֻׁתָּף לְכֻלָּם?"
+    "altText": "אֵיךְ מִיַּנְתִּי? שָׂמִים כׇּל צוּרָה בַּקְּבוּצָה שֶׁלָּהּ."
   }
 }

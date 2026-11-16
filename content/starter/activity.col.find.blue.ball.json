@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "col.find.blue.ball",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "colors",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.4
   },
@@ -25,39 +25,56 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה הַכַּדּוּר הַכָּחֹל?"
+        "v": "שָׂמִים כָּאן רַק כַּדּוּר כָּחֹל."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:balloon_blue",
-        "label": "בָּלוֹן כָּחֹל",
-        "misconception": "M-COL-ONEATTR"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:ball_yellow",
-        "label": "כַּדּוּר צָהֹב",
-        "misconception": "M-COL-ONEATTR"
-      },
-      {
-        "id": "o3",
+        "id": "b1",
         "sprite": "asset:ball_blue",
+        "count": 1,
         "label": "כַּדּוּר כָּחֹל"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:cross",
+        "count": 1,
+        "label": "לֹא כַּדּוּר כָּחֹל"
       }
     ],
-    "correct": "o3",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:ball_blue",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:balloon_blue",
+        "bin": "b2",
+        "misconception": "M-COL-ONEATTR"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:ball_yellow",
+        "bin": "b2",
+        "misconception": "M-COL-ONEATTR"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:ball_blue",
+        "bin": "b1"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-COL-ONEATTR"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -66,7 +83,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה כַּדּוּר כָּחֹל."
+          "v": "כֵּן! רַק כַּדּוּר כָּחֹל."
         }
       ]
     },
@@ -117,11 +134,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.sort.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
         }
       ]
     },
@@ -132,7 +149,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "זֶה כַּדּוּר כָּחֹל. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+          "v": "צָרִיךְ גַּם כַּדּוּר וְגַם כָּחֹל. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -148,10 +165,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה הַכַּדּוּר הַכָּחֹל?"
+    "altText": "שָׂמִים כָּאן רַק כַּדּוּר כָּחֹל."
   }
 }

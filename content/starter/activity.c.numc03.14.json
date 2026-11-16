@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "c.numc03.14",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.4",
+  "revision": 2,
+  "template": "shop_pay",
+  "templateVersion": "1.0",
   "domain": "numbers",
   "band": "C",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "symbolic",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "pay",
   "difficulty": {
     "authored": 0.9
   },
@@ -25,39 +25,30 @@
     "caption": [
       {
         "t": "he",
-        "v": "שֵׁשׁ עֲשָׂרוֹת וּשְׁמוֹנֶה יְחִידוֹת. אֵיזֶה מִסְפָּר זֶה?"
+        "v": "הַמְּחִיר הוּא שִׁשִּׁים וּשְׁמוֹנָה שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַוִּי."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "itemSprite": "asset:star",
+    "itemCount": 1,
+    "price": 6800,
+    "purse": [
+      {
+        "kind": "s10",
+        "count": 8
+      },
+      {
+        "kind": "s1",
+        "count": 8
+      }
+    ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "numeral": 86,
-        "label": "שְׁמוֹנִים וְשֵׁשׁ",
-        "misconception": "M-NUM-REV"
-      },
-      {
-        "id": "o2",
-        "numeral": 68,
-        "label": "שִׁשִּׁים וּשְׁמוֹנֶה"
-      },
-      {
-        "id": "o3",
-        "numeral": 608,
-        "label": "שֵׁשׁ מֵאוֹת וּשְׁמוֹנֶה",
-        "misconception": "M-PV-ZERO"
-      }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "pay",
+    "countMisconception": "M-MONEY-COUNT"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -66,28 +57,18 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! שִׁשִּׁים וּשְׁמוֹנֶה."
+          "v": "כֵּן! שִׁלַּמְתֶּם בְּדִיּוּק שִׁשִּׁים וּשְׁמוֹנָה שְׁקָלִים."
         }
       ]
     },
     "incorrect": [
       {
-        "when": "misconception:M-NUM-REV",
-        "vo": "vo:fb.num_rev",
+        "when": "misconception:M-MONEY-COUNT",
+        "vo": "vo:fb.money_count",
         "caption": [
           {
             "t": "he",
-            "v": "הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
-          }
-        ]
-      },
-      {
-        "when": "misconception:M-PV-ZERO",
-        "vo": "vo:fb.pv_zero",
-        "caption": [
-          {
-            "t": "he",
-            "v": "בְּמִסְפָּר עִם עֲשָׂרוֹת וִיחִידוֹת יֵשׁ רַק שְׁתֵּי סְפָרוֹת. בּוֹאוּ נִבְדֹּק אֶת הַמָּקוֹם שֶׁל כׇּל סִפְרָה."
+            "v": "כׇּל מַטְבֵּעַ שָׁוֶה כַּמָּה שֶׁכָּתוּב עָלָיו. בּוֹאוּ נְחַבֵּר אֶת מַה שֶּׁכָּתוּב."
           }
         ]
       },
@@ -127,11 +108,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:c.numc03.13.h2",
+      "vo": "vo:hint.pay.h2",
       "caption": [
         {
           "t": "he",
-          "v": "אֶת הָעֲשָׂרוֹת כּוֹתְבִים קֹדֶם, מִשְּׂמֹאל, וְאֶת הַיְּחִידוֹת אַחֲרֵיהֶן — גַּם אִם שׁוֹמְעִים אוֹתָן קֹדֶם."
+          "v": "כׇּל מַטְבֵּעַ שָׁוֶה כַּמָּה שֶׁכָּתוּב עָלָיו."
         }
       ]
     },
@@ -142,7 +123,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "שֵׁשׁ עֲשָׂרוֹת הֵן שִׁשִּׁים, וְעוֹד שְׁמוֹנֶה: שִׁשִּׁים וּשְׁמוֹנֶה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שִׁשִּׁים וּשְׁמוֹנֶה."
+          "v": "סוֹפְרִים בַּעֲשָׂרוֹת: עֶשֶׂר, עֶשְׂרִים, שְׁלוֹשִׁים, אַרְבָּעִים, חֲמִשִּׁים, שִׁשִּׁים, וְעוֹד שְׁמוֹנָה שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -158,10 +139,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child pays the exact price by adding the values of the coins",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "שֵׁשׁ עֲשָׂרוֹת וּשְׁמוֹנֶה יְחִידוֹת. אֵיזֶה מִסְפָּר זֶה?"
+    "altText": "הַמְּחִיר הוּא שִׁשִּׁים וּשְׁמוֹנָה שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַוִּי."
   }
 }

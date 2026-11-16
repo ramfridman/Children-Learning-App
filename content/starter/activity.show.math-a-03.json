@@ -1,0 +1,186 @@
+{
+  "schema": "activity/v1",
+  "id": "show.math-a-03",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
+  "domain": "math",
+  "band": "A",
+  "skills": [
+    {
+      "id": "MATH-A-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.pnina.show.math_a_03.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְחַלְּקִים תַּפּוּחִים לַחֲבֵרִים."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:cat",
+        "count": 1,
+        "label": "חָתוּל"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:dog",
+        "count": 1,
+        "label": "כֶּלֶב"
+      },
+      {
+        "id": "b3",
+        "sprite": "asset:duck",
+        "count": 1,
+        "label": "בַּרְוָז"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:apple",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:apple",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:apple",
+        "bin": "b3"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.pnina.show.math_a_03.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֶחָד לְכׇל אֶחָד, בַּתּוֹר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "מְחַלְּקִים תַּפּוּחִים לַחֲבֵרִים."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.pnina.show.math_a_03.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מְחַלְּקִים תַּפּוּחִים לַחֲבֵרִים."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.pnina.show.math_a_03.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אֶחָד לְכׇל אֶחָד, בַּתּוֹר."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.pnina.show.math_a_03.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: לַבַּרְוָז."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "item": "i1",
+        "bin": "b1",
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "item": "i2",
+        "bin": "b2"
+      },
+      {
+        "by": "child",
+        "item": "i3",
+        "bin": "b3"
+      }
+    ],
+    "teaches": [
+      "חָתוּל",
+      "כֶּלֶב",
+      "בַּרְוָז"
+    ]
+  }
+}

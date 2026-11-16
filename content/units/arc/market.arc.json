@@ -1,0 +1,3521 @@
+{
+ "schema": "lesson-arc-source/v0",
+ "land": "math",
+ "host": "pnina",
+ "review": "needs-editor",
+ "status": "M11 Stage 2, step 2.4d (Market Village), authored by the curriculum-expert on 2026-11-16. Host lines are pointed drafts (the pointing the pack already uses for each word) for the hebrew-text-editor. The Shows on sort_drag play today (MATH-A-03, A-04, A-07, B-10, B-16, B-19); the others wait for the Show and lead players of number_line, balance, build_pattern, give_n, shop_pay and clock_set (step 2.1), for the prefilled frame of step 2.2 (MATH-B-06) or for Stage 3.1 (MATH-A-01, A-02, B-07).",
+ "spec": "docs/milestones/M11-stage2.md §2, §3.2, §7.4 and §8",
+ "howToRead": [
+  "As counting-hills.arc.json. More move words for the players still to come: balance `block` (that many blocks put on the light pan in one run) or `put` (the named thing put on a `pan`); build_pattern `cell` and `piece` (a card laid on that place, from the start dot); clock_set `hand` and `to` (the hand turned to that hour); shop_pay `coin` (one coin of that kind on the counter).",
+  "A deal shown in turn (MATH-A-03, B-10) is a sort whose cards have their bins in turn: it plays on the sort player of today."
+ ],
+ "caps": {
+  "P1": {
+   "screens": 5,
+   "minutes": 3
+  },
+  "P2": {
+   "screens": 6,
+   "minutes": 4
+  },
+  "P3": {
+   "screens": 8,
+   "minutes": 5
+  },
+  "P4": {
+   "screens": 9,
+   "minutes": 6,
+   "scoredItems": 7
+  }
+ },
+ "shows": [
+  {
+   "id": "show.math-a-01",
+   "skill": "MATH-A-01",
+   "band": "A",
+   "purpose": "show",
+   "template": null,
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": null,
+   "steps": [],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_a_01.open",
+     "text": "יֵשׁ שְׁלוֹשָׁה תַּפּוּחִים בַּסַּל.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_a_01.key",
+     "text": "מוֹסִיפִים עוֹד אֶחָד: אַרְבָּעָה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_a_01.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד אֶחָד.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "Pnina adds one apple at a time to a basket and counts the whole",
+   "status": "waits for Stage 3.1 (counters moved in and out)"
+  },
+  {
+   "id": "show.math-a-02",
+   "skill": "MATH-A-02",
+   "band": "A",
+   "purpose": "show",
+   "template": null,
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": null,
+   "steps": [],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_a_02.open",
+     "text": "יֵשׁ אַרְבָּעָה תַּפּוּחִים בַּסַּל.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_a_02.key",
+     "text": "לוֹקְחִים אֶחָד: נִשְׁאֲרוּ שְׁלוֹשָׁה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_a_02.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: קְחוּ אֶחָד.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "Pnina takes one apple out of the basket at a time",
+   "status": "waits for Stage 3.1"
+  },
+  {
+   "id": "show.math-a-03",
+   "skill": "MATH-A-03",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:cat",
+      "count": 1,
+      "label": "חָתוּל"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:dog",
+      "count": 1,
+      "label": "כֶּלֶב"
+     },
+     {
+      "id": "b3",
+      "sprite": "asset:duck",
+      "count": 1,
+      "label": "בַּרְוָז"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:apple",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:apple",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:apple",
+      "bin": "b3"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "child",
+     "item": "i3",
+     "bin": "b3"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_a_03.open",
+     "text": "מְחַלְּקִים תַּפּוּחִים לַחֲבֵרִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_a_03.key",
+     "text": "אֶחָד לְכׇל אֶחָד, בַּתּוֹר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_a_03.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: לַבַּרְוָז.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "חָתוּל",
+    "כֶּלֶב",
+    "בַּרְוָז"
+   ],
+   "picture": "three apples dealt in turn: one to the cat, one to the dog, the child gives the duck its apple; all three plates show one",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.math-a-04",
+   "skill": "MATH-A-04",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:ball_size_l",
+      "count": 1,
+      "label": "גְּדוֹלִים"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:ball_size_s",
+      "count": 1,
+      "label": "קְטַנִּים"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:ball_size_l",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:ball_size_s",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:star_size_l",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:apple_size_s",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_a_04.open",
+     "text": "מְמַיְּנִים לְפִי הַגֹּדֶל.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_a_04.key",
+     "text": "הַגְּדוֹלִים כָּאן, הַקְּטַנִּים כָּאן.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_a_04.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הַקָּטָן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "גְּדוֹלִים",
+    "קְטַנִּים"
+   ],
+   "picture": "a big ball and a small ball as the two bins; Pnina holds each thing next to the bin picture before it drops",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.math-a-05",
+   "skill": "MATH-A-05",
+   "band": "A",
+   "purpose": "show",
+   "template": "build_pattern",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "slots": 3,
+    "palette": [
+     "asset:time_evening",
+     "asset:time_morning",
+     "asset:time_noon"
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "cell": 0,
+     "piece": "asset:time_morning",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "cell": 1,
+     "piece": "asset:time_noon"
+    },
+    {
+     "by": "child",
+     "cell": 2,
+     "piece": "asset:time_evening"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_a_05.open",
+     "text": "מְסַדְּרִים אֶת הַיּוֹם.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_a_05.key",
+     "text": "קֹדֶם בֹּקֶר, אַחַר כָּךְ צָהֳרַיִם.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_a_05.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: מַה בָּא בַּסּוֹף?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "בֹּקֶר",
+    "צָהֳרַיִם",
+    "עֶרֶב"
+   ],
+   "picture": "three picture cards of the day; Pnina lays morning on the place with the start dot, then noon; the child lays evening",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need)",
+   "note": "the first place carries a start dot, so the direction is shown and not assumed (§3.2)"
+  },
+  {
+   "id": "show.math-a-06",
+   "skill": "MATH-A-06",
+   "band": "A",
+   "purpose": "show",
+   "template": "give_n",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "source": {
+     "sprite": "asset:coin",
+     "count": 6
+    },
+    "target": {
+     "sprite": "asset:basket_target"
+    }
+   },
+   "steps": [
+    {
+     "by": "host",
+     "move": 1,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "move": 1
+    },
+    {
+     "by": "child",
+     "move": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_a_06.open",
+     "text": "כׇּל תַּפּוּחַ עוֹלֶה מַטְבֵּעַ אֶחָד.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_a_06.key",
+     "text": "שְׁלוֹשָׁה תַּפּוּחִים, שְׁלוֹשָׁה מַטְבְּעוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_a_06.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַמַּטְבֵּעַ הַשְּׁלִישִׁי.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "a pile of coins and three apples on the stall; Pnina pays one coin for each apple, matching them one to one",
+   "status": "waits for the Show and lead player of give_n (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.math-a-07",
+   "skill": "MATH-A-07",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:apple",
+      "count": 2,
+      "label": "תַּפּוּחִים"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:fish",
+      "count": 2,
+      "label": "דָּגִים"
+     },
+     {
+      "id": "b3",
+      "sprite": "asset:star",
+      "count": 2,
+      "label": "כּוֹכָבִים"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:apple",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:fish",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:star",
+      "bin": "b3"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:apple",
+      "bin": "b1"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b3"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b1"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_a_07.open",
+     "text": "מְמַיְּנִים לַעֲמוּדוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_a_07.key",
+     "text": "כׇּל דָּבָר לָעַמּוּדָה שֶׁלּוֹ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_a_07.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הָאַחֲרוֹן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "תַּפּוּחִים",
+    "דָּגִים",
+    "כּוֹכָבִים"
+   ],
+   "picture": "three columns; each thing goes up its column; at the end the apples column is the tallest",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.math-b-01",
+   "skill": "MATH-B-01",
+   "band": "B",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+     0,
+     3,
+     10
+    ],
+    "start": 3,
+    "hops": [
+     1,
+     1
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 1,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "hop": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_01.open",
+     "text": "שָׁלוֹשׁ, וְעוֹד שְׁתַּיִם.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_01.key",
+     "text": "מַתְחִילִים בְּשָׁלוֹשׁ וְקוֹפְצִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_01.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַקְּפִיצָה הַשְּׁנִיָּה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "the frog on 3; Pnina makes one hop and the child the second; \"three and two more is five\"",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.math-b-02",
+   "skill": "MATH-B-02",
+   "band": "B",
+   "purpose": "show",
+   "template": "balance",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "left": {
+     "groups": [
+      {
+       "sprite": "asset:block",
+       "count": 6,
+       "weight": 1
+      }
+     ]
+    },
+    "right": {
+     "groups": [
+      {
+       "sprite": "asset:block",
+       "count": 4,
+       "weight": 1
+      }
+     ]
+    },
+    "blockSprite": "asset:block"
+   },
+   "steps": [
+    {
+     "by": "host",
+     "block": 1,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "block": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_02.open",
+     "text": "שֵׁשׁ בַּצַּד אֶחָד, אַרְבַּע בַּשֵּׁנִי.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_02.key",
+     "text": "מוֹסִיפִים עַד שֶׁהַצְּדָדִים שָׁוִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_02.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַקֻּבִּיָּה הָאַחֲרוֹנָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "six blocks against four; Pnina adds one block to the light pan (it rises a little), the child adds the last and the pans level: four and two is six",
+   "status": "waits for the Show and lead player of balance (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.math-b-03",
+   "skill": "MATH-B-03",
+   "band": "B",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+     0,
+     3,
+     10
+    ],
+    "start": 3,
+    "hops": [
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 1,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "child",
+     "hop": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_03.open",
+     "text": "שָׁלוֹשׁ וְעוֹד אַרְבַּע.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_03.key",
+     "text": "שָׁלוֹשׁ זֶה הַהַתְחָלָה, אַרְבַּע הַקְּפִיצוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_03.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַקְּפִיצָה הָאַחֲרוֹנָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "the sentence 3 + 4 above the line; the 3 lights with the start, each hop lights one of the 4",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.math-b-04",
+   "skill": "MATH-B-04",
+   "band": "B",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+     0,
+     7,
+     10
+    ],
+    "start": 7,
+    "hops": [
+     1,
+     1
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 1,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "hop": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_04.open",
+     "text": "שְׁתַּיִם וְעוֹד שֶׁבַע.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_04.key",
+     "text": "מַתְחִילִים מֵהַגָּדוֹל, מִשֶּׁבַע.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_04.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד קְפִיצָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "the cards 2 and 7 swap places; the frog starts on 7 and makes two hops",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.math-b-06",
+   "skill": "MATH-B-06",
+   "band": "B",
+   "purpose": "show",
+   "template": "give_n",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "source": {
+     "sprite": "asset:apple",
+     "count": 10
+    },
+    "target": {
+     "sprite": "asset:basket_target"
+    },
+    "frame": true
+   },
+   "steps": [
+    {
+     "by": "host",
+     "move": 1
+    },
+    {
+     "by": "host",
+     "move": 1
+    },
+    {
+     "by": "host",
+     "move": 1
+    },
+    {
+     "by": "child",
+     "move": 1,
+     "say": "key"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_06.open",
+     "text": "יֵשׁ שֵׁשׁ. כַּמָּה עַד עֶשֶׂר?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_06.key",
+     "text": "מְמַלְּאִים אֶת הַמִּסְגֶּרֶת וְסוֹפְרִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_06.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַמִּשְׁבֶּצֶת הָאַחֲרוֹנָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "a ten-frame that starts with six; Pnina fills three of the four empty cells, counting \"one, two, three\"; the child the last: four",
+   "status": "waits for the Show and lead player of give_n (step 2.1, the templates the pilot did not need) and for the prefilled frame of step 2.2",
+   "note": "the scene needs `prefilled: 6` (step 2.2); not written into it"
+  },
+  {
+   "id": "show.math-b-07",
+   "skill": "MATH-B-07",
+   "band": "B",
+   "purpose": "show",
+   "template": null,
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": null,
+   "steps": [],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_07.open",
+     "text": "לוֹקְחִים אֶת כֻּלָּם.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_07.key",
+     "text": "לֹא נִשְׁאָר כְּלוּם: אֶפֶס.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_07.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: כַּמָּה נִשְׁאֲרוּ?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אֶפֶס"
+   ],
+   "picture": "all the apples leave the basket; the empty basket and 0",
+   "status": "waits for Stage 3.1"
+  },
+  {
+   "id": "show.math-b-08",
+   "skill": "MATH-B-08",
+   "band": "B",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 20,
+    "markerSprite": "asset:frog",
+    "labels": [
+     0,
+     8,
+     10,
+     20
+    ],
+    "start": 8,
+    "hops": [
+     2,
+     3
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 2,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "hop": 3
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_08.open",
+     "text": "שְׁמוֹנֶה וְעוֹד חָמֵשׁ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_08.key",
+     "text": "קֹדֶם עַד עֶשֶׂר, וְאַחַר כָּךְ הָלְאָה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_08.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד שָׁלוֹשׁ.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "two arcs: 8 to the marked 10 (two), then three more; the child makes the second arc",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.math-b-09",
+   "skill": "MATH-B-09",
+   "band": "B",
+   "purpose": "show",
+   "template": "balance",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "left": {
+     "groups": [
+      {
+       "sprite": "asset:apple",
+       "count": 3,
+       "weight": 1
+      },
+      {
+       "sprite": "asset:apple",
+       "count": 4,
+       "weight": 1
+      }
+     ]
+    },
+    "right": {
+     "groups": [
+      {
+       "sprite": "asset:apple",
+       "count": 7,
+       "weight": 1
+      }
+     ]
+    }
+   },
+   "steps": [
+    {
+     "by": "host",
+     "block": 3,
+     "pan": "left",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "block": 4,
+     "pan": "left"
+    },
+    {
+     "by": "child",
+     "block": 7,
+     "pan": "right"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_09.open",
+     "text": "שָׁלוֹשׁ וְעוֹד אַרְבַּע.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_09.key",
+     "text": "שָׁוֶה זֶה אוֹתוֹ דָּבָר בִּשְׁנֵי הַצְּדָדִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_09.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: שֶׁבַע בַּצַּד הַשֵּׁנִי.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "שָׁוֶה"
+   ],
+   "picture": "Pnina puts 3 and 4 on one pan; the child puts 7 on the other; the pans level: \"the same as\"",
+   "status": "waits for the Show and lead player of balance (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.math-b-10",
+   "skill": "MATH-B-10",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:plate",
+      "count": 1,
+      "label": "צַלַּחַת"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:plate",
+      "count": 1,
+      "label": "צַלַּחַת"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:apple",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:apple",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:apple",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:apple",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_10.open",
+     "text": "מְחַלְּקִים לְצַלָּחוֹת שָׁווֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_10.key",
+     "text": "אֶחָד לְכׇל צַלַּחַת, בַּתּוֹר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_10.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הָאַחֲרוֹן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "צַלַּחַת"
+   ],
+   "picture": "four apples dealt to two plates in turn; each plate shows two",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.math-b-13",
+   "skill": "MATH-B-13",
+   "band": "B",
+   "purpose": "show",
+   "template": "balance",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "left": {
+     "groups": [
+      {
+       "sprite": "asset:feather",
+       "count": 1,
+       "weight": 1
+      }
+     ]
+    },
+    "right": {
+     "groups": [
+      {
+       "sprite": "asset:stone",
+       "count": 1,
+       "weight": 4
+      }
+     ]
+    }
+   },
+   "steps": [
+    {
+     "by": "host",
+     "put": "feather",
+     "pan": "left",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "put": "stone",
+     "pan": "right"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_13.open",
+     "text": "מַה כָּבֵד יוֹתֵר?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_13.key",
+     "text": "הַצַּד הַכָּבֵד יוֹרֵד לְמַטָּה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_13.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: שִׂימוּ אֶת הָאֶבֶן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "כָּבֵד",
+    "קַל"
+   ],
+   "picture": "Pnina puts the big feather on one pan (it goes down); the child puts the small stone on the other and the stone's side drops",
+   "status": "waits for the Show and lead player of balance (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.math-b-14",
+   "skill": "MATH-B-14",
+   "band": "B",
+   "purpose": "show",
+   "template": "build_pattern",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "slots": 4,
+    "palette": [
+     "asset:day_3",
+     "asset:day_1",
+     "asset:day_4",
+     "asset:day_2"
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "cell": 0,
+     "piece": "asset:day_1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "cell": 1,
+     "piece": "asset:day_2"
+    },
+    {
+     "by": "host",
+     "cell": 2,
+     "piece": "asset:day_3"
+    },
+    {
+     "by": "child",
+     "cell": 3,
+     "piece": "asset:day_4"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_14.open",
+     "text": "הַיָּמִים בַּשָּׁבוּעַ לְפִי הַסֵּדֶר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_14.key",
+     "text": "רִאשׁוֹן, שֵׁנִי, שְׁלִישִׁי.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_14.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: מַה בָּא אַחַר כָּךְ?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "יוֹם רִאשׁוֹן",
+    "יוֹם שֵׁנִי",
+    "יוֹם שְׁלִישִׁי",
+    "יוֹם רְבִיעִי"
+   ],
+   "picture": "day cards; Pnina lays Sunday on the start dot, then Monday and Tuesday; the child lays Wednesday",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.math-b-15",
+   "skill": "MATH-B-15",
+   "band": "B",
+   "purpose": "show",
+   "template": "clock_set",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "hour": 3,
+    "minute": 0,
+    "startHour": 12,
+    "startHalf": false
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hand": "short",
+     "to": 1,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "hand": "short",
+     "to": 2
+    },
+    {
+     "by": "child",
+     "hand": "short",
+     "to": 3
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_15.open",
+     "text": "מְכַוְּנִים אֶת הַשָּׁעוֹן לְשָׁלוֹשׁ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_15.key",
+     "text": "הַמַּחֲוָג הַקָּצָר אוֹמֵר אֶת הַשָּׁעָה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_15.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד שָׁעָה אַחַת.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "the short hand turned one hour at a time from 12; the child turns it to 3",
+   "status": "waits for the Show and lead player of clock_set (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.math-b-16",
+   "skill": "MATH-B-16",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:coin_a10",
+      "count": 1,
+      "label": "אֲגוֹרוֹת"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:coin_s1",
+      "count": 1,
+      "label": "שְׁקָלִים"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:coin_a10",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:coin_s1",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:coin_h50",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:coin_s5",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_16.open",
+     "text": "אֲגוֹרוֹת וּשְׁקָלִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_16.key",
+     "text": "חֲצִי שֶׁקֶל גָּדוֹל, אֲבָל אֲגוֹרוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_16.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: חֲמִשָּׁה שְׁקָלִים.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אֲגוֹרוֹת",
+    "שְׁקָלִים"
+   ],
+   "picture": "Israeli coins as they look; the big half-shekel goes to the agorot as Pnina points to the 1/2 on it",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.math-b-17",
+   "skill": "MATH-B-17",
+   "band": "B",
+   "purpose": "show",
+   "template": "shop_pay",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "itemSprite": "asset:apple",
+    "itemCount": 1,
+    "price": 700,
+    "purse": [
+     {
+      "kind": "s5",
+      "count": 1
+     },
+     {
+      "kind": "s2",
+      "count": 2
+     },
+     {
+      "kind": "s1",
+      "count": 3
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "coin": "s5",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "coin": "s2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_17.open",
+     "text": "הַתַּפּוּחַ עוֹלֶה שִׁבְעָה שְׁקָלִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_17.key",
+     "text": "חֲמִשָּׁה, וְעוֹד שְׁנַיִם: שִׁבְעָה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_17.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: שְׁנֵי שְׁקָלִים.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "Pnina lays the five-shekel coin (\"five\"), the child lays a two (\"seven\"); the counter shows the sum only in this Show",
+   "status": "waits for the Show and lead player of shop_pay (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.math-b-18",
+   "skill": "MATH-B-18",
+   "band": "B",
+   "purpose": "show",
+   "template": "balance",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "left": {
+     "groups": [
+      {
+       "sprite": "asset:block",
+       "count": 7,
+       "weight": 1
+      }
+     ]
+    },
+    "right": {
+     "groups": [
+      {
+       "sprite": "asset:block",
+       "count": 3,
+       "weight": 1
+      }
+     ]
+    },
+    "blockSprite": "asset:block"
+   },
+   "steps": [
+    {
+     "by": "host",
+     "block": 1
+    },
+    {
+     "by": "host",
+     "block": 1
+    },
+    {
+     "by": "host",
+     "block": 1
+    },
+    {
+     "by": "child",
+     "block": 1,
+     "say": "key"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_18.open",
+     "text": "שָׁלוֹשׁ וְעוֹד כַּמָּה שָׁוֶה שֶׁבַע?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_18.key",
+     "text": "מוֹסִיפִים עַד שֶׁהַצְּדָדִים שָׁוִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_18.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַקֻּבִּיָּה הָאַחֲרוֹנָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "seven against three; Pnina adds three blocks one at a time, the child the fourth; the pans level: three and four is seven",
+   "status": "waits for the Show and lead player of balance (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.math-b-19",
+   "skill": "MATH-B-19",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:apple",
+      "count": 1,
+      "label": "תַּפּוּחִים"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:banana_yellow",
+      "count": 1,
+      "label": "בָּנָנוֹת"
+     },
+     {
+      "id": "b3",
+      "sprite": "asset:ball_red",
+      "count": 1,
+      "label": "כַּדּוּרִים"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:apple",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:banana_yellow",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:ball_red",
+      "bin": "b3"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:banana_yellow",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b3"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_b_19.open",
+     "text": "מְמַיְּנִים לַעֲמוּדוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_b_19.key",
+     "text": "כׇּל דָּבָר לָעַמּוּדָה שֶׁלּוֹ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_b_19.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַבָּנָנָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "תַּפּוּחִים",
+    "בָּנָנוֹת",
+    "כַּדּוּרִים"
+   ],
+   "picture": "the three columns of the chart fill as the things are sorted; the bananas column ends tallest",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.math-c-01",
+   "skill": "MATH-C-01",
+   "band": "C",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 20,
+    "markerSprite": "asset:frog",
+    "labels": [
+     0,
+     9,
+     10,
+     20
+    ],
+    "start": 9,
+    "hops": [
+     1,
+     6
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 1,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "hop": 6
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_c_01.open",
+     "text": "תֵּשַׁע וְעוֹד שֶׁבַע.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_c_01.key",
+     "text": "אֶחָד עַד עֶשֶׂר, וְעוֹד שֵׁשׁ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_c_01.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד שֵׁשׁ.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "two arcs: 9 to 10, then six more; the child makes the long arc",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.math-c-02",
+   "skill": "MATH-C-02",
+   "band": "C",
+   "purpose": "show",
+   "template": "balance",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "left": {
+     "groups": [
+      {
+       "sprite": "asset:block",
+       "count": 10,
+       "weight": 1
+      },
+      {
+       "sprite": "asset:block",
+       "count": 5,
+       "weight": 1
+      }
+     ]
+    },
+    "right": {
+     "groups": [
+      {
+       "sprite": "asset:block",
+       "count": 9,
+       "weight": 1
+      }
+     ]
+    },
+    "blockSprite": "asset:block"
+   },
+   "steps": [
+    {
+     "by": "host",
+     "block": 3,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "block": 3
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_c_02.open",
+     "text": "חֲמֵשׁ עֶשְׂרֵה פָּחוֹת כַּמָּה שָׁוֶה תֵּשַׁע?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_c_02.key",
+     "text": "תֵּשַׁע וְעוֹד כַּמָּה שָׁוֶה חֲמֵשׁ עֶשְׂרֵה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_c_02.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד שָׁלוֹשׁ.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "fifteen against nine; Pnina adds three blocks in one run, the child three more; the pans level: six",
+   "status": "waits for the Show and lead player of balance (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.math-c-03",
+   "skill": "MATH-C-03",
+   "band": "C",
+   "purpose": "show",
+   "template": "shop_pay",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "itemSprite": "asset:duck",
+    "itemCount": 1,
+    "price": 7000,
+    "purse": [
+     {
+      "kind": "s10",
+      "count": 8
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "coin": "s10",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "coin": "s10"
+    },
+    {
+     "by": "host",
+     "coin": "s10"
+    },
+    {
+     "by": "child",
+     "coin": "s10"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.pnina.show.math_c_03.open",
+     "text": "אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.pnina.show.math_c_03.key",
+     "text": "אַרְבַּע עֲשָׂרוֹת וְעוֹד שָׁלוֹשׁ עֲשָׂרוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.pnina.show.math_c_03.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד עֲשָׂרָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "עֲשָׂרוֹת"
+   ],
+   "picture": "Pnina lays four ten-shekel coins (\"forty\"), then the child lays three more one by one (\"fifty, sixty, seventy\"); the price stays hidden until the last coin",
+   "status": "waits for the Show and lead player of shop_pay (step 2.1, the templates the pilot did not need)"
+  }
+ ],
+ "hostLines": [
+  {
+   "role": "together_lead",
+   "template": "sort_drag",
+   "vo": "vo:host.pnina.together.sort",
+   "text": "אֲנִי שָׂמָה אֶת הָרִאשׁוֹן. אַתֶּם מַמְשִׁיכִים.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "number_line",
+   "vo": "vo:host.pnina.together.line",
+   "text": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "balance",
+   "vo": "vo:host.pnina.together.scale",
+   "text": "מִסְתַּכְּלִים עַל הַמֹּאזְנַיִם, וּמוֹסִיפִים לְאַט.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "build_pattern",
+   "vo": "vo:host.pnina.together.build",
+   "text": "מַה קֹּדֶם, וּמָה אַחַר כָּךְ?",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "shop_pay",
+   "vo": "vo:host.pnina.together.pay",
+   "text": "סוֹפְרִים אֶת הַמַּטְבְּעוֹת בְּקוֹל.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "give_n",
+   "vo": "vo:host.pnina.together.give",
+   "text": "מַטְבֵּעַ אֶחָד לְכׇל תַּפּוּחַ.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "clock_set",
+   "vo": "vo:host.pnina.together.clock",
+   "text": "מִסְתַּכְּלִים עַל הַמַּחֲוָג הַקָּצָר.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "tap_answer",
+   "vo": "vo:host.pnina.together.tap",
+   "text": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.pnina.handover.1",
+   "text": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.pnina.handover.2",
+   "text": "יֹפִי. עַכְשָׁו תּוֹרְכֶם.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.pnina.handover.3",
+   "text": "אֲנִי מִסְתַּכֶּלֶת. עַכְשָׁו אַתֶּם.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "show_me",
+   "vo": "vo:host.pnina.showme.1",
+   "text": "בּוֹאוּ נִרְאֶה שׁוּב, לְאַט.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "show_me",
+   "vo": "vo:host.pnina.showme.2",
+   "text": "אֲנִי מַרְאָה עוֹד פַּעַם.",
+   "review": "needs-editor"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "add-one-more",
+   "band": "A",
+   "skills": [
+    "MATH-A-01"
+   ],
+   "recall": [
+    "b15.numa04.1"
+   ],
+   "show": "show.math-a-01",
+   "together": [
+    {
+     "id": "math.add.ducks",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "math.add.apples",
+    "math.add.fish",
+    "math.add.stars"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "take-one-away",
+   "band": "A",
+   "skills": [
+    "MATH-A-02"
+   ],
+   "recall": [
+    "b15.numa04.1"
+   ],
+   "show": "show.math-a-02",
+   "together": [
+    {
+     "id": "math.take.fish",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "math.take.apples",
+    "math.take.stars"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "big-small-long-heavy",
+   "band": "A",
+   "skills": [
+    "MATH-A-04"
+   ],
+   "recall": [],
+   "show": "show.math-a-04",
+   "together": [
+    {
+     "id": "math.size.big",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "math.size.small",
+    "b15.matha04.1",
+    "b15.matha04.2",
+    "math.size.long",
+    "math.size.short",
+    "math.size.heavy",
+    "math.size.light"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "my-day",
+   "band": "A",
+   "skills": [
+    "MATH-A-05"
+   ],
+   "recall": [
+    "b15.loga08.1"
+   ],
+   "show": "show.math-a-05",
+   "together": [
+    {
+     "id": "math.time.evening",
+     "lead": 0,
+     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "math.time.after",
+    "math.time.before",
+    "math.time.night",
+    "math.time.morning",
+    "math.time.noon"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "the-shop",
+   "band": "A",
+   "skills": [
+    "MATH-A-06"
+   ],
+   "recall": [
+    "b15.numa03.1"
+   ],
+   "show": "show.math-a-06",
+   "together": [
+    {
+     "id": "math.shop.fish",
+     "lead": 0,
+     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "math.shop.apples",
+    "math.shop.stars"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "picture-graph",
+   "band": "A",
+   "skills": [
+    "MATH-A-07"
+   ],
+   "recall": [
+    "log.sort.animal"
+   ],
+   "show": "show.math-a-07",
+   "together": [
+    {
+     "id": "math.graph.apples",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "math.graph.fish",
+    "math.graph.stars"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "sharing",
+   "band": "A",
+   "skills": [
+    "MATH-A-03"
+   ],
+   "recall": [
+    "b15.numa06.1"
+   ],
+   "show": "show.math-a-03",
+   "together": [
+    {
+     "id": "math.share.fish",
+     "lead": 0,
+     "note": "a share has no lead player yet: the host says its line and the child deals every card"
+    }
+   ],
+   "alone": [
+    "math.share.apples",
+    "math.share.stars"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "add-one-more-again",
+   "band": "A",
+   "skills": [
+    "MATH-A-01"
+   ],
+   "recall": [
+    "b15.numa04.1"
+   ],
+   "show": "show.math-a-01",
+   "together": [
+    {
+     "id": "math.add.fish2",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "math.add.stars2",
+    "b15.matha01.1"
+   ],
+   "use": [
+    "b15.matha01.2"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "take-one-away-again",
+   "band": "A",
+   "skills": [
+    "MATH-A-02"
+   ],
+   "recall": [
+    "b15.numa04.1"
+   ],
+   "show": "show.math-a-02",
+   "together": [
+    {
+     "id": "math.take.apples2",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "math.take.ducks",
+    "math.take.fish2",
+    "b15.matha02.1"
+   ],
+   "use": [
+    "b15.matha02.2"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "sharing-again",
+   "band": "A",
+   "skills": [
+    "MATH-A-03"
+   ],
+   "recall": [
+    "b15.numa06.1"
+   ],
+   "show": "show.math-a-03",
+   "together": [
+    {
+     "id": "math.share.birds",
+     "lead": 0,
+     "note": "a share has no lead player yet: the host says its line and the child deals every card"
+    }
+   ],
+   "alone": [
+    "math.share.ducks",
+    "math.share.ladybugs",
+    "b15.matha03.1"
+   ],
+   "use": [
+    "b15.matha03.2"
+   ],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "the-shop-again",
+   "band": "A",
+   "skills": [
+    "MATH-A-06"
+   ],
+   "recall": [
+    "b15.numa03.1"
+   ],
+   "show": "show.math-a-06",
+   "together": [
+    {
+     "id": "math.shop.apples2",
+     "lead": 0,
+     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "math.shop.ducks",
+    "math.shop.fish2",
+    "b15.matha06.1",
+    "b15.matha06.2"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "picture-graph-again",
+   "band": "A",
+   "skills": [
+    "MATH-A-07"
+   ],
+   "recall": [
+    "log.sort.animal"
+   ],
+   "show": "show.math-a-07",
+   "together": [
+    {
+     "id": "math.graph.ducks",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "math.graph.apples2",
+    "b15.matha07.1",
+    "b15.matha07.2",
+    "math.graph.stars2"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "join-more",
+   "band": "B",
+   "skills": [
+    "MATH-B-01"
+   ],
+   "recall": [
+    "b15.matha01.1"
+   ],
+   "show": "show.math-b-01",
+   "together": [
+    {
+     "id": "b.mathb01.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb01.2",
+    "b.mathb01.3",
+    "b.mathb01.4",
+    "b.mathb01.5",
+    "b.mathb01.6"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "take-away-more",
+   "band": "B",
+   "skills": [
+    "MATH-B-01"
+   ],
+   "recall": [
+    "b15.matha01.1"
+   ],
+   "show": "show.math-b-01",
+   "together": [
+    {
+     "id": "b.mathb01.13",
+     "lead": 0,
+     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb01.14",
+    "b.mathb01.7",
+    "b.mathb01.8",
+    "b.mathb01.9",
+    "b.mathb01.10",
+    "b.mathb01.11",
+    "b.mathb01.12",
+    "b.mathb01.15",
+    "b.mathb01.16",
+    "b.mathb01.17"
+   ],
+   "use": [
+    "b.mathb01.18"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "missing-part",
+   "band": "B",
+   "skills": [
+    "MATH-B-02"
+   ],
+   "recall": [
+    "b.numb14.1"
+   ],
+   "show": "show.math-b-02",
+   "together": [
+    {
+     "id": "b.mathb02.2",
+     "lead": 0,
+     "note": "balance has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb02.1",
+    "b.mathb02.3",
+    "b.mathb02.4",
+    "b.mathb02.5",
+    "b.mathb02.6"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "missing-part-more",
+   "band": "B",
+   "skills": [
+    "MATH-B-02"
+   ],
+   "recall": [
+    "b.numb14.1"
+   ],
+   "show": "show.math-b-02",
+   "together": [
+    {
+     "id": "b.mathb02.7",
+     "lead": 0,
+     "note": "balance has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb02.8",
+    "b.mathb02.9",
+    "b.mathb02.10",
+    "b.mathb02.11",
+    "b.mathb02.12"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "read-sums",
+   "band": "B",
+   "skills": [
+    "MATH-B-03"
+   ],
+   "recall": [
+    "b.mathb01.1"
+   ],
+   "show": "show.math-b-03",
+   "together": [
+    {
+     "id": "b.mathb03.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb03.2",
+    "b.mathb03.3",
+    "b.mathb03.5",
+    "b.mathb03.7",
+    "b.mathb03.4",
+    "b.mathb03.6",
+    "b.mathb03.8"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "find-the-slip",
+   "band": "B",
+   "skills": [
+    "MATH-B-03"
+   ],
+   "recall": [
+    "b.mathb01.1"
+   ],
+   "show": "show.math-b-03",
+   "together": [
+    {
+     "id": "b.mathb03.13",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb03.14",
+    "b.mathb03.9",
+    "b.mathb03.10",
+    "b.mathb03.11",
+    "b.mathb03.15",
+    "b.mathb03.16"
+   ],
+   "use": [
+    "b.mathb03.12"
+   ],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "make-ten",
+   "band": "B",
+   "skills": [
+    "MATH-B-06"
+   ],
+   "recall": [
+    "b.mathb02.1"
+   ],
+   "show": "show.math-b-06",
+   "together": [
+    {
+     "id": "b.mathb06.1",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb06.2",
+    "b.mathb06.3",
+    "b.mathb06.4",
+    "b.mathb06.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "make-ten-more",
+   "band": "B",
+   "skills": [
+    "MATH-B-06"
+   ],
+   "recall": [
+    "b.mathb02.1"
+   ],
+   "show": "show.math-b-06",
+   "together": [
+    {
+     "id": "b.mathb06.6",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb06.7",
+    "b.mathb06.8",
+    "b.mathb06.9"
+   ],
+   "use": [
+    "b.mathb06.10"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "zero-sums",
+   "band": "B",
+   "skills": [
+    "MATH-B-07"
+   ],
+   "recall": [
+    "b.mathb03.1"
+   ],
+   "show": "show.math-b-07",
+   "together": [
+    {
+     "id": "b.mathb07.1",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb07.2",
+    "b.mathb07.3",
+    "b.mathb07.4",
+    "b.mathb07.5",
+    "b.mathb07.6",
+    "b.mathb07.7",
+    "b.mathb07.8"
+   ],
+   "use": [],
+   "poolRungs": [
+    2
+   ]
+  },
+  {
+   "id": "to-twenty",
+   "band": "B",
+   "skills": [
+    "MATH-B-08"
+   ],
+   "recall": [
+    "b.mathb06.1"
+   ],
+   "show": "show.math-b-08",
+   "together": [
+    {
+     "id": "b.mathb08.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb08.2",
+    "b.mathb08.3",
+    "b.mathb08.4",
+    "b.mathb08.5",
+    "b.mathb08.6",
+    "b.mathb08.7",
+    "b.mathb08.8"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "to-twenty-more",
+   "band": "B",
+   "skills": [
+    "MATH-B-08"
+   ],
+   "recall": [
+    "b.mathb06.1"
+   ],
+   "show": "show.math-b-08",
+   "together": [
+    {
+     "id": "b.mathb08.9",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb08.11",
+    "b.mathb08.10",
+    "b.mathb08.12",
+    "b.mathb08.13",
+    "b.mathb08.14"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "equals-balance",
+   "band": "B",
+   "skills": [
+    "MATH-B-09"
+   ],
+   "recall": [
+    "b.mathb03.1"
+   ],
+   "show": "show.math-b-09",
+   "together": [
+    {
+     "id": "b.mathb09.1",
+     "lead": 0,
+     "note": "balance has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb09.2",
+    "b.mathb09.3",
+    "b.mathb09.4",
+    "b.mathb09.5",
+    "b.mathb09.6",
+    "b.mathb09.7",
+    "b.mathb09.8"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "equals-slip",
+   "band": "B",
+   "skills": [
+    "MATH-B-09"
+   ],
+   "recall": [
+    "b.mathb03.1"
+   ],
+   "show": "show.math-b-09",
+   "together": [
+    {
+     "id": "b.mathb09.9",
+     "lead": 0,
+     "note": "spot_error has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb09.10",
+    "b.mathb09.11"
+   ],
+   "use": [
+    "b.mathb09.12"
+   ],
+   "poolRungs": [
+    2
+   ]
+  },
+  {
+   "id": "equal-groups",
+   "band": "B",
+   "skills": [
+    "MATH-B-10"
+   ],
+   "recall": [
+    "b15.matha03.1"
+   ],
+   "show": "show.math-b-10",
+   "together": [
+    {
+     "id": "b.mathb10.1",
+     "lead": 0,
+     "note": "a share has no lead player yet: the host says its line and the child deals every card"
+    }
+   ],
+   "alone": [
+    "b.mathb10.2",
+    "b.mathb10.3",
+    "b.mathb10.7",
+    "b.mathb10.4",
+    "b.mathb10.5",
+    "b.mathb10.6",
+    "b.mathb10.8"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "weigh-it",
+   "band": "B",
+   "skills": [
+    "MATH-B-13"
+   ],
+   "recall": [
+    "math.size.heavy"
+   ],
+   "show": "show.math-b-13",
+   "together": [
+    {
+     "id": "b.mathb13.1",
+     "lead": 0,
+     "note": "balance has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb13.2",
+    "b.mathb13.3",
+    "b.mathb13.4",
+    "b.mathb13.5",
+    "b.mathb13.6"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "balance-it",
+   "band": "B",
+   "skills": [
+    "MATH-B-13"
+   ],
+   "recall": [
+    "math.size.heavy"
+   ],
+   "show": "show.math-b-13",
+   "together": [
+    {
+     "id": "b.mathb13.7",
+     "lead": 0,
+     "note": "balance has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb13.8",
+    "b.mathb13.9",
+    "b.mathb13.10",
+    "b.mathb13.11",
+    "b.mathb13.12"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "days-of-the-week",
+   "band": "B",
+   "skills": [
+    "MATH-B-14"
+   ],
+   "recall": [
+    "math.time.morning"
+   ],
+   "show": "show.math-b-14",
+   "together": [
+    {
+     "id": "b.mathb14.1",
+     "lead": 0,
+     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb14.2",
+    "b.mathb14.3",
+    "b.mathb14.4",
+    "b.mathb14.6",
+    "b.mathb14.5",
+    "b.mathb14.7",
+    "b.mathb14.8",
+    "b.mathb14.9",
+    "b.mathb14.10",
+    "b.mathb14.11"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    2
+   ]
+  },
+  {
+   "id": "what-time",
+   "band": "B",
+   "skills": [
+    "MATH-B-15"
+   ],
+   "recall": [
+    "b.numb08.2"
+   ],
+   "show": "show.math-b-15",
+   "together": [
+    {
+     "id": "b.mathb15.1",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb15.2",
+    "b.mathb15.3",
+    "b.mathb15.4",
+    "b.mathb15.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "what-time-more",
+   "band": "B",
+   "skills": [
+    "MATH-B-15"
+   ],
+   "recall": [
+    "b.numb08.2"
+   ],
+   "show": "show.math-b-15",
+   "together": [
+    {
+     "id": "b.mathb15.6",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb15.7",
+    "b.mathb15.8",
+    "b.mathb15.9",
+    "b.mathb15.10"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "missing-number",
+   "band": "B",
+   "skills": [
+    "MATH-B-18"
+   ],
+   "recall": [
+    "b.mathb02.1"
+   ],
+   "show": "show.math-b-18",
+   "together": [
+    {
+     "id": "b.mathb18.1",
+     "lead": 0,
+     "note": "balance has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.mathb18.2",
+    "b.mathb18.3",
+    "b.mathb18.4",
+    "b.mathb18.5",
+    "b.mathb18.6",
+    "b.mathb18.7",
+    "b.mathb18.8"
+   ],
+   "use": [
+    "b.mathb18.9"
+   ],
+   "poolRungs": [
+    0,
+    2
+   ]
+  },
+  {
+   "id": "know-the-coins",
+   "band": "B",
+   "skills": [
+    "MATH-B-16"
+   ],
+   "recall": [
+    "b15.numa08.1"
+   ],
+   "show": "show.math-b-16",
+   "together": [
+    {
+     "id": "x.mathb16.1",
+     "lead": 0,
+     "note": "match_pairs has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "x.mathb16.2",
+    "x.mathb16.3"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "know-the-coins-more",
+   "band": "B",
+   "skills": [
+    "MATH-B-16"
+   ],
+   "recall": [
+    "b15.numa08.1"
+   ],
+   "show": "show.math-b-16",
+   "together": [
+    {
+     "id": "x.mathb16.7",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "x.mathb16.8",
+    "x.mathb16.4",
+    "x.mathb16.5",
+    "x.mathb16.6"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "pay-exactly",
+   "band": "B",
+   "skills": [
+    "MATH-B-17"
+   ],
+   "recall": [
+    "x.mathb16.1"
+   ],
+   "show": "show.math-b-17",
+   "together": [
+    {
+     "id": "x.mathb17.1",
+     "lead": 0,
+     "note": "shop_pay has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "x.mathb17.2",
+    "x.mathb17.3",
+    "x.mathb17.4",
+    "x.mathb17.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "pay-exactly-more",
+   "band": "B",
+   "skills": [
+    "MATH-B-17"
+   ],
+   "recall": [
+    "x.mathb16.1"
+   ],
+   "show": "show.math-b-17",
+   "together": [
+    {
+     "id": "x.mathb17.6",
+     "lead": 0,
+     "note": "shop_pay has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "x.mathb17.7",
+    "x.mathb17.8",
+    "x.mathb17.9",
+    "x.mathb17.10"
+   ],
+   "use": [
+    "x.mathb17.11"
+   ],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "read-the-chart",
+   "band": "B",
+   "skills": [
+    "MATH-B-19"
+   ],
+   "recall": [
+    "math.graph.apples"
+   ],
+   "show": "show.math-b-19",
+   "together": [
+    {
+     "id": "x.mathb19.1",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "x.mathb19.2",
+    "x.mathb19.3",
+    "x.mathb19.4",
+    "x.mathb19.6",
+    "x.mathb19.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "read-the-chart-more",
+   "band": "B",
+   "skills": [
+    "MATH-B-19"
+   ],
+   "recall": [
+    "math.graph.apples"
+   ],
+   "show": "show.math-b-19",
+   "together": [
+    {
+     "id": "x.mathb19.7",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "x.mathb19.8",
+    "x.mathb19.9",
+    "x.mathb19.10",
+    "x.mathb19.11"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "set-the-clock",
+   "band": "B",
+   "skills": [
+    "MATH-B-15"
+   ],
+   "recall": [
+    "b.numb08.2"
+   ],
+   "show": "show.math-b-15",
+   "together": [
+    {
+     "id": "x.mathb15.1",
+     "lead": 0,
+     "note": "clock_set has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "x.mathb15.2",
+    "x.mathb15.3",
+    "x.mathb15.4"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "set-the-clock-more",
+   "band": "B",
+   "skills": [
+    "MATH-B-15"
+   ],
+   "recall": [
+    "b.numb08.2"
+   ],
+   "show": "show.math-b-15",
+   "together": [
+    {
+     "id": "x.mathb15.5",
+     "lead": 0,
+     "note": "clock_set has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "x.mathb15.6",
+    "x.mathb15.7",
+    "x.mathb15.8"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "count-on-big",
+   "band": "B",
+   "skills": [
+    "MATH-B-04"
+   ],
+   "recall": [
+    "b.mathb01.1"
+   ],
+   "show": "show.math-b-04",
+   "together": [
+    {
+     "id": "c.mathb04.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.mathb04.3",
+    "c.mathb04.7",
+    "c.mathb04.8",
+    "c.mathb04.9",
+    "c.mathb04.10",
+    "c.mathb04.11",
+    "c.mathb04.12",
+    "c.mathb04.2",
+    "c.mathb04.4",
+    "c.mathb04.5",
+    "c.mathb04.6"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "facts-to-18",
+   "band": "C",
+   "skills": [
+    "MATH-C-01"
+   ],
+   "recall": [
+    "b.mathb08.1"
+   ],
+   "show": "show.math-c-01",
+   "together": [
+    {
+     "id": "c.mathc01.1",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.mathc01.5",
+    "c.mathc01.9",
+    "c.mathc01.2",
+    "c.mathc01.3",
+    "c.mathc01.4",
+    "c.mathc01.6",
+    "c.mathc01.7",
+    "c.mathc01.8"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "facts-to-18-more",
+   "band": "C",
+   "skills": [
+    "MATH-C-01"
+   ],
+   "recall": [
+    "b.mathb08.1"
+   ],
+   "show": "show.math-c-01",
+   "together": [
+    {
+     "id": "c.mathc01.13",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.mathc01.17",
+    "c.mathc01.10",
+    "c.mathc01.11",
+    "c.mathc01.12",
+    "c.mathc01.14",
+    "c.mathc01.15",
+    "c.mathc01.16",
+    "c.mathc01.18"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "facts-to-18-again",
+   "band": "C",
+   "skills": [
+    "MATH-C-01"
+   ],
+   "recall": [
+    "b.mathb08.1"
+   ],
+   "show": "show.math-c-01",
+   "together": [
+    {
+     "id": "c.mathc01.32",
+     "lead": 0,
+     "note": "balance has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.mathc01.33",
+    "c.mathc01.21",
+    "c.mathc01.25",
+    "c.mathc01.26",
+    "c.mathc01.19",
+    "c.mathc01.20",
+    "c.mathc01.22",
+    "c.mathc01.23",
+    "c.mathc01.24",
+    "c.mathc01.34"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1,
+    2
+   ]
+  },
+  {
+   "id": "fact-families",
+   "band": "C",
+   "skills": [
+    "MATH-C-02"
+   ],
+   "recall": [
+    "c.mathc01.1"
+   ],
+   "show": "show.math-c-02",
+   "together": [
+    {
+     "id": "c.mathc02.4",
+     "lead": 0,
+     "note": "balance has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.mathc02.5",
+    "c.mathc02.1",
+    "c.mathc02.2",
+    "c.mathc02.3",
+    "c.mathc02.6",
+    "c.mathc02.7",
+    "c.mathc02.8"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    2
+   ]
+  },
+  {
+   "id": "fact-families-more",
+   "band": "C",
+   "skills": [
+    "MATH-C-02"
+   ],
+   "recall": [
+    "c.mathc01.1"
+   ],
+   "show": "show.math-c-02",
+   "together": [
+    {
+     "id": "c.mathc02.12",
+     "lead": 0,
+     "note": "balance has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.mathc02.16",
+    "c.mathc02.17",
+    "c.mathc02.18"
+   ],
+   "use": [
+    "c.mathc02.19"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "whole-tens",
+   "band": "C",
+   "skills": [
+    "MATH-C-03"
+   ],
+   "recall": [
+    "c.mathc01.1"
+   ],
+   "show": "show.math-c-03",
+   "together": [
+    {
+     "id": "c.mathc03.1",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.mathc03.2",
+    "c.mathc03.3",
+    "c.mathc03.4",
+    "c.mathc03.5",
+    "c.mathc03.6",
+    "c.mathc03.7",
+    "c.mathc03.8"
+   ],
+   "use": [],
+   "poolRungs": [
+    2
+   ]
+  },
+  {
+   "id": "whole-tens-more",
+   "band": "C",
+   "skills": [
+    "MATH-C-03"
+   ],
+   "recall": [
+    "c.mathc01.1"
+   ],
+   "show": "show.math-c-03",
+   "together": [
+    {
+     "id": "c.mathc03.15",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.mathc03.16",
+    "c.mathc03.17"
+   ],
+   "use": [
+    "c.mathc03.18"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "type-the-answer",
+   "band": "C",
+   "skills": [
+    "MATH-C-01",
+    "MATH-C-02",
+    "MATH-C-03"
+   ],
+   "recall": [
+    "b.mathb08.1"
+   ],
+   "show": "show.math-c-01",
+   "secondShow": {
+    "id": "show.math-c-02",
+    "kind": "reminder",
+    "before": "the first item of MATH-C-02"
+   },
+   "together": [
+    {
+     "id": "c.mathc01.27",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.mathc01.28",
+    "c.mathc01.29",
+    "c.mathc01.30",
+    "c.mathc01.31",
+    "c.mathc02.13",
+    "c.mathc02.14",
+    "c.mathc02.15",
+    "c.mathc03.13",
+    "c.mathc03.14"
+   ],
+   "use": [],
+   "poolRungs": [
+    2
+   ]
+  }
+ ]
+}

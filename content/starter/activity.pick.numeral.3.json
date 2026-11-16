@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "pick.numeral.3",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "number_line",
+  "templateVersion": "1.0",
   "domain": "numbers",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "symbolic",
-  "variantGroup": "pick-numeral",
+  "representation": "pictorial",
+  "variantGroup": "numline",
   "difficulty": {
     "authored": 0.15
   },
@@ -25,36 +25,28 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה הַמִּסְפָּר שָׁלוֹשׁ?"
+        "v": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל שָׁלוֹשׁ. נוֹגְעִים בַּמָּקוֹם."
       }
     ],
     "replayButton": true
   },
   "scene": {
-    "background": "asset:meadow"
+    "background": "asset:meadow",
+    "from": 1,
+    "to": 5,
+    "markerSprite": "asset:frog",
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "numeral": 2,
-        "label": "שְׁתַּיִם"
-      },
-      {
-        "id": "o2",
-        "numeral": 3,
-        "label": "שָׁלוֹשׁ"
-      },
-      {
-        "id": "o3",
-        "numeral": 5,
-        "label": "חָמֵשׁ"
-      }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "line",
+    "mode": "place",
+    "target": 3
   },
   "voiceAnswer": false,
   "feedback": {
@@ -63,7 +55,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "שָׁלוֹשׁ! מְצָאתֶם אֶת הַמִּסְפָּר."
+          "v": "שָׁלוֹשׁ! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן."
         }
       ]
     },
@@ -93,22 +85,22 @@
     {
       "level": 1,
       "action": "replay_prompt_slow",
-      "vo": "vo:pick.numeral.3.h1",
+      "vo": "vo:hint.pick.h1",
       "caption": [
         {
           "t": "he",
-          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב: שָׁלוֹשׁ."
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
         }
       ]
     },
     {
       "level": 2,
-      "action": "show_fingers",
-      "vo": "vo:pick.numeral.3.h2",
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.line.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת עַד שָׁלוֹשׁ: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ."
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
         }
       ]
     },
@@ -119,7 +111,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. הַמִּסְפָּר הָאַחֲרוֹן הוּא שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ."
+          "v": "מַתְחִילִים מֵאַחַת וְסוֹפְרִים: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -135,10 +127,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child finds the numeral that is named",
+    "goal": "child finds the number on the line",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה הַמִּסְפָּר שָׁלוֹשׁ?"
+    "altText": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל שָׁלוֹשׁ. נוֹגְעִים בַּמָּקוֹם."
   }
 }

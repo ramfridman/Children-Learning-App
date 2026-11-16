@@ -17,12 +17,12 @@
   "items": [
     "col.name.yellow.flower",
     "col.name.green.ball",
-    "col.name.red.near",
     "col.name.orange",
     "col.name.purple",
     "col.name.pink",
     "b15.cola02.1",
-    "b15.cola02.2"
+    "b15.cola02.2",
+    "col.name.red.near"
   ],
   "estimatedMinutes": 4,
   "sequence": 3,
@@ -34,5 +34,45 @@
         "v": "יָפֶה מְאֹד! הִכַּרְתֶּם עוֹד צְבָעִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.col-a-02",
+    "secondShow": {
+      "id": "show.col-a-03",
+      "before": "col.name.orange"
+    },
+    "together": [
+      {
+        "id": "col.name.yellow.flower",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.goni.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "col.name.green.ball",
+      "col.name.orange",
+      "col.name.purple",
+      "col.name.pink",
+      "b15.cola02.1",
+      "b15.cola02.2",
+      "col.name.red.near"
+    ],
+    "handover": {
+      "vo": "vo:host.goni.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

@@ -28,5 +28,39 @@
         "v": "כׇּל הַכָּבוֹד! חִלַּקְתֶּם בַּהֲגִינוּת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-a-03",
+    "recall": [
+      "b15.numa06.1"
+    ],
+    "together": [
+      {
+        "id": "math.share.fish",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֲנִי שָׂמָה אֶת הָרִאשׁוֹן. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "math.share.apples",
+      "math.share.stars"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק."
+        }
+      ]
+    }
   }
 }

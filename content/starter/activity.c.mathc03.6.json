@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "c.mathc03.6",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.4",
   "domain": "math",
@@ -16,12 +16,12 @@
   "purpose": "practice",
   "checkType": "practice",
   "representation": "symbolic",
-  "variantGroup": "pick",
+  "variantGroup": "number",
   "difficulty": {
     "authored": 0.72
   },
   "prompt": {
-    "vo": "vo:c.mathb04.1.prompt",
+    "vo": "vo:c.mathb04.2.prompt",
     "caption": [
       {
         "t": "he",
@@ -32,7 +32,6 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
     "row": [
       "n:90",
       "op:-",
@@ -42,35 +41,23 @@
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
+    "type": "number",
+    "value": 40,
+    "expected": [
       {
-        "id": "o1",
-        "numeral": 4,
-        "label": "אַרְבַּע",
+        "value": 4,
         "misconception": "M-PV-FACE"
       },
       {
-        "id": "o2",
-        "numeral": 40,
-        "label": "אַרְבָּעִים"
-      },
-      {
-        "id": "o3",
-        "numeral": 400,
-        "label": "אַרְבַּע מֵאוֹת",
-        "misconception": "M-PV-ZERO"
-      },
-      {
-        "id": "o4",
-        "numeral": 140,
-        "label": "מֵאָה וְאַרְבָּעִים",
+        "value": 140,
         "misconception": "M-OP-SWAP"
+      },
+      {
+        "value": 400,
+        "misconception": "M-PV-ZERO"
       }
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "rules": []
   },
   "voiceAnswer": false,
   "feedback": {
@@ -154,7 +141,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "חוֹשְׁבִים בַּעֲשָׂרוֹת: תֵּשַׁע עֲשָׂרוֹת פָּחוֹת חָמֵשׁ עֲשָׂרוֹת — כְּמוֹ תֵּשַׁע פָּחוֹת חָמֵשׁ."
+          "v": "חוֹשְׁבִים בַּעֲשָׂרוֹת: תֵּשַׁע עֲשָׂרוֹת פָּחוֹת חָמֵשׁ עֲשָׂרוֹת."
         }
       ]
     },
@@ -165,7 +152,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אַרְבַּע עֲשָׂרוֹת הֵן אַרְבָּעִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבָּעִים."
+          "v": "תִּשְׁעִים פָּחוֹת חֲמִשִּׁים שָׁוֶה אַרְבָּעִים. כּוֹתְבִים אַרְבָּעִים."
         }
       ]
     }
@@ -181,7 +168,7 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child types the number",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {

@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "c.mathc01.7",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
-  "templateVersion": "1.1",
+  "templateVersion": "1.4",
   "domain": "math",
   "band": "C",
   "skills": [
@@ -16,12 +16,12 @@
   "purpose": "practice",
   "checkType": "practice",
   "representation": "symbolic",
-  "variantGroup": "fact-8-4",
+  "variantGroup": "number",
   "difficulty": {
     "authored": 0.79
   },
   "prompt": {
-    "vo": "vo:c.mathb04.1.prompt",
+    "vo": "vo:c.mathb04.2.prompt",
     "caption": [
       {
         "t": "he",
@@ -32,7 +32,6 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
     "row": [
       "n:8",
       "op:+",
@@ -42,35 +41,23 @@
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
+    "type": "number",
+    "value": 12,
+    "expected": [
       {
-        "id": "o1",
-        "numeral": 11,
-        "label": "אַחַת עֶשְׂרֵה",
-        "misconception": "M-CNT-DOUBLE"
-      },
-      {
-        "id": "o2",
-        "numeral": 8,
-        "label": "שְׁמוֹנֶה",
-        "misconception": "M-CNT-CARD"
-      },
-      {
-        "id": "o3",
-        "numeral": 4,
-        "label": "אַרְבַּע",
+        "value": 4,
         "misconception": "M-OP-SWAP"
       },
       {
-        "id": "o4",
-        "numeral": 12,
-        "label": "שְׁתֵּים עֶשְׂרֵה"
+        "value": 8,
+        "misconception": "M-CNT-CARD"
+      },
+      {
+        "value": 11,
+        "misconception": "M-CNT-DOUBLE"
       }
     ],
-    "correct": "o4",
-    "shuffle": false,
-    "unsureAllowed": true
+    "rules": []
   },
   "voiceAnswer": false,
   "feedback": {
@@ -86,21 +73,21 @@
     "incorrect": [
       {
         "when": "misconception:M-CNT-CARD",
-        "vo": "vo:fb.sum_card",
+        "vo": "vo:fb.card",
         "caption": [
           {
             "t": "he",
-            "v": "זֶה רַק אֶחָד מֵהַמִּסְפָּרִים. בּוֹאוּ נוֹסִיף גַּם אֶת הַמִּסְפָּר הַשֵּׁנִי."
+            "v": "לָקַחְנוּ אֶת כֻּלָּם. בּוֹאוּ נִסְפֹּר וְנַעֲצֹר בַּמִּסְפָּר שֶׁצָּרִיךְ."
           }
         ]
       },
       {
         "when": "misconception:M-CNT-DOUBLE",
-        "vo": "vo:fb.count_on_start",
+        "vo": "vo:fb.double_set",
         "caption": [
           {
             "t": "he",
-            "v": "כְּשֶׁמַּמְשִׁיכִים לִסְפֹּר, לֹא סוֹפְרִים שׁוּב אֶת הַמִּסְפָּר שֶׁמַּתְחִילִים מִמֶּנּוּ. בּוֹאוּ נִבְדֹּק."
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
           }
         ]
       },
@@ -150,22 +137,22 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:c.mathc01.7.h2",
+      "vo": "vo:c.mathc01.3.h2",
       "caption": [
         {
           "t": "he",
-          "v": "מַשְׁלִימִים לְעֶשֶׂר: שְׁמוֹנֶה וְעוֹד שְׁתַּיִם הֵם עֶשֶׂר, וְנִשְׁאֲרוּ עוֹד שְׁתַּיִם."
+          "v": "עוֹבְרִים דֶּרֶךְ הָעֶשֶׂר: קֹדֶם עַד עֶשֶׂר, וְאַחַר כָּךְ מַה שֶּׁנִּשְׁאַר."
         }
       ]
     },
     {
       "level": 3,
       "action": "worked_example",
-      "vo": "vo:c.mathc01.1.h3",
+      "vo": "vo:c.mathc01.7.h3",
       "caption": [
         {
           "t": "he",
-          "v": "עֶשֶׂר וְעוֹד שְׁתַּיִם הֵם שְׁתֵּים עֶשְׂרֵה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתֵּים עֶשְׂרֵה."
+          "v": "שְׁמוֹנֶה וְעוֹד אַרְבַּע שָׁוֶה שְׁתֵּים עֶשְׂרֵה. כּוֹתְבִים שְׁתֵּים עֶשְׂרֵה."
         }
       ]
     }
@@ -181,7 +168,7 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child types the number",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {

@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "pick.numeral.4b",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "number_line",
+  "templateVersion": "1.0",
   "domain": "numbers",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "symbolic",
-  "variantGroup": "pick-numeral",
+  "representation": "pictorial",
+  "variantGroup": "numline",
   "difficulty": {
     "authored": 0.25
   },
@@ -25,36 +25,28 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה הַמִּסְפָּר אַרְבַּע?"
+        "v": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל אַרְבַּע. נוֹגְעִים בַּמָּקוֹם."
       }
     ],
     "replayButton": true
   },
   "scene": {
-    "background": "asset:meadow"
+    "background": "asset:meadow",
+    "from": 1,
+    "to": 5,
+    "markerSprite": "asset:frog",
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "numeral": 2,
-        "label": "שְׁתַּיִם"
-      },
-      {
-        "id": "o2",
-        "numeral": 4,
-        "label": "אַרְבַּע"
-      },
-      {
-        "id": "o3",
-        "numeral": 5,
-        "label": "חָמֵשׁ"
-      }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "line",
+    "mode": "place",
+    "target": 4
   },
   "voiceAnswer": false,
   "feedback": {
@@ -63,7 +55,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אַרְבַּע! מְצָאתֶם אֶת הַמִּסְפָּר."
+          "v": "אַרְבַּע! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן."
         }
       ]
     },
@@ -93,22 +85,22 @@
     {
       "level": 1,
       "action": "replay_prompt_slow",
-      "vo": "vo:pick.numeral.4b.h1",
+      "vo": "vo:hint.pick.h1",
       "caption": [
         {
           "t": "he",
-          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב: אַרְבַּע."
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
         }
       ]
     },
     {
       "level": 2,
-      "action": "show_fingers",
-      "vo": "vo:pick.numeral.4b.h2",
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.line.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת עַד אַרְבַּע: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע."
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
         }
       ]
     },
@@ -119,7 +111,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. הַמִּסְפָּר הָאַחֲרוֹן הוּא אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע."
+          "v": "מַתְחִילִים מֵאַחַת וְסוֹפְרִים: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -135,10 +127,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child finds the numeral that is named",
+    "goal": "child finds the number on the line",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה הַמִּסְפָּר אַרְבַּע?"
+    "altText": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל אַרְבַּע. נוֹגְעִים בַּמָּקוֹם."
   }
 }

@@ -1,0 +1,1808 @@
+{
+ "schema": "lesson-arc-source/v0",
+ "land": "colors",
+ "host": "goni",
+ "review": "needs-editor",
+ "status": "M11 Stage 2, step 2.4e (Colour Bay), authored by the curriculum-expert on 2026-11-16. Pointed drafts for the hebrew-text-editor. Colour carries the answer only here (M11 §7); every sprite keeps its ink outline. The sort Shows play today; COL-B-02 and B-06 wait for the Show and lead player of build_pattern (step 2.1), COL-B-01 for Stage 3.4.",
+ "spec": "docs/milestones/M11-stage2.md §2, §3.3, §7.4 and §8",
+ "howToRead": [
+  "As counting-hills.arc.json and market.arc.json."
+ ],
+ "caps": {
+  "P1": {
+   "screens": 5,
+   "minutes": 3
+  },
+  "P2": {
+   "screens": 6,
+   "minutes": 4
+  },
+  "P3": {
+   "screens": 8,
+   "minutes": 5
+  },
+  "P4": {
+   "screens": 9,
+   "minutes": 6,
+   "scoredItems": 7
+  }
+ },
+ "shows": [
+  {
+   "id": "show.col-a-01",
+   "skill": "COL-A-01",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:balloon_red",
+      "count": 1,
+      "label": "אָדֹם"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:ball_blue",
+      "count": 1,
+      "label": "כָּחֹל"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:ball_red",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:balloon_blue",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:bloom_red",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:bloom_blue",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.goni.show.col_a_01.open",
+     "text": "כׇּל צֶבַע לַבַּיִת שֶׁלּוֹ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.goni.show.col_a_01.key",
+     "text": "כַּדּוּר אָדֹם, בָּלוֹן אָדֹם: אוֹתוֹ צֶבַע.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.goni.show.col_a_01.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַפֶּרַח הַכָּחֹל.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אָדֹם",
+    "כָּחֹל"
+   ],
+   "picture": "a red bucket (with a red balloon) and a blue one (with a blue ball); the red ball goes to the red bucket, not to the ball",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.col-a-02",
+   "skill": "COL-A-02",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:ball_red",
+      "count": 1,
+      "label": "אָדֹם"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:ball_yellow",
+      "count": 1,
+      "label": "צָהֹב"
+     },
+     {
+      "id": "b3",
+      "sprite": "asset:ball_green",
+      "count": 1,
+      "label": "יָרֹק"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:balloon_red",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:bloom_yellow",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:balloon_green",
+      "bin": "b3"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:bloom_red",
+      "bin": "b1"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b3"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b1"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.goni.show.col_a_02.open",
+     "text": "לְכׇל צֶבַע יֵשׁ שֵׁם.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.goni.show.col_a_02.key",
+     "text": "אָדֹם. צָהֹב. יָרֹק.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.goni.show.col_a_02.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד אָדֹם.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אָדֹם",
+    "צָהֹב",
+    "יָרֹק"
+   ],
+   "picture": "three named buckets; each thing lands as Goni says its colour (a different thing each time, so the word sticks to the colour)",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.col-a-03",
+   "skill": "COL-A-03",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:ball_orange",
+      "count": 1,
+      "label": "כָּתֹם"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:ball_red",
+      "count": 1,
+      "label": "אָדֹם"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:ball_orange",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:bloom_red",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:balloon_orange",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:balloon_red",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.goni.show.col_a_03.open",
+     "text": "כָּתֹם וְאָדֹם דּוֹמִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.goni.show.col_a_03.key",
+     "text": "זֶה כָּתֹם, לֹא אָדֹם.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.goni.show.col_a_03.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַבָּלוֹן הָאָדֹם.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "כָּתֹם",
+    "אָדֹם"
+   ],
+   "picture": "orange and red side by side; Goni holds the orange ball against the red bucket, shakes his head, and it goes to the orange",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.col-a-04",
+   "skill": "COL-A-04",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:shape_circle_red",
+      "count": 1,
+      "label": "אָדֹם"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:shape_square_blue",
+      "count": 1,
+      "label": "כָּחֹל"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:shape_square_red",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:shape_circle_blue",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:shape_triangle_red",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:shape_triangle_blue",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.goni.show.col_a_04.open",
+     "text": "מְמַיְּנִים רַק לְפִי צֶבַע.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.goni.show.col_a_04.key",
+     "text": "רִבּוּעַ, אֲבָל אָדֹם.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.goni.show.col_a_04.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַמְּשֻׁלָּשׁ הַכָּחֹל.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אָדֹם",
+    "כָּחֹל"
+   ],
+   "picture": "the red square goes to the red circle, not to the blue square; the shape is crossed out for a moment, the colour glows",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.col-a-05",
+   "skill": "COL-A-05",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:banana_yellow",
+      "count": 1,
+      "label": "בָּנָנוֹת"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:apple",
+      "count": 1,
+      "label": "תַּפּוּחִים"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:banana_yellow",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:apple",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:banana_green",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:apple_green",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.goni.show.col_a_05.open",
+     "text": "לְפֵרוֹת יֵשׁ כַּמָּה צְבָעִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.goni.show.col_a_05.key",
+     "text": "יְרֻקָּה, וְהִיא עֲדַיִן בָּנָנָה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.goni.show.col_a_05.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הַיָּרֹק.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "בָּנָנוֹת",
+    "תַּפּוּחִים"
+   ],
+   "picture": "a banana box and an apple box; a green banana goes in with the yellow one; the child puts the green apple with the red",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.col-a-06",
+   "skill": "COL-A-06",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:ball_brown",
+      "count": 1,
+      "label": "חוּם"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:ball_grey",
+      "count": 1,
+      "label": "אָפֹר"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:ball_brown",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:balloon_grey",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:bloom_brown",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:ball_grey",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.goni.show.col_a_06.open",
+     "text": "עוֹד שְׁנֵי צְבָעִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.goni.show.col_a_06.key",
+     "text": "זֶה חוּם. וְזֶה אָפֹר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.goni.show.col_a_06.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַכַּדּוּר הָאָפֹר.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "חוּם",
+    "אָפֹר"
+   ],
+   "picture": "a brown bucket and a grey one; things land as Goni names them",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.col-a-07",
+   "skill": "COL-A-07",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:bloom_blue",
+      "count": 1,
+      "label": "פֶּרַח כָּחֹל"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:cross",
+      "count": 1,
+      "label": "לֹא פֶּרַח כָּחֹל"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:bloom_blue",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:ball_blue",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:bloom_red",
+      "bin": "b2"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:bloom_blue",
+      "bin": "b1"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b2"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b1"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.goni.show.col_a_07.open",
+     "text": "רַק פֶּרַח כָּחֹל נִכְנָס.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.goni.show.col_a_07.key",
+     "text": "כָּחֹל, אֲבָל לֹא פֶּרַח.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.goni.show.col_a_07.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַפֶּרַח הַכָּחֹל.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "פֶּרַח כָּחֹל"
+   ],
+   "picture": "a vase that takes only blue flowers; the blue ball and the red flower stay out, each for its own reason",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.col-b-01",
+   "skill": "COL-B-01",
+   "band": "B",
+   "purpose": "show",
+   "template": null,
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": null,
+   "steps": [],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.goni.show.col_b_01.open",
+     "text": "מַה יִּקְרֶה אִם נְעַרְבֵּב?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.goni.show.col_b_01.key",
+     "text": "אָדֹם וְצָהֹב עוֹשִׂים כָּתֹם.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.goni.show.col_b_01.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: נְעַרְבֵּב?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": {
+    "line": "מה יקרה אם נערבב?",
+    "choices": []
+   },
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "two tubs of paint poured together; the child first guesses the colour, then watches",
+   "status": "waits for Stage 3.4 (mix the colours), as the exempt list says"
+  },
+  {
+   "id": "show.col-b-02",
+   "skill": "COL-B-02",
+   "band": "B",
+   "purpose": "show",
+   "template": "build_pattern",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "slots": 3,
+    "palette": [
+     "asset:shade_blue_3",
+     "asset:shade_blue_1",
+     "asset:shade_blue_2"
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "cell": 0,
+     "piece": "asset:shade_blue_1"
+    },
+    {
+     "by": "host",
+     "cell": 1,
+     "piece": "asset:shade_blue_2",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "cell": 2,
+     "piece": "asset:shade_blue_3"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.goni.show.col_b_02.open",
+     "text": "מֵהַבָּהִיר אֶל הַכֵּהֶה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.goni.show.col_b_02.key",
+     "text": "בָּהִיר, וְאַחַר כָּךְ כֵּהֶה יוֹתֵר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.goni.show.col_b_02.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַכֵּהֶה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "בָּהִיר",
+    "כֵּהֶה"
+   ],
+   "picture": "three blues; Goni lays the lightest on the start dot, holds the middle one beside it, lays it; the child the darkest",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.col-b-03",
+   "skill": "COL-B-03",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:shade_blue_2",
+      "count": 1,
+      "label": "כָּחֹל"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:shade_green_2",
+      "count": 1,
+      "label": "יָרֹק"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:shade_blue_1",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:shade_green_3",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:shade_blue_3",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:shade_green_1",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.goni.show.col_b_03.open",
+     "text": "בָּהִיר אוֹ כֵּהֶה?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.goni.show.col_b_03.key",
+     "text": "בָּהִיר, וַעֲדַיִן כָּחֹל.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.goni.show.col_b_03.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַיָּרֹק הַבָּהִיר.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "כָּחֹל",
+    "יָרֹק"
+   ],
+   "picture": "a light blue and a dark blue both go to the blue bucket",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.col-b-04",
+   "skill": "COL-B-04",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:ball_red",
+      "count": 1,
+      "label": "אָדֹם"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:ball_blue",
+      "count": 1,
+      "label": "כָּחֹל"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:shape_circle_red",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:shape_square_blue",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:shape_square_red",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:shape_circle_blue",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.goni.show.col_b_04.open",
+     "text": "מְמַיְּנִים לְפִי צֶבַע.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.goni.show.col_b_04.key",
+     "text": "הַצּוּרָה לֹא מְשַׁנָּה. הַצֶּבַע כֵּן.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.goni.show.col_b_04.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הָעִגּוּל הַכָּחֹל.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אָדֹם",
+    "כָּחֹל"
+   ],
+   "picture": "circles and squares sorted by colour only",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.col-b-06",
+   "skill": "COL-B-06",
+   "band": "B",
+   "purpose": "show",
+   "template": "build_pattern",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "slots": 3,
+    "palette": [
+     "asset:ball_orange",
+     "asset:ball_red",
+     "asset:ball_yellow"
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "cell": 0,
+     "piece": "asset:ball_red",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "cell": 1,
+     "piece": "asset:ball_orange"
+    },
+    {
+     "by": "child",
+     "cell": 2,
+     "piece": "asset:ball_yellow"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.goni.show.col_b_06.open",
+     "text": "הַצְּבָעִים שֶׁל הַקֶּשֶׁת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.goni.show.col_b_06.key",
+     "text": "אָדֹם, כָּתֹם, צָהֹב.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.goni.show.col_b_06.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַצָּהֹב.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "the rainbow model above; Goni lays red and orange in its order; the child lays yellow",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need)"
+  }
+ ],
+ "hostLines": [
+  {
+   "role": "together_lead",
+   "template": "sort_drag",
+   "vo": "vo:host.goni.together.sort",
+   "text": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "build_pattern",
+   "vo": "vo:host.goni.together.build",
+   "text": "מִסְתַּכְּלִים עַל הַצְּבָעִים לְאַט.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "tap_answer",
+   "vo": "vo:host.goni.together.tap",
+   "text": "נִסְתַּכֵּל יַחַד. אַתֶּם בּוֹחֲרִים.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.goni.handover.1",
+   "text": "עַכְשָׁו אַתֶּם רוֹאִים צְבָעִים לְבַד.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.goni.handover.2",
+   "text": "יֹפִי. עַכְשָׁו תּוֹרְכֶם.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.goni.handover.3",
+   "text": "מִסְתַּכְּלִים טוֹב. עַכְשָׁו אַתֶּם.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "show_me",
+   "vo": "vo:host.goni.showme.1",
+   "text": "בּוֹאוּ נִרְאֶה שׁוּב, לְאַט.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "show_me",
+   "vo": "vo:host.goni.showme.2",
+   "text": "נִסְתַּכֵּל עַל הַצֶּבַע עוֹד פַּעַם.",
+   "review": "needs-editor"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "colour-match",
+   "band": "A",
+   "skills": [
+    "COL-A-01",
+    "COL-A-02"
+   ],
+   "recall": [],
+   "show": "show.col-a-01",
+   "secondShow": {
+    "id": "show.col-a-02",
+    "kind": "reminder",
+    "before": "the first item of COL-A-02"
+   },
+   "together": [
+    {
+     "id": "col.match.red",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "col.match.blue",
+    "col.match.yellow",
+    "col.name.red.ball",
+    "col.name.blue.balloon",
+    "col.match.green"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "colour-names",
+   "band": "A",
+   "skills": [
+    "COL-A-02",
+    "COL-A-03"
+   ],
+   "recall": [],
+   "show": "show.col-a-02",
+   "secondShow": {
+    "id": "show.col-a-03",
+    "kind": "reminder",
+    "before": "the first item of COL-A-03"
+   },
+   "together": [
+    {
+     "id": "col.name.yellow.flower",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "col.name.green.ball",
+    "col.name.orange",
+    "col.name.purple",
+    "col.name.pink",
+    "b15.cola02.1",
+    "b15.cola02.2",
+    "col.name.red.near"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "more-colours",
+   "band": "A",
+   "skills": [
+    "COL-A-03",
+    "COL-A-06"
+   ],
+   "recall": [
+    "b15.cola02.3"
+   ],
+   "show": "show.col-a-03",
+   "secondShow": {
+    "id": "show.col-a-06",
+    "kind": "reminder",
+    "before": "the first item of COL-A-06"
+   },
+   "together": [
+    {
+     "id": "col.name.black",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "col.name.brown",
+    "col.name.grey",
+    "col.name.white",
+    "col.name.grey.flower"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "colour-sorting",
+   "band": "A",
+   "skills": [
+    "COL-A-04",
+    "COL-A-07"
+   ],
+   "recall": [
+    "b15.cola01.1"
+   ],
+   "show": "show.col-a-04",
+   "secondShow": {
+    "id": "show.col-a-07",
+    "kind": "reminder",
+    "before": "the first item of COL-A-07"
+   },
+   "together": [
+    {
+     "id": "col.sort.red",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "col.sort.blue",
+    "col.sort.green",
+    "col.find.red.balloon",
+    "col.find.blue.ball",
+    "col.find.yellow.flower",
+    "col.find.green.balloon"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "colours-of-things",
+   "band": "A",
+   "skills": [
+    "COL-A-05"
+   ],
+   "recall": [
+    "b15.cola02.3"
+   ],
+   "show": "show.col-a-05",
+   "together": [
+    {
+     "id": "col.world.banana",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "col.world.apple",
+    "col.world.sun",
+    "col.world.grass"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "colours-again",
+   "band": "A",
+   "skills": [
+    "COL-A-01",
+    "COL-A-03",
+    "COL-A-06"
+   ],
+   "recall": [],
+   "show": "show.col-a-01",
+   "secondShow": {
+    "id": "show.col-a-03",
+    "kind": "reminder",
+    "before": "the first item of COL-A-03"
+   },
+   "together": [
+    {
+     "id": "col.match.green2",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "col.name.brown2",
+    "col.name.grey2",
+    "col.match.red2",
+    "col.name.orange2",
+    "col.name.pink2",
+    "col.name.purple2",
+    "col.name.brown3"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "colour-sorting-again",
+   "band": "A",
+   "skills": [
+    "COL-A-04",
+    "COL-A-07"
+   ],
+   "recall": [
+    "b15.cola01.1"
+   ],
+   "show": "show.col-a-04",
+   "secondShow": {
+    "id": "show.col-a-07",
+    "kind": "reminder",
+    "before": "the first item of COL-A-07"
+   },
+   "together": [
+    {
+     "id": "col.sort.orange",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b15.cola04.1",
+    "b15.cola04.2",
+    "col.sort.yellow",
+    "col.sort.pink",
+    "col.find.red.ball",
+    "col.find.yellow.balloon"
+   ],
+   "use": [
+    "b15.cola07.1"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "colours-of-things-again",
+   "band": "A",
+   "skills": [
+    "COL-A-05"
+   ],
+   "recall": [
+    "b15.cola02.3"
+   ],
+   "show": "show.col-a-05",
+   "together": [
+    {
+     "id": "b15.cola05.1",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b15.cola05.2",
+    "col.world.apple.red",
+    "col.world.banana.ripe"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "colour-names-1-b15",
+   "band": "A",
+   "skills": [
+    "COL-A-02",
+    "COL-A-03"
+   ],
+   "recall": [],
+   "show": "show.col-a-02",
+   "secondShow": {
+    "id": "show.col-a-03",
+    "kind": "reminder",
+    "before": "the first item of COL-A-03"
+   },
+   "together": [
+    {
+     "id": "b15.cola02.3",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b15.cola02.4",
+    "b15.cola02.5"
+   ],
+   "use": [
+    "b15.cola02.6"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "colours-again-1-b15",
+   "band": "A",
+   "skills": [
+    "COL-A-01",
+    "COL-A-03",
+    "COL-A-06"
+   ],
+   "recall": [],
+   "show": "show.col-a-01",
+   "secondShow": {
+    "id": "show.col-a-03",
+    "kind": "reminder",
+    "before": "the first item of COL-A-03"
+   },
+   "together": [
+    {
+     "id": "b15.cola01.1",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b15.cola03.1",
+    "b15.cola03.2",
+    "b15.cola01.2",
+    "b15.cola03.3",
+    "b15.cola03.4",
+    "b15.cola03.5"
+   ],
+   "use": [
+    "b15.cola03.6"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "colours-again-2-b15",
+   "band": "A",
+   "skills": [
+    "COL-A-01",
+    "COL-A-03",
+    "COL-A-06"
+   ],
+   "recall": [],
+   "show": "show.col-a-01",
+   "secondShow": {
+    "id": "show.col-a-03",
+    "kind": "reminder",
+    "before": "the first item of COL-A-03"
+   },
+   "together": [
+    {
+     "id": "b15.cola06.1",
+     "lead": 0,
+     "note": "spot_error has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b15.cola06.2"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "colour-sorting-again-1-b15",
+   "band": "A",
+   "skills": [
+    "COL-A-04",
+    "COL-A-07"
+   ],
+   "recall": [
+    "b15.cola01.1"
+   ],
+   "show": "show.col-a-04",
+   "secondShow": {
+    "id": "show.col-a-07",
+    "kind": "reminder",
+    "before": "the first item of COL-A-07"
+   },
+   "together": [],
+   "alone": [
+    "b15.cola07.2"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "mix-colours",
+   "band": "B",
+   "skills": [
+    "COL-B-01"
+   ],
+   "recall": [
+    "b15.cola03.3"
+   ],
+   "show": "show.col-b-01",
+   "together": [
+    {
+     "id": "b.colb01.1",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.colb01.2",
+    "b.colb01.3"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "mix-colours-more",
+   "band": "B",
+   "skills": [
+    "COL-B-01"
+   ],
+   "recall": [
+    "b15.cola03.3"
+   ],
+   "show": "show.col-b-01",
+   "together": [
+    {
+     "id": "b.colb01.4",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.colb01.5",
+    "b.colb01.6",
+    "b.colb01.7",
+    "b.colb01.8",
+    "b.colb01.9"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "light-and-dark",
+   "band": "B",
+   "skills": [
+    "COL-B-02"
+   ],
+   "recall": [
+    "b15.cola03.3"
+   ],
+   "show": "show.col-b-02",
+   "together": [
+    {
+     "id": "b.colb02.1",
+     "lead": 0,
+     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.colb02.3",
+    "b.colb02.5",
+    "b.colb02.2",
+    "b.colb02.4",
+    "b.colb02.6"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "middle-shade",
+   "band": "B",
+   "skills": [
+    "COL-B-02"
+   ],
+   "recall": [
+    "b15.cola03.3"
+   ],
+   "show": "show.col-b-02",
+   "together": [
+    {
+     "id": "b.colb02.7",
+     "lead": 0,
+     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.colb02.9",
+    "b.colb02.8",
+    "b.colb02.10",
+    "b.colb02.11"
+   ],
+   "use": [
+    "b.colb02.12"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "same-colour-shades",
+   "band": "B",
+   "skills": [
+    "COL-B-03"
+   ],
+   "recall": [
+    "b.colb02.10"
+   ],
+   "show": "show.col-b-03",
+   "together": [
+    {
+     "id": "b.colb03.1",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.colb03.2",
+    "b.colb03.3",
+    "b.colb03.4"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "same-colour-shades-more",
+   "band": "B",
+   "skills": [
+    "COL-B-03"
+   ],
+   "recall": [
+    "b.colb02.10"
+   ],
+   "show": "show.col-b-03",
+   "together": [
+    {
+     "id": "b.colb03.5",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.colb03.6",
+    "b.colb03.7",
+    "b.colb03.8",
+    "b.colb03.9"
+   ],
+   "use": [
+    "b.colb03.10"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "sort-two-ways",
+   "band": "B",
+   "skills": [
+    "COL-B-04"
+   ],
+   "recall": [
+    "col.sort.pink"
+   ],
+   "show": "show.col-b-04",
+   "together": [
+    {
+     "id": "b.colb04.1",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.colb04.2",
+    "b.colb04.3",
+    "b.colb04.4",
+    "b.colb04.5"
+   ],
+   "use": [
+    "b.colb04.6"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "rainbow",
+   "band": "B",
+   "skills": [
+    "COL-B-06"
+   ],
+   "recall": [
+    "b.colb01.1"
+   ],
+   "show": "show.col-b-06",
+   "together": [
+    {
+     "id": "b.colb06.1",
+     "lead": 0,
+     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.colb06.2",
+    "b.colb06.3",
+    "b.colb06.4"
+   ],
+   "use": [
+    "b.colb06.5"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  }
+ ]
+}

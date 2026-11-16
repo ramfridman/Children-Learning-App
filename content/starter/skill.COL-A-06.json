@@ -24,7 +24,8 @@
     }
   ],
   "representations": [
-    "pictorial"
+    "pictorial",
+    "concrete"
   ],
   "misconceptions": [
     "M-COL-NAME"

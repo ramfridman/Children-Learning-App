@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "log.size.fish.first",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
   "domain": "logic",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "size3",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.35
   },
@@ -25,43 +25,28 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה בָּא רִאשׁוֹן?"
+        "v": "מְסַדְּרִים מֵהַקָּטָן אֶל הַגָּדוֹל."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
-      "?",
+    "slots": 3,
+    "palette": [
+      "asset:fish_size_l",
       "asset:fish_size_m",
-      "asset:fish_size_l"
+      "asset:fish_size_s"
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:fish_size_s",
-        "label": "דָּג קָטָן"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:fish_size_m",
-        "label": "דָּג בֵּינוֹנִי",
-        "misconception": "M-PAT-NEXT"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:fish_size_l",
-        "label": "דָּג גָּדוֹל"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:fish_size_s",
+      "asset:fish_size_m",
+      "asset:fish_size_l"
     ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-SER-ENDS"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -76,12 +61,12 @@
     },
     "incorrect": [
       {
-        "when": "misconception:M-PAT-NEXT",
-        "vo": "vo:fb.ser.first_smallest",
+        "when": "misconception:M-SER-ENDS",
+        "vo": "vo:fb.ser_ends",
         "caption": [
           {
             "t": "he",
-            "v": "בַּהַתְחָלָה בָּא הֲכִי קָטָן. בּוֹאוּ נַשְׁוֶה."
+            "v": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל."
           }
         ]
       },
@@ -136,7 +121,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "קָטָן, בֵּינוֹנִי, גָּדוֹל — קֹדֶם בָּא קָטָן. עַכְשָׁו תּוֹרְכֶם."
+          "v": "קָטָן, בֵּינוֹנִי, גָּדוֹל. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -152,10 +137,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child orders three things from the smallest to the biggest",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה בָּא רִאשׁוֹן?"
+    "altText": "מְסַדְּרִים מֵהַקָּטָן אֶל הַגָּדוֹל."
   }
 }

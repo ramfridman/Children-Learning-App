@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "x.mathb19.1",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.2",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "math",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.37
   },
@@ -25,53 +25,70 @@
     "caption": [
       {
         "t": "he",
-        "v": "מִמָּה יֵשׁ הֲכִי הַרְבֵּה?"
+        "v": "מְמַיְּנִים: כׇּל דָּבָר עִם הַדּוֹמִים לוֹ."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "chart": [
+    "bins": [
       {
+        "id": "b1",
         "sprite": "asset:apple",
-        "count": 3
+        "count": 1,
+        "label": "תַּפּוּחִים"
       },
       {
+        "id": "b2",
         "sprite": "asset:banana_yellow",
-        "count": 5
+        "count": 1,
+        "label": "בָּנָנוֹת"
       },
       {
+        "id": "b3",
         "sprite": "asset:ball_red",
-        "count": 2
+        "count": 1,
+        "label": "כַּדּוּרִים"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:apple",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:banana_yellow",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:banana_yellow",
+        "bin": "b2"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:apple",
+        "bin": "b1"
+      },
+      {
+        "id": "i5",
+        "sprite": "asset:banana_yellow",
+        "bin": "b2"
+      },
+      {
+        "id": "i6",
+        "sprite": "asset:ball_red",
+        "bin": "b3"
       }
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:apple",
-        "label": "תַּפּוּחַ",
-        "misconception": "M-CNT-SIZE"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:banana_yellow",
-        "label": "בָּנָנָה"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:ball_red",
-        "label": "כַּדּוּר אָדֹם",
-        "misconception": "M-CNT-SIZE"
-      }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-SORT-SHIFT"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -80,18 +97,18 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! בַּתַּרְשִׁים הָעַמּוּד שֶׁלּוֹ הֲכִי גָּבוֹהַּ."
+          "v": "כֵּן! מִיַּנְתֶּם. יֵשׁ הֲכִי הַרְבֵּה בָּנָנוֹת."
         }
       ]
     },
     "incorrect": [
       {
-        "when": "misconception:M-CNT-SIZE",
-        "vo": "vo:fb.size.chart",
+        "when": "misconception:M-SORT-SHIFT",
+        "vo": "vo:fb.sort_shift.kind",
         "caption": [
           {
             "t": "he",
-            "v": "הַצִּיּוּר גָּדוֹל, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד."
+            "v": "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
           }
         ]
       },
@@ -131,11 +148,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.sort.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
         }
       ]
     },
@@ -146,7 +163,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ הֲכִי הַרְבֵּה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנָּכוֹן."
+          "v": "נַעֲבִיר כׇּל תְּמוּנָה אֶל הַקְּבוּצָה הַמַּתְאִימָה. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -162,10 +179,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מִמָּה יֵשׁ הֲכִי הַרְבֵּה?"
+    "altText": "מְמַיְּנִים: כׇּל דָּבָר עִם הַדּוֹמִים לוֹ."
   }
 }

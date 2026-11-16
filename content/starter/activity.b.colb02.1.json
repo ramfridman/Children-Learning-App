@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.colb02.1",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
   "domain": "colors",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.37
   },
@@ -25,39 +25,29 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיזֶה הֲכִי כֵּהֶה?"
+        "v": "מְסַדְּרִים מֵהַבָּהִיר אֶל הַכֵּהֶה."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "slots": 3,
+    "palette": [
+      "asset:shade_blue_3",
+      "asset:shade_green_2",
+      "asset:shade_blue_1",
+      "asset:shade_blue_2"
+    ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:shade_blue_1",
-        "label": "כָּחֹל בָּהִיר",
-        "misconception": "M-COL-SHADE"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:shade_blue_2",
-        "label": "כָּחֹל",
-        "misconception": "M-SER-ENDS"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:shade_blue_3",
-        "label": "כָּחֹל כֵּהֶה"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:shade_blue_1",
+      "asset:shade_blue_2",
+      "asset:shade_blue_3"
     ],
-    "correct": "o3",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-SER-ENDS"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -66,21 +56,11 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה הֲכִי כֵּהֶה."
+          "v": "כֵּן! מֵהַבָּהִיר אֶל הַכֵּהֶה."
         }
       ]
     },
     "incorrect": [
-      {
-        "when": "misconception:M-COL-SHADE",
-        "vo": "vo:fb.col_shade",
-        "caption": [
-          {
-            "t": "he",
-            "v": "כָּחֹל בָּהִיר וְכָחֹל כֵּהֶה הֵם שְׁנֵיהֶם כָּחֹל. בּוֹאוּ נִסְתַּכֵּל עַל הַצֶּבַע."
-          }
-        ]
-      },
       {
         "when": "misconception:M-SER-ENDS",
         "vo": "vo:fb.ser_ends",
@@ -127,11 +107,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.build.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד."
         }
       ]
     },
@@ -142,7 +122,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הַכֵּהֶה הוּא הֲכִי חָשׁוּךְ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+          "v": "כָּחֹל בָּהִיר, כָּחֹל, כָּחֹל כֵּהֶה. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -158,10 +138,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child copies the pattern in the same order",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיזֶה הֲכִי כֵּהֶה?"
+    "altText": "מְסַדְּרִים מֵהַבָּהִיר אֶל הַכֵּהֶה."
   }
 }

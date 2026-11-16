@@ -1,0 +1,196 @@
+{
+  "schema": "activity/v1",
+  "id": "show.col-a-02",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
+  "domain": "colors",
+  "band": "A",
+  "skills": [
+    {
+      "id": "COL-A-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.goni.show.col_a_02.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְכׇל צֶבַע יֵשׁ שֵׁם."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:ball_red",
+        "count": 1,
+        "label": "אָדֹם"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:ball_yellow",
+        "count": 1,
+        "label": "צָהֹב"
+      },
+      {
+        "id": "b3",
+        "sprite": "asset:ball_green",
+        "count": 1,
+        "label": "יָרֹק"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:balloon_red",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:bloom_yellow",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:balloon_green",
+        "bin": "b3"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:bloom_red",
+        "bin": "b1"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.goni.show.col_a_02.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אָדֹם. צָהֹב. יָרֹק."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "לְכׇל צֶבַע יֵשׁ שֵׁם."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.goni.show.col_a_02.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְכׇל צֶבַע יֵשׁ שֵׁם."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.goni.show.col_a_02.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אָדֹם. צָהֹב. יָרֹק."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.goni.show.col_a_02.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: עוֹד אָדֹם."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "item": "i1",
+        "bin": "b1",
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "item": "i2",
+        "bin": "b2"
+      },
+      {
+        "by": "host",
+        "item": "i3",
+        "bin": "b3"
+      },
+      {
+        "by": "child",
+        "item": "i4",
+        "bin": "b1"
+      }
+    ],
+    "teaches": [
+      "אָדֹם",
+      "צָהֹב",
+      "יָרֹק"
+    ]
+  }
+}

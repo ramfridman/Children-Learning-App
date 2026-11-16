@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "c.numc09.2",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "number_line",
+  "templateVersion": "1.0",
   "domain": "numbers",
   "band": "C",
   "skills": [
@@ -14,66 +14,53 @@
     }
   ],
   "purpose": "practice",
-  "checkType": "practice",
-  "representation": "symbolic",
-  "variantGroup": "pick",
+  "checkType": "predict",
+  "representation": "pictorial",
+  "variantGroup": "numline",
   "difficulty": {
     "authored": 0.44
   },
   "prompt": {
-    "vo": "vo:c.mathb04.1.prompt",
+    "vo": "vo:c.numc09.2.prompt",
     "caption": [
       {
         "t": "he",
-        "v": "כַּמָּה זֶה?"
+        "v": "הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל חֲמִשִּׁים וְשֶׁבַע וְקוֹפֶצֶת עֲשָׂרָה צְעָדִים קָדִימָה. עַל אֵיזֶה מִסְפָּר הִיא תִּנְחַת?"
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
-      "n:57",
-      "op:+",
-      "n:10",
-      "op:=",
-      "?"
+    "from": 50,
+    "to": 70,
+    "markerSprite": "asset:frog",
+    "labels": [
+      50,
+      57,
+      60,
+      70
+    ],
+    "start": 57,
+    "hops": [
+      10
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "numeral": 58,
-        "label": "חֲמִשִּׁים וּשְׁמוֹנֶה",
-        "misconception": "M-HC-ROW"
-      },
-      {
-        "id": "o2",
-        "numeral": 67,
-        "label": "שִׁשִּׁים וְשֶׁבַע"
-      },
-      {
-        "id": "o3",
-        "numeral": 47,
-        "label": "אַרְבָּעִים וְשֶׁבַע",
-        "misconception": "M-OP-SWAP"
-      }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "line",
+    "mode": "jump",
+    "target": 67,
+    "misconception": "M-HC-ROW",
+    "mirrorMisconception": "M-NL-DIR"
   },
   "voiceAnswer": false,
   "feedback": {
     "correct": {
-      "vo": "vo:c.numc09.2.correct",
+      "vo": "vo:c.numc06.10.correct",
       "caption": [
         {
           "t": "he",
-          "v": "שִׁשִּׁים וְשֶׁבַע! חֲמִשִּׁים וְשֶׁבַע וְעוֹד עֶשֶׂר שָׁוֶה שִׁשִּׁים וְשֶׁבַע."
+          "v": "שִׁשִּׁים וְשֶׁבַע! הַצְּפַרְדֵּעַ נָחֲתָה עַל שִׁשִּׁים וְשֶׁבַע."
         }
       ]
     },
@@ -89,12 +76,12 @@
         ]
       },
       {
-        "when": "misconception:M-OP-SWAP",
-        "vo": "vo:fb.op_swap",
+        "when": "misconception:M-NL-DIR",
+        "vo": "vo:fb.nl_dir",
         "caption": [
           {
             "t": "he",
-            "v": "רֶגַע, מוֹסִיפִים כָּאן אוֹ מוֹרִידִים? בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַסִּימָן."
+            "v": "הַמִּסְפָּרִים הַקְּטַנִּים בַּצַּד הַשְּׂמָאלִי, וְהֵם גְּדֵלִים לְכִוּוּן הַחֵץ."
           }
         ]
       },
@@ -134,11 +121,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:c.numc09.1.h2",
+      "vo": "vo:hint.line.h2",
       "caption": [
         {
           "t": "he",
-          "v": "בְּלוּחַ הַמֵּאָה, עֶשֶׂר יוֹתֵר זוֹ שׁוּרָה לְמַטָּה בְּאוֹתוֹ טוּר. הַיְּחִידוֹת לֹא מִשְׁתַּנּוֹת, רַק הָעֲשָׂרוֹת."
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
         }
       ]
     },
@@ -149,7 +136,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "מֵחֲמִשִּׁים וְשֶׁבַע יוֹרְדִים שׁוּרָה לְמַטָּה: שִׁשִּׁים וְשֶׁבַע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שִׁשִּׁים וְשֶׁבַע."
+          "v": "מַתְחִילִים מֵחֲמִשִּׁים וְשֶׁבַע וְקוֹפְצִים עֲשָׂרָה צְעָדִים קָדִימָה. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -165,10 +152,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child finds the number on the line",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "כַּמָּה זֶה?"
+    "altText": "הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל חֲמִשִּׁים וְשֶׁבַע וְקוֹפֶצֶת עֲשָׂרָה צְעָדִים קָדִימָה. עַל אֵיזֶה מִסְפָּר הִיא תִּנְחַת?"
   }
 }

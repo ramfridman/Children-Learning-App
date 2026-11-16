@@ -16,9 +16,9 @@
   ],
   "items": [
     "col.name.black",
-    "col.name.white",
     "col.name.brown",
     "col.name.grey",
+    "col.name.white",
     "col.name.grey.flower"
   ],
   "estimatedMinutes": 3,
@@ -31,5 +31,45 @@
         "v": "מַדְהִים! אַתֶּם מַכִּירִים הַרְבֵּה צְבָעִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.col-a-03",
+    "secondShow": {
+      "id": "show.col-a-06",
+      "before": "col.name.brown"
+    },
+    "recall": [
+      "b15.cola02.3"
+    ],
+    "together": [
+      {
+        "id": "col.name.black",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.goni.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "col.name.brown",
+      "col.name.grey",
+      "col.name.white",
+      "col.name.grey.flower"
+    ],
+    "handover": {
+      "vo": "vo:host.goni.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מִסְתַּכְּלִים טוֹב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

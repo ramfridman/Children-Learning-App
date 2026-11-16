@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.mathb01.1",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "number_line",
+  "templateVersion": "1.0",
   "domain": "math",
   "band": "B",
   "skills": [
@@ -14,9 +14,9 @@
     }
   ],
   "purpose": "practice",
-  "checkType": "practice",
+  "checkType": "predict",
   "representation": "pictorial",
-  "variantGroup": "sum",
+  "variantGroup": "numline",
   "difficulty": {
     "authored": 0.37
   },
@@ -25,54 +25,33 @@
     "caption": [
       {
         "t": "he",
-        "v": "יֵשׁ שְׁלוֹשָׁה תַּפּוּחִים. מוֹסִיפִים עוֹד שְׁנֵי תַּפּוּחִים. כַּמָּה יֵשׁ עַכְשָׁו?"
+        "v": "שָׁלוֹשׁ וְעוֹד שְׁתַּיִם: הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל שָׁלוֹשׁ וְקוֹפֶצֶת שְׁנֵי צְעָדִים. אֵיפֹה הִיא תִּנְחַת?"
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "group": {
-      "sprite": "asset:apple",
-      "count": 3,
-      "arrangement": "line",
-      "seed": 3,
-      "scale": 1
-    },
-    "group2": {
-      "sprite": "asset:apple",
-      "count": 2,
-      "arrangement": "line",
-      "seed": 8,
-      "scale": 1
-    }
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+      0,
+      3,
+      10
+    ],
+    "start": 3,
+    "hops": [
+      2
+    ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "numeral": 5,
-        "label": "חָמֵשׁ"
-      },
-      {
-        "id": "o2",
-        "numeral": 3,
-        "label": "שָׁלוֹשׁ"
-      },
-      {
-        "id": "o3",
-        "numeral": 6,
-        "label": "שֵׁשׁ",
-        "misconception": "M-CNT-DOUBLE"
-      }
-    ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "line",
+    "mode": "jump",
+    "target": 5,
+    "misconception": "M-NL-SPACE"
   },
-  "voiceAnswer": true,
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.mathb01.1.correct",
@@ -85,12 +64,12 @@
     },
     "incorrect": [
       {
-        "when": "misconception:M-CNT-DOUBLE",
-        "vo": "vo:fb.double_set",
+        "when": "misconception:M-NL-SPACE",
+        "vo": "vo:fb.nl_space",
         "caption": [
           {
             "t": "he",
-            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+            "v": "כׇּל הַקְּפִיצוֹת בְּאוֹתוֹ אֹרֶךְ. בּוֹאוּ נִקְפֹּץ יַחַד וְנִסְפֹּר."
           }
         ]
       },
@@ -130,11 +109,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.line.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
         }
       ]
     },
@@ -145,7 +124,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "שָׁלוֹשׁ וְעוֹד שְׁתַּיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חָמֵשׁ."
+          "v": "מַתְחִילִים מִשָּׁלוֹשׁ וְקוֹפְצִים שְׁנֵי צְעָדִים קָדִימָה. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -161,10 +140,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child finds the number on the line",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "יֵשׁ שְׁלוֹשָׁה תַּפּוּחִים. מוֹסִיפִים עוֹד שְׁנֵי תַּפּוּחִים. כַּמָּה יֵשׁ עַכְשָׁו?"
+    "altText": "שָׁלוֹשׁ וְעוֹד שְׁתַּיִם: הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל שָׁלוֹשׁ וְקוֹפֶצֶת שְׁנֵי צְעָדִים. אֵיפֹה הִיא תִּנְחַת?"
   }
 }

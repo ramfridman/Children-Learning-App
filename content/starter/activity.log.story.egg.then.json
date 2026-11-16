@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "log.story.egg.then",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
   "domain": "logic",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "story",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.35
   },
@@ -25,43 +25,29 @@
     "caption": [
       {
         "t": "he",
-        "v": "הַבֵּיצָה נִסְדְּקָה. מַה בָּא אַחַר כָּךְ?"
+        "v": "מְסַדְּרִים אֶת הַסִּפּוּר: מַה קֹּדֶם, וּמָה אַחַר כָּךְ?"
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
+    "slots": 3,
+    "palette": [
+      "asset:chick",
+      "asset:plant_seed",
       "asset:egg",
-      "asset:egg_crack",
-      "?"
+      "asset:egg_crack"
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:egg",
-        "label": "בֵּיצָה",
-        "misconception": "M-SEQ-CAUSE"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:chick",
-        "label": "אֶפְרוֹחַ"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:plant_seed",
-        "label": "זֶרַע"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:egg",
+      "asset:egg_crack",
+      "asset:chick"
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-SEQ-CAUSE"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -70,7 +56,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! אַחַר כָּךְ יוֹצֵא אֶפְרוֹחַ."
+          "v": "כֵּן! כָּכָה זֶה קוֹרֶה."
         }
       ]
     },
@@ -121,11 +107,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.build.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד."
         }
       ]
     },
@@ -136,7 +122,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הַבֵּיצָה נִסְדְּקָה, וְאַחַר כָּךְ יוֹצֵא אֶפְרוֹחַ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הָאֶפְרוֹחַ."
+          "v": "קֹדֶם בֵּיצָה, אַחַר כָּךְ הִיא נִסְדֶּקֶת, וּבַסּוֹף אֶפְרוֹחַ. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -152,10 +138,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child lays the pictures of a story in the order they happen",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "הַבֵּיצָה נִסְדְּקָה. מַה בָּא אַחַר כָּךְ?"
+    "altText": "מְסַדְּרִים אֶת הַסִּפּוּר: מַה קֹּדֶם, וּמָה אַחַר כָּךְ?"
   }
 }

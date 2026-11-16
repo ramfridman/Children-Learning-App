@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "x.mathb16.7",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "math",
   "band": "B",
   "skills": [
@@ -14,9 +14,9 @@
     }
   ],
   "purpose": "practice",
-  "checkType": "transfer",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.6
   },
@@ -25,33 +25,55 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיזֶה מַטְבֵּעַ שָׁוֶה יוֹתֵר?"
+        "v": "מְמַיְּנִים: אֲגוֹרוֹת לְכָאן, וּשְׁקָלִים לְכָאן."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:coin_s1",
-        "label": "מַטְבֵּעַ שֶׁל שֶׁקֶל"
+        "id": "b1",
+        "sprite": "asset:coin_a10",
+        "count": 1,
+        "label": "אֲגוֹרוֹת"
       },
       {
-        "id": "o2",
-        "sprite": "asset:coin_h50",
-        "label": "מַטְבֵּעַ שֶׁל חֲצִי שֶׁקֶל",
-        "misconception": "M-MONEY-SIZE"
+        "id": "b2",
+        "sprite": "asset:coin_s1",
+        "count": 1,
+        "label": "שְׁקָלִים"
       }
     ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:coin_a10",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:coin_h50",
+        "bin": "b1",
+        "misconception": "M-MONEY-SIZE"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:coin_s1",
+        "bin": "b2"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:coin_s2",
+        "bin": "b2"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-MONEY-SIZE"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -60,7 +82,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! שֶׁקֶל שָׁוֶה יוֹתֵר מֵחֲצִי שֶׁקֶל."
+          "v": "כֵּן! מִיַּנְתֶּם אֶת הַמַּטְבְּעוֹת."
         }
       ]
     },
@@ -111,11 +133,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.sort.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
         }
       ]
     },
@@ -126,7 +148,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "זֶה מַטְבֵּעַ שֶׁל שֶׁקֶל. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+          "v": "עֶשֶׂר אֲגוֹרוֹת וַחֲצִי שֶׁקֶל הֵם אֲגוֹרוֹת. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -142,10 +164,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיזֶה מַטְבֵּעַ שָׁוֶה יוֹתֵר?"
+    "altText": "מְמַיְּנִים: אֲגוֹרוֹת לְכָאן, וּשְׁקָלִים לְכָאן."
   }
 }

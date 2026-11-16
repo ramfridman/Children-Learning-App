@@ -210,6 +210,7 @@ MIX = {frozenset(('red', 'yellow')): 'orange', frozenset(('blue', 'yellow')): 'g
 # an oval has no sides (it is curved and closed); a trapezoid has four straight ones, not all equal, and is neither a square nor a rectangle
 SIDES = {'triangle': 3, 'square': 4, 'rect': 4, 'quad': 4, 'pentagon': 5, 'hexagon': 6, 'trapezoid': 4}
 POLYGONS = set(SIDES)
+PARTNER = {'spoon': 'plate', 'sock': 'shoe', 'key': 'lock', 'pencil': 'paper', 'paste': 'brush', 'umbrella': 'rain'}  # M11 Stage 2, LOG-A-09
 COINS = {'a10': 0.1, 'h50': 0.5, 's1': 1, 's2': 2, 's5': 5, 's10': 10}
 SIZE_RANK = {'s': 1, 'm': 2, 'l': 3}
 # Plain objects whose colour every child knows from the picture.
@@ -1824,6 +1825,16 @@ def check_number_line(f, it):
         if x != target:
             f.add('WRONG', it, 'answer', 'the frog lands on %s, the item marks %s' % (x, target))
         return [start] + [abs(h) for h in hops] + [x]
+    # M11 Stage 2: "which is bigger, a or b? The frog goes on the bigger" (NUM-B-10 and NUM-C-04 on the line): both numbers are marked, and
+    # the target is the bigger (or the smaller) of the two said
+    if len(nums) >= 2 and (it.has('גדול יותר') or it.has('קטן יותר')):
+        want = max(nums[:2]) if it.has('גדול יותר') else min(nums[:2])
+        if target != want:
+            f.add('WRONG', it, 'answer', 'the caption asks for the %s of %s and %s, the target is %s' % (
+                'bigger' if it.has('גדול יותר') else 'smaller', nums[0], nums[1], target))
+        if not set(nums[:2]) <= set(labels):
+            f.add('WRONG', it, 'picture', 'the two numbers compared, %s and %s, are not both marked on the line' % (nums[0], nums[1]))
+        return [target]
     if nums and nums[0] != target:
         f.add('WRONG', it, 'answer', 'the caption asks for %s, the target is %s' % (nums[0], target))
     if target is not None and (target < lo or target > hi):
@@ -1887,7 +1898,12 @@ def check_shop(f, it):
     sc = it.scene
     price = (sc.get('price') or 0) / 100
     nums = numbers(it.caption)
-    if nums and nums[0] != price:
+    # M11 Stage 2 (MATH-C-03 in the shop): "forty shekels and thirty more" pays the sum; "it costs ninety, forty are paid already" pays the rest
+    if len(nums) >= 2 and it.has('ועוד') and nums[0] + nums[1] == price:
+        pass
+    elif len(nums) >= 2 and it.has('כבר') and nums[0] - nums[1] == price:
+        pass
+    elif nums and nums[0] != price:
         f.add('WRONG', it, 'answer', 'the caption says %s shekels, the price is %s' % (nums[0], price))
     coins = []
     for p in sc.get('purse') or []:
@@ -1959,6 +1975,13 @@ def check_sort(f, it):
         if len(items) % max(1, len(bins)):
             f.add('WRONG', it, 'unsolvable', '%d items do not share fairly between %d' % (len(items), len(bins)))
         return [len(items)]
+    # M11 Stage 2: a Show that deals one kind of card to its bins in turn (NUM-B-18's socks, one to the cat and one to the dog) is a share
+    # played as a sort: every bin gets the same number of cards
+    if it.doc.get('purpose') == 'show' and len({x.get('sprite') for x in items}) == 1 and len(bins) > 1:
+        per = [sum(1 for x in items if x.get('bin') == b['id']) for b in bins]
+        if len(set(per)) != 1:
+            f.add('WRONG', it, 'answer', 'a deal shown in turn gives the bins %s cards: not the same' % per)
+        return [len(items)]
     binfo = {b['id']: sprite_info(b.get('sprite')) for b in bins}
     prop = shape_property_bins(it, bins)
     if prop:  # M11 Stage 2: the Shape Forest sorts by a property (sides, closed, equal sides, straight, rolls, face, shape of a thing)
@@ -1970,6 +1993,55 @@ def check_sort(f, it):
             elif got != x.get('bin'):
                 f.add('WRONG', it, 'answer', '%s (%s) sorted by %s belongs in %s, the item puts it in %s' %
                       (x['id'], sprite_info(x.get('sprite'))['name'], name, got, x.get('bin')))
+        return []
+    # M11 Stage 2, Colour Bay: "X / not X" with a crossed bin. The fruit whatever its colour (COL-A-05) matches the sample's kind; "only a blue
+    # ball" (COL-A-07, the caption says רק) matches its kind and its colour
+    crossed = [b for b in bins if b.get('sprite') == 'asset:cross']
+    if len(bins) == 2 and len(crossed) == 1 and not prop:
+        yes = [b for b in bins if b is not crossed[0]][0]
+        si = binfo[yes['id']]
+        for x in items:
+            xi = sprite_info(x.get('sprite'))
+            fits = xi.get('kind') == si.get('kind') and (not it.has('רק') or xi.get('colour') == si.get('colour'))
+            want = yes['id'] if fits else crossed[0]['id']
+            if x.get('bin') != want:
+                f.add('WRONG', it, 'answer', '%s (%s) belongs in %s, the item puts it in %s' % (x['id'], xi['name'], want, x.get('bin')))
+        return []
+    # M11 Stage 2, Riddle Grotto sorts. Partners (LOG-A-09): each thing goes by the thing it is used with.
+    if items and all(sprite_info(x.get('sprite'))['kind'] in PARTNER for x in items) and             all(binfo[b['id']].get('kind') in PARTNER.values() for b in bins):
+        for x in items:
+            want = [b['id'] for b in bins if PARTNER.get(sprite_info(x.get('sprite'))['kind']) == binfo[b['id']].get('kind')]
+            if x.get('bin') not in want:
+                f.add('WRONG', it, 'answer', '%s (%s) goes with %s, the item puts it in %s' % (x['id'], x.get('sprite'), want, x.get('bin')))
+        return []
+    # "every <thing> in the basket, everything else on the grass" (LOG-A-01) and "the alike in the basket, the odd one on the grass" (LOG-A-02):
+    # the basket holds one kind of thing, the grass none of it (one card, for the odd one out)
+    if [b.get('sprite') for b in bins] == ['asset:bin_basket', 'asset:bin_grass'] and not colours_in(it.cap) and not shapes_in(it.cap) and             not any(sprite_info(x.get('sprite')).get('shape') for x in items):
+        kinds = {b['id']: {sprite_info(x.get('sprite'))['kind'] for x in items if x.get('bin') == b['id']} for b in bins}
+        inside, outside = kinds[bins[0]['id']], kinds[bins[1]['id']]
+        if len(inside) != 1 or inside & outside:
+            f.add('WRONG', it, 'answer', 'the basket holds %s and the grass %s: one kind in the basket, none of it outside' % (inside, outside))
+        if it.has('השונה') and sum(1 for x in items if x.get('bin') == bins[1]['id']) != 1:
+            f.add('WRONG', it, 'answer', 'the odd one out is one card')
+        return []
+    # M11 Stage 2 (LOG-B-08's Show): "if red, then to the basket": basket and grass, one colour said, and every card of it in the basket
+    if [b.get('sprite') for b in bins] == ['asset:bin_basket', 'asset:bin_grass'] and len(colours_in(it.cap)) == 1 and             not shapes_in(it.cap) and not it.has('וגם לא'):
+        c0 = colours_in(it.cap)[0]
+        for x in items:
+            want = bins[0]['id'] if sprite_info(x.get('sprite')).get('colour') == c0 else bins[1]['id']
+            if x.get('bin') != want:
+                f.add('WRONG', it, 'answer', '%s (%s): %s to the basket, the rest to the grass: belongs in %s, the item puts it in %s' % (
+                    x['id'], x.get('sprite'), c0, want, x.get('bin')))
+        return []
+    # M11 Stage 2 (LOG-B-09 as a sort): "in the basket every shape that is not <colour> and not <shape>; the rest on the grass"
+    if it.has('וגם לא') and colours_in(it.cap) and shapes_in(it.cap):
+        c0, s0 = colours_in(it.cap)[0], shapes_in(it.cap)[0]
+        for x in items:
+            xi = sprite_info(x.get('sprite'))
+            want = bins[0]['id'] if xi.get('colour') != c0 and not shape_member(xi, s0, True) else bins[1]['id']
+            if x.get('bin') != want:
+                f.add('WRONG', it, 'answer', '%s (%s) is %s not-%s-and-not-%s: belongs in %s, the item puts it in %s' % (
+                    x['id'], xi['name'], '' if want == bins[0]['id'] else 'not', c0, s0, want, x.get('bin')))
         return []
     if it.has('אם הצורה', 'כל השאר'):
         cs, ss = colours_in(it.cap), shapes_in(it.cap)
@@ -1983,11 +2055,22 @@ def check_sort(f, it):
                 f.add('WRONG', it, 'answer', '%s (%s) belongs in %s, the item puts it in %s' %
                       (x['id'], sprite_info(x.get('sprite'))['name'], want, x.get('bin')))
         return []
+    # M11 Stage 2 (MATH-B-16): agorot and shekels; a coin worth less than a shekel is agorot, whatever its size
+    if it.has('אגורות') and it.has('שקלים') and all((x.get('sprite') or '').startswith('asset:coin_') for x in items):
+        for x in items:
+            worth = COINS.get(x['sprite'][len('asset:coin_'):])
+            want = bins[0]['id'] if worth is not None and worth < 1 else bins[1]['id']
+            if x.get('bin') != want:
+                f.add('WRONG', it, 'answer', '%s (%s, %s shekels) belongs in %s, the item puts it in %s' % (x['id'], x['sprite'], worth, want,
+                                                                                                         x.get('bin')))
+        return []
     key = 'colour' if it.has('לפי צבע') else 'shape' if it.has('לפי צורה') else 'size' if it.has('גדולים') else None
     if key is None:
         keys = [k for k in ('colour', 'shape', 'size', 'kind') if len({b.get(k) for b in binfo.values()}) == len(bins)
                 and None not in {b.get(k) for b in binfo.values()}]
-        key = keys[0] if keys else None
+        # M11 Stage 2 (COL-A-05's Show: a green banana with the bananas): of the keys the bins tell apart, the one every card has a bin for
+        whole = [k for k in keys if all(any(bi.get(k) == sprite_info(x.get('sprite')).get(k) for bi in binfo.values()) for x in items)]
+        key = (whole or keys or [None])[0]
     if key is None:
         f.add('UNCHECKED', it, 'sort', 'no sorting rule found')
         return []

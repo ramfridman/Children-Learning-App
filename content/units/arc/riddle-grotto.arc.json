@@ -1,0 +1,2176 @@
+{
+ "schema": "lesson-arc-source/v0",
+ "land": "logic",
+ "host": "timi",
+ "review": "needs-editor",
+ "status": "M11 Stage 2, step 2.4b (Riddle Grotto), authored by the curriculum-expert on 2026-11-16. Pointed drafts for the hebrew-text-editor; Timi speaks in \"we\" forms (no first-person gender). The sort Shows play today (LOG-A-01, A-02, A-03, A-09, B-06, B-08, B-09); the build_pattern Shows wait for its Show and lead player (step 2.1) and, for the given cells of LOG-A-06, A-07 and B-01, for step 2.2; LOG-A-04 waits for the pattern-strip sprites; LOG-B-02 for step 2.2c. `predict` (the question before the host acts, §2.1) is written for the predict-then-watch skills; the app does not play it yet.",
+ "spec": "docs/milestones/M11-stage2.md §2, §3.5, §7.4 and §8",
+ "howToRead": [
+  "As counting-hills.arc.json and market.arc.json. `predict`: the host's question and the child's unscored choices (empty when the choice is a touch on the picture)."
+ ],
+ "caps": {
+  "P1": {
+   "screens": 5,
+   "minutes": 3
+  },
+  "P2": {
+   "screens": 6,
+   "minutes": 4
+  },
+  "P3": {
+   "screens": 8,
+   "minutes": 5
+  },
+  "P4": {
+   "screens": 9,
+   "minutes": 6,
+   "scoredItems": 7
+  }
+ },
+ "shows": [
+  {
+   "id": "show.log-a-01",
+   "skill": "LOG-A-01",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:bin_basket",
+      "count": 1,
+      "label": "הַסַּל"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:bin_grass",
+      "count": 1,
+      "label": "הַדֶּשֶׁא"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:apple",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:ball_red",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:apple_green",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:balloon_red",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_a_01.open",
+     "text": "מְחַפְּשִׂים אֶת כׇּל הַתַּפּוּחִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_a_01.key",
+     "text": "עָגֹל וְאָדֹם, אֲבָל לֹא תַּפּוּחַ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_a_01.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַבָּלוֹן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "הַסַּל",
+    "הַדֶּשֶׁא",
+    "תַּפּוּחַ"
+   ],
+   "picture": "apples to the basket; Timi holds the red ball by an apple, shakes its head, and it rolls to the grass; the child puts the red balloon on the grass",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.log-a-02",
+   "skill": "LOG-A-02",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:bin_basket",
+      "count": 1,
+      "label": "הַסַּל"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:bin_grass",
+      "count": 1,
+      "label": "הַדֶּשֶׁא"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:star",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:star",
+      "bin": "b1"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:apple",
+      "bin": "b2"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:star",
+      "bin": "b1"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b1"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b2",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b1"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_a_02.open",
+     "text": "מִי שׁוֹנֶה מֵהָאֲחֵרִים?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_a_02.key",
+     "text": "כֻּלָּם כּוֹכָבִים, חוּץ מֵאֶחָד.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_a_02.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַכּוֹכָב הָאַחֲרוֹן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "הַסַּל",
+    "הַדֶּשֶׁא"
+   ],
+   "picture": "three stars and an apple; the stars to the basket, the apple to the grass as Timi says the key line",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.log-a-03",
+   "skill": "LOG-A-03",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:cat",
+      "count": 2,
+      "label": "חָתוּל"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:dog",
+      "count": 2,
+      "label": "כֶּלֶב"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:cat",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:dog",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:cat",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:dog",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_a_03.open",
+     "text": "מְמַיְּנִים לִשְׁתֵּי קְבוּצוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_a_03.key",
+     "text": "חֲתוּלִים כָּאן, כְּלָבִים כָּאן.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_a_03.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַכֶּלֶב.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "חָתוּל",
+    "כֶּלֶב"
+   ],
+   "picture": "cats and dogs into two groups; each lands by its own kind",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.log-a-04",
+   "skill": "LOG-A-04",
+   "band": "A",
+   "purpose": "show",
+   "template": null,
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": null,
+   "steps": [],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_a_04.open",
+     "text": "הַאִם זֶה חוֹזֵר?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_a_04.key",
+     "text": "אָדֹם, כָּחֹל. אָדֹם, כָּחֹל. חוֹזֵר!",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_a_04.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: זֶה חוֹזֵר?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": {
+    "line": "האם זה חוזר?",
+    "choices": [
+     "כן",
+     "לא"
+    ]
+   },
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "חוֹזֵר"
+   ],
+   "picture": "strips of tiles; Timi claps each tile; a strip that repeats goes to \"repeats\", one that does not to \"does not\"",
+   "status": "waits for the pattern-strip sprites (design-director) to sort them"
+  },
+  {
+   "id": "show.log-a-05",
+   "skill": "LOG-A-05",
+   "band": "A",
+   "purpose": "show",
+   "template": "build_pattern",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "slots": 4,
+    "palette": [
+     "asset:ball_blue",
+     "asset:ball_red"
+    ],
+    "model": [
+     "asset:ball_red",
+     "asset:ball_blue",
+     "asset:ball_red",
+     "asset:ball_blue"
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "cell": 0,
+     "piece": "asset:ball_red",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "cell": 1,
+     "piece": "asset:ball_blue"
+    },
+    {
+     "by": "host",
+     "cell": 2,
+     "piece": "asset:ball_red"
+    },
+    {
+     "by": "child",
+     "cell": 3,
+     "piece": "asset:ball_blue"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_a_05.open",
+     "text": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_a_05.key",
+     "text": "אָדֹם, כָּחֹל, אָדֹם, כָּחֹל.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_a_05.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הָאַחֲרוֹן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "the model row above; Timi copies three cells under it, touching each model cell first; the child lays the last",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.log-a-06",
+   "skill": "LOG-A-06",
+   "band": "A",
+   "purpose": "show",
+   "template": "build_pattern",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "slots": 7,
+    "palette": [
+     "asset:cat",
+     "asset:dog",
+     "asset:duck"
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "cell": 5,
+     "piece": "asset:dog",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "cell": 6,
+     "piece": "asset:cat"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_a_06.open",
+     "text": "מַה בָּא אַחַר כָּךְ?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_a_06.key",
+     "text": "חָתוּל, כֶּלֶב. חָתוּל, כֶּלֶב.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_a_06.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: מָה הַבָּא?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": {
+    "line": "מה בא אחר כך?",
+    "choices": [
+     "כלב",
+     "חתול"
+    ]
+   },
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "cat, dog, cat, dog, cat are given; Timi claps the unit and lays the dog; the child lays the cat",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need) and for the given cells of step 2.2",
+   "note": "the first five cells are given (step 2.2); not written into the scene"
+  },
+  {
+   "id": "show.log-a-07",
+   "skill": "LOG-A-07",
+   "band": "A",
+   "purpose": "show",
+   "template": "build_pattern",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "slots": 6,
+    "palette": [
+     "asset:ball_red",
+     "asset:ball_blue"
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "cell": 3,
+     "piece": "asset:ball_blue",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "cell": 5,
+     "piece": "asset:ball_blue"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_a_07.open",
+     "text": "מִישֶׁהוּ טָעָה בַּסֵּדֶר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_a_07.key",
+     "text": "אָדֹם, כָּחֹל. כָּאן צָרִיךְ כָּחֹל.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_a_07.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: תַּקְּנוּ אֶת הַשֵּׁנִי.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": {
+    "line": "איפה הטעות?",
+    "choices": []
+   },
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "red, blue, red, red, red, red: Timi claps along, stops at the wrong red and swaps it for blue; the child fixes the other",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need) and for the given cells of step 2.2"
+  },
+  {
+   "id": "show.log-a-08",
+   "skill": "LOG-A-08",
+   "band": "A",
+   "purpose": "show",
+   "template": "build_pattern",
+   "representation": "story",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "slots": 3,
+    "palette": [
+     "asset:egg_crack",
+     "asset:chick",
+     "asset:egg"
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "cell": 0,
+     "piece": "asset:egg"
+    },
+    {
+     "by": "host",
+     "cell": 1,
+     "piece": "asset:egg_crack",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "cell": 2,
+     "piece": "asset:chick"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_a_08.open",
+     "text": "מַה קָּרָה קֹדֶם?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_a_08.key",
+     "text": "קֹדֶם בֵּיצָה, וְאָז הִיא נִסְדֶּקֶת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_a_08.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: מַה בַּסּוֹף?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": {
+    "line": "מה קרה קודם?",
+    "choices": []
+   },
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "egg, cracked egg and chick; Timi lays the egg on the start dot, then the crack; the child lays the chick",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.log-a-09",
+   "skill": "LOG-A-09",
+   "band": "A",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:plate",
+      "count": 1,
+      "label": "צַלַּחַת"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:shoe",
+      "count": 1,
+      "label": "נַעַל"
+     },
+     {
+      "id": "b3",
+      "sprite": "asset:lock",
+      "count": 1,
+      "label": "מַנְעוּל"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:spoon",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:sock",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:key",
+      "bin": "b3"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "child",
+     "item": "i3",
+     "bin": "b3"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_a_09.open",
+     "text": "מָה הוֹלֵךְ עִם מַה?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_a_09.key",
+     "text": "כַּף הוֹלֶכֶת עִם צַלַּחַת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_a_09.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַמַּפְתֵּחַ.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "צַלַּחַת",
+    "נַעַל",
+    "מַנְעוּל"
+   ],
+   "picture": "a plate, a shoe and a lock as the bins; the spoon goes by the plate, the sock by the shoe; the child puts the key by the lock",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.log-a-10",
+   "skill": "LOG-A-10",
+   "band": "A",
+   "purpose": "show",
+   "template": "build_pattern",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "slots": 3,
+    "palette": [
+     "asset:ball_size_m",
+     "asset:ball_size_l",
+     "asset:ball_size_s"
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "cell": 0,
+     "piece": "asset:ball_size_s",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "cell": 1,
+     "piece": "asset:ball_size_m"
+    },
+    {
+     "by": "child",
+     "cell": 2,
+     "piece": "asset:ball_size_l"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_a_10.open",
+     "text": "מְסַדְּרִים מֵהַקָּטָן אֶל הַגָּדוֹל.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_a_10.key",
+     "text": "קָטָן, וְאַחַר כָּךְ גָּדוֹל יוֹתֵר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_a_10.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַגָּדוֹל.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "three balls; Timi lays the smallest on the start dot, compares, then the middle one; the child lays the biggest",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.log-b-01",
+   "skill": "LOG-B-01",
+   "band": "B",
+   "purpose": "show",
+   "template": "build_pattern",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "slots": 8,
+    "palette": [
+     "asset:star",
+     "asset:apple",
+     "asset:fish"
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "cell": 6,
+     "piece": "asset:apple",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "cell": 7,
+     "piece": "asset:fish"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_b_01.open",
+     "text": "הַסֵּדֶר אָרֹךְ יוֹתֵר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_b_01.key",
+     "text": "כּוֹכָב, תַּפּוּחַ, דָּג. וְשׁוּב.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_b_01.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: מָה הַבָּא?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": {
+    "line": "מה בא אחר כך?",
+    "choices": []
+   },
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "star, apple, fish, star, apple, fish, star are given; Timi brackets the unit of three and lays the apple; the child the fish",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need) and for the given cells of step 2.2",
+   "note": "given cells (step 2.2)"
+  },
+  {
+   "id": "show.log-b-02",
+   "skill": "LOG-B-02",
+   "band": "B",
+   "purpose": "show",
+   "template": null,
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": null,
+   "steps": [],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_b_02.open",
+     "text": "מָה הַחֵלֶק שֶׁחוֹזֵר?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_b_02.key",
+     "text": "אָדֹם, כָּחֹל, כָּחֹל. זֶה הַחֵלֶק.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_b_02.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: בְּנוּ אֶת הַחֵלֶק.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "a long row; Timi brackets the part that repeats; the child builds that part",
+   "status": "waits for step 2.2c (build_pattern with a model longer than its places), as the exempt list says"
+  },
+  {
+   "id": "show.log-b-04",
+   "skill": "LOG-B-04",
+   "band": "B",
+   "purpose": "show",
+   "template": "build_pattern",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "slots": 4,
+    "palette": [
+     "asset:tower_3",
+     "asset:tower_1",
+     "asset:tower_4",
+     "asset:tower_2"
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "cell": 0,
+     "piece": "asset:tower_1"
+    },
+    {
+     "by": "host",
+     "cell": 1,
+     "piece": "asset:tower_2",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "cell": 2,
+     "piece": "asset:tower_3"
+    },
+    {
+     "by": "child",
+     "cell": 3,
+     "piece": "asset:tower_4"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_b_04.open",
+     "text": "הַמִּגְדָּלִים גְּדֵלִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_b_04.key",
+     "text": "כׇּל פַּעַם קֻבִּיָּה אַחַת יוֹתֵר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_b_04.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַמִּגְדָּל הַבָּא.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": {
+    "line": "כמה קוביות יהיו במגדל הבא?",
+    "choices": []
+   },
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "towers of one, two, three cubes; Timi counts the cubes of each as it lays it; the child lays the tower of four",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.log-b-06",
+   "skill": "LOG-B-06",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:shape_circle_red",
+      "count": 1,
+      "label": "אָדֹם"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:shape_circle_blue",
+      "count": 1,
+      "label": "כָּחֹל"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:shape_square_red",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:shape_triangle_blue",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:shape_triangle_red",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:shape_square_blue",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_b_06.open",
+     "text": "אֵיךְ מִיַּנְתִּי? מִסְתַּכְּלִים עַל הַדֻּגְמָאוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_b_06.key",
+     "text": "לֹא לְפִי הַצּוּרָה. לְפִי הַצֶּבַע.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_b_06.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הָרִבּוּעַ הַכָּחֹל.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": {
+    "line": "איך מיינתי?",
+    "choices": [
+     "לפי הצבע",
+     "לפי הצורה"
+    ]
+   },
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אָדֹם",
+    "כָּחֹל"
+   ],
+   "picture": "two bins with one sample each (a red circle, a blue circle); the square and the triangles go by colour; Timi taps the colour of each card before it drops",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.log-b-08",
+   "skill": "LOG-B-08",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:bin_basket",
+      "count": 1,
+      "label": "הַסַּל"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:bin_grass",
+      "count": 1,
+      "label": "הַדֶּשֶׁא"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:shape_circle_red",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:shape_square_blue",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:shape_triangle_red",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:shape_circle_blue",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_b_08.open",
+     "text": "אִם אָדֹם, אָז לַסַּל.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_b_08.key",
+     "text": "אָדֹם לַסַּל. כׇּל הַשְּׁאָר לַדֶּשֶׁא.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_b_08.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הָעִגּוּל הַכָּחֹל.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "הַסַּל",
+    "הַדֶּשֶׁא"
+   ],
+   "picture": "the rule card \"red to the basket\"; each shape checked against it and placed",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.log-b-09",
+   "skill": "LOG-B-09",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:bin_basket",
+      "count": 1,
+      "label": "הַסַּל"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:bin_grass",
+      "count": 1,
+      "label": "הַדֶּשֶׁא"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:shape_square_blue",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:shape_circle_blue",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:shape_square_red",
+      "bin": "b2"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:shape_triangle_green",
+      "bin": "b1"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b2"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b1"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_b_09.open",
+     "text": "לֹא אָדֹם, וְגַם לֹא עִגּוּל.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_b_09.key",
+     "text": "בּוֹדְקִים פַּעֲמַיִם: צֶבַע, וְאָז צוּרָה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_b_09.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַמְּשֻׁלָּשׁ הַיָּרֹק.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "הַסַּל",
+    "הַדֶּשֶׁא"
+   ],
+   "picture": "two crossed clue cards (not red, not a circle); Timi checks each shape twice, a tick or a cross under each clue",
+   "status": "buildable on the sort player of today"
+  },
+  {
+   "id": "show.log-b-11",
+   "skill": "LOG-B-11",
+   "band": "B",
+   "purpose": "show",
+   "template": "build_pattern",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "slots": 3,
+    "palette": [
+     "asset:tower_3",
+     "asset:tower_1",
+     "asset:tower_2"
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "cell": 0,
+     "piece": "asset:tower_1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "cell": 1,
+     "piece": "asset:tower_2"
+    },
+    {
+     "by": "child",
+     "cell": 2,
+     "piece": "asset:tower_3"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.timi.show.log_b_11.open",
+     "text": "מֵהַנָּמוּךְ אֶל הַגָּבוֹהַּ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.timi.show.log_b_11.key",
+     "text": "כׇּל מִגְדָּל גָּבוֹהַּ מֵהַקּוֹדֵם.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.timi.show.log_b_11.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַגָּבוֹהַּ.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [],
+   "picture": "three towers; Timi lays the lowest on the start dot and stands the next beside it to compare; the child lays the tallest",
+   "status": "waits for the Show and lead player of build_pattern (step 2.1, the templates the pilot did not need)"
+  }
+ ],
+ "hostLines": [
+  {
+   "role": "together_lead",
+   "template": "sort_drag",
+   "vo": "vo:host.timi.together.sort",
+   "text": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "build_pattern",
+   "vo": "vo:host.timi.together.build",
+   "text": "אוֹמְרִים אֶת הַסֵּדֶר בְּקוֹל.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "tap_answer",
+   "vo": "vo:host.timi.together.tap",
+   "text": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.timi.handover.1",
+   "text": "עַכְשָׁו הַחִידָה שֶׁלָּכֶם.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.timi.handover.2",
+   "text": "יֹפִי. עַכְשָׁו תּוֹרְכֶם.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.timi.handover.3",
+   "text": "חוֹשְׁבִים לְאַט. עַכְשָׁו אַתֶּם.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "show_me",
+   "vo": "vo:host.timi.showme.1",
+   "text": "בּוֹאוּ נִרְאֶה שׁוּב, לְאַט.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "show_me",
+   "vo": "vo:host.timi.showme.2",
+   "text": "נִפְתֹּר אֶת זֶה עוֹד פַּעַם יַחַד.",
+   "review": "needs-editor"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "same-and-different",
+   "band": "A",
+   "skills": [
+    "LOG-A-01",
+    "LOG-A-02"
+   ],
+   "recall": [],
+   "show": "show.log-a-01",
+   "secondShow": {
+    "id": "show.log-a-02",
+    "kind": "reminder",
+    "before": "the first item of LOG-A-02"
+   },
+   "together": [
+    {
+     "id": "log.same.star",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "log.same.cat",
+    "log.same.duck",
+    "log.odd.colour",
+    "log.odd.animal",
+    "log.odd.thing"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "sorting-groups",
+   "band": "A",
+   "skills": [
+    "LOG-A-03"
+   ],
+   "recall": [
+    "b15.loga01.3"
+   ],
+   "show": "show.log-a-03",
+   "together": [
+    {
+     "id": "log.sort.colour",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "log.sort.balloon",
+    "log.sort.animal"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "patterns",
+   "band": "A",
+   "skills": [
+    "LOG-A-04",
+    "LOG-A-06"
+   ],
+   "recall": [
+    "b15.loga01.3"
+   ],
+   "show": "show.log-a-04",
+   "secondShow": {
+    "id": "show.log-a-06",
+    "kind": "reminder",
+    "before": "the first item of LOG-A-06"
+   },
+   "together": [
+    {
+     "id": "log.pat.yes.colours",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "log.pat.no.mixed",
+    "log.pat.yes.animals",
+    "log.next.colours",
+    "log.next.animals"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "more-patterns",
+   "band": "A",
+   "skills": [
+    "LOG-A-06",
+    "LOG-A-07"
+   ],
+   "recall": [
+    "b15.loga04.1"
+   ],
+   "show": "show.log-a-06",
+   "secondShow": {
+    "id": "show.log-a-07",
+    "kind": "reminder",
+    "before": "the first item of LOG-A-07"
+   },
+   "together": [
+    {
+     "id": "log.next.balloons",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "log.next.stars",
+    "log.fix.colours",
+    "log.fix.animals",
+    "log.fix.balloons"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "first-then-last",
+   "band": "A",
+   "skills": [
+    "LOG-A-08",
+    "LOG-A-09"
+   ],
+   "recall": [
+    "b15.numa13.1"
+   ],
+   "show": "show.log-a-08",
+   "secondShow": {
+    "id": "show.log-a-09",
+    "kind": "reminder",
+    "before": "the first item of LOG-A-09"
+   },
+   "together": [
+    {
+     "id": "log.story.plant.first",
+     "lead": 0,
+     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "log.story.egg.then",
+    "log.pair.sock",
+    "log.pair.key",
+    "log.story.plant.last",
+    "log.pair.brush"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "by-size",
+   "band": "A",
+   "skills": [
+    "LOG-A-10"
+   ],
+   "recall": [
+    "b15.loga01.3"
+   ],
+   "show": "show.log-a-10",
+   "together": [
+    {
+     "id": "log.size.last",
+     "lead": 0,
+     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "log.size.middle",
+    "log.size.middle.down"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "sort-by-hand",
+   "band": "A",
+   "skills": [
+    "LOG-A-03"
+   ],
+   "recall": [
+    "b15.loga01.3"
+   ],
+   "show": "show.log-a-03",
+   "together": [
+    {
+     "id": "log.sortdrag.colour",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "log.sortdrag.animals",
+    "log.sortdrag.three",
+    "b15.loga03.1"
+   ],
+   "use": [
+    "b15.loga03.2"
+   ],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "copy-patterns",
+   "band": "A",
+   "skills": [
+    "LOG-A-05"
+   ],
+   "recall": [
+    "b15.loga04.1"
+   ],
+   "show": "show.log-a-05",
+   "together": [
+    {
+     "id": "log.copy.colours",
+     "lead": 0,
+     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "log.copy.animals",
+    "log.copy.balloons",
+    "log.copy.three",
+    "log.copy.pets",
+    "log.copy.green",
+    "b15.loga05.1"
+   ],
+   "use": [
+    "b15.loga05.2"
+   ],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "same-and-different-again",
+   "band": "A",
+   "skills": [
+    "LOG-A-01",
+    "LOG-A-02"
+   ],
+   "recall": [],
+   "show": "show.log-a-01",
+   "secondShow": {
+    "id": "show.log-a-02",
+    "kind": "reminder",
+    "before": "the first item of LOG-A-02"
+   },
+   "together": [
+    {
+     "id": "log.same.apple",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "log.same.bird",
+    "log.same.balloon",
+    "log.odd.ball",
+    "log.odd.fruit",
+    "b15.loga01.1",
+    "b15.loga01.2",
+    "log.odd.bird"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "patterns-again",
+   "band": "A",
+   "skills": [
+    "LOG-A-04",
+    "LOG-A-06"
+   ],
+   "recall": [
+    "b15.loga01.3"
+   ],
+   "show": "show.log-a-04",
+   "secondShow": {
+    "id": "show.log-a-06",
+    "kind": "reminder",
+    "before": "the first item of LOG-A-06"
+   },
+   "together": [
+    {
+     "id": "log.pat.yes.green",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "log.pat.no.things",
+    "log.pat.yes.fish",
+    "log.next.pets",
+    "log.next.balls",
+    "b15.loga04.1",
+    "b15.loga04.2"
+   ],
+   "use": [
+    "b15.loga06.1"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "fix-patterns-again",
+   "band": "A",
+   "skills": [
+    "LOG-A-07"
+   ],
+   "recall": [
+    "b15.loga06.1"
+   ],
+   "show": "show.log-a-07",
+   "together": [
+    {
+     "id": "log.fix.balls",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "log.fix.things",
+    "log.fix.pets",
+    "b15.loga07.1"
+   ],
+   "use": [
+    "b15.loga07.2"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "stories-and-pairs-again",
+   "band": "A",
+   "skills": [
+    "LOG-A-08",
+    "LOG-A-09"
+   ],
+   "recall": [
+    "b15.numa13.1"
+   ],
+   "show": "show.log-a-08",
+   "secondShow": {
+    "id": "show.log-a-09",
+    "kind": "reminder",
+    "before": "the first item of LOG-A-09"
+   },
+   "together": [
+    {
+     "id": "log.story.weather.last",
+     "lead": 0,
+     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "log.story.egg.first",
+    "log.pair.bowl",
+    "log.pair.shoe",
+    "log.story.plant.mid",
+    "log.pair.pencil",
+    "b15.loga08.1",
+    "b15.loga08.2"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "by-size-again",
+   "band": "A",
+   "skills": [
+    "LOG-A-10"
+   ],
+   "recall": [
+    "b15.loga01.3"
+   ],
+   "show": "show.log-a-10",
+   "together": [
+    {
+     "id": "log.size.stars",
+     "lead": 0,
+     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "log.size.apples.last",
+    "log.size.fish.first",
+    "b15.loga10.1"
+   ],
+   "use": [
+    "b15.loga10.2"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "same-and-different-again-1-b15",
+   "band": "A",
+   "skills": [
+    "LOG-A-01",
+    "LOG-A-02"
+   ],
+   "recall": [],
+   "show": "show.log-a-01",
+   "secondShow": {
+    "id": "show.log-a-02",
+    "kind": "reminder",
+    "before": "the first item of LOG-A-02"
+   },
+   "together": [
+    {
+     "id": "b15.loga01.3",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b15.loga01.4",
+    "b15.loga01.5",
+    "b15.loga01.6",
+    "b15.loga02.1"
+   ],
+   "use": [
+    "b15.loga02.2"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "patterns-again-1-b15",
+   "band": "A",
+   "skills": [
+    "LOG-A-04",
+    "LOG-A-06"
+   ],
+   "recall": [
+    "b15.loga01.3"
+   ],
+   "show": "show.log-a-04",
+   "secondShow": {
+    "id": "show.log-a-06",
+    "kind": "reminder",
+    "before": "the first item of LOG-A-06"
+   },
+   "together": [],
+   "alone": [
+    "b15.loga06.2"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "stories-and-pairs-again-1-b15",
+   "band": "A",
+   "skills": [
+    "LOG-A-08",
+    "LOG-A-09"
+   ],
+   "recall": [
+    "b15.numa13.1"
+   ],
+   "show": "show.log-a-08",
+   "secondShow": {
+    "id": "show.log-a-09",
+    "kind": "reminder",
+    "before": "the first item of LOG-A-09"
+   },
+   "together": [
+    {
+     "id": "b15.loga09.1",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b15.loga09.2"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "longer-patterns",
+   "band": "B",
+   "skills": [
+    "LOG-B-01"
+   ],
+   "recall": [
+    "b15.loga06.1"
+   ],
+   "show": "show.log-b-01",
+   "together": [
+    {
+     "id": "b.logb01.1",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.logb01.2",
+    "b.logb01.3",
+    "b.logb01.4"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "longer-patterns-more",
+   "band": "B",
+   "skills": [
+    "LOG-B-01"
+   ],
+   "recall": [
+    "b15.loga06.1"
+   ],
+   "show": "show.log-b-01",
+   "together": [
+    {
+     "id": "b.logb01.5",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.logb01.6",
+    "b.logb01.7",
+    "b.logb01.8",
+    "b.logb01.9"
+   ],
+   "use": [
+    "b.logb01.10"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "broken-pattern",
+   "band": "B",
+   "skills": [
+    "LOG-B-02"
+   ],
+   "recall": [
+    "b.logb01.1"
+   ],
+   "show": "show.log-b-02",
+   "together": [
+    {
+     "id": "b.logb02.1",
+     "lead": 0,
+     "note": "spot_error has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.logb02.2",
+    "b.logb02.3",
+    "b.logb02.4",
+    "b.logb02.5"
+   ],
+   "use": [
+    "b.logb02.6"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "growing-towers",
+   "band": "B",
+   "skills": [
+    "LOG-B-04"
+   ],
+   "recall": [
+    "b.logb01.1"
+   ],
+   "show": "show.log-b-04",
+   "together": [
+    {
+     "id": "b.logb04.1",
+     "lead": 0,
+     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.logb04.3",
+    "b.logb04.5",
+    "b.logb04.7",
+    "b.logb04.2",
+    "b.logb04.4",
+    "b.logb04.6"
+   ],
+   "use": [
+    "b.logb04.8"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "find-the-rule",
+   "band": "B",
+   "skills": [
+    "LOG-B-06"
+   ],
+   "recall": [
+    "log.sort.animal"
+   ],
+   "show": "show.log-b-06",
+   "together": [
+    {
+     "id": "b.logb06.1",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.logb06.3",
+    "b.logb06.5",
+    "b.logb06.2",
+    "b.logb06.4",
+    "b.logb06.6",
+    "b.logb06.7"
+   ],
+   "use": [
+    "b.logb06.8"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "if-then",
+   "band": "B",
+   "skills": [
+    "LOG-B-08"
+   ],
+   "recall": [
+    "b.logb06.2"
+   ],
+   "show": "show.log-b-08",
+   "together": [
+    {
+     "id": "b.logb08.1",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.logb08.2",
+    "b.logb08.3",
+    "b.logb08.4",
+    "b.logb08.5"
+   ],
+   "use": [
+    "b.logb08.6"
+   ],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "not-this-not-that",
+   "band": "B",
+   "skills": [
+    "LOG-B-09"
+   ],
+   "recall": [
+    "b.logb06.2"
+   ],
+   "show": "show.log-b-09",
+   "together": [
+    {
+     "id": "b.logb09.1",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "b.logb09.4",
+    "b.logb09.5",
+    "b.logb09.2",
+    "b.logb09.3",
+    "b.logb09.6",
+    "b.logb09.7"
+   ],
+   "use": [
+    "b.logb09.8"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "line-up-five",
+   "band": "B",
+   "skills": [
+    "LOG-B-11"
+   ],
+   "recall": [
+    "b15.loga10.1"
+   ],
+   "show": "show.log-b-11",
+   "together": [
+    {
+     "id": "b.logb11.1",
+     "lead": 0,
+     "note": "build_pattern has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.logb11.2",
+    "b.logb11.3",
+    "b.logb11.4"
+   ],
+   "use": [
+    "b.logb11.5"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  }
+ ]
+}

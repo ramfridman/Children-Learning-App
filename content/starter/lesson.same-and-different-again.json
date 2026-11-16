@@ -20,9 +20,9 @@
     "log.same.balloon",
     "log.odd.ball",
     "log.odd.fruit",
-    "log.odd.bird",
     "b15.loga01.1",
-    "b15.loga01.2"
+    "b15.loga01.2",
+    "log.odd.bird"
   ],
   "estimatedMinutes": 4,
   "sequence": 9,
@@ -34,5 +34,45 @@
         "v": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַזֵּהֶה וְאֶת הַשּׁוֹנֶה."
       }
     ]
+  },
+  "parts": {
+    "show": "show.log-a-01",
+    "secondShow": {
+      "id": "show.log-a-02",
+      "before": "log.odd.ball"
+    },
+    "together": [
+      {
+        "id": "log.same.apple",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.timi.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "log.same.bird",
+      "log.same.balloon",
+      "log.odd.ball",
+      "log.odd.fruit",
+      "b15.loga01.1",
+      "b15.loga01.2",
+      "log.odd.bird"
+    ],
+    "handover": {
+      "vo": "vo:host.timi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חוֹשְׁבִים לְאַט. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "c.mathc02.1",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
-  "templateVersion": "1.1",
+  "templateVersion": "1.4",
   "domain": "math",
   "band": "C",
   "skills": [
@@ -16,7 +16,7 @@
   "purpose": "practice",
   "checkType": "reverse",
   "representation": "symbolic",
-  "variantGroup": "pick",
+  "variantGroup": "number",
   "difficulty": {
     "authored": 0.37
   },
@@ -32,7 +32,6 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
     "row": [
       "n:15",
       "op:-",
@@ -42,29 +41,19 @@
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
+    "type": "number",
+    "value": 7,
+    "expected": [
       {
-        "id": "o1",
-        "numeral": 7,
-        "label": "שֶׁבַע"
-      },
-      {
-        "id": "o2",
-        "numeral": 23,
-        "label": "עֶשְׂרִים וְשָׁלוֹשׁ",
-        "misconception": "M-OP-SWAP"
-      },
-      {
-        "id": "o3",
-        "numeral": 15,
-        "label": "חֲמֵשׁ עֶשְׂרֵה",
+        "value": 15,
         "misconception": "M-EQ-OPER"
+      },
+      {
+        "value": 23,
+        "misconception": "M-OP-SWAP"
       }
     ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "rules": []
   },
   "voiceAnswer": false,
   "feedback": {
@@ -138,7 +127,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "חִבּוּר וְחִסּוּר הֵם מִשְׁפָּחָה: שְׁמוֹנֶה וְעוֹד כַּמָּה שָׁוֶה חֲמֵשׁ עֶשְׂרֵה?"
+          "v": "חִבּוּר וְחִסּוּר הֵם מִשְׁפָּחָה. אֵיזֶה מִסְפָּר עוֹשֶׂה אֶת הַתַּרְגִּיל נָכוֹן?"
         }
       ]
     },
@@ -149,7 +138,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "שְׁמוֹנֶה וְעוֹד שֶׁבַע שָׁוֶה חֲמֵשׁ עֶשְׂרֵה, אָז חֲמֵשׁ עֶשְׂרֵה פָּחוֹת שֶׁבַע שָׁוֶה שְׁמוֹנֶה."
+          "v": "חֲמֵשׁ עֶשְׂרֵה פָּחוֹת שֶׁבַע שָׁוֶה שְׁמוֹנֶה. כּוֹתְבִים שֶׁבַע."
         }
       ]
     }
@@ -165,7 +154,7 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child types the number",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {

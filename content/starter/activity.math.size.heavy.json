@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "math.size.heavy",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "balance",
+  "templateVersion": "1.0",
   "domain": "math",
   "band": "A",
   "skills": [
@@ -16,7 +16,7 @@
   "purpose": "practice",
   "checkType": "practice",
   "representation": "pictorial",
-  "variantGroup": "pick",
+  "variantGroup": "scale",
   "difficulty": {
     "authored": 0.2
   },
@@ -25,32 +25,37 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה כָּבֵד?"
+        "v": "אֵיזֶה צַד כָּבֵד יוֹתֵר? אוֹ שֶׁהֵם שָׁוִים?"
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "left": {
+      "groups": [
+        {
+          "sprite": "asset:feather",
+          "count": 1,
+          "weight": 1
+        }
+      ]
+    },
+    "right": {
+      "groups": [
+        {
+          "sprite": "asset:stone",
+          "count": 1,
+          "weight": 4
+        }
+      ]
+    }
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:feather",
-        "label": "נוֹצָה"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:stone",
-        "label": "אֶבֶן"
-      }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "scale",
+    "mode": "compare",
+    "result": "right",
+    "misconception": "M-MEAS-BIG"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -59,11 +64,21 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! אֶבֶן כְּבֵדָה."
+          "v": "כֵּן! הַצַּד הַזֶּה כָּבֵד יוֹתֵר."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-MEAS-BIG",
+        "vo": "vo:fb.meas_big",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה נִרְאֶה גָּדוֹל, אֲבָל מַה כָּבֵד יוֹתֵר? בּוֹאוּ נִשְׁקֹל וְנִרְאֶה."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -100,11 +115,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.scale.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
         }
       ]
     },
@@ -115,7 +130,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אֶבֶן כְּבֵדָה, וְנוֹצָה קַלָּה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הָאֶבֶן."
+          "v": "הַצַּד הַכָּבֵד יוֹרֵד לְמַטָּה. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -131,10 +146,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child reads the scale",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה כָּבֵד?"
+    "altText": "אֵיזֶה צַד כָּבֵד יוֹתֵר? אוֹ שֶׁהֵם שָׁוִים?"
   }
 }

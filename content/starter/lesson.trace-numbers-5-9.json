@@ -30,5 +30,41 @@
         "v": "יָפֶה מְאֹד! עוֹד מִסְפָּרִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-07",
+    "recall": [
+      "b15.numa08.1"
+    ],
+    "together": [
+      {
+        "id": "x.numb07.6",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.trace",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֲנִי מַתְחִיל. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "x.numb07.7",
+      "x.numb07.8",
+      "x.numb07.9",
+      "x.numb07.10"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד."
+        }
+      ]
+    }
   }
 }

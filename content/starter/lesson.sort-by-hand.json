@@ -30,5 +30,43 @@
         "v": "יָפֶה מְאֹד! מִיַּנְתֶּם בְּעַצְמְכֶם."
       }
     ]
+  },
+  "parts": {
+    "show": "show.log-a-03",
+    "recall": [
+      "b15.loga01.3"
+    ],
+    "together": [
+      {
+        "id": "log.sortdrag.colour",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.timi.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "log.sortdrag.animals",
+      "log.sortdrag.three",
+      "b15.loga03.1"
+    ],
+    "use": [
+      "b15.loga03.2"
+    ],
+    "handover": {
+      "vo": "vo:host.timi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו הַחִידָה שֶׁלָּכֶם."
+        }
+      ]
+    }
   }
 }

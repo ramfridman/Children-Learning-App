@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b15.matha07.1",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "math",
   "band": "A",
   "skills": [
@@ -14,9 +14,9 @@
     }
   ],
   "purpose": "practice",
-  "checkType": "transfer",
-  "representation": "pictorial",
-  "variantGroup": "compare-more",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.4
   },
@@ -25,44 +25,64 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה יֵשׁ יוֹתֵר אֶפְרוֹחִים?"
+        "v": "שָׂמִים כׇּל אֶחָד עִם הַדּוֹמִים לוֹ."
       }
     ],
     "replayButton": true
   },
   "scene": {
-    "background": "asset:meadow"
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "background": "asset:meadow",
+    "bins": [
       {
-        "id": "o1",
-        "set": {
-          "sprite": "asset:chick",
-          "count": 2,
-          "arrangement": "line",
-          "seed": 3,
-          "scale": 1.5
-        },
-        "label": "שְׁנֵי אֶפְרוֹחִים",
-        "misconception": "M-CNT-SIZE"
+        "id": "b1",
+        "sprite": "asset:apple",
+        "count": 2,
+        "label": "תַּפּוּחִים"
       },
       {
-        "id": "o2",
-        "set": {
-          "sprite": "asset:chick",
-          "count": 4,
-          "arrangement": "line",
-          "seed": 6,
-          "scale": 1
-        },
-        "label": "אַרְבָּעָה אֶפְרוֹחִים"
+        "id": "b2",
+        "sprite": "asset:fish",
+        "count": 2,
+        "label": "דָּגִים"
       }
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:fish",
+        "bin": "b2"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:apple",
+        "bin": "b1"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:fish",
+        "bin": "b2"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:fish",
+        "bin": "b2"
+      },
+      {
+        "id": "i5",
+        "sprite": "asset:apple",
+        "bin": "b1"
+      },
+      {
+        "id": "i6",
+        "sprite": "asset:fish",
+        "bin": "b2"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-SORT-SHIFT"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -71,18 +91,18 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! כָּאן יֵשׁ יוֹתֵר אֶפְרוֹחִים."
+          "v": "כֵּן! יֵשׁ יוֹתֵר דָּגִים."
         }
       ]
     },
     "incorrect": [
       {
-        "when": "misconception:M-CNT-SIZE",
-        "vo": "vo:fb.size.big",
+        "when": "misconception:M-SORT-SHIFT",
+        "vo": "vo:fb.sort_shift.kind",
         "caption": [
           {
             "t": "he",
-            "v": "הֵם גְּדוֹלִים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר."
+            "v": "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
           }
         ]
       },
@@ -111,22 +131,22 @@
     {
       "level": 1,
       "action": "replay_prompt_slow",
-      "vo": "vo:b15.matha07.1.h1",
+      "vo": "vo:hint.pick.h1",
       "caption": [
         {
           "t": "he",
-          "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים."
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
         }
       ]
     },
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:b15.matha07.1.h2",
+      "vo": "vo:hint.sort.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה."
+          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
         }
       ]
     },
@@ -137,7 +157,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "בְּצַד אֶחָד יֵשׁ אַרְבָּעָה אֶפְרוֹחִים, וּבַצַּד הָאַחֵר שְׁנֵי אֶפְרוֹחִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה."
+          "v": "נַעֲבִיר כׇּל תְּמוּנָה אֶל הַקְּבוּצָה הַמַּתְאִימָה. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -153,10 +173,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child compares by number, not by how big or spread out the things look",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה יֵשׁ יוֹתֵר אֶפְרוֹחִים?"
+    "altText": "שָׂמִים כׇּל אֶחָד עִם הַדּוֹמִים לוֹ."
   }
 }

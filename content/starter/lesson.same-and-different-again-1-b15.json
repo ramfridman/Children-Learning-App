@@ -32,5 +32,45 @@
         "v": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַזֵּהֶה וְאֶת הַשּׁוֹנֶה."
       }
     ]
+  },
+  "parts": {
+    "show": "show.log-a-01",
+    "secondShow": {
+      "id": "show.log-a-02",
+      "before": "b15.loga02.1"
+    },
+    "together": [
+      {
+        "id": "b15.loga01.3",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.timi.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b15.loga01.4",
+      "b15.loga01.5",
+      "b15.loga01.6",
+      "b15.loga02.1"
+    ],
+    "use": [
+      "b15.loga02.2"
+    ],
+    "handover": {
+      "vo": "vo:host.timi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "c.mathc02.6",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
-  "templateVersion": "1.1",
+  "templateVersion": "1.4",
   "domain": "math",
   "band": "C",
   "skills": [
@@ -16,7 +16,7 @@
   "purpose": "practice",
   "checkType": "reverse",
   "representation": "symbolic",
-  "variantGroup": "pick",
+  "variantGroup": "number",
   "difficulty": {
     "authored": 0.72
   },
@@ -32,7 +32,6 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
     "row": [
       "?",
       "op:-",
@@ -42,29 +41,19 @@
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
+    "type": "number",
+    "value": 15,
+    "expected": [
       {
-        "id": "o1",
-        "numeral": 15,
-        "label": "חֲמֵשׁ עֶשְׂרֵה"
-      },
-      {
-        "id": "o2",
-        "numeral": 3,
-        "label": "שָׁלוֹשׁ",
+        "value": 3,
         "misconception": "M-OP-SWAP"
       },
       {
-        "id": "o3",
-        "numeral": 9,
-        "label": "תֵּשַׁע",
+        "value": 9,
         "misconception": "M-EQ-OPER"
       }
     ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "rules": []
   },
   "voiceAnswer": false,
   "feedback": {
@@ -134,11 +123,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:c.mathc02.6.h2",
+      "vo": "vo:c.mathc02.1.h2",
       "caption": [
         {
           "t": "he",
-          "v": "מָה הָיָה לִפְנֵי שֶׁהוֹרַדְנוּ? מְחַבְּרִים אֶת מַה שֶּׁנִּשְׁאַר וְאֶת מַה שֶּׁהוֹרַדְנוּ."
+          "v": "חִבּוּר וְחִסּוּר הֵם מִשְׁפָּחָה. אֵיזֶה מִסְפָּר עוֹשֶׂה אֶת הַתַּרְגִּיל נָכוֹן?"
         }
       ]
     },
@@ -149,7 +138,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "תֵּשַׁע וְעוֹד שֵׁשׁ שָׁוֶה חֲמֵשׁ עֶשְׂרֵה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חֲמֵשׁ עֶשְׂרֵה."
+          "v": "חֲמֵשׁ עֶשְׂרֵה פָּחוֹת שֵׁשׁ שָׁוֶה תֵּשַׁע. כּוֹתְבִים חֲמֵשׁ עֶשְׂרֵה."
         }
       ]
     }
@@ -165,7 +154,7 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child types the number",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {

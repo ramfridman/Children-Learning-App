@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "c.numb06.5",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "number_line",
+  "templateVersion": "1.0",
   "domain": "numbers",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "symbolic",
-  "variantGroup": "pick",
+  "representation": "pictorial",
+  "variantGroup": "numline",
   "difficulty": {
     "authored": 0.65
   },
@@ -25,39 +25,34 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה הַמִּסְפָּר חָמֵשׁ?"
+        "v": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל חָמֵשׁ. נוֹגְעִים בַּמָּקוֹם."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "numeral": 2,
-        "label": "שְׁתַּיִם",
-        "misconception": "M-NUM-REV"
-      },
-      {
-        "id": "o2",
-        "numeral": 5,
-        "label": "חָמֵשׁ"
-      },
-      {
-        "id": "o3",
-        "numeral": 4,
-        "label": "אַרְבַּע",
-        "misconception": "M-CNT-SEQ"
-      }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "line",
+    "mode": "place",
+    "target": 5
   },
   "voiceAnswer": false,
   "feedback": {
@@ -66,31 +61,11 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה חָמֵשׁ."
+          "v": "חָמֵשׁ! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן."
         }
       ]
     },
     "incorrect": [
-      {
-        "when": "misconception:M-CNT-SEQ",
-        "vo": "vo:fb.seq",
-        "caption": [
-          {
-            "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר."
-          }
-        ]
-      },
-      {
-        "when": "misconception:M-NUM-REV",
-        "vo": "vo:fb.num_rev_digit",
-        "caption": [
-          {
-            "t": "he",
-            "v": "יֵשׁ מִסְפָּרִים שֶׁנִּרְאִים דּוֹמִים כְּשֶׁהוֹפְכִים אוֹתָם. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַצּוּרָה."
-          }
-        ]
-      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -127,11 +102,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:c.numb06.1.h2",
+      "vo": "vo:hint.line.h2",
       "caption": [
         {
           "t": "he",
-          "v": "הַמִּסְפָּרִים הָאֵלֶּה דּוֹמִים. נִסְתַּכֵּל עַל כׇּל אֶחָד לְאַט, וְנַעֲבֹר עִם הָאֶצְבַּע עַל הַצּוּרָה שֶׁלּוֹ."
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
         }
       ]
     },
@@ -142,7 +117,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הִנֵּה הַמִּסְפָּר חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חָמֵשׁ."
+          "v": "מַתְחִילִים מֵאֶפֶס וְסוֹפְרִים: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -158,10 +133,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child finds the number on the line",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה הַמִּסְפָּר חָמֵשׁ?"
+    "altText": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל חָמֵשׁ. נוֹגְעִים בַּמָּקוֹם."
   }
 }

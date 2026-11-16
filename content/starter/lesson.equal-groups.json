@@ -17,10 +17,10 @@
     "b.mathb10.1",
     "b.mathb10.2",
     "b.mathb10.3",
+    "b.mathb10.7",
     "b.mathb10.4",
     "b.mathb10.5",
     "b.mathb10.6",
-    "b.mathb10.7",
     "b.mathb10.8"
   ],
   "estimatedMinutes": 5,
@@ -33,5 +33,44 @@
         "v": "כׇּל הַכָּבוֹד! בְּכׇל צַלַּחַת אוֹתוֹ מִסְפָּר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.math-b-10",
+    "recall": [
+      "b15.matha03.1"
+    ],
+    "together": [
+      {
+        "id": "b.mathb10.1",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.pnina.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֲנִי שָׂמָה אֶת הָרִאשׁוֹן. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.mathb10.2",
+      "b.mathb10.3",
+      "b.mathb10.7",
+      "b.mathb10.4",
+      "b.mathb10.5",
+      "b.mathb10.6",
+      "b.mathb10.8"
+    ],
+    "handover": {
+      "vo": "vo:host.pnina.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

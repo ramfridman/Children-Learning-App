@@ -14,11 +14,11 @@
     "NUM-B-07"
   ],
   "items": [
-    "x.numb07.16",
     "x.numb07.17",
     "x.numb07.18",
     "x.numb07.19",
-    "x.numb07.20"
+    "x.numb07.20",
+    "x.numb07.16"
   ],
   "estimatedMinutes": 5,
   "sequence": 63,
@@ -30,5 +30,43 @@
         "v": "מְצֻיָּן! הַמִּסְפָּרִים בַּמָּקוֹם."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-07",
+    "recall": [
+      "b15.numa08.1"
+    ],
+    "together": [
+      {
+        "id": "x.numb07.17",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.trace",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֲנִי מַתְחִיל. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "x.numb07.18",
+      "x.numb07.19",
+      "x.numb07.20"
+    ],
+    "use": [
+      "x.numb07.16"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

@@ -158,7 +158,9 @@
     }
   },
   "tagFeedback": {
-    "M-SHARE-UNEQ": "בּוֹאוּ נַחֲלֹק אֶחָד אֶחָד, לְכׇל חָבֵר לְפִי הַתּוֹר."
+    "M-SHARE-UNEQ": "בּוֹאוּ נַחֲלֹק אֶחָד אֶחָד, לְכׇל חָבֵר לְפִי הַתּוֹר.",
+    "M-MEAS-BIG": "זֶה נִרְאֶה גָּדוֹל, אֲבָל מַה כָּבֵד יוֹתֵר? בּוֹאוּ נִשְׁקֹל וְנִרְאֶה.",
+    "M-SEQ-CAUSE": "בּוֹאוּ נַחְשֹׁב: מַה קּוֹרֶה קֹדֶם, וּמָה אַחַר כָּךְ?"
   },
   "misconceptions": [
     {
@@ -457,32 +459,82 @@
       }
     },
     {
-      "kind": "pick",
+      "kind": "sort",
       "id": "math.size.big",
       "skill": "MATH-A-04",
-      "prompt": "אֵיזֶה כַּדּוּר גָּדוֹל?",
-      "options": [
-        "ball_red*1@0.6",
-        "ball_red*1@1.5"
-      ],
-      "correct": "ball_red*1@1.5",
       "difficulty": 0.1,
-      "correct_text": "כֵּן! זֶה הַכַּדּוּר הַגָּדוֹל.",
-      "h3": "הַכַּדּוּר הַגָּדוֹל תּוֹפֵס יוֹתֵר מָקוֹם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+      "rule": "size",
+      "check": "practice",
+      "prompt": "מְמַיְּנִים: גְּדוֹלִים לְכָאן, וּקְטַנִּים לְכָאן.",
+      "bins": [
+        {
+          "sprite": "ball_size_l",
+          "label": "גְּדוֹלִים"
+        },
+        {
+          "sprite": "ball_size_s",
+          "label": "קְטַנִּים"
+        }
+      ],
+      "items": [
+        [
+          "ball_size_l",
+          1
+        ],
+        [
+          "star_size_s",
+          2
+        ],
+        [
+          "fish_size_l",
+          1
+        ],
+        [
+          "apple_size_s",
+          2
+        ]
+      ],
+      "h3": "הַגְּדוֹלִים עִם הַגְּדוֹלִים, וְהַקְּטַנִּים עִם הַקְּטַנִּים. עַכְשָׁו תּוֹרְכֶם.",
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "sort",
       "id": "math.size.small",
       "skill": "MATH-A-04",
-      "prompt": "אֵיזֶה כַּדּוּר קָטָן?",
-      "options": [
-        "ball_red*1@1.5",
-        "ball_red*1@0.6"
-      ],
-      "correct": "ball_red*1@0.6",
       "difficulty": 0.1,
-      "correct_text": "כֵּן! זֶה הַכַּדּוּר הַקָּטָן.",
-      "h3": "הַכַּדּוּר הַקָּטָן תּוֹפֵס פָּחוֹת מָקוֹם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+      "rule": "size",
+      "check": "practice",
+      "prompt": "מְמַיְּנִים: גְּדוֹלִים לְכָאן, וּקְטַנִּים לְכָאן.",
+      "bins": [
+        {
+          "sprite": "apple_size_l",
+          "label": "גְּדוֹלִים"
+        },
+        {
+          "sprite": "apple_size_s",
+          "label": "קְטַנִּים"
+        }
+      ],
+      "items": [
+        [
+          "star_size_l",
+          1
+        ],
+        [
+          "apple_size_s",
+          2
+        ],
+        [
+          "fish_size_s",
+          2
+        ],
+        [
+          "ball_size_l",
+          1
+        ]
+      ],
+      "h3": "הַגְּדוֹלִים עִם הַגְּדוֹלִים, וְהַקְּטַנִּים עִם הַקְּטַנִּים. עַכְשָׁו תּוֹרְכֶם.",
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -513,32 +565,58 @@
       "h3": "הַמַּקֵּל הַקָּצָר מַגִּיעַ פָּחוֹת רָחוֹק. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
     },
     {
-      "kind": "pick",
+      "kind": "scale",
       "id": "math.size.heavy",
       "skill": "MATH-A-04",
-      "prompt": "מַה כָּבֵד?",
-      "options": [
-        "feather",
-        "stone"
-      ],
-      "correct": "stone",
       "difficulty": 0.2,
-      "correct_text": "כֵּן! אֶבֶן כְּבֵדָה.",
-      "h3": "אֶבֶן כְּבֵדָה, וְנוֹצָה קַלָּה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הָאֶבֶן."
+      "mode": "compare",
+      "left": [
+        [
+          "feather",
+          1,
+          1
+        ]
+      ],
+      "right": [
+        [
+          "stone",
+          1,
+          4
+        ]
+      ],
+      "result": "right",
+      "tag": "M-MEAS-BIG",
+      "prompt": "אֵיזֶה צַד כָּבֵד יוֹתֵר? אוֹ שֶׁהֵם שָׁוִים?",
+      "h3": "הַצַּד הַכָּבֵד יוֹרֵד לְמַטָּה. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! הַצַּד הַזֶּה כָּבֵד יוֹתֵר.",
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "scale",
       "id": "math.size.light",
       "skill": "MATH-A-04",
-      "prompt": "מַה קַּל?",
-      "options": [
-        "stone",
-        "feather"
-      ],
-      "correct": "feather",
       "difficulty": 0.2,
-      "correct_text": "כֵּן! נוֹצָה קַלָּה.",
-      "h3": "נוֹצָה קַלָּה, וְאֶבֶן כְּבֵדָה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנּוֹצָה."
+      "mode": "compare",
+      "left": [
+        [
+          "block",
+          1,
+          3
+        ]
+      ],
+      "right": [
+        [
+          "feather",
+          1,
+          1
+        ]
+      ],
+      "result": "left",
+      "tag": "M-MEAS-BIG",
+      "prompt": "אֵיזֶה צַד כָּבֵד יוֹתֵר? אוֹ שֶׁהֵם שָׁוִים?",
+      "h3": "הַצַּד הַכָּבֵד יוֹרֵד לְמַטָּה. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! הַצַּד הַזֶּה כָּבֵד יוֹתֵר.",
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -573,20 +651,28 @@
       "h3": "בַּצָּהֳרַיִם הַשֶּׁמֶשׁ גְּבוֹהָה בַּשָּׁמַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַצָּהֳרַיִם."
     },
     {
-      "kind": "pick",
+      "kind": "build",
       "id": "math.time.evening",
       "skill": "MATH-A-05",
-      "prompt": "אֵיזוֹ תְּמוּנָה מַרְאָה עֶרֶב?",
-      "options": [
+      "difficulty": 0.3,
+      "sequence": [
         "time_morning",
         "time_noon",
         "time_evening"
       ],
-      "correct": "time_evening",
-      "difficulty": 0.3,
-      "rep": "story",
-      "correct_text": "כֵּן! בָּעֶרֶב הַשֶּׁמֶשׁ יוֹרֶדֶת.",
-      "h3": "בָּעֶרֶב הַשֶּׁמֶשׁ יוֹרֶדֶת וְהַשָּׁמַיִם כְּתֻמִּים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הָעֶרֶב."
+      "palette": [
+        "time_noon",
+        "time_evening",
+        "time_morning",
+        "time_night"
+      ],
+      "tag": "M-SEQ-CAUSE",
+      "prompt": "מְסַדְּרִים אֶת הַיּוֹם: מַה קֹּדֶם, וּמָה אַחַר כָּךְ?",
+      "h3": "קֹדֶם בֹּקֶר, אַחַר כָּךְ צָהֳרַיִם, וְאָז עֶרֶב. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כָּכָה עוֹבֵר הַיּוֹם.",
+      "goal": "child lays the parts of the day in order",
+      "check": "practice",
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -605,21 +691,27 @@
       "h3": "בַּלַּיְלָה חָשׁוּךְ, וְיֵשׁ יָרֵחַ וְכוֹכָבִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַלַּיְלָה."
     },
     {
-      "kind": "pick",
+      "kind": "build",
       "id": "math.time.after",
-      "voice": true,
       "skill": "MATH-A-05",
-      "prompt": "מַה בָּא אַחֲרֵי הַבֹּקֶר?",
-      "options": [
-        "time_night",
-        "time_noon",
-        "time_morning"
-      ],
-      "correct": "time_noon",
       "difficulty": 0.4,
-      "rep": "story",
-      "correct_text": "כֵּן! אַחֲרֵי הַבֹּקֶר בָּאִים הַצָּהֳרַיִם.",
-      "h3": "קֹדֶם בֹּקֶר, אַחַר כָּךְ צָהֳרַיִם, אַחַר כָּךְ עֶרֶב, וּבַסּוֹף לַיְלָה. עַכְשָׁו תּוֹרְכֶם."
+      "sequence": [
+        "time_morning",
+        "time_noon",
+        "time_evening"
+      ],
+      "palette": [
+        "time_evening",
+        "time_morning",
+        "time_noon"
+      ],
+      "tag": "M-SEQ-CAUSE",
+      "prompt": "מְסַדְּרִים אֶת הַיּוֹם: מַה קֹּדֶם, וּמָה אַחַר כָּךְ?",
+      "h3": "קֹדֶם בֹּקֶר, אַחַר כָּךְ צָהֳרַיִם, וְאָז עֶרֶב. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כָּכָה עוֹבֵר הַיּוֹם.",
+      "goal": "child lays the parts of the day in order",
+      "check": "practice",
+      "revision": 2
     },
     {
       "kind": "give",
@@ -821,22 +913,27 @@
       "difficulty": 0.2
     },
     {
-      "kind": "pick",
+      "kind": "build",
       "id": "math.time.before",
-      "voice": true,
       "skill": "MATH-A-05",
-      "prompt": "מַה בָּא לִפְנֵי הָעֶרֶב?",
-      "options": [
+      "difficulty": 0.4,
+      "sequence": [
+        "time_noon",
+        "time_evening",
+        "time_night"
+      ],
+      "palette": [
         "time_night",
         "time_noon",
         "time_evening"
       ],
-      "correct": "time_noon",
-      "difficulty": 0.4,
-      "rep": "story",
-      "correct_text": "כֵּן! לִפְנֵי הָעֶרֶב בָּאִים הַצָּהֳרַיִם.",
-      "h3": "קֹדֶם בֹּקֶר, אַחַר כָּךְ צָהֳרַיִם, אַחַר כָּךְ עֶרֶב. עַכְשָׁו תּוֹרְכֶם.",
-      "check": "reverse"
+      "tag": "M-SEQ-CAUSE",
+      "prompt": "מְסַדְּרִים אֶת הַיּוֹם: מַה קֹּדֶם, וּמָה אַחַר כָּךְ?",
+      "h3": "קֹדֶם צָהֳרַיִם, אַחַר כָּךְ עֶרֶב, וְאָז לַיְלָה. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! כָּכָה עוֹבֵר הַיּוֹם.",
+      "goal": "child lays the parts of the day in order",
+      "check": "practice",
+      "revision": 2
     },
     {
       "kind": "shop",
@@ -869,19 +966,49 @@
       "check": "practice"
     },
     {
-      "kind": "compare_more",
+      "kind": "sort",
       "id": "math.graph.ducks",
       "skill": "MATH-A-07",
-      "obj": "duck",
-      "options": [
-        2,
-        5
-      ],
-      "big": 5,
-      "small": 2,
-      "trap": false,
       "difficulty": 0.25,
-      "domain": "math"
+      "rule": "kind",
+      "check": "practice",
+      "prompt": "שָׂמִים כׇּל אֶחָד עִם הַדּוֹמִים לוֹ.",
+      "bins": [
+        {
+          "sprite": "star",
+          "count": 2,
+          "label": "כּוֹכָבִים"
+        },
+        {
+          "sprite": "apple",
+          "count": 2,
+          "label": "תַּפּוּחִים"
+        }
+      ],
+      "items": [
+        [
+          "apple",
+          2
+        ],
+        [
+          "star",
+          1
+        ],
+        [
+          "apple",
+          2
+        ],
+        [
+          "apple",
+          2
+        ],
+        [
+          "star",
+          1
+        ]
+      ],
+      "correct_text": "כֵּן! יֵשׁ יוֹתֵר תַּפּוּחִים.",
+      "revision": 2
     },
     {
       "kind": "compare_more",
@@ -899,20 +1026,53 @@
       "domain": "math"
     },
     {
-      "kind": "compare_more",
+      "kind": "sort",
       "id": "math.graph.apples2",
       "skill": "MATH-A-07",
-      "obj": "apple",
-      "options": [
-        5,
-        3
-      ],
-      "big": 5,
-      "small": 3,
-      "ask": "fewer",
-      "trap": false,
       "difficulty": 0.35,
-      "domain": "math"
+      "rule": "kind",
+      "check": "practice",
+      "prompt": "שָׂמִים כׇּל אֶחָד עִם הַדּוֹמִים לוֹ.",
+      "bins": [
+        {
+          "sprite": "fish",
+          "count": 2,
+          "label": "דָּגִים"
+        },
+        {
+          "sprite": "star",
+          "count": 2,
+          "label": "כּוֹכָבִים"
+        }
+      ],
+      "items": [
+        [
+          "fish",
+          1
+        ],
+        [
+          "star",
+          2
+        ],
+        [
+          "fish",
+          1
+        ],
+        [
+          "star",
+          2
+        ],
+        [
+          "star",
+          2
+        ],
+        [
+          "star",
+          2
+        ]
+      ],
+      "correct_text": "כֵּן! יֵשׁ יוֹתֵר כּוֹכָבִים.",
+      "revision": 2
     },
     {
       "kind": "madd",
@@ -991,36 +1151,86 @@
       "domain": "math"
     },
     {
-      "kind": "pick",
+      "kind": "sort",
       "id": "b15.matha04.1",
       "skill": "MATH-A-04",
-      "check": "transfer",
-      "prompt": "אֵיזֶה דָּג גָּדוֹל?",
-      "options": [
-        "fish_size_s",
-        "fish_size_l"
-      ],
-      "correct": "fish_size_l",
-      "correct_text": "כֵּן! זֶה הַדָּג הַגָּדוֹל.",
-      "h3": "הַדָּג הַגָּדוֹל תּוֹפֵס יוֹתֵר מָקוֹם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.",
       "difficulty": 0.3,
-      "domain": "math"
+      "rule": "size",
+      "check": "practice",
+      "prompt": "מְמַיְּנִים: גְּדוֹלִים לְכָאן, וּקְטַנִּים לְכָאן.",
+      "bins": [
+        {
+          "sprite": "fish_size_l",
+          "label": "גְּדוֹלִים"
+        },
+        {
+          "sprite": "fish_size_s",
+          "label": "קְטַנִּים"
+        }
+      ],
+      "items": [
+        [
+          "fish_size_l",
+          1
+        ],
+        [
+          "ball_size_s",
+          2
+        ],
+        [
+          "apple_size_l",
+          1
+        ],
+        [
+          "fish_size_s",
+          2
+        ]
+      ],
+      "h3": "הַגְּדוֹלִים עִם הַגְּדוֹלִים, וְהַקְּטַנִּים עִם הַקְּטַנִּים. עַכְשָׁו תּוֹרְכֶם.",
+      "revision": 2
     },
     {
-      "kind": "pick",
+      "kind": "sort",
       "id": "b15.matha04.2",
       "skill": "MATH-A-04",
-      "check": "transfer",
-      "prompt": "אֵיזֶה כּוֹכָב קָטָן?",
-      "options": [
-        "star_size_l",
-        "star_size_s"
-      ],
-      "correct": "star_size_s",
-      "correct_text": "כֵּן! זֶה הַכּוֹכָב הַקָּטָן.",
-      "h3": "הַכּוֹכָב הַקָּטָן תּוֹפֵס פָּחוֹת מָקוֹם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.",
       "difficulty": 0.3,
-      "domain": "math"
+      "rule": "size",
+      "check": "practice",
+      "prompt": "מְמַיְּנִים: גְּדוֹלִים לְכָאן, וּקְטַנִּים לְכָאן.",
+      "bins": [
+        {
+          "sprite": "star_size_l",
+          "label": "גְּדוֹלִים"
+        },
+        {
+          "sprite": "star_size_s",
+          "label": "קְטַנִּים"
+        }
+      ],
+      "items": [
+        [
+          "star_size_s",
+          2
+        ],
+        [
+          "apple_size_l",
+          1
+        ],
+        [
+          "ball_size_s",
+          2
+        ],
+        [
+          "star_size_l",
+          1
+        ],
+        [
+          "apple_size_s",
+          2
+        ]
+      ],
+      "h3": "הַגְּדוֹלִים עִם הַגְּדוֹלִים, וְהַקְּטַנִּים עִם הַקְּטַנִּים. עַכְשָׁו תּוֹרְכֶם.",
+      "revision": 2
     },
     {
       "kind": "pick",
@@ -1071,41 +1281,98 @@
       "voice": false
     },
     {
-      "kind": "compare_more",
+      "kind": "sort",
       "id": "b15.matha07.1",
       "skill": "MATH-A-07",
-      "obj": "chick",
-      "options": [
-        2,
-        4
-      ],
-      "big": 4,
-      "small": 2,
-      "scale": {
-        "2": 1.5
-      },
-      "check": "transfer",
       "difficulty": 0.4,
-      "domain": "math"
+      "rule": "kind",
+      "check": "practice",
+      "prompt": "שָׂמִים כׇּל אֶחָד עִם הַדּוֹמִים לוֹ.",
+      "bins": [
+        {
+          "sprite": "apple",
+          "count": 2,
+          "label": "תַּפּוּחִים"
+        },
+        {
+          "sprite": "fish",
+          "count": 2,
+          "label": "דָּגִים"
+        }
+      ],
+      "items": [
+        [
+          "fish",
+          2
+        ],
+        [
+          "apple",
+          1
+        ],
+        [
+          "fish",
+          2
+        ],
+        [
+          "fish",
+          2
+        ],
+        [
+          "apple",
+          1
+        ],
+        [
+          "fish",
+          2
+        ]
+      ],
+      "correct_text": "כֵּן! יֵשׁ יוֹתֵר דָּגִים.",
+      "revision": 2
     },
     {
-      "kind": "compare_more",
+      "kind": "sort",
       "id": "b15.matha07.2",
       "skill": "MATH-A-07",
-      "obj": "butterfly",
-      "options": [
-        5,
-        3
-      ],
-      "big": 5,
-      "small": 3,
-      "ask": "fewer",
-      "scale": {
-        "5": 0.7
-      },
-      "check": "transfer",
       "difficulty": 0.45,
-      "domain": "math"
+      "rule": "kind",
+      "check": "practice",
+      "prompt": "שָׂמִים כׇּל אֶחָד עִם הַדּוֹמִים לוֹ.",
+      "bins": [
+        {
+          "sprite": "apple",
+          "count": 2,
+          "label": "תַּפּוּחִים"
+        },
+        {
+          "sprite": "star",
+          "count": 2,
+          "label": "כּוֹכָבִים"
+        }
+      ],
+      "items": [
+        [
+          "star",
+          2
+        ],
+        [
+          "apple",
+          1
+        ],
+        [
+          "star",
+          2
+        ],
+        [
+          "apple",
+          1
+        ],
+        [
+          "apple",
+          1
+        ]
+      ],
+      "correct_text": "כֵּן! יֵשׁ יוֹתֵר תַּפּוּחִים.",
+      "revision": 2
     }
   ],
   "firstSequence": 1,

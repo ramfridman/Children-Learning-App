@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "numeral.apples.2",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "count_tap",
+  "templateVersion": "1.0",
   "domain": "numbers",
   "band": "A",
   "skills": [
@@ -13,10 +13,10 @@
       "weight": 1
     }
   ],
-  "purpose": "practice",
+  "purpose": "learn",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "set-to-numeral",
+  "representation": "concrete",
+  "variantGroup": "count-tap",
   "difficulty": {
     "authored": 0.15
   },
@@ -25,17 +25,23 @@
     "caption": [
       {
         "t": "he",
-        "v": "כַּמָּה תַּפּוּחִים יֵשׁ? בּוֹחֲרִים אֶת הַמִּסְפָּר."
+        "v": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים."
       }
     ],
     "replayButton": true
   },
   "scene": {
-    "group": {
+    "background": "asset:meadow",
+    "objects": {
       "sprite": "asset:apple",
+      "litSprite": "asset:apple_lit",
       "count": 2,
       "arrangement": "scatter",
-      "seed": 5
+      "onTap": "glow",
+      "seed": 82
+    },
+    "target": {
+      "sprite": "asset:basket_target"
     }
   },
   "answer": {
@@ -43,19 +49,16 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 1,
-        "label": "אַחַת",
+        "value": 1,
         "misconception": "M-CNT-SKIP"
       },
       {
         "id": "o2",
-        "numeral": 2,
-        "label": "שְׁתַּיִם"
+        "value": 2
       },
       {
         "id": "o3",
-        "numeral": 3,
-        "label": "שָׁלוֹשׁ",
+        "value": 3,
         "misconception": "M-CNT-DOUBLE"
       }
     ],
@@ -63,14 +66,23 @@
     "shuffle": false,
     "unsureAllowed": true
   },
-  "voiceAnswer": false,
+  "voiceAnswer": true,
+  "answerPrompt": {
+    "vo": "vo:numeral.apples.2.how_many",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה תַּפּוּחִים?"
+      }
+    ]
+  },
   "feedback": {
     "correct": {
       "vo": "vo:numeral.apples.2.correct",
       "caption": [
         {
           "t": "he",
-          "v": "שְׁתַּיִם! זֶה הַמִּסְפָּר."
+          "v": "שְׁתַּיִם! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת."
         }
       ]
     },
@@ -120,22 +132,22 @@
     {
       "level": 1,
       "action": "replay_prompt_slow",
-      "vo": "vo:hint.set.h1",
+      "vo": "vo:numeral.apples.2.h1",
       "caption": [
         {
           "t": "he",
-          "v": "בּוֹאוּ נְנַסֶּה לִסְפֹּר לְאַט."
+          "v": "נוֹגְעִים בְּתַפּוּחַ אֶחָד, וְאוֹמְרִים מִסְפָּר אֶחָד."
         }
       ]
     },
     {
       "level": 2,
       "action": "show_fingers",
-      "vo": "vo:numeral.apples.2.h2",
+      "vo": "vo:hint.ucount.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם."
+          "v": "בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ…"
         }
       ]
     },
@@ -146,7 +158,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "אַחַת, שְׁתַּיִם. יֵשׁ שְׁנֵי תַּפּוּחִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם."
+          "v": "אַחַת, שְׁתַּיִם. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: שְׁתַּיִם! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם."
         }
       ]
     }
@@ -162,10 +174,20 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the numeral that tells how many",
+    "goal": "child touches each one once and answers with the last number counted",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "כַּמָּה תַּפּוּחִים יֵשׁ? בּוֹחֲרִים אֶת הַמִּסְפָּר."
-  }
+    "altText": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים."
+  },
+  "traceClassifiers": [
+    {
+      "when": "same_object_tapped_twice",
+      "misconception": "M-CNT-DOUBLE"
+    },
+    {
+      "when": "object_never_tapped",
+      "misconception": "M-CNT-SKIP"
+    }
+  ]
 }

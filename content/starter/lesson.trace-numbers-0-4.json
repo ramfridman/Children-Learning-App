@@ -30,5 +30,41 @@
         "v": "כׇּל הַכָּבוֹד! כְּתַבְתֶּם מִסְפָּרִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-07",
+    "recall": [
+      "b15.numa08.1"
+    ],
+    "together": [
+      {
+        "id": "x.numb07.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.trace",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֲנִי מַתְחִיל. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "x.numb07.2",
+      "x.numb07.3",
+      "x.numb07.4",
+      "x.numb07.5"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

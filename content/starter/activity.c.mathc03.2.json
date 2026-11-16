@@ -2,7 +2,7 @@
   "schema": "activity/v1",
   "id": "c.mathc03.2",
   "review": "needs-editor",
-  "revision": 1,
+  "revision": 2,
   "template": "tap_answer",
   "templateVersion": "1.4",
   "domain": "math",
@@ -16,12 +16,12 @@
   "purpose": "practice",
   "checkType": "practice",
   "representation": "symbolic",
-  "variantGroup": "pick",
+  "variantGroup": "number",
   "difficulty": {
     "authored": 0.44
   },
   "prompt": {
-    "vo": "vo:c.mathb04.1.prompt",
+    "vo": "vo:c.mathb04.2.prompt",
     "caption": [
       {
         "t": "he",
@@ -32,7 +32,6 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
     "row": [
       "n:20",
       "op:+",
@@ -42,35 +41,23 @@
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
+    "type": "number",
+    "value": 70,
+    "expected": [
       {
-        "id": "o1",
-        "numeral": 7,
-        "label": "שֶׁבַע",
+        "value": 7,
         "misconception": "M-PV-FACE"
       },
       {
-        "id": "o2",
-        "numeral": 70,
-        "label": "שִׁבְעִים"
-      },
-      {
-        "id": "o3",
-        "numeral": 700,
-        "label": "שְׁבַע מֵאוֹת",
-        "misconception": "M-PV-ZERO"
-      },
-      {
-        "id": "o4",
-        "numeral": 30,
-        "label": "שְׁלוֹשִׁים",
+        "value": 30,
         "misconception": "M-OP-SWAP"
+      },
+      {
+        "value": 700,
+        "misconception": "M-PV-ZERO"
       }
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "rules": []
   },
   "voiceAnswer": false,
   "feedback": {
@@ -154,18 +141,18 @@
       "caption": [
         {
           "t": "he",
-          "v": "חוֹשְׁבִים בַּעֲשָׂרוֹת: שְׁתֵּי עֲשָׂרוֹת וְעוֹד חָמֵשׁ עֲשָׂרוֹת — כְּמוֹ שְׁתַּיִם וְעוֹד חָמֵשׁ."
+          "v": "חוֹשְׁבִים בַּעֲשָׂרוֹת: שְׁתֵּי עֲשָׂרוֹת וְעוֹד חָמֵשׁ עֲשָׂרוֹת."
         }
       ]
     },
     {
       "level": 3,
       "action": "worked_example",
-      "vo": "vo:c.mathc03.1.h3",
+      "vo": "vo:c.mathc03.2.h3",
       "caption": [
         {
           "t": "he",
-          "v": "שֶׁבַע עֲשָׂרוֹת הֵן שִׁבְעִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שִׁבְעִים."
+          "v": "עֶשְׂרִים וְעוֹד חֲמִשִּׁים שָׁוֶה שִׁבְעִים. כּוֹתְבִים שִׁבְעִים."
         }
       ]
     }
@@ -181,7 +168,7 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child types the number",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {

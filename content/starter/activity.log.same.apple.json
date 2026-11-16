@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "log.same.apple",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "logic",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "same",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.1
   },
@@ -25,40 +25,56 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה עוֹד תַּפּוּחַ?"
+        "v": "שָׂמִים כׇּל תַּפּוּחַ בַּסַּל, וְאֶת כׇּל הַשְּׁאָר עַל הַדֶּשֶׁא."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "group": {
-      "sprite": "asset:apple",
-      "count": 1,
-      "arrangement": "line",
-      "seed": 3,
-      "scale": 1
-    }
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
+        "id": "b1",
+        "sprite": "asset:bin_basket",
+        "count": 1,
+        "label": "הַסַּל"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:bin_grass",
+        "count": 1,
+        "label": "הַדֶּשֶׁא"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:apple",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
         "sprite": "asset:ball_red",
-        "label": "כַּדּוּר אָדֹם",
+        "bin": "b2",
         "misconception": "M-COL-ONEATTR"
       },
       {
-        "id": "o2",
-        "sprite": "asset:apple",
-        "label": "תַּפּוּחַ"
+        "id": "i3",
+        "sprite": "asset:apple_green",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:balloon_red",
+        "bin": "b2",
+        "misconception": "M-COL-ONEATTR"
       }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-SORT-SHIFT"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -67,13 +83,23 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה תַּפּוּחַ."
+          "v": "כֵּן! מִיַּנְתֶּם אֶת כֻּלָּם."
         }
       ]
     },
     "incorrect": [
       {
         "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.col_oneattr",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SORT-SHIFT",
         "vo": "vo:fb.sort_shift.kind",
         "caption": [
           {
@@ -118,11 +144,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.sort.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
         }
       ]
     },
@@ -133,7 +159,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "זֶה תַּפּוּחַ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+          "v": "תַּפּוּחַ אָדֹם וְתַפּוּחַ יָרֹק הֵם תַּפּוּחִים. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -149,10 +175,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה עוֹד תַּפּוּחַ?"
+    "altText": "שָׂמִים כׇּל תַּפּוּחַ בַּסַּל, וְאֶת כׇּל הַשְּׁאָר עַל הַדֶּשֶׁא."
   }
 }

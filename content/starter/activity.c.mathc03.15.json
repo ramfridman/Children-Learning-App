@@ -160,7 +160,7 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:c.mathc03.1.h2",
+      "vo": "vo:c.mathc03.13.h2",
       "caption": [
         {
           "t": "he",
@@ -171,7 +171,7 @@
     {
       "level": 3,
       "action": "worked_example",
-      "vo": "vo:c.mathc03.15.h3",
+      "vo": "vo:c.mathc03.9.h3",
       "caption": [
         {
           "t": "he",

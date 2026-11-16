@@ -16,9 +16,9 @@
   "items": [
     "x.numb07.11",
     "x.numb07.12",
-    "x.numb07.13",
     "x.numb07.14",
-    "x.numb07.15"
+    "x.numb07.15",
+    "x.numb07.13"
   ],
   "estimatedMinutes": 5,
   "sequence": 62,
@@ -30,5 +30,43 @@
         "v": "נִפְלָא! כְּתַבְתֶּם לְבַד."
       }
     ]
+  },
+  "parts": {
+    "show": "show.num-b-07",
+    "recall": [
+      "b15.numa08.1"
+    ],
+    "together": [
+      {
+        "id": "x.numb07.11",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.nekudi.together.trace",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֲנִי מַתְחִיל. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "x.numb07.12",
+      "x.numb07.14",
+      "x.numb07.15"
+    ],
+    "use": [
+      "x.numb07.13"
+    ],
+    "handover": {
+      "vo": "vo:host.nekudi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

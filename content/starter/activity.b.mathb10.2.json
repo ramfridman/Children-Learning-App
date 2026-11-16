@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.mathb10.2",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.2",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "math",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "share",
   "difficulty": {
     "authored": 0.44
   },
@@ -25,64 +25,87 @@
     "caption": [
       {
         "t": "he",
-        "v": "יֵשׁ שָׁלוֹשׁ צַלָּחוֹת. עַל כׇּל צַלַּחַת שְׁנֵי דָּגִים. כַּמָּה יֵשׁ בְּסַךְ הַכֹּל?"
+        "v": "מְחַלְּקִים שִׁשָּׁה דָּגִים לְשָׁלוֹשׁ צַלָּחוֹת, אֶחָד לְכׇל צַלַּחַת בַּתּוֹר."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "chart": [
+    "bins": [
       {
-        "sprite": "asset:fish",
-        "count": 2
+        "id": "b1",
+        "sprite": "asset:plate",
+        "count": 1,
+        "label": "צַלַּחַת"
       },
       {
-        "sprite": "asset:fish",
-        "count": 2
+        "id": "b2",
+        "sprite": "asset:plate",
+        "count": 1,
+        "label": "צַלַּחַת"
       },
       {
-        "sprite": "asset:fish",
-        "count": 2
+        "id": "b3",
+        "sprite": "asset:plate",
+        "count": 1,
+        "label": "צַלַּחַת"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:fish"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:fish"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:fish"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:fish"
+      },
+      {
+        "id": "i5",
+        "sprite": "asset:fish"
+      },
+      {
+        "id": "i6",
+        "sprite": "asset:fish"
       }
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "numeral": 2,
-        "label": "שְׁתַּיִם"
-      },
-      {
-        "id": "o2",
-        "numeral": 6,
-        "label": "שֵׁשׁ"
-      },
-      {
-        "id": "o3",
-        "numeral": 5,
-        "label": "חָמֵשׁ"
-      }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "sort",
+    "mode": "share",
+    "misconception": "M-SHARE-UNEQ"
   },
-  "voiceAnswer": true,
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.mathb10.2.correct",
       "caption": [
         {
           "t": "he",
-          "v": "שֵׁשׁ! שְׁתַּיִם וְעוֹד שְׁתַּיִם וְעוֹד שְׁתַּיִם הֵם שֵׁשׁ."
+          "v": "כֵּן! בְּכׇל צַלַּחַת שְׁנֵי דָּגִים."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHARE-UNEQ",
+        "vo": "vo:fb.share_uneq",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נַחֲלֹק אֶחָד אֶחָד, לְכׇל חָבֵר לְפִי הַתּוֹר."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -119,11 +142,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.share.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נַחֲלֹק אֶחָד לָזֶה, וְאֶחָד לָזֶה, לְפִי הַתּוֹר."
         }
       ]
     },
@@ -134,7 +157,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "שְׁתַּיִם וְעוֹד שְׁתַּיִם וְעוֹד שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שֵׁשׁ."
+          "v": "אֶחָד לָזֶה, אֶחָד לָזֶה, עַד שֶׁנִּגְמַר. לְכׇל אֶחָד יֵשׁ אוֹתוֹ מִסְפָּר. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -150,10 +173,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child shares fairly: one for each in turn, so both have the same",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "יֵשׁ שָׁלוֹשׁ צַלָּחוֹת. עַל כׇּל צַלַּחַת שְׁנֵי דָּגִים. כַּמָּה יֵשׁ בְּסַךְ הַכֹּל?"
+    "altText": "מְחַלְּקִים שִׁשָּׁה דָּגִים לְשָׁלוֹשׁ צַלָּחוֹת, אֶחָד לְכׇל צַלַּחַת בַּתּוֹר."
   }
 }

@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "col.sort.green",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "colors",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.4
   },
@@ -25,45 +25,56 @@
     "caption": [
       {
         "t": "he",
-        "v": "מִי עוֹד יָרֹק?"
+        "v": "מְמַיְּנִים לְפִי צֶבַע: יָרֹק לְכָאן, וְצָהֹב לְכָאן."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "group": {
-      "sprite": "asset:bloom_green",
-      "count": 3,
-      "arrangement": "line",
-      "seed": 3,
-      "scale": 1
-    }
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:bloom_red",
-        "label": "פֶּרַח אָדֹם",
+        "id": "b1",
+        "sprite": "asset:shape_square_green",
+        "count": 1,
+        "label": "יָרֹק"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:shape_circle_yellow",
+        "count": 1,
+        "label": "צָהֹב"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:shape_circle_green",
+        "bin": "b1",
         "misconception": "M-SORT-SHIFT"
       },
       {
-        "id": "o2",
-        "sprite": "asset:ball_green",
-        "label": "כַּדּוּר יָרֹק"
+        "id": "i2",
+        "sprite": "asset:shape_square_yellow",
+        "bin": "b2",
+        "misconception": "M-SORT-SHIFT"
       },
       {
-        "id": "o3",
-        "sprite": "asset:balloon_yellow",
-        "label": "בָּלוֹן צָהֹב"
+        "id": "i3",
+        "sprite": "asset:shape_triangle_green",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:shape_triangle_yellow",
+        "bin": "b2"
       }
-    ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-SORT-SHIFT"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -72,7 +83,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה כַּדּוּר יָרֹק."
+          "v": "כֵּן! מִיַּנְתֶּם אֶת כֻּלָּם."
         }
       ]
     },
@@ -123,11 +134,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.sort.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
         }
       ]
     },
@@ -138,7 +149,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "זֶה כַּדּוּר יָרֹק. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+          "v": "כׇּל הַדְּבָרִים בְּאוֹתוֹ צֶבַע הוֹלְכִים יַחַד. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -154,10 +165,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מִי עוֹד יָרֹק?"
+    "altText": "מְמַיְּנִים לְפִי צֶבַע: יָרֹק לְכָאן, וְצָהֹב לְכָאן."
   }
 }

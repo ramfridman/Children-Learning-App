@@ -13,6 +13,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.argv = sys.argv[:1] + ['-']  # author.py is imported, never run
 from author import F, M, TURN, count_short, count_words, counts, from_, hint_fit, place, prefix, qty, vav  # noqa: E402
+from band_b_recuts import RECUTS  # noqa: E402  M11 Stage 2: the taps of Band B re-cut to hands-on templates (data)
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 UNITS = os.path.join(ROOT, 'content', 'units')
@@ -47,6 +48,7 @@ NAMES = {
     'stone': {'one': 'אֶבֶן', 'g': 'f'}, 'feather': {'one': 'נוֹצָה', 'g': 'f'},
     'cat': {'one': 'חָתוּל', 'g': 'm'}, 'dog': {'one': 'כֶּלֶב', 'g': 'm'},
     'rainbow': {'one': 'קֶשֶׁת', 'g': 'f'}, 'coin': {'one': 'מַטְבֵּעַ', 'g': 'm'},
+    'plate': {'one': 'צַלַּחַת', 'g': 'f'},  # M11 Stage 2: the plates a share deals to (MATH-B-10)
 }
 for _c, _adj in (('blue', 'כָּחֹל'), ('green', 'יָרֹק'), ('red', 'אָדֹם'), ('purple', 'סָגֹל')):
     for _k, _t in enumerate(('%s בָּהִיר', '%s', '%s כֵּהֶה'), start=1):
@@ -131,6 +133,11 @@ class Unit:
         if kind == 'pick' and skill in VOICE_SKILLS:
             a['voice'] = True
         a.update(kw)
+        # M11 Stage 2 (docs/milestones/M11-stage2.md §4): a tap re-cut to a hands-on template keeps its id and its lesson places; its new
+        # form is data in band_b_recuts.py (revision 2)
+        if a['id'] in RECUTS:
+            a = {'id': a['id'], 'skill': skill, 'difficulty': a['difficulty'], 'revision': 2,
+                 **({'band': a['band']} if 'band' in a else {}), **RECUTS[a['id']]}
         self.d['activities'].append(a)
         return a['id']
 

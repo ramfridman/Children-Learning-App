@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "log.size.last",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
   "domain": "logic",
   "band": "A",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.35
   },
@@ -25,43 +25,28 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה בָּא בַּסּוֹף?"
+        "v": "מְסַדְּרִים מֵהַקָּטָן אֶל הַגָּדוֹל."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
-      "asset:ball_size_s",
+    "slots": 3,
+    "palette": [
       "asset:ball_size_m",
-      "?"
+      "asset:ball_size_l",
+      "asset:ball_size_s"
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:ball_size_m",
-        "label": "כַּדּוּר בֵּינוֹנִי",
-        "misconception": "M-PAT-NEXT"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:ball_size_l",
-        "label": "כַּדּוּר גָּדוֹל"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:ball_size_s",
-        "label": "כַּדּוּר קָטָן"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:ball_size_s",
+      "asset:ball_size_m",
+      "asset:ball_size_l"
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-SER-ENDS"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -76,12 +61,12 @@
     },
     "incorrect": [
       {
-        "when": "misconception:M-PAT-NEXT",
-        "vo": "vo:fb.ser.last_biggest",
+        "when": "misconception:M-SER-ENDS",
+        "vo": "vo:fb.ser_ends",
         "caption": [
           {
             "t": "he",
-            "v": "בַּסּוֹף בָּא הֲכִי גָּדוֹל. בּוֹאוּ נַשְׁוֶה."
+            "v": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל."
           }
         ]
       },
@@ -136,7 +121,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "קָטָן, בֵּינוֹנִי, וְאַחַר כָּךְ גָּדוֹל. עַכְשָׁו תּוֹרְכֶם."
+          "v": "קָטָן, בֵּינוֹנִי, גָּדוֹל. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -152,10 +137,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child orders three things from the smallest to the biggest",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה בָּא בַּסּוֹף?"
+    "altText": "מְסַדְּרִים מֵהַקָּטָן אֶל הַגָּדוֹל."
   }
 }

@@ -21,7 +21,7 @@
     "authored": 0.6
   },
   "prompt": {
-    "vo": "vo:c.numc02.5.prompt",
+    "vo": "vo:c.numc02.20.prompt",
     "caption": [
       {
         "t": "he",
@@ -74,7 +74,7 @@
   "voiceAnswer": false,
   "feedback": {
     "correct": {
-      "vo": "vo:c.numc02.5.correct",
+      "vo": "vo:c.numc02.20.correct",
       "caption": [
         {
           "t": "he",

@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.mathb18.4",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "balance",
+  "templateVersion": "1.0",
   "domain": "math",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "symbolic",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "scale",
   "difficulty": {
     "authored": 0.58
   },
@@ -25,55 +25,47 @@
     "caption": [
       {
         "t": "he",
-        "v": "חָמֵשׁ וְעוֹד כַּמָּה שָׁוֶה שְׁמוֹנֶה?"
+        "v": "חָמֵשׁ וְעוֹד כַּמָּה שָׁוֶה שְׁמוֹנֶה? מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
-      "n:5",
-      "op:+",
-      "?",
-      "op:=",
-      "n:8"
-    ]
+    "left": {
+      "groups": [
+        {
+          "sprite": "asset:block",
+          "count": 8,
+          "weight": 1
+        }
+      ]
+    },
+    "right": {
+      "groups": [
+        {
+          "sprite": "asset:block",
+          "count": 5,
+          "weight": 1
+        }
+      ]
+    },
+    "blockSprite": "asset:block"
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "numeral": 3,
-        "label": "שָׁלוֹשׁ"
-      },
-      {
-        "id": "o2",
-        "numeral": 8,
-        "label": "שְׁמוֹנֶה",
-        "misconception": "M-EQ-OPER"
-      },
-      {
-        "id": "o3",
-        "numeral": 13,
-        "label": "שְׁלֹשׁ עֶשְׂרֵה",
-        "misconception": "M-PART-MISS"
-      }
-    ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "scale",
+    "mode": "balance",
+    "result": "3",
+    "misconception": "M-EQ-OPER"
   },
-  "voiceAnswer": true,
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.mathb18.4.correct",
       "caption": [
         {
           "t": "he",
-          "v": "שָׁלוֹשׁ! חָמֵשׁ וְעוֹד שָׁלוֹשׁ שָׁוֶה שְׁמוֹנֶה."
+          "v": "כֵּן! חָמֵשׁ וְעוֹד שָׁלוֹשׁ שָׁוֶה שְׁמוֹנֶה."
         }
       ]
     },
@@ -85,16 +77,6 @@
           {
             "t": "he",
             "v": "סִימַן הַשָּׁוֶה אוֹמֵר: בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר. בּוֹאוּ נִבְדֹּק."
-          }
-        ]
-      },
-      {
-        "when": "misconception:M-PART-MISS",
-        "vo": "vo:fb.part_miss.sentence.5_8",
-        "caption": [
-          {
-            "t": "he",
-            "v": "חִבַּרְנוּ אֶת שְׁנֵיהֶם, אֲבָל שְׁמוֹנֶה זֶה כְּבָר הַכֹּל. כַּמָּה מוֹסִיפִים לְחָמֵשׁ כְּדֵי לְהַגִּיעַ לִשְׁמוֹנֶה?"
           }
         ]
       },
@@ -134,11 +116,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:b.mathb18.4.h2",
+      "vo": "vo:hint.scale.h2",
       "caption": [
         {
           "t": "he",
-          "v": "חָמֵשׁ כְּבָר יֵשׁ. מוֹסִיפִים אַחַת אַחַת עַד שְׁמוֹנֶה, וְסוֹפְרִים כַּמָּה הוֹסַפְנוּ."
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
         }
       ]
     },
@@ -149,7 +131,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "חָמֵשׁ… וּמַמְשִׁיכִים: שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה. הֵרַמְנוּ שָׁלוֹשׁ אֶצְבָּעוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ."
+          "v": "בַּצַּד שֶׁלְּמַטָּה יֵשׁ שְׁמוֹנֶה קֻבִּיּוֹת, וּבַצַּד שֶׁלְּמַעְלָה חָמֵשׁ קֻבִּיּוֹת. צָרִיךְ עוֹד שָׁלוֹשׁ קֻבִּיּוֹת."
         }
       ]
     }
@@ -165,10 +147,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child reads the scale",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "חָמֵשׁ וְעוֹד כַּמָּה שָׁוֶה שְׁמוֹנֶה?"
+    "altText": "חָמֵשׁ וְעוֹד כַּמָּה שָׁוֶה שְׁמוֹנֶה? מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים."
   }
 }

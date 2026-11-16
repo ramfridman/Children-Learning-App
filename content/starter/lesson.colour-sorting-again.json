@@ -15,13 +15,13 @@
     "COL-A-07"
   ],
   "items": [
-    "col.sort.yellow",
     "col.sort.orange",
+    "b15.cola04.1",
+    "b15.cola04.2",
+    "col.sort.yellow",
     "col.sort.pink",
     "col.find.red.ball",
     "col.find.yellow.balloon",
-    "b15.cola04.1",
-    "b15.cola04.2",
     "b15.cola07.1"
   ],
   "estimatedMinutes": 4,
@@ -34,5 +34,50 @@
         "v": "חֲכָמִים! הִסְתַּכַּלְתֶּם עַל הַצֶּבַע וְעַל הַדָּבָר."
       }
     ]
+  },
+  "parts": {
+    "show": "show.col-a-04",
+    "secondShow": {
+      "id": "show.col-a-07",
+      "before": "col.find.red.ball"
+    },
+    "recall": [
+      "b15.cola01.1"
+    ],
+    "together": [
+      {
+        "id": "col.sort.orange",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.goni.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b15.cola04.1",
+      "b15.cola04.2",
+      "col.sort.yellow",
+      "col.sort.pink",
+      "col.find.red.ball",
+      "col.find.yellow.balloon"
+    ],
+    "use": [
+      "b15.cola07.1"
+    ],
+    "handover": {
+      "vo": "vo:host.goni.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו אַתֶּם רוֹאִים צְבָעִים לְבַד."
+        }
+      ]
+    }
   }
 }

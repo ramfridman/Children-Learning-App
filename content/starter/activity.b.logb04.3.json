@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.logb04.3",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
   "domain": "logic",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.51
   },
@@ -25,44 +25,31 @@
     "caption": [
       {
         "t": "he",
-        "v": "הַמִּגְדָּלִים גְּדֵלִים. אֵיזֶה מִגְדָּל חָסֵר?"
+        "v": "הַמִּגְדָּלִים גְּדֵלִים. בּוֹנִים אֶת כׇּל הַשּׁוּרָה."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
-      "asset:tower_1",
+    "slots": 4,
+    "palette": [
+      "asset:tower_4",
+      "asset:tower_7",
       "asset:tower_2",
-      "asset:tower_3",
-      "?"
+      "asset:tower_5",
+      "asset:tower_3"
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:tower_3",
-        "label": "מִגְדָּל שֶׁל שָׁלוֹשׁ קֻבִּיּוֹת",
-        "misconception": "M-PAT-GROW"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:tower_5",
-        "label": "מִגְדָּל שֶׁל חָמֵשׁ קֻבִּיּוֹת"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:tower_4",
-        "label": "מִגְדָּל שֶׁל אַרְבַּע קֻבִּיּוֹת"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:tower_2",
+      "asset:tower_3",
+      "asset:tower_4",
+      "asset:tower_5"
     ],
-    "correct": "o3",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-PAT-GROW"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -71,7 +58,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! כׇּל מִגְדָּל גָּבוֹהַּ בְּקֻבִּיָּה אַחַת."
+          "v": "כֵּן! כׇּל מִגְדָּל גָּבוֹהַּ יוֹתֵר מֵהַקּוֹדֵם."
         }
       ]
     },
@@ -137,7 +124,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כׇּל מִגְדָּל גָּבוֹהַּ בְּקֻבִּיָּה אַחַת מֵהַמִּגְדָּל שֶׁלְּפָנָיו. עַכְשָׁו תּוֹרְכֶם."
+          "v": "כׇּל פַּעַם קֻבִּיָּה אַחַת יוֹתֵר. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -153,10 +140,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child copies the pattern in the same order",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "הַמִּגְדָּלִים גְּדֵלִים. אֵיזֶה מִגְדָּל חָסֵר?"
+    "altText": "הַמִּגְדָּלִים גְּדֵלִים. בּוֹנִים אֶת כׇּל הַשּׁוּרָה."
   }
 }

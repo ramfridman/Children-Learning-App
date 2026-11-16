@@ -21,7 +21,7 @@
     "authored": 0.9
   },
   "prompt": {
-    "vo": "vo:c.mathb04.1.prompt",
+    "vo": "vo:c.mathb04.2.prompt",
     "caption": [
       {
         "t": "he",
@@ -142,7 +142,7 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:c.mathc03.6.h2",
+      "vo": "vo:c.mathc03.14.h2",
       "caption": [
         {
           "t": "he",
@@ -153,7 +153,7 @@
     {
       "level": 3,
       "action": "worked_example",
-      "vo": "vo:c.mathc03.14.h3",
+      "vo": "vo:c.mathc03.6.h3",
       "caption": [
         {
           "t": "he",

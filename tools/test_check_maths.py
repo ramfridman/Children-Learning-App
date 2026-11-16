@@ -713,7 +713,9 @@ class C1Last(BatchC1):
         frames = [i for i, d in by.items() if d['template'] == 'give_n' and d['scene'].get('frame')]
         self.assertEqual(sorted(x5), ['c.numc06.17', 'c.numc06.3', 'c.numc06.4', 'c.numc06.5', 'c.numc06.6'])
         self.assertEqual(sorted(cards), ['c.mathc02.16', 'c.mathc02.17', 'c.mathc02.18', 'c.mathc02.19'])
-        self.assertEqual(sorted(frames), ['c.numb09.15', 'c.numb09.16'])
+        # M11 Stage 2 (Counting Hills): four flashes of NUM-A-05 and A-10 and two of NUM-B-09 are re-cut to frames built by hand
+        self.assertEqual(sorted(frames), ['c.numb09.1', 'c.numb09.15', 'c.numb09.16', 'c.numb09.2', 'flash.frame.3', 'flash.frame.4',
+                                          'flash.frame.5b', 'flash.scatter.2'])
         self.assertTrue(all(by[i]['templateVersion'] == '1.1' for i in x5 + frames))
         f, _ = cm.check_docs([by[i] for i in x5 + cards + frames], records, skills, CATALOGUE, cm.Svg(cm.STARTER))
         self.assertEqual([r for r in f.rows if r[0] in cm.STRICT_FAILING], [])

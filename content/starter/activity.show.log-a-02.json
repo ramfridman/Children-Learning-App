@@ -1,0 +1,189 @@
+{
+  "schema": "activity/v1",
+  "id": "show.log-a-02",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
+  "domain": "logic",
+  "band": "A",
+  "skills": [
+    {
+      "id": "LOG-A-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.timi.show.log_a_02.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מִי שׁוֹנֶה מֵהָאֲחֵרִים?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:bin_basket",
+        "count": 1,
+        "label": "הַסַּל"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:bin_grass",
+        "count": 1,
+        "label": "הַדֶּשֶׁא"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:star",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:star",
+        "bin": "b1"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:apple",
+        "bin": "b2"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:star",
+        "bin": "b1"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.timi.show.log_a_02.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֻּלָּם כּוֹכָבִים, חוּץ מֵאֶחָד."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "מִי שׁוֹנֶה מֵהָאֲחֵרִים?"
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.timi.show.log_a_02.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מִי שׁוֹנֶה מֵהָאֲחֵרִים?"
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.timi.show.log_a_02.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כֻּלָּם כּוֹכָבִים, חוּץ מֵאֶחָד."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.timi.show.log_a_02.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַכּוֹכָב הָאַחֲרוֹן."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "item": "i1",
+        "bin": "b1"
+      },
+      {
+        "by": "host",
+        "item": "i2",
+        "bin": "b1"
+      },
+      {
+        "by": "host",
+        "item": "i3",
+        "bin": "b2",
+        "say": "key"
+      },
+      {
+        "by": "child",
+        "item": "i4",
+        "bin": "b1"
+      }
+    ],
+    "teaches": [
+      "הַסַּל",
+      "הַדֶּשֶׁא"
+    ]
+  }
+}

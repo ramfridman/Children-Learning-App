@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.mathb14.3",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
   "domain": "math",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "symbolic",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.51
   },
@@ -25,47 +25,38 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה בָּא אַחֲרֵי יוֹם רִאשׁוֹן?"
+        "v": "מְסַדְּרִים אֶת הַיָּמִים לְפִי הַסֵּדֶר, מִיוֹם רִאשׁוֹן."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "slots": 3,
+    "palette": [
+      "asset:day_2",
+      "asset:day_5",
+      "asset:day_3",
+      "asset:day_1"
+    ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:day_1",
-        "label": "יוֹם רִאשׁוֹן"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:day_3",
-        "label": "יוֹם שְׁלִישִׁי",
-        "misconception": "M-CNT-SEQ"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:day_2",
-        "label": "יוֹם שֵׁנִי"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:day_1",
+      "asset:day_2",
+      "asset:day_3"
     ],
-    "correct": "o3",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-CNT-SEQ"
   },
-  "voiceAnswer": true,
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.mathb14.3.correct",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! יוֹם שֵׁנִי."
+          "v": "כֵּן! יוֹם רִאשׁוֹן, יוֹם שֵׁנִי, יוֹם שְׁלִישִׁי."
         }
       ]
     },
@@ -116,11 +107,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.build.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד."
         }
       ]
     },
@@ -131,7 +122,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "יוֹם רִאשׁוֹן, יוֹם שֵׁנִי. עַכְשָׁו תּוֹרְכֶם."
+          "v": "יוֹם רִאשׁוֹן, יוֹם שֵׁנִי, יוֹם שְׁלִישִׁי. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -147,10 +138,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child lays the days of the week in order",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה בָּא אַחֲרֵי יוֹם רִאשׁוֹן?"
+    "altText": "מְסַדְּרִים אֶת הַיָּמִים לְפִי הַסֵּדֶר, מִיוֹם רִאשׁוֹן."
   }
 }

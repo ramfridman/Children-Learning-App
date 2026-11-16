@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.logb09.4",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "logic",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "sort",
   "difficulty": {
     "authored": 0.58
   },
@@ -25,43 +25,56 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיזוֹ צוּרָה לֹא אֲדֻמָּה וְגַם לֹא רִבּוּעַ?"
+        "v": "בַּסַּל: כׇּל צוּרָה שֶׁהִיא לֹא אֲדֻמָּה וְגַם לֹא רִבּוּעַ. הַשְּׁאָר עַל הַדֶּשֶׁא."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "row": [
-      "asset:clue_not_red",
-      "asset:clue_not_square"
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:bin_basket",
+        "count": 1,
+        "label": "הַסַּל"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:bin_grass",
+        "count": 1,
+        "label": "הַדֶּשֶׁא"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:shape_triangle_blue",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:shape_square_blue",
+        "bin": "b2",
+        "misconception": "M-LOG-NOT"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:shape_triangle_red",
+        "bin": "b2",
+        "misconception": "M-LOG-NOT"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:shape_circle_green",
+        "bin": "b1"
+      }
     ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:shape_triangle_blue",
-        "label": "מְשֻׁלָּשׁ כָּחֹל"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:shape_square_blue",
-        "label": "רִבּוּעַ כָּחֹל",
-        "misconception": "M-LOG-NOT"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:shape_triangle_red",
-        "label": "מְשֻׁלָּשׁ אָדֹם",
-        "misconception": "M-LOG-NOT"
-      }
-    ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-LOG-NOT"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -70,7 +83,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה מְשֻׁלָּשׁ כָּחֹל: לֹא אָדֹם וְלֹא רִבּוּעַ."
+          "v": "כֵּן! שְׁנֵי הָרְמָזִים נִבְדְּקוּ."
         }
       ]
     },
@@ -121,11 +134,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.log_clues.h2",
+      "vo": "vo:hint.sort.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל קֹדֶם בָּרֶמֶז הָרִאשׁוֹן, וְאַחַר כָּךְ בָּרֶמֶז הַשֵּׁנִי."
+          "v": "נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מַה יֵּשׁ לָהּ."
         }
       ]
     },
@@ -136,7 +149,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "מְחַפְּשִׂים מַשֶּׁהוּ שֶׁהוּא לֹא אָדֹם וְגַם לֹא רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם."
+          "v": "בּוֹדְקִים כׇּל צוּרָה פַּעֲמַיִם: הַצֶּבַע, וְאַחַר כָּךְ הַצּוּרָה. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -152,10 +165,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child puts every picture in the group that fits the rule",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיזוֹ צוּרָה לֹא אֲדֻמָּה וְגַם לֹא רִבּוּעַ?"
+    "altText": "בַּסַּל: כׇּל צוּרָה שֶׁהִיא לֹא אֲדֻמָּה וְגַם לֹא רִבּוּעַ. הַשְּׁאָר עַל הַדֶּשֶׁא."
   }
 }

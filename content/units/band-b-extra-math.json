@@ -214,6 +214,10 @@
    "one": "מַטְבֵּעַ",
    "g": "m"
   },
+  "plate": {
+   "one": "צַלַּחַת",
+   "g": "f"
+  },
   "shade_blue_1": {
    "one": "כָּחֹל בָּהִיר",
    "g": "m"
@@ -974,39 +978,86 @@
    "correct_text": "כֵּן! כׇּל מַטְבֵּעַ עִם הַמִּסְפָּר שֶׁלּוֹ."
   },
   {
-   "kind": "pick",
    "id": "x.mathb16.7",
    "skill": "MATH-B-16",
    "difficulty": 0.6,
-   "domain": "math",
-   "prompt": "אֵיזֶה מַטְבֵּעַ שָׁוֶה יוֹתֵר?",
-   "options": [
-    "coin_s1",
-    "coin_h50"
+   "revision": 2,
+   "kind": "sort",
+   "tag": "M-MONEY-SIZE",
+   "rule": "kind",
+   "bins": [
+    {
+     "sprite": "coin_a10",
+     "label": "אֲגוֹרוֹת"
+    },
+    {
+     "sprite": "coin_s1",
+     "label": "שְׁקָלִים"
+    }
    ],
-   "correct": "coin_s1",
-   "tags": {
-    "coin_h50": "M-MONEY-SIZE"
-   },
-   "check": "transfer",
-   "correct_text": "כֵּן! שֶׁקֶל שָׁוֶה יוֹתֵר מֵחֲצִי שֶׁקֶל."
+   "items": [
+    [
+     "coin_a10",
+     1
+    ],
+    [
+     "coin_h50",
+     1,
+     "M-MONEY-SIZE"
+    ],
+    [
+     "coin_s1",
+     2
+    ],
+    [
+     "coin_s2",
+     2
+    ]
+   ],
+   "prompt": "מְמַיְּנִים: אֲגוֹרוֹת לְכָאן, וּשְׁקָלִים לְכָאן.",
+   "h3": "עֶשֶׂר אֲגוֹרוֹת וַחֲצִי שֶׁקֶל הֵם אֲגוֹרוֹת. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! מִיַּנְתֶּם אֶת הַמַּטְבְּעוֹת."
   },
   {
-   "kind": "pick",
    "id": "x.mathb16.8",
    "skill": "MATH-B-16",
    "difficulty": 0.6,
-   "domain": "math",
-   "prompt": "אֵיזֶה מַטְבֵּעַ שָׁוֶה יוֹתֵר?",
-   "options": [
-    "coin_s5",
-    "coin_s10"
+   "revision": 2,
+   "kind": "sort",
+   "tag": "M-MONEY-SIZE",
+   "rule": "kind",
+   "bins": [
+    {
+     "sprite": "coin_a10",
+     "label": "אֲגוֹרוֹת"
+    },
+    {
+     "sprite": "coin_s1",
+     "label": "שְׁקָלִים"
+    }
    ],
-   "correct": "coin_s10",
-   "tags": {
-    "coin_s5": "M-MONEY-SIZE"
-   },
-   "check": "transfer"
+   "items": [
+    [
+     "coin_a10",
+     1
+    ],
+    [
+     "coin_h50",
+     1,
+     "M-MONEY-SIZE"
+    ],
+    [
+     "coin_s5",
+     2
+    ],
+    [
+     "coin_s10",
+     2
+    ]
+   ],
+   "prompt": "מְמַיְּנִים: אֲגוֹרוֹת לְכָאן, וּשְׁקָלִים לְכָאן.",
+   "h3": "עֶשֶׂר אֲגוֹרוֹת וַחֲצִי שֶׁקֶל הֵם אֲגוֹרוֹת. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! מִיַּנְתֶּם אֶת הַמַּטְבְּעוֹת."
   },
   {
    "kind": "pay",
@@ -1304,95 +1355,98 @@
    "correct_text": "כֵּן! שִׁלַּמְתֶּם בְּדִיּוּק שְׁנֵים עָשָׂר שְׁקָלִים."
   },
   {
-   "kind": "pick",
    "id": "x.mathb19.1",
    "skill": "MATH-B-19",
    "difficulty": 0.37,
-   "domain": "math",
-   "chart": [
+   "revision": 2,
+   "kind": "sort",
+   "rule": "kind",
+   "bins": [
+    {
+     "sprite": "apple",
+     "count": 1,
+     "label": "תַּפּוּחִים"
+    },
+    {
+     "sprite": "banana_yellow",
+     "count": 1,
+     "label": "בָּנָנוֹת"
+    },
+    {
+     "sprite": "ball_red",
+     "count": 1,
+     "label": "כַּדּוּרִים"
+    }
+   ],
+   "items": [
     [
      "apple",
-     3
+     1
     ],
     [
      "banana_yellow",
-     5
+     2
+    ],
+    [
+     "banana_yellow",
+     2
+    ],
+    [
+     "apple",
+     1
+    ],
+    [
+     "banana_yellow",
+     2
     ],
     [
      "ball_red",
-     2
+     3
     ]
    ],
-   "options": [
-    "apple",
-    "banana_yellow",
-    "ball_red"
-   ],
-   "tags": {
-    "apple": "M-CNT-SIZE",
-    "ball_red": "M-CNT-SIZE"
-   },
-   "tag_lines": {
-    "M-CNT-SIZE": [
-     "vo:fb.size.chart",
-     "הַצִּיּוּר גָּדוֹל, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד."
-    ]
-   },
-   "correct": "banana_yellow",
-   "prompt": "מִמָּה יֵשׁ הֲכִי הַרְבֵּה?",
-   "correct_text": "כֵּן! בַּתַּרְשִׁים הָעַמּוּד שֶׁלּוֹ הֲכִי גָּבוֹהַּ.",
-   "h3": "בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ הֲכִי הַרְבֵּה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנָּכוֹן."
+   "prompt": "מְמַיְּנִים: כׇּל דָּבָר עִם הַדּוֹמִים לוֹ.",
+   "correct_text": "כֵּן! מִיַּנְתֶּם. יֵשׁ הֲכִי הַרְבֵּה בָּנָנוֹת."
   },
   {
-   "kind": "pick",
    "id": "x.mathb19.2",
    "skill": "MATH-B-19",
    "difficulty": 0.44,
-   "domain": "math",
-   "chart": [
-    [
-     "fish",
-     4
-    ],
-    [
-     "star",
-     6
-    ],
-    [
-     "duck",
-     3
-    ]
+   "revision": 2,
+   "kind": "sort",
+   "rule": "kind",
+   "bins": [
+    {
+     "sprite": "apple",
+     "count": 1,
+     "label": "תַּפּוּחִים"
+    },
+    {
+     "sprite": "banana_yellow",
+     "count": 1,
+     "label": "בָּנָנוֹת"
+    },
+    {
+     "sprite": "ball_red",
+     "count": 1,
+     "label": "כַּדּוּרִים"
+    }
    ],
-   "options": [
-    "star",
-    "duck",
-    "fish"
-   ],
-   "tags": {
-    "fish": "M-CNT-SIZE",
-    "duck": "M-CNT-SIZE"
-   },
-   "tag_lines": {
-    "M-CNT-SIZE": [
-     "vo:fb.size.chart",
-     "הַצִּיּוּר גָּדוֹל, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד."
-    ]
-   },
-   "correct": "star",
-   "prompt": "מִמָּה יֵשׁ הֲכִי הַרְבֵּה?",
-   "correct_text": "כֵּן! בַּתַּרְשִׁים הָעַמּוּד שֶׁלּוֹ הֲכִי גָּבוֹהַּ.",
-   "h3": "בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ הֲכִי הַרְבֵּה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנָּכוֹן."
-  },
-  {
-   "kind": "pick",
-   "id": "x.mathb19.3",
-   "skill": "MATH-B-19",
-   "difficulty": 0.51,
-   "domain": "math",
-   "chart": [
+   "items": [
     [
      "apple",
-     5
+     1
+    ],
+    [
+     "apple",
+     1
+    ],
+    [
+     "ball_red",
+     3
+    ],
+    [
+     "apple",
+     1
     ],
     [
      "banana_yellow",
@@ -1400,68 +1454,117 @@
     ],
     [
      "ball_red",
-     4
+     3
     ]
    ],
-   "options": [
-    "banana_yellow",
-    "ball_red",
-    "apple"
-   ],
-   "tags": {
-    "apple": "M-CNT-SIZE",
-    "ball_red": "M-CNT-SIZE"
-   },
-   "tag_lines": {
-    "M-CNT-SIZE": [
-     "vo:fb.size.chart",
-     "הַצִּיּוּר גָּדוֹל, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד."
-    ]
-   },
-   "correct": "banana_yellow",
-   "prompt": "מִמָּה יֵשׁ הֲכִי מְעַט?",
-   "correct_text": "כֵּן! בַּתַּרְשִׁים הָעַמּוּד שֶׁלּוֹ הֲכִי נָמוּךְ.",
-   "h3": "בָּעַמּוּד הַנָּמוּךְ יֵשׁ הֲכִי מְעַט. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנָּכוֹן."
+   "prompt": "מְמַיְּנִים: כׇּל דָּבָר עִם הַדּוֹמִים לוֹ.",
+   "correct_text": "כֵּן! מִיַּנְתֶּם. יֵשׁ הֲכִי הַרְבֵּה תַּפּוּחִים."
   },
   {
-   "kind": "pick",
-   "id": "x.mathb19.4",
+   "id": "x.mathb19.3",
    "skill": "MATH-B-19",
-   "difficulty": 0.58,
-   "domain": "math",
-   "chart": [
+   "difficulty": 0.51,
+   "revision": 2,
+   "kind": "sort",
+   "rule": "kind",
+   "bins": [
+    {
+     "sprite": "apple",
+     "count": 1,
+     "label": "תַּפּוּחִים"
+    },
+    {
+     "sprite": "banana_yellow",
+     "count": 1,
+     "label": "בָּנָנוֹת"
+    },
+    {
+     "sprite": "ball_red",
+     "count": 1,
+     "label": "כַּדּוּרִים"
+    }
+   ],
+   "items": [
     [
-     "fish",
+     "apple",
+     1
+    ],
+    [
+     "banana_yellow",
      2
     ],
     [
-     "star",
-     5
+     "ball_red",
+     3
     ],
     [
-     "duck",
-     4
+     "apple",
+     1
+    ],
+    [
+     "ball_red",
+     3
+    ],
+    [
+     "ball_red",
+     3
     ]
    ],
-   "options": [
-    "fish",
-    "star",
-    "duck"
+   "prompt": "מְמַיְּנִים: כׇּל דָּבָר עִם הַדּוֹמִים לוֹ.",
+   "correct_text": "כֵּן! מִיַּנְתֶּם. יֵשׁ הֲכִי מְעַט בָּנָנוֹת."
+  },
+  {
+   "id": "x.mathb19.4",
+   "skill": "MATH-B-19",
+   "difficulty": 0.58,
+   "revision": 2,
+   "kind": "sort",
+   "rule": "kind",
+   "bins": [
+    {
+     "sprite": "apple",
+     "count": 1,
+     "label": "תַּפּוּחִים"
+    },
+    {
+     "sprite": "banana_yellow",
+     "count": 1,
+     "label": "בָּנָנוֹת"
+    },
+    {
+     "sprite": "ball_red",
+     "count": 1,
+     "label": "כַּדּוּרִים"
+    }
    ],
-   "tags": {
-    "star": "M-CNT-SIZE",
-    "duck": "M-CNT-SIZE"
-   },
-   "tag_lines": {
-    "M-CNT-SIZE": [
-     "vo:fb.size.chart",
-     "הַצִּיּוּר גָּדוֹל, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד."
+   "items": [
+    [
+     "apple",
+     1
+    ],
+    [
+     "banana_yellow",
+     2
+    ],
+    [
+     "ball_red",
+     3
+    ],
+    [
+     "banana_yellow",
+     2
+    ],
+    [
+     "ball_red",
+     3
+    ],
+    [
+     "ball_red",
+     3
     ]
-   },
-   "correct": "fish",
-   "prompt": "מִמָּה יֵשׁ הֲכִי מְעַט?",
-   "correct_text": "כֵּן! בַּתַּרְשִׁים הָעַמּוּד שֶׁלּוֹ הֲכִי נָמוּךְ.",
-   "h3": "בָּעַמּוּד הַנָּמוּךְ יֵשׁ הֲכִי מְעַט. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנָּכוֹן."
+   ],
+   "prompt": "מְמַיְּנִים: כׇּל דָּבָר עִם הַדּוֹמִים לוֹ.",
+   "correct_text": "כֵּן! מִיַּנְתֶּם. יֵשׁ הֲכִי מְעַט תַּפּוּחִים."
   },
   {
    "kind": "pick",
@@ -1499,39 +1602,65 @@
    "h3": "שָׁלוֹשׁ וְעוֹד חָמֵשׁ וְעוֹד שְׁתַּיִם הֵם עֶשֶׂר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל עֶשֶׂר."
   },
   {
-   "kind": "pick",
    "id": "x.mathb19.6",
    "skill": "MATH-B-19",
    "difficulty": 0.72,
-   "domain": "math",
-   "chart": [
+   "revision": 2,
+   "kind": "sort",
+   "rule": "kind",
+   "bins": [
+    {
+     "sprite": "apple",
+     "count": 1,
+     "label": "תַּפּוּחִים"
+    },
+    {
+     "sprite": "banana_yellow",
+     "count": 1,
+     "label": "בָּנָנוֹת"
+    },
+    {
+     "sprite": "ball_red",
+     "count": 1,
+     "label": "כַּדּוּרִים"
+    }
+   ],
+   "items": [
     [
-     "fish",
-     4
+     "apple",
+     1
     ],
     [
-     "star",
+     "apple",
+     1
+    ],
+    [
+     "banana_yellow",
      2
     ],
     [
-     "duck",
+     "ball_red",
+     3
+    ],
+    [
+     "apple",
+     1
+    ],
+    [
+     "banana_yellow",
+     2
+    ],
+    [
+     "banana_yellow",
+     2
+    ],
+    [
+     "ball_red",
      3
     ]
    ],
-   "options": [
-    "n:8",
-    "n:10",
-    "n:9"
-   ],
-   "correct": "n:9",
-   "tags": {
-    "n:8": "M-CNT-SKIP",
-    "n:10": "M-CNT-DOUBLE"
-   },
-   "voice": true,
-   "prompt": "כַּמָּה יֵשׁ בְּסַךְ הַכֹּל בַּתַּרְשִׁים?",
-   "correct_text": "תֵּשַׁע! אַרְבַּע וְעוֹד שְׁתַּיִם וְעוֹד שָׁלוֹשׁ הֵם תֵּשַׁע.",
-   "h3": "אַרְבַּע וְעוֹד שְׁתַּיִם וְעוֹד שָׁלוֹשׁ הֵם תֵּשַׁע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל תֵּשַׁע."
+   "prompt": "מְמַיְּנִים: כׇּל דָּבָר עִם הַדּוֹמִים לוֹ.",
+   "correct_text": "כֵּן! מִיַּנְתֶּם. יֵשׁ שְׁמוֹנֶה בְּסַךְ הַכֹּל."
   },
   {
    "kind": "pick",

@@ -14,10 +14,10 @@
     "COL-A-05"
   ],
   "items": [
-    "col.world.apple.red",
-    "col.world.banana.ripe",
     "b15.cola05.1",
-    "b15.cola05.2"
+    "b15.cola05.2",
+    "col.world.apple.red",
+    "col.world.banana.ripe"
   ],
   "estimatedMinutes": 2,
   "sequence": 9,
@@ -29,5 +29,40 @@
         "v": "וַאוּ! יְדַעְתֶּם אֵיזֶה צֶבַע יֵשׁ לַדְּבָרִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.col-a-05",
+    "recall": [
+      "b15.cola02.3"
+    ],
+    "together": [
+      {
+        "id": "b15.cola05.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.goni.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b15.cola05.2",
+      "col.world.apple.red",
+      "col.world.banana.ripe"
+    ],
+    "handover": {
+      "vo": "vo:host.goni.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "יֹפִי. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

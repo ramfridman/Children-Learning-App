@@ -15,10 +15,10 @@
   ],
   "items": [
     "b.logb06.1",
-    "b.logb06.2",
     "b.logb06.3",
-    "b.logb06.4",
     "b.logb06.5",
+    "b.logb06.2",
+    "b.logb06.4",
     "b.logb06.6",
     "b.logb06.7",
     "b.logb06.8"
@@ -33,5 +33,46 @@
         "v": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַכְּלָל."
       }
     ]
+  },
+  "parts": {
+    "show": "show.log-b-06",
+    "recall": [
+      "log.sort.animal"
+    ],
+    "together": [
+      {
+        "id": "b.logb06.1",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.timi.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.logb06.3",
+      "b.logb06.5",
+      "b.logb06.2",
+      "b.logb06.4",
+      "b.logb06.6",
+      "b.logb06.7"
+    ],
+    "use": [
+      "b.logb06.8"
+    ],
+    "handover": {
+      "vo": "vo:host.timi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חוֹשְׁבִים לְאַט. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

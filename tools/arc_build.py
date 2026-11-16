@@ -36,7 +36,12 @@ LEAD_TEMPLATES = ('sort_drag', 'shape_builder', 'trace')
 ALMOST = ('vo:fb.almost', 'בּוֹאוּ נְנַסֶּה שׁוּב.')
 UNSURE = ('vo:fb.unsure', 'שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד.')
 TEMPLATE_OF_LEAD_LINE = {'sort_drag': 'sort_drag', 'shape_builder': 'shape_builder', 'tap_answer': 'tap_answer',
-                         'trace': 'trace', 'listen_do': 'listen_do'}
+                         'trace': 'trace', 'listen_do': 'listen_do',
+                         # M11 Stage 2, the other lands: a Together item of a template with no lead player yet (lead 0) has its host's line of
+                         # that template; a pick that is not a tap says the tap's line (the strategy, then the hint-1 picture)
+                         'number_line': 'number_line', 'give_n': 'give_n', 'count_tap': 'count_tap', 'build_pattern': 'build_pattern',
+                         'balance': 'balance', 'shop_pay': 'shop_pay', 'robot_path': 'robot_path', 'clock_set': 'clock_set',
+                         'flash': 'tap_answer', 'spot_error': 'tap_answer', 'match_pairs': 'tap_answer'}
 
 
 # The answer block of a Show of each template (a Show is never scored; the schema wants the template's own type).

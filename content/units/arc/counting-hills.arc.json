@@ -1,0 +1,4928 @@
+{
+ "schema": "lesson-arc-source/v0",
+ "land": "numbers",
+ "host": "nekudi",
+ "review": "needs-editor",
+ "status": "M11 Stage 2, step 2.4c (Counting Hills), authored by the curriculum-expert on 2026-11-16. Host lines are plain drafts for the hebrew-text-editor. Only the Show of NUM-B-07 (trace) plays today; the others wait for the Show and lead players of number_line, give_n, count_tap, shop_pay and the share mode of sort_drag (step 2.1 for the templates the pilot did not need), or for Stage 3 (NUM-A-11 to A-14); a lesson whose Show waits stays a flat list (arc_build.py).",
+ "spec": "docs/milestones/M11-stage2.md §2, §3.1, §7.4 and §8",
+ "howToRead": [
+  "As shape-forest.arc.json. Steps of the templates that have no Show player yet are written in the move words the player will need (the hand-off to the app-developer): number_line `hop` (one hop of that size from where the marker stands) and `point` (the host points to a tick and says its number) with the child's `place` (the frog put on a tick); count_tap `touch` (that many objects touched in one run of the hand, each counted aloud); give_n `move` (that many objects moved to the target in one run, counted aloud); shop_pay `coin` (one coin of that kind laid on the counter); sort_drag share `item` and `bin` (the card dealt to that bin).",
+  "A Show with `template: null` waits for a Stage 3 template; its lines and picture are the brief for it.",
+  "lessons: Together is the first item of the lesson's first skill, concrete first; a template with no lead player has lead 0 (the host says its line and the child does the whole item). Alone is the pool, concrete first, then pictures, then symbols."
+ ],
+ "caps": {
+  "P1": {
+   "screens": 5,
+   "minutes": 3
+  },
+  "P2": {
+   "screens": 6,
+   "minutes": 4
+  },
+  "P3": {
+   "screens": 8,
+   "minutes": 5
+  },
+  "P4": {
+   "screens": 9,
+   "minutes": 6,
+   "scoredItems": 7
+  }
+ },
+ "shows": [
+  {
+   "id": "show.num-a-01",
+   "skill": "NUM-A-01",
+   "band": "A",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 1,
+    "to": 5,
+    "markerSprite": "asset:frog",
+    "labels": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "start": 1,
+    "hops": [
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 1,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "child",
+     "hop": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_a_01.open",
+     "text": "סוֹפְרִים יַחַד עִם הַצְּפַרְדֵּעַ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_a_01.key",
+     "text": "קְפִיצָה אַחַת, מִסְפָּר אֶחָד.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_a_01.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַקְּפִיצָה הָאַחֲרוֹנָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַחַת",
+    "שְׁתַּיִם",
+    "שָׁלוֹשׁ",
+    "אַרְבַּע",
+    "חָמֵשׁ"
+   ],
+   "picture": "the frog on a track of five stones labelled 1 to 5; Nekudi taps the frog, it hops one stone and he says the number it lands on; three hops, then the child makes the hop to 5",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-a-02",
+   "skill": "NUM-A-02",
+   "band": "A",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 1,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10
+    ],
+    "start": 6,
+    "hops": [
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 1,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "child",
+     "hop": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_a_02.open",
+     "text": "הַצְּפַרְדֵּעַ מַמְשִׁיכָה עַד עֶשֶׂר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_a_02.key",
+     "text": "שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה, תֵּשַׁע.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_a_02.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד קְפִיצָה אַחַת.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "שֵׁשׁ",
+    "שֶׁבַע",
+    "שְׁמוֹנֶה",
+    "תֵּשַׁע",
+    "עֶשֶׂר"
+   ],
+   "picture": "the track of ten stones; the frog starts on 6 and Nekudi says each number as it lands (7, 8, 9); the child hops to 10",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-a-03",
+   "skill": "NUM-A-03",
+   "band": "A",
+   "purpose": "show",
+   "template": "count_tap",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "objects": {
+     "sprite": "asset:ladybug",
+     "litSprite": "asset:ladybug_lit",
+     "count": 4,
+     "arrangement": "line",
+     "onTap": "glow",
+     "seed": 7
+    },
+    "target": {
+     "sprite": "asset:basket_target"
+    }
+   },
+   "steps": [
+    {
+     "by": "host",
+     "touch": 1,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "touch": 1
+    },
+    {
+     "by": "host",
+     "touch": 1
+    },
+    {
+     "by": "child",
+     "touch": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_a_03.open",
+     "text": "סוֹפְרִים אֶת הַחִפּוּשִׁיּוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_a_03.key",
+     "text": "נוֹגְעִים בְּכׇל אַחַת פַּעַם אַחַת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_a_03.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הָאַחֲרוֹנָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַחַת",
+    "שְׁתַּיִם",
+    "שָׁלוֹשׁ",
+    "אַרְבַּע"
+   ],
+   "picture": "four ladybugs in a row; Nekudi's finger touches one, it lights and he says its number; three of them, then the child touches the last",
+   "status": "waits for the Show and lead player of count_tap (step 2.1)"
+  },
+  {
+   "id": "show.num-a-04",
+   "skill": "NUM-A-04",
+   "band": "A",
+   "purpose": "show",
+   "template": "count_tap",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "objects": {
+     "sprite": "asset:butterfly",
+     "litSprite": "asset:butterfly_lit",
+     "count": 4,
+     "arrangement": "line",
+     "onTap": "glow",
+     "seed": 7
+    },
+    "target": {
+     "sprite": "asset:basket_target"
+    }
+   },
+   "steps": [
+    {
+     "by": "host",
+     "touch": 1
+    },
+    {
+     "by": "host",
+     "touch": 1
+    },
+    {
+     "by": "host",
+     "touch": 1,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "touch": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_a_04.open",
+     "text": "כַּמָּה פַּרְפָּרִים יֵשׁ?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_a_04.key",
+     "text": "הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_a_04.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַפַּרְפַּר הָאַחֲרוֹן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַחַת",
+    "שְׁתַּיִם",
+    "שָׁלוֹשׁ",
+    "אַרְבַּע"
+   ],
+   "picture": "four butterflies; Nekudi touches three and says one, two, three; the child touches the fourth; Nekudi repeats the last number, \"four: there are four\", and the numeral 4 lights",
+   "status": "waits for the Show and lead player of count_tap (step 2.1)"
+  },
+  {
+   "id": "show.num-a-05",
+   "skill": "NUM-A-05",
+   "band": "A",
+   "purpose": "show",
+   "template": "give_n",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "source": {
+     "sprite": "asset:star",
+     "count": 5
+    },
+    "target": {
+     "sprite": "asset:basket_target"
+    },
+    "frame": true
+   },
+   "steps": [
+    {
+     "by": "host",
+     "move": 1,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "move": 1
+    },
+    {
+     "by": "child",
+     "move": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_a_05.open",
+     "text": "שָׂמִים כּוֹכָבִים בַּמִּסְגֶּרֶת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_a_05.key",
+     "text": "רוֹאִים שְׁלוֹשָׁה בְּלִי לִסְפֹּר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_a_05.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַכּוֹכָב הַשְּׁלִישִׁי.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַחַת",
+    "שְׁתַּיִם",
+    "שָׁלוֹשׁ"
+   ],
+   "picture": "a ten-frame; Nekudi puts two stars in the first cells, the child the third; the three stand in a row, seen at a glance",
+   "status": "waits for the Show and lead player of give_n (step 2.1)"
+  },
+  {
+   "id": "show.num-a-06",
+   "skill": "NUM-A-06",
+   "band": "A",
+   "purpose": "show",
+   "template": "give_n",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "source": {
+     "sprite": "asset:apple",
+     "count": 6
+    },
+    "target": {
+     "sprite": "asset:basket_target"
+    }
+   },
+   "steps": [
+    {
+     "by": "host",
+     "move": 1
+    },
+    {
+     "by": "host",
+     "move": 1,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "move": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_a_06.open",
+     "text": "צָרִיךְ לָתֵת שְׁלוֹשָׁה תַּפּוּחִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_a_06.key",
+     "text": "סוֹפְרִים, וְעוֹצְרִים בְּשָׁלוֹשׁ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_a_06.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הַשְּׁלִישִׁי.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַחַת",
+    "שְׁתַּיִם",
+    "שָׁלוֹשׁ"
+   ],
+   "picture": "a pile of six apples and a basket; Nekudi moves one (\"one\"), then one (\"two\"), the child moves the third and the hand stops: the rest of the pile stays",
+   "status": "waits for the Show and lead player of give_n (step 2.1)"
+  },
+  {
+   "id": "show.num-a-07",
+   "skill": "NUM-A-07",
+   "band": "A",
+   "purpose": "show",
+   "template": "count_tap",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "objects": {
+     "sprite": "asset:apple",
+     "litSprite": "asset:apple_lit",
+     "count": 3,
+     "arrangement": "line",
+     "onTap": "glow",
+     "seed": 7
+    },
+    "target": {
+     "sprite": "asset:basket_target"
+    }
+   },
+   "steps": [
+    {
+     "by": "host",
+     "touch": 1,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "touch": 1
+    },
+    {
+     "by": "child",
+     "touch": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_a_07.open",
+     "text": "כַּמָּה תַּפּוּחִים? וְאֵיזֶה מִסְפָּר?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_a_07.key",
+     "text": "שְׁלוֹשָׁה תַּפּוּחִים. זֶה הַמִּסְפָּר שָׁלוֹשׁ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_a_07.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הָאַחֲרוֹן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַחַת",
+    "שְׁתַּיִם",
+    "שָׁלוֹשׁ"
+   ],
+   "picture": "three apples; Nekudi touches two, the child the third; then the numeral 3 lights among the number tiles as the key line is said",
+   "status": "waits for the Show and lead player of count_tap (step 2.1)"
+  },
+  {
+   "id": "show.num-a-08",
+   "skill": "NUM-A-08",
+   "band": "A",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 1,
+    "to": 5,
+    "markerSprite": "asset:frog",
+    "labels": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "point": 1,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "point": 2
+    },
+    {
+     "by": "host",
+     "point": 3
+    },
+    {
+     "by": "child",
+     "place": 4
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_a_08.open",
+     "text": "לְכׇל מִסְפָּר יֵשׁ צוּרָה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_a_08.key",
+     "text": "זֶה אַחַת. זֶה שְׁתַּיִם. זֶה שָׁלוֹשׁ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_a_08.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: אֵיפֹה אַרְבַּע?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַחַת",
+    "שְׁתַּיִם",
+    "שָׁלוֹשׁ",
+    "אַרְבַּע"
+   ],
+   "picture": "the track labelled 1 to 5; Nekudi's finger rests on each numeral and traces its shape as he names it; the child puts the frog on 4",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-a-09",
+   "skill": "NUM-A-09",
+   "band": "A",
+   "purpose": "show",
+   "template": "count_tap",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "objects": {
+     "sprite": "asset:ladybug",
+     "litSprite": "asset:ladybug_lit",
+     "count": 6,
+     "arrangement": "line",
+     "onTap": "glow",
+     "seed": 7
+    },
+    "target": {
+     "sprite": "asset:basket_target"
+    }
+   },
+   "steps": [
+    {
+     "by": "host",
+     "touch": 5,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "touch": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_a_09.open",
+     "text": "סוֹפְרִים עַד עֶשֶׂר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_a_09.key",
+     "text": "חָמֵשׁ, וְעוֹד אַחַת: שֵׁשׁ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_a_09.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הָאַחֲרוֹנָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַחַת",
+    "שְׁתַּיִם",
+    "שָׁלוֹשׁ",
+    "אַרְבַּע",
+    "חָמֵשׁ",
+    "שֵׁשׁ"
+   ],
+   "picture": "six ladybugs in a row; Nekudi touches five in one run, counting aloud, and stops; the child touches the sixth",
+   "status": "waits for the Show and lead player of count_tap (step 2.1)",
+   "note": "a step `touch: 5` is five touches in one run of the hand, counted aloud (one demonstrated move at P1 and P2)"
+  },
+  {
+   "id": "show.num-a-10",
+   "skill": "NUM-A-10",
+   "band": "A",
+   "purpose": "show",
+   "template": "give_n",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "source": {
+     "sprite": "asset:apple",
+     "count": 8
+    },
+    "target": {
+     "sprite": "asset:basket_target"
+    },
+    "frame": true
+   },
+   "steps": [
+    {
+     "by": "host",
+     "move": 4,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "move": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_a_10.open",
+     "text": "מְמַלְּאִים שׁוּרָה בַּמִּסְגֶּרֶת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_a_10.key",
+     "text": "שׁוּרָה מְלֵאָה זֶה חָמֵשׁ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_a_10.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַחֲמִישִׁי.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַרְבַּע",
+    "חָמֵשׁ"
+   ],
+   "picture": "a ten-frame; Nekudi fills four cells of the top row in one run; the child puts the fifth; the full row glows: five",
+   "status": "waits for the Show and lead player of give_n (step 2.1)"
+  },
+  {
+   "id": "show.num-a-11",
+   "skill": "NUM-A-11",
+   "band": "A",
+   "purpose": "show",
+   "template": null,
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": null,
+   "steps": [],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_a_11.open",
+     "text": "לְמִי יֵשׁ יוֹתֵר?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_a_11.key",
+     "text": "שָׂמִים אֶחָד מוּל אֶחָד.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_a_11.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: מִי נִשְׁאָר בְּלִי זוּג?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "יותר",
+    "פחות"
+   ],
+   "picture": "two rows of ladybugs matched one to one by lines; the one left over shows \"more\"",
+   "status": "waits for Stage 3.1 (two ten-frames as rows), as the exempt list says"
+  },
+  {
+   "id": "show.num-a-12",
+   "skill": "NUM-A-12",
+   "band": "A",
+   "purpose": "show",
+   "template": null,
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": null,
+   "steps": [],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_a_12.open",
+     "text": "גְּדוֹלִים זֶה לֹא יוֹתֵר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_a_12.key",
+     "text": "סוֹפְרִים, לֹא מִסְתַּכְּלִים עַל הַגֹּדֶל.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_a_12.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: אֵיפֹה יֵשׁ יוֹתֵר?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "יותר"
+   ],
+   "picture": "three big stars and five small stars matched one to one; the five small have more",
+   "status": "waits for Stage 3.1"
+  },
+  {
+   "id": "show.num-a-13",
+   "skill": "NUM-A-13",
+   "band": "A",
+   "purpose": "show",
+   "template": null,
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": null,
+   "steps": [],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_a_13.open",
+     "text": "הַחַיּוֹת עוֹמְדוֹת בַּתּוֹר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_a_13.key",
+     "text": "רִאשׁוֹן, שֵׁנִי, שְׁלִישִׁי.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_a_13.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: מִי הָאַחֲרוֹן?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "ראשון",
+    "שני",
+    "שלישי",
+    "אחרון"
+   ],
+   "picture": "animals join a queue facing its front, which is marked; Nekudi counts them from the front",
+   "status": "waits for Stage 3.2 (order cards)"
+  },
+  {
+   "id": "show.num-a-14",
+   "skill": "NUM-A-14",
+   "band": "A",
+   "purpose": "show",
+   "template": null,
+   "representation": "story",
+   "handOver": "last",
+   "scene": null,
+   "steps": [],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_a_14.open",
+     "text": "הַצִּפֳּרִים עָפוֹת מֵהַקֵּן.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_a_14.key",
+     "text": "לֹא נִשְׁאֲרָה אַף אַחַת: אֶפֶס.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_a_14.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: כַּמָּה נִשְׁאֲרוּ?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אפס"
+   ],
+   "picture": "three birds fly from the nest one by one; the empty nest and the numeral 0",
+   "status": "waits for Stage 3.1"
+  },
+  {
+   "id": "show.num-b-01",
+   "skill": "NUM-B-01",
+   "band": "B",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 20,
+    "markerSprite": "asset:frog",
+    "labels": [
+     0,
+     10,
+     20
+    ],
+    "start": 10,
+    "hops": [
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 1,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "child",
+     "hop": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_01.open",
+     "text": "הַצְּפַרְדֵּעַ קוֹפֶצֶת אַחֲרֵי עֶשֶׂר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_01.key",
+     "text": "אַחַת עֶשְׂרֵה, שְׁתֵּים עֶשְׂרֵה, שְׁלֹשׁ עֶשְׂרֵה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_01.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַקְּפִיצָה הָאַחֲרוֹנָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַחַת עֶשְׂרֵה",
+    "שְׁתֵּים עֶשְׂרֵה",
+    "שְׁלֹשׁ עֶשְׂרֵה",
+    "אַרְבַּע עֶשְׂרֵה"
+   ],
+   "picture": "the line 0 to 20 with 10 marked; the frog on 10 hops one at a time and Nekudi says 11, 12, 13; the child hops to 14",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-b-02",
+   "skill": "NUM-B-02",
+   "band": "B",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 10,
+    "to": 30,
+    "markerSprite": "asset:frog",
+    "labels": [
+     10,
+     20,
+     30
+    ],
+    "start": 18,
+    "hops": [
+     1,
+     1,
+     1
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "host",
+     "hop": 1,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "hop": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_02.open",
+     "text": "קוֹפְצִים מֵעַל עֶשְׂרִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_02.key",
+     "text": "אַחֲרֵי תְּשַׁע עֶשְׂרֵה בָּא עֶשְׂרִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_02.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: מָה אַחֲרֵי עֶשְׂרִים?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "תְּשַׁע עֶשְׂרֵה",
+    "עֶשְׂרִים",
+    "עֶשְׂרִים וְאַחַת"
+   ],
+   "picture": "the line 10 to 30; the frog hops 18 to 19 and then over the marked 20 (the ten flashes); the child hops to 21",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-b-03",
+   "skill": "NUM-B-03",
+   "band": "B",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+     0,
+     10
+    ],
+    "start": 10,
+    "hops": [
+     -1,
+     -1,
+     -1,
+     -1
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": -1,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "hop": -1
+    },
+    {
+     "by": "host",
+     "hop": -1
+    },
+    {
+     "by": "child",
+     "hop": -1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_03.open",
+     "text": "סוֹפְרִים אֲחוֹרָה, כְּמוֹ בַּחֲלָלִית.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_03.key",
+     "text": "קְפִיצָה אֲחוֹרָה: אֶחָד פָּחוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_03.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד קְפִיצָה אֲחוֹרָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "עֶשֶׂר",
+    "תֵּשַׁע",
+    "שְׁמוֹנֶה",
+    "שֶׁבַע",
+    "שֵׁשׁ"
+   ],
+   "picture": "the line 0 to 10; the frog on 10 hops back (to the left) three times as Nekudi counts down 9, 8, 7; the child hops to 6",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-b-04",
+   "skill": "NUM-B-04",
+   "band": "B",
+   "purpose": "show",
+   "template": "count_tap",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "objects": {
+     "sprite": "asset:star",
+     "litSprite": "asset:star_lit",
+     "count": 13,
+     "arrangement": "line",
+     "onTap": "glow",
+     "seed": 7
+    },
+    "target": {
+     "sprite": "asset:basket_target"
+    }
+   },
+   "steps": [
+    {
+     "by": "host",
+     "touch": 10,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "touch": 1
+    },
+    {
+     "by": "host",
+     "touch": 1
+    },
+    {
+     "by": "child",
+     "touch": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_04.open",
+     "text": "סוֹפְרִים הַרְבֵּה כּוֹכָבִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_04.key",
+     "text": "קֹדֶם עֶשֶׂר, וְאָז מַמְשִׁיכִים לִסְפֹּר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_04.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הָאַחֲרוֹן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "עֶשֶׂר",
+    "אַחַת עֶשְׂרֵה",
+    "שְׁתֵּים עֶשְׂרֵה",
+    "שְׁלֹשׁ עֶשְׂרֵה"
+   ],
+   "picture": "thirteen stars; Nekudi touches ten in one run (they light as a group: \"ten\"), then 11 and 12; the child touches the last",
+   "status": "waits for the Show and lead player of count_tap (step 2.1)"
+  },
+  {
+   "id": "show.num-b-05",
+   "skill": "NUM-B-05",
+   "band": "B",
+   "purpose": "show",
+   "template": "give_n",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "source": {
+     "sprite": "asset:fish",
+     "count": 20
+    },
+    "target": {
+     "sprite": "asset:basket_target"
+    }
+   },
+   "steps": [
+    {
+     "by": "host",
+     "move": 10,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "move": 1
+    },
+    {
+     "by": "host",
+     "move": 1
+    },
+    {
+     "by": "child",
+     "move": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_05.open",
+     "text": "צָרִיךְ לָתֵת שְׁלוֹשָׁה עָשָׂר דָּגִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_05.key",
+     "text": "עֲשָׂרָה, וְעוֹד שְׁלוֹשָׁה. וְעוֹצְרִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_05.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הָאַחֲרוֹן, וְעוֹצְרִים.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "עֶשֶׂר",
+    "אַחַת עֶשְׂרֵה",
+    "שְׁתֵּים עֶשְׂרֵה",
+    "שְׁלֹשׁ עֶשְׂרֵה"
+   ],
+   "picture": "a pile of twenty fish; Nekudi moves ten in one run (\"ten\"), then 11 and 12; the child moves the thirteenth and the hand stops",
+   "status": "waits for the Show and lead player of give_n (step 2.1)"
+  },
+  {
+   "id": "show.num-b-06",
+   "skill": "NUM-B-06",
+   "band": "B",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "point": 6,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "point": 9
+    },
+    {
+     "by": "child",
+     "place": 6
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_06.open",
+     "text": "מִסְפָּרִים שֶׁנִּרְאִים דּוֹמִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_06.key",
+     "text": "זֶה שֵׁשׁ. וְזֶה תֵּשַׁע.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_06.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: אֵיפֹה שֵׁשׁ?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "שֵׁשׁ",
+    "תֵּשַׁע"
+   ],
+   "picture": "the line 0 to 10 with every numeral; Nekudi's finger traces the 6 (round at the bottom) and the 9 (round at the top); the child puts the frog on 6",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-b-07",
+   "skill": "NUM-B-07",
+   "band": "B",
+   "purpose": "show",
+   "template": "trace",
+   "representation": "embodied",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "strokes": [
+     [
+      [
+       62,
+       10
+      ],
+      [
+       20,
+       62
+      ],
+      [
+       82,
+       62
+      ]
+     ],
+     [
+      [
+       62,
+       10
+      ],
+      [
+       62,
+       90
+      ]
+     ]
+    ],
+    "guide": "full",
+    "tolerance": 12
+   },
+   "steps": [
+    {
+     "by": "host",
+     "segment": 1,
+     "trace": "side"
+    },
+    {
+     "by": "host",
+     "segment": 2,
+     "trace": "side",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "segment": 3
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_07.open",
+     "text": "כּוֹתְבִים אַרְבַּע מֵהַנְּקֻדָּה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_07.key",
+     "text": "קַו לְמַטָּה, וְאָז קַו יָשָׁר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_07.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַקַּו הָאָרֹךְ.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַרְבַּע"
+   ],
+   "picture": "the 4 of x.numb07.5 with its start dot; Nekudi's finger draws the slant and the bar, the corner pulses; the long down stroke is left dotted for the child",
+   "status": "buildable: trace is a lead template (one lead step = one side of the path)"
+  },
+  {
+   "id": "show.num-b-08",
+   "skill": "NUM-B-08",
+   "band": "B",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 10,
+    "to": 20,
+    "markerSprite": "asset:frog",
+    "labels": [
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "point": 11
+    },
+    {
+     "by": "host",
+     "point": 12
+    },
+    {
+     "by": "host",
+     "point": 13,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "place": 14
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_08.open",
+     "text": "קוֹרְאִים מִסְפָּרִים אַחֲרֵי עֶשֶׂר.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_08.key",
+     "text": "אַחַת עֶשְׂרֵה, שְׁתֵּים עֶשְׂרֵה, שְׁלֹשׁ עֶשְׂרֵה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_08.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: אֵיפֹה אַרְבַּע עֶשְׂרֵה?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַחַת עֶשְׂרֵה",
+    "שְׁתֵּים עֶשְׂרֵה",
+    "שְׁלֹשׁ עֶשְׂרֵה",
+    "אַרְבַּע עֶשְׂרֵה"
+   ],
+   "picture": "the line 10 to 20 with every numeral; Nekudi's finger runs under each numeral, the 1 first, as he reads it; the child puts the frog on 14",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-b-09",
+   "skill": "NUM-B-09",
+   "band": "B",
+   "purpose": "show",
+   "template": "give_n",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "source": {
+     "sprite": "asset:apple",
+     "count": 12
+    },
+    "target": {
+     "sprite": "asset:basket_target"
+    },
+    "frame": true
+   },
+   "steps": [
+    {
+     "by": "host",
+     "move": 5,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "move": 1
+    },
+    {
+     "by": "host",
+     "move": 1
+    },
+    {
+     "by": "child",
+     "move": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_09.open",
+     "text": "מִסְגֶּרֶת שֶׁל עֶשֶׂר מִשְׁבָּצוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_09.key",
+     "text": "שׁוּרָה מְלֵאָה חָמֵשׁ, וְעוֹד שָׁלוֹשׁ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_09.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַשְּׁמִינִי.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "חָמֵשׁ",
+    "שְׁמוֹנֶה"
+   ],
+   "picture": "a ten-frame; Nekudi fills the top row in one run (\"five\"), then puts two more under it; the child puts the eighth; \"five and three is eight\"",
+   "status": "waits for the Show and lead player of give_n (step 2.1)"
+  },
+  {
+   "id": "show.num-b-10",
+   "skill": "NUM-B-10",
+   "band": "B",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+     0,
+     4,
+     7,
+     10
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "point": 4
+    },
+    {
+     "by": "host",
+     "point": 7,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "place": 7
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_10.open",
+     "text": "מִי גָּדוֹל יוֹתֵר, אַרְבַּע אוֹ שֶׁבַע?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_10.key",
+     "text": "לְכִוּוּן הַחֵץ, הַמִּסְפָּרִים גְּדֵלִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_10.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: שִׂימוּ עַל הַגָּדוֹל.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַרְבַּע",
+    "שֶׁבַע"
+   ],
+   "picture": "the line 0 to 10 with 4 and 7 marked and an arrow at the end; Nekudi points to 4, then slides to 7 along the arrow; the child puts the frog on 7",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-b-11",
+   "skill": "NUM-B-11",
+   "band": "B",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+     0,
+     5,
+     10
+    ],
+    "start": 5,
+    "hops": [
+     1,
+     -1,
+     -1
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 1,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "hop": -1
+    },
+    {
+     "by": "child",
+     "hop": -1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_11.open",
+     "text": "אֶחָד יוֹתֵר, אֶחָד פָּחוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_11.key",
+     "text": "קָדִימָה זֶה יוֹתֵר, אֲחוֹרָה פָּחוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_11.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד אֶחָד פָּחוֹת.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַרְבַּע",
+    "חָמֵשׁ",
+    "שֵׁשׁ"
+   ],
+   "picture": "the frog on 5; Nekudi hops it forward to 6 (\"one more\"), back to 5 (\"one less\"); the child hops back to 4",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-b-13",
+   "skill": "NUM-B-13",
+   "band": "B",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+     0,
+     5,
+     10
+    ],
+    "start": 0,
+    "hops": [
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 1,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "child",
+     "hop": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_13.open",
+     "text": "קוֹפְצִים עַל צִיר הַמִּסְפָּרִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_13.key",
+     "text": "כׇּל הַקְּפִיצוֹת בְּאוֹתוֹ אֹרֶךְ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_13.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד קְפִיצָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַחַת",
+    "שְׁתַּיִם",
+    "שָׁלוֹשׁ",
+    "אַרְבַּע"
+   ],
+   "picture": "the line 0 to 10; the frog on 0 makes three equal hops, each arc drawn the same size; the child makes the fourth",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-b-14",
+   "skill": "NUM-B-14",
+   "band": "B",
+   "purpose": "show",
+   "template": "give_n",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "source": {
+     "sprite": "asset:apple",
+     "count": 8
+    },
+    "target": {
+     "sprite": "asset:basket_target"
+    },
+    "frame": true
+   },
+   "steps": [
+    {
+     "by": "host",
+     "move": 1
+    },
+    {
+     "by": "host",
+     "move": 1
+    },
+    {
+     "by": "child",
+     "move": 1,
+     "say": "key"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_14.open",
+     "text": "יֵשׁ חָמֵשׁ. רוֹצִים שְׁמוֹנֶה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_14.key",
+     "text": "חָמֵשׁ וְעוֹד שָׁלוֹשׁ זֶה שְׁמוֹנֶה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_14.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד אֶחָד.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "חָמֵשׁ",
+    "שֵׁשׁ",
+    "שֶׁבַע",
+    "שְׁמוֹנֶה"
+   ],
+   "picture": "a ten-frame that starts with its top row full (five); Nekudi adds the sixth and the seventh; the child the eighth",
+   "status": "waits for the Show and lead player of give_n (step 2.1) and for the prefilled frame of step 2.2",
+   "note": "the scene needs `prefilled: 5` (step 2.2); not written into it"
+  },
+  {
+   "id": "show.num-b-16",
+   "skill": "NUM-B-16",
+   "band": "B",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 20,
+    "markerSprite": "asset:frog",
+    "labels": [
+     0,
+     10,
+     20
+    ],
+    "start": 10,
+    "hops": [
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "host",
+     "hop": 1,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "hop": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_16.open",
+     "text": "עֶשֶׂר, וְעוֹד כַּמָּה?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_16.key",
+     "text": "עֶשֶׂר, וְעוֹד אַרְבַּע: אַרְבַּע עֶשְׂרֵה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_16.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַקְּפִיצָה הָאַחֲרוֹנָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "עֶשֶׂר",
+    "אַרְבַּע עֶשְׂרֵה"
+   ],
+   "picture": "the frog on the marked 10; three small hops (11, 12, 13); the child makes the fourth; the four arcs are counted \"ten and four\"; upgrade: a full frame and four more when the prefilled frame of 2.2 lands",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-b-17",
+   "skill": "NUM-B-17",
+   "band": "B",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 10,
+    "markerSprite": "asset:frog",
+    "labels": [
+     0,
+     10
+    ],
+    "start": 0,
+    "hops": [
+     2,
+     2,
+     2,
+     2
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 2,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "hop": 2
+    },
+    {
+     "by": "host",
+     "hop": 2
+    },
+    {
+     "by": "child",
+     "hop": 2
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_17.open",
+     "text": "קוֹפְצִים בִּשְׁתַּיִם.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_17.key",
+     "text": "שְׁתַּיִם, אַרְבַּע, שֵׁשׁ.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_17.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד שְׁתַּיִם.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "שְׁתַּיִם",
+    "אַרְבַּע",
+    "שֵׁשׁ",
+    "שְׁמוֹנֶה"
+   ],
+   "picture": "the frog hops two stones at a time from 0: 2, 4, 6; the child hops to 8",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-b-18",
+   "skill": "NUM-B-18",
+   "band": "B",
+   "purpose": "show",
+   "template": "sort_drag",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "bins": [
+     {
+      "id": "b1",
+      "sprite": "asset:cat",
+      "count": 1,
+      "label": "חָתוּל"
+     },
+     {
+      "id": "b2",
+      "sprite": "asset:dog",
+      "count": 1,
+      "label": "כֶּלֶב"
+     }
+    ],
+    "items": [
+     {
+      "id": "i1",
+      "sprite": "asset:sock",
+      "bin": "b1"
+     },
+     {
+      "id": "i2",
+      "sprite": "asset:sock",
+      "bin": "b2"
+     },
+     {
+      "id": "i3",
+      "sprite": "asset:sock",
+      "bin": "b1"
+     },
+     {
+      "id": "i4",
+      "sprite": "asset:sock",
+      "bin": "b2"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "item": "i1",
+     "bin": "b1",
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "item": "i2",
+     "bin": "b2"
+    },
+    {
+     "by": "host",
+     "item": "i3",
+     "bin": "b1"
+    },
+    {
+     "by": "child",
+     "item": "i4",
+     "bin": "b2"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_b_18.open",
+     "text": "מְחַלְּקִים גַּרְבַּיִם לֶחָתוּל וְלַכֶּלֶב.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_b_18.key",
+     "text": "גֶּרֶב לָזֶה, גֶּרֶב לָזֶה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_b_18.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַגֶּרֶב הָאַחֲרוֹנָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "זוּג",
+    "חָתוּל",
+    "כֶּלֶב"
+   ],
+   "picture": "four socks dealt in turn, one to the cat and one to the dog; each round the two socks are joined by a line: a pair",
+   "status": "buildable on the sort player of today: the Show is a sort whose cards have their bins in turn (cat, dog, cat, dog); the Alone items are shares"
+  },
+  {
+   "id": "show.num-c-01",
+   "skill": "NUM-C-01",
+   "band": "C",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 30,
+    "to": 50,
+    "markerSprite": "asset:frog",
+    "labels": [
+     30,
+     40,
+     50
+    ],
+    "start": 37,
+    "hops": [
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "host",
+     "hop": 1
+    },
+    {
+     "by": "host",
+     "hop": 1,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "hop": 1
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_c_01.open",
+     "text": "סוֹפְרִים עַד מֵאָה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_c_01.key",
+     "text": "אַחֲרֵי שְׁלוֹשִׁים וְתֵשַׁע: אַרְבָּעִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_c_01.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד קְפִיצָה.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "שְׁלוֹשִׁים וּשְׁמוֹנֶה",
+    "שְׁלוֹשִׁים וְתֵשַׁע",
+    "אַרְבָּעִים",
+    "אַרְבָּעִים וְאַחַת"
+   ],
+   "picture": "the line 30 to 50; the frog hops 37 to 38, 39, then over the marked 40 (the ten flashes); the child hops to 41",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-c-02",
+   "skill": "NUM-C-02",
+   "band": "C",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 40,
+    "to": 60,
+    "markerSprite": "asset:frog",
+    "labels": [
+     40,
+     50,
+     60
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "point": 40,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "point": 50
+    },
+    {
+     "by": "child",
+     "place": 47
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_c_02.open",
+     "text": "אֵיפֹה אַרְבָּעִים וְשֶׁבַע?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_c_02.key",
+     "text": "אַרְבָּעִים, וְעוֹד שֶׁבַע: קָרוֹב לַחֲמִשִּׁים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_c_02.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: שִׂימוּ אֶת הַצְּפַרְדֵּעַ.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "אַרְבָּעִים",
+    "אַרְבָּעִים וְשֶׁבַע",
+    "חֲמִשִּׁים"
+   ],
+   "picture": "the line 40 to 60; the numeral 47 above it with its 4 lit, then its 7; Nekudi points to 40 and to 50; the child puts the frog on 47",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-c-03",
+   "skill": "NUM-C-03",
+   "band": "C",
+   "purpose": "show",
+   "template": "shop_pay",
+   "representation": "concrete",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "itemSprite": "asset:fish",
+    "itemCount": 1,
+    "price": 3100,
+    "purse": [
+     {
+      "kind": "s10",
+      "count": 5
+     },
+     {
+      "kind": "s1",
+      "count": 5
+     }
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "coin": "s10"
+    },
+    {
+     "by": "host",
+     "coin": "s10"
+    },
+    {
+     "by": "host",
+     "coin": "s10",
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "coin": "s1"
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_c_03.open",
+     "text": "מְשַׁלְּמִים שְׁלוֹשִׁים וְאֶחָד שְׁקָלִים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_c_03.key",
+     "text": "שָׁלוֹשׁ עֲשָׂרוֹת, וְעוֹד אֶחָד.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_c_03.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַשֶּׁקֶל הָאַחֲרוֹן.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "עשרות",
+    "אחד"
+   ],
+   "picture": "the price 31 on the fish; Nekudi lays three ten-shekel coins, counting \"ten, twenty, thirty\"; the child lays the one shekel; upgrade: base-ten rods first (Stage 3.3)",
+   "status": "waits for the Show and lead player of shop_pay (step 2.1)"
+  },
+  {
+   "id": "show.num-c-04",
+   "skill": "NUM-C-04",
+   "band": "C",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 30,
+    "to": 50,
+    "markerSprite": "asset:frog",
+    "labels": [
+     30,
+     39,
+     41,
+     50
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "point": 39
+    },
+    {
+     "by": "host",
+     "point": 41,
+     "say": "key"
+    },
+    {
+     "by": "child",
+     "place": 41
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_c_04.open",
+     "text": "מִי גָּדוֹל יוֹתֵר?",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_c_04.key",
+     "text": "מַשְׁוִים קֹדֶם אֶת הָעֲשָׂרוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_c_04.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: שִׂימוּ עַל הַגָּדוֹל.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "שְׁלוֹשִׁים וְתֵשַׁע",
+    "אַרְבָּעִים וְאַחַת"
+   ],
+   "picture": "the line 30 to 50 with 39 and 41 marked; Nekudi lights the tens digit of each (3, 4), then points along the arrow to 41; the child puts the frog on 41",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-c-06",
+   "skill": "NUM-C-06",
+   "band": "C",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 0,
+    "to": 100,
+    "markerSprite": "asset:frog",
+    "labels": [
+     0,
+     50,
+     100
+    ],
+    "tickStep": 10
+   },
+   "steps": [
+    {
+     "by": "host",
+     "point": 50,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "point": 20
+    },
+    {
+     "by": "child",
+     "place": 23
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_c_06.open",
+     "text": "צִיר מֵאֶפֶס עַד מֵאָה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_c_06.key",
+     "text": "בָּאֶמְצַע: חֲמִשִּׁים.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_c_06.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: אֵיפֹה עֶשְׂרִים וְשָׁלוֹשׁ?",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "עֶשְׂרִים",
+    "עֶשְׂרִים וְשָׁלוֹשׁ",
+    "חֲמִשִּׁים"
+   ],
+   "picture": "the line 0 to 100 with a tick every ten; Nekudi points to the middle (50), then to 20; the child puts the frog a little after 20",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  },
+  {
+   "id": "show.num-c-09",
+   "skill": "NUM-C-09",
+   "band": "C",
+   "purpose": "show",
+   "template": "number_line",
+   "representation": "pictorial",
+   "handOver": "last",
+   "scene": {
+    "background": "asset:meadow",
+    "from": 20,
+    "to": 60,
+    "markerSprite": "asset:frog",
+    "labels": [
+     20,
+     30,
+     40,
+     50,
+     60
+    ],
+    "start": 23,
+    "hops": [
+     10,
+     10,
+     10
+    ]
+   },
+   "steps": [
+    {
+     "by": "host",
+     "hop": 10,
+     "say": "key"
+    },
+    {
+     "by": "host",
+     "hop": 10
+    },
+    {
+     "by": "child",
+     "hop": 10
+    }
+   ],
+   "lines": [
+    {
+     "role": "open",
+     "vo": "vo:host.nekudi.show.num_c_09.open",
+     "text": "קוֹפְצִים עֶשֶׂר קָדִימָה.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "key",
+     "vo": "vo:host.nekudi.show.num_c_09.key",
+     "text": "עֶשֶׂר יוֹתֵר: הַיְּחִידוֹת נִשְׁאָרוֹת.",
+     "review": "needs-editor"
+    },
+    {
+     "role": "handover",
+     "vo": "vo:host.nekudi.show.num_c_09.handover",
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד עֶשֶׂר.",
+     "review": "needs-editor"
+    }
+   ],
+   "predict": null,
+   "reminder": {
+    "line": "key",
+    "maxSeconds": 8
+   },
+   "teaches": [
+    "עֶשְׂרִים וְשָׁלוֹשׁ",
+    "שְׁלוֹשִׁים וְשָׁלוֹשׁ",
+    "אַרְבָּעִים וְשָׁלוֹשׁ",
+    "חֲמִשִּׁים וְשָׁלוֹשׁ"
+   ],
+   "picture": "the line 20 to 60; the frog on 23 makes a long hop to 33, then to 43 (the 3 of the ones lights each time); the child hops to 53",
+   "status": "waits for the Show and lead player of number_line (step 2.1, the templates the pilot did not need)"
+  }
+ ],
+ "hostLines": [
+  {
+   "role": "together_lead",
+   "template": "number_line",
+   "vo": "vo:host.nekudi.together.line",
+   "text": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "give_n",
+   "vo": "vo:host.nekudi.together.give",
+   "text": "סוֹפְרִים בִּזְמַן שֶׁנּוֹתְנִים, וְעוֹצְרִים.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "count_tap",
+   "vo": "vo:host.nekudi.together.count",
+   "text": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "tap_answer",
+   "vo": "vo:host.nekudi.together.tap",
+   "text": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "trace",
+   "vo": "vo:host.nekudi.together.trace",
+   "text": "אֲנִי מַתְחִיל. אַתֶּם מַמְשִׁיכִים.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "sort_drag",
+   "vo": "vo:host.nekudi.together.sort",
+   "text": "אֶחָד לָזֶה, אֶחָד לָזֶה.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "together_lead",
+   "template": "shop_pay",
+   "vo": "vo:host.nekudi.together.pay",
+   "text": "סוֹפְרִים אֶת הַמַּטְבְּעוֹת בְּקוֹל.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.nekudi.handover.1",
+   "text": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.nekudi.handover.2",
+   "text": "יֹפִי. עַכְשָׁו תּוֹרְכֶם.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "handover",
+   "vo": "vo:host.nekudi.handover.3",
+   "text": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "show_me",
+   "vo": "vo:host.nekudi.showme.1",
+   "text": "בּוֹאוּ נִרְאֶה שׁוּב, לְאַט.",
+   "review": "needs-editor"
+  },
+  {
+   "role": "show_me",
+   "vo": "vo:host.nekudi.showme.2",
+   "text": "אֲנִי סוֹפֵר אִתְּכֶם עוֹד פַּעַם.",
+   "review": "needs-editor"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "butterflies",
+   "band": "A",
+   "skills": [
+    "NUM-A-03",
+    "NUM-A-04",
+    "COL-A-02"
+   ],
+   "recall": [
+    "next.after.1"
+   ],
+   "show": "show.num-a-03",
+   "secondShow": {
+    "id": "show.num-a-04",
+    "kind": "reminder",
+    "before": "the first item of NUM-A-04"
+   },
+   "together": [
+    {
+     "id": "count.butterflies.3",
+     "lead": 0,
+     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "count.butterflies.4",
+    "count.butterflies.5",
+    "give.butterflies.4",
+    "pick.red.flower"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "counting-words",
+   "band": "A",
+   "skills": [
+    "NUM-A-01",
+    "NUM-A-02"
+   ],
+   "recall": [],
+   "show": "show.num-a-01",
+   "secondShow": {
+    "id": "show.num-a-02",
+    "kind": "reminder",
+    "before": "the first item of NUM-A-02"
+   },
+   "together": [
+    {
+     "id": "next.after.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "next.after.4",
+    "next.after.6",
+    "next.after.8",
+    "next.after.2",
+    "next.before.7"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "glance-small",
+   "band": "A",
+   "skills": [
+    "NUM-A-05"
+   ],
+   "recall": [],
+   "show": "show.num-a-05",
+   "together": [
+    {
+     "id": "flash.dice.1",
+     "lead": 0,
+     "note": "flash has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "flash.dice.2",
+    "flash.dice.3",
+    "flash.scatter.3"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "giving",
+   "band": "A",
+   "skills": [
+    "NUM-A-06"
+   ],
+   "recall": [
+    "b15.numa04.1"
+   ],
+   "show": "show.num-a-06",
+   "together": [
+    {
+     "id": "give.ladybugs.2",
+     "lead": 0,
+     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "give.apples.3",
+    "give.fish.4",
+    "give.stars.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "numbers-and-things",
+   "band": "A",
+   "skills": [
+    "NUM-A-07"
+   ],
+   "recall": [
+    "b15.numa04.1"
+   ],
+   "show": "show.num-a-07",
+   "together": [
+    {
+     "id": "numeral.apples.2",
+     "lead": 0,
+     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "numeral.stars.3",
+    "numeral.fish.4",
+    "numeral.bugs.5",
+    "show.apples.3",
+    "show.birds.4",
+    "show.stars.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "find-the-number",
+   "band": "A",
+   "skills": [
+    "NUM-A-08"
+   ],
+   "recall": [
+    "next.after.1"
+   ],
+   "show": "show.num-a-08",
+   "together": [
+    {
+     "id": "pick.numeral.3",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "pick.numeral.2",
+    "pick.numeral.4",
+    "pick.numeral.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "count-to-ten",
+   "band": "A",
+   "skills": [
+    "NUM-A-09",
+    "NUM-A-03"
+   ],
+   "recall": [
+    "next.after.5"
+   ],
+   "show": "show.num-a-09",
+   "secondShow": {
+    "id": "show.num-a-03",
+    "kind": "reminder",
+    "before": "the first item of NUM-A-03"
+   },
+   "together": [
+    {
+     "id": "count.ladybugs.6",
+     "lead": 0,
+     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "count.apples.7",
+    "count.stars.8",
+    "count.fish.9",
+    "count.birds.10"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "glance-more",
+   "band": "A",
+   "skills": [
+    "NUM-A-10"
+   ],
+   "recall": [
+    "b15.numa05.1"
+   ],
+   "show": "show.num-a-10",
+   "together": [
+    {
+     "id": "flash.frame.4",
+     "lead": 0,
+     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "flash.dice.4",
+    "flash.dice.5",
+    "flash.frame.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "more-or-less",
+   "band": "A",
+   "skills": [
+    "NUM-A-11"
+   ],
+   "recall": [
+    "b15.numa03.1"
+   ],
+   "show": "show.num-a-11",
+   "together": [
+    {
+     "id": "more.apples.2v4",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "more.fish.3v5",
+    "fewer.stars.4v2",
+    "same.bugs.3v3",
+    "same.apples.4v5"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "tricky-sizes",
+   "band": "A",
+   "skills": [
+    "NUM-A-12"
+   ],
+   "recall": [
+    "b15.numa04.1"
+   ],
+   "show": "show.num-a-12",
+   "together": [
+    {
+     "id": "more.big.apples",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "more.spread.stars",
+    "fewer.big.fish"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "who-is-first",
+   "band": "A",
+   "skills": [
+    "NUM-A-13"
+   ],
+   "recall": [
+    "next.after.5"
+   ],
+   "show": "show.num-a-13",
+   "together": [
+    {
+     "id": "ordinal.first",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "ordinal.second",
+    "ordinal.third",
+    "ordinal.last",
+    "ordinal.third.of4"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "nothing-there",
+   "band": "A",
+   "skills": [
+    "NUM-A-14"
+   ],
+   "recall": [
+    "b15.numa04.1"
+   ],
+   "show": "show.num-a-14",
+   "together": [
+    {
+     "id": "zero.nest",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "nonzero.nest.2",
+    "zero.bowl",
+    "zero.basket"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "more-counting-words",
+   "band": "A",
+   "skills": [
+    "NUM-A-01",
+    "NUM-A-02"
+   ],
+   "recall": [],
+   "show": "show.num-a-01",
+   "secondShow": {
+    "id": "show.num-a-02",
+    "kind": "reminder",
+    "before": "the first item of NUM-A-02"
+   },
+   "together": [
+    {
+     "id": "next.after.3",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "next.after.5",
+    "next.before.4",
+    "next.before.5",
+    "next.after.9",
+    "next.before.9",
+    "next.before.10"
+   ],
+   "use": [
+    "b15.numa01.1"
+   ],
+   "poolRungs": [
+    0,
+    1,
+    2
+   ]
+  },
+  {
+   "id": "more-counting",
+   "band": "A",
+   "skills": [
+    "NUM-A-03",
+    "NUM-A-04"
+   ],
+   "recall": [
+    "next.after.1"
+   ],
+   "show": "show.num-a-03",
+   "secondShow": {
+    "id": "show.num-a-04",
+    "kind": "reminder",
+    "before": "the first item of NUM-A-04"
+   },
+   "together": [
+    {
+     "id": "count.ladybugs.3",
+     "lead": 0,
+     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "count.cats.3",
+    "count.fish.4",
+    "count.dogs.4",
+    "count.apples.5",
+    "count.ducks.5",
+    "count.stars.4",
+    "count.fish.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "more-glances",
+   "band": "A",
+   "skills": [
+    "NUM-A-05",
+    "NUM-A-10"
+   ],
+   "recall": [],
+   "show": "show.num-a-05",
+   "secondShow": {
+    "id": "show.num-a-10",
+    "kind": "reminder",
+    "before": "the first item of NUM-A-10"
+   },
+   "together": [
+    {
+     "id": "flash.scatter.2",
+     "lead": 0,
+     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "flash.frame.3",
+    "flash.frame.5b",
+    "flash.dice.4b",
+    "b15.numa05.1",
+    "b15.numa05.2",
+    "b15.numa10.1"
+   ],
+   "use": [
+    "b15.numa10.2"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "more-giving",
+   "band": "A",
+   "skills": [
+    "NUM-A-06"
+   ],
+   "recall": [
+    "b15.numa04.1"
+   ],
+   "show": "show.num-a-06",
+   "together": [
+    {
+     "id": "give.cats.2",
+     "lead": 0,
+     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "give.ducks.3",
+    "give.dogs.4",
+    "b15.numa06.1"
+   ],
+   "use": [
+    "b15.numa06.2"
+   ],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "more-numerals",
+   "band": "A",
+   "skills": [
+    "NUM-A-08"
+   ],
+   "recall": [
+    "next.after.1"
+   ],
+   "show": "show.num-a-08",
+   "together": [
+    {
+     "id": "pick.numeral.2b",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "pick.numeral.4b",
+    "b15.numa08.1",
+    "b15.numa08.2",
+    "pick.numeral.1",
+    "b15.numa08.3"
+   ],
+   "use": [
+    "b15.numa08.4"
+   ],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "count-more-things",
+   "band": "A",
+   "skills": [
+    "NUM-A-09"
+   ],
+   "recall": [
+    "next.after.5"
+   ],
+   "show": "show.num-a-09",
+   "together": [
+    {
+     "id": "count.cats.7",
+     "lead": 0,
+     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "count.dogs.8",
+    "count.ladybugs.10",
+    "b15.numa09.1"
+   ],
+   "use": [
+    "b15.numa09.2"
+   ],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "more-comparing",
+   "band": "A",
+   "skills": [
+    "NUM-A-11",
+    "NUM-A-12"
+   ],
+   "recall": [
+    "b15.numa03.1"
+   ],
+   "show": "show.num-a-11",
+   "secondShow": {
+    "id": "show.num-a-12",
+    "kind": "reminder",
+    "before": "the first item of NUM-A-12"
+   },
+   "together": [
+    {
+     "id": "more.ducks.5v3",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "fewer.stars.4v1",
+    "same.fish.2v2",
+    "more.big.stars",
+    "more.spread.fish",
+    "fewer.big.ducks",
+    "b15.numa11.1"
+   ],
+   "use": [
+    "b15.numa11.2"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "more-queues-and-zero",
+   "band": "A",
+   "skills": [
+    "NUM-A-13",
+    "NUM-A-14"
+   ],
+   "recall": [
+    "next.after.5"
+   ],
+   "show": "show.num-a-13",
+   "secondShow": {
+    "id": "show.num-a-14",
+    "kind": "reminder",
+    "before": "the first item of NUM-A-14"
+   },
+   "together": [
+    {
+     "id": "ordinal.first.of4",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "ordinal.second.of4",
+    "nonzero.bowl.1",
+    "zero.basket.b",
+    "b15.numa13.1",
+    "b15.numa14.1",
+    "b15.numa14.2"
+   ],
+   "use": [
+    "b15.numa13.2"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "more-counting-words-1-b15",
+   "band": "A",
+   "skills": [
+    "NUM-A-01",
+    "NUM-A-02"
+   ],
+   "recall": [],
+   "show": "show.num-a-01",
+   "secondShow": {
+    "id": "show.num-a-02",
+    "kind": "reminder",
+    "before": "the first item of NUM-A-02"
+   },
+   "together": [
+    {
+     "id": "b15.numa01.2",
+     "lead": 0,
+     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b15.numa01.3",
+    "b15.numa02.1",
+    "b15.numa02.2",
+    "b15.numa02.3",
+    "b15.numa01.4",
+    "b15.numa01.5"
+   ],
+   "use": [
+    "b15.numa02.4"
+   ],
+   "poolRungs": [
+    0,
+    2
+   ]
+  },
+  {
+   "id": "more-counting-words-2-b15",
+   "band": "A",
+   "skills": [
+    "NUM-A-01",
+    "NUM-A-02"
+   ],
+   "recall": [],
+   "show": "show.num-a-01",
+   "secondShow": {
+    "id": "show.num-a-02",
+    "kind": "reminder",
+    "before": "the first item of NUM-A-02"
+   },
+   "together": [],
+   "alone": [
+    "b15.numa02.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    2
+   ]
+  },
+  {
+   "id": "more-counting-1-b15",
+   "band": "A",
+   "skills": [
+    "NUM-A-03",
+    "NUM-A-04"
+   ],
+   "recall": [
+    "next.after.1"
+   ],
+   "show": "show.num-a-03",
+   "secondShow": {
+    "id": "show.num-a-04",
+    "kind": "reminder",
+    "before": "the first item of NUM-A-04"
+   },
+   "together": [
+    {
+     "id": "b15.numa03.3",
+     "lead": 0,
+     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b15.numa03.4",
+    "b15.numa04.3",
+    "b15.numa03.1",
+    "b15.numa03.2",
+    "b15.numa04.1",
+    "b15.numa04.2"
+   ],
+   "use": [
+    "b15.numa03.5"
+   ],
+   "poolRungs": [
+    0,
+    1,
+    2
+   ]
+  },
+  {
+   "id": "more-counting-2-b15",
+   "band": "A",
+   "skills": [
+    "NUM-A-03",
+    "NUM-A-04"
+   ],
+   "recall": [
+    "next.after.1"
+   ],
+   "show": "show.num-a-03",
+   "secondShow": {
+    "id": "show.num-a-04",
+    "kind": "reminder",
+    "before": "the first item of NUM-A-04"
+   },
+   "together": [],
+   "alone": [
+    "b15.numa04.4"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "more-comparing-1-b15",
+   "band": "A",
+   "skills": [
+    "NUM-A-11",
+    "NUM-A-12"
+   ],
+   "recall": [
+    "b15.numa03.1"
+   ],
+   "show": "show.num-a-11",
+   "secondShow": {
+    "id": "show.num-a-12",
+    "kind": "reminder",
+    "before": "the first item of NUM-A-12"
+   },
+   "together": [
+    {
+     "id": "b15.numa12.1",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b15.numa12.2"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "match-numbers-sets",
+   "band": "A",
+   "skills": [
+    "NUM-A-07"
+   ],
+   "recall": [
+    "b15.numa04.1"
+   ],
+   "show": "show.num-a-07",
+   "together": [
+    {
+     "id": "x.numa07.1",
+     "lead": 0,
+     "note": "match_pairs has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "x.numa07.2",
+    "x.numa07.3",
+    "x.numa07.4"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "match-numbers-sets-more",
+   "band": "A",
+   "skills": [
+    "NUM-A-07"
+   ],
+   "recall": [
+    "b15.numa04.1"
+   ],
+   "show": "show.num-a-07",
+   "together": [
+    {
+     "id": "x.numa07.5",
+     "lead": 0,
+     "note": "match_pairs has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "x.numa07.6",
+    "x.numa07.7"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "count-to-20",
+   "band": "B",
+   "skills": [
+    "NUM-B-01"
+   ],
+   "recall": [
+    "next.after.5"
+   ],
+   "show": "show.num-b-01",
+   "together": [
+    {
+     "id": "b.numb01.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb01.2",
+    "b.numb01.3",
+    "b.numb01.4",
+    "b.numb01.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "count-to-20-more",
+   "band": "B",
+   "skills": [
+    "NUM-B-01"
+   ],
+   "recall": [
+    "next.after.5"
+   ],
+   "show": "show.num-b-01",
+   "together": [
+    {
+     "id": "b.numb01.6",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb01.7",
+    "b.numb01.8",
+    "b.numb01.9"
+   ],
+   "use": [],
+   "poolRungs": [
+    2
+   ]
+  },
+  {
+   "id": "count-to-30",
+   "band": "B",
+   "skills": [
+    "NUM-B-02"
+   ],
+   "recall": [
+    "b.numb01.1"
+   ],
+   "show": "show.num-b-02",
+   "together": [
+    {
+     "id": "b.numb02.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb02.2",
+    "b.numb02.3",
+    "b.numb02.4",
+    "b.numb02.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "count-to-30-more",
+   "band": "B",
+   "skills": [
+    "NUM-B-02"
+   ],
+   "recall": [
+    "b.numb01.1"
+   ],
+   "show": "show.num-b-02",
+   "together": [
+    {
+     "id": "b.numb02.6",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb02.7",
+    "b.numb02.8",
+    "b.numb02.9"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "rocket-countdown",
+   "band": "B",
+   "skills": [
+    "NUM-B-03"
+   ],
+   "recall": [
+    "next.after.5"
+   ],
+   "show": "show.num-b-03",
+   "together": [
+    {
+     "id": "b.numb03.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb03.2",
+    "b.numb03.3",
+    "b.numb03.4",
+    "b.numb03.5",
+    "b.numb03.6",
+    "b.numb03.7",
+    "b.numb03.8",
+    "b.numb03.9"
+   ],
+   "use": [
+    "b.numb03.10"
+   ],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "many-things",
+   "band": "B",
+   "skills": [
+    "NUM-B-04"
+   ],
+   "recall": [
+    "b15.numa09.1"
+   ],
+   "show": "show.num-b-04",
+   "together": [
+    {
+     "id": "b.numb04.1",
+     "lead": 0,
+     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb04.2",
+    "b.numb04.3",
+    "b.numb04.4",
+    "b.numb04.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "many-things-more",
+   "band": "B",
+   "skills": [
+    "NUM-B-04"
+   ],
+   "recall": [
+    "b15.numa09.1"
+   ],
+   "show": "show.num-b-04",
+   "together": [
+    {
+     "id": "b.numb04.6",
+     "lead": 0,
+     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb04.7",
+    "b.numb04.8",
+    "b.numb04.9",
+    "b.numb04.10"
+   ],
+   "use": [
+    "b.numb04.11"
+   ],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "give-up-to-20",
+   "band": "B",
+   "skills": [
+    "NUM-B-05"
+   ],
+   "recall": [
+    "b.numb04.1"
+   ],
+   "show": "show.num-b-05",
+   "together": [
+    {
+     "id": "b.numb05.1",
+     "lead": 0,
+     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb05.2",
+    "b.numb05.3",
+    "b.numb05.4",
+    "b.numb05.5",
+    "b.numb05.6",
+    "b.numb05.7",
+    "b.numb05.8",
+    "b.numb05.9"
+   ],
+   "use": [
+    "b.numb05.10"
+   ],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "read-the-teens",
+   "band": "B",
+   "skills": [
+    "NUM-B-08"
+   ],
+   "recall": [
+    "b15.numa08.1"
+   ],
+   "show": "show.num-b-08",
+   "together": [
+    {
+     "id": "b.numb08.2",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb08.5",
+    "b.numb08.1",
+    "b.numb08.3",
+    "b.numb08.4",
+    "b.numb08.6"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "read-the-teens-more",
+   "band": "B",
+   "skills": [
+    "NUM-B-08"
+   ],
+   "recall": [
+    "b15.numa08.1"
+   ],
+   "show": "show.num-b-08",
+   "together": [
+    {
+     "id": "b.numb08.7",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb08.8",
+    "b.numb08.9",
+    "b.numb08.10",
+    "b.numb08.11",
+    "b.numb08.12",
+    "b.numb08.13"
+   ],
+   "use": [
+    "b.numb08.14"
+   ],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "which-is-bigger",
+   "band": "B",
+   "skills": [
+    "NUM-B-10"
+   ],
+   "recall": [
+    "b15.numa12.1"
+   ],
+   "show": "show.num-b-10",
+   "together": [
+    {
+     "id": "b.numb10.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb10.2",
+    "b.numb10.3",
+    "b.numb10.5",
+    "b.numb10.4"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "which-is-bigger-more",
+   "band": "B",
+   "skills": [
+    "NUM-B-10"
+   ],
+   "recall": [
+    "b15.numa12.1"
+   ],
+   "show": "show.num-b-10",
+   "together": [
+    {
+     "id": "b.numb10.6",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb10.8",
+    "b.numb10.7",
+    "b.numb10.9",
+    "b.numb10.10"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "count-order",
+   "band": "B",
+   "skills": [
+    "NUM-B-11"
+   ],
+   "recall": [
+    "b.numb10.1"
+   ],
+   "show": "show.num-b-11",
+   "together": [
+    {
+     "id": "b.numb11.1",
+     "lead": 0,
+     "note": "spot_error has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb11.2",
+    "b.numb11.3",
+    "b.numb11.4",
+    "b.numb11.5"
+   ],
+   "use": [
+    "b.numb11.6"
+   ],
+   "poolRungs": [
+    2
+   ]
+  },
+  {
+   "id": "one-more-one-less",
+   "band": "B",
+   "skills": [
+    "NUM-B-11"
+   ],
+   "recall": [
+    "b.numb10.1"
+   ],
+   "show": "show.num-b-11",
+   "together": [
+    {
+     "id": "b.numb11.7",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb11.9",
+    "b.numb11.10",
+    "b.numb11.12",
+    "b.numb11.13",
+    "b.numb11.15",
+    "b.numb11.16",
+    "b.numb11.18",
+    "b.numb11.8",
+    "b.numb11.11",
+    "b.numb11.14",
+    "b.numb11.17"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "frog-line-10",
+   "band": "B",
+   "skills": [
+    "NUM-B-13"
+   ],
+   "recall": [
+    "b.numb11.10"
+   ],
+   "show": "show.num-b-13",
+   "together": [
+    {
+     "id": "b.numb13.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb13.2",
+    "b.numb13.3",
+    "b.numb13.4",
+    "b.numb13.5",
+    "b.numb13.6"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "frog-line-20",
+   "band": "B",
+   "skills": [
+    "NUM-B-13"
+   ],
+   "recall": [
+    "b.numb11.10"
+   ],
+   "show": "show.num-b-13",
+   "together": [
+    {
+     "id": "b.numb13.7",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb13.8",
+    "b.numb13.9",
+    "b.numb13.10",
+    "b.numb13.11",
+    "b.numb13.12"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "frog-jumps",
+   "band": "B",
+   "skills": [
+    "NUM-B-13"
+   ],
+   "recall": [
+    "b.numb11.10"
+   ],
+   "show": "show.num-b-13",
+   "together": [
+    {
+     "id": "b.numb13.13",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb13.14",
+    "b.numb13.15",
+    "b.numb13.16",
+    "b.numb13.17",
+    "b.numb13.18",
+    "b.numb13.19",
+    "b.numb13.20"
+   ],
+   "use": [
+    "b.numb13.21"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "split-numbers",
+   "band": "B",
+   "skills": [
+    "NUM-B-14"
+   ],
+   "recall": [
+    "b15.numa10.1"
+   ],
+   "show": "show.num-b-14",
+   "together": [
+    {
+     "id": "b.numb14.1",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb14.2",
+    "b.numb14.3",
+    "b.numb14.4",
+    "b.numb14.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "split-numbers-more",
+   "band": "B",
+   "skills": [
+    "NUM-B-14"
+   ],
+   "recall": [
+    "b15.numa10.1"
+   ],
+   "show": "show.num-b-14",
+   "together": [
+    {
+     "id": "b.numb14.6",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb14.7",
+    "b.numb14.8",
+    "b.numb14.9",
+    "b.numb14.10"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "ten-and-some",
+   "band": "B",
+   "skills": [
+    "NUM-B-16"
+   ],
+   "recall": [
+    "b.numb08.2"
+   ],
+   "show": "show.num-b-16",
+   "together": [
+    {
+     "id": "b.numb16.1",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb16.2",
+    "b.numb16.3",
+    "b.numb16.5",
+    "b.numb16.4"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "ten-and-some-more",
+   "band": "B",
+   "skills": [
+    "NUM-B-16"
+   ],
+   "recall": [
+    "b.numb08.2"
+   ],
+   "show": "show.num-b-16",
+   "together": [
+    {
+     "id": "b.numb16.6",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb16.7",
+    "b.numb16.8",
+    "b.numb16.9",
+    "b.numb16.10",
+    "b.numb16.11"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "tens-and-twos",
+   "band": "B",
+   "skills": [
+    "NUM-B-17"
+   ],
+   "recall": [
+    "b.numb02.1"
+   ],
+   "show": "show.num-b-17",
+   "together": [
+    {
+     "id": "b.numb17.7",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "b.numb17.8",
+    "b.numb17.9",
+    "b.numb17.10",
+    "b.numb17.11",
+    "b.numb17.1",
+    "b.numb17.2",
+    "b.numb17.3",
+    "b.numb17.4",
+    "b.numb17.5",
+    "b.numb17.12"
+   ],
+   "use": [
+    "b.numb17.6"
+   ],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "pairs",
+   "band": "B",
+   "skills": [
+    "NUM-B-18"
+   ],
+   "recall": [
+    "b.numb04.1"
+   ],
+   "show": "show.num-b-18",
+   "together": [
+    {
+     "id": "b.numb18.1",
+     "lead": 0,
+     "note": "a share has no lead player yet: the host says its line and the child deals every card"
+    }
+   ],
+   "alone": [
+    "b.numb18.3",
+    "b.numb18.6",
+    "b.numb18.9",
+    "b.numb18.2",
+    "b.numb18.4",
+    "b.numb18.5",
+    "b.numb18.7",
+    "b.numb18.8"
+   ],
+   "use": [
+    "b.numb18.10"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "trace-numbers-0-4",
+   "band": "B",
+   "skills": [
+    "NUM-B-07"
+   ],
+   "recall": [
+    "b15.numa08.1"
+   ],
+   "show": "show.num-b-07",
+   "together": [
+    {
+     "id": "x.numb07.1",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "x.numb07.2",
+    "x.numb07.3",
+    "x.numb07.4",
+    "x.numb07.5"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "trace-numbers-5-9",
+   "band": "B",
+   "skills": [
+    "NUM-B-07"
+   ],
+   "recall": [
+    "b15.numa08.1"
+   ],
+   "show": "show.num-b-07",
+   "together": [
+    {
+     "id": "x.numb07.6",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "x.numb07.7",
+    "x.numb07.8",
+    "x.numb07.9",
+    "x.numb07.10"
+   ],
+   "use": [],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "write-from-the-dot-0-4",
+   "band": "B",
+   "skills": [
+    "NUM-B-07"
+   ],
+   "recall": [
+    "b15.numa08.1"
+   ],
+   "show": "show.num-b-07",
+   "together": [
+    {
+     "id": "x.numb07.11",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "x.numb07.12",
+    "x.numb07.14",
+    "x.numb07.15"
+   ],
+   "use": [
+    "x.numb07.13"
+   ],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "write-from-the-dot-5-9",
+   "band": "B",
+   "skills": [
+    "NUM-B-07"
+   ],
+   "recall": [
+    "b15.numa08.1"
+   ],
+   "show": "show.num-b-07",
+   "together": [
+    {
+     "id": "x.numb07.17",
+     "lead": 1
+    }
+   ],
+   "alone": [
+    "x.numb07.18",
+    "x.numb07.19",
+    "x.numb07.20"
+   ],
+   "use": [
+    "x.numb07.16"
+   ],
+   "poolRungs": [
+    0
+   ]
+  },
+  {
+   "id": "read-numerals",
+   "band": "B",
+   "skills": [
+    "NUM-B-06"
+   ],
+   "recall": [
+    "b15.numa08.1"
+   ],
+   "show": "show.num-b-06",
+   "together": [
+    {
+     "id": "c.numb06.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numb06.3",
+    "c.numb06.5",
+    "c.numb06.2",
+    "c.numb06.4",
+    "c.numb06.6",
+    "c.numb06.7"
+   ],
+   "use": [
+    "c.numb06.8"
+   ],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "read-numerals-more",
+   "band": "B",
+   "skills": [
+    "NUM-B-06"
+   ],
+   "recall": [
+    "b15.numa08.1"
+   ],
+   "show": "show.num-b-06",
+   "together": [
+    {
+     "id": "c.numb06.15",
+     "lead": 0,
+     "note": "count_tap has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numb06.17",
+    "c.numb06.9",
+    "c.numb06.10",
+    "c.numb06.11",
+    "c.numb06.12",
+    "c.numb06.13",
+    "c.numb06.14"
+   ],
+   "use": [
+    "c.numb06.16"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "ten-frame-glance",
+   "band": "B",
+   "skills": [
+    "NUM-B-09"
+   ],
+   "recall": [
+    "b15.numa10.1"
+   ],
+   "show": "show.num-b-09",
+   "together": [
+    {
+     "id": "c.numb09.1",
+     "lead": 0,
+     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numb09.2",
+    "c.numb09.3",
+    "c.numb09.4",
+    "c.numb09.5",
+    "c.numb09.6",
+    "c.numb09.7"
+   ],
+   "use": [
+    "c.numb09.8"
+   ],
+   "poolRungs": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "ten-frame-more",
+   "band": "B",
+   "skills": [
+    "NUM-B-09"
+   ],
+   "recall": [
+    "b15.numa10.1"
+   ],
+   "show": "show.num-b-09",
+   "together": [
+    {
+     "id": "c.numb09.15",
+     "lead": 0,
+     "note": "give_n has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numb09.16",
+    "c.numb09.9",
+    "c.numb09.10",
+    "c.numb09.11",
+    "c.numb09.12",
+    "c.numb09.13",
+    "c.numb09.14"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    1,
+    2
+   ]
+  },
+  {
+   "id": "count-and-compare-again",
+   "band": "B",
+   "skills": [
+    "NUM-B-01",
+    "NUM-B-10"
+   ],
+   "recall": [
+    "next.after.5"
+   ],
+   "show": "show.num-b-01",
+   "secondShow": {
+    "id": "show.num-b-10",
+    "kind": "reminder",
+    "before": "the first item of NUM-B-10"
+   },
+   "together": [
+    {
+     "id": "c.numb01.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numb01.2",
+    "c.numb10.1",
+    "c.numb01.3",
+    "c.numb01.4",
+    "c.numb10.3",
+    "c.numb10.4"
+   ],
+   "use": [
+    "c.numb10.2"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "count-to-100",
+   "band": "C",
+   "skills": [
+    "NUM-C-01"
+   ],
+   "recall": [
+    "b.numb02.1"
+   ],
+   "show": "show.num-c-01",
+   "together": [
+    {
+     "id": "c.numc01.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numc01.2",
+    "c.numc01.3",
+    "c.numc01.4",
+    "c.numc01.6",
+    "c.numc01.7",
+    "c.numc01.11",
+    "c.numc01.12",
+    "c.numc01.5",
+    "c.numc01.8",
+    "c.numc01.9",
+    "c.numc01.10"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "read-to-100",
+   "band": "C",
+   "skills": [
+    "NUM-C-02"
+   ],
+   "recall": [
+    "c.numc01.1"
+   ],
+   "show": "show.num-c-02",
+   "together": [
+    {
+     "id": "c.numc02.2",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numc02.3",
+    "c.numc02.5",
+    "c.numc02.8",
+    "c.numc02.1",
+    "c.numc02.4",
+    "c.numc02.6",
+    "c.numc02.7",
+    "c.numc02.9",
+    "c.numc02.10",
+    "c.numc02.11"
+   ],
+   "use": [
+    "c.numc02.12"
+   ],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "tens-and-ones",
+   "band": "C",
+   "skills": [
+    "NUM-C-03"
+   ],
+   "recall": [
+    "c.numc02.18"
+   ],
+   "show": "show.num-c-03",
+   "together": [
+    {
+     "id": "c.numc03.1",
+     "lead": 0,
+     "note": "shop_pay has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numc03.2",
+    "c.numc03.4",
+    "c.numc03.3",
+    "c.numc03.5",
+    "c.numc03.6",
+    "c.numc03.7",
+    "c.numc03.8"
+   ],
+   "use": [],
+   "poolRungs": [
+    0,
+    2
+   ]
+  },
+  {
+   "id": "tens-and-ones-more",
+   "band": "C",
+   "skills": [
+    "NUM-C-03"
+   ],
+   "recall": [
+    "c.numc02.18"
+   ],
+   "show": "show.num-c-03",
+   "together": [
+    {
+     "id": "c.numc03.14",
+     "lead": 0,
+     "note": "shop_pay has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numc03.15",
+    "c.numc03.16",
+    "c.numc03.17",
+    "c.numc03.26",
+    "c.numc03.27",
+    "c.numc03.28",
+    "c.numc03.9",
+    "c.numc03.10",
+    "c.numc03.11",
+    "c.numc03.13"
+   ],
+   "use": [
+    "c.numc03.12"
+   ],
+   "poolRungs": [
+    0,
+    1,
+    2
+   ]
+  },
+  {
+   "id": "compare-to-100",
+   "band": "C",
+   "skills": [
+    "NUM-C-04"
+   ],
+   "recall": [
+    "c.numc03.10"
+   ],
+   "show": "show.num-c-04",
+   "together": [
+    {
+     "id": "c.numc04.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numc04.2",
+    "c.numc04.3",
+    "c.numc04.4",
+    "c.numc04.5",
+    "c.numc04.6",
+    "c.numc04.7",
+    "c.numc04.8"
+   ],
+   "use": [],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "compare-to-100-more",
+   "band": "C",
+   "skills": [
+    "NUM-C-04"
+   ],
+   "recall": [
+    "c.numc03.10"
+   ],
+   "show": "show.num-c-04",
+   "together": [
+    {
+     "id": "c.numc04.13",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numc04.14",
+    "c.numc04.15",
+    "c.numc04.9",
+    "c.numc04.10",
+    "c.numc04.11",
+    "c.numc04.12"
+   ],
+   "use": [
+    "c.numc04.16"
+   ],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "line-to-100",
+   "band": "C",
+   "skills": [
+    "NUM-C-06"
+   ],
+   "recall": [
+    "c.numc03.10"
+   ],
+   "show": "show.num-c-06",
+   "together": [
+    {
+     "id": "c.numc06.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numc06.2",
+    "c.numc06.7",
+    "c.numc06.3",
+    "c.numc06.4",
+    "c.numc06.5",
+    "c.numc06.6"
+   ],
+   "use": [
+    "c.numc06.8"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "line-to-100-more",
+   "band": "C",
+   "skills": [
+    "NUM-C-06"
+   ],
+   "recall": [
+    "c.numc03.10"
+   ],
+   "show": "show.num-c-06",
+   "together": [
+    {
+     "id": "c.numc06.9",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numc06.10",
+    "c.numc06.11",
+    "c.numc06.12",
+    "c.numc06.17",
+    "c.numc06.14",
+    "c.numc06.15",
+    "c.numc06.16"
+   ],
+   "use": [
+    "c.numc06.13"
+   ],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "ten-more-ten-less",
+   "band": "C",
+   "skills": [
+    "NUM-C-09"
+   ],
+   "recall": [
+    "c.numc03.10"
+   ],
+   "show": "show.num-c-09",
+   "together": [
+    {
+     "id": "c.numc09.1",
+     "lead": 0,
+     "note": "number_line has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numc09.2",
+    "c.numc09.3",
+    "c.numc09.4",
+    "c.numc09.5",
+    "c.numc09.11",
+    "c.numc09.12",
+    "c.numc09.6",
+    "c.numc09.7",
+    "c.numc09.8",
+    "c.numc09.9"
+   ],
+   "use": [
+    "c.numc09.10"
+   ],
+   "poolRungs": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "blocks-tens-and-ones",
+   "band": "C",
+   "skills": [
+    "NUM-C-03",
+    "NUM-C-02"
+   ],
+   "recall": [
+    "c.numc02.2"
+   ],
+   "show": "show.num-c-03",
+   "secondShow": {
+    "id": "show.num-c-02",
+    "kind": "reminder",
+    "before": "the first item of NUM-C-02"
+   },
+   "together": [
+    {
+     "id": "c.numc03.18",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numc03.19",
+    "c.numc03.20",
+    "c.numc03.24",
+    "c.numc03.25",
+    "c.numc02.18",
+    "c.numc02.19"
+   ],
+   "use": [
+    "c.numc02.20"
+   ],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "hundred-chart",
+   "band": "C",
+   "skills": [
+    "NUM-C-09",
+    "NUM-C-01"
+   ],
+   "recall": [
+    "c.numc03.10"
+   ],
+   "show": "show.num-c-09",
+   "secondShow": {
+    "id": "show.num-c-01",
+    "kind": "reminder",
+    "before": "the first item of NUM-C-01"
+   },
+   "together": [
+    {
+     "id": "c.numc09.13",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numc09.14",
+    "c.numc09.15",
+    "c.numc09.16",
+    "c.numc09.17",
+    "c.numc01.13",
+    "c.numc01.14",
+    "c.numc01.15",
+    "c.numc01.16"
+   ],
+   "use": [],
+   "poolRungs": [
+    1
+   ]
+  },
+  {
+   "id": "write-numbers",
+   "band": "C",
+   "skills": [
+    "NUM-C-02",
+    "NUM-C-03"
+   ],
+   "recall": [
+    "c.numc01.1"
+   ],
+   "show": "show.num-c-02",
+   "secondShow": {
+    "id": "show.num-c-03",
+    "kind": "reminder",
+    "before": "the first item of NUM-C-03"
+   },
+   "together": [
+    {
+     "id": "c.numc02.13",
+     "lead": 0,
+     "note": "tap_answer has no lead player yet: the host says its line and the child does the whole item"
+    }
+   ],
+   "alone": [
+    "c.numc02.14",
+    "c.numc02.15",
+    "c.numc02.16",
+    "c.numc02.17",
+    "c.numc03.21",
+    "c.numc03.22",
+    "c.numc03.23",
+    "c.numc02.21"
+   ],
+   "use": [],
+   "poolRungs": [
+    2
+   ]
+  }
+ ]
+}

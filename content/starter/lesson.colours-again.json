@@ -17,12 +17,12 @@
   ],
   "items": [
     "col.match.green2",
+    "col.name.brown2",
+    "col.name.grey2",
     "col.match.red2",
     "col.name.orange2",
     "col.name.pink2",
     "col.name.purple2",
-    "col.name.brown2",
-    "col.name.grey2",
     "col.name.brown3"
   ],
   "estimatedMinutes": 6,
@@ -35,5 +35,45 @@
         "v": "כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים הַרְבֵּה צְבָעִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.col-a-01",
+    "secondShow": {
+      "id": "show.col-a-03",
+      "before": "col.name.orange2"
+    },
+    "together": [
+      {
+        "id": "col.match.green2",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.goni.together.tap",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נִסְתַּכֵּל יַחַד. אַתֶּם בּוֹחֲרִים."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "col.name.brown2",
+      "col.name.grey2",
+      "col.match.red2",
+      "col.name.orange2",
+      "col.name.pink2",
+      "col.name.purple2",
+      "col.name.brown3"
+    ],
+    "handover": {
+      "vo": "vo:host.goni.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מִסְתַּכְּלִים טוֹב. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

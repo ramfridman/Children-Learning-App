@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "b.numb18.1",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
   "domain": "numbers",
   "band": "B",
   "skills": [
@@ -15,8 +15,8 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
-  "variantGroup": "pick",
+  "representation": "concrete",
+  "variantGroup": "share",
   "difficulty": {
     "authored": 0.37
   },
@@ -25,39 +25,50 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֶפְשָׁר לְחַלֵּק אֶת כֻּלָּם לְזוּגוֹת, בְּלִי שֶׁיִּשָּׁאֵר אֶחָד לְבַד?"
+        "v": "מְחַלְּקִים אַרְבַּע גַּרְבַּיִם בֵּין הֶחָתוּל לַכֶּלֶב. לִשְׁנֵיהֶם אוֹתוֹ מִסְפָּר."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true,
-    "group": {
-      "sprite": "asset:sock",
-      "count": 4,
-      "arrangement": "scatter",
-      "seed": 3,
-      "scale": 1
-    }
-  },
-  "answer": {
-    "type": "choice",
-    "options": [
+    "bins": [
       {
-        "id": "o1",
-        "sprite": "asset:tick",
-        "label": "כֵּן"
+        "id": "b1",
+        "sprite": "asset:cat",
+        "count": 1,
+        "label": "חָתוּל"
       },
       {
-        "id": "o2",
-        "sprite": "asset:cross",
-        "label": "לֹא"
+        "id": "b2",
+        "sprite": "asset:dog",
+        "count": 1,
+        "label": "כֶּלֶב"
       }
     ],
-    "correct": "o1",
-    "shuffle": false,
-    "unsureAllowed": true
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:sock"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:sock"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:sock"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:sock"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "share",
+    "misconception": "M-SHARE-UNEQ"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -66,11 +77,21 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן, כֻּלָּם בְּזוּגוֹת."
+          "v": "כֵּן! לִשְׁנֵיהֶם אוֹתוֹ מִסְפָּר. אַרְבַּע מִתְחַלֵּק לְזוּגוֹת."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHARE-UNEQ",
+        "vo": "vo:fb.share_uneq",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נַחֲלֹק אֶחָד אֶחָד, לְכׇל חָבֵר לְפִי הַתּוֹר."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -107,11 +128,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.share.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נַחֲלֹק אֶחָד לָזֶה, וְאֶחָד לָזֶה, לְפִי הַתּוֹר."
         }
       ]
     },
@@ -122,7 +143,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "נְחַלֵּק לְזוּגוֹת: זוּג, זוּג. כֻּלָּם בְּזוּגוֹת. עַכְשָׁו תּוֹרְכֶם."
+          "v": "אֶחָד לָזֶה, אֶחָד לָזֶה, עַד שֶׁנִּגְמַר. לְכׇל אֶחָד יֵשׁ אוֹתוֹ מִסְפָּר. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -138,10 +159,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child shares fairly: one for each in turn, so both have the same",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֶפְשָׁר לְחַלֵּק אֶת כֻּלָּם לְזוּגוֹת, בְּלִי שֶׁיִּשָּׁאֵר אֶחָד לְבַד?"
+    "altText": "מְחַלְּקִים אַרְבַּע גַּרְבַּיִם בֵּין הֶחָתוּל לַכֶּלֶב. לִשְׁנֵיהֶם אוֹתוֹ מִסְפָּר."
   }
 }

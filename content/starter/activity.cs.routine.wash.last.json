@@ -2,9 +2,9 @@
   "schema": "activity/v1",
   "id": "cs.routine.wash.last",
   "review": "needs-editor",
-  "revision": 1,
-  "template": "tap_answer",
-  "templateVersion": "1.1",
+  "revision": 2,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
   "domain": "cs",
   "band": "A",
   "skills": [
@@ -16,7 +16,7 @@
   "purpose": "practice",
   "checkType": "practice",
   "representation": "story",
-  "variantGroup": "pick",
+  "variantGroup": "build",
   "difficulty": {
     "authored": 0.25
   },
@@ -25,38 +25,28 @@
     "caption": [
       {
         "t": "he",
-        "v": "רוֹחֲצִים יָדַיִם. מָה עוֹשִׂים בַּסּוֹף?"
+        "v": "רוֹחֲצִים יָדַיִם. מְסַדְּרִים אֶת הַצְּעָדִים לְפִי הַסֵּדֶר."
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "slots": 3,
+    "palette": [
+      "asset:step_soap",
+      "asset:step_tap",
+      "asset:step_towel"
+    ]
   },
   "answer": {
-    "type": "choice",
-    "options": [
-      {
-        "id": "o1",
-        "sprite": "asset:step_soap",
-        "label": "סַבּוֹן"
-      },
-      {
-        "id": "o2",
-        "sprite": "asset:step_towel",
-        "label": "מַגֶּבֶת"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:step_tap",
-        "label": "בָּרֶז",
-        "misconception": "M-SEQ-CAUSE"
-      }
+    "type": "build",
+    "sequence": [
+      "asset:step_tap",
+      "asset:step_soap",
+      "asset:step_towel"
     ],
-    "correct": "o2",
-    "shuffle": false,
-    "unsureAllowed": true
+    "misconception": "M-SEQ-CAUSE"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -65,7 +55,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! בַּסּוֹף מְיַבְּשִׁים בְּמַגֶּבֶת."
+          "v": "כֵּן! כָּךְ רוֹחֲצִים יָדַיִם."
         }
       ]
     },
@@ -116,11 +106,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.build.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד."
         }
       ]
     },
@@ -131,7 +121,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמַּגֶּבֶת."
+          "v": "קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -147,10 +137,10 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child picks the right picture",
+    "goal": "child lays the steps of a routine in order",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "רוֹחֲצִים יָדַיִם. מָה עוֹשִׂים בַּסּוֹף?"
+    "altText": "רוֹחֲצִים יָדַיִם. מְסַדְּרִים אֶת הַצְּעָדִים לְפִי הַסֵּדֶר."
   }
 }
