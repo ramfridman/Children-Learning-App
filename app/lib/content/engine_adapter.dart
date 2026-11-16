@@ -36,7 +36,7 @@ Catalog engineCatalog(PackContent content) {
     ],
     items: <ItemMeta>[
       for (final Activity a in content.activities.values)
-        // What is no evidence is not an item of the engine: a teach screen; a step of a course that is never scored (a chant, a story only
+        // What is no evidence is not an item of the engine: a Show of a land; a teach screen; a step of a course that is never scored (a chant, a story only
         // heard, a personal turn, a movement); and a say step of a skill that is not a speaking one (a spoken answer counts for a speaking
         // skill alone). Counted as items, their words would be groups of a set that no answer can ever cover, and a visit could pick one.
         if (!a.teachScreen && !_writesNoAnswer(a) && !_saysForNothing(a, content))
@@ -83,8 +83,9 @@ Catalog engineCatalog(PackContent content) {
 }
 
 /// A step of a course that is never scored (a chant, a story only heard, a personal turn, a movement) writes no answer. The intro of a
-/// letter (LS02) is left to the writing rules, which already know it.
-bool _writesNoAnswer(Activity a) => a.isLanguage && a.unscored && a is! LetterWriteActivity;
+/// letter (LS02) is left to the writing rules, which already know it. A Show of a land (`purpose: show`, M11 Stage 2) writes no answer
+/// either, whatever its template: the host does the worked example and the child makes only its last step.
+bool _writesNoAnswer(Activity a) => a.isShow || (a.isLanguage && a.unscored && a is! LetterWriteActivity);
 
 /// A say step (LS09) of a skill that is not a speaking one: its answers are ignored by the engine, whatever they are.
 bool _saysForNothing(Activity a, PackContent content) =>

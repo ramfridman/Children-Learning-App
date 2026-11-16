@@ -6,6 +6,7 @@ import '../speech/hebrew_text.dart';
 import '../speech/lexicon.dart';
 import '../speech/spoken_options.dart';
 import '../speech/word_text.dart' show normalizeWords;
+import 'arc_checks.dart';
 import 'block_geometry.dart';
 import 'capabilities.dart' show compareTemplateVersion;
 import 'hint_ladder.dart';
@@ -331,7 +332,8 @@ List<Problem> validatePack({
     if (hints.length >= 3 && hints[2]['action'] == hints[1]['action']) {
       say(file, 'hints[2].action', 'level 3 must help in a different way than level 2');
     }
-    final String? ladder = a['template'] == 'say_it'
+    // A Show has no hints: the host does the example (see `checkShowActivity`).
+    final String? ladder = a['template'] == 'say_it' || a['purpose'] == 'show'
         ? null
         : HintLadder.problemWith(
             a['template']! as String,
@@ -735,6 +737,21 @@ List<Problem> validatePack({
           }
         }
         checkTag(file, 'answer.misconception', answer['misconception']);
+        for (final (int i, Map<String, Object?> t) in _maps(answer['pieceTags']).indexed) {
+          checkAsset(file, 'answer.pieceTags[$i].piece', t['piece']);
+          checkAsset(file, 'answer.pieceTags[$i].slot', t['slot']);
+          checkTag(file, 'answer.pieceTags[$i].misconception', t['misconception']);
+          final Object? piece = t['piece'];
+          final Object? place = t['slot'];
+          if (piece is String &&
+              !slotSprites.contains(piece) &&
+              !((scene['decoys'] as List<Object?>?) ?? const <Object?>[]).contains(piece)) {
+            say(file, 'answer.pieceTags[$i].piece', 'is not a piece of the tray');
+          }
+          if (place != null && !slotSprites.contains(place)) {
+            say(file, 'answer.pieceTags[$i].slot', 'is not the picture of a place');
+          }
+        }
       case 'robot_path':
         checkAsset(file, 'scene.background', scene['background']);
         checkAsset(file, 'scene.robotSprite', scene['robotSprite']);
@@ -786,6 +803,7 @@ List<Problem> validatePack({
           if (!share && !binIds.contains(it['bin'])) {
             say(file, 'scene.items[$i].bin', 'must be the id of a bin');
           }
+          checkTag(file, 'scene.items[$i].misconception', it['misconception']);
         }
         if (share && (bins.length < 2 || bins.length > 3 || items.length % bins.length != 0)) {
           say(
@@ -915,6 +933,14 @@ List<Problem> validatePack({
     _languageOnlyTemplate(file, a, say, language: Course.isLanguage(course));
     _hebrew(file, a, say, pointed: a['band'] != 'C');
     _voiceAnswer(file, a, say, starter: manifest['id'] == 'starter');
+    checkShowActivity(file, a, say);
+    if (a['purpose'] == 'show') {
+      for (final (int i, Map<String, Object?> l) in _maps(
+        (a['show'] as Map<String, Object?>?)?['lines'],
+      ).indexed) {
+        checkVo(file, 'show.lines[$i].vo', l['vo']);
+      }
+    }
   });
 
   lessons.forEach((String id, Map<String, Object?> l) {
@@ -999,6 +1025,32 @@ List<Problem> validatePack({
     _targetClips(file, l, say, checkVo);
     _hebrew(file, l, say, pointed: l['band'] != 'C');
   });
+
+  // ---- the arc of the lands (M11 Stage 2): a Show first, the lead of a Together item, the caps, the tags, the rungs ----
+  if (!Course.isLanguage(course)) {
+    checkArc(activities: activities, lessons: lessons, skills: skills, say: say);
+    for (final MapEntry<String, Map<String, Object?>> l in lessons.entries) {
+      final Object? parts = l.value['parts'];
+      if (parts is! Map<String, Object?>) continue;
+      final String file = 'lesson.${l.key}.json';
+      for (final (int i, Map<String, Object?> t) in _maps(parts['together']).indexed) {
+        final Object? line = t['line'];
+        if (line is Map<String, Object?>) checkVo(file, 'parts.together[$i].line.vo', line['vo']);
+      }
+      final Object? handover = parts['handover'];
+      if (handover is Map<String, Object?>) checkVo(file, 'parts.handover.vo', handover['vo']);
+    }
+  } else if (lessons.values.any((Map<String, Object?> l) => l['parts'] != null)) {
+    for (final MapEntry<String, Map<String, Object?>> l in lessons.entries) {
+      if (l.value['parts'] != null) {
+        say(
+          'lesson.${l.key}.json',
+          'parts',
+          'only the lessons of a land are in parts, not a language lesson',
+        );
+      }
+    }
+  }
 
   skills.forEach((String id, Map<String, Object?> s) {
     final String file = 'skill.$id.json';
@@ -1135,6 +1187,22 @@ List<Problem> packWarnings({required Map<String, Object?> docs}) {
         );
         break;
       }
+    }
+  }
+  // W1 (M11 Stage 2): a scored item of a land in parts asks a word its Show has not taught.
+  Map<String, Map<String, Object?>> byKind(String prefix) => <String, Map<String, Object?>>{
+    for (final MapEntry<String, Object?> d in docs.entries)
+      if (d.key.startsWith(prefix) && d.value is Map<String, Object?>)
+        (d.value! as Map<String, Object?>)['id']! as String: d.value! as Map<String, Object?>,
+  };
+  final Map<String, Map<String, Object?>> lessons = byKind('lesson.');
+  if (lessons.values.any((Map<String, Object?> l) => l['parts'] != null)) {
+    for (final String w in metBeforeAsked(
+      activities: byKind('activity.'),
+      lessons: lessons,
+      skills: byKind('skill.'),
+    )) {
+      out.add(Problem('', w));
     }
   }
   return out;
@@ -1832,9 +1900,10 @@ void _languageFieldsInLands(String file, Map<String, Object?> a, void Function(S
       node.forEach((String k, Object? v) {
         final String here = path.isEmpty ? k : '$path.$k';
         final bool option = RegExp(r'^answer\.options\[\d+\]$').hasMatch(path);
+        // `show` is the word shown in a chip under a line of a language course (a string); a Show of a land (`purpose: show`) is an object.
         final bool own =
+            (k == 'show' && v is String) ||
             const <String>{
-              'show',
               'clips',
               'pole',
               'pairWith',
@@ -2717,7 +2786,8 @@ void _courseRules({
     final String file = 'lesson.$id.json';
     sameCourse(file, l);
     ownId(file, id);
-    if (!language) _languageFieldsInLands(file, l, say);
+    // The parts of a lesson (M11 Stage 2) name a Show by its id under `show`, which is no language field; they are checked by `checkArc`.
+    if (!language) _languageFieldsInLands(file, <String, Object?>{...l}..remove('parts'), say);
     for (final (int i, Object? s) in (l['skills']! as List<Object?>).indexed) {
       if (s is String && !ownSkill(s)) say(file, 'skills[$i]', '$s is not a skill of the course $course');
     }

@@ -111,7 +111,6 @@ const Map<String, String> _knownNewGaps = <String, String>{
   'b15.loga09.1': 'E2',
   'b15.loga09.2': 'E2',
   'b15.shpa02.1': 'E2',
-  'b15.shpa02.2': 'E2',
   'b.logb01.9': 'one tag only: the pattern has no second wrong place',
   'b.logb01.10': 'one tag only: the pattern has no second wrong place',
   'b15.numa13.1': 'spec: one tag (M-ORD-CARD)',
@@ -124,8 +123,9 @@ void main() {
   final Map<String, Map<String, Object?>> skills = _load('skill.');
 
   test('the sources are the 967 activities and 100 skills of pack 0.11.0, and the 239 and 12 of M10 batch C1 (170 of the first sessions, 58 for the block, chart, keypad and tolerance modes, 5 for the line by estimate and the true-or-false card, 4 lucky-right items, and 2 hidden-basket count-on items)', () {
-    expect(acts.length, 967 + 239);
-    expect(skills.length, 100 + 12);
+    // + 14 skills and 48 items of the Shape Forest pilot (M11 Stage 2): SHP-B-05 and SHP-B-06, 8 new shape builders, and the 16 Shows
+    expect(acts.length, 967 + 239 + 8 + 16);
+    expect(skills.length, 100 + 12 + 2);
   });
 
   test('the representation label of every activity follows the rule of spec section 2', () {
@@ -181,14 +181,14 @@ void main() {
   group('section 5.3: two tagged wrong answers on an item with three or more options', () {
     final List<String> gaps = _tagGaps(acts);
 
-    test('the 21 new items B-15 added with a gap are exactly the explained ones', () {
+    test('the 20 new items B-15 added with a gap are exactly the explained ones', () {
       final Set<String> newGaps = gaps.where(_knownNewGaps.containsKey).toSet();
       expect(
         newGaps,
         _knownNewGaps.keys.toSet(),
         reason: 'a gap on this list got fixed (take it off), or the item changed its id',
       );
-      expect(_knownNewGaps.length, 21);
+      expect(_knownNewGaps.length, 20);
     });
 
     // 320 since the maths check fixes of 2026-11-06 (docs/knowledge/maths/check-2026-11-06-fixes.md): +14 where a second
@@ -200,11 +200,12 @@ void main() {
     // tag, M-SER-DIR, is proposed to the curriculum-expert), +2 where the false M-PAT-UNIT lure became an untagged
     // same-size lure (b15.loga06.1, .2), +2 for the "+1" tower of b.logb04.7 and .8 (growth by two; no honest
     // tag yet), -2 where LOG-B-06 .5 and .6 now offer two options
-    test('no other new item falls short: the old gaps are pinned at 326', () {
+    test('no other new item falls short: the old gaps are pinned at 297', () {
       final List<String> older = gaps.where((String id) => !_knownNewGaps.containsKey(id)).toList();
       expect(
         older.length,
-        326,
+        // 297 since the Shape Forest pilot (M11 Stage 2): 29 taps were re-cut to hands-on templates or got an honest second tag
+        297,
         reason: 'a new gap, or an old one fixed: update the pin with the curriculum-expert',
       );
     });

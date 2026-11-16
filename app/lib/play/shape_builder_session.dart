@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -12,7 +13,9 @@ import 'hints/hint_pictures.dart' show hintScale;
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
+import 'lesson_arc.dart' show ArcPart, ArcStep;
 import 'response_code.dart';
+import 'show_stage.dart';
 import 'template_session.dart';
 
 /// The shape-builder template (T10). A picture made of shapes stands on the stage as silhouettes; the shapes wait in the tray
@@ -20,6 +23,11 @@ import 'template_session.dart';
 /// the way the picture needs it (the child never has to turn anything); one that does not is a gentle "not yet" and goes back.
 /// After three wrong tries only the right place takes the shape: the guide first puts one piece in its place as a worked example,
 /// and the place and the piece stay lit.
+///
+/// A piece fits a place of its own shape, whatever its colour ([ShapeBuilderActivity.fits]): a rocket's nose and its fins are two triangles
+/// of nearly one size, and a child cannot tell them apart by the grey shadow. A wrong piece records the tag of that piece in that place
+/// ([ShapeBuilderActivity.tagFor]). The host's part (M11 Stage 2): in a Show (`purpose: show`) the host fills every place but the last and the
+/// child fills the last, with nothing written and a wrong piece only a "let's look again"; in a Together item the host fills its first places.
 class ShapeBuilderSession extends TemplateSession {
   ShapeBuilderSession(super.controller, this.activity);
 
@@ -71,6 +79,8 @@ class ShapeBuilderSession extends TemplateSession {
   static GhostKind? ghostKindOf(String sprite) {
     if (sprite.contains('shape_circle')) return GhostKind.circle;
     if (sprite.contains('shape_square')) return GhostKind.square;
+    // The half of a square (a right triangle) is tested before the triangle: its id contains the triangle's.
+    if (sprite.contains('shape_triangle_half')) return GhostKind.triangle;
     if (sprite.contains('shape_triangle')) return GhostKind.triangle;
     if (sprite.contains('shape_rect')) return GhostKind.rect;
     return null;
@@ -112,7 +122,7 @@ class ShapeBuilderSession extends TemplateSession {
 
   void select(int piece) {
     _endDemo();
-    if (_busy || ring == AnswerState.correct || isUsed(piece)) return;
+    if (_busy || hosting || ring == AnswerState.correct || isUsed(piece)) return;
     selected = selected == piece ? null : piece;
     notify();
   }
@@ -124,9 +134,9 @@ class ShapeBuilderSession extends TemplateSession {
 
   Future<void> drop(int piece, String slotId) async {
     _endDemo();
-    if (_busy || ring == AnswerState.correct || isUsed(piece) || filled.contains(slotId)) return;
+    if (_busy || hosting || ring == AnswerState.correct || isUsed(piece) || filled.contains(slotId)) return;
     final ShapeSlot slot = activity.slots.firstWhere((ShapeSlot s) => s.id == slotId);
-    if (pieces[piece] == slot.sprite) {
+    if (ShapeBuilderActivity.fits(pieces[piece], slot)) {
       _hint.clear();
       filled.add(slotId);
       usedPieces.add(piece);
@@ -135,6 +145,11 @@ class ShapeBuilderSession extends TemplateSession {
       hintPiece = null;
       notify();
       if (filled.length == activity.slots.length) await _done();
+      return;
+    }
+    // The wrong piece of a Show: nothing is written and nothing is counted; the host looks again and points.
+    if (activity.isShow) {
+      _lookAgain(piece, slotId);
       return;
     }
     if (controller.guided) {
@@ -146,7 +161,7 @@ class ShapeBuilderSession extends TemplateSession {
     notify();
     await controller.submitPlacement(
       right: false,
-      tag: activity.wrongTag ?? '',
+      tag: activity.tagFor(pieces[piece], slot) ?? '',
       response: ResponseCode.shapeMove(piece, slotId),
     );
     if (disposed) return;
@@ -161,6 +176,14 @@ class ShapeBuilderSession extends TemplateSession {
 
   Future<void> _done() async {
     _busy = true;
+    if (activity.isShow) {
+      // The child made the last step of the Show: the host's key line is said again as the praise, and nothing is written.
+      controller.completePractice();
+      ring = AnswerState.correct;
+      notify();
+      later(praise, controller.next);
+      return;
+    }
     await controller.submitPlacement(right: true, response: ResponseCode.built);
     if (disposed) return;
     ring = AnswerState.correct;
@@ -168,13 +191,115 @@ class ShapeBuilderSession extends TemplateSession {
     later(praise, controller.next);
   }
 
+  /// The first tray piece that is not used and fits [slot].
+  int _pieceFor(ShapeSlot slot) =>
+      <int>[for (int i = 0; i < pieces.length; i++) i]
+          .firstWhere((int i) => !isUsed(i) && ShapeBuilderActivity.fits(pieces[i], slot), orElse: () => 0);
+
+  /// A Show, and the child's piece does not belong in that place: the host says "let's look again" and points at the place. Nothing is written.
+  void _lookAgain(int piece, String slotId) {
+    _busy = true;
+    notYetSlot = slotId;
+    controller.speak(activity.feedback.forIncorrect(null));
+    _point(piece);
+    later(TemplateSession.notYetPause, () {
+      notYetSlot = null;
+      selected = null;
+      _busy = false;
+      notify();
+    });
+  }
+
+  // ---- the host's part (a Show, the lead of a Together item) ----
+
+  /// The host's hand takes the piece that fits [slot] from the tray and puts it there: the path of the worked example of a hint, at the pace of
+  /// the look ([fast]: a reminder). A step with a motion of its own rests on the place first (the design draws the motions).
+  Future<void> _hostFill(ShapeSlot slot, {required bool fast, bool rests = false}) async {
+    final int taken = fast ? 300 : 850;
+    final int put = fast ? 550 : 1250;
+    final int over = fast ? 900 : 2200;
+    final int rest = rests && !fast ? 600 : 0;
+    final int fit = _pieceFor(slot);
+    hintSlot = slot.id;
+    hintPiece = fit;
+    notify();
+    final ActivitySpec? spec = _spec;
+    if (spec != null && _canDraw) {
+      final double side = math.max(44, math.min(84, spec.tilesWidth / math.max(1, pieces.length) - 8));
+      _hint.play(
+        handTourPlan(<HandStop>[
+          HandStop(spec.tileTip(pieces.length, fit, slot: side + 8, slop: 4), taken),
+          HandStop(slotRect(_size, slot).center, over - taken + rest),
+        ]),
+      );
+    }
+    await pause(Duration(milliseconds: put + rest));
+    filled.add(slot.id);
+    usedPieces.add(fit);
+    hintSlot = null;
+    hintPiece = null;
+    notify();
+    await pause(Duration(milliseconds: over - put));
+  }
+
+  /// A step of a Show with a motion (the finger round the hole, the corners): the host's hand shows the place first, then fills it.
+  Future<void> _hostShowFill(ShowStep step, {required bool fast}) async {
+    final ShowStyle? style = showStyle;
+    final ShapeSlot slot = _slotOf(step);
+    final ShowOutline? outline = style?.art.of(slot.sprite);
+    if (style != null && outline != null && !fast && _canDraw && ShowDirector.motions.contains(step.motion)) {
+      showMarks.scale = hintScale(_size);
+      await ShowDirector(this, style, showMarks).motion(step, outline, slotRect(_size, slot));
+      showMarks.clearMarks();
+    }
+    await _hostFill(slot, fast: fast, rests: step.motion != null && outline == null);
+  }
+
+  ShapeSlot _slotOf(ShowStep step) => activity.slots.firstWhere((ShapeSlot s) => s.id == step.slot);
+
+  /// What the host does on this screen, if anything: a Show (it fills every place but the child's), or the lead of a Together item.
+  @override
+  void startHost() {
+    final ArcStep? step = controller.step;
+    if (step == null || hosting) return;
+    if (activity.isShow) {
+      unawaited(
+        playShow(activity.show!, move: (ShowStep s, {required bool fast}) => _hostShowFill(s, fast: fast)),
+      );
+    } else if (step.part == ArcPart.together && controller.leading && step.lead > 0) {
+      unawaited(
+        playLead(<Future<void> Function()>[
+          for (final ShapeSlot s in activity.slots.take(step.lead)) () => _hostFill(s, fast: false),
+        ]),
+      );
+    }
+  }
+
+  /// A touch on a reminder skips what the host still has to do: its places are filled at once, and the child's step is left.
+  @override
+  void onScreenTouch() {
+    if (!activity.isShow) return;
+    skipHost(() {
+      _hint.clear();
+      showMarks.clear();
+      hintSlot = null;
+      hintPiece = null;
+      for (final ShowStep s in activity.show!.hostSteps) {
+        final ShapeSlot slot = _slotOf(s);
+        if (filled.add(slot.id)) usedPieces.add(_pieceFor(slot));
+      }
+    });
+  }
+
   /// The help shows the next place that is still empty and a piece that fits it.
   void _point(int fromPiece) {
     final ShapeSlot? open = activity.slots.where((ShapeSlot s) => !filled.contains(s.id)).firstOrNull;
     if (open == null) return;
     hintSlot = open.id;
-    final int fit = <int>[for (int i = 0; i < pieces.length; i++) i]
-        .firstWhere((int i) => !isUsed(i) && pieces[i] == open.sprite, orElse: () => fromPiece);
+    final int fit = <int>[for (int i = 0; i < pieces.length; i++) i].firstWhere(
+      (int i) => !isUsed(i) && ShapeBuilderActivity.fits(pieces[i], open),
+      orElse: () => fromPiece,
+    );
     hintPiece = fit;
     notify();
   }
@@ -187,6 +312,14 @@ class ShapeBuilderSession extends TemplateSession {
     _demoPiece = null;
     filled.clear();
     usedPieces.clear();
+    // The places the host filled in the lead of a Together item stay filled.
+    final int lead = controller.step?.part == ArcPart.together && !controller.leading
+        ? controller.step!.lead
+        : 0;
+    for (final ShapeSlot s in activity.slots.take(lead)) {
+      filled.add(s.id);
+      usedPieces.add(_pieceFor(s));
+    }
     selected = null;
     hintSlot = null;
     hintPiece = null;
@@ -278,8 +411,7 @@ class ShapeBuilderSession extends TemplateSession {
     demoRunning = true;
     selected = null;
     hintSlot = open.id;
-    final int fit = <int>[for (int i = 0; i < pieces.length; i++) i]
-        .firstWhere((int i) => !isUsed(i) && pieces[i] == open.sprite, orElse: () => 0);
+    final int fit = _pieceFor(open);
     hintPiece = fit;
     const int taken = 850; // the hand is at the piece
     const int put = 1300; // and in the place
@@ -344,7 +476,7 @@ class ShapeBuilderSession extends TemplateSession {
               Draggable<int>(
                 key: Key('piece-$i'),
                 data: i,
-                maxSimultaneousDrags: _busy ? 0 : 1,
+                maxSimultaneousDrags: _busy || hosting ? 0 : 1,
                 feedback: SizedBox(width: side, height: side, child: PackSvg(activity.assets.svg(p))),
                 childWhenDragging: Opacity(opacity: 0.25, child: _tile(i, p, side)),
                 child: _tile(i, p, side),
@@ -402,6 +534,10 @@ class _BuilderStage extends StatelessWidget {
                 ),
               ),
             ),
+            if (s.showStyle != null)
+              Positioned.fill(
+                child: ShowLayer(marks: s.showMarks, style: s.showStyle!),
+              ),
             Positioned.fill(child: s._hint.body(size)),
           ],
         ),
@@ -414,6 +550,7 @@ class _BuilderStage extends StatelessWidget {
   static (double, double) _visible(String sprite) {
     if (sprite.contains('shape_circle')) return (0.76, 0.76);
     if (sprite.contains('shape_square')) return (0.72, 0.72);
+    if (sprite.contains('shape_triangle_half')) return (0.72, 0.72);
     if (sprite.contains('shape_triangle')) return (0.8, 0.72);
     if (sprite.contains('shape_rect')) return (0.88, 0.44);
     return (1, 1);

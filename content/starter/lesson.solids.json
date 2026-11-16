@@ -14,10 +14,10 @@
     "SHP-B-08"
   ],
   "items": [
-    "b.shpb08.1",
     "b.shpb08.2",
-    "b.shpb08.3",
     "b.shpb08.4",
+    "b.shpb08.1",
+    "b.shpb08.3",
     "b.shpb08.5"
   ],
   "estimatedMinutes": 5,
@@ -30,5 +30,41 @@
         "v": "כׇּל הַכָּבוֹד! הִכַּרְתֶּם גּוּפִים."
       }
     ]
+  },
+  "parts": {
+    "show": "show.shp-b-08",
+    "recall": [
+      "shp.solid.rolls"
+    ],
+    "together": [
+      {
+        "id": "b.shpb08.2",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.kubi.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחַ אֶת הָרִאשׁוֹן."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.shpb08.4",
+      "b.shpb08.1",
+      "b.shpb08.3",
+      "b.shpb08.5"
+    ],
+    "handover": {
+      "vo": "vo:host.kubi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "לְאַט לְאַט. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

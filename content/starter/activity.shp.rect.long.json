@@ -50,7 +50,8 @@
       {
         "id": "i1",
         "sprite": "asset:shape_rect",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-SHP-SQRECT"
       },
       {
         "id": "i2",
@@ -60,7 +61,8 @@
       {
         "id": "i3",
         "sprite": "asset:shape_rect_blue",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-SHP-SQRECT"
       },
       {
         "id": "i4",
@@ -70,7 +72,8 @@
       {
         "id": "i5",
         "sprite": "asset:shape_square_tilt",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-SHP-ORIENT"
       }
     ]
   },
@@ -91,6 +94,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-ORIENT",
+        "vo": "vo:fb.shp_orient",
+        "caption": [
+          {
+            "t": "he",
+            "v": "צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה גַּם כְּשֶׁמְּסֹבְבִים אוֹתָהּ. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "misconception:M-SHP-SQRECT",
         "vo": "vo:fb.shp_sqrect",

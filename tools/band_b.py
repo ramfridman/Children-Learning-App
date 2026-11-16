@@ -40,6 +40,7 @@ NAMES = {
     'solid_cylinder': {'one': 'גָּלִיל', 'g': 'm'}, 'solid_cone': {'one': 'חָרוּט', 'g': 'm'},
     'solid_sphere': {'one': 'כַּדּוּר', 'g': 'm'}, 'solid_pyramid': {'one': 'פִּירָמִידָה', 'g': 'f'},
     'solid_box': {'one': 'תֵּבָה', 'g': 'f'},
+    'gift_box': {'one': 'תֵּבָה', 'g': 'f'},
     'rule_colour': {'one': 'הַצֶּבַע', 'g': 'm'}, 'rule_shape': {'one': 'הַצּוּרָה', 'g': 'f'},
     'rule_size': {'one': 'הַגֹּדֶל', 'g': 'm'},
     'frog': {'one': 'צְפַרְדֵּעַ', 'g': 'f'}, 'block': {'one': 'קֻבִּיָּה', 'g': 'f'},

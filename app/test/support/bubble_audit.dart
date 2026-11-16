@@ -130,9 +130,11 @@ Future<BubbleFindings> auditBubbles(
   return (overTiles: failures, overStage: spills);
 }
 
-/// Every activity of the pack, in id order: what the full audit opens.
+/// Every activity of the pack, in id order: what the full audit opens. A Show (M11 Stage 2) is left out: it asks nothing and has no hints; the host
+/// plays it (`arc_flow_test.dart`).
 List<Activity> allActivities(PackContent c) =>
-    c.activities.values.toList()..sort((Activity a, Activity b) => a.id.compareTo(b.id));
+    c.activities.values.where((Activity a) => !a.isShow).toList()
+      ..sort((Activity a, Activity b) => a.id.compareTo(b.id));
 
 /// The longest line the bubble says while [a] is worked on: the question, a hint, a "not yet". The longer the line, the less room it leaves.
 int longestLine(Activity a) => <int>[

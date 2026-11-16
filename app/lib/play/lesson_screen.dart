@@ -12,6 +12,7 @@ import '../app/companion.dart';
 import '../app/language_providers.dart';
 import '../app/look_providers.dart';
 import '../app/math_providers.dart';
+import '../app/world_providers.dart' show worldProvider, WorldView;
 import '../app/providers.dart';
 import '../app/reward_providers.dart';
 import '../app/state.dart';
@@ -72,6 +73,8 @@ import 'ls01_sort_session.dart';
 import 'ls01_spot_session.dart';
 import 'ls01_tap_session.dart';
 import 'goni_moment.dart';
+import 'lesson_arc.dart';
+import 'show_stage.dart';
 import 'lesson_controller.dart';
 import 'name_options.dart';
 import 'clock_set_session.dart';
@@ -182,6 +185,13 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
 
   /// This visit introduces the lesson's words: the child has not finished this lesson before (see [LessonController.introVisit]).
   bool _introVisit = true;
+
+  /// Where the child stands in each skill when the visit begins (M11 Stage 2: a Show plays for a skill the child is new to, none for one it has
+  /// mastered), read once with the look. Until it is read, or when it cannot be, every skill is new to the child.
+  WorldView? _world;
+
+  /// The art of the host's hand in a Show (Kubi's pointer, the ant, the outlines), read with the standing; null where it cannot be read.
+  ShowArt? _showArt;
   IdleLadder? _ladder;
   IdleStep? _idleStep;
   bool _ring = false;
@@ -235,6 +245,23 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs()),
         courseBand: courseBand,
       );
+      // The standing in the skills is read with the look: a lesson in parts needs it to choose its screens, and a failure only means that every skill
+      // counts as new to the child (the full Show), never that the visit does not open.
+      if (widget.mission == null &&
+          widget.flow == null &&
+          widget.course == Course.core &&
+          ref.read(roomsEnabledProvider)) {
+        try {
+          // Only a lesson in parts needs it, and the reading is not made for any other.
+          final PackContent pack = await ref.read(contentProvider.future);
+          if (pack.lessons[widget.lessonId]?.parts != null) {
+            _world = await ref.read(worldProvider(widget.profileId).future);
+            _showArt = await ShowArt.load();
+          }
+        } on Object {
+          _world = null;
+        }
+      }
       if (!mounted) return;
       setState(() {
         _look = look;
@@ -572,6 +599,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     );
     final RoomSpec? room = _room = _roomFor(content, widget.mission ?? content.lessons[widget.lessonId]!);
     final HostSpec? host = _host = room == null ? null : HostSpec.byId(room.hostId);
+    final ArcPlan? arc = room == null ? null : _planFor(content, content.lessons[widget.lessonId], look);
     final LessonController made = _controller = LessonController(
       content: content,
       captionsShown: look.captionsShown,
@@ -600,6 +628,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         return room == null ? made : inRoom(made);
       },
       // The host of the room greets before the first item (text with a clip that is still pending, M11 step 1.3).
+      arc: arc,
       hostGreeting: host == null || room == null ? null : _greetingOf(host, room),
       hostCheer: host == null
           ? null
@@ -616,6 +645,27 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     });
     return made;
   }
+
+  /// The screens of this visit of [lesson] when it is in parts (M11 Stage 2) and played in a room: a Show for a skill the child is new to, the host's
+  /// lead of a Together item, the Alone items in the order of the fade rule, by the child's level and the look's caps. Null for a lesson that is not in
+  /// parts (a mission, a course lesson, a pack made before the arc) and when no plan can be made: it is then played from its flat list of items.
+  ArcPlan? _planFor(PackContent content, Lesson? lesson, LookNow look) {
+    final LessonParts? parts = lesson?.parts;
+    if (lesson == null || parts == null) return null;
+    final WorldView? world = _world;
+    return ArcPlan.build(
+      content: content,
+      parts: parts,
+      skills: lesson.skillIds,
+      caps: ArcCaps.ofStage(look.stage.index),
+      standing: (String skill) =>
+          world == null ? const SkillStanding() : SkillStanding.of(world.engine, skill, world.now),
+      started: (String skill) => world?.engine.state.skills[skill]?.started ?? false,
+    );
+  }
+
+  /// The host teaches in this moment (a Show, the lead-in of a Together item): its voice is the one that speaks.
+  bool _hostTeaches(Moment m) => m == Moment.show || m == Moment.lead;
 
   /// What [host] says when the lesson opens. The two foreign-language hosts first say their greeting word in the course's own language, then the
   /// Hebrew greeting (`hostHello`): the word's clip goes first in the line and the Hebrew clip follows it, a clip that is not in the pack is
@@ -658,6 +708,20 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     if (widget.flow != null || !ref.read(roomsEnabledProvider)) return null;
     final String? skill = _lessonSkill(content, lesson);
     return skill == null ? null : RoomSpec.of(content.skills[skill]);
+  }
+
+  /// A host's line that leads no steps (the lead-in of a tap or a tracing, the hand-over to the companion) ends by itself, once it has been there
+  /// for [_greetingPause] and its voice (when it has one) has ended, or at a touch.
+  void _holdLead(LessonController c) {
+    final int at = c.index;
+    _greetTimer?.cancel();
+    _greetTimer = Timer(_greetingPause, () {
+      unawaited(
+        _director.untilQuiet().then((_) {
+          if (mounted && c.index == at) c.leadDone();
+        }),
+      );
+    });
   }
 
   /// The greeting ends by itself, once it has been there for [_greetingPause] and its voice (when it has one) has ended, or at a touch.
@@ -908,11 +972,30 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         SayItActivity() => SayItSession(c, a, say: _makeSayStep(c, a)),
       };
       _session!.playClips = _playClips;
+      // Kubi has the art for the hand of a Show (his pointer); another host's Show is done by the pointing hand of the hints until it has its own.
+      final ShowArt? art = _showArt;
+      final RoomSpec? room = _room;
+      if (art != null && room != null && _host?.id == 'kubi') {
+        _session!.showStyle = ShowStyle(
+          art: art,
+          deep: room.lip,
+          lip: room.lip,
+          slow: _look?.stage == PresentationStage.p1 || _look?.stage == PresentationStage.p2,
+          still: MediaQuery.disableAnimationsOf(context),
+        );
+      }
       _session!.untilQuiet = _director.untilQuiet;
       _sessionIndex = c.index;
       // The old stage is still on screen for this frame; let it go afterwards.
       if (old != null) SchedulerBinding.instance.addPostFrameCallback((_) => old.dispose());
       SchedulerBinding.instance.addPostFrameCallback((_) => _voice?.newQuestion());
+      // The host's part of a Show and of a Together item begins once its stage has been drawn; a line that leads no steps ends by itself.
+      final TemplateSession made = _session!;
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || _session != made) return;
+        made.startHost();
+        if (c.leading && (c.step?.lead ?? 0) == 0) _holdLead(c);
+      });
     }
     return _session!;
   }
@@ -1065,7 +1148,13 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     final RoomSpec? room = _room;
     final HostSpec? host = _host;
     if (room == null || host == null) return null;
-    final HostPose pose = greeting ? HostPose.talk : meet?.hostPose ?? HostPose.idle;
+    // The host teaches in a Show and in the lead of a Together item: its hand is out on the stage, and the companion listens behind it.
+    final bool teaching = !greeting && meet == null && (c.moment == Moment.show || c.moment == Moment.lead);
+    final HostPose pose = greeting
+        ? HostPose.talk
+        : teaching
+        ? HostPose.show
+        : meet?.hostPose ?? HostPose.idle;
     return RoomScene(
       room: room,
       hostView: HostView(
@@ -1077,7 +1166,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         skin: goniSkinFor(c, room),
       ),
       hostMouth: host.mouthShare(pose),
-      hostBeat: greeting || meet != null,
+      hostBeat: greeting || meet != null || teaching,
       companionSpeaks: meet?.companionSpeaks ?? false,
       // A Meet screen right after the greeting finds the host in front already: it does not walk in again.
       hostStays: !greeting && c.index == 0,
@@ -1180,6 +1269,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             onPointerDown: (_) {
               session.onScreenTouch();
               _ladder?.touch();
+              // A touch ends the host's line where the host does nothing but say it (a Together lead with no steps to lead, the hand-over).
+              if (controller.leading && (controller.step?.lead ?? 0) == 0) controller.leadDone();
             },
             child: ActivityFrame(
               spec: spec,
@@ -1189,7 +1280,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
                 director: _director,
                 resting: resting,
                 // The host's voice is not the companion's: the companion's mouth stays still while the host speaks.
-                voiceOf: meet != null && !meet.companionSpeaks ? 'host' : guide.character.id,
+                voiceOf: (meet != null ? !meet.companionSpeaks : _hostTeaches(controller.moment))
+                    ? 'host'
+                    : guide.character.id,
               ),
               bubbleText: controller.bubble,
               bubbleMath: controller.bubbleMath,

@@ -79,6 +79,15 @@ PresentationSpec presentationSpec(int band, {String course = Course.core, Engine
 /// The most answer choices a stage shows (the UI cap; the stage's own token holds the same numbers for the layout).
 const List<int> maxChoicesByStage = <int>[3, 3, 4, 5];
 
+/// The caps of a lesson in parts by look stage P1 to P4 (M11-stage2 section 2.5; the greeting and the celebration are not counted): the screens a
+/// visit serves in all, the Alone items after a Show and a Together item, whether a recall item and a use item are served, and the most scored
+/// items (null: only the screens limit). `ArcCaps` in `play/lesson_arc.dart` reads them.
+const List<int> arcScreensByStage = <int>[5, 6, 8, 9];
+const List<int> arcAloneByStage = <int>[2, 3, 4, 5];
+const List<int> arcRecallByStage = <int>[0, 1, 1, 1];
+const List<int> arcUseByStage = <int>[0, 1, 1, 1];
+const List<int?> arcScoredByStage = <int?>[null, null, null, 7];
+
 /// Items in an activity, the lower and the upper end, by stage.
 const List<(int, int)> itemsByStage = <(int, int)>[(3, 4), (3, 5), (5, 8), (8, 12)];
 

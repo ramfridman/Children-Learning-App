@@ -1,0 +1,180 @@
+{
+  "schema": "activity/v1",
+  "id": "show.shp-a-01",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "shape_builder",
+  "templateVersion": "1.0",
+  "domain": "shapes",
+  "band": "A",
+  "skills": [
+    {
+      "id": "SHP-A-01",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.kubi.show.shp_a_01.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְכׇל צוּרָה בַּקֻּפְסָה יֵשׁ חֹר."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "aspect": 1.091,
+    "slots": [
+      {
+        "id": "s1",
+        "sprite": "asset:shape_circle",
+        "x": 0.0,
+        "y": 0.0,
+        "w": 0.4048,
+        "h": 0.4416,
+        "rot": 0
+      },
+      {
+        "id": "s2",
+        "sprite": "asset:shape_square",
+        "x": 0.5952,
+        "y": 0.0,
+        "w": 0.4048,
+        "h": 0.4416,
+        "rot": 0
+      },
+      {
+        "id": "s3",
+        "sprite": "asset:shape_triangle",
+        "x": 0.2976,
+        "y": 0.5584,
+        "w": 0.4048,
+        "h": 0.4416,
+        "rot": 0
+      }
+    ]
+  },
+  "answer": {
+    "type": "shapes"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.kubi.show.shp_a_01.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַחֹר עָגֹל, אָז נִכְנָס הָעִגּוּל."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "לְכׇל צוּרָה בַּקֻּפְסָה יֵשׁ חֹר."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.kubi.show.shp_a_01.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְכׇל צוּרָה בַּקֻּפְסָה יֵשׁ חֹר."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.kubi.show.shp_a_01.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַחֹר עָגֹל, אָז נִכְנָס הָעִגּוּל."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.kubi.show.shp_a_01.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: הַמְּשֻׁלָּשׁ."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "piece": "asset:shape_circle",
+        "slot": "s1",
+        "say": "key",
+        "motion": "trace",
+        "detail": "hole"
+      },
+      {
+        "by": "host",
+        "piece": "asset:shape_square",
+        "slot": "s2"
+      },
+      {
+        "by": "child",
+        "piece": "asset:shape_triangle",
+        "slot": "s3"
+      }
+    ],
+    "teaches": [
+      "עִגּוּל",
+      "רִבּוּעַ",
+      "מְשֻׁלָּשׁ"
+    ]
+  }
+}

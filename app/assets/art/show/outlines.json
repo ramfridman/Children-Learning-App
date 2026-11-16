@@ -1,0 +1,1048 @@
+{
+ "by": "tools/make_show_art.py",
+ "pictures": {
+  "can": {
+   "base": [
+    50,
+    80,
+    29,
+    8.5
+   ],
+   "kind": "solid",
+   "top": [
+    50,
+    22,
+    29,
+    8.5
+   ]
+  },
+  "line_curved": {
+   "d": "M12 80 C 30 10, 70 10, 88 80",
+   "kind": "line"
+  },
+  "line_curved_arc": {
+   "d": "M20 86 C 6 40, 40 10, 86 20",
+   "kind": "line"
+  },
+  "line_curved_wave": {
+   "d": "M8 50 C 22 20, 36 80, 50 50 S 78 20, 92 50",
+   "kind": "line"
+  },
+  "line_straight": {
+   "d": "M12 82 L88 18",
+   "kind": "line"
+  },
+  "line_straight_flat": {
+   "d": "M10 50 L90 50",
+   "kind": "line"
+  },
+  "line_straight_up": {
+   "d": "M50 10 L50 90",
+   "kind": "line"
+  },
+  "party_hat": {
+   "base": [
+    50,
+    80,
+    31,
+    9
+   ],
+   "kind": "solid",
+   "point": [
+    50,
+    13
+   ]
+  },
+  "plate": {
+   "e": [
+    50,
+    54,
+    44,
+    19
+   ],
+   "kind": "ellipse"
+  },
+  "shape_circle": {
+   "e": [
+    50,
+    50,
+    38,
+    38
+   ],
+   "kind": "ellipse"
+  },
+  "shape_circle_blue": {
+   "e": [
+    50,
+    50,
+    38,
+    38
+   ],
+   "kind": "ellipse",
+   "same": "shape_circle"
+  },
+  "shape_circle_green": {
+   "e": [
+    50,
+    50,
+    38,
+    38
+   ],
+   "kind": "ellipse",
+   "same": "shape_circle"
+  },
+  "shape_circle_orange": {
+   "e": [
+    50,
+    50,
+    38,
+    38
+   ],
+   "kind": "ellipse",
+   "same": "shape_circle"
+  },
+  "shape_circle_red": {
+   "e": [
+    50,
+    50,
+    38,
+    38
+   ],
+   "kind": "ellipse",
+   "same": "shape_circle"
+  },
+  "shape_circle_yellow": {
+   "e": [
+    50,
+    50,
+    38,
+    38
+   ],
+   "kind": "ellipse",
+   "same": "shape_circle"
+  },
+  "shape_curved": {
+   "kind": "dome",
+   "q": [
+    [
+     12,
+     84
+    ],
+    [
+     50,
+     -10
+    ],
+    [
+     88,
+     84
+    ]
+   ]
+  },
+  "shape_hexagon": {
+   "kind": "poly",
+   "pts": [
+    [
+     50.0,
+     14.0
+    ],
+    [
+     82.9,
+     33.0
+    ],
+    [
+     82.9,
+     71.0
+    ],
+    [
+     50.0,
+     90.0
+    ],
+    [
+     17.1,
+     71.0
+    ],
+    [
+     17.1,
+     33.0
+    ]
+   ]
+  },
+  "shape_open": {
+   "kind": "open",
+   "pts": [
+    [
+     12,
+     84
+    ],
+    [
+     50,
+     14
+    ],
+    [
+     88,
+     84
+    ],
+    [
+     24,
+     84
+    ]
+   ]
+  },
+  "shape_oval": {
+   "e": [
+    50,
+    50,
+    42,
+    27
+   ],
+   "kind": "ellipse"
+  },
+  "shape_oval_blue": {
+   "e": [
+    50,
+    50,
+    42,
+    27
+   ],
+   "kind": "ellipse",
+   "same": "shape_oval"
+  },
+  "shape_oval_green": {
+   "e": [
+    50,
+    50,
+    42,
+    27
+   ],
+   "kind": "ellipse",
+   "same": "shape_oval"
+  },
+  "shape_oval_orange": {
+   "e": [
+    50,
+    50,
+    42,
+    27
+   ],
+   "kind": "ellipse",
+   "same": "shape_oval"
+  },
+  "shape_oval_red": {
+   "e": [
+    50,
+    50,
+    42,
+    27
+   ],
+   "kind": "ellipse",
+   "same": "shape_oval"
+  },
+  "shape_oval_yellow": {
+   "e": [
+    50,
+    50,
+    42,
+    27
+   ],
+   "kind": "ellipse",
+   "same": "shape_oval"
+  },
+  "shape_pentagon": {
+   "kind": "poly",
+   "pts": [
+    [
+     50.0,
+     14.0
+    ],
+    [
+     86.1,
+     40.3
+    ],
+    [
+     72.3,
+     82.7
+    ],
+    [
+     27.7,
+     82.7
+    ],
+    [
+     13.9,
+     40.3
+    ]
+   ]
+  },
+  "shape_quad": {
+   "kind": "poly",
+   "pts": [
+    [
+     78.3,
+     23.7
+    ],
+    [
+     78.3,
+     80.3
+    ],
+    [
+     21.7,
+     80.3
+    ],
+    [
+     21.7,
+     23.7
+    ]
+   ]
+  },
+  "shape_rect": {
+   "kind": "poly",
+   "pts": [
+    [
+     6,
+     28
+    ],
+    [
+     94,
+     28
+    ],
+    [
+     94,
+     72
+    ],
+    [
+     6,
+     72
+    ]
+   ]
+  },
+  "shape_rect_blue": {
+   "kind": "poly",
+   "pts": [
+    [
+     6,
+     28
+    ],
+    [
+     94,
+     28
+    ],
+    [
+     94,
+     72
+    ],
+    [
+     6,
+     72
+    ]
+   ],
+   "same": "shape_rect"
+  },
+  "shape_rect_green": {
+   "kind": "poly",
+   "pts": [
+    [
+     6,
+     28
+    ],
+    [
+     94,
+     28
+    ],
+    [
+     94,
+     72
+    ],
+    [
+     6,
+     72
+    ]
+   ],
+   "same": "shape_rect"
+  },
+  "shape_rect_orange": {
+   "kind": "poly",
+   "pts": [
+    [
+     6,
+     28
+    ],
+    [
+     94,
+     28
+    ],
+    [
+     94,
+     72
+    ],
+    [
+     6,
+     72
+    ]
+   ],
+   "same": "shape_rect"
+  },
+  "shape_rect_red": {
+   "kind": "poly",
+   "pts": [
+    [
+     6,
+     28
+    ],
+    [
+     94,
+     28
+    ],
+    [
+     94,
+     72
+    ],
+    [
+     6,
+     72
+    ]
+   ],
+   "same": "shape_rect"
+  },
+  "shape_rect_yellow": {
+   "kind": "poly",
+   "pts": [
+    [
+     6,
+     28
+    ],
+    [
+     94,
+     28
+    ],
+    [
+     94,
+     72
+    ],
+    [
+     6,
+     72
+    ]
+   ],
+   "same": "shape_rect"
+  },
+  "shape_square": {
+   "kind": "poly",
+   "pts": [
+    [
+     14,
+     14
+    ],
+    [
+     86,
+     14
+    ],
+    [
+     86,
+     86
+    ],
+    [
+     14,
+     86
+    ]
+   ]
+  },
+  "shape_square_blue": {
+   "kind": "poly",
+   "pts": [
+    [
+     14,
+     14
+    ],
+    [
+     86,
+     14
+    ],
+    [
+     86,
+     86
+    ],
+    [
+     14,
+     86
+    ]
+   ],
+   "same": "shape_square"
+  },
+  "shape_square_green": {
+   "kind": "poly",
+   "pts": [
+    [
+     14,
+     14
+    ],
+    [
+     86,
+     14
+    ],
+    [
+     86,
+     86
+    ],
+    [
+     14,
+     86
+    ]
+   ],
+   "same": "shape_square"
+  },
+  "shape_square_orange": {
+   "kind": "poly",
+   "pts": [
+    [
+     14,
+     14
+    ],
+    [
+     86,
+     14
+    ],
+    [
+     86,
+     86
+    ],
+    [
+     14,
+     86
+    ]
+   ],
+   "same": "shape_square"
+  },
+  "shape_square_red": {
+   "kind": "poly",
+   "pts": [
+    [
+     14,
+     14
+    ],
+    [
+     86,
+     14
+    ],
+    [
+     86,
+     86
+    ],
+    [
+     14,
+     86
+    ]
+   ],
+   "same": "shape_square"
+  },
+  "shape_square_tilt": {
+   "kind": "poly",
+   "pts": [
+    [
+     50.0,
+     -0.91
+    ],
+    [
+     100.91,
+     50.0
+    ],
+    [
+     50.0,
+     100.91
+    ],
+    [
+     -0.91,
+     50.0
+    ]
+   ]
+  },
+  "shape_square_yellow": {
+   "kind": "poly",
+   "pts": [
+    [
+     14,
+     14
+    ],
+    [
+     86,
+     14
+    ],
+    [
+     86,
+     86
+    ],
+    [
+     14,
+     86
+    ]
+   ],
+   "same": "shape_square"
+  },
+  "shape_trapezoid": {
+   "kind": "poly",
+   "pts": [
+    [
+     27,
+     28
+    ],
+    [
+     73,
+     28
+    ],
+    [
+     93,
+     72
+    ],
+    [
+     7,
+     72
+    ]
+   ]
+  },
+  "shape_trapezoid_blue": {
+   "kind": "poly",
+   "pts": [
+    [
+     27,
+     28
+    ],
+    [
+     73,
+     28
+    ],
+    [
+     93,
+     72
+    ],
+    [
+     7,
+     72
+    ]
+   ],
+   "same": "shape_trapezoid"
+  },
+  "shape_trapezoid_green": {
+   "kind": "poly",
+   "pts": [
+    [
+     27,
+     28
+    ],
+    [
+     73,
+     28
+    ],
+    [
+     93,
+     72
+    ],
+    [
+     7,
+     72
+    ]
+   ],
+   "same": "shape_trapezoid"
+  },
+  "shape_trapezoid_orange": {
+   "kind": "poly",
+   "pts": [
+    [
+     27,
+     28
+    ],
+    [
+     73,
+     28
+    ],
+    [
+     93,
+     72
+    ],
+    [
+     7,
+     72
+    ]
+   ],
+   "same": "shape_trapezoid"
+  },
+  "shape_trapezoid_red": {
+   "kind": "poly",
+   "pts": [
+    [
+     27,
+     28
+    ],
+    [
+     73,
+     28
+    ],
+    [
+     93,
+     72
+    ],
+    [
+     7,
+     72
+    ]
+   ],
+   "same": "shape_trapezoid"
+  },
+  "shape_trapezoid_yellow": {
+   "kind": "poly",
+   "pts": [
+    [
+     27,
+     28
+    ],
+    [
+     73,
+     28
+    ],
+    [
+     93,
+     72
+    ],
+    [
+     7,
+     72
+    ]
+   ],
+   "same": "shape_trapezoid"
+  },
+  "shape_triangle": {
+   "kind": "poly",
+   "pts": [
+    [
+     50,
+     12
+    ],
+    [
+     90,
+     84
+    ],
+    [
+     10,
+     84
+    ]
+   ]
+  },
+  "shape_triangle_blue": {
+   "kind": "poly",
+   "pts": [
+    [
+     50,
+     12
+    ],
+    [
+     90,
+     84
+    ],
+    [
+     10,
+     84
+    ]
+   ],
+   "same": "shape_triangle"
+  },
+  "shape_triangle_down": {
+   "kind": "poly",
+   "pts": [
+    [
+     10,
+     16
+    ],
+    [
+     90,
+     16
+    ],
+    [
+     50,
+     88
+    ]
+   ]
+  },
+  "shape_triangle_green": {
+   "kind": "poly",
+   "pts": [
+    [
+     50,
+     12
+    ],
+    [
+     90,
+     84
+    ],
+    [
+     10,
+     84
+    ]
+   ],
+   "same": "shape_triangle"
+  },
+  "shape_triangle_half": {
+   "kind": "poly",
+   "pts": [
+    [
+     14,
+     14
+    ],
+    [
+     86,
+     86
+    ],
+    [
+     14,
+     86
+    ]
+   ]
+  },
+  "shape_triangle_half_blue": {
+   "kind": "poly",
+   "pts": [
+    [
+     14,
+     14
+    ],
+    [
+     86,
+     86
+    ],
+    [
+     14,
+     86
+    ]
+   ],
+   "same": "shape_triangle_half"
+  },
+  "shape_triangle_half_green": {
+   "kind": "poly",
+   "pts": [
+    [
+     14,
+     14
+    ],
+    [
+     86,
+     86
+    ],
+    [
+     14,
+     86
+    ]
+   ],
+   "same": "shape_triangle_half"
+  },
+  "shape_triangle_half_orange": {
+   "kind": "poly",
+   "pts": [
+    [
+     14,
+     14
+    ],
+    [
+     86,
+     86
+    ],
+    [
+     14,
+     86
+    ]
+   ],
+   "same": "shape_triangle_half"
+  },
+  "shape_triangle_half_red": {
+   "kind": "poly",
+   "pts": [
+    [
+     14,
+     14
+    ],
+    [
+     86,
+     86
+    ],
+    [
+     14,
+     86
+    ]
+   ],
+   "same": "shape_triangle_half"
+  },
+  "shape_triangle_half_yellow": {
+   "kind": "poly",
+   "pts": [
+    [
+     14,
+     14
+    ],
+    [
+     86,
+     86
+    ],
+    [
+     14,
+     86
+    ]
+   ],
+   "same": "shape_triangle_half"
+  },
+  "shape_triangle_orange": {
+   "kind": "poly",
+   "pts": [
+    [
+     50,
+     12
+    ],
+    [
+     90,
+     84
+    ],
+    [
+     10,
+     84
+    ]
+   ],
+   "same": "shape_triangle"
+  },
+  "shape_triangle_red": {
+   "kind": "poly",
+   "pts": [
+    [
+     50,
+     12
+    ],
+    [
+     90,
+     84
+    ],
+    [
+     10,
+     84
+    ]
+   ],
+   "same": "shape_triangle"
+  },
+  "shape_triangle_thin": {
+   "kind": "poly",
+   "pts": [
+    [
+     50,
+     6
+    ],
+    [
+     66,
+     92
+    ],
+    [
+     34,
+     92
+    ]
+   ]
+  },
+  "shape_triangle_yellow": {
+   "kind": "poly",
+   "pts": [
+    [
+     50,
+     12
+    ],
+    [
+     90,
+     84
+    ],
+    [
+     10,
+     84
+    ]
+   ],
+   "same": "shape_triangle"
+  },
+  "sign": {
+   "kind": "poly",
+   "pts": [
+    [
+     50,
+     10
+    ],
+    [
+     92,
+     84
+    ],
+    [
+     8,
+     84
+    ]
+   ]
+  },
+  "solid_box": {
+   "face": [
+    [
+     50,
+     10
+    ],
+    [
+     88,
+     28
+    ],
+    [
+     50,
+     46
+    ],
+    [
+     12,
+     28
+    ]
+   ],
+   "kind": "solid"
+  },
+  "solid_cone": {
+   "base": [
+    50,
+    80,
+    34,
+    10
+   ],
+   "kind": "solid",
+   "point": [
+    50,
+    10
+   ]
+  },
+  "solid_cylinder": {
+   "base": [
+    50,
+    76,
+    30,
+    10
+   ],
+   "kind": "solid",
+   "top": [
+    50,
+    24,
+    30,
+    10
+   ]
+  },
+  "window": {
+   "kind": "poly",
+   "pts": [
+    [
+     10,
+     14
+    ],
+    [
+     90,
+     14
+    ],
+    [
+     90,
+     86
+    ],
+    [
+     10,
+     86
+    ]
+   ]
+  }
+ },
+ "schema": "show-outlines/v1",
+ "units": "the picture viewBox, 100 x 100"
+}

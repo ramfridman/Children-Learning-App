@@ -28,5 +28,39 @@
         "v": "יָפֶה מְאֹד! צִיַּרְתֶּם מֵהַנְּקֻדָּה."
       }
     ]
+  },
+  "parts": {
+    "show": "show.shp-a-02",
+    "recall": [
+      "shp.match.circle"
+    ],
+    "together": [
+      {
+        "id": "x.shpa02.4",
+        "lead": 0,
+        "line": {
+          "vo": "vo:host.kubi.together.trace",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נְצַיֵּר יַחַד. אֲנִי מַתְחִיל."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "x.shpa02.5",
+      "x.shpa02.6"
+    ],
+    "handover": {
+      "vo": "vo:host.kubi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו תּוֹרְכֶם. אֲנִי כָּאן, אִם צָרִיךְ."
+        }
+      ]
+    }
   }
 }

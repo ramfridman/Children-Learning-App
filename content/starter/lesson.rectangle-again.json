@@ -15,8 +15,8 @@
   ],
   "items": [
     "shp.rect.blue",
-    "shp.square.orange",
     "shp.rect.green",
+    "shp.square.orange",
     "b15.shpa04.1",
     "b15.shpa04.2"
   ],
@@ -30,5 +30,43 @@
         "v": "יָפֶה מְאֹד! הִבְדַּלְתֶּם בֵּין מַלְבֵּן לְרִבּוּעַ."
       }
     ]
+  },
+  "parts": {
+    "show": "show.shp-a-04",
+    "recall": [
+      "shp.name.circle"
+    ],
+    "together": [
+      {
+        "id": "shp.rect.blue",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.kubi.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחַ אֶת הָרִאשׁוֹן."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "shp.rect.green",
+      "shp.square.orange",
+      "b15.shpa04.1"
+    ],
+    "use": [
+      "b15.shpa04.2"
+    ],
+    "handover": {
+      "vo": "vo:host.kubi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עָבַדְנוּ יַחַד. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

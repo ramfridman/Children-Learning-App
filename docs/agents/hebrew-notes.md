@@ -1112,3 +1112,70 @@ The owner chose **אַלְפִי** (Alfi, the Hebrew course's hyrax, from אלף
 Niqqud. Alfi: patach on the alef (the owner's message had a kamatz, `אָלְפִי`; the word אלף is `אַלֶף` and the name is said "Al-fi", so patach), and **no dagesh in the pe**: after a silent shva a pe would take a dagesh (`אַלְפִּי`, read "Alpi"), but the name is said with an f, like the end of the word `אלף`. The voice text keeps the niqqud on the name so that the voice does not hesitate between `אַלְפִי`, `אֶלְפִי` and `אֲלָפִי`. Gosha: `גּוֹשָׁה` (gimel with a dagesh and a holam on the vav, as in `גּוֹנִי`; shin with a dagesh and a kamatz, read "sha"); the voice text keeps the niqqud on the name for the same reason. Words about the host: the greetings are first person ("אני") and the cheers are "we", so no verb or adjective agrees with a gendered host (Gosha being male changes nothing in the text today). Any future line that talks about Gosha uses masculine forms. The "הַ" before the old noun names is gone (a name takes no article). The cheers do not name the host and are unchanged.
 
 Open: (1) `Gosha` is close to `Goni` in sound and in the first syllable (I had left it out in 16.1 for that reason); the owner chose it, so it stays, but the two hosts are never in the same room and the pictures differ. (2) The art tools and `docs/languages/pictures.md` call the Russian puppet "Sasha" (`make_language_characters.py`); that is an internal art name of the giraffe, now clashing with Gosha. Needs the design-director's decision whether to rename it; I changed nothing there. (3) Both greetings are shorter than before (the old `שְׁפַן הַסֶּלַע` and `הַגִּ׳ירָפָה` were longer), so the bubble fit only got easier; fit test at 1.3 passes.
+
+## 17. M11 Stage 2 pilot, Shape Forest: Kubi's 61 lines and the 173 narrator clips (hebrew-text-editor, 2026-11-15)
+
+Scope: the curriculum-expert's drafts of `docs/milestones/M11-stage2.md` §6 and §11 for Shape Forest. Nothing was voiced or paid. Files changed: `content/units/arc/shape-forest.arc.json` (61 lines, now pointed, with `voice`, `text-ready`), `content/units/shapes.json` (Band A, 8 strings in the four A-07 sorts), `tools/hebrew_voice_review.py` (`SHAPE_FOREST_PILOT` phrase rules and one `READ` entry), this file. Not changed: `tools/band_b2.py` and `tools/band_b3.py` (generators; their Hebrew strings are in 17.5 for the app-developer), the pack, every id, answer, tag and structure.
+
+### 17.1 What the 61 host lines follow
+
+- **Kubi is "he"** (design-spec §4.4), so his own verbs are masculine singular (`אֲנִי מַעֲבִיר, דּוֹחֵף, מַנִּיחַ, סוֹפֵר, בּוֹדֵק`); the children are always plural (`בּוֹאוּ`, `שִׂימוּ`, `תּוֹרְכֶם`) or the impersonal present (`סוֹפְרִים`, `הוֹלְכִים`). His habit is `לְאַט לְאַט` (greeting `נִבְנֶה צוּרוֹת?`, cheer `לְאַט לְאַט, וּבָנִינוּ יַחַד.`), used in four lines only, so it stays a habit.
+- **A Show** says what he does and what the picture shows, never a question and never praise: open (what we do), key (the sentence the reminder replays), hand-over (`עַכְשָׁו תּוֹרְכֶם.` plus one instruction). Every word in a Show's `teaches` is said in its key line exactly as the items label it (the CE drafts missed `לֹא מְשֻׁלָּשׁ`, `נֶעֱרָם`, `אַרְבַּע צְלָעוֹת`, `צוּרָה סְגוּרָה / פְּתוּחָה / עֲקֻמָּה`).
+- **A Together lead-in** invites (`בּוֹאוּ נַעֲשֶׂה יַחַד.` then what Kubi does); a **hand-over** passes the turn (`עַכְשָׁו תּוֹרְכֶם.`, no `לבד`, which a three-year-old can hear as "left alone"; no `יפה`, which would be praise); the two **show me** replies are `בּוֹאוּ נִרְאֶה שׁוּב, לְאַט לְאַט.` and `אֲנִי מַרְאֶה עוֹד פַּעַם, וְאַחַר כָּךְ אַתֶּם.`
+- **Imperatives chosen so that the voice text needs no nikud:** `שִׂימוּ` (plain `שימו` is the precedent), `לִסְפֹּר`, `מַנִּיחַ`; not `הַכְנִיסוּ`, `הַטְבִּיעוּ`, `בִּדְקוּ`, `הִסְתַּכְּלוּ`, `הַמְשִׁיכוּ`, `סִפְרוּ` (their plain forms are the past tense or another word). `שָׂם` became `מַנִּיחַ` for the same reason.
+- No left or right word, no `לֹא` question in Band A, nothing personal. **Bubble limit (design-director, `docs/design/m11-rooms.md` 13.6; the host bubble on the phone holds two lines at the band size and does not shrink): every one of the 61 lines is at most 6 words and 24 letters** (first drafts had keys of 12 words). An idea too long for one line is split over the open, key and hand-over lines (V2 allows three), not squeezed into one. `teaches` words not said in a Show (said by the earlier skill or silently by the picture): `רִבּוּעַ` in A-01, `מְשֻׁלָּשׁ` in A-05 and B-09. Totals: 61 lines, **1,585 voice characters** (partial nikud, number words pointed).
+
+### 17.2 The shape words (decisions, each with the reason)
+
+| Concept | Word | Why |
+|---|---|---|
+| circle, square, triangle, rectangle | `עִגּוּל, רִבּוּעַ, מְשֻׁלָּשׁ, מַלְבֵּן` | the words of gan and grade 1, as `docs/curriculum.md` §Hebrew words and every earlier decision; a square is also a rectangle (W3), so no Show says it is not |
+| four-sided shape that is not a rectangle | `מְרֻבָּע` in Band B (SHP-B-01, B-06); in Band A `צוּרָה עִם אַרְבַּע צְלָעוֹת` if ever needed | an Israeli first-grade teacher says `מְרֻבָּע` for "any four sides" and `מְעֻיָּן / דַּלְתּוֹן / טְרַפֵּז` only from SHP-C-01 (curriculum §3, C1); the curriculum's own note: `רִבּוּעַ` and `מְרֻבָּע` sound alike, so they stay in separate skills and are always shown |
+| oval | `אֶלִיפְּסָה` (feminine) | the curriculum's word and the one on the gan wall; `ביצה` is what a child says at home, and is only used as a gloss if the owner wants it. **No line uses it yet** (the oval is not drawn); `shp.name.circle` etc. wait for the picture |
+| the box | Band A `קֻפְסָה`, Band B `תֵּבָה` bridged (`כְּמוֹ קֻפְסָה`) | hebrew-notes D6, owner Q7. Fixed: the four A-07 hints said `קֻבִּיָּה שְׁטוּחָה`; the Show for SHP-B-09 bridges `הַתֵּבָה, כְּמוֹ קֻפְסָה` |
+| the solid | `גּוּף` (B), never in Band A; `גָּלִיל, חָרוּט, כַּדּוּר, פִּירָמִידָה` | `חֹד` is the tip of the cone (as the approved SHP-B-08 hint) |
+| cube, box (design-director: `solid_box` is drawn as a cube; a dice and a gift box are drawn) | the dice and `solid_box` are `קֻבִּיָּה` (Band B; a child says it for a dice in Band A too); the gift box is `תֵּבָה` in Band B, bridged `כְּמוֹ קֻפְסָה שֶׁל נַעֲלַיִם`, and `קֻפְסָה` in Band A; a cube is never called `תֵּבָה` | a shoe box is not a cube, so the item "where is the תֵּבָה?" must show the gift box, and `band_b2.py` `solids` (`solid_box` → `הַתֵּבָה`) becomes `gift_box` → `הַתֵּבָה`, `solid_box` → `הַקֻּבִּיָּה`. Show B-09 says `הַתֵּבָה`, so its box item must be the gift box (it leaves a rectangle; the cube leaves a square). The bins of the sorts are only `גָּלִיל, חָרוּט, כַּדּוּר` today, so no bin label changes |
+| side, corner, hole, shadow | `צֶלַע, פִּנָּה, חֹר, צֵל` | the words the approved items already use; `מִתְחַבֵּא` (hide and seek) instead of `מִסְתַּתֵּר` |
+| straight, curved | `יָשָׁר, עָקֹם` (`קַו עָקֹם`, `מִתְעַקֵּם`) | as SHP-A-10 and the approved lines |
+
+### 17.3 Narrator lines: what changed
+
+The 140 distinct texts (433 rows, 497 with the app strings) of the CE's list were read one by one: 123 were already right (many are word for word in owner-approved rows: `בּוֹאוּ נְנַסֶּה שׁוּב.`, `אוֹתָהּ צוּרָה יְכוֹלָה לְהֵרָאוֹת קְצָת אַחֶרֶת.`, `לְצוּרָה סְגוּרָה אֵין פֶּתַח…`, the box bridge). 17 texts changed (48 rows; 14 phrase rules in `SHAPE_FOREST_PILOT`, of which the two Band A ones are also fixed in `content/units/shapes.json`, so 43 rows are left for the generators):
+
+| Was | Now | Why |
+|---|---|---|
+| `סְגוּרָה, וְכׇל הַצְּלָעוֹת יְשָׁרוֹת? כֵּן — לְכָאן. לֹא — לְכָאן.` (SHP-B-04 sorts) | `בּוֹדְקִים כׇּל צוּרָה: סְגוּרָה, וְכׇל הַצְּלָעוֹת שֶׁלָּהּ יְשָׁרוֹת? כֵּן — לְכָאן. לֹא — לְכָאן.` | two adjectives with no noun |
+| `כֵּן! הַסְּגוּרוֹת עִם הַצְּלָעוֹת הַיְשָׁרוֹת בְּיַחַד.` | `כֵּן! כָּאן כׇּל הַצּוּרוֹת הַסְּגוּרוֹת עִם צְלָעוֹת יְשָׁרוֹת.` | the same |
+| `אֵיזֶה גּוּף מִתְגַּלְגֵּל? לְכָאן. וּמִי לֹא — לְכָאן.` (B-08) and the B-09 twin | `גּוּפִים שֶׁמִּתְגַּלְגְּלִים — לְכָאן. וְהַשְּׁאָר — לְכָאן.` | `מִי` is for a person or an animal (section 13, rule 2) |
+| `נְדַמְיֵן שֶׁדּוֹחֲפִים …: מִי מִתְגַּלְגֵּל, וּמִי נִשְׁאָר עוֹמֵד?` (A-07 and B-08) | `נִדְחַף וְנִרְאֶה: מַה מִּתְגַּלְגֵּל, וּמַה נִּשְׁאָר עוֹמֵד?` | `נְדַמְיֵן` is the word the owner's 2026-11-08 sweep already took out of SHP-B-09; the hint picture pushes the solids |
+| `קֻבִּיָּה שְׁטוּחָה, וְאֶפְשָׁר לַעֲרֹם אוֹתָהּ.` (A-07) | `לְקֻפְסָה יֵשׁ צְדָדִים שְׁטוּחִים, וְאֶפְשָׁר לַעֲרֹם אוֹתָהּ.` | Band A says `קֻפְסָה` (D6) |
+| `בָּרִבּוּעַ אַרְבַּע צְלָעוֹת שָׁווֹת, …` (B-03) | `בָּרִבּוּעַ יֵשׁ אַרְבַּע צְלָעוֹת שָׁווֹת, …` | a verb, as the line of section 12 |
+| `אֵיפֹה מִסְתַּתֵּר מְשֻׁלָּשׁ?`, `מֵהַחֲתִיכָה הַגְּדוֹלָה` (B-05) | `אֵיפֹה מִתְחַבֵּא מְשֻׁלָּשׁ?`, `מֵהַצּוּרָה הַגְּדוֹלָה` | child words; one name for the pieces |
+| `אֵיזוֹ צוּרָה קְטַנָּה נִכְנֶסֶת פַּעֲמַיִם בַּצֵּל?` (shared by B-06's four items) | `… נִכְנֶסֶת בַּצֵּל שׁוּב וְשׁוּב?` | the last item needs four, not "twice" |
+| `שָׂמִים אֶחָד, וְעוֹד אֶחָד לְיָדוֹ.` (B-06) | `מַנִּיחִים אֶחָד לְיַד אֶחָד.` | true for two and for four; no V1 nikud in the voice text |
+| `מַטְבִּיעִים אֶת הַגּוּף וְרוֹאִים אֶת הַצּוּרָה שֶׁנִּשְׁאֶרֶת.` (`x.shpb09.1`, `.4`, `.5`) | `מַטְבִּיעִים צַד שָׁטוּחַ שֶׁל הַגּוּף וְרוֹאִים …` | the CE's note: the pyramid stamped on its base leaves a square; **three owner-approved rows lost their approval** (new text, new hash) |
+| `נִפְלָא! מִשְּׁתֵּי צוּרוֹת בְּנִיתֶם צוּרָה.` (lesson `shapes-make-shapes`) | `נִפְלָא! מִצּוּרוֹת קְטַנּוֹת בְּנִיתֶם צוּרָה גְּדוֹלָה.` | the last item uses four squares |
+
+All 433 rows (and the 201 rows of the 17 Show activities that `tools/arc_build.py` writes from the arc file) are covered by one `READ` entry and are `text-ready`; the guard `voice_word_mismatches` is clean (0). Voice texts of the narrator lines come from the tool unchanged (no `VOICE_MANUAL`). New voice characters: **181 distinct clips, 6,413 characters** (what is not already in the voice plan).
+
+### 17.4 Run order for the app-developer
+
+`tools/regen_content.py`, `tools/export-hebrew-review.py`, then `tools/hebrew_voice_review.py`. The committed `hebrew-review.csv` is older than the pack (the Show activities are not in it), so until the export is run the 61 Kubi lines are not rows of the master. A full run in a scratch copy of this worktree (generators, export, tool) gave 653 `text-ready`, 64 `proposed` (the he.dart screens that are not Shape Forest), `voice_word_mismatches` 0.
+
+### 17.5 For the app-developer: the Hebrew strings to change in the Band B generators (the table already shows them as `ui_text`)
+
+`tools/band_b2.py`: line 63 `_EQUAL.h3` (`יֵשׁ` after `בָּרִבּוּעַ`); lines 74 and 77 `_CLOSED.prompt` and `.correct_text`; line 118 `_ROLLS.prompt`; line 119 `_ROLLS.h2`; line 396 `h2` and 397 `h3` of SHP-B-05; line 404 `h2` and 405 `h3` of SHP-B-06; line 419 the celebration of `shapes-make-shapes`. `tools/band_b2.py` line 399: the skill SHP-B-06 title `שתי צורות עושות צורה אחת` → `צורות קטנות עושות צורה גדולה`, child line `שְׁתֵּי צוּרוֹת עוֹשׂוֹת צוּרָה` → `צוּרוֹת קְטַנּוֹת עוֹשׂוֹת צוּרָה גְּדוֹלָה` (owner's answer 3, curriculum-expert to confirm; `MANUAL` and `SHAPE_FOREST_PILOT` show it in the table). `tools/band_b3.py`: lines 262 (`B09_CIRCLE.prompt`), 292 and 301 (the `h3` of `x.shpb09.1`, `.4`, `.5`). The new strings are exactly the "Now" column of 17.3 (and `SHAPE_FOREST_PILOT` in the tool). `content/units/band-b-shapes.json` and `band-b-extra-shapes.json` are generator output; do not edit them. Until this is done `test_done_rows_have_ui_text` is red for 43 rows (the pack text differs from the table's), which is the intended signal; `test_table_counts` needs the new row count after the export.
+
+### 17.6 For the voice director
+
+Nothing is voiced. Three notes: (1) the hand-overs start `עַכְשָׁו תּוֹרְכֶם.` and the full stop is the beat before the instruction; (2) the key line of SHP-B-01 is a count, `שָׁלוֹשׁ צלעות: משולש. אַרְבַּע: מרובע…`, said slowly like the count-on lines; (3) `הַתֵּבָה` comes out as plain `התיבה` (the same as the approved SHP-B-08 line); if it is misread, add `הַתֵּבָה` to `KEEP_POINTED`.
+
+### 17.7 The owner's three answers (2026-11-15)
+
+1. Yes: `מַטְבִּיעִים צַד שָׁטוּחַ שֶׁל הַגּוּף` stays; `x.shpb09.1`, `.4`, `.5` hint 3 are `owner-approved` again (`OWNER_APPROVED`, exactly those three rows, "owner approved in chat, 2026-11-15"). 2. The oval is `אֶלִיפְּסָה`. 3. SHP-B-06 is retitled `צורות קטנות עושות צורה גדולה` (child line `צוּרוֹת קְטַנּוֹת עוֹשׂוֹת צוּרָה גְּדוֹלָה`); the lesson `צוּרוֹת עוֹשׂוֹת צוּרוֹת` is unchanged. The first-pass questions follow.
+
+### 17.8 First-pass questions (answered above)
+
+1. **Three approved rows changed** (`x.shpb09.1`, `.4`, `.5`, hint 3): `מַטְבִּיעִים צַד שָׁטוּחַ שֶׁל הַגּוּף` instead of `מַטְבִּיעִים אֶת הַגּוּף`, because the pyramid does not leave a triangle on its base. OK?
+2. **Oval:** `אֶלִיפְּסָה` when the oval is drawn (the gan word and the curriculum's), or `ביצה`? No line uses it yet.
+3. **SHP-B-06's name** says "two shapes make a shape" (`שְׁתֵּי צוּרוֹת עוֹשׂוֹת צוּרָה`) but its last item uses four squares. I changed only the celebration; retitle the skill `צוּרוֹת קְטַנּוֹת עוֹשׂוֹת צוּרָה גְּדוֹלָה`?

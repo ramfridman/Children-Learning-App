@@ -5,9 +5,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../child/activity_shell.dart';
 import '../content/hint_ladder.dart';
-import '../content/models.dart' show Activity;
+import '../content/models.dart' show Activity, ShowScript, ShowStep, Spoken;
 import '../speech/answer_matcher.dart';
+import 'lesson_arc.dart' show ShowKind;
 import 'lesson_controller.dart';
+import 'show_stage.dart';
 
 /// Plays clips (`vo:` references) in order; see [TemplateSession.playClips]. The result completes when the clips have been played
 /// (or were cut off): a session that needs the end of a line (a chant says its lines one after another) waits for it, and every
@@ -79,6 +81,113 @@ abstract class TemplateSession extends ChangeNotifier {
     final Completer<void> c = Completer<void>();
     later(d, c.complete);
     return c.future;
+  }
+
+  // ---- the host's part (M11 Stage 2: a Show and the lead of a Together item) ----
+
+  /// How long a line of the host stays at least: long enough to read while it has no voice, and it waits for its voice to end. A reminder
+  /// (the key line only, at most 8 seconds of the host in all) holds it for less.
+  static const Duration hostLinePause = Duration(milliseconds: 2400);
+  static const Duration reminderLinePause = Duration(milliseconds: 1800);
+
+  /// The host is acting on the stage (its steps, its lines): a touch of the child is not a move now.
+  bool hosting = false;
+  int _hostRun = 0;
+
+  /// The Show on screen is a reminder (the child has met the skill): a touch skips what the host does.
+  bool get reminder => controller.step?.show == ShowKind.reminder;
+
+  /// How the host's hand is drawn in a Show (its pointer, its marks, the lift to the middle of the stage), or null: the hand of the hints does the
+  /// worked example. The lesson screen sets it when the host has the art for it (Kubi, M11 Stage 2); [showMarks] is what is drawn now.
+  ShowStyle? showStyle;
+  final ShowMarks showMarks = ShowMarks();
+
+  /// Calls [tick] with 0 to 1 over [d], about 60 times a second, on the session's own timer; completes at 1 (never once the session has gone).
+  Future<void> animate(Duration d, void Function(double t) tick) {
+    final Completer<void> done = Completer<void>();
+    int ticks = 0;
+    late final Timer timer;
+    timer = Timer.periodic(const Duration(milliseconds: 16), (Timer _) {
+      if (_disposed) {
+        timer.cancel();
+        return;
+      }
+      // Counted in steps, not read from a clock, so that a test that moves time forward moves the motion with it.
+      final double t = (++ticks * 16000 / d.inMicroseconds).clamp(0.0, 1.0);
+      tick(t);
+      if (t >= 1) {
+        timer.cancel();
+        done.complete();
+      }
+    });
+    _timers.add(timer);
+    return done.future;
+  }
+
+  /// A template that has a host's part begins it here once its stage has been drawn (the lesson screen calls it after the first frame).
+  void startHost() {}
+
+  /// The host says [line] (the bubble, and its voice when it has one) and the next move waits until it is said.
+  Future<void> sayLine(Spoken line, {Duration atLeast = hostLinePause}) async {
+    controller.speak(line);
+    await lineSaid(atLeast);
+  }
+
+  /// Waits until the line in the bubble has been read and heard: at least [atLeast], and until the voice has ended.
+  Future<void> lineSaid([Duration atLeast = hostLinePause]) =>
+      Future.wait(<Future<void>>[pause(atLeast), ?untilQuiet?.call()]);
+
+  /// A Show: the host says its lines and makes its moves through [move] (the template draws them; [fast] for a reminder), then it stops before
+  /// the last move, which the child makes. Nothing is written. The opening line (the key line, for a reminder) is already in the bubble.
+  Future<void> playShow(
+    ShowScript show, {
+    required Future<void> Function(ShowStep step, {required bool fast}) move,
+  }) async {
+    final int run = ++_hostRun;
+    bool alive() => !disposed && run == _hostRun;
+    final bool fast = reminder;
+    hosting = true;
+    notify();
+    await lineSaid(fast ? reminderLinePause : hostLinePause);
+    for (final ShowStep step in show.hostSteps) {
+      if (!alive()) return;
+      if (!fast && step.saysKey) await sayLine(show.lines['key']!);
+      if (!alive()) return;
+      await move(step, fast: fast);
+    }
+    if (!alive()) return;
+    final Spoken? handover = show.lines['handover'];
+    if (!fast && handover != null) await sayLine(handover);
+    if (!alive()) return;
+    hosting = false;
+    notify();
+  }
+
+  /// The host does the first steps of a Together item, each through [moves], and then it is the child's turn: the companion asks the question.
+  /// The host's line is already in the bubble.
+  Future<void> playLead(List<Future<void> Function()> moves) async {
+    final int run = ++_hostRun;
+    bool alive() => !disposed && run == _hostRun;
+    hosting = true;
+    notify();
+    await lineSaid();
+    for (final Future<void> Function() move in moves) {
+      if (!alive()) return;
+      await move();
+    }
+    if (!alive()) return;
+    hosting = false;
+    notify();
+    controller.leadDone();
+  }
+
+  /// A touch while the host acts in a reminder skips to the child's step: [placeAll] puts what the host had still to do in its place at once.
+  void skipHost(VoidCallback placeAll) {
+    if (!hosting || !reminder || !(controller.step?.activity.isShow ?? false)) return;
+    _hostRun++;
+    placeAll();
+    hosting = false;
+    notify();
   }
 
   /// Plays [ids] and waits until they have been played (at most [atMost]); with no player (a test) it waits [without] instead.

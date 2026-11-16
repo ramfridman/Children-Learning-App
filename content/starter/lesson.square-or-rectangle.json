@@ -14,12 +14,12 @@
     "SHP-B-03"
   ],
   "items": [
-    "b.shpb03.1",
     "b.shpb03.2",
-    "b.shpb03.3",
     "b.shpb03.4",
-    "b.shpb03.5",
     "b.shpb03.6",
+    "b.shpb03.1",
+    "b.shpb03.3",
+    "b.shpb03.5",
     "b.shpb03.7"
   ],
   "estimatedMinutes": 5,
@@ -32,5 +32,46 @@
         "v": "כׇּל הַכָּבוֹד! אַתֶּם יוֹדְעִים שֶׁרִבּוּעַ הוּא מַלְבֵּן מְיֻחָד."
       }
     ]
+  },
+  "parts": {
+    "show": "show.shp-b-03",
+    "recall": [
+      "shp.rect.blue",
+      "b.shpb02.1"
+    ],
+    "together": [
+      {
+        "id": "b.shpb03.2",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.kubi.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחַ אֶת הָרִאשׁוֹן."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.shpb03.4",
+      "b.shpb03.6",
+      "b.shpb03.1",
+      "b.shpb03.3",
+      "b.shpb03.5"
+    ],
+    "use": [
+      "b.shpb03.7"
+    ],
+    "handover": {
+      "vo": "vo:host.kubi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "לְאַט לְאַט. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

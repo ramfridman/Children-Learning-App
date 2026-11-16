@@ -25,7 +25,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיזֶה גּוּף מַשְׁאִיר עִגּוּל בַּחוֹל? לְכָאן. וּמִי לֹא — לְכָאן."
+        "v": "גּוּפִים שֶׁמַּשְׁאִירִים עִגּוּל בַּחוֹל — לְכָאן. וְהַשְּׁאָר — לְכָאן."
       }
     ],
     "replayButton": true
@@ -50,22 +50,26 @@
       {
         "id": "i1",
         "sprite": "asset:solid_cone",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-SHP-FACE"
       },
       {
         "id": "i2",
-        "sprite": "asset:solid_box",
-        "bin": "b2"
+        "sprite": "asset:gift_box",
+        "bin": "b2",
+        "misconception": "M-SHP-FACE"
       },
       {
         "id": "i3",
         "sprite": "asset:solid_cylinder",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-SHP-FACE"
       },
       {
         "id": "i4",
         "sprite": "asset:solid_pyramid",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-SHP-FACE"
       }
     ]
   },
@@ -167,6 +171,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיזֶה גּוּף מַשְׁאִיר עִגּוּל בַּחוֹל? לְכָאן. וּמִי לֹא — לְכָאן."
+    "altText": "גּוּפִים שֶׁמַּשְׁאִירִים עִגּוּל בַּחוֹל — לְכָאן. וְהַשְּׁאָר — לְכָאן."
   }
 }

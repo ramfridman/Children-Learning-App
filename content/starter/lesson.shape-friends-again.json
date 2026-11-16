@@ -34,5 +34,47 @@
         "v": "כׇּל הַכָּבוֹד! הִכַּרְתֶּם עוֹד צוּרוֹת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.shp-a-01",
+    "secondShow": {
+      "id": "show.shp-a-02",
+      "before": "shp.name.square.yellow"
+    },
+    "together": [
+      {
+        "id": "shp.match.circle.blue",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.kubi.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחַ צוּרָה אַחַת."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "shp.match.triangle.green",
+      "shp.match.square.orange",
+      "shp.name.square.yellow",
+      "shp.name.triangle.green",
+      "b15.shpa01.1",
+      "b15.shpa01.2"
+    ],
+    "use": [
+      "b15.shpa02.1"
+    ],
+    "handover": {
+      "vo": "vo:host.kubi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו תּוֹרְכֶם. אֲנִי כָּאן, אִם צָרִיךְ."
+        }
+      ]
+    }
   }
 }

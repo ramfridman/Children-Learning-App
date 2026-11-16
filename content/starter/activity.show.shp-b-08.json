@@ -1,0 +1,185 @@
+{
+  "schema": "activity/v1",
+  "id": "show.shp-b-08",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
+  "domain": "shapes",
+  "band": "B",
+  "skills": [
+    {
+      "id": "SHP-B-08",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.kubi.show.shp_b_08.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לַגּוּפִים יֵשׁ שֵׁמוֹת."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:solid_cylinder",
+        "label": "גָּלִיל"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:solid_cone",
+        "label": "חָרוּט"
+      },
+      {
+        "id": "b3",
+        "sprite": "asset:solid_sphere",
+        "label": "כַּדּוּר"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:ball_red",
+        "bin": "b3"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:solid_cone",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:solid_cylinder",
+        "bin": "b1"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.kubi.show.shp_b_08.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַכַּדּוּר עָגֹל כֻּלּוֹ. לֶחָרוּט יֵשׁ חֹד."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "לַגּוּפִים יֵשׁ שֵׁמוֹת."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.kubi.show.shp_b_08.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לַגּוּפִים יֵשׁ שֵׁמוֹת."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.kubi.show.shp_b_08.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַכַּדּוּר עָגֹל כֻּלּוֹ. לֶחָרוּט יֵשׁ חֹד."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.kubi.show.shp_b_08.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לַגָּלִיל שְׁנֵי עִגּוּלִים. עַכְשָׁו תּוֹרְכֶם."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "item": "i1",
+        "bin": "b3",
+        "say": "key",
+        "motion": "turn"
+      },
+      {
+        "by": "host",
+        "item": "i2",
+        "bin": "b2",
+        "motion": "turn"
+      },
+      {
+        "by": "child",
+        "item": "i3",
+        "bin": "b1"
+      }
+    ],
+    "teaches": [
+      "גָּלִיל",
+      "חָרוּט",
+      "כַּדּוּר"
+    ]
+  }
+}

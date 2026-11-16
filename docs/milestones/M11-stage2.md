@@ -526,9 +526,9 @@ The owner said yes to all four questions: (1) at most 7 scored items for ages 7 
 
 | Step | Status (2026-11-15) |
 |---|---|
-| 2.1 Show, parts, lead, evidence, gating, caps | **next: app-developer**, from `content/units/arc/shape-forest.arc.json` (§7.4) |
+| 2.1 Show, parts, lead, evidence, gating, caps | **built for the pilot (2026-11-15, app-developer)**: schema, `arc_build.py`, `lesson_arc.dart`, the controller and the two sort and shape sessions, the host's hand for Kubi; not yet: the "show me" hand button, a second Together item, the predict question, the motions push, stack, turn and stamp, other hosts' pointers; QA and the security-engineer's review still to come |
 | 2.2, 2.2c template extensions | not started (2.2c frees SHP-A-08's Show) |
-| 2.3 validator V1 to V7, W1, the fade rule | not started; §11.2 corrects V6 and V7 |
+| 2.3 validator V1 to V7, W1, the fade rule | **built** in `arc_checks.dart` (§11.2's corrections as named waiver lists) and `lesson_arc.dart`; V5 reads a table of what each B-40 picture draws |
 | **2.4a pilot: Shape Forest content** | **done by the curriculum-expert** (§11.1); Hebrew drafts wait for the hebrew-text-editor, drawings for the design-director |
 | 2.4b to 2.4e, 2.5, 2.7, signing | not started |
 
@@ -540,7 +540,7 @@ The owner said yes to all four questions: (1) at most 7 scored items for ages 7 
 - **Pick-only share now:** every Shape Forest skill at or under its cap (A-02 62% under the 80% recognition cap; A-08 exempt); Band A 52% (46% without A-08), Band B 49%.
 - **Which ids:** not the first ones of each skill (the throwaway plan) but the taps with the fewest honest tags, keeping the owner's box-word item `b.shpb08.5` (hebrew-notes D6) and, where the count allowed, items pinned by tests.
 - **Shows:** 17, one per skill, with 61 host lines for Kubi (1,522 letters without nikud, 1,984 characters); 16 play on today's templates once 2.1 lands, SHP-A-08's waits for 2.2c.
-- **Generator changes (for the app-developer's review):** `author.py` writes an item's `revision`, lets a sort have no tag of its own, a family `h2` line and (behind `LAND_SORT_ITEM_TAGS`, off) a picture's own tag, and lets a `shape_builder` item say its own question, hints and answer tag; `pick_spec` keeps `revision`. `check_maths.py` reads the Shape Forest property sorts (sides, closed, equal sides, straight, rolls, faces, the shape of a thing), so every re-cut item is recomputed: 0 WRONG, 0 UNCHECKED.
+- **Generator changes (for the app-developer's review):** `author.py` writes an item's `revision`, lets a sort have no tag of its own, a family `h2` line and a picture's own tag, and lets a `shape_builder` item say its own question, hints and answer tag; `pick_spec` keeps `revision`. `check_maths.py` reads the Shape Forest property sorts (sides, closed, equal sides, straight, rolls, faces, the shape of a thing), so every re-cut item is recomputed: 0 WRONG, 0 UNCHECKED. **Reviewed by the app-developer (2026-11-15):** correct and in the house style; the switch `LAND_SORT_ITEM_TAGS` was taken out (the sort session and the validator now take the tag, so it is always written), `k_shapebuild` writes `decoy_tags` and `pair_tags` as `answer.pieceTags` (with a feedback line for each tag), `check_maths.py` knows the real-object solids (`gift_box`, `dice`, `can`, `party_hat`, `pyramid_egypt`), `band_b.py` names `gift_box`.
 
 ### 11.2 What turned out wrong in this spec
 

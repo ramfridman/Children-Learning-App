@@ -641,6 +641,33 @@ const SObject misconceptionSchema = SObject(<String, SField>{
   'preferredRepresentations': SField(SArray(SEnum(representations), maxItems: 5)),
 });
 
+/// The parts of a lesson of a land (see [lessonSchema], `parts`).
+const SObject _lessonParts = SObject(<String, SField>{
+  // The Show of the lesson's first skill, and for a lesson of two skills the Show of the second, which plays just before the first item of
+  // that skill (`before`) when the child needs it.
+  'show': SField(_id),
+  'secondShow': SField(SObject(<String, SField>{'id': SField(_id), 'before': SField(_id)}), required: false),
+  // Candidate items of an earlier skill for one item of recall: the first whose skill the child has started is served.
+  'recall': SField(SArray(_id, maxItems: 3), required: false),
+  // An item played with the host's lead: the host does the first `lead` steps (0 for a template with no steps to lead: the host only says its
+  // lead-in), `line` is what it says first.
+  'together': SField(
+    SArray(
+      SObject(<String, SField>{
+        'id': SField(_id),
+        'lead': SField(SInt(min: 0, max: 7)),
+        'line': SField(_spoken),
+      }),
+      maxItems: 2,
+    ),
+    required: false,
+  ),
+  'alone': SField(SArray(_id, maxItems: 12)),
+  'use': SField(SArray(_id, maxItems: 2), required: false),
+  // What the host says as the companion takes over, when Alone begins.
+  'handover': SField(_spoken, required: false),
+});
+
 const SObject lessonSchema = SObject(<String, SField>{
   'schema': SField(SConst(SchemaIds.lesson)),
   'id': SField(_lessonId),
@@ -662,6 +689,10 @@ const SObject lessonSchema = SObject(<String, SField>{
     }),
     required: false,
   ),
+  // The lesson in parts (M11 Stage 2, docs/milestones/M11-stage2.md sections 2 and 7.4), for a lesson of a land in a room: Recall, Show, Together, Alone,
+  // Use. `items` still lists the lesson's own items (together, alone, use) for a reader that does not know the parts, and a Show is never among
+  // them. `alone` is a pool: how many of it a visit serves, and in which order, is the app's (the child's level and look decide).
+  'parts': SField(_lessonParts, required: false),
   // The place of the lesson on the path of its land (M9): the island plays the first lesson, in this order, that the
   // child has not finished yet. Lessons without one come last.
   'sequence': SField(SInt(min: 1, max: 500), required: false),
@@ -1072,6 +1103,57 @@ const SObject _hintShow = SObject(<String, SField>{
   'mode': SField(SEnum(<String>['graphemes', 'merge', 'units']), required: false),
 });
 
+/// The lines of a Show (M11 Stage 2, docs/milestones/M11-stage2.md section 2.4): what the host says, in order. At most one of each.
+const List<String> showRoles = <String>['open', 'key', 'handover'];
+
+/// The motion the host's hand makes on an item in a Show (it names what is drawn, never what is scored): a finger along the sides, a count of
+/// them, sticks lifting off the sides, a walk round the outline, a push or a roll, a stack, a turn, a print in the sand.
+const List<String> hostMotions = <String>[
+  'trace',
+  'count',
+  'sticks',
+  'walk',
+  'push',
+  'stack',
+  'turn',
+  'stamp',
+];
+
+/// One move of a Show: the host's, or the child's last one. A sort moves a card (`item`) into a bin; a shape builder puts a piece (`piece`,
+/// the picture of the tray piece) into a place (`slot`). `say: key` marks the move at which the key line is said. `motion` and `detail` name the
+/// motion of the host's hand (what the design shows), and are never read by any rule of the lesson.
+const SObject _showStep = SObject(<String, SField>{
+  'by': SField(SEnum(<String>['host', 'child'])),
+  'item': SField(SString(minLength: 2, maxLength: 3, pattern: r'i[0-9]{1,2}'), required: false),
+  'bin': SField(SString(minLength: 2, maxLength: 2, pattern: r'b[0-9]'), required: false),
+  'piece': SField(_asset, required: false),
+  'slot': SField(SString(minLength: 2, maxLength: 3, pattern: r's[0-9]{1,2}'), required: false),
+  'say': SField(SConst('key'), required: false),
+  'motion': SField(SEnum(hostMotions), required: false),
+  'detail': SField(SString(minLength: 2, maxLength: 12, pattern: r'[a-z]{2,12}'), required: false),
+});
+
+/// A Show: an activity with `purpose: show` that plays on the skill's hands-on template, unscored. The host does the `steps` one after
+/// another and stops before the last, which is the child's (`handOver: last`); `lines` are what the host says; `teaches` are the words
+/// the Show says, as the skill's items label them (rule W1).
+const SObject _show = SObject(<String, SField>{
+  'handOver': SField(SConst('last')),
+  'lines': SField(
+    SArray(
+      SObject(<String, SField>{
+        'role': SField(SEnum(showRoles)),
+        'vo': SField(_vo),
+        'caption': SField(_caption),
+      }),
+      minItems: 2,
+      maxItems: 3,
+      uniqueKey: 'role',
+    ),
+  ),
+  'steps': SField(SArray(_showStep, minItems: 2, maxItems: 8)),
+  'teaches': SField(SArray(SString(minLength: 1, maxLength: 40), maxItems: 12)),
+});
+
 Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>{
   'schema': const SField(SConst(SchemaIds.activity)),
   'id': const SField(_id),
@@ -1116,7 +1198,7 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
       uniqueKey: 'id',
     ),
   ),
-  'purpose': const SField(SEnum(<String>['learn', 'practice', 'probe', 'repair', 'check'])),
+  'purpose': const SField(SEnum(<String>['learn', 'practice', 'probe', 'repair', 'check', 'show'])),
   // The misconception this item is built to expose (used by the session builder after a repair).
   'contradicts': const SField(_tag, required: false),
   // The word the item asks, when its prompt is a phrase and not the word (a command "show me the arms"): the clip of the word, so that
@@ -1468,6 +1550,7 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'misconception': SField(_tag, required: false),
         }),
       ),
+      'show': const SField(_show, required: false),
     }),
   ),
   // T07: a robot on a grid is moved to the flag with arrows, one step at a time (`direct`) or by planning the steps
@@ -1642,8 +1725,22 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
         SObject(<String, SField>{
           'type': SField(SConst('shapes')),
           'misconception': SField(_tag, required: false),
+          // The tag of a piece put where it does not belong: `piece` is the tray piece, `slot` the picture of the place it was put in
+          // (none: in any place). The most exact entry that fits wins; the answer's own tag is the rest.
+          'pieceTags': SField(
+            SArray(
+              SObject(<String, SField>{
+                'piece': SField(_asset),
+                'slot': SField(_asset, required: false),
+                'misconception': SField(_tag),
+              }),
+              maxItems: 8,
+            ),
+            required: false,
+          ),
         }),
       ),
+      'show': const SField(_show, required: false),
     }),
   ),
   // T05: the child fills the places of a pattern from a palette, by tapping or dragging.

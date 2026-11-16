@@ -50,12 +50,14 @@
       {
         "id": "i1",
         "sprite": "asset:shape_square_tilt",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-SHP-ORIENT"
       },
       {
         "id": "i2",
         "sprite": "asset:shape_rect",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-SHP-SQRECT"
       },
       {
         "id": "i3",
@@ -65,7 +67,8 @@
       {
         "id": "i4",
         "sprite": "asset:shape_rect_red",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-SHP-SQRECT"
       },
       {
         "id": "i5",
@@ -91,6 +94,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-ORIENT",
+        "vo": "vo:fb.shp_orient",
+        "caption": [
+          {
+            "t": "he",
+            "v": "צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה גַּם כְּשֶׁמְּסֹבְבִים אוֹתָהּ. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "misconception:M-SHP-SQRECT",
         "vo": "vo:fb.shp_sqrect",
@@ -152,7 +165,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "בָּרִבּוּעַ אַרְבַּע צְלָעוֹת שָׁווֹת, גַּם כְּשֶׁהוּא מְסֻבָּב. עַכְשָׁו תּוֹרְכֶם."
+          "v": "בָּרִבּוּעַ יֵשׁ אַרְבַּע צְלָעוֹת שָׁווֹת, גַּם כְּשֶׁהוּא מְסֻבָּב. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }

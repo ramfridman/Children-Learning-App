@@ -75,6 +75,22 @@ References for the second batch, looked at on 2026-11-06:
     page: an ordinary wall calendar (two binder rings, a coloured band at the top). Sticks, stone, feather, coin, the
     nest, the sky at four times of day: drawn from what they look like outdoors; the coin is not a real coin.
   The Languages pictures reused here carry their own references (tools/make_language_pictures.py and _b2.py).
+References for M11 Stage 2 (Shape Forest), looked at on 2026-11-15 (facts and photographs; the look is ours):
+  Tin can: https://en.wikipedia.org/wiki/Steel_and_tin_cans (a right circular cylinder, a rim at top and bottom with the
+    end recessed inside it, ribs on the side wall, a paper label glued round the side) and a Bing image search "tin can
+    food label corn" (silver rims, a green label with a yellow cob in its husk leaves). No brand, no words.
+  Party hat: https://en.wikipedia.org/wiki/Party_hat (a cone of thin card, printed outside, an elastic chin strap) and a
+    Bing image search "paper birthday party hat cone" (gores or stripes running to the point, dots, a pompom on the tip).
+    The pompom is kept small so the cone's one point still shows; the strap is left out (it would hang below the base).
+  Gift box: a Bing image search "gift box ribbon bow" (a box wrapped in one colour, a ribbon round each face crossing on
+    the lid, a bow of two loops and a knot). Drawn longer than it is tall, so it is a box (תֵּבָה), not a cube.
+  Dice: https://en.wikipedia.org/wiki/Dice (a cube, rounded corners and edges on a non-precision die, sunk pips,
+    opposite faces adding to seven, 1-2-3 counterclockwise round their corner on a Western "right-handed" die).
+  Pyramid: https://en.wikipedia.org/wiki/Egyptian_pyramids (the white casing mostly gone; Khafre's keeps some near the
+    top) and a Bing image search "giza pyramid khafre photo" (golden limestone, a sunny and a shady face, rows of stone
+    blocks, the smoother cap on top, sand round its foot). Israeli children meet it in the Passover story.
+  Oval, trapezoid, half-square triangle: geometry only (an ellipse 84 x 54; an isosceles trapezoid 86 and 46 wide, 44
+    high; the square's own corners), in the shapes' house style.
 References for the plain path robot, looked at on 2026-11-07 (photographs; the look is ours):
   Robot: the Wikimedia Commons media searches "wind-up robot toy" and "tin toy robot" (the generic tin wind-up toy
     robots of the 1950s to 1970s: a box head on a short neck, a single antenna, round lens eyes, a small grille mouth,
@@ -793,7 +809,19 @@ SHAPE_D = {
     'triangle': ('M50 12 L90 84 H10 Z', 'M44 30 L30 56'),
     'rect': ('M6 32 C6 29.5 7.5 28 10 28 H90 C92.5 28 94 29.5 94 32 V68 C94 70.5 92.5 72 90 72 H10 C7.5 72 6 70.5 6 68 Z',
              'M14 38 V54'),
+    # M11 Stage 2 (2026-11-15). The oval: a circle stretched to 1.56 : 1 (84 x 54), so it is plainly not round at 44 pt
+    # and still a smooth closed curve (the second honest distractor of "where is the circle?").
+    'oval': ('M8 50 A42 27 0 1 1 92 50 A42 27 0 1 1 8 50 Z', 'M17 42 Q24 30 42 26'),
+    # A four-sided shape that is not a rectangle: an isosceles trapezoid as tall as the rectangle (44) and as wide at its
+    # foot (86), its top 46 wide, so both slanted sides lean 20 units: four sides, no square corner, visible at 28 pt.
+    'trapezoid': ('M27 28 H73 L93 72 H7 Z', 'M30 35 L21 55'),
+    # Half of the square, cut on its diagonal: the right angle at the bottom left, the two short sides exactly the
+    # square's sides (14..86). Two of them (one turned 180 degrees about the middle) cover shape_square exactly.
+    'triangle_half': ('M14 14 L86 86 H18 C15.5 86 14 84.5 14 82 Z', 'M21 36 V66'),
 }
+# The fill of the plain (colourless-name) picture of each new kind: the same as the shape it is a distractor for (the oval
+# is red like shape_circle, the trapezoid orange like shape_rect), so colour never tells them apart.
+NEW_KIND_FILL = {'oval': '#E5484D', 'trapezoid': '#FF9F43', 'triangle_half': '#4CAF50'}
 
 
 def shape(kind, fill):
@@ -832,6 +860,10 @@ def shape_bodies():
     out['shape_quad'] = shape_other(poly_d(4, 40, -45), '#4CAF50')
     out['shape_curved'] = shape_other('M12 84 Q50 -10 88 84 Z', '#4DA3FF')
     out['shape_open'] = shape_open()
+    for kind, fill in NEW_KIND_FILL.items():   # M11 Stage 2: oval, trapezoid, the half-square triangle, in the five colours
+        out['shape_' + kind] = shape(kind, fill)
+        for name, c in SHAPE_COLOURS.items():
+            out['shape_%s_%s' % (kind, name)] = shape(kind, c)
     return out
 
 
@@ -1187,6 +1219,165 @@ def solid_pyramid():
     return p.body()
 
 
+# ---- Shape Forest, M11 Stage 2: the solids as real things (SHP-B-08, B-09) ---------------------------------------------
+#
+# Each is the solid's form first and the thing second: the defining parts (two round ends, one point, flat faces and
+# straight edges) are the biggest marks of the drawing, the decoration stays inside the faces and never hides an edge.
+# Seen a little from above, light from the top left, as the abstract solids above.
+
+def _iso(p0, a, b, c):
+    """The corners of a box standing on the ground, seen from a front corner: p0 the bottom front corner, a the length
+    along the right face, b along the left face, c the height. Returns the named points and the three face matrices
+    (a unit square 0..100 in face coordinates mapped onto each face)."""
+    ax, ay = 0.866 * a, -0.5 * a
+    bx, by = -0.866 * b, -0.5 * b
+    x0, y0 = p0
+    P = {'f0': (x0, y0), 'r0': (x0 + ax, y0 + ay), 'l0': (x0 + bx, y0 + by),
+         'f1': (x0, y0 - c), 'r1': (x0 + ax, y0 + ay - c), 'l1': (x0 + bx, y0 + by - c),
+         'k1': (x0 + ax + bx, y0 + ay + by - c)}
+    m = lambda o, u, v: 'matrix(%.4f %.4f %.4f %.4f %.3f %.3f)' % (u[0] / 100, u[1] / 100, v[0] / 100, v[1] / 100, o[0], o[1])
+    F = {'left': m(P['l1'], (-bx, -by), (0, c)),            # u: from the left corner to the front, v: down
+         'right': m(P['f1'], (ax, ay), (0, c)),             # u: from the front to the right corner, v: down
+         'top': m(P['l1'], (ax, ay), (-bx, -by))}           # u: toward the back right, v: toward the front
+    return P, F
+
+
+def _poly(*pts):
+    return 'M' + ' L'.join('%.2f %.2f' % q for q in pts) + ' Z'
+
+
+def can():
+    """A tin of sweet corn standing up: a cylinder (two round ends, one straight curved side). Silver rims at top and
+    bottom, the lid recessed inside the top rim, ribs on the bare metal, a green paper label with a corn cob."""
+    p = Pic()
+    p.shadow(50, 89, 33, 3.2)
+    side = 'M21 22 V80 A29 8.5 0 0 0 79 80 V22 Z'
+    cid = p.shaded(side, '#E4E7EF', '#AEB4C6', k=4, sw=0)
+    label = 'M21 31 A29 8.5 0 0 0 79 31 V72 A29 8.5 0 0 1 21 72 Z'
+    p.clipped(cid, '<path d="%s" fill="#3E9B45"/>' % label +
+              '<path d="M21 31 A29 8.5 0 0 0 79 31 V35 A29 8.5 0 0 1 21 35 Z" fill="#2E7D35"/>'
+              '<path d="M21 68 A29 8.5 0 0 0 79 68 V72 A29 8.5 0 0 1 21 72 Z" fill="#2E7D35"/>'
+              # the shade side of the label, then the cob and its two husk leaves, inside the label's middle
+              '<path d="M64 20 H84 V92 H64 Z" fill="#1F5F25" opacity="0.28"/>'
+              '<path d="M38 66 C34 56 40 46 46 42 C44 52 44 60 46 68 Z" fill="#7BC74D" stroke="#2B6B2F" stroke-width="1.2"/>'
+              '<path d="M62 66 C66 56 60 46 54 42 C56 52 56 60 54 68 Z" fill="#7BC74D" stroke="#2B6B2F" stroke-width="1.2"/>'
+              '<ellipse cx="50" cy="52" rx="8" ry="15" fill="#FFD84D" stroke="#C99A1A" stroke-width="1.2"/>' +
+              ''.join('<circle cx="%s" cy="%s" r="1.6" fill="#F0B92A"/>' % (x, y)
+                      for y in (42, 47, 52, 57, 62) for x in ((46.5, 50, 53.5) if y not in (42, 62) else (48, 52))) +
+              # ribs on the bare metal, following the round side
+              '<path d="M21 26.5 A29 8.5 0 0 0 79 26.5 M21 76.5 A29 8.5 0 0 0 79 76.5" fill="none" stroke="#9AA0B4" '
+              'stroke-width="1.3"/>')
+    p.path(side, 'none')
+    p.add('<ellipse cx="50" cy="22" rx="29" ry="8.5" fill="#F2F4F8" stroke="%s" stroke-width="%s"/>' % (INK, SW))
+    p.add('<ellipse cx="50" cy="22.6" rx="23.5" ry="5.6" fill="#D3D8E3"/>')
+    p.add('<ellipse cx="50" cy="23.4" rx="18" ry="3.7" fill="none" stroke="#B9BFCE" stroke-width="1.2"/>')
+    p.hl('M27 38 V64', 3)
+    return p.body()
+
+
+def party_hat():
+    """A paper party hat standing on a table: a cone (one round base, one point). Blue and yellow gores meeting at the
+    point, white dots, a small red pompom on the tip (small, so the point still shows)."""
+    import math
+    p = Pic()
+    p.shadow(50, 88, 33, 3)
+    ax, ay, cx, cy, rx, ry = 50, 13, 50, 80, 31, 9
+    body = 'M%s %s L%s %s A%s %s 0 0 1 %s %s Z' % (ax, ay, cx + rx, cy, rx, ry, cx - rx, cy)
+    cid = p.shaded(body, '#2F7FE0', '#1F5DB0', k=4, sw=0)
+    gores = []
+    n = 7
+    for i in range(0, n, 2):
+        t0, t1 = math.pi * i / n, math.pi * (i + 1) / n
+        a0 = (cx + rx * math.cos(t0), cy + ry * math.sin(t0) + 1)
+        a1 = (cx + rx * math.cos(t1), cy + ry * math.sin(t1) + 1)
+        gores.append('<path d="M%s %s L%.2f %.2f L%.2f %.2f Z" fill="#FFC531"/>' % (ax, ay, a0[0], a0[1], a1[0], a1[1]))
+    dots = ''.join('<circle cx="%s" cy="%s" r="%s" fill="#FFFFFF"/>' % d for d in
+                   ((40, 62, 2.2), (57, 49, 1.9), (48, 72, 2.4), (62, 70, 2.2), (44, 44, 1.6), (53, 34, 1.4)))
+    p.clipped(cid, ''.join(gores) + dots +
+              '<path d="M%s %s L%s %s A%s %s 0 0 1 58 %s Z" fill="#1A2D6B" opacity="0.22"/>' % (ax, ay, cx + rx, cy, rx, ry, cy + ry))
+    p.path(body, 'none')
+    # the pompom: a fluffy ball of eight puffs on the tip
+    puffs = ''.join('<circle cx="%.2f" cy="%.2f" r="2.9"/>' % (ax + 4.6 * math.cos(k * math.pi / 4), ay - 3 + 4.6 * math.sin(k * math.pi / 4))
+                    for k in range(8))
+    p.add('<g fill="%s" stroke="%s" stroke-width="2.4">%s</g>' % (INK, INK, puffs))
+    p.add('<g fill="#E5484D">%s<circle cx="%s" cy="%s" r="4.6"/></g>' % (puffs, ax, ay - 3))
+    p.add('<circle cx="%s" cy="%s" r="1.6" fill="#FFFFFF" opacity="0.7"/>' % (ax - 2, ay - 5))
+    p.hl('M45 30 L32 64', 3)
+    return p.body()
+
+
+def gift_box():
+    """A gift box (a box shape: six flat faces, all rectangles, longer than it is tall): red, a yellow ribbon round it
+    and a bow on top. Seen from a front corner."""
+    P, F = _iso((44, 90), 46, 30, 32)
+    p = Pic()
+    p.shadow(50, 90, 40, 3.2)
+    faces = {'left': _poly(P['l1'], P['f1'], P['f0'], P['l0']), 'right': _poly(P['f1'], P['r1'], P['r0'], P['f0']),
+             'top': _poly(P['l1'], P['k1'], P['r1'], P['f1'])}
+    fill = {'top': '#F26D72', 'left': '#E5484D', 'right': '#B8323A'}
+    rib = {'top': '#FFD84D', 'left': '#FFC531', 'right': '#E0A21A'}
+    for f in ('left', 'right', 'top'):
+        p.add('<path d="%s" fill="%s"/>' % (faces[f], fill[f]))
+        band = '<rect x="42" y="0" width="16" height="100"/>' + ('<rect x="0" y="42" width="100" height="16"/>' if f == 'top' else '')
+        p.add('<g transform="%s" fill="%s">%s</g>' % (F[f], rib[f], band))
+    for f in ('left', 'right', 'top'):
+        p.path(faces[f], 'none')
+    # the bow, at the middle of the top face
+    bx, by = (P['l1'][0] + P['r1'][0]) / 2, (P['f1'][1] + P['k1'][1]) / 2
+    p.path('M%s %s C%s %s %s %s %s %s C%s %s %s %s %s %s Z' % (bx, by, bx - 6, by - 12, bx - 20, by - 10, bx - 16, by - 3,
+                                                               bx - 13, by + 2, bx - 6, by + 2, bx, by), '#FFC531', sw=2.4)
+    p.path('M%s %s C%s %s %s %s %s %s C%s %s %s %s %s %s Z' % (bx, by, bx + 6, by - 12, bx + 20, by - 10, bx + 16, by - 3,
+                                                               bx + 13, by + 2, bx + 6, by + 2, bx, by), '#FFC531', sw=2.4)
+    p.add('<ellipse cx="%s" cy="%s" rx="4.2" ry="3.4" fill="#E0A21A" stroke="%s" stroke-width="2.4"/>' % (bx, by, INK))
+    p.hl('M%.1f %.1f L%.1f %.1f' % (P['l1'][0] + 4, P['l1'][1] + 8, P['l1'][0] + 4, P['l0'][1] - 6), 2.6)
+    return p.body()
+
+
+PIPS = {1: [(50, 50)], 2: [(27, 27), (73, 73)], 3: [(27, 27), (50, 50), (73, 73)]}
+
+
+def dice():
+    """A dice (a cube: six equal square faces): white, rounded edges, dark pips sunk in. The faces 1, 2 and 3 meet at
+    the corner in front, counterclockwise as on a right-handed dice (left 1, right 2, top 3)."""
+    P, F = _iso((50, 91), 40, 40, 40)
+    p = Pic()
+    p.shadow(50, 91, 36, 3.2)
+    sil = _poly(P['l1'], P['k1'], P['r1'], P['r0'], P['f0'], P['l0'])
+    p.add('<path d="%s" fill="#CFC8E0"/>' % sil)
+    fill = {'top': '#FFFFFF', 'left': '#F3F0FA', 'right': '#DCD6EA'}
+    for f, n in (('left', 1), ('right', 2), ('top', 3)):
+        pips = ''.join('<circle cx="%s" cy="%s" r="%s" fill="%s"/>' % (x, y, 11 if n == 1 else 9.5, INK) for x, y in PIPS[n])
+        p.add('<g transform="%s"><rect x="5" y="5" width="90" height="90" rx="16" fill="%s"/>%s</g>' % (F[f], fill[f], pips))
+    p.add('<path d="%s" fill="none" stroke="%s" stroke-width="%s" stroke-linejoin="round"/>' % (sil, INK, SW))
+    p.hl('M%.1f %.1f L%.1f %.1f' % (P['l1'][0] + 5, P['l1'][1] + 10, P['l1'][0] + 5, P['l0'][1] - 8), 2.4)
+    return p.body()
+
+
+def pyramid_egypt():
+    """A pyramid of Egypt standing on the sand (a square base, four triangle faces meeting at a point), seen from a
+    corner: the sunny face and the shady face, rows of stones, the smooth top that some still have."""
+    p = Pic()
+    p.add('<path d="M2 84 C14 76 34 77 52 80 C70 77 88 76 98 84 C88 92 14 92 2 84 Z" fill="#F6DDB0"/>')
+    p.shadow(52, 87, 44, 3)
+    A, L, Fr, R = (50, 13), (6, 79), (54, 90), (95, 76)
+    left, right = _poly(A, L, Fr), _poly(A, Fr, R)
+    p.add('<path d="%s" fill="#EFCB84"/><path d="%s" fill="#C7924E"/>' % (left, right))
+    lerp = lambda a, b, t: (a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t)
+    rows = []
+    for t in (0.3, 0.42, 0.54, 0.66, 0.78, 0.9):
+        l0, l1, r1 = lerp(A, L, t), lerp(A, Fr, t), lerp(A, R, t)
+        rows.append('<path d="M%.2f %.2f L%.2f %.2f" stroke="#C9A060" stroke-width="1.3"/>' % (l0 + l1))
+        rows.append('<path d="M%.2f %.2f L%.2f %.2f" stroke="#9E7038" stroke-width="1.3"/>' % (l1 + r1))
+    p.add(''.join(rows))
+    c = 0.2   # the smooth top
+    p.add('<path d="%s" fill="#F7E3B5"/><path d="%s" fill="#D9AE6E"/>' % (_poly(A, lerp(A, L, c), lerp(A, Fr, c)),
+                                                                         _poly(A, lerp(A, Fr, c), lerp(A, R, c))))
+    p.path(left, 'none')
+    p.path(right, 'none')
+    p.hl('M45 26 L22 64', 2.6)
+    return p.body()
+
+
 def red_ball(cx, cy, r):
     """The red ball of the position pictures (a plain play ball: round, a band, a highlight)."""
     p = Pic()
@@ -1520,7 +1711,10 @@ def build():
     pics.update({'solid_box': solid_box(), 'solid_cone': solid_cone(), 'solid_cylinder': solid_cylinder(),
                  'solid_sphere': solid_sphere(), 'solid_pyramid': solid_pyramid(), 'pos_on': pos_on(),
                  'pos_under': pos_under(), 'pos_in': pos_in(), 'pos_next': pos_next(), 'pos_above': pos_above(),
-                 'window': window(), 'sign': sign()})
+                 'window': window(), 'sign': sign(),
+                 # M11 Stage 2: the solids as real things
+                 'can': can(), 'party_hat': party_hat(), 'gift_box': gift_box(), 'dice': dice(),
+                 'pyramid_egypt': pyramid_egypt()})
     for name, (d, c) in LINES.items():
         pics[name] = line_pic(d, c)
     # Robot Harbour
@@ -1572,6 +1766,9 @@ BATCHES = {
     'forest': ('Shape Forest: the solids, the position pictures, the lines, the window and the sign',
                ['solid_box', 'solid_cone', 'solid_cylinder', 'solid_sphere', 'solid_pyramid', 'pos_on', 'pos_under', 'pos_in',
                 'pos_next', 'pos_above', 'window', 'sign'] + list(LINES)),
+    'stage2': ('M11 Stage 2, Shape Forest: the oval, the trapezoid, the half-square triangle, the solids as real things',
+               ['shape_%s%s' % (k, s) for k in NEW_KIND_FILL for s in [''] + ['_' + c for c in SHAPE_COLOURS]] +
+               ['can', 'party_hat', 'gift_box', 'dice', 'pyramid_egypt']),
     'robot': ('Robot Harbour: the robot, the flag, the grass path cell, the steps of washing and brushing',
               ['robot', 'flag', 'grass', 'step_tap', 'step_soap', 'step_rinse', 'step_towel', 'step_paste', 'step_brush']),
     'towers': ('The towers on their tall canvas (100 x 220)', ['tower_%d' % k for k in range(1, TOWER_MAX + 1)]),

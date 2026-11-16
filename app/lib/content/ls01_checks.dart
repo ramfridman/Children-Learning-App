@@ -136,7 +136,9 @@ void _refuseInLands(
         ('items', _maps(scene['items'])),
       ]) {
         for (final (int i, Map<String, Object?> f) in faces.indexed) {
-          for (final String k in <String>['text', 'clip', 'misconception', 'alt']) {
+          // A card of a sort of the lands may carry the tag of the mistake of putting it in a wrong bin (M11 Stage 2: a thing that is not a
+          // triangle shows what it is mistaken for); a bin's sign never does.
+          for (final String k in <String>['text', 'clip', if (list == 'bins') 'misconception', 'alt']) {
             if (f.containsKey(k)) say(file, 'scene.$list[$i].$k', why);
           }
           if (f['sprite'] == null) say(file, 'scene.$list[$i].sprite', 'is missing: a picture');

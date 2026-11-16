@@ -15,9 +15,9 @@
     "SHP-A-10"
   ],
   "items": [
-    "shp.world.circle",
     "shp.world.rect",
     "shp.world.triangle",
+    "shp.world.circle",
     "shp.line.straight",
     "shp.line.curved"
   ],
@@ -31,5 +31,45 @@
         "v": "וַאוּ! מְצָאתֶם צוּרוֹת בְּכׇל מָקוֹם."
       }
     ]
+  },
+  "parts": {
+    "show": "show.shp-a-05",
+    "secondShow": {
+      "id": "show.shp-a-10",
+      "before": "shp.line.straight"
+    },
+    "recall": [
+      "shp.any.big.circle"
+    ],
+    "together": [
+      {
+        "id": "shp.world.rect",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.kubi.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחַ אֶת הָרִאשׁוֹן."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "shp.world.triangle",
+      "shp.world.circle",
+      "shp.line.straight",
+      "shp.line.curved"
+    ],
+    "handover": {
+      "vo": "vo:host.kubi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו תּוֹרְכֶם. אֲנִי כָּאן, אִם צָרִיךְ."
+        }
+      ]
+    }
   }
 }

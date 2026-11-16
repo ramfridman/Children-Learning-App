@@ -33,5 +33,44 @@
         "v": "כׇּל הַכָּבוֹד! הִכַּרְתֶּם אֶת הַצּוּרוֹת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.shp-a-01",
+    "secondShow": {
+      "id": "show.shp-a-02",
+      "before": "shp.name.circle"
+    },
+    "together": [
+      {
+        "id": "shp.match.circle",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.kubi.together.build",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחַ צוּרָה אַחַת."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "shp.match.square",
+      "shp.match.triangle",
+      "shp.name.circle",
+      "shp.name.square",
+      "shp.name.triangle",
+      "shp.name.mix"
+    ],
+    "handover": {
+      "vo": "vo:host.kubi.handover.1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עַכְשָׁו תּוֹרְכֶם. אֲנִי כָּאן, אִם צָרִיךְ."
+        }
+      ]
+    }
   }
 }

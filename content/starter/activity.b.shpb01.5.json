@@ -50,22 +50,26 @@
       {
         "id": "i1",
         "sprite": "asset:shape_pentagon",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-CNT-DOUBLE"
       },
       {
         "id": "i2",
         "sprite": "asset:shape_hexagon",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-CNT-SKIP"
       },
       {
         "id": "i3",
         "sprite": "asset:shape_hexagon",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-CNT-SKIP"
       },
       {
         "id": "i4",
         "sprite": "asset:shape_pentagon",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-CNT-DOUBLE"
       }
     ]
   },
@@ -85,6 +89,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-CNT-SKIP",
+        "vo": "vo:fb.skip_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

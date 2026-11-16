@@ -76,7 +76,18 @@
     ]
   },
   "answer": {
-    "type": "shapes"
+    "type": "shapes",
+    "pieceTags": [
+      {
+        "piece": "asset:shape_open",
+        "misconception": "M-SHP-CLOSED"
+      },
+      {
+        "piece": "asset:shape_rect_orange",
+        "slot": "asset:shape_square_red",
+        "misconception": "M-SHP-SQRECT"
+      }
+    ]
   },
   "voiceAnswer": false,
   "feedback": {
@@ -90,6 +101,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-CLOSED",
+        "vo": "vo:fb.shp_closed",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SHP-SQRECT",
+        "vo": "vo:fb.shp_sqrect",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בַּמַּלְבֵּן הַזֶּה יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

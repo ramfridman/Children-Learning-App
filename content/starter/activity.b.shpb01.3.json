@@ -50,22 +50,26 @@
       {
         "id": "i1",
         "sprite": "asset:shape_triangle_thin",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-SHP-PROTO"
       },
       {
         "id": "i2",
         "sprite": "asset:shape_open",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-SHP-CLOSED"
       },
       {
         "id": "i3",
         "sprite": "asset:shape_triangle_down",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-SHP-ORIENT"
       },
       {
         "id": "i4",
         "sprite": "asset:shape_curved",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-SHP-CLOSED"
       },
       {
         "id": "i5",
@@ -103,6 +107,26 @@
           {
             "t": "he",
             "v": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SHP-ORIENT",
+        "vo": "vo:fb.shp_orient",
+        "caption": [
+          {
+            "t": "he",
+            "v": "צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה גַּם כְּשֶׁמְּסֹבְבִים אוֹתָהּ. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SHP-PROTO",
+        "vo": "vo:fb.shp_proto",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוֹתָהּ צוּרָה יְכוֹלָה לְהֵרָאוֹת קְצָת אַחֶרֶת. בּוֹאוּ נִסְפֹּר צְלָעוֹת."
           }
         ]
       },

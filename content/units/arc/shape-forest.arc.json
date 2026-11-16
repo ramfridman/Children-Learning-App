@@ -2,12 +2,12 @@
  "schema": "lesson-arc-source/v0",
  "land": "shapes",
  "host": "kubi",
- "review": "needs-editor",
- "status": "M11 Stage 2 pilot (step 2.4a), authored by the curriculum-expert on 2026-11-15. Data for the developer; the app does not read it yet.",
+ "review": "text-ready",
+ "status": "M11 Stage 2 pilot (step 2.4a), authored by the curriculum-expert on 2026-11-15. Data for the developer; the app does not read it yet. Hebrew text finalised by the hebrew-text-editor on 2026-11-15 (pointed text, voice text, text-ready; waits for the owner).",
  "spec": "docs/milestones/M11-stage2.md §2, §7.4 (the format of this file) and §8",
  "howToRead": [
   "shows: one Show per skill. `template` is the hands-on template the Show plays on and `scene` is its scene in pack form. `steps` are the moves in order, `by` host or child; the last step is always the child's (`handOver: last`). The key line plays at the step marked `say: key`. Other step keys (trace, count, sticks, walk, push, stack, turn, stamp) name the motion of the host hand; `picture` describes it for the design-director.",
-  "lines: at most three host lines, roles open, key (the reminder replays it, at most 8 seconds) and handover. Plain Hebrew drafts without nikud, needs-editor; the hebrew-text-editor writes the pointed text and the voice text. Until the owner voices them each shows as a bubble with a pause.",
+  "lines: at most three host lines, roles open, key (the reminder replays it, at most 8 seconds) and handover; every line is at most 6 words, because the host bubble on the phone holds two lines at the band's size (docs/design/m11-rooms.md 13.6). `text` is the final pointed text for the screen and `voice` the voice text for the voice inventory (hebrew-text-editor, 2026-11-15, text-ready: waits for the owner's approval). Until the owner voices them each shows as a bubble with a pause.",
   "teaches: the words the Show says, as the items label them (rule W1 compares the option labels of the skill's scored items with them).",
   "lessons: every Shape Forest lesson in parts. `recall` lists candidate ids of the prerequisite skill (served only once that skill was started); `together` reuses a pool item with `lead`, the number of steps the host does first; `alone` is the pool, rung 0 first; `use` is the check that ends the lesson. The stage caps (`caps`, spec §2.5) decide how much of the pool one visit serves.",
   "hostLines: Kubi's lines that belong to no one skill: the Together lead-in per template, the hand-over to the companion when Alone starts, and the replies of the \"show me\" hand."
@@ -96,20 +96,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_a_01.open",
-     "text": "יש לי קופסה עם חורים. כל צורה נכנסת לחור שלה.",
-     "review": "needs-editor"
+     "text": "לְכׇל צוּרָה בַּקֻּפְסָה יֵשׁ חֹר.",
+     "voice": "לכל צורה בקופסה יש חור.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_a_01.key",
-     "text": "אני מעביר אצבע מסביב לחור. עגול? אז נכנס העיגול.",
-     "review": "needs-editor"
+     "text": "הַחֹר עָגֹל, אָז נִכְנָס הָעִגּוּל.",
+     "voice": "החור עגול, אז נכנס העיגול.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_a_01.handover",
-     "text": "נשאר משולש אחד. תכניסו אותו לחור שלו.",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַמְּשֻׁלָּשׁ.",
+     "voice": "עכשיו תורכם: המשולש.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -202,20 +205,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_a_02.open",
-     "text": "לכל צורה יש שם. תקשיבו.",
-     "review": "needs-editor"
+     "text": "לְכׇל צוּרָה יֵשׁ שֵׁם.",
+     "voice": "לכל צורה יש שם.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_a_02.key",
-     "text": "זה עיגול. זה ריבוע. וזה משולש.",
-     "review": "needs-editor"
+     "text": "זֶה עִגּוּל. זֶה רִבּוּעַ. זֶה מְשֻׁלָּשׁ.",
+     "voice": "זה עיגול. זה ריבוע. זה משולש.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_a_02.handover",
-     "text": "נשאר עוד עיגול. שימו אותו עם העיגולים.",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד עִגּוּל.",
+     "voice": "עכשיו תורכם: עוד עיגול.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -305,20 +311,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_a_03.open",
-     "text": "אני בודק משולשים. לאט לאט.",
-     "review": "needs-editor"
+     "text": "גַּם דַּק וְגַם הָפוּךְ: מְשֻׁלָּשׁ.",
+     "voice": "גם דק וגם הפוך: משולש.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_a_03.key",
-     "text": "שלוש צלעות ישרות, וסגור: משולש. גם דק, וגם הפוך. צורה פתוחה — לא.",
-     "review": "needs-editor"
+     "text": "שָׁלוֹשׁ צְלָעוֹת יְשָׁרוֹת, וְאֵין פֶּתַח.",
+     "voice": "שָׁלוֹשׁ צלעות ישרות, ואין פתח.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_a_03.handover",
-     "text": "עכשיו אתם. לאן הולך המשולש האחרון?",
-     "review": "needs-editor"
+     "text": "צוּרָה פְּתוּחָה — לֹא. עַכְשָׁו תּוֹרְכֶם.",
+     "voice": "צורה פתוחה — לא. עכשיו תורכם.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -397,20 +406,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_a_04.open",
-     "text": "זה מלבן, וזה ריבוע. בואו נשווה.",
-     "review": "needs-editor"
+     "text": "זֶה רִבּוּעַ מְסֻבָּב, וְזֶה מַלְבֵּן.",
+     "voice": "זה ריבוע מסובב, וזה מלבן.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_a_04.key",
-     "text": "בריבוע כל הצלעות שוות, גם כשהוא מסובב. במלבן הארוך שתיים ארוכות ושתיים קצרות.",
-     "review": "needs-editor"
+     "text": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת.",
+     "voice": "בריבוע כל הצלעות שוות.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_a_04.handover",
-     "text": "הריבוע האחרון שלכם.",
-     "review": "needs-editor"
+     "text": "הַמַּלְבֵּן — לֹא רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם.",
+     "voice": "המלבן — לא ריבוע. עכשיו תורכם.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -495,20 +507,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_a_05.open",
-     "text": "גם לדברים בבית יש צורה.",
-     "review": "needs-editor"
+     "text": "גַּם בַּבַּיִת יֵשׁ צוּרוֹת.",
+     "voice": "גם בבית יש צורות.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_a_05.key",
-     "text": "אני מעביר אצבע מסביב לצלחת: עיגול! ומסביב לחלון: מלבן.",
-     "review": "needs-editor"
+     "text": "הַצַּלַּחַת עִגּוּל. הַחַלּוֹן מַלְבֵּן.",
+     "voice": "הצלחת עיגול. החלון מלבן.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_a_05.handover",
-     "text": "ולשלט יש צורה. לאן הוא הולך?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַשֶּׁלֶט.",
+     "voice": "עכשיו תורכם: השלט.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -590,20 +605,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_a_06.open",
-     "text": "נבנה בית מצורות.",
-     "review": "needs-editor"
+     "text": "נִבְנֶה בַּיִת מִצּוּרוֹת.",
+     "voice": "נבנה בית מצורות.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_a_06.key",
-     "text": "כל צורה נכנסת לצל שדומה לה.",
-     "review": "needs-editor"
+     "text": "כׇּל צוּרָה לַצֵּל שֶׁדּוֹמֶה לָהּ.",
+     "voice": "כל צורה לצל שדומה לה.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_a_06.handover",
-     "text": "נשארה הדלת. איפה הצל שלה?",
-     "review": "needs-editor"
+     "text": "נִשְׁאֲרָה הַדֶּלֶת. עַכְשָׁו תּוֹרְכֶם.",
+     "voice": "נשארה הדלת. עכשיו תורכם.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -680,20 +698,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_a_07.open",
-     "text": "אני דוחף לאט, ומסתכל.",
-     "review": "needs-editor"
+     "text": "אֲנִי דּוֹחֵף כַּדּוּר וְקֻפְסָה.",
+     "voice": "אני דוחף כדור וקופסה.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_a_07.key",
-     "text": "הכדור עגול, והוא מתגלגל. הקופסה שטוחה, ואפשר לערום אותה.",
-     "review": "needs-editor"
+     "text": "הַכַּדּוּר עָגֹל, אָז הוּא מִתְגַּלְגֵּל.",
+     "voice": "הכדור עגול, אז הוא מתגלגל.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_a_07.handover",
-     "text": "עכשיו אתם. לאן הולך הכדור?",
-     "review": "needs-editor"
+     "text": "מַה שֶּׁשָּׁטוּחַ נֶעֱרָם. עַכְשָׁו תּוֹרְכֶם.",
+     "voice": "מה ששטוח נערם. עכשיו תורכם.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -763,20 +784,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_a_08.open",
-     "text": "הכדור שלי הולך למקומות.",
-     "review": "needs-editor"
+     "text": "אֲנִי מַנִּיחַ אֶת הַכַּדּוּר.",
+     "voice": "אני מניח את הכדור.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_a_08.key",
-     "text": "על הקופסה. מתחת לשולחן. ליד הקופסה.",
-     "review": "needs-editor"
+     "text": "עַל הַקֻּפְסָה. מִתַּחַת לַשֻּׁלְחָן. לְיַד הַקֻּפְסָה.",
+     "voice": "על הקופסה. מתחת לשולחן. ליד הקופסה.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_a_08.handover",
-     "text": "ועכשיו אתם: שימו את הכדור בתוך הקופסה.",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: בְּתוֹךְ הַקֻּפְסָה.",
+     "voice": "עכשיו תורכם: בתוך הקופסה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -858,20 +882,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_a_10.open",
-     "text": "אני הולך על הקו עם האצבע.",
-     "review": "needs-editor"
+     "text": "אֲנִי הוֹלֵךְ עַל הַקַּו בָּאֶצְבַּע.",
+     "voice": "אני הולך על הקו באצבע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_a_10.key",
-     "text": "הקו הזה ישר. הקו הזה מתעקם: הוא עקום.",
-     "review": "needs-editor"
+     "text": "זֶה קַו יָשָׁר. זֶה קַו עָקֹם.",
+     "voice": "זה קו ישר. זה קו עקום.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_a_10.handover",
-     "text": "ומה עם הקו האחרון?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַקַּו הָאַחֲרוֹן.",
+     "voice": "עכשיו תורכם: הקו האחרון.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -952,20 +979,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_b_01.open",
-     "text": "סופרים צלעות, ויודעים את השם.",
-     "review": "needs-editor"
+     "text": "יֵשׁ שֵׁמוֹת: מְחֻמָּשׁ, מְשֻׁשֶּׁה, וְעוֹד.",
+     "voice": "יש שמות: מחומש, משושה, ועוד.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_b_01.key",
-     "text": "שלוש צלעות: משולש. ארבע: מרובע. חמש: מחומש. שש: משושה.",
-     "review": "needs-editor"
+     "text": "שָׁלוֹשׁ — מְשֻׁלָּשׁ. אַרְבַּע — מְרֻבָּע.",
+     "voice": "שָׁלוֹשׁ — משולש. אַרְבַּע — מרובע.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_b_01.handover",
-     "text": "ספרו את הצלעות של האחרון.",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: לִסְפֹּר אֶת הָאַחֲרוֹן.",
+     "voice": "עכשיו תורכם: לספור את האחרון.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1048,20 +1078,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_b_02.open",
-     "text": "אני סופר כל צלע פעם אחת.",
-     "review": "needs-editor"
+     "text": "אֲנִי סוֹפֵר צְלָעוֹת: שָׁלוֹשׁ אוֹ אַרְבַּע.",
+     "voice": "אני סופר צלעות: שָׁלוֹשׁ או אַרְבַּע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_b_02.key",
-     "text": "אחת, שתיים, שלוש: שלוש צלעות, כמו שלושה מקלות.",
-     "review": "needs-editor"
+     "text": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ: שָׁלוֹשׁ צְלָעוֹת.",
+     "voice": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ: שָׁלוֹשׁ צלעות.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_b_02.handover",
-     "text": "ספרו את הצלעות של המלבן.",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: לִסְפֹּר אֶת הַמַּלְבֵּן.",
+     "voice": "עכשיו תורכם: לספור את המלבן.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1141,20 +1174,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_b_03.open",
-     "text": "אני שם מקל על כל צלע.",
-     "review": "needs-editor"
+     "text": "אֲנִי מַנִּיחַ מַקֵּל עַל כׇּל צֶלַע.",
+     "voice": "אני מניח מקל על כל צלע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_b_03.key",
-     "text": "בריבוע כל המקלות שווים, גם כשהוא מסובב. במלבן הזה לא.",
-     "review": "needs-editor"
+     "text": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת, גַּם מְסֻבָּב.",
+     "voice": "בריבוע כל הצלעות שוות, גם מסובב.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_b_03.handover",
-     "text": "ריבוע מסובב. לאן הוא הולך?",
-     "review": "needs-editor"
+     "text": "בַּמַּלְבֵּן — לֹא. עַכְשָׁו תּוֹרְכֶם.",
+     "voice": "במלבן — לא. עכשיו תורכם.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1245,20 +1281,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_b_04.open",
-     "text": "אני הולך מסביב לצורה, כמו נמלה.",
-     "review": "needs-editor"
+     "text": "אֲנִי הוֹלֵךְ מִסָּבִיב, כְּמוֹ נְמָלָה.",
+     "voice": "אני הולך מסביב, כמו נמלה.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_b_04.key",
-     "text": "חוזרים להתחלה, וכל הקווים ישרים: כן. יש פתח, או קו עקום: לא.",
-     "review": "needs-editor"
+     "text": "צוּרָה סְגוּרָה, קַוִּים יְשָׁרִים: כֵּן.",
+     "voice": "צורה סגורה, קווים ישרים: כן.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_b_04.handover",
-     "text": "המשושה האחרון. כן או לא?",
-     "review": "needs-editor"
+     "text": "פְּתוּחָה אוֹ עֲקֻמָּה: לֹא. עַכְשָׁו תּוֹרְכֶם.",
+     "voice": "פתוחה או עקומה: לא. עכשיו תורכם.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1340,20 +1379,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_b_05.open",
-     "text": "יש כאן צל אחד גדול.",
-     "review": "needs-editor"
+     "text": "יֵשׁ כָּאן צֵל אֶחָד גָּדוֹל.",
+     "voice": "יש כאן צל אֶחָד גדול.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_b_05.key",
-     "text": "אני מחפש פינות וקווים ישרים: פה מסתתר משולש.",
-     "review": "needs-editor"
+     "text": "אֲנִי מְחַפֵּשׂ פִּנּוֹת: פֹּה מִתְחַבֵּא מְשֻׁלָּשׁ.",
+     "voice": "אני מחפש פינות: פה מתחבא משולש.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_b_05.handover",
-     "text": "נשארה צורה אחת. איפה היא בצל?",
-     "review": "needs-editor"
+     "text": "נִשְׁאֲרָה צוּרָה אַחַת. עַכְשָׁו תּוֹרְכֶם.",
+     "voice": "נשארה צורה אַחַת. עכשיו תורכם.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1414,20 +1456,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_b_06.open",
-     "text": "זה מלבן. אפשר לבנות אותו משתי צורות.",
-     "review": "needs-editor"
+     "text": "אֶפְשָׁר לִבְנוֹת מַלְבֵּן מִשְּׁתֵּי צוּרוֹת.",
+     "voice": "אפשר לבנות מלבן מִשְּׁתֵּי צורות.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_b_06.key",
-     "text": "ריבוע אחד, ועוד ריבוע לידו: מלבן!",
-     "review": "needs-editor"
+     "text": "רִבּוּעַ, וְעוֹד רִבּוּעַ לְיָדוֹ: מַלְבֵּן.",
+     "voice": "ריבוע, ועוד ריבוע לידו: מלבן.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_b_06.handover",
-     "text": "שימו את הריבוע השני לידו.",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הָרִבּוּעַ הַשֵּׁנִי.",
+     "voice": "עכשיו תורכם: הריבוע הַשֵּׁנִי.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1512,20 +1557,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_b_08.open",
-     "text": "לגופים יש שמות.",
-     "review": "needs-editor"
+     "text": "לַגּוּפִים יֵשׁ שֵׁמוֹת.",
+     "voice": "לגופים יש שמות.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_b_08.key",
-     "text": "הכדור עגול כולו. לחרוט יש חוד. לגליל שני עיגולים.",
-     "review": "needs-editor"
+     "text": "הַכַּדּוּר עָגֹל כֻּלּוֹ. לֶחָרוּט יֵשׁ חֹד.",
+     "voice": "הכדור עגול כולו. לחרוט יש חוד.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_b_08.handover",
-     "text": "הגוף האחרון שלכם.",
-     "review": "needs-editor"
+     "text": "לַגָּלִיל שְׁנֵי עִגּוּלִים. עַכְשָׁו תּוֹרְכֶם.",
+     "voice": "לגליל שְׁנֵי עיגולים. עכשיו תורכם.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1572,7 +1620,7 @@
      },
      {
       "id": "i2",
-      "sprite": "asset:solid_box",
+      "sprite": "asset:gift_box",
       "bin": "b2"
      },
      {
@@ -1606,20 +1654,23 @@
     {
      "role": "open",
      "vo": "vo:host.kubi.show.shp_b_09.open",
-     "text": "אני מטביע גוף בחול, כמו חותמת.",
-     "review": "needs-editor"
+     "text": "אֲנִי מַטְבִּיעַ גּוּף בַּחוֹל.",
+     "voice": "אני מטביע גוף בחול.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.kubi.show.shp_b_09.key",
-     "text": "הגליל משאיר עיגול. התיבה משאירה מלבן.",
-     "review": "needs-editor"
+     "text": "הַגָּלִיל מַשְׁאִיר עִגּוּל. הַתֵּבָה — מַלְבֵּן.",
+     "voice": "הגליל משאיר עיגול. התיבה — מלבן.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.kubi.show.shp_b_09.handover",
-     "text": "עכשיו החרוט. מה הוא משאיר?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הֶחָרוּט.",
+     "voice": "עכשיו תורכם: החרוט.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1641,66 +1692,76 @@
    "role": "together_lead",
    "template": "sort_drag",
    "vo": "vo:host.kubi.together.sort",
-   "text": "אני שם את הראשון. אתם ממשיכים.",
-   "review": "needs-editor"
+   "text": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחַ אֶת הָרִאשׁוֹן.",
+   "voice": "נַעֲשֶׂה יחד. אני מניח את הראשון.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "shape_builder",
    "vo": "vo:host.kubi.together.build",
-   "text": "אני שם צורה אחת. אתם משלימים.",
-   "review": "needs-editor"
+   "text": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחַ צוּרָה אַחַת.",
+   "voice": "נַעֲשֶׂה יחד. אני מניח צורה אַחַת.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "tap_answer",
    "vo": "vo:host.kubi.together.tap",
-   "text": "תסתכלו איך אני בודק, ואז תבחרו.",
-   "review": "needs-editor"
+   "text": "נִבְדֹּק יַחַד. אֲנִי בּוֹדֵק קֹדֶם.",
+   "voice": "נבדוק יחד. אני בודק קודם.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "trace",
    "vo": "vo:host.kubi.together.trace",
-   "text": "אני מצייר את הקו הראשון. אתם ממשיכים.",
-   "review": "needs-editor"
+   "text": "נְצַיֵּר יַחַד. אֲנִי מַתְחִיל.",
+   "voice": "נצייר יחד. אני מתחיל.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "listen_do",
    "vo": "vo:host.kubi.together.place",
-   "text": "אני מראה את הראשון. עכשיו אתם.",
-   "review": "needs-editor"
+   "text": "נַעֲשֶׂה יַחַד. אֲנִי מַרְאֶה אֶת הָרִאשׁוֹן.",
+   "voice": "נַעֲשֶׂה יחד. אני מראה את הראשון.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.kubi.handover.1",
-   "text": "עכשיו אתם לבד. אני כאן אם צריך.",
-   "review": "needs-editor"
+   "text": "עַכְשָׁו תּוֹרְכֶם. אֲנִי כָּאן, אִם צָרִיךְ.",
+   "voice": "עכשיו תורכם. אני כאן, אם צריך.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.kubi.handover.2",
-   "text": "לאט לאט ובטוח. תמשיכו.",
-   "review": "needs-editor"
+   "text": "לְאַט לְאַט. עַכְשָׁו אַתֶּם.",
+   "voice": "לאט לאט. עכשיו אתם.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.kubi.handover.3",
-   "text": "עבדנו יפה יחד. עכשיו תורכם.",
-   "review": "needs-editor"
+   "text": "עָבַדְנוּ יַחַד. עַכְשָׁו תּוֹרְכֶם.",
+   "voice": "עבדנו יחד. עכשיו תורכם.",
+   "review": "text-ready"
   },
   {
    "role": "show_me",
    "vo": "vo:host.kubi.showme.1",
-   "text": "בואו נראה שוב, לאט.",
-   "review": "needs-editor"
+   "text": "בּוֹאוּ נִרְאֶה שׁוּב, לְאַט לְאַט.",
+   "voice": "בואו נראה שוב, לאט לאט.",
+   "review": "text-ready"
   },
   {
    "role": "show_me",
    "vo": "vo:host.kubi.showme.2",
-   "text": "אני מראה עוד פעם, ואז אתם.",
-   "review": "needs-editor"
+   "text": "אֲנִי מַרְאֶה שׁוּב, וְאָז אַתֶּם.",
+   "voice": "אני מראה שוב, ואז אתם.",
+   "review": "text-ready"
   }
  ],
  "lessons": [

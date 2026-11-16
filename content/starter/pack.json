@@ -931,6 +931,98 @@
     {
       "id": "tower_8",
       "file": "tower_8.svg"
+    },
+    {
+      "id": "shape_oval",
+      "file": "shape_oval.svg"
+    },
+    {
+      "id": "shape_oval_blue",
+      "file": "shape_oval_blue.svg"
+    },
+    {
+      "id": "shape_oval_green",
+      "file": "shape_oval_green.svg"
+    },
+    {
+      "id": "shape_oval_orange",
+      "file": "shape_oval_orange.svg"
+    },
+    {
+      "id": "shape_oval_red",
+      "file": "shape_oval_red.svg"
+    },
+    {
+      "id": "shape_oval_yellow",
+      "file": "shape_oval_yellow.svg"
+    },
+    {
+      "id": "shape_trapezoid",
+      "file": "shape_trapezoid.svg"
+    },
+    {
+      "id": "shape_trapezoid_blue",
+      "file": "shape_trapezoid_blue.svg"
+    },
+    {
+      "id": "shape_trapezoid_green",
+      "file": "shape_trapezoid_green.svg"
+    },
+    {
+      "id": "shape_trapezoid_orange",
+      "file": "shape_trapezoid_orange.svg"
+    },
+    {
+      "id": "shape_trapezoid_red",
+      "file": "shape_trapezoid_red.svg"
+    },
+    {
+      "id": "shape_trapezoid_yellow",
+      "file": "shape_trapezoid_yellow.svg"
+    },
+    {
+      "id": "shape_triangle_half",
+      "file": "shape_triangle_half.svg"
+    },
+    {
+      "id": "shape_triangle_half_blue",
+      "file": "shape_triangle_half_blue.svg"
+    },
+    {
+      "id": "shape_triangle_half_green",
+      "file": "shape_triangle_half_green.svg"
+    },
+    {
+      "id": "shape_triangle_half_orange",
+      "file": "shape_triangle_half_orange.svg"
+    },
+    {
+      "id": "shape_triangle_half_red",
+      "file": "shape_triangle_half_red.svg"
+    },
+    {
+      "id": "shape_triangle_half_yellow",
+      "file": "shape_triangle_half_yellow.svg"
+    },
+    {
+      "id": "can",
+      "file": "can.svg"
+    },
+    {
+      "id": "party_hat",
+      "file": "party_hat.svg"
+    },
+    {
+      "id": "gift_box",
+      "file": "gift_box.svg"
+    },
+    {
+      "id": "dice",
+      "file": "dice.svg"
+    },
+    {
+      "id": "pyramid_egypt",
+      "file": "pyramid_egypt.svg"
     }
   ],
   "vo": []

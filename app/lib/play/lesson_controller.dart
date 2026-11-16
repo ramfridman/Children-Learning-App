@@ -12,6 +12,7 @@ import '../rooms/moments.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
 import 'first_meeting.dart';
+import 'lesson_arc.dart';
 import 'name_options.dart';
 import 'number_rules.dart';
 import 'response_code.dart';
@@ -171,16 +172,20 @@ class LessonController extends ChangeNotifier {
     this.fastHints = false,
     this.hostGreeting,
     this.hostCheer,
+    this.arc,
     Activity Function(Activity)? personalise,
     Clock clock = const SystemClock(),
   }) : _personalise = personalise ?? _ownNameWithoutAName,
-       items = _playable(<Activity>[
-         for (final Activity a
-             in flow == null
-                 ? content.itemsFor(lesson, route: route)
-                 : <Activity>[content.activities[flow.first()]!])
-           (personalise ?? _ownNameWithoutAName)(a),
-       ]),
+       items = arc != null
+           // A lesson in parts is played from its plan: one activity for each of its screens, the Shows and the recall item among them.
+           ? <Activity>[for (final ArcStep s in arc.steps) (personalise ?? _ownNameWithoutAName)(s.activity)]
+           : _playable(<Activity>[
+               for (final Activity a
+                   in flow == null
+                       ? content.itemsFor(lesson, route: route)
+                       : <Activity>[content.activities[flow.first()]!])
+                 (personalise ?? _ownNameWithoutAName)(a),
+             ]),
        _record = record,
        _recordNote = recordNote,
        _clock = clock {
@@ -210,12 +215,32 @@ class LessonController extends ChangeNotifier {
   final Spoken? hostCheer;
   bool _greeting = false;
 
+  /// The visit as a lesson in parts (M11 Stage 2: Recall, Show, Together, Alone, Use), or null for a lesson played from its flat list of items.
+  /// [items] has one activity for each of its steps, in step order.
+  final ArcPlan? arc;
+
+  /// The step the child is on, or null when the lesson is not in parts.
+  ArcStep? get step => arc?.steps[math.min(index, arc!.steps.length - 1)];
+
+  /// The part of the lesson the child is in, or null when the lesson is not in parts.
+  ArcPart? get part => step?.part;
+
+  /// The host does the first steps of a Together item and says what it does ([ArcStep.line]); the item's own question comes after, from the
+  /// companion ([leadDone]).
+  bool _leading = false;
+  bool get leading => _leading;
+
   /// What moment of the lesson this is, and so who speaks: the host's greeting before the first item, a Meet screen in a room (the course host
   /// introduces the word), the child's turns (the companion's) and the cheer at the end. The screen draws the pair and the bubble's tail from it
   /// (Stage 2 adds the Show and the lead-in here). A lesson with no host (no room) has no host moment but its end.
   Moment get moment {
     if (finished) return Moment.cheer;
     if (_greeting) return Moment.greeting;
+    final ArcStep? s = step;
+    if (hostGreeting != null && s != null) {
+      if (s.part == ArcPart.show) return Moment.show;
+      if (_leading) return Moment.lead;
+    }
     final Activity now = current;
     return hostGreeting != null && now is SayItActivity && now.meetScreen ? Moment.meet : Moment.turn;
   }
@@ -225,6 +250,16 @@ class LessonController extends ChangeNotifier {
   void endGreeting() {
     if (!_greeting) return;
     _greeting = false;
+    _say(_promptOf(current));
+    _markMs = _clock.nowMs();
+    notifyListeners();
+  }
+
+  /// The host has done its part of a Together item (its first steps and its line, or only its line): the child's turn begins, the companion asks
+  /// the item's question, and the time the child takes counts from now.
+  void leadDone() {
+    if (!_leading || finished) return;
+    _leading = false;
     _say(_promptOf(current));
     _markMs = _clock.nowMs();
     notifyListeners();
@@ -286,7 +321,7 @@ class LessonController extends ChangeNotifier {
   /// No lamp and no "show me": a probe of the placement game (one answer, one neutral line, frame section 3.2) and a step that is never
   /// scored (a personal turn, a story only heard, a chant, the embodied "done"), where "show me" would write an attempt that no such
   /// step may leave behind (SEC-L4-1).
-  bool get noHelp => !finished && (_greeting || current.purpose == 'probe' || current.unscored);
+  bool get noHelp => !finished && (_greeting || _leading || current.purpose == 'probe' || current.unscored);
 
   final PackContent content;
   final Lesson lesson;
@@ -511,6 +546,9 @@ class LessonController extends ChangeNotifier {
   /// The first answer to the activity just finished was not the right one (read by an adaptive flow).
   bool _missed = false;
 
+  /// A wrong answer of the activity carried a misconception tag: the fade rule steps one rung down after it (M11-stage2 section 5).
+  bool _taggedWrong = false;
+
   Activity get current => items[math.min(index, items.length - 1)];
 
   void _begin() {
@@ -525,6 +563,7 @@ class LessonController extends ChangeNotifier {
     _demoDone = false;
     solved = false;
     _missed = false;
+    _taggedWrong = false;
     feedback = FeedbackKind.none;
     hintAction = null;
     hintShown = 0;
@@ -532,7 +571,11 @@ class LessonController extends ChangeNotifier {
     askedLine = null;
     // A session that says the replay itself (a Meet screen, a story) asks for it again, once it is made.
     replayQuiet = false;
-    _say(_promptOf(a));
+    // A Together item opens with the host's line (and the first Alone item after the host taught with the line of its hand-over); the host's own
+    // steps and the child's question follow it (see [leadDone]).
+    final Spoken? lead = hostGreeting != null ? step?.line : null;
+    _leading = lead != null;
+    _say(lead ?? _promptOf(a));
     _markMs = _clock.nowMs();
     resetNonce++;
     _prefetchTutor(a);
@@ -541,6 +584,8 @@ class LessonController extends ChangeNotifier {
   /// The line a step opens with: the question alone when a say step is played picture first (the word follows after a pause, from the
   /// session), otherwise the activity's own prompt. Sets [pictureFirst].
   Spoken _promptOf(Activity a) {
+    // A Show opens with the host's opening line; the reminder of a Show has the key line only (M11-stage2 section 2.3).
+    if (a.isShow && step?.show == ShowKind.reminder) return a.show!.lines['key'] ?? a.promptLine;
     pictureFirst =
         a is SayItActivity &&
         a.picturesFirst(routeOfSkill?.call(a.skillId) ?? route, echoOnly: echoOnly?.call() ?? false);
@@ -796,6 +841,7 @@ class LessonController extends ChangeNotifier {
       notifyListeners();
       return Outcome(correct: true, tag: tag);
     }
+    if (tag.isNotEmpty) _taggedWrong = true;
     await _write(result: 'incorrect', tag: tag, response: response, byVoice: byVoice);
     if (alsoTag.isNotEmpty && alsoTag != tag) {
       await _write(
@@ -901,6 +947,17 @@ class LessonController extends ChangeNotifier {
       notifyListeners();
       return;
     }
+    final ArcPlan? plan = arc;
+    if (plan != null) {
+      // The fade rule: a mistake with a tag or a worked example puts the next item of the skill one rung lower, two clean answers put it back.
+      for (final int i in plan.answered(
+        index,
+        slipped: _taggedWrong || guided || hintLevel >= 3,
+        clean: errors == 0 && hintLevel <= 1,
+      )) {
+        items[i] = _personalise(plan.steps[i].activity);
+      }
+    }
     index++;
     _begin();
     notifyListeners();
@@ -923,7 +980,9 @@ class LessonController extends ChangeNotifier {
     final int now = _clock.nowMs();
     // The first meeting with a word is no evidence, right or wrong (L7-3): the child sees the same help and feedback, and no attempt is written.
     // The answer is still the child's tap and pace, which the parent's guessing and frustration alerts watch: a note for them alone (SEC-L7-1).
-    if (_meeting.asks(a)) {
+    // The same for the first Together item of a skill whose full Show just played (M11 Stage 2, the owner's answer 4 of 2026-11-15): the host did
+    // most of the item, so a right answer shows that the child copied the host. Nothing is written; the child's own answers in Alone are scored.
+    if (_meeting.asks(a) || (step?.firstMeeting ?? false)) {
       final int? visit = sessionId;
       final Future<void> noted = visit == null || ResponseCode.isAlso(response) || _recordNote == null
           ? Future<void>.value()
@@ -952,7 +1011,8 @@ class LessonController extends ChangeNotifier {
       skillId: a.skillId,
       result: result,
       attemptNo: attemptNo,
-      hintLevel: hintLevel,
+      // A Together item of a later visit is an answer given at hint level 2: evidence of reduced weight, never an independent success.
+      hintLevel: step?.part == ArcPart.together ? math.max(hintLevel, 2) : hintLevel,
       misconceptionTag: tag,
       response: response,
       durationMs: math.max(0, now - _markMs),

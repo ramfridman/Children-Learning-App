@@ -55,18 +55,21 @@
     "items": [
       {
         "id": "i1",
-        "sprite": "asset:solid_box",
-        "bin": "b2"
+        "sprite": "asset:gift_box",
+        "bin": "b2",
+        "misconception": "M-SHP-FACE"
       },
       {
         "id": "i2",
         "sprite": "asset:solid_pyramid",
-        "bin": "b3"
+        "bin": "b3",
+        "misconception": "M-SHP-FACE"
       },
       {
         "id": "i3",
         "sprite": "asset:solid_cylinder",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-SHP-FACE"
       }
     ]
   },

@@ -1,0 +1,174 @@
+{
+  "schema": "activity/v1",
+  "id": "show.shp-a-06",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "shape_builder",
+  "templateVersion": "1.0",
+  "domain": "shapes",
+  "band": "A",
+  "skills": [
+    {
+      "id": "SHP-A-06",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.kubi.show.shp_a_06.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "נִבְנֶה בַּיִת מִצּוּרוֹת."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "aspect": 0.588,
+    "slots": [
+      {
+        "id": "s1",
+        "sprite": "asset:shape_square_blue",
+        "x": 0.0,
+        "y": 0.4118,
+        "w": 1.0,
+        "h": 0.5882,
+        "rot": 0
+      },
+      {
+        "id": "s2",
+        "sprite": "asset:shape_triangle_green",
+        "x": 0.0,
+        "y": 0.0,
+        "w": 1.0,
+        "h": 0.5882,
+        "rot": 0
+      },
+      {
+        "id": "s3",
+        "sprite": "asset:shape_rect_orange",
+        "x": 0.2571,
+        "y": 0.6471,
+        "w": 0.4857,
+        "h": 0.2857,
+        "rot": 90
+      }
+    ]
+  },
+  "answer": {
+    "type": "shapes"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.kubi.show.shp_a_06.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כׇּל צוּרָה לַצֵּל שֶׁדּוֹמֶה לָהּ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "נִבְנֶה בַּיִת מִצּוּרוֹת."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.kubi.show.shp_a_06.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "נִבְנֶה בַּיִת מִצּוּרוֹת."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.kubi.show.shp_a_06.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כׇּל צוּרָה לַצֵּל שֶׁדּוֹמֶה לָהּ."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.kubi.show.shp_a_06.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "נִשְׁאֲרָה הַדֶּלֶת. עַכְשָׁו תּוֹרְכֶם."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "piece": "asset:shape_square_blue",
+        "slot": "s1",
+        "say": "key"
+      },
+      {
+        "by": "host",
+        "piece": "asset:shape_triangle_green",
+        "slot": "s2"
+      },
+      {
+        "by": "child",
+        "piece": "asset:shape_rect_orange",
+        "slot": "s3"
+      }
+    ],
+    "teaches": []
+  }
+}

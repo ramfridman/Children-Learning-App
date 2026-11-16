@@ -50,17 +50,20 @@
       {
         "id": "i1",
         "sprite": "asset:shape_triangle_thin",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-SHP-PROTO"
       },
       {
         "id": "i2",
         "sprite": "asset:shape_square_tilt",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-SHP-ORIENT"
       },
       {
         "id": "i3",
         "sprite": "asset:shape_triangle_down",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-SHP-ORIENT"
       },
       {
         "id": "i4",
@@ -96,6 +99,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-ORIENT",
+        "vo": "vo:fb.shp_orient",
+        "caption": [
+          {
+            "t": "he",
+            "v": "צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה גַּם כְּשֶׁמְּסֹבְבִים אוֹתָהּ. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "misconception:M-SHP-PROTO",
         "vo": "vo:fb.shp_proto",

@@ -14,10 +14,10 @@
     "SHP-B-02"
   ],
   "items": [
-    "b.shpb02.1",
     "b.shpb02.2",
-    "b.shpb02.3",
-    "b.shpb02.4"
+    "b.shpb02.4",
+    "b.shpb02.1",
+    "b.shpb02.3"
   ],
   "estimatedMinutes": 5,
   "sequence": 32,
@@ -29,5 +29,40 @@
         "v": "כׇּל הַכָּבוֹד! סְפַרְתֶּם צְלָעוֹת."
       }
     ]
+  },
+  "parts": {
+    "show": "show.shp-b-02",
+    "recall": [
+      "b.shpb01.1"
+    ],
+    "together": [
+      {
+        "id": "b.shpb02.2",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.kubi.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחַ אֶת הָרִאשׁוֹן."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.shpb02.4",
+      "b.shpb02.1",
+      "b.shpb02.3"
+    ],
+    "handover": {
+      "vo": "vo:host.kubi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עָבַדְנוּ יַחַד. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

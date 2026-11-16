@@ -50,27 +50,32 @@
       {
         "id": "i1",
         "sprite": "asset:shape_square_blue",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-CNT-SKIP"
       },
       {
         "id": "i2",
         "sprite": "asset:shape_triangle_green",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-CNT-DOUBLE"
       },
       {
         "id": "i3",
         "sprite": "asset:shape_rect_green",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-CNT-SKIP"
       },
       {
         "id": "i4",
         "sprite": "asset:shape_triangle_thin",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-CNT-DOUBLE"
       },
       {
         "id": "i5",
         "sprite": "asset:shape_square_tilt",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-CNT-SKIP"
       }
     ]
   },
@@ -90,6 +95,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-CNT-SKIP",
+        "vo": "vo:fb.skip_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

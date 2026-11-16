@@ -168,6 +168,7 @@ SHAPE_WORDS = {
     'circle': ('עגול', 'עגולים'), 'square': ('רבוע', 'רבועים'), 'triangle': ('משלש', 'משלשים'),
     'rect': ('מלבן', 'מלבנים'), 'quad': ('מרבע', 'מרבעים'), 'pentagon': ('מחמש', 'מחמשים'), 'hexagon': ('מששה',),
 }
+REAL_SOLIDS = {'gift_box': 'box', 'dice': 'box', 'can': 'cylinder', 'party_hat': 'cone', 'pyramid_egypt': 'pyramid'}
 SOLID_WORDS = {'cylinder': ('גליל', 'גלילים'), 'cone': ('חרוט',), 'pyramid': ('פירמידה',), 'box': ('תבה', 'קפסה'),
                'cube': ('קביה',), 'sphere': ('כדור',)}
 KIND_WORDS = {'ball': ('כדור', 'כדורים'), 'balloon': ('בלון', 'בלונים'), 'bloom': ('פרח', 'פרחים'),
@@ -253,6 +254,10 @@ def sprite_info(s):
     m = re.fullmatch(r'shade_(\w+)_(\d)', n)
     if m:
         info.update(kind='shade', colour=m[1], n=int(m[2]))
+        return info
+    # the real things drawn for the solids (M11 Stage 2, design-director): a gift box and a dice are boxes, a can a cylinder, a party hat a cone
+    if n in REAL_SOLIDS:
+        info.update(kind='solid', solid=REAL_SOLIDS[n])
         return info
     m = re.fullmatch(r'solid_(\w+)', n)
     if m:

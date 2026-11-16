@@ -174,6 +174,10 @@ MANUAL = {
         'word: the coin is "מטבע של שני שקלים"'),
 }
 
+# M11 Stage 2 pilot (the owner's answer of 2026-11-15, curriculum text for the curriculum-expert to confirm): SHP-B-06 is named for its items,
+# whose last one builds a big square from four small ones. The generator (tools/band_b2.py line 399) still has the old title.
+MANUAL['שתי צורות עושות צורה אחת'] = ('צורות קטנות עושות צורה גדולה', 'title (owner, 2026-11-15): the last item of SHP-B-06 uses four squares, so the name fits all four items')
+
 # Phrase rules on pointed text: (pattern, replacement, why). Patterns are matched on whole words.
 B = r'(?<![\u0590-\u05ff])'   # word start
 E = r'(?![\u0590-\u05ff])'    # word end
@@ -293,6 +297,45 @@ SUBS = [
      'that is down; draft'),
     (B + 'וּבַצַּד הַיְמָנִי' + E, 'וּבַצַּד שֶׁלְּמַעְלָה', 'band B (B-13, curriculum audit F8): the light side is the one that is up; draft'),
 ]
+# M11 Stage 2 pilot, Shape Forest (hebrew-notes.md section 17, 2026-11-15): the corrections of the curriculum-expert's narrator drafts
+# whose text lives in the Band B generators (tools/band_b2.py, tools/band_b3.py), which the editor does not edit: the table shows the
+# corrected text and the app-developer brings it into the generators. (The Band A ones are fixed in content/units/shapes.json.)
+SHAPE_FOREST_PILOT = [
+    # Band A (already fixed in content/units/shapes.json; the table shows the fix until the pack is regenerated)
+    ('נְדַמְיֵן שֶׁדּוֹחֲפִים: מִי מִתְגַּלְגֵּל, וּמִי נִשְׁאָר עוֹמֵד?', 'נִדְחַף וְנִרְאֶה: מַה מִּתְגַּלְגֵּל, וּמַה נִּשְׁאָר עוֹמֵד?',
+     'vocabulary and sense (M11 Stage 2 pilot): "נְדַמְיֵן" is adult, and "מִי" is for a person or an animal; the picture pushes the things, as the question "מַה נִּשְׁאָר עוֹמֵד" of the approved Band A lines asks'),
+    ('קֻבִּיָּה שְׁטוּחָה, וְאֶפְשָׁר לַעֲרֹם אוֹתָהּ.', 'לְקֻפְסָה יֵשׁ צְדָדִים שְׁטוּחִים, וְאֶפְשָׁר לַעֲרֹם אוֹתָהּ.',
+     'vocabulary (M11 Stage 2 pilot, owner Q7 of 2026-10-29): Band A says "קֻפְסָה" (the bin\'s picture is the box), and a box has flat sides; "a flat cube" is not what a child sees'),
+    # Band B and the extra band (their text lives in tools/band_b2.py and tools/band_b3.py)
+    ('אֵיזֶה גּוּף מִתְגַּלְגֵּל? לְכָאן. וּמִי לֹא — לְכָאן.', 'גּוּפִים שֶׁמִּתְגַּלְגְּלִים — לְכָאן. וְהַשְּׁאָר — לְכָאן.',
+     'sense (M11 Stage 2 pilot): "מִי" is for a person or an animal, and a solid is a thing; the sort is said as the other sorts say it (what goes here, and the rest)'),
+    ('אֵיזֶה גּוּף מַשְׁאִיר עִגּוּל בַּחוֹל? לְכָאן. וּמִי לֹא — לְכָאן.', 'גּוּפִים שֶׁמַּשְׁאִירִים עִגּוּל בַּחוֹל — לְכָאן. וְהַשְּׁאָר — לְכָאן.',
+     'sense (M11 Stage 2 pilot): "מִי" is for a person or an animal, and a solid is a thing; the sort is said as the other sorts say it (what goes here, and the rest)'),
+    ('נְדַמְיֵן שֶׁדּוֹחֲפִים כׇּל גּוּף: יֵשׁ לוֹ צַד עָגֹל?', 'נִדְחַף כׇּל גּוּף וְנִרְאֶה: יֵשׁ לוֹ צַד עָגֹל?',
+     'vocabulary (M11 Stage 2 pilot): "נְדַמְיֵן" is adult (the owner-approved sweep of 2026-11-08 already replaced it in SHP-B-08/09); the hint picture pushes the solid, so the words say we push'),
+    ('סְגוּרָה, וְכׇל הַצְּלָעוֹת יְשָׁרוֹת? כֵּן — לְכָאן. לֹא — לְכָאן.',
+     'בּוֹדְקִים כׇּל צוּרָה: סְגוּרָה, וְכׇל הַצְּלָעוֹת שֶׁלָּהּ יְשָׁרוֹת? כֵּן — לְכָאן. לֹא — לְכָאן.',
+     'syntax (M11 Stage 2 pilot): "סְגוּרָה" and "יְשָׁרוֹת" were adjectives with no noun; the sort checks each shape'),
+    ('כֵּן! הַסְּגוּרוֹת עִם הַצְּלָעוֹת הַיְשָׁרוֹת בְּיַחַד.', 'כֵּן! כָּאן כׇּל הַצּוּרוֹת הַסְּגוּרוֹת עִם צְלָעוֹת יְשָׁרוֹת.',
+     'syntax (M11 Stage 2 pilot): "הַסְּגוּרוֹת" had no noun; the bin says what it holds'),
+    ('בָּרִבּוּעַ אַרְבַּע צְלָעוֹת שָׁווֹת, גַּם כְּשֶׁהוּא מְסֻבָּב.', 'בָּרִבּוּעַ יֵשׁ אַרְבַּע צְלָעוֹת שָׁווֹת, גַּם כְּשֶׁהוּא מְסֻבָּב.',
+     'syntax (M11 Stage 2 pilot): a sentence with a verb, as the correct line of the same family has it (hebrew-notes.md section 12)'),
+    ('נְחַפֵּשׂ פִּנּוֹת וְקַוִּים יְשָׁרִים בַּצֵּל: אֵיפֹה מִסְתַּתֵּר מְשֻׁלָּשׁ?', 'נְחַפֵּשׂ פִּנּוֹת וְקַוִּים יְשָׁרִים בַּצֵּל: אֵיפֹה מִתְחַבֵּא מְשֻׁלָּשׁ?',
+     'vocabulary (M11 Stage 2 pilot): "מִתְחַבֵּא" is the word of hide and seek; "מִסְתַּתֵּר" is written Hebrew'),
+    ('מַתְחִילִים מֵהַחֲתִיכָה הַגְּדוֹלָה, וְאַחַר כָּךְ הַקְּטַנּוֹת.', 'מַתְחִילִים מֵהַצּוּרָה הַגְּדוֹלָה, וְאַחַר כָּךְ הַקְּטַנּוֹת.',
+     'vocabulary (M11 Stage 2 pilot): the pieces are called shapes everywhere else in the lesson'),
+    ('אֵיזוֹ צוּרָה קְטַנָּה נִכְנֶסֶת פַּעֲמַיִם בַּצֵּל?', 'אֵיזוֹ צוּרָה קְטַנָּה נִכְנֶסֶת בַּצֵּל שׁוּב וְשׁוּב?',
+     'sense (M11 Stage 2 pilot): the hint is shared by the four items of SHP-B-06, and the last one needs the small shape four times, not "twice"'),
+    ('שָׂמִים אֶחָד, וְעוֹד אֶחָד לְיָדוֹ.', 'מַנִּיחִים אֶחָד לְיַד אֶחָד.',
+     'sense and voice (M11 Stage 2 pilot): true for two pieces and for four (the last item of SHP-B-06); "מַנִּיחִים" is read right without nikud'),
+    ('מַטְבִּיעִים אֶת הַגּוּף וְרוֹאִים אֶת הַצּוּרָה שֶׁנִּשְׁאֶרֶת.', 'מַטְבִּיעִים צַד שָׁטוּחַ שֶׁל הַגּוּף וְרוֹאִים אֶת הַצּוּרָה שֶׁנִּשְׁאֶרֶת.',
+     'truth (M11 Stage 2 pilot, the curriculum-expert\'s note): the pyramid stamped on its base leaves a square, not the triangle the item asks for; "a flat side of the solid" is true for every solid of the item'),
+    ('שְׁתֵּי צוּרוֹת עוֹשׂוֹת צוּרָה', 'צוּרוֹת קְטַנּוֹת עוֹשׂוֹת צוּרָה גְּדוֹלָה',
+     'title (owner, 2026-11-15): the last item of SHP-B-06 uses four squares, so the child line fits all four items'),
+    ('נִפְלָא! מִשְּׁתֵּי צוּרוֹת בְּנִיתֶם צוּרָה.', 'נִפְלָא! מִצּוּרוֹת קְטַנּוֹת בְּנִיתֶם צוּרָה גְּדוֹלָה.',
+     'truth (M11 Stage 2 pilot): the last item of SHP-B-06 builds a square from four squares, not from two shapes'),
+]
+SUBS += [(B + re.escape(o), r, w) for o, r, w in SHAPE_FOREST_PILOT]
 SUBS = [(re.compile(canon(p)), canon(r), why) for p, r, why in SUBS]
 
 # The reviewed helper lines (group 4) have no nikud: full spelling and the right future forms.
@@ -929,7 +972,18 @@ READ_OLD_DAY = '2026-11-06'
 READ_NEW = "2026-11-07 (the 35 C1 items of commit 98f57707, blocks, keypad, pay and the middle of two marks; hebrew-notes.md section 11.9)"
 SWEEP = ('Editor sweep 2026-11-08 (owner: a full read before the children try the app; hebrew-notes.md section 14): the editor read it; '
          'this row is the corrected text (what was wrong is in the section); waits for the owner.')
+SHAPE_FOREST_PILOT_READ = ('M11 Stage 2 pilot, Shape Forest (docs/agents/hebrew-notes.md section 17): read by the editor on 2026-11-15, every distinct text '
+                           '(grammar, nikud, agreement, plural address, vocabulary for ages 3 to 8, the shape words of docs/curriculum.md); the curriculum-expert\'s '
+                           'draft, corrected where the table says; waits for the owner.')
 READ = [
+    # M11 Stage 2 pilot (2026-11-15): the 61 re-cut and new Shape Forest items, SHP-B-05 and B-06 and their two lessons, and the 17 Show
+    # activities that tools/arc_build.py writes from content/units/arc/shape-forest.arc.json (Kubi's lines are in that file, read and final).
+    ('3', r'', r'^(activity\.(b\.shpb0[1-68]\.\d+|b15\.shpa0[1247]\.\d+|shp\.[a-z0-9.]+|x\.shpb09\.\d+|show\.shp-[ab]-\d+)|lesson\.(one-shadow|shapes-make-shapes)|skill\.SHP-B-0[56])\.json$',
+     SHAPE_FOREST_PILOT_READ),
+    # the host lines that tools/arc_build.py copies into the parts of the 27 Shape Forest lessons (Kubi's hand-overs and Together lead-ins: the same
+    # 10 texts as hostLines of the arc file, read and final)
+    ('3', r'^parts\.', r'^lesson\.(any-shape|any-shape-again|build-with-shapes|closed-shapes|closed-shapes-more|count-sides|count-sides-more|draw-the-shapes|one-shadow|polygon-detectives|polygon-detectives-more|rectangle|rectangle-again|roll-or-stack|roll-or-stack-again|shape-friends|shape-friends-again|shape-friends-again-1-b15|shapes-around-us|shapes-around-us-again|shapes-around-us-again-1-b15|shapes-make-shapes|solid-and-face|solids|solids-more|square-or-rectangle|trace-the-shapes|where-is-it|where-is-it-again)\.json$',
+     SHAPE_FOREST_PILOT_READ),
     # The sweep of 2026-11-08: the 17 he.dart strings that were NOT READ (screen-reader labels of the L5 screens and the division setting)
     # and the texts the sweep corrected. These entries come first so that they win over the C1 entries below.
     ('1', r'^(boxBowl|boxStampVowel|boxStampHard|boxStampSoft|boxSound|boxPlace|changeTarget|changeThatsIt|wheelHub|wheelLetter|wheelSign|stripTile|stripWindow|slideKnob|mergeTile)Semantics$|^division(Heading|Help)$|^(medalExplainerHow|medalBugFixerHow|tutorLogHelp)$',
@@ -1003,6 +1057,9 @@ DOUBT = [
 # Rows the OWNER approved (his own answers, relayed by the orchestrator; the editor never approves): (regex on the source,
 # regex on the original text, the comment). Their status is `owner-approved`. Nothing else is ever set to it by this script.
 OWNER_APPROVED = [
+    # The owner's answer in chat, 2026-11-15: the hint "a flat side of the solid" (the pyramid does not leave a triangle on its base); exactly these three rows
+    (r'^activity\.x\.shpb09\.(1|4|5)\.json$', r'^מַטְבִּיעִים (אֶת הַגּוּף|צַד שָׁטוּחַ שֶׁל הַגּוּף) וְרוֹאִים אֶת הַצּוּרָה שֶׁנִּשְׁאֶרֶת\. עַכְשָׁו תּוֹרְכֶם\.$',
+     'owner approved in chat, 2026-11-15', r'^hints\.2\.caption'),
     # The owner's answers of 2026-11-08 (hebrew-notes.md section 14.5)
     (r'^activity\.(same|x\.numa07)\.', r'^(בּוֹאוּ נַעֲשֶׂה זוּגוֹת: לְכֻלָּם יֵשׁ זוּג\?|בּוֹאוּ נִסְפֹּר כַּמָּה יֵשׁ בְּכׇל קְבוּצָה\.)$',
      'the two Q2 lines (NUM-A-11 pairing, NUM-A-07 counting), approved as written (owner-approved 2026-11-08).'),

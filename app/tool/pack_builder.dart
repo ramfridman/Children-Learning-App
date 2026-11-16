@@ -2,6 +2,7 @@
 //
 //   dart run tool/pack_builder.dart keygen [--out <key file>] [--replace-public]
 //   dart run tool/pack_builder.dart build <source folder> [--key <key file>] [--out <folder>]
+//   dart run tool/pack_builder.dart check <source folder>     (the content rules over the sources; no key, nothing is signed)
 //   dart run tool/pack_builder.dart verify <pack file> [--public-key <file>]
 //   dart run tool/pack_builder.dart inspect <pack file> [--public-key <file>]
 //   dart run tool/pack_builder.dart build-language <eng|heb|rus|all> [--key <key file>] [--out <folder>]
@@ -38,6 +39,8 @@ Future<void> main(List<String> args) async {
         await _keygen(rest);
       case 'build':
         await _build(rest);
+      case 'check':
+        await _check(rest);
       case 'build-language':
         await _buildLanguage(rest);
       case 'build-character':
@@ -116,6 +119,21 @@ Future<void> _build(List<String> args) async {
     stdout.writeln('WARNING: $w');
   }
   stdout.writeln('Built ${file.path}: ${built.bytes.length} bytes, manifest sha256 ${built.manifestSha256}');
+}
+
+/// Runs every content rule over a source folder as a build would, with no key: prints each problem and warning, and fails when there is a problem.
+Future<void> _check(List<String> args) async {
+  final List<String> pos = _positional(args);
+  if (pos.length != 1) throw const BuildFailed('check needs one source folder');
+  final ({List<Problem> problems, List<Problem> warnings}) found = await checkSource(Directory(pos.single));
+  for (final Problem w in found.warnings) {
+    stdout.writeln('WARNING: $w');
+  }
+  for (final Problem p in found.problems) {
+    stdout.writeln('PROBLEM: $p');
+  }
+  stdout.writeln('${found.problems.length} problems, ${found.warnings.length} warnings');
+  if (found.problems.isNotEmpty) exit(1);
 }
 
 /// Builds and signs the pack of one language course, or of all three, from `content/languages/<course>/pack` (what

@@ -50,17 +50,20 @@
       {
         "id": "i1",
         "sprite": "asset:shape_triangle_thin",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-SHP-PROTO"
       },
       {
         "id": "i2",
         "sprite": "asset:shape_open",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-SHP-CLOSED"
       },
       {
         "id": "i3",
         "sprite": "asset:shape_triangle_down",
-        "bin": "b1"
+        "bin": "b1",
+        "misconception": "M-SHP-ORIENT"
       },
       {
         "id": "i4",
@@ -75,7 +78,8 @@
       {
         "id": "i6",
         "sprite": "asset:shape_curved",
-        "bin": "b2"
+        "bin": "b2",
+        "misconception": "M-SHP-CLOSED"
       }
     ]
   },
@@ -96,6 +100,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-CLOSED",
+        "vo": "vo:fb.shp_closed",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SHP-ORIENT",
+        "vo": "vo:fb.shp_orient",
+        "caption": [
+          {
+            "t": "he",
+            "v": "צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה גַּם כְּשֶׁמְּסֹבְבִים אוֹתָהּ. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "misconception:M-SHP-PROTO",
         "vo": "vo:fb.shp_proto",

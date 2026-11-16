@@ -14,9 +14,9 @@
     "SHP-A-04"
   ],
   "items": [
+    "shp.rect.long",
     "shp.rect.find",
-    "shp.rect.square",
-    "shp.rect.long"
+    "shp.rect.square"
   ],
   "estimatedMinutes": 3,
   "sequence": 3,
@@ -28,5 +28,39 @@
         "v": "יָפֶה מְאֹד! הִבְדַּלְתֶּם בֵּין מַלְבֵּן לְרִבּוּעַ."
       }
     ]
+  },
+  "parts": {
+    "show": "show.shp-a-04",
+    "recall": [
+      "shp.name.circle"
+    ],
+    "together": [
+      {
+        "id": "shp.rect.long",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.kubi.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחַ אֶת הָרִאשׁוֹן."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "shp.rect.find",
+      "shp.rect.square"
+    ],
+    "handover": {
+      "vo": "vo:host.kubi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עָבַדְנוּ יַחַד. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

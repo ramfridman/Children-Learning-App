@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
 import 'choice_row.dart' show withStageAtLeast;
+import 'lesson_arc.dart' show ArcPart, ArcStep;
+import 'show_stage.dart';
 import 'size_scale.dart';
 import 'sprite_group.dart';
 import 'response_code.dart';
@@ -30,6 +33,11 @@ typedef BinBands = ({double sample, double label, double items, double itemSide}
 /// In share mode (two or three friends, a number of pictures that divides evenly) any bin takes any picture, and the check is
 /// that all end up with the same number: a child who shares unequally gets a "not yet" with M-SHARE-UNEQ and starts dealing
 /// again.
+///
+/// A wrong drop records the tag of the picture itself when it has one (a thing that is not a triangle shows what it is mistaken for), else the
+/// activity's. The host's part (M11 Stage 2): a Show (`purpose: show`) is acted by the host, which sorts every picture but the last, and the child
+/// sorts the last one, with nothing written and a wrong bin only a "let's look again"; a Together item has the host sort its first pictures
+/// ([ArcStep.lead]) before the child sorts the rest.
 class SortDragSession extends TemplateSession {
   SortDragSession(super.controller, this.activity);
 
@@ -59,9 +67,12 @@ class SortDragSession extends TemplateSession {
   Size _size = Size.zero;
   ActivitySpec? _spec;
 
+  /// The picture the host holds up in the middle of the stage in a Show (it has left its tile and is not in a bin yet).
+  String? _lifted;
+
   List<SortItem> get tray => <SortItem>[
     for (final SortItem i in activity.items)
-      if (!placed.containsKey(i.id)) i,
+      if (!placed.containsKey(i.id) && i.id != _lifted) i,
   ];
 
   int countIn(String bin) => placed.values.where((String b) => b == bin).length;
@@ -160,7 +171,7 @@ class SortDragSession extends TemplateSession {
 
   void select(String itemId) {
     _endDemo();
-    if (_busy || ring == AnswerState.correct) return;
+    if (_busy || hosting || ring == AnswerState.correct) return;
     selected = selected == itemId ? null : itemId;
     notify();
   }
@@ -173,7 +184,7 @@ class SortDragSession extends TemplateSession {
 
   Future<void> drop(String itemId, String binId) async {
     _endDemo();
-    if (_busy || ring == AnswerState.correct || placed.containsKey(itemId)) return;
+    if (_busy || hosting || ring == AnswerState.correct || placed.containsKey(itemId)) return;
     final SortItem item = activity.items.firstWhere((SortItem i) => i.id == itemId);
     if (activity.share) {
       placed[itemId] = binId;
@@ -191,6 +202,11 @@ class SortDragSession extends TemplateSession {
       if (placed.length == activity.items.length) await _done();
       return;
     }
+    // The wrong bin of a Show: nothing is written and nothing is counted; the host looks again and points.
+    if (activity.isShow) {
+      _lookAgain(item, binId);
+      return;
+    }
     // The wrong bin. With only the right bin left (after three tries) it is simply not taken.
     if (controller.guided) {
       if (controller.answerShown) _pointAt(item);
@@ -201,7 +217,7 @@ class SortDragSession extends TemplateSession {
     notify();
     await controller.submitPlacement(
       right: false,
-      tag: activity.wrongTag ?? '',
+      tag: item.misconception ?? activity.wrongTag ?? '',
       response: ResponseCode.sortMove(itemId, binId),
     );
     if (disposed) return;
@@ -216,6 +232,14 @@ class SortDragSession extends TemplateSession {
 
   Future<void> _done() async {
     _busy = true;
+    if (activity.isShow) {
+      // The child made the last step of the Show: the host's key line is said again as the praise, and nothing is written.
+      controller.completePractice();
+      ring = AnswerState.correct;
+      notify();
+      later(praise, controller.next);
+      return;
+    }
     await controller.submitPlacement(right: true, response: ResponseCode.sorted);
     if (disposed) return;
     ring = AnswerState.correct;
@@ -246,6 +270,128 @@ class SortDragSession extends TemplateSession {
       _busy = false;
       if (controller.guided) _dealDemo();
       notify();
+    });
+  }
+
+  /// A Show, and the child's step went in the wrong bin: the host says "let's look again" and its hand points at the bin. Nothing is written,
+  /// nothing is counted, and the child may try as often as it likes.
+  void _lookAgain(SortItem item, String binId) {
+    _busy = true;
+    notYetBin = binId;
+    controller.speak(activity.feedback.forIncorrect(null));
+    _pointAt(item);
+    later(TemplateSession.notYetPause, () {
+      notYetBin = null;
+      selected = null;
+      _busy = false;
+      notify();
+    });
+  }
+
+  // ---- the host's part (a Show, the lead of a Together item) ----
+
+  SortItem _itemOf(ShowStep step) => activity.items.firstWhere((SortItem i) => i.id == step.item);
+
+  /// The host's hand takes [item] from the tray and puts it in its bin: the same path as the worked example of a hint, at the pace of the
+  /// look ([fast]: a reminder). A step with a motion of its own (a finger along the sides, a count) rests on the picture first, as long as the
+  /// motion would take; what it looks like is the design's (the hand's own motions are drawn by the design-director).
+  Future<void> _hostMove(SortItem item, {required bool fast, bool rests = false}) async {
+    final int taken = fast ? 300 : 850;
+    final int put = fast ? 550 : 1250;
+    final int over = fast ? 900 : 2200;
+    final int rest = rests && !fast ? 600 : 0;
+    final List<SortItem> left = tray;
+    hintItem = item.id;
+    notify();
+    if (_canDraw) {
+      _hint.play(
+        handTourPlan(<HandStop>[
+          HandStop(_trayTip(left.length, left.indexWhere((SortItem i) => i.id == item.id)), taken + rest),
+          _dropStop(
+            activity.bins.length,
+            activity.bins.indexWhere((SortBin b) => b.id == item.bin),
+            over - taken,
+          ),
+        ]),
+      );
+    }
+    await pause(Duration(milliseconds: put + rest));
+    placed[item.id] = item.bin!;
+    hintItem = null;
+    notify();
+    await pause(Duration(milliseconds: over - put));
+  }
+
+  /// A step of a Show with a motion of the host's hand (a finger along the sides, a count, an ant, sticks): the picture is lifted to the middle of
+  /// the stage, shown, and dragged into its bin. Anything the director has no row for, a reminder and a stage with no art for the hand is the plain
+  /// drag of [_hostMove].
+  Future<void> _hostShow(ShowStep step, {required bool fast}) async {
+    final ShowStyle? style = showStyle;
+    final SortItem item = _itemOf(step);
+    final ShowOutline? outline = item.sprite == null ? null : style?.art.of(item.sprite!);
+    if (style == null ||
+        outline == null ||
+        fast ||
+        !_canDraw ||
+        !ShowDirector.motions.contains(step.motion)) {
+      return _hostMove(item, fast: fast, rests: step.motion != null);
+    }
+    final ShowDirector director = ShowDirector(this, style, showMarks);
+    final List<SortItem> left = tray;
+    final Offset tile = _trayTip(left.length, left.indexWhere((SortItem i) => i.id == item.id));
+    final double side = ShowDirector.spotSide(_size);
+    showMarks.scale = hintScale(_size);
+    final Rect spot = Rect.fromCenter(center: _size.center(Offset.zero), width: side, height: side);
+    _lifted = item.id;
+    hintItem = null;
+    notify();
+    await director.lift(
+      from: Rect.fromCenter(center: tile + const Offset(0, 36), width: 44, height: 44),
+      spot: spot,
+      svg: activity.assets.svg(item.sprite!),
+    );
+    await director.motion(step, outline, spot);
+    final Rect bin = binRect(
+      _size,
+      activity.bins.length,
+      activity.bins.indexWhere((SortBin b) => b.id == item.bin),
+    );
+    await director.dropTo(Rect.fromCenter(center: bin.center, width: 40, height: 40));
+    placed[item.id] = item.bin!;
+    _lifted = null;
+    notify();
+  }
+
+  /// What the host does on this screen, if anything: a Show (it sorts every picture but the child's), or the lead of a Together item.
+  @override
+  void startHost() {
+    final ArcStep? step = controller.step;
+    if (step == null || hosting) return;
+    if (activity.isShow) {
+      unawaited(
+        playShow(activity.show!, move: (ShowStep s, {required bool fast}) => _hostShow(s, fast: fast)),
+      );
+    } else if (step.part == ArcPart.together && controller.leading && step.lead > 0) {
+      unawaited(
+        playLead(<Future<void> Function()>[
+          for (final SortItem i in activity.items.take(step.lead)) () => _hostMove(i, fast: false),
+        ]),
+      );
+    }
+  }
+
+  /// A touch on a reminder skips what the host still has to do: its pictures go in their bins at once, and the child's step is left.
+  @override
+  void onScreenTouch() {
+    if (!activity.isShow) return;
+    skipHost(() {
+      _hint.clear();
+      showMarks.clear();
+      _lifted = null;
+      hintItem = null;
+      for (final ShowStep s in activity.show!.hostSteps) {
+        placed[_itemOf(s).id] = s.bin!;
+      }
     });
   }
 
@@ -396,6 +542,13 @@ class SortDragSession extends TemplateSession {
     _hint.clear();
     _demoItem = null;
     placed.clear();
+    // The pictures the host sorted in the lead of a Together item stay sorted.
+    final int lead = controller.step?.part == ArcPart.together && !controller.leading
+        ? controller.step!.lead
+        : 0;
+    for (final SortItem i in activity.items.take(lead)) {
+      placed[i.id] = i.bin!;
+    }
     selected = null;
     hintItem = null;
     hintBin = null;
@@ -461,7 +614,7 @@ class SortDragSession extends TemplateSession {
             Draggable<String>(
               key: Key('item-${i.id}'),
               data: i.id,
-              maxSimultaneousDrags: _busy || demoRunning ? 0 : 1,
+              maxSimultaneousDrags: _busy || demoRunning || hosting ? 0 : 1,
               feedback: SizedBox(
                 width: side,
                 height: side,
@@ -527,6 +680,10 @@ class _SortStage extends StatelessWidget {
                 ),
               ),
             ),
+            if (s.showStyle != null)
+              Positioned.fill(
+                child: ShowLayer(marks: s.showMarks, style: s.showStyle!),
+              ),
             Positioned.fill(child: s._hint.body(size)),
           ],
         ),

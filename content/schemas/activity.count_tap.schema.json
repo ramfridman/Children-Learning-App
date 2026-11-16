@@ -121,7 +121,8 @@
         "practice",
         "probe",
         "repair",
-        "check"
+        "check",
+        "show"
       ]
     },
     "contradicts": {

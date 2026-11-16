@@ -29,5 +29,42 @@
         "v": "יָפֶה מְאֹד! גּוּפִים בְּכׇל מָקוֹם."
       }
     ]
+  },
+  "parts": {
+    "show": "show.shp-b-08",
+    "recall": [
+      "shp.solid.rolls"
+    ],
+    "together": [
+      {
+        "id": "b.shpb08.6",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.kubi.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחַ אֶת הָרִאשׁוֹן."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "b.shpb08.7",
+      "b.shpb08.8"
+    ],
+    "use": [
+      "b.shpb08.9"
+    ],
+    "handover": {
+      "vo": "vo:host.kubi.handover.3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עָבַדְנוּ יַחַד. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
   }
 }

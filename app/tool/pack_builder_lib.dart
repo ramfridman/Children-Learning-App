@@ -217,9 +217,59 @@ void _checkPackSize(Map<String, Uint8List> files) {
   }
 }
 
+/// What [prepareSource] made of a source folder: the files, their documents, the manifest the pack would carry and every problem the content
+/// rules found (empty when the pack may be signed).
+typedef PreparedSource = ({
+  Map<String, Uint8List> files,
+  Map<String, Object?> docs,
+  Map<String, Object?> manifest,
+  List<String> names,
+  List<Problem> problems,
+});
+
+/// Runs every content rule over the pack in [source] as the builder does, and signs nothing: the list of problems a build would stop on, and
+/// the warnings it would print. For a check of the sources in CI or while authoring, with no key.
+Future<({List<Problem> problems, List<Problem> warnings})> checkSource(Directory source) async {
+  final PreparedSource made = await prepareSource(source);
+  return (problems: made.problems, warnings: packWarnings(docs: made.docs));
+}
+
 /// Builds the pack in [source] and signs it with [key]. The same sources and key always give the same bytes
 /// (Ed25519 signatures are deterministic).
 Future<BuiltPack> buildPack(Directory source, PackKey key) async {
+  final PreparedSource made = await prepareSource(source);
+  final List<Problem> problems = made.problems;
+  if (problems.isNotEmpty) {
+    throw BuildFailed('the pack does not follow the content rules; nothing was signed', problems);
+  }
+  final Map<String, Uint8List> files = made.files;
+  final Map<String, Object?> manifest = made.manifest;
+  final List<String> names = made.names;
+  final Map<String, Object?> docs = made.docs;
+  final Uint8List manifestBytes = Uint8List.fromList(
+    utf8.encode('${const JsonEncoder.withIndent('  ').convert(manifest)}\n'),
+  );
+  final SimpleKeyPair pair = await key.toKeyPair();
+  final Signature signature = await Ed25519().sign(signingInput(manifestBytes), keyPair: pair);
+  final Uint8List zip = writeStoredZip(<ZipEntry>[
+    ZipEntry(manifestName, manifestBytes),
+    ZipEntry(signatureName, Uint8List.fromList(signature.bytes)),
+    for (final String n in names) ZipEntry(n, files[n]!),
+  ]);
+
+  // The builder trusts nothing it made: run the app's own check before handing the file over.
+  final VerifiedPack check = await verifyPack(zip, publicKey: key.publicKey);
+  return BuiltPack(
+    fileName: '${manifest['id']}-${manifest['version']}.nnpack',
+    bytes: zip,
+    manifestSha256: check.manifestSha256,
+    warnings: packWarnings(docs: docs),
+  );
+}
+
+/// Reads the pack in [source], makes its manifest and runs the content rules (see [PreparedSource]); throws [BuildFailed] for a folder that is
+/// not a pack at all (no `pack.json`, files that cannot go into a pack, a file that is not JSON).
+Future<PreparedSource> prepareSource(Directory source) async {
   if (!source.existsSync()) throw BuildFailed('no source folder at ${source.path}');
   final File descriptor = File('${source.path}${Platform.pathSeparator}pack.json');
   if (!descriptor.existsSync()) throw const BuildFailed('the source folder has no pack.json');
@@ -360,29 +410,7 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
   problems.addAll(validatePack(manifest: manifest, docs: docs, files: names.toSet()));
   problems.addAll(checkPackPictures(files));
   if (problems.isEmpty) problems.addAll(checkCharacterFiles(manifest, docs, files));
-  if (problems.isNotEmpty) {
-    throw BuildFailed('the pack does not follow the content rules; nothing was signed', problems);
-  }
-
-  final Uint8List manifestBytes = Uint8List.fromList(
-    utf8.encode('${const JsonEncoder.withIndent('  ').convert(manifest)}\n'),
-  );
-  final SimpleKeyPair pair = await key.toKeyPair();
-  final Signature signature = await Ed25519().sign(signingInput(manifestBytes), keyPair: pair);
-  final Uint8List zip = writeStoredZip(<ZipEntry>[
-    ZipEntry(manifestName, manifestBytes),
-    ZipEntry(signatureName, Uint8List.fromList(signature.bytes)),
-    for (final String n in names) ZipEntry(n, files[n]!),
-  ]);
-
-  // The builder trusts nothing it made: run the app's own check before handing the file over.
-  final VerifiedPack check = await verifyPack(zip, publicKey: key.publicKey);
-  return BuiltPack(
-    fileName: '${pack['id']}-${pack['version']}.nnpack',
-    bytes: zip,
-    manifestSha256: check.manifestSha256,
-    warnings: packWarnings(docs: docs),
-  );
+  return (files: files, docs: docs, manifest: manifest, names: names, problems: problems);
 }
 
 // ---- JSON Schema files ----

@@ -8,6 +8,8 @@ committed files:
 3. tools/author.py turns each unit spec into content/starter, Band A first, then Band B, then Band C (each reads lines and
    assets the files before it already wrote). Band C lines that say the same text share one voice id; the pool that does it
    (content/voice-pool.c.json) is emptied first, so the ids depend on the specs alone.
+4. tools/arc_build.py writes the Shows and the parts of the lessons of the lands in content/units/arc/*.arc.json (M11 Stage 2) over the
+   lesson files author.py wrote.
 
 A handful of the oldest starter files (the M2 butterflies lesson and its skills and misconceptions) have no spec and
 are edited by hand. Nothing is published or voiced here.
@@ -39,6 +41,7 @@ def run(root=ROOT, quiet=False):
         spec = os.path.join(root, 'content', 'units', u + '.json')
         subprocess.run([sys.executable, '-s', os.path.join(tools, 'author.py'), spec], cwd=root, env=env, check=True,
                        stdout=out)
+    subprocess.run([sys.executable, '-s', os.path.join(tools, 'arc_build.py')], cwd=root, env=env, check=True, stdout=out)
 
 
 if __name__ == '__main__':

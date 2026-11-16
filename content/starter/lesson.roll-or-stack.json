@@ -14,6 +14,7 @@
     "SHP-A-07"
   ],
   "items": [
+    "shp.solid.rolls.blue",
     "shp.solid.rolls",
     "shp.solid.stacks",
     "shp.solid.which"
@@ -28,5 +29,37 @@
         "v": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה מִּתְגַּלְגֵּל וּמָה נֶעֱרָם."
       }
     ]
+  },
+  "parts": {
+    "show": "show.shp-a-07",
+    "together": [
+      {
+        "id": "shp.solid.rolls.blue",
+        "lead": 1,
+        "line": {
+          "vo": "vo:host.kubi.together.sort",
+          "caption": [
+            {
+              "t": "he",
+              "v": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחַ אֶת הָרִאשׁוֹן."
+            }
+          ]
+        }
+      }
+    ],
+    "alone": [
+      "shp.solid.rolls",
+      "shp.solid.stacks",
+      "shp.solid.which"
+    ],
+    "handover": {
+      "vo": "vo:host.kubi.handover.2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "לְאַט לְאַט. עַכְשָׁו אַתֶּם."
+        }
+      ]
+    }
   }
 }

@@ -447,12 +447,14 @@ void main() {
       expect(cheerRepeatsPraise('', 'כל הכבוד!'), isFalse);
     });
 
-    test('each moment has one speaker (the seam Stage 2 adds its Show and lead-in to)', () {
+    test('each moment has one speaker: a Show and the lead-in of a Together item are the hosts', () {
       expect(
         <Moment, Speaker>{for (final Moment m in Moment.values) m: m.speaker},
         <Moment, Speaker>{
           Moment.greeting: Speaker.host,
           Moment.meet: Speaker.host,
+          Moment.show: Speaker.host,
+          Moment.lead: Speaker.host,
           Moment.turn: Speaker.companion,
           Moment.cheer: Speaker.host,
         },

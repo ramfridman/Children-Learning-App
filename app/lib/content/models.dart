@@ -83,6 +83,73 @@ class IncorrectRule {
   final Spoken say;
 }
 
+/// One move of a Show: the host's, or the child's last one (see [ShowScript]).
+class ShowStep {
+  const ShowStep({
+    required this.byHost,
+    this.item,
+    this.bin,
+    this.piece,
+    this.slot,
+    this.saysKey = false,
+    this.motion,
+    this.detail,
+  });
+
+  factory ShowStep.fromJson(Map<String, Object?> m) => ShowStep(
+    byHost: m['by'] == 'host',
+    item: m['item'] as String?,
+    bin: m['bin'] as String?,
+    piece: m['piece'] as String?,
+    slot: m['slot'] as String?,
+    saysKey: m['say'] == 'key',
+    motion: m['motion'] as String?,
+    detail: m['detail'] as String?,
+  );
+
+  final bool byHost;
+
+  /// A sort: the card moved and the bin it goes in. A shape builder: the tray piece (its picture) and the place it goes in.
+  final String? item;
+  final String? bin;
+  final String? piece;
+  final String? slot;
+
+  /// The key line of the Show is said as this move begins.
+  final bool saysKey;
+
+  /// The motion the host's hand makes (one of `hostMotions`) and its detail; they only say what is drawn.
+  final String? motion;
+  final String? detail;
+}
+
+/// What a Show says and does (`purpose: show`, M11 Stage 2): the host's lines, and the moves it makes one after another before it stops, so
+/// that the child makes the last one. A Show is never scored and writes nothing.
+class ShowScript {
+  ShowScript._(Map<String, Object?> json)
+    : lines = <String, Spoken>{
+        for (final Map<String, Object?> l in _maps(json['lines'])) l['role']! as String: Spoken.fromJson(l),
+      },
+      steps = <ShowStep>[for (final Map<String, Object?> s in _maps(json['steps'])) ShowStep.fromJson(s)],
+      teaches = <String>[for (final Object? t in json['teaches']! as List<Object?>) t! as String];
+
+  /// The host's lines by role (`open`, `key`, `handover`).
+  final Map<String, Spoken> lines;
+  final List<ShowStep> steps;
+
+  /// The words the Show says, as the skill's items label them.
+  final List<String> teaches;
+
+  /// The moves the host makes before the child's.
+  List<ShowStep> get hostSteps => <ShowStep>[
+    for (final ShowStep s in steps)
+      if (s.byHost) s,
+  ];
+
+  /// The move the child makes: the last one.
+  ShowStep get childStep => steps.last;
+}
+
 class ActivityFeedback {
   const ActivityFeedback({required this.correct, required this.incorrect, required this.unsure});
 
@@ -158,7 +225,8 @@ sealed class Activity {
           ),
       ],
       maxAttempts = _map(json['scoring'])['maxAttempts']! as int,
-      altText = _map(json['a11y'])['altText']! as String;
+      altText = _map(json['a11y'])['altText']! as String,
+      show = json['show'] == null ? null : ShowScript._(_map(json['show']));
 
   factory Activity.fromJson(Map<String, Object?> json, PackAssets assets) => switch (json['template']) {
     'count_tap' => CountTapActivity._(json, assets),
@@ -214,7 +282,14 @@ sealed class Activity {
 
   /// A step that is never scored (a story only heard, a chant, the embodied "done", a personal turn): it writes no attempt of any
   /// kind, not even an "unsure", and the child is offered no help in it (docs/languages/frame.md section 3.3.8 and 5.2).
-  bool get unscored => false;
+  bool get unscored => isShow;
+
+  /// A Show (`purpose: show`): the host does a worked example on the skill's hands-on template and stops before its last step, which the child
+  /// makes. It is unscored, writes no evidence and is no item of the engine.
+  bool get isShow => purpose == 'show';
+
+  /// What the host says and does in a Show, or null for every other activity.
+  final ShowScript? show;
 
   /// The misconception tags this activity's wrong answers can carry (what the tutor may be asked about).
   List<String> get misconceptionTags => <String>{
@@ -226,6 +301,11 @@ sealed class Activity {
     // The look-alike pairs of the own-name answer: the tag a touch on the look-alike of the child's first letter carries.
     for (final Map<String, Object?> p in _maps(_map(json['answer'])['pairs']))
       if (p['misconception'] is String) p['misconception']! as String,
+    // A card of a sort that has a tag of its own, and a piece of a shape builder that does (the lands, M11 Stage 2).
+    for (final Map<String, Object?> i in _maps(_maybe(json['scene'])['items']))
+      if (i['misconception'] is String) i['misconception']! as String,
+    for (final Map<String, Object?> t in _maps(_map(json['answer'])['pieceTags']))
+      if (t['misconception'] is String) t['misconception']! as String,
   }.toList();
 
   /// What the learning engine needs to know about the activity.
@@ -1811,12 +1891,51 @@ class ShapeBuilderActivity extends Activity {
           d! as String,
       ],
       wrongTag = _map(json['answer'])['misconception'] as String?,
+      pieceTags = <PieceTag>[
+        for (final Map<String, Object?> t in _maps(_map(json['answer'])['pieceTags']))
+          PieceTag(
+            piece: t['piece']! as String,
+            slot: t['slot'] as String?,
+            tag: t['misconception']! as String,
+          ),
+      ],
       super._();
 
   final double aspect;
   final List<ShapeSlot> slots;
   final List<String> decoys;
   final String? wrongTag;
+
+  /// The tags of pieces put where they do not belong (a decoy, a rectangle in the place of a square), most exact first by [tagFor].
+  final List<PieceTag> pieceTags;
+
+  /// The shape a picture draws, whatever its colour: `shape_triangle_red` and `shape_triangle_green` are both the triangle, so a triangle piece
+  /// fits any place that is a triangle (a rocket's nose and its fins are two triangles of nearly one size, and a child cannot tell which is
+  /// which by the grey shadow). A picture that is not one of the four plain shapes in a colour (`shape_triangle_thin`, `shape_square_tilt`,
+  /// a decoy) is its own shape.
+  static String shapeClassOf(String sprite) {
+    final RegExpMatch? m = _plainShape.firstMatch(sprite);
+    return m == null ? sprite : 'asset:shape_${m.group(1)}';
+  }
+
+  static final RegExp _plainShape = RegExp(
+    r'^asset:shape_(circle|square|triangle|rect)(?:_(?:red|blue|green|orange|yellow))?$',
+  );
+
+  /// Whether the tray piece [piece] belongs in [slot]: the same shape (see [shapeClassOf]).
+  static bool fits(String piece, ShapeSlot slot) => shapeClassOf(piece) == shapeClassOf(slot.sprite);
+
+  /// The tag of the wrong move of putting [piece] in [slot]: the entry for that piece in that place, else the entry for that piece anywhere,
+  /// else the answer's own tag, else none.
+  String? tagFor(String piece, ShapeSlot slot) {
+    String? anywhere;
+    for (final PieceTag t in pieceTags) {
+      if (t.piece != piece) continue;
+      if (t.slot == slot.sprite) return t.tag;
+      if (t.slot == null) anywhere ??= t.tag;
+    }
+    return anywhere ?? wrongTag;
+  }
 
   /// The shapes in the tray, as asset references: one for each place and the decoys, in a fixed mixed order.
   List<String> get pieces {
@@ -1830,7 +1949,18 @@ class ShapeBuilderActivity extends Activity {
   int get optionCount => 0;
 
   @override
-  Set<String> get engineTags => <String>{?wrongTag};
+  Set<String> get engineTags => <String>{?wrongTag, for (final PieceTag t in pieceTags) t.tag};
+}
+
+/// The tag of a piece put where it does not belong (see [ShapeBuilderActivity.tagFor]).
+class PieceTag {
+  const PieceTag({required this.piece, required this.tag, this.slot});
+
+  final String piece;
+
+  /// The picture of the place the piece was put in; null: any place.
+  final String? slot;
+  final String tag;
 }
 
 /// The robot-path template (T07): move a robot to the flag with arrows, directly or by planning the steps first.
@@ -2169,7 +2299,8 @@ class Lesson {
       ],
       stopAfterStruggles = 0,
       celebration = Spoken.fromJson(json['celebration']),
-      demo = json['demo'] == null ? null : Spoken.fromJson(json['demo']);
+      demo = json['demo'] == null ? null : Spoken.fromJson(json['demo']),
+      parts = json['parts'] == null ? null : LessonParts._(_map(json['parts']));
 
   /// A short lesson made on the spot for one skill's revisit (M8): the bell flag on the map. It is not in any pack.
   Lesson.mission({
@@ -2181,6 +2312,7 @@ class Lesson {
   }) : revision = 1,
        sequence = 1000,
        demo = null,
+       parts = null,
        teach = const <TeachSet>[],
        course = skillIds.isEmpty ? Course.core : Course.ofSkillId(skillIds.first),
        title = '';
@@ -2206,6 +2338,62 @@ class Lesson {
   /// The line said at the end of the demonstration this lesson opens with (ten loose cubes snapping into a rod, see `block_demo.dart`), or
   /// null for a lesson that has none (every revisit mission).
   final Spoken? demo;
+
+  /// The lesson in parts (Recall, Show, Together, Alone, Use), or null for a lesson that has none: a mission, a course lesson and every lesson of
+  /// a pack made before the arc. Such a lesson is played from [itemIds] as it always was.
+  final LessonParts? parts;
+}
+
+/// An item played together with the host: the host does the first [lead] steps and says [line], and the child finishes.
+class TogetherItem {
+  const TogetherItem({required this.id, required this.lead, this.line});
+
+  final String id;
+
+  /// The steps the host does first; 0 where the template has no steps to lead (the host only says its line).
+  final int lead;
+  final Spoken? line;
+}
+
+/// The parts of a lesson of a land in a room (M11 Stage 2, docs/milestones/M11-stage2.md sections 2 and 7.4). The ids are the pack's activities;
+/// [PackContent.activities] holds them. Which of the parts a visit serves, and in which order, is decided by the child's level (`lesson_arc.dart`).
+class LessonParts {
+  LessonParts._(Map<String, Object?> json)
+    : show = json['show']! as String,
+      secondShow = json['secondShow'] == null ? null : _map(json['secondShow'])['id']! as String,
+      secondShowBefore = json['secondShow'] == null ? null : _map(json['secondShow'])['before']! as String,
+      recall = <String>[
+        for (final Object? i in (json['recall'] as List<Object?>? ?? const <Object?>[])) i! as String,
+      ],
+      together = <TogetherItem>[
+        for (final Map<String, Object?> t in _maps(json['together']))
+          TogetherItem(
+            id: t['id']! as String,
+            lead: t['lead']! as int,
+            line: t['line'] == null ? null : Spoken.fromJson(t['line']),
+          ),
+      ],
+      alone = <String>[for (final Object? i in json['alone']! as List<Object?>) i! as String],
+      use = <String>[
+        for (final Object? i in (json['use'] as List<Object?>? ?? const <Object?>[])) i! as String,
+      ],
+      handover = json['handover'] == null ? null : Spoken.fromJson(json['handover']);
+
+  /// The Show of the lesson's first skill, and the one of its second skill with the item it stands in front of (none for a lesson of one skill).
+  final String show;
+  final String? secondShow;
+  final String? secondShowBefore;
+
+  /// Candidate items of an earlier skill for the one item of recall.
+  final List<String> recall;
+  final List<TogetherItem> together;
+
+  /// The pool of items the child works alone.
+  final List<String> alone;
+  final List<String> use;
+
+  /// What the host says as the companion takes over, when Alone begins.
+  final Spoken? handover;
 }
 
 /// A set of screens to be shown before a lesson asks its words, in order, and the routes of a language course that are shown them: the

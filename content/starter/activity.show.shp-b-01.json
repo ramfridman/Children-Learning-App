@@ -1,0 +1,183 @@
+{
+  "schema": "activity/v1",
+  "id": "show.shp-b-01",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
+  "domain": "shapes",
+  "band": "B",
+  "skills": [
+    {
+      "id": "SHP-B-01",
+      "weight": 1
+    }
+  ],
+  "purpose": "show",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "show",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:host.kubi.show.shp_b_01.open",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יֵשׁ שֵׁמוֹת: מְחֻמָּשׁ, מְשֻׁשֶּׁה, וְעוֹד."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:shape_triangle",
+        "label": "מְשֻׁלָּשׁ"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:shape_quad",
+        "label": "מְרֻבָּע"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:shape_triangle_thin",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:shape_square_tilt",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:shape_rect",
+        "bin": "b2"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:host.kubi.show.shp_b_01.key",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שָׁלוֹשׁ — מְשֻׁלָּשׁ. אַרְבַּע — מְרֻבָּע."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "the host does a worked example and the child makes only the last step",
+    "mustNotRevealBeforeHint": 0
+  },
+  "a11y": {
+    "altText": "יֵשׁ שֵׁמוֹת: מְחֻמָּשׁ, מְשֻׁשֶּׁה, וְעוֹד."
+  },
+  "show": {
+    "handOver": "last",
+    "lines": [
+      {
+        "role": "open",
+        "vo": "vo:host.kubi.show.shp_b_01.open",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ שֵׁמוֹת: מְחֻמָּשׁ, מְשֻׁשֶּׁה, וְעוֹד."
+          }
+        ]
+      },
+      {
+        "role": "key",
+        "vo": "vo:host.kubi.show.shp_b_01.key",
+        "caption": [
+          {
+            "t": "he",
+            "v": "שָׁלוֹשׁ — מְשֻׁלָּשׁ. אַרְבַּע — מְרֻבָּע."
+          }
+        ]
+      },
+      {
+        "role": "handover",
+        "vo": "vo:host.kubi.show.shp_b_01.handover",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עַכְשָׁו תּוֹרְכֶם: לִסְפֹּר אֶת הָאַחֲרוֹן."
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "by": "host",
+        "item": "i1",
+        "bin": "b1",
+        "say": "key",
+        "motion": "count",
+        "detail": "sides"
+      },
+      {
+        "by": "host",
+        "item": "i2",
+        "bin": "b2",
+        "motion": "count",
+        "detail": "sides"
+      },
+      {
+        "by": "child",
+        "item": "i3",
+        "bin": "b2"
+      }
+    ],
+    "teaches": [
+      "מְשֻׁלָּשׁ",
+      "מְרֻבָּע",
+      "מְחֻמָּשׁ",
+      "מְשֻׁשֶּׁה"
+    ]
+  }
+}
