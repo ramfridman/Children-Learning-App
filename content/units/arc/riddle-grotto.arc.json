@@ -2,8 +2,8 @@
  "schema": "lesson-arc-source/v0",
  "land": "logic",
  "host": "timi",
- "review": "needs-editor",
- "status": "M11 Stage 2, step 2.4b (Riddle Grotto), authored by the curriculum-expert on 2026-11-16. Pointed drafts for the hebrew-text-editor; Timi speaks in \"we\" forms (no first-person gender). The sort Shows play today (LOG-A-01, A-02, A-03, A-09, B-06, B-08, B-09); the build_pattern Shows wait for its Show and lead player (step 2.1) and, for the given cells of LOG-A-06, A-07 and B-01, for step 2.2; LOG-A-04 waits for the pattern-strip sprites; LOG-B-02 for step 2.2c. `predict` (the question before the host acts, §2.1) is written for the predict-then-watch skills; the app does not play it yet.",
+ "review": "text-ready",
+ "status": "M11 Stage 2, step 2.4b (Riddle Grotto), authored by the curriculum-expert on 2026-11-16. Pointed drafts for the hebrew-text-editor; Timi speaks in \"we\" forms (no first-person gender). The sort Shows play today (LOG-A-01, A-02, A-03, A-09, B-06, B-08, B-09); the build_pattern Shows wait for its Show and lead player (step 2.1) and, for the given cells of LOG-A-06, A-07 and B-01, for step 2.2; LOG-A-04 waits for the pattern-strip sprites; LOG-B-02 for step 2.2c. `predict` (the question before the host acts, §2.1) is written for the predict-then-watch skills; the app does not play it yet. Hebrew finalised by the hebrew-text-editor on 2026-11-16 (pointed text, voice text, text-ready; waits for the owner; docs/agents/hebrew-notes.md section 19).",
  "spec": "docs/milestones/M11-stage2.md §2, §3.5, §7.4 and §8",
  "howToRead": [
   "As counting-hills.arc.json and market.arc.json. `predict`: the host's question and the child's unscored choices (empty when the choice is a touch on the picture)."
@@ -103,19 +103,22 @@
      "role": "open",
      "vo": "vo:host.timi.show.log_a_01.open",
      "text": "מְחַפְּשִׂים אֶת כׇּל הַתַּפּוּחִים.",
-     "review": "needs-editor"
+     "voice": "מחפשים את כל התפוחים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_a_01.key",
-     "text": "עָגֹל וְאָדֹם, אֲבָל לֹא תַּפּוּחַ.",
-     "review": "needs-editor"
+     "text": "הַכַּדּוּר עָגֹל וְאָדֹם, אֲבָל לֹא תַּפּוּחַ.",
+     "voice": "הכדור עגול ואדום, אבל לא תפוח.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_a_01.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַבָּלוֹן.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הבלון.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -205,20 +208,23 @@
     {
      "role": "open",
      "vo": "vo:host.timi.show.log_a_02.open",
-     "text": "מִי שׁוֹנֶה מֵהָאֲחֵרִים?",
-     "review": "needs-editor"
+     "text": "יֵשׁ אֶחָד שֶׁשּׁוֹנֶה מֵהָאֲחֵרִים.",
+     "voice": "יש אֶחָד ששונה מהאחרים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_a_02.key",
      "text": "כֻּלָּם כּוֹכָבִים, חוּץ מֵאֶחָד.",
-     "review": "needs-editor"
+     "voice": "כולם כוכבים, חוץ מֵאֶחָד.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_a_02.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַכּוֹכָב הָאַחֲרוֹן.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הכוכב האחרון.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -308,19 +314,22 @@
      "role": "open",
      "vo": "vo:host.timi.show.log_a_03.open",
      "text": "מְמַיְּנִים לִשְׁתֵּי קְבוּצוֹת.",
-     "review": "needs-editor"
+     "voice": "ממיינים לִשְׁתֵּי קבוצות.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_a_03.key",
      "text": "חֲתוּלִים כָּאן, כְּלָבִים כָּאן.",
-     "review": "needs-editor"
+     "voice": "חתולים כאן, כלבים כאן.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_a_03.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַכֶּלֶב.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הכלב.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -399,28 +408,33 @@
     {
      "role": "open",
      "vo": "vo:host.timi.show.log_a_04.open",
-     "text": "הַאִם זֶה חוֹזֵר?",
-     "review": "needs-editor"
+     "text": "בּוֹדְקִים אִם הַסֵּדֶר חוֹזֵר.",
+     "voice": "בודקים אם הסדר חוזר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_a_04.key",
-     "text": "אָדֹם, כָּחֹל. אָדֹם, כָּחֹל. חוֹזֵר!",
-     "review": "needs-editor"
+     "text": "אָדֹם, כָּחֹל. אָדֹם, כָּחֹל. זֶה חוֹזֵר.",
+     "voice": "אדום, כחול. אדום, כחול. זה חוזר.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_a_04.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: זֶה חוֹזֵר?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַסֵּדֶר הַבָּא.",
+     "voice": "עכשיו תורכם: הסדר הבא.",
+     "review": "text-ready"
     }
    ],
    "predict": {
-    "line": "הַאִם זֶה חוֹזֵר?",
+    "line": "זֶה חוֹזֵר?",
+    "voice": "זה חוזר?",
     "choices": [
      "כֵּן",
      "לֹא"
-    ]
+    ],
+    "review": "text-ready"
    },
    "reminder": {
     "line": "key",
@@ -482,19 +496,22 @@
      "role": "open",
      "vo": "vo:host.timi.show.log_a_05.open",
      "text": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
-     "review": "needs-editor"
+     "voice": "מעתיקים את הסדר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_a_05.key",
      "text": "אָדֹם, כָּחֹל, אָדֹם, כָּחֹל.",
-     "review": "needs-editor"
+     "voice": "אדום, כחול, אדום, כחול.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_a_05.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הָאַחֲרוֹן.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: האחרון.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -562,28 +579,33 @@
     {
      "role": "open",
      "vo": "vo:host.timi.show.log_a_06.open",
-     "text": "מַה בָּא אַחַר כָּךְ?",
-     "review": "needs-editor"
+     "text": "מַמְשִׁיכִים אֶת הַסֵּדֶר.",
+     "voice": "ממשיכים את הסדר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_a_06.key",
      "text": "חָתוּל, כֶּלֶב. חָתוּל, כֶּלֶב.",
-     "review": "needs-editor"
+     "voice": "חתול, כלב. חתול, כלב.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_a_06.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: מָה הַבָּא?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַבָּא בַּסֵּדֶר.",
+     "voice": "עכשיו תורכם: הבא בסדר.",
+     "review": "text-ready"
     }
    ],
    "predict": {
     "line": "מַה בָּא אַחַר כָּךְ?",
+    "voice": "מה בא אחר כך?",
     "choices": [
      "כֶּלֶב",
      "חָתוּל"
-    ]
+    ],
+    "review": "text-ready"
    },
    "reminder": {
     "line": "key",
@@ -653,25 +675,30 @@
     {
      "role": "open",
      "vo": "vo:host.timi.show.log_a_07.open",
-     "text": "מִישֶׁהוּ טָעָה בַּסֵּדֶר.",
-     "review": "needs-editor"
+     "text": "יֵשׁ טָעוּת בַּסֵּדֶר.",
+     "voice": "יש טעות בסדר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_a_07.key",
      "text": "אָדֹם, כָּחֹל. כָּאן צָרִיךְ כָּחֹל.",
-     "review": "needs-editor"
+     "voice": "אדום, כחול. כאן צריך כחול.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_a_07.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: תַּקְּנוּ אֶת הַשֵּׁנִי.",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: לְתַקֵּן עוֹד אֶחָד.",
+     "voice": "עכשיו תורכם: לתקן עוד אֶחָד.",
+     "review": "text-ready"
     }
    ],
    "predict": {
     "line": "אֵיפֹה הַטָּעוּת?",
-    "choices": []
+    "voice": "איפה הטעות?",
+    "choices": [],
+    "review": "text-ready"
    },
    "reminder": {
     "line": "key",
@@ -720,28 +747,33 @@
     {
      "role": "open",
      "vo": "vo:host.timi.show.log_a_08.open",
-     "text": "מַה קָּרָה קֹדֶם?",
-     "review": "needs-editor"
+     "text": "מְסַדְּרִים אֶת הַסִּפּוּר.",
+     "voice": "מסדרים את הסיפור.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_a_08.key",
      "text": "קֹדֶם בֵּיצָה, וְאָז הִיא נִסְדֶּקֶת.",
-     "review": "needs-editor"
+     "voice": "קודם ביצה, ואז היא נסדקת.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_a_08.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: מַה בַּסּוֹף?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַסּוֹף שֶׁל הַסִּפּוּר.",
+     "voice": "עכשיו תורכם: הסוף של הסיפור.",
+     "review": "text-ready"
     }
    ],
    "predict": {
     "line": "מַה קָּרָה קֹדֶם?",
+    "voice": "מה קרה קודם?",
     "choices": [
      "בֵּיצָה",
      "אֶפְרוֹחַ"
-    ]
+    ],
+    "review": "text-ready"
    },
    "reminder": {
     "line": "key",
@@ -821,20 +853,23 @@
     {
      "role": "open",
      "vo": "vo:host.timi.show.log_a_09.open",
-     "text": "מָה הוֹלֵךְ עִם מַה?",
-     "review": "needs-editor"
+     "text": "יֵשׁ דְּבָרִים שֶׁהוֹלְכִים יַחַד.",
+     "voice": "יש דברים שהולכים יחד.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_a_09.key",
      "text": "כַּף הוֹלֶכֶת עִם צַלַּחַת.",
-     "review": "needs-editor"
+     "voice": "כף הולכת עם צלחת.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_a_09.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַמַּפְתֵּחַ.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: המפתח.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -890,19 +925,22 @@
      "role": "open",
      "vo": "vo:host.timi.show.log_a_10.open",
      "text": "מְסַדְּרִים מֵהַקָּטָן אֶל הַגָּדוֹל.",
-     "review": "needs-editor"
+     "voice": "מסדרים מהקטן אל הגדול.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_a_10.key",
      "text": "קָטָן, וְאַחַר כָּךְ גָּדוֹל יוֹתֵר.",
-     "review": "needs-editor"
+     "voice": "קטן, ואחר כך גדול יותר.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_a_10.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַגָּדוֹל.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הגדול.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -975,28 +1013,33 @@
      "role": "open",
      "vo": "vo:host.timi.show.log_b_01.open",
      "text": "הַסֵּדֶר אָרֹךְ יוֹתֵר.",
-     "review": "needs-editor"
+     "voice": "הסדר ארוך יותר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_b_01.key",
      "text": "כּוֹכָב, תַּפּוּחַ, דָּג. וְשׁוּב.",
-     "review": "needs-editor"
+     "voice": "כוכב, תפוח, דג. ושוב.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_b_01.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: מָה הַבָּא?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַבָּא בַּסֵּדֶר.",
+     "voice": "עכשיו תורכם: הבא בסדר.",
+     "review": "text-ready"
     }
    ],
    "predict": {
     "line": "מַה בָּא אַחַר כָּךְ?",
+    "voice": "מה בא אחר כך?",
     "choices": [
      "כּוֹכָב",
      "תַּפּוּחַ",
      "דָּג"
-    ]
+    ],
+    "review": "text-ready"
    },
    "reminder": {
     "line": "key",
@@ -1020,20 +1063,23 @@
     {
      "role": "open",
      "vo": "vo:host.timi.show.log_b_02.open",
-     "text": "מָה הַחֵלֶק שֶׁחוֹזֵר?",
-     "review": "needs-editor"
+     "text": "יֵשׁ חֵלֶק שֶׁחוֹזֵר שׁוּב וְשׁוּב.",
+     "voice": "יש חלק שחוזר שוב ושוב.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_b_02.key",
      "text": "אָדֹם, כָּחֹל, כָּחֹל. זֶה הַחֵלֶק.",
-     "review": "needs-editor"
+     "voice": "אדום, כחול, כחול. זה החלק.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_b_02.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: בְּנוּ אֶת הַחֵלֶק.",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: לִבְנוֹת אֶת הַחֵלֶק.",
+     "voice": "עכשיו תורכם: לבנות את החלק.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1090,25 +1136,30 @@
     {
      "role": "open",
      "vo": "vo:host.timi.show.log_b_04.open",
-     "text": "הַמִּגְדָּלִים גְּדֵלִים.",
-     "review": "needs-editor"
+     "text": "הַמִּגְדָּלִים גְּבוֹהִים יוֹתֵר וְיוֹתֵר.",
+     "voice": "המגדלים גבוהים יותר ויותר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_b_04.key",
      "text": "כׇּל פַּעַם קֻבִּיָּה אַחַת יוֹתֵר.",
-     "review": "needs-editor"
+     "voice": "כל פעם קובייה אַחַת יותר.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_b_04.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַמִּגְדָּל הַבָּא.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: המגדל הבא.",
+     "review": "text-ready"
     }
    ],
    "predict": {
     "line": "כַּמָּה קֻבִּיּוֹת יִהְיוּ בַּמִּגְדָּל הַבָּא?",
-    "choices": []
+    "voice": "כמה קוביות יהיו במגדל הבא?",
+    "choices": [],
+    "review": "text-ready"
    },
    "reminder": {
     "line": "key",
@@ -1182,28 +1233,33 @@
     {
      "role": "open",
      "vo": "vo:host.timi.show.log_b_06.open",
-     "text": "אֵיךְ מִיַּנְתִּי?",
-     "review": "needs-editor"
+     "text": "מְמַיְּנִים אֶת הַצּוּרוֹת.",
+     "voice": "ממיינים את הצורות.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_b_06.key",
      "text": "לֹא לְפִי הַצּוּרָה. לְפִי הַצֶּבַע.",
-     "review": "needs-editor"
+     "voice": "לא לפי הצורה. לפי הצבע.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_b_06.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הָרִבּוּעַ הַכָּחֹל.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הריבוע הכחול.",
+     "review": "text-ready"
     }
    ],
    "predict": {
-    "line": "אֵיךְ מִיַּנְתִּי?",
+    "line": "מְמַיְּנִים לְפִי מָה?",
+    "voice": "ממיינים לפי מה?",
     "choices": [
      "לְפִי הַצֶּבַע",
      "לְפִי הַצּוּרָה"
-    ]
+    ],
+    "review": "text-ready"
    },
    "reminder": {
     "line": "key",
@@ -1291,19 +1347,22 @@
      "role": "open",
      "vo": "vo:host.timi.show.log_b_08.open",
      "text": "אִם אָדֹם, אָז לַסַּל.",
-     "review": "needs-editor"
+     "voice": "אם אדום, אז לסל.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_b_08.key",
      "text": "אָדֹם לַסַּל. כׇּל הַשְּׁאָר לַדֶּשֶׁא.",
-     "review": "needs-editor"
+     "voice": "אדום לסל. כל השאר לדשא.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_b_08.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הָעִגּוּל הַכָּחֹל.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: העיגול הכחול.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1393,19 +1452,22 @@
      "role": "open",
      "vo": "vo:host.timi.show.log_b_09.open",
      "text": "לֹא אָדֹם, וְגַם לֹא עִגּוּל.",
-     "review": "needs-editor"
+     "voice": "לא אדום, וגם לא עיגול.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_b_09.key",
      "text": "בּוֹדְקִים פַּעֲמַיִם: צֶבַע, וְאָז צוּרָה.",
-     "review": "needs-editor"
+     "voice": "בודקים פעמיים: צבע, ואז צורה.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_b_09.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַמְּשֻׁלָּשׁ הַיָּרֹק.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: המשולש הירוק.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1459,20 +1521,23 @@
     {
      "role": "open",
      "vo": "vo:host.timi.show.log_b_11.open",
-     "text": "מֵהַנָּמוּךְ אֶל הַגָּבוֹהַּ.",
-     "review": "needs-editor"
+     "text": "מְסַדְּרִים מֵהַנָּמוּךְ אֶל הַגָּבוֹהַּ.",
+     "voice": "מסדרים מהנמוך אל הגבוה.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.timi.show.log_b_11.key",
      "text": "כׇּל מִגְדָּל גָּבוֹהַּ מֵהַקּוֹדֵם.",
-     "review": "needs-editor"
+     "voice": "כל מגדל גבוה מהקודם.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.timi.show.log_b_11.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַגָּבוֹהַּ.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הגבוה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1490,52 +1555,60 @@
    "role": "together_lead",
    "template": "sort_drag",
    "vo": "vo:host.timi.together.sort",
-   "text": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים.",
-   "review": "needs-editor"
+   "text": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחָה אֶת הָרִאשׁוֹן.",
+   "voice": "נַעֲשֶׂה יחד. אני מניחה את הראשון.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "build_pattern",
    "vo": "vo:host.timi.together.build",
    "text": "אוֹמְרִים אֶת הַסֵּדֶר בְּקוֹל.",
-   "review": "needs-editor"
+   "voice": "אומרים את הסדר בקול.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "tap_answer",
    "vo": "vo:host.timi.together.tap",
    "text": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים.",
-   "review": "needs-editor"
+   "voice": "נחשוב יחד. אתם בוחרים.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.timi.handover.1",
    "text": "עַכְשָׁו הַחִידָה שֶׁלָּכֶם.",
-   "review": "needs-editor"
+   "voice": "עכשיו החידה שלכם.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.timi.handover.2",
-   "text": "יֹפִי. עַכְשָׁו תּוֹרְכֶם.",
-   "review": "needs-editor"
+   "text": "עַכְשָׁו תּוֹרְכֶם. אֲנִי כָּאן.",
+   "voice": "עכשיו תורכם. אני כאן.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.timi.handover.3",
    "text": "חוֹשְׁבִים לְאַט. עַכְשָׁו אַתֶּם.",
-   "review": "needs-editor"
+   "voice": "חושבים לאט. עכשיו אתם.",
+   "review": "text-ready"
   },
   {
    "role": "show_me",
    "vo": "vo:host.timi.showme.1",
    "text": "בּוֹאוּ נִרְאֶה שׁוּב, לְאַט.",
-   "review": "needs-editor"
+   "voice": "בואו נראה שוב, לאט.",
+   "review": "text-ready"
   },
   {
    "role": "show_me",
    "vo": "vo:host.timi.showme.2",
    "text": "נִפְתֹּר אֶת זֶה עוֹד פַּעַם יַחַד.",
-   "review": "needs-editor"
+   "voice": "נפתור את זה עוד פעם יחד.",
+   "review": "text-ready"
   }
  ],
  "lessons": [

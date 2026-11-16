@@ -2,8 +2,8 @@
  "schema": "lesson-arc-source/v0",
  "land": "cs",
  "host": "tzaadon",
- "review": "needs-editor",
- "status": "M11 Stage 2, step 2.4b (Robot Harbour), authored by the curriculum-expert on 2026-11-16. Pointed drafts for the hebrew-text-editor. No Show plays yet: build_pattern and robot_path have no Show and lead player (step 2.1), and CS-B-04 waits for step 2.2c; every lesson stays a flat list until then. Every CS skill is predict-then-watch (§2.1): `predict` is written.",
+ "review": "text-ready",
+ "status": "M11 Stage 2, step 2.4b (Robot Harbour), authored by the curriculum-expert on 2026-11-16. Pointed drafts for the hebrew-text-editor. No Show plays yet: build_pattern and robot_path have no Show and lead player (step 2.1), and CS-B-04 waits for step 2.2c; every lesson stays a flat list until then. Every CS skill is predict-then-watch (§2.1): `predict` is written. Hebrew finalised by the hebrew-text-editor on 2026-11-16 (pointed text, voice text, text-ready; waits for the owner; docs/agents/hebrew-notes.md section 19).",
  "spec": "docs/milestones/M11-stage2.md §2, §3.6, §7.4 and §8",
  "howToRead": [
   "As counting-hills.arc.json and market.arc.json; robot_path `arrow` is one arrow card laid (plan) or one step pressed (direct), with the robot moving one square."
@@ -67,29 +67,34 @@
     {
      "role": "open",
      "vo": "vo:host.tzaadon.show.cs_a_01.open",
-     "text": "בִּיפּ! מָה עוֹשִׂים קֹדֶם?",
-     "review": "needs-editor"
+     "text": "בִּיפּ! מְצַחְצְחִים שִׁנַּיִם.",
+     "voice": "ביפ, מצחצחים שיניים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.tzaadon.show.cs_a_01.key",
      "text": "קֹדֶם מִשְׁחָה, וְאָז מִבְרֶשֶׁת.",
-     "review": "needs-editor"
+     "voice": "קודם משחה, ואז מברשת.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.tzaadon.show.cs_a_01.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: מַה בַּסּוֹף?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַצַּעַד הָאַחֲרוֹן.",
+     "voice": "עכשיו תורכם: הצעד האחרון.",
+     "review": "text-ready"
     }
    ],
    "predict": {
     "line": "מָה עוֹשִׂים קֹדֶם?",
+    "voice": "מה עושים קודם?",
     "choices": [
      "מִשְׁחָה",
      "מִבְרֶשֶׁת",
-     "שׁוֹטְפִים"
-    ]
+     "כּוֹס מַיִם"
+    ],
+    "review": "text-ready"
    },
    "reminder": {
     "line": "key",
@@ -145,25 +150,30 @@
     {
      "role": "open",
      "vo": "vo:host.tzaadon.show.cs_a_03.open",
-     "text": "בִּיפּ! אֵיפֹה אֶעֱצֹר?",
-     "review": "needs-editor"
+     "text": "בִּיפּ! הָרוֹבּוֹט הוֹלֵךְ לַדֶּגֶל.",
+     "voice": "ביפ, הרובוט הולך לדגל.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.tzaadon.show.cs_a_03.key",
      "text": "חֵץ אֶחָד, צַעַד אֶחָד.",
-     "review": "needs-editor"
+     "voice": "חץ אֶחָד, צעד אֶחָד.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.tzaadon.show.cs_a_03.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַצַּעַד הָאַחֲרוֹן.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הצעד האחרון.",
+     "review": "text-ready"
     }
    ],
    "predict": {
     "line": "אֵיפֹה הָרוֹבּוֹט יַעֲצֹר?",
-    "choices": []
+    "voice": "איפה הרובוט יעצור?",
+    "choices": [],
+    "review": "text-ready"
    },
    "reminder": {
     "line": "key",
@@ -221,24 +231,29 @@
      "role": "open",
      "vo": "vo:host.tzaadon.show.cs_a_04.open",
      "text": "מְתַכְנְנִים קֹדֶם, וְאָז הוֹלְכִים.",
-     "review": "needs-editor"
+     "voice": "מתכננים קודם, ואז הולכים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.tzaadon.show.cs_a_04.key",
      "text": "שְׁנֵי צְעָדִים לְמַעְלָה, וְאָז לַדֶּגֶל.",
-     "review": "needs-editor"
+     "voice": "שְׁנֵי צעדים למעלה, ואז לדגל.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.tzaadon.show.cs_a_04.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַחֵץ הָאַחֲרוֹן.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: החץ האחרון.",
+     "review": "text-ready"
     }
    ],
    "predict": {
     "line": "אֵיפֹה הָרוֹבּוֹט יַעֲצֹר?",
-    "choices": []
+    "voice": "איפה הרובוט יעצור?",
+    "choices": [],
+    "review": "text-ready"
    },
    "reminder": {
     "line": "key",
@@ -288,20 +303,23 @@
     {
      "role": "open",
      "vo": "vo:host.tzaadon.show.cs_a_05.open",
-     "text": "מַשֶּׁהוּ הִגִּיעַ לְכָאן בְּטָעוּת.",
-     "review": "needs-editor"
+     "text": "בִּיפּ! מַשֶּׁהוּ הִגִּיעַ בְּטָעוּת.",
+     "voice": "ביפ, משהו הגיע בטעות.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.tzaadon.show.cs_a_05.key",
-     "text": "סַבּוֹן? לֹא בְּצִחְצוּחַ שִׁנַּיִם.",
-     "review": "needs-editor"
+     "text": "לֹא מְצַחְצְחִים שִׁנַּיִם בְּסַבּוֹן.",
+     "voice": "לא מצחצחים שיניים בסבון.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.tzaadon.show.cs_a_05.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַצַּעַד הָאַחֲרוֹן.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הצעד האחרון.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -361,29 +379,34 @@
     {
      "role": "open",
      "vo": "vo:host.tzaadon.show.cs_b_01.open",
-     "text": "דֶּרֶךְ אֲרֻכָּה יוֹתֵר.",
-     "review": "needs-editor"
+     "text": "בִּיפּ! הַדֶּרֶךְ לַדֶּגֶל אֲרֻכָּה יוֹתֵר.",
+     "voice": "ביפ, הדרך לדגל ארוכה יותר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.tzaadon.show.cs_b_01.key",
      "text": "סוֹפְרִים אֶת הַמִּשְׁבָּצוֹת בְּכׇל כִּוּוּן.",
-     "review": "needs-editor"
+     "voice": "סופרים את המשבצות בכל כיוון.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.tzaadon.show.cs_b_01.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַחֵץ הַבָּא.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: החץ הבא.",
+     "review": "text-ready"
     }
    ],
    "predict": {
     "line": "כַּמָּה צְעָדִים עַד הַדֶּגֶל?",
+    "voice": "כמה צעדים עד הדגל?",
     "choices": [
-     "שְׁלוֹשָׁה",
-     "אַרְבָּעָה",
-     "חֲמִשָּׁה"
-    ]
+     "שָׁלוֹשׁ",
+     "אַרְבַּע",
+     "חָמֵשׁ"
+    ],
+    "review": "text-ready"
    },
    "reminder": {
     "line": "key",
@@ -408,25 +431,30 @@
     {
      "role": "open",
      "vo": "vo:host.tzaadon.show.cs_b_04.open",
-     "text": "בִּיפּ! הַתָּכְנִית לֹא הִגִּיעָה.",
-     "review": "needs-editor"
+     "text": "בִּיפּ! הָרוֹבּוֹט לֹא הִגִּיעַ לַדֶּגֶל.",
+     "voice": "ביפ, הרובוט לא הגיע לדגל.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.tzaadon.show.cs_b_04.key",
-     "text": "מוֹצְאִים אֶת הַחֵץ הַלֹּא נָכוֹן.",
-     "review": "needs-editor"
+     "text": "מוֹצְאִים אֶת הַחֵץ שֶׁלֹּא נָכוֹן.",
+     "voice": "מוצאים את החץ שלא נכון.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.tzaadon.show.cs_b_04.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: תַּקְּנוּ אוֹתוֹ.",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: לְתַקֵּן אֶת הַחֵץ.",
+     "voice": "עכשיו תורכם: לתקן את החץ.",
+     "review": "text-ready"
     }
    ],
    "predict": {
     "line": "אֵיפֹה הָרוֹבּוֹט יַעֲצֹר?",
-    "choices": []
+    "voice": "איפה הרובוט יעצור?",
+    "choices": [],
+    "review": "text-ready"
    },
    "reminder": {
     "line": "key",
@@ -443,58 +471,67 @@
    "template": "build_pattern",
    "vo": "vo:host.tzaadon.together.build",
    "text": "בִּיפּ! אוֹמְרִים כׇּל צַעַד בְּקוֹל.",
-   "review": "needs-editor"
+   "voice": "ביפ, אומרים כל צעד בקול.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "robot_path",
    "vo": "vo:host.tzaadon.together.robot",
    "text": "סוֹפְרִים כׇּל מִשְׁבֶּצֶת בְּקוֹל.",
-   "review": "needs-editor"
+   "voice": "סופרים כל משבצת בקול.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "tap_answer",
    "vo": "vo:host.tzaadon.together.tap",
    "text": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים.",
-   "review": "needs-editor"
+   "voice": "נחשוב יחד. אתם בוחרים.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "spot_error",
    "vo": "vo:host.tzaadon.together.spot",
    "text": "בּוֹדְקִים כׇּל צַעַד, אֶחָד אֶחָד.",
-   "review": "needs-editor"
+   "voice": "בודקים כל צעד, אֶחָד אֶחָד.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.tzaadon.handover.1",
    "text": "בִּיפּ בּוּפּ! עַכְשָׁו אַתֶּם.",
-   "review": "needs-editor"
+   "voice": "ביפ בופ, עכשיו אתם.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.tzaadon.handover.2",
-   "text": "יֹפִי. עַכְשָׁו תּוֹרְכֶם.",
-   "review": "needs-editor"
+   "text": "עַכְשָׁו תּוֹרְכֶם. אֲנִי כָּאן.",
+   "voice": "עכשיו תורכם. אני כאן.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.tzaadon.handover.3",
-   "text": "הָרוֹבּוֹט מְחַכֶּה לָכֶם.",
-   "review": "needs-editor"
+   "text": "הָרוֹבּוֹט מוּכָן. עַכְשָׁו אַתֶּם.",
+   "voice": "הרובוט מוכן. עכשיו אתם.",
+   "review": "text-ready"
   },
   {
    "role": "show_me",
    "vo": "vo:host.tzaadon.showme.1",
    "text": "בִּיפּ! בּוֹאוּ נִרְאֶה שׁוּב, לְאַט.",
-   "review": "needs-editor"
+   "voice": "ביפ, בואו נראה שוב, לאט.",
+   "review": "text-ready"
   },
   {
    "role": "show_me",
    "vo": "vo:host.tzaadon.showme.2",
    "text": "נָרִיץ אֶת זֶה עוֹד פַּעַם יַחַד.",
-   "review": "needs-editor"
+   "voice": "נריץ את זה עוד פעם יחד.",
+   "review": "text-ready"
   }
  ],
  "lessons": [

@@ -376,7 +376,7 @@ def is_new_cell(cell):
     return (kind == 'n' and len(rest) >= 4) or (kind == 'op' and rest in ('<', '>', '(', ')'))
 
 
-def template_version(template, scene, answer):
+def template_version(template, scene, answer, numeral=False):
     """The version of the template an item needs: the oldest that has everything the item uses (the validator makes an item say
     this or more). tap_answer: 1.1 numerals and sets, 1.2 charts, 1.4 stage pictures, the number answer, five choices, the signs
     < > ( ) and numbers to 10,000, a row of more than eight cells. spot_error: 1.0, or 1.1 for the signs and numbers of 1.4.
@@ -388,7 +388,9 @@ def template_version(template, scene, answer):
         if answer.get('classifiers'):
             return '1.2'
         return '1.1' if 'tickStep' in scene or 'tolerance' in answer else '1.0'
-    if template == 'give_n':  # 1.1: the target is a ten-frame (M10, NUM-B-09); 1.2: a frame that starts with objects in it (M11 step 2.2)
+    if template == 'give_n':  # 1.1: the target is a ten-frame (M10, NUM-B-09); 1.2: a frame that starts with objects in it (M11 step 2.2); 1.3: the numeral asked for
+        if numeral:
+            return '1.3'
         if scene.get('prefilled'):
             return '1.2'
         return '1.1' if scene.get('frame') else '1.0'
@@ -419,7 +421,7 @@ def activity(a, template, skills, purpose, check, scene, answer, fb_tags, h, goa
     d = {
         # M11 Stage 2 §4.1: an item re-cut to another template keeps its id and says its revision (2 after one re-cut)
         'schema': 'activity/v1', 'id': i, 'review': 'needs-editor', 'revision': a.get('revision', 1),
-        'template': template, 'templateVersion': template_version(template, scene, answer),
+        'template': template, 'templateVersion': template_version(template, scene, answer, bool(prompt_math)),
         'domain': a.get('domain', 'numbers'), 'band': a.get('band', 'A'),
         'skills': [{'id': s, 'weight': w} for s, w in skills],
         'purpose': purpose, 'checkType': a.get('check', check),

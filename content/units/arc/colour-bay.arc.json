@@ -2,8 +2,8 @@
  "schema": "lesson-arc-source/v0",
  "land": "colors",
  "host": "goni",
- "review": "needs-editor",
- "status": "M11 Stage 2, step 2.4e (Colour Bay), authored by the curriculum-expert on 2026-11-16. Pointed drafts for the hebrew-text-editor. Colour carries the answer only here (M11 §7); every sprite keeps its ink outline. The sort Shows play today; COL-B-02 and B-06 wait for the Show and lead player of build_pattern (step 2.1), COL-B-01 for Stage 3.4.",
+ "review": "text-ready",
+ "status": "M11 Stage 2, step 2.4e (Colour Bay), authored by the curriculum-expert on 2026-11-16. Pointed drafts for the hebrew-text-editor. Colour carries the answer only here (M11 §7); every sprite keeps its ink outline. The sort Shows play today; COL-B-02 and B-06 wait for the Show and lead player of build_pattern (step 2.1), COL-B-01 for Stage 3.4. Hebrew finalised by the hebrew-text-editor on 2026-11-16 (pointed text, voice text, text-ready; waits for the owner; docs/agents/hebrew-notes.md section 19).",
  "spec": "docs/milestones/M11-stage2.md §2, §3.3, §7.4 and §8",
  "howToRead": [
   "As counting-hills.arc.json and market.arc.json."
@@ -103,19 +103,22 @@
      "role": "open",
      "vo": "vo:host.goni.show.col_a_01.open",
      "text": "כׇּל צֶבַע לַבַּיִת שֶׁלּוֹ.",
-     "review": "needs-editor"
+     "voice": "כל צבע לבית שלו.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_a_01.key",
      "text": "כַּדּוּר אָדֹם, בָּלוֹן אָדֹם: אוֹתוֹ צֶבַע.",
-     "review": "needs-editor"
+     "voice": "כדור אדום, בלון אדום: אותו צבע.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.goni.show.col_a_01.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַפֶּרַח הַכָּחֹל.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הפרח הכחול.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -211,19 +214,22 @@
      "role": "open",
      "vo": "vo:host.goni.show.col_a_02.open",
      "text": "לְכׇל צֶבַע יֵשׁ שֵׁם.",
-     "review": "needs-editor"
+     "voice": "לכל צבע יש שם.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_a_02.key",
      "text": "אָדֹם. צָהֹב. יָרֹק.",
-     "review": "needs-editor"
+     "voice": "אדום. צהוב. ירוק.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.goni.show.col_a_02.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד אָדֹם.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד אדום.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -314,19 +320,22 @@
      "role": "open",
      "vo": "vo:host.goni.show.col_a_03.open",
      "text": "כָּתֹם וְאָדֹם דּוֹמִים.",
-     "review": "needs-editor"
+     "voice": "כתום ואדום דומים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_a_03.key",
      "text": "זֶה כָּתֹם, לֹא אָדֹם.",
-     "review": "needs-editor"
+     "voice": "זה כתום, לא אדום.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.goni.show.col_a_03.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַבָּלוֹן הָאָדֹם.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הבלון האדום.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -416,19 +425,22 @@
      "role": "open",
      "vo": "vo:host.goni.show.col_a_04.open",
      "text": "מְמַיְּנִים רַק לְפִי צֶבַע.",
-     "review": "needs-editor"
+     "voice": "ממיינים רק לפי צבע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_a_04.key",
-     "text": "רִבּוּעַ, אֲבָל אָדֹם.",
-     "review": "needs-editor"
+     "text": "רִבּוּעַ אָדֹם הוֹלֵךְ עִם הָאָדֹם.",
+     "voice": "ריבוע אדום הולך עם האדום.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.goni.show.col_a_04.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַמְּשֻׁלָּשׁ הַכָּחֹל.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: המשולש הכחול.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -517,20 +529,23 @@
     {
      "role": "open",
      "vo": "vo:host.goni.show.col_a_05.open",
-     "text": "לְפֵרוֹת יֵשׁ כַּמָּה צְבָעִים.",
-     "review": "needs-editor"
+     "text": "לְפֵרוֹת יֵשׁ צְבָעִים שׁוֹנִים.",
+     "voice": "לפרות יש צבעים שונים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_a_05.key",
-     "text": "יְרֻקָּה, וְהִיא עֲדַיִן בָּנָנָה.",
-     "review": "needs-editor"
+     "text": "בָּנָנָה יְרֻקָּה — עֲדַיִן בָּנָנָה.",
+     "voice": "בננה ירוקה — עדיין בננה.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.goni.show.col_a_05.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הַיָּרֹק.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: התפוח הירוק.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -620,19 +635,22 @@
      "role": "open",
      "vo": "vo:host.goni.show.col_a_06.open",
      "text": "עוֹד שְׁנֵי צְבָעִים.",
-     "review": "needs-editor"
+     "voice": "עוד שְׁנֵי צבעים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_a_06.key",
      "text": "זֶה חוּם. וְזֶה אָפֹר.",
-     "review": "needs-editor"
+     "voice": "זה חום. וזה אפור.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.goni.show.col_a_06.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַכַּדּוּר הָאָפֹר.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הכדור האפור.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -721,20 +739,23 @@
     {
      "role": "open",
      "vo": "vo:host.goni.show.col_a_07.open",
-     "text": "רַק פֶּרַח כָּחֹל נִכְנָס.",
-     "review": "needs-editor"
+     "text": "רַק פְּרָחִים כְּחֻלִּים נִכְנָסִים.",
+     "voice": "רק פרחים כחולים נכנסים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_a_07.key",
-     "text": "כָּחֹל, אֲבָל לֹא פֶּרַח.",
-     "review": "needs-editor"
+     "text": "הַכַּדּוּר כָּחֹל, אֲבָל לֹא פֶּרַח.",
+     "voice": "הכדור כחול, אבל לא פרח.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.goni.show.col_a_07.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַפֶּרַח הַכָּחֹל.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הפרח הכחול.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -762,29 +783,34 @@
     {
      "role": "open",
      "vo": "vo:host.goni.show.col_b_01.open",
-     "text": "מַה יִּקְרֶה אִם נְעַרְבֵּב?",
-     "review": "needs-editor"
+     "text": "מְעַרְבְּבִים שְׁנֵי צְבָעִים.",
+     "voice": "מערבבים שְׁנֵי צבעים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_b_01.key",
      "text": "אָדֹם וְצָהֹב עוֹשִׂים כָּתֹם.",
-     "review": "needs-editor"
+     "voice": "אדום וצהוב עושים כתום.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.goni.show.col_b_01.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: נְעַרְבֵּב?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: לְעַרְבֵּב אֶת הַצְּבָעִים.",
+     "voice": "עכשיו תורכם: לערבב את הצבעים.",
+     "review": "text-ready"
     }
    ],
    "predict": {
     "line": "מַה יִּקְרֶה אִם נְעַרְבֵּב?",
+    "voice": "מה יקרה אם נערבב?",
     "choices": [
      "כָּתֹם",
      "סָגֹל",
      "יָרֹק"
-    ]
+    ],
+    "review": "text-ready"
    },
    "reminder": {
     "line": "key",
@@ -833,20 +859,23 @@
     {
      "role": "open",
      "vo": "vo:host.goni.show.col_b_02.open",
-     "text": "מֵהַבָּהִיר אֶל הַכֵּהֶה.",
-     "review": "needs-editor"
+     "text": "מְסַדְּרִים מֵהַבָּהִיר אֶל הַכֵּהֶה.",
+     "voice": "מסדרים מהבהיר אל הכהה.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_b_02.key",
      "text": "בָּהִיר, וְאַחַר כָּךְ כֵּהֶה יוֹתֵר.",
-     "review": "needs-editor"
+     "voice": "בהיר, ואחר כך כהה יותר.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.goni.show.col_b_02.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַכֵּהֶה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הכהה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -935,20 +964,23 @@
     {
      "role": "open",
      "vo": "vo:host.goni.show.col_b_03.open",
-     "text": "בָּהִיר אוֹ כֵּהֶה?",
-     "review": "needs-editor"
+     "text": "כָּחֹל יָכוֹל לִהְיוֹת בָּהִיר אוֹ כֵּהֶה.",
+     "voice": "כחול יכול להיות בהיר או כהה.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_b_03.key",
-     "text": "בָּהִיר, וַעֲדַיִן כָּחֹל.",
-     "review": "needs-editor"
+     "text": "כָּחֹל בָּהִיר הוּא עֲדַיִן כָּחֹל.",
+     "voice": "כחול בהיר הוא עדיין כחול.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.goni.show.col_b_03.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַיָּרֹק הַבָּהִיר.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הירוק הבהיר.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1038,19 +1070,22 @@
      "role": "open",
      "vo": "vo:host.goni.show.col_b_04.open",
      "text": "מְמַיְּנִים לְפִי צֶבַע.",
-     "review": "needs-editor"
+     "voice": "ממיינים לפי צבע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_b_04.key",
-     "text": "הַצּוּרָה לֹא מְשַׁנָּה. הַצֶּבַע כֵּן.",
-     "review": "needs-editor"
+     "text": "הַצּוּרָה לֹא חֲשׁוּבָה. הַצֶּבַע חָשׁוּב.",
+     "voice": "הצורה לא חשובה. הצבע חשוב.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.goni.show.col_b_04.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הָעִגּוּל הַכָּחֹל.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: העיגול הכחול.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1104,20 +1139,23 @@
     {
      "role": "open",
      "vo": "vo:host.goni.show.col_b_06.open",
-     "text": "הַצְּבָעִים שֶׁל הַקֶּשֶׁת.",
-     "review": "needs-editor"
+     "text": "מְסַדְּרִים אֶת צִבְעֵי הַקֶּשֶׁת.",
+     "voice": "מסדרים את צבעי הקשת.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.goni.show.col_b_06.key",
      "text": "אָדֹם, כָּתֹם, צָהֹב.",
-     "review": "needs-editor"
+     "voice": "אדום, כתום, צהוב.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.goni.show.col_b_06.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַצָּהֹב.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הצהוב.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1135,52 +1173,60 @@
    "role": "together_lead",
    "template": "sort_drag",
    "vo": "vo:host.goni.together.sort",
-   "text": "אֶת הָרִאשׁוֹן שָׂמִים יַחַד. אַתֶּם מַמְשִׁיכִים.",
-   "review": "needs-editor"
+   "text": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחַ אֶת הָרִאשׁוֹן.",
+   "voice": "נַעֲשֶׂה יחד. אני מניח את הראשון.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "build_pattern",
    "vo": "vo:host.goni.together.build",
    "text": "מִסְתַּכְּלִים עַל הַצְּבָעִים לְאַט.",
-   "review": "needs-editor"
+   "voice": "מסתכלים על הצבעים לאט.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "tap_answer",
    "vo": "vo:host.goni.together.tap",
    "text": "נִסְתַּכֵּל יַחַד. אַתֶּם בּוֹחֲרִים.",
-   "review": "needs-editor"
+   "voice": "נסתכל יחד. אתם בוחרים.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.goni.handover.1",
-   "text": "עַכְשָׁו אַתֶּם רוֹאִים צְבָעִים לְבַד.",
-   "review": "needs-editor"
+   "text": "עַכְשָׁו אַתֶּם מִסְתַּכְּלִים עַל הַצְּבָעִים.",
+   "voice": "עכשיו אתם מסתכלים על הצבעים.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.goni.handover.2",
-   "text": "יֹפִי. עַכְשָׁו תּוֹרְכֶם.",
-   "review": "needs-editor"
+   "text": "עַכְשָׁו תּוֹרְכֶם. אֲנִי כָּאן.",
+   "voice": "עכשיו תורכם. אני כאן.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.goni.handover.3",
    "text": "מִסְתַּכְּלִים טוֹב. עַכְשָׁו אַתֶּם.",
-   "review": "needs-editor"
+   "voice": "מסתכלים טוב. עכשיו אתם.",
+   "review": "text-ready"
   },
   {
    "role": "show_me",
    "vo": "vo:host.goni.showme.1",
    "text": "בּוֹאוּ נִרְאֶה שׁוּב, לְאַט.",
-   "review": "needs-editor"
+   "voice": "בואו נראה שוב, לאט.",
+   "review": "text-ready"
   },
   {
    "role": "show_me",
    "vo": "vo:host.goni.showme.2",
    "text": "נִסְתַּכֵּל עַל הַצֶּבַע עוֹד פַּעַם.",
-   "review": "needs-editor"
+   "voice": "נסתכל על הצבע עוד פעם.",
+   "review": "text-ready"
   }
  ],
  "lessons": [

@@ -276,6 +276,20 @@ void main() {
     });
   });
 
+  group('the numeral of a give-N item', () {
+    test(
+      'is read from the prompt (the bubble draws it under the question, as for every activity that has one)',
+      () {
+        final Activity base = content.activities['give.ladybugs.2']!;
+        final Map<String, Object?> json = _copy(base.json);
+        json['templateVersion'] = '1.3';
+        (json['prompt']! as Map<String, Object?>)['math'] = <Object?>['n:2'];
+        final Activity numeral = Activity.fromJson(json, base.assets);
+        expect(numeral.promptMath, <String>['n:2']);
+      },
+    );
+  });
+
   group('count_tap', () {
     testWidgets(
       'a Show: the host touches the objects but the last, the child the last, and it is not asked "how many?"',

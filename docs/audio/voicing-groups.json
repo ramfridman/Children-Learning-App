@@ -681,7 +681,6 @@
     "vo:host.nekudi.together.count",
     "vo:host.nekudi.together.give",
     "vo:host.nekudi.together.line",
-    "vo:host.nekudi.together.tap",
     "vo:more.apples.2v4.correct",
     "vo:more.apples.2v4.h1",
     "vo:more.apples.2v4.h2",
@@ -881,13 +880,13 @@
     "vo:same.fish.2v2.prompt",
     "vo:show.apples.3.correct",
     "vo:show.apples.3.h1",
+    "vo:show.apples.3.h2",
     "vo:show.apples.3.h3",
-    "vo:show.apples.3.how_many",
     "vo:show.apples.3.prompt",
     "vo:show.birds.4.correct",
     "vo:show.birds.4.h1",
+    "vo:show.birds.4.h2",
     "vo:show.birds.4.h3",
-    "vo:show.birds.4.how_many",
     "vo:show.birds.4.prompt",
     "vo:show.stars.5.correct",
     "vo:show.stars.5.h1",
@@ -936,7 +935,7 @@
     "vo:zero.nest.h3",
     "vo:zero.nest.prompt"
    ],
-   "chars": 26747
+   "chars": 28365
   },
   {
    "name": "colors-A",
@@ -1161,12 +1160,11 @@
     "vo:host.goni.show.col_a_07.key",
     "vo:host.goni.show.col_a_07.open",
     "vo:host.goni.together.sort",
-    "vo:host.goni.together.tap",
     "vo:pick.red.flower.correct",
     "vo:pick.red.flower.h1",
     "vo:pick.red.flower.prompt"
    ],
-   "chars": 5053
+   "chars": 6431
   },
   {
    "name": "shapes-A",
@@ -1585,12 +1583,25 @@
     "vo:host.timi.show.log_a_03.handover",
     "vo:host.timi.show.log_a_03.key",
     "vo:host.timi.show.log_a_03.open",
+    "vo:host.timi.show.log_a_04.handover",
+    "vo:host.timi.show.log_a_04.key",
+    "vo:host.timi.show.log_a_04.open",
+    "vo:host.timi.show.log_a_04.predict",
     "vo:host.timi.show.log_a_05.handover",
     "vo:host.timi.show.log_a_05.key",
     "vo:host.timi.show.log_a_05.open",
+    "vo:host.timi.show.log_a_06.handover",
+    "vo:host.timi.show.log_a_06.key",
+    "vo:host.timi.show.log_a_06.open",
+    "vo:host.timi.show.log_a_06.predict",
+    "vo:host.timi.show.log_a_07.handover",
+    "vo:host.timi.show.log_a_07.key",
+    "vo:host.timi.show.log_a_07.open",
+    "vo:host.timi.show.log_a_07.predict",
     "vo:host.timi.show.log_a_08.handover",
     "vo:host.timi.show.log_a_08.key",
     "vo:host.timi.show.log_a_08.open",
+    "vo:host.timi.show.log_a_08.predict",
     "vo:host.timi.show.log_a_09.handover",
     "vo:host.timi.show.log_a_09.key",
     "vo:host.timi.show.log_a_09.open",
@@ -1781,7 +1792,7 @@
     "vo:log.story.weather.last.h3",
     "vo:log.story.weather.last.prompt"
    ],
-   "chars": 8390
+   "chars": 9927
   },
   {
    "name": "cs-A",
@@ -1890,12 +1901,15 @@
     "vo:host.tzaadon.show.cs_a_01.handover",
     "vo:host.tzaadon.show.cs_a_01.key",
     "vo:host.tzaadon.show.cs_a_01.open",
+    "vo:host.tzaadon.show.cs_a_01.predict",
     "vo:host.tzaadon.show.cs_a_03.handover",
     "vo:host.tzaadon.show.cs_a_03.key",
     "vo:host.tzaadon.show.cs_a_03.open",
+    "vo:host.tzaadon.show.cs_a_03.predict",
     "vo:host.tzaadon.show.cs_a_04.handover",
     "vo:host.tzaadon.show.cs_a_04.key",
     "vo:host.tzaadon.show.cs_a_04.open",
+    "vo:host.tzaadon.show.cs_a_04.predict",
     "vo:host.tzaadon.show.cs_a_05.handover",
     "vo:host.tzaadon.show.cs_a_05.key",
     "vo:host.tzaadon.show.cs_a_05.open",
@@ -1903,7 +1917,7 @@
     "vo:host.tzaadon.together.robot",
     "vo:host.tzaadon.together.tap"
    ],
-   "chars": 3905
+   "chars": 4281
   },
   {
    "name": "math-A",
@@ -2117,7 +2131,7 @@
     "vo:math.time.noon.h3",
     "vo:math.time.noon.prompt"
    ],
-   "chars": 8340
+   "chars": 8802
   },
   {
    "name": "numbers-B",
@@ -2868,6 +2882,7 @@
     "vo:host.nekudi.show.num_b_18.key",
     "vo:host.nekudi.show.num_b_18.open",
     "vo:host.nekudi.together.sort",
+    "vo:host.nekudi.together.tap",
     "vo:host.nekudi.together.trace",
     "vo:x.numb07.1.correct",
     "vo:x.numb07.1.h3",
@@ -2930,7 +2945,7 @@
     "vo:x.numb07.9.h3",
     "vo:x.numb07.9.prompt"
    ],
-   "chars": 35656
+   "chars": 39674
   },
   {
    "name": "colors-B",
@@ -3077,7 +3092,7 @@
     "vo:host.goni.show.col_b_06.open",
     "vo:host.goni.together.build"
    ],
-   "chars": 3843
+   "chars": 4314
   },
   {
    "name": "shapes-B",
@@ -3459,12 +3474,18 @@
     "vo:fb.pat_grow.two",
     "vo:fb.ser_ends.neighbour",
     "vo:hint.log_clues.h2",
+    "vo:host.timi.show.log_b_01.handover",
+    "vo:host.timi.show.log_b_01.key",
+    "vo:host.timi.show.log_b_01.open",
+    "vo:host.timi.show.log_b_01.predict",
     "vo:host.timi.show.log_b_04.handover",
     "vo:host.timi.show.log_b_04.key",
     "vo:host.timi.show.log_b_04.open",
+    "vo:host.timi.show.log_b_04.predict",
     "vo:host.timi.show.log_b_06.handover",
     "vo:host.timi.show.log_b_06.key",
     "vo:host.timi.show.log_b_06.open",
+    "vo:host.timi.show.log_b_06.predict",
     "vo:host.timi.show.log_b_08.handover",
     "vo:host.timi.show.log_b_08.key",
     "vo:host.timi.show.log_b_08.open",
@@ -3475,7 +3496,7 @@
     "vo:host.timi.show.log_b_11.key",
     "vo:host.timi.show.log_b_11.open"
    ],
-   "chars": 5740
+   "chars": 6289
   },
   {
    "name": "cs-B",
@@ -3531,9 +3552,10 @@
     "vo:fb.cs_fixall",
     "vo:host.tzaadon.show.cs_b_01.handover",
     "vo:host.tzaadon.show.cs_b_01.key",
-    "vo:host.tzaadon.show.cs_b_01.open"
+    "vo:host.tzaadon.show.cs_b_01.open",
+    "vo:host.tzaadon.show.cs_b_01.predict"
    ],
-   "chars": 2351
+   "chars": 2444
   },
   {
    "name": "math-B",
@@ -4032,6 +4054,7 @@
     "vo:fb.part_miss.sentence.7_9",
     "vo:fb.part_miss.sentence.8_12",
     "vo:fb.sum_card",
+    "vo:fb.take_card",
     "vo:hint.clock.h2",
     "vo:hint.pay.h2",
     "vo:host.pnina.show.math_b_01.handover",
@@ -4080,6 +4103,7 @@
     "vo:host.pnina.show.math_b_19.key",
     "vo:host.pnina.show.math_b_19.open",
     "vo:host.pnina.together.clock",
+    "vo:host.pnina.together.count",
     "vo:host.pnina.together.line",
     "vo:host.pnina.together.pay",
     "vo:host.pnina.together.scale",
@@ -4198,7 +4222,7 @@
     "vo:x.mathb19.9.h3",
     "vo:x.mathb19.9.prompt"
    ],
-   "chars": 30739
+   "chars": 33073
   },
   {
    "name": "numbers-C",
@@ -4570,7 +4594,7 @@
     "vo:host.nekudi.show.num_c_09.open",
     "vo:host.nekudi.together.pay"
    ],
-   "chars": 23090
+   "chars": 24581
   },
   {
    "name": "math-C",
@@ -4768,7 +4792,7 @@
     "vo:host.pnina.show.math_c_03.key",
     "vo:host.pnina.show.math_c_03.open"
    ],
-   "chars": 12182
+   "chars": 12569
   }
  ]
 }

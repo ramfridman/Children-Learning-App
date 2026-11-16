@@ -894,6 +894,7 @@ List<Problem> validatePack({
         for (final (int i, Map<String, Object?> c) in _maps(answer['classifiers']).indexed) {
           checkTag(file, 'answer.classifiers[$i].misconception', c['misconception']);
         }
+        _giveNumeral(file, a, scene, answer, say);
     }
     _targetClips(file, a, say, checkVo);
     checkLs01(
@@ -1690,6 +1691,28 @@ void _nameAnswer(
   for (final (int i, Map<String, Object?> p) in pairs.indexed) {
     if (p['a'] == p['b']) say(file, 'answer.pairs[$i]', 'a letter is not its own look-alike');
     checkTag(file, 'answer.pairs[$i].misconception', p['misconception']);
+  }
+}
+
+/// The numeral of a give-N item (`prompt.math`, give_n 1.3): one number, the total the child is asked to have in the frame (the objects it adds and
+/// those the frame starts with), which the bubble shows as digits under the question; and no more than the size of its band.
+void _giveNumeral(
+  String file,
+  Map<String, Object?> a,
+  Map<String, Object?> scene,
+  Map<String, Object?> answer,
+  void Function(String, String, String) say,
+) {
+  final List<String>? run = ((a['prompt']! as Map<String, Object?>)['math'] as List<Object?>?)
+      ?.whereType<String>()
+      .toList();
+  if (run == null) return;
+  final int total = (answer['n']! as int) + ((scene['prefilled'] as int?) ?? 0);
+  if (run.length != 1 || run.single != 'n:$total') {
+    say(file, 'prompt.math', 'a give-N item shows one numeral, the number asked for: ["n:$total"]');
+  }
+  if (compareTemplateVersion('${a['templateVersion']}', '1.3') < 0) {
+    say(file, 'templateVersion', 'is ${a['templateVersion']}, but a numeral in the prompt needs give_n 1.3');
   }
 }
 

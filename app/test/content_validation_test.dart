@@ -487,6 +487,22 @@ final List<Broken> _cases = <Broken>[
     '$_g › scene.source.sprite',
     'is not in the manifest assets',
   ),
+  Broken(
+    'give_n: a numeral that is not the number asked for',
+    (SamplePack p) {
+      _m(p.manifest['templates'])['give_n'] = '1.3';
+      _m(p.doc(_g))['templateVersion'] = '1.3';
+      _m(p.doc(_g)['prompt'])['math'] = <Object?>['n:4'];
+    },
+    '$_g › prompt.math',
+    'a give-N item shows one numeral, the number asked for: ["n:3"]',
+  ),
+  Broken(
+    'give_n: a numeral in an older version than 1.3',
+    (SamplePack p) => _m(p.doc(_g)['prompt'])['math'] = <Object?>['n:3'],
+    '$_g › templateVersion',
+    'a numeral in the prompt needs give_n 1.3',
+  ),
   // ---- lessons, skills, misconceptions ----
   Broken(
     'lesson: an item with no activity',
@@ -611,6 +627,19 @@ void _put(Object root, List<Object> path, Object? value, {required bool remove})
 void main() {
   test('the sample pack is valid', () {
     expect(_run(SamplePack()), isEmpty);
+  });
+
+  test('a give-N item may show the numeral it asks for (give_n 1.3, the frame objects counted in)', () {
+    final SamplePack p = SamplePack();
+    _m(p.manifest['templates'])['give_n'] = '1.3';
+    _m(p.doc(_g))['templateVersion'] = '1.3';
+    _m(p.doc(_g)['prompt'])['math'] = <Object?>['n:3'];
+    expect(_run(p), isEmpty);
+    // a frame that starts with 7 objects, to which 3 are added, asks for the numeral of the total
+    _m(p.doc(_g)['scene'])['frame'] = true;
+    _m(p.doc(_g)['scene'])['prefilled'] = 7;
+    _m(p.doc(_g)['prompt'])['math'] = <Object?>['n:10'];
+    expect(_run(p), isEmpty);
   });
 
   test('there are at least thirty broken files in the table', () {

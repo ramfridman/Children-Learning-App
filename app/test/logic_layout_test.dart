@@ -75,9 +75,9 @@ void main() {
         expect(sizeFamilyOf('asset:apple'), isNull);
         final PackContent content = await loadStarter();
         bool compares(String id) => comparesSizes(content.activities[id]! as TapAnswerActivity);
-        expect(compares('log.size.last'), isTrue); // small, medium, ?  and three balls
-        expect(compares('b.logb04.5'), isTrue); // towers
-        expect(compares('log.next.animals'), isFalse); // a row of unlike things
+        expect(compares('log.size.middle'), isTrue); // small, medium, ?  and three balls
+        expect(compares('b.logb04.4'), isTrue); // towers
+        expect(compares('log.next.pets'), isFalse); // a row of unlike things
       },
     );
 
@@ -85,7 +85,7 @@ void main() {
       testWidgets('the row and the answer tiles draw a size picture at one size, ${w.key}', (
         WidgetTester tester,
       ) async {
-        await _open(tester, 'log.size.last', w.value);
+        await _open(tester, 'log.size.middle', w.value);
         final List<Size> sizes = <Size>[
           for (final Element e in find.byKey(const Key('same-scale')).evaluate()) e.size!,
         ];
@@ -144,7 +144,7 @@ void main() {
     });
 
     testWidgets('an item of unlike pictures keeps the room each has', (WidgetTester tester) async {
-      await _open(tester, 'log.next.animals', _windows['phone']!);
+      await _open(tester, 'log.next.pets', _windows['phone']!);
       expect(find.byKey(const Key('same-scale')), findsNothing);
     });
   });
@@ -319,7 +319,7 @@ void main() {
       'the aspect of a picture is read from its viewBox, and only a size family can make an item tall',
       () async {
         final PackContent content = (await loadSourcePack());
-        final TapAnswerActivity towers = content.activities['b.logb04.5']! as TapAnswerActivity;
+        final TapAnswerActivity towers = content.activities['b.logb04.4']! as TapAnswerActivity;
         expect(spriteAspect(towers.assets.svg('asset:tower_3')), closeTo(100 / 220, 0.001));
         expect(spriteAspect(towers.assets.svg('asset:ball_size_m')), 1);
         expect(spriteAspect('<svg viewBox="0 0 100 100"/>'), 1);
@@ -327,7 +327,7 @@ void main() {
         // Cut to the ink of the tallest tower of the item (6 cubes) and the floor, the box is wider than the sprite's own 100 by 220.
         expect(sizeLookOfTap(towers)!.aspect, allOf(greaterThan(0.3), lessThan(0.6)));
         expect(TapGeometry.rowIsTall(towers), isTrue);
-        final TapAnswerActivity balls = content.activities['log.size.last']! as TapAnswerActivity;
+        final TapAnswerActivity balls = content.activities['log.size.middle']! as TapAnswerActivity;
         expect(TapGeometry.rowIsTall(balls), isFalse, reason: 'a square picture keeps its square box');
       },
     );
@@ -364,7 +364,8 @@ void main() {
               );
             }
           }
-          expect(seen, greaterThanOrEqualTo(8), reason: 'the towers of LOG-A-10 and LOG-B-04');
+          // (6 since the swaps of the lands re-cut two of the tower taps to builds)
+          expect(seen, greaterThanOrEqualTo(6), reason: 'the towers of LOG-A-10 and LOG-B-04');
         },
       );
     }
@@ -374,13 +375,13 @@ void main() {
         WidgetTester tester,
       ) async {
         final PackContent content = (await tester.runAsync(loadSourcePack))!;
-        await _open(tester, 'b.logb04.5', _windows[board]!, content: content);
+        await _open(tester, 'b.logb04.4', _windows[board]!, content: content);
         final List<Size> sizes = <Size>[
           for (final Element e in find.byKey(const Key('same-scale')).evaluate()) e.size!,
         ];
-        expect(sizes.length, 6, reason: 'three towers in the row and three on the tiles');
+        expect(sizes.length, 5, reason: 'three towers in the row and two on the tiles');
         expect(sizes.toSet().length, 1, reason: '$sizes');
-        final SizeLook look = sizeLookOfTap(content.activities['b.logb04.5']! as TapAnswerActivity)!;
+        final SizeLook look = sizeLookOfTap(content.activities['b.logb04.4']! as TapAnswerActivity)!;
         expect(cube(sizes.first.height, look), greaterThanOrEqualTo(10));
         // The tiles are tall, and stay above the edge where no hotspot may be.
         final Rect tile = tester.getRect(find.byKey(const Key('answer-tile')).first);
@@ -640,7 +641,7 @@ void main() {
 
     group('a thing to find among the tiles', () {
       for (final String board in <String>['phone', 'phone SE', 'tablet landscape']) {
-        for (final String id in <String>['log.same.apple', 'b15.loga09.1']) {
+        for (final String id in <String>['b15.loga09.2', 'b15.loga09.1']) {
           testWidgets('is at least as large as a picture on a tile: $id, $board', (
             WidgetTester tester,
           ) async {

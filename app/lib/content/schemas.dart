@@ -73,7 +73,8 @@ const Map<String, String> supportedTemplates = <String, String>{
   'sound_boxes': '1.1',
   'count_tap': '1.1',
   // 1.1: `scene.frame`, the target as a ten-frame (M10). 1.2: `scene.prefilled`, a frame that starts with objects in it (M11 Stage 2, step 2.2).
-  'give_n': '1.2',
+  // 1.3: `prompt.math`, the numeral asked for, shown in the bubble.
+  'give_n': '1.3',
   'flash': '1.0',
   'sort_drag': '1.1',
   // 1.2: `scene.given` (places filled when the item opens) and `answer.pieceTags` (M11 Stage 2, step 2.2).
@@ -239,6 +240,13 @@ const SArray _mathRun = SArray(
   SString(minLength: 1, maxLength: 10, pattern: r'\?|n:(?:0|[1-9][0-9]{0,3}|10000)|op:[+=x:<>()-]'),
   minItems: 3,
   maxItems: 9,
+);
+
+/// The numeral a give-N item shows in the bubble (give_n 1.3): one number token, the number the child is asked to have.
+const SArray _numeralRun = SArray(
+  SString(minLength: 3, maxLength: 8, pattern: r'n:(?:0|[1-9][0-9]{0,3}|10000)'),
+  minItems: 1,
+  maxItems: 1,
 );
 
 /// A rectangle in a picture, as shares of the picture's width and height (a hotspot, a place, a thing in a room).
@@ -1859,6 +1867,16 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
   ),
   'give_n' => SObject(
     _base(<String, SField>{
+      // The numeral the child is asked for, shown in the bubble under the question as digits (give_n 1.3, M11 Stage 2: NUM-A-07, numeral to set).
+      'prompt': const SField(
+        SObject(<String, SField>{
+          'vo': SField(_vo),
+          'caption': SField(_caption),
+          'replayButton': SField(SBool()),
+          'math': SField(_numeralRun, required: false),
+          ..._lineExtras,
+        }),
+      ),
       'scene': const SField(
         SObject(<String, SField>{
           'background': SField(_asset, required: false),

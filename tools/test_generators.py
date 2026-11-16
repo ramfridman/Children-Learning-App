@@ -306,8 +306,13 @@ class BandCTest(unittest.TestCase):
             'c.mathc03.17': ['n:70', 'op:-', 'n:40', 'op:=', '?'], 'c.mathc03.18': ['n:60', 'op:-', 'n:20', 'op:=', '?']})
         self.assertEqual({d['templateVersion'] for d in load('activity.c.mathc03.1[5-8].json')}, {'1.4'})
         # no other item has one (the field is for a sentence said and not drawn in a row)
-        with_run = [d['id'] for d in load('activity.*.json') if 'math' in d['prompt']]
+        # (but the numeral a give-N item of NUM-A-07 is asked for: one token, give_n 1.3)
+        with_run = [d['id'] for d in load('activity.*.json') if 'math' in d['prompt'] and d['template'] != 'give_n']
         self.assertEqual(sorted(with_run), sorted(runs))
+        for d in load('activity.*.json'):
+            if d['template'] == 'give_n' and 'math' in d['prompt']:
+                self.assertEqual(d['prompt']['math'], ['n:%d' % (d['answer']['n'] + d['scene'].get('prefilled', 0))], d['id'])
+                self.assertEqual(d['templateVersion'], '1.3', d['id'])
         a = {'kind': 'pick', 'id': 'c.mathc03.99', 'skill': 'MATH-C-03', 'band': 'C', 'prompt': 'q', 'options': ['n:7', 'n:8'],
              'correct': 'n:7', 'row': band_c.tokens(3, '+', 4, '=', '?'), 'math': band_c.tokens(3, '+', 4, '=', '?')}
         with self.assertRaises(AssertionError):

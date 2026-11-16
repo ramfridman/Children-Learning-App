@@ -602,36 +602,32 @@
       "revision": 2
     },
     {
-      "kind": "count_tap",
+      "kind": "give",
       "id": "show.apples.3",
       "skill": "NUM-A-07",
       "difficulty": 0.3,
       "obj": "apple",
-      "count": 3,
-      "options": [
-        2,
-        4,
-        3
-      ],
-      "seed": 83,
-      "arrangement": "scatter",
-      "revision": 2
+      "n": 3,
+      "source": 6,
+      "classifiers": {
+        "took_more": "M-CNT-DOUBLE",
+        "took_fewer": "M-CNT-SKIP"
+      },
+      "revision": 3
     },
     {
-      "kind": "count_tap",
+      "kind": "give",
       "id": "show.birds.4",
       "skill": "NUM-A-07",
       "difficulty": 0.4,
       "obj": "bird",
-      "count": 4,
-      "options": [
-        4,
-        3,
-        5
-      ],
-      "seed": 84,
-      "arrangement": "scatter",
-      "revision": 2
+      "n": 4,
+      "source": 7,
+      "classifiers": {
+        "took_more": "M-CNT-DOUBLE",
+        "took_fewer": "M-CNT-SKIP"
+      },
+      "revision": 3
     },
     {
       "kind": "numeral_to_set",

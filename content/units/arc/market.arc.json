@@ -2,8 +2,8 @@
  "schema": "lesson-arc-source/v0",
  "land": "math",
  "host": "pnina",
- "review": "needs-editor",
- "status": "M11 Stage 2, step 2.4d (Market Village), authored by the curriculum-expert on 2026-11-16. Host lines are pointed drafts (the pointing the pack already uses for each word) for the hebrew-text-editor. The Shows on sort_drag play today (MATH-A-03, A-04, A-07, B-10, B-16, B-19); the others wait for the Show and lead players of number_line, balance, build_pattern, give_n, shop_pay and clock_set (step 2.1), for the prefilled frame of step 2.2 (MATH-B-06) or for Stage 3.1 (MATH-A-01, A-02, B-07).",
+ "review": "text-ready",
+ "status": "M11 Stage 2, step 2.4d (Market Village), authored by the curriculum-expert on 2026-11-16. Host lines are pointed drafts (the pointing the pack already uses for each word) for the hebrew-text-editor. The Shows on sort_drag play today (MATH-A-03, A-04, A-07, B-10, B-16, B-19); the others wait for the Show and lead players of number_line, balance, build_pattern, give_n, shop_pay and clock_set (step 2.1), for the prefilled frame of step 2.2 (MATH-B-06) or for Stage 3.1 (MATH-A-01, A-02, B-07). Hebrew finalised by the hebrew-text-editor on 2026-11-16 (pointed text, voice text, text-ready; waits for the owner; docs/agents/hebrew-notes.md section 19).",
  "spec": "docs/milestones/M11-stage2.md §2, §3.2, §7.4 and §8",
  "howToRead": [
   "As counting-hills.arc.json. More move words for the players still to come: balance `block` (that many blocks put on the light pan in one run) or `put` (the named thing put on a `pan`); build_pattern `cell` and `piece` (a card laid on that place, from the start dot); clock_set `hand` and `to` (the hand turned to that hour); shop_pay `coin` (one coin of that kind on the counter).",
@@ -44,19 +44,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_a_01.open",
      "text": "יֵשׁ שְׁלוֹשָׁה תַּפּוּחִים בַּסַּל.",
-     "review": "needs-editor"
+     "voice": "יש שְׁלוֹשָׁה תפוחים בסל.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_a_01.key",
-     "text": "מוֹסִיפִים עוֹד אֶחָד: אַרְבָּעָה.",
-     "review": "needs-editor"
+     "text": "שָׁלוֹשׁ, וְעוֹד אַחַת: אַרְבַּע.",
+     "voice": "שָׁלוֹשׁ, ועוד אַחַת: אַרְבַּע.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_a_01.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד אֶחָד.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד אֶחָד.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -83,19 +86,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_a_02.open",
      "text": "יֵשׁ אַרְבָּעָה תַּפּוּחִים בַּסַּל.",
-     "review": "needs-editor"
+     "voice": "יש אַרְבָּעָה תפוחים בסל.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_a_02.key",
-     "text": "לוֹקְחִים אֶחָד: נִשְׁאֲרוּ שְׁלוֹשָׁה.",
-     "review": "needs-editor"
+     "text": "לוֹקְחִים אֶחָד: נִשְׁאֲרוּ שָׁלוֹשׁ.",
+     "voice": "לוקחים אֶחָד: נשארו שָׁלוֹשׁ.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_a_02.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: קְחוּ אֶחָד.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: קְחוּ אֶחָד.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -178,19 +184,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_a_03.open",
      "text": "מְחַלְּקִים תַּפּוּחִים לַחֲבֵרִים.",
-     "review": "needs-editor"
+     "voice": "מחלקים תפוחים לחברים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_a_03.key",
-     "text": "אֶחָד לְכׇל אֶחָד, בַּתּוֹר.",
-     "review": "needs-editor"
+     "text": "תַּפּוּחַ אֶחָד לְכׇל חָבֵר, לְפִי הַתּוֹר.",
+     "voice": "תפוח אֶחָד לכל חבר, לפי התור.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_a_03.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: לַבַּרְוָז.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: לברווז.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -281,19 +290,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_a_04.open",
      "text": "מְמַיְּנִים לְפִי הַגֹּדֶל.",
-     "review": "needs-editor"
+     "voice": "ממיינים לפי הגודל.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_a_04.key",
      "text": "הַגְּדוֹלִים כָּאן, הַקְּטַנִּים כָּאן.",
-     "review": "needs-editor"
+     "voice": "הגדולים כאן, הקטנים כאן.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_a_04.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הַקָּטָן.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: התפוח הקטן.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -354,19 +366,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_a_05.open",
      "text": "מְסַדְּרִים אֶת הַיּוֹם.",
-     "review": "needs-editor"
+     "voice": "מסדרים את היום.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_a_05.key",
-     "text": "קֹדֶם בֹּקֶר, אַחַר כָּךְ צָהֳרַיִם.",
-     "review": "needs-editor"
+     "text": "בֹּקֶר, צָהֳרַיִם, וְאָז עֶרֶב.",
+     "voice": "בוקר, צהריים, ואז ערב.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_a_05.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: מַה בָּא בַּסּוֹף?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַלַּיְלָה.",
+     "voice": "עכשיו תורכם: הלילה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -422,19 +437,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_a_06.open",
      "text": "כׇּל תַּפּוּחַ עוֹלֶה מַטְבֵּעַ אֶחָד.",
-     "review": "needs-editor"
+     "voice": "כל תפוח עולה מטבע אֶחָד.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_a_06.key",
      "text": "שְׁלוֹשָׁה תַּפּוּחִים, שְׁלוֹשָׁה מַטְבְּעוֹת.",
-     "review": "needs-editor"
+     "voice": "שְׁלוֹשָׁה תפוחים, שְׁלוֹשָׁה מטבעות.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_a_06.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַמַּטְבֵּעַ הַשְּׁלִישִׁי.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: המטבע השלישי.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -526,20 +544,23 @@
     {
      "role": "open",
      "vo": "vo:host.pnina.show.math_a_07.open",
-     "text": "מְמַיְּנִים לַעֲמוּדוֹת.",
-     "review": "needs-editor"
+     "text": "מְמַיְּנִים לָעַמּוּדוֹת.",
+     "voice": "ממיינים לעמודות.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_a_07.key",
      "text": "כׇּל דָּבָר לָעַמּוּדָה שֶׁלּוֹ.",
-     "review": "needs-editor"
+     "voice": "כל דבר לעמודה שלו.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_a_07.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הָאַחֲרוֹן.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: התפוח האחרון.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -595,19 +616,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_01.open",
      "text": "שָׁלוֹשׁ, וְעוֹד שְׁתַּיִם.",
-     "review": "needs-editor"
+     "voice": "שָׁלוֹשׁ, ועוד שְׁתַּיִם.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_01.key",
      "text": "מַתְחִילִים בְּשָׁלוֹשׁ וְקוֹפְצִים.",
-     "review": "needs-editor"
+     "voice": "מתחילים בְּשָׁלוֹשׁ וקופצים.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_01.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַקְּפִיצָה הַשְּׁנִיָּה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הקפיצה השנייה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -664,20 +688,23 @@
     {
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_02.open",
-     "text": "שֵׁשׁ בַּצַּד אֶחָד, אַרְבַּע בַּשֵּׁנִי.",
-     "review": "needs-editor"
+     "text": "שֵׁשׁ בְּצַד אֶחָד, אַרְבַּע בַּצַּד הַשֵּׁנִי.",
+     "voice": "שֵׁשׁ בצד אֶחָד, אַרְבַּע בצד הַשֵּׁנִי.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_02.key",
      "text": "מוֹסִיפִים עַד שֶׁהַצְּדָדִים שָׁוִים.",
-     "review": "needs-editor"
+     "voice": "מוסיפים עד שהצדדים שווים.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_02.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַקֻּבִּיָּה הָאַחֲרוֹנָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הקובייה האחרונה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -739,19 +766,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_03.open",
      "text": "שָׁלוֹשׁ וְעוֹד אַרְבַּע.",
-     "review": "needs-editor"
+     "voice": "שָׁלוֹשׁ ועוד אַרְבַּע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_03.key",
-     "text": "שָׁלוֹשׁ זֶה הַהַתְחָלָה, אַרְבַּע הַקְּפִיצוֹת.",
-     "review": "needs-editor"
+     "text": "שָׁלוֹשׁ — הַהַתְחָלָה, אַרְבַּע — הַקְּפִיצוֹת.",
+     "voice": "שָׁלוֹשׁ — ההתחלה, אַרְבַּע — הקפיצות.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_03.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַקְּפִיצָה הָאַחֲרוֹנָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הקפיצה האחרונה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -803,19 +833,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_04.open",
      "text": "שְׁתַּיִם וְעוֹד שֶׁבַע.",
-     "review": "needs-editor"
+     "voice": "שְׁתַּיִם ועוד שֶׁבַע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_04.key",
      "text": "מַתְחִילִים מֵהַגָּדוֹל, מִשֶּׁבַע.",
-     "review": "needs-editor"
+     "voice": "מתחילים מהגדול, מִשֶּׁבַע.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_04.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד קְפִיצָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד קפיצה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -869,20 +902,23 @@
     {
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_06.open",
-     "text": "יֵשׁ שֵׁשׁ. כַּמָּה עַד עֶשֶׂר?",
-     "review": "needs-editor"
+     "text": "יֵשׁ שֵׁשׁ. רוֹצִים עֶשֶׂר.",
+     "voice": "יש שֵׁשׁ. רוצים עֶשֶׂר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_06.key",
      "text": "מְמַלְּאִים אֶת הַמִּסְגֶּרֶת וְסוֹפְרִים.",
-     "review": "needs-editor"
+     "voice": "ממלאים את המסגרת וסופרים.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_06.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַמִּשְׁבֶּצֶת הָאַחֲרוֹנָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: המשבצת האחרונה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -910,19 +946,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_07.open",
      "text": "לוֹקְחִים אֶת כֻּלָּם.",
-     "review": "needs-editor"
+     "voice": "לוקחים את כולם.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_07.key",
      "text": "לֹא נִשְׁאָר כְּלוּם: אֶפֶס.",
-     "review": "needs-editor"
+     "voice": "לא נשאר כלום: אֶפֶס.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_07.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: כַּמָּה נִשְׁאֲרוּ?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: לִסְפֹּר כַּמָּה נִשְׁאֲרוּ.",
+     "voice": "עכשיו תורכם: לספור כמה נשארו.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -977,19 +1016,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_08.open",
      "text": "שְׁמוֹנֶה וְעוֹד חָמֵשׁ.",
-     "review": "needs-editor"
+     "voice": "שְׁמוֹנֶה ועוד חָמֵשׁ.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_08.key",
-     "text": "קֹדֶם עַד עֶשֶׂר, וְאַחַר כָּךְ הָלְאָה.",
-     "review": "needs-editor"
+     "text": "קֹדֶם עַד עֶשֶׂר, וְאַחַר כָּךְ מַמְשִׁיכִים.",
+     "voice": "קודם עד עֶשֶׂר, ואחר כך ממשיכים.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_08.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד שָׁלוֹשׁ.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד שָׁלוֹשׁ.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1058,19 +1100,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_09.open",
      "text": "שָׁלוֹשׁ וְעוֹד אַרְבַּע.",
-     "review": "needs-editor"
+     "voice": "שָׁלוֹשׁ ועוד אַרְבַּע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_09.key",
      "text": "שָׁוֶה זֶה אוֹתוֹ דָּבָר בִּשְׁנֵי הַצְּדָדִים.",
-     "review": "needs-editor"
+     "voice": "שווה זה אותו דבר בִּשְׁנֵי הצדדים.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_09.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: שֶׁבַע בַּצַּד הַשֵּׁנִי.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: שֶׁבַע בצד הַשֵּׁנִי.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1158,20 +1203,23 @@
     {
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_10.open",
-     "text": "מְחַלְּקִים לְצַלָּחוֹת שָׁווֹת.",
-     "review": "needs-editor"
+     "text": "מְחַלְּקִים תַּפּוּחִים לִשְׁתֵּי צַלָּחוֹת.",
+     "voice": "מחלקים תפוחים לִשְׁתֵּי צלחות.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_10.key",
-     "text": "אֶחָד לְכׇל צַלַּחַת, בַּתּוֹר.",
-     "review": "needs-editor"
+     "text": "תַּפּוּחַ אֶחָד לְכׇל צַלַּחַת, לְפִי הַתּוֹר.",
+     "voice": "תפוח אֶחָד לכל צלחת, לפי התור.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_10.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הָאַחֲרוֹן.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: התפוח האחרון.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1231,20 +1279,23 @@
     {
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_13.open",
-     "text": "מַה כָּבֵד יוֹתֵר?",
-     "review": "needs-editor"
+     "text": "הַנּוֹצָה גְּדוֹלָה, וְהָאֶבֶן קְטַנָּה.",
+     "voice": "הנוצה גדולה, והאבן קטנה.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_13.key",
-     "text": "הַצַּד הַכָּבֵד יוֹרֵד לְמַטָּה.",
-     "review": "needs-editor"
+     "text": "הַצַּד הַכָּבֵד יוֹרֵד, הַצַּד הַקַּל עוֹלֶה.",
+     "voice": "הצד הכבד יורד, הצד הקל עולה.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_13.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: שִׂימוּ אֶת הָאֶבֶן.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: שימו את האבן.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1304,20 +1355,23 @@
     {
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_14.open",
-     "text": "הַיָּמִים בַּשָּׁבוּעַ לְפִי הַסֵּדֶר.",
-     "review": "needs-editor"
+     "text": "מְסַדְּרִים אֶת יְמֵי הַשָּׁבוּעַ.",
+     "voice": "מסדרים את ימי השבוע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_14.key",
-     "text": "רִאשׁוֹן, שֵׁנִי, שְׁלִישִׁי.",
-     "review": "needs-editor"
+     "text": "יוֹם רִאשׁוֹן, יוֹם שֵׁנִי, יוֹם שְׁלִישִׁי.",
+     "voice": "יום ראשון, יום שֵׁנִי, יום שלישי.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_14.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: מַה בָּא אַחַר כָּךְ?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: יוֹם רְבִיעִי.",
+     "voice": "עכשיו תורכם: יום רביעי.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1372,19 +1426,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_15.open",
      "text": "מְכַוְּנִים אֶת הַשָּׁעוֹן לְשָׁלוֹשׁ.",
-     "review": "needs-editor"
+     "voice": "מכוונים את השעון לְשָׁלוֹשׁ.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_15.key",
      "text": "הַמַּחֲוָג הַקָּצָר אוֹמֵר אֶת הַשָּׁעָה.",
-     "review": "needs-editor"
+     "voice": "המחוג הקצר אומר את השעה.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_15.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד שָׁעָה אַחַת.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד שעה אַחַת.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1470,20 +1527,23 @@
     {
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_16.open",
-     "text": "אֲגוֹרוֹת וּשְׁקָלִים.",
-     "review": "needs-editor"
+     "text": "יֵשׁ אֲגוֹרוֹת וְיֵשׁ שְׁקָלִים.",
+     "voice": "יש אגורות ויש שקלים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_16.key",
-     "text": "חֲצִי שֶׁקֶל גָּדוֹל, אֲבָל אֲגוֹרוֹת.",
-     "review": "needs-editor"
+     "text": "חֲצִי שֶׁקֶל גָּדוֹל, אֲבָל הוּא בָּאֲגוֹרוֹת.",
+     "voice": "חצי שֶׁקֶל גדול, אבל הוא באגורות.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_16.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: חֲמִשָּׁה שְׁקָלִים.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: חֲמִשָּׁה שקלים.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1542,19 +1602,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_17.open",
      "text": "הַתַּפּוּחַ עוֹלֶה שִׁבְעָה שְׁקָלִים.",
-     "review": "needs-editor"
+     "voice": "התפוח עולה שִׁבְעָה שקלים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_17.key",
-     "text": "חֲמִשָּׁה, וְעוֹד שְׁנַיִם: שִׁבְעָה.",
-     "review": "needs-editor"
+     "text": "חָמֵשׁ וְעוֹד שְׁתַּיִם הֵם שֶׁבַע.",
+     "voice": "חָמֵשׁ ועוד שְׁתַּיִם הם שֶׁבַע.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_17.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: שְׁנֵי שְׁקָלִים.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: שְׁנֵי שקלים.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1619,20 +1682,23 @@
     {
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_18.open",
-     "text": "שָׁלוֹשׁ וְעוֹד כַּמָּה שָׁוֶה שֶׁבַע?",
-     "review": "needs-editor"
+     "text": "יֵשׁ שָׁלוֹשׁ. רוֹצִים שֶׁבַע.",
+     "voice": "יש שָׁלוֹשׁ. רוצים שֶׁבַע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_18.key",
      "text": "מוֹסִיפִים עַד שֶׁהַצְּדָדִים שָׁוִים.",
-     "review": "needs-editor"
+     "voice": "מוסיפים עד שהצדדים שווים.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_18.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַקֻּבִּיָּה הָאַחֲרוֹנָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הקובייה האחרונה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1724,20 +1790,23 @@
     {
      "role": "open",
      "vo": "vo:host.pnina.show.math_b_19.open",
-     "text": "מְמַיְּנִים לַעֲמוּדוֹת.",
-     "review": "needs-editor"
+     "text": "מְמַיְּנִים לָעַמּוּדוֹת.",
+     "voice": "ממיינים לעמודות.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_b_19.key",
      "text": "כׇּל דָּבָר לָעַמּוּדָה שֶׁלּוֹ.",
-     "review": "needs-editor"
+     "voice": "כל דבר לעמודה שלו.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_b_19.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַבָּנָנָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הבננה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1794,19 +1863,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_c_01.open",
      "text": "תֵּשַׁע וְעוֹד שֶׁבַע.",
-     "review": "needs-editor"
+     "voice": "תֵּשַׁע ועוד שֶׁבַע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_c_01.key",
-     "text": "אֶחָד עַד עֶשֶׂר, וְעוֹד שֵׁשׁ.",
-     "review": "needs-editor"
+     "text": "מִתֵּשַׁע לְעֶשֶׂר, וְעוֹד שֵׁשׁ.",
+     "voice": "מִתֵּשַׁע לְעֶשֶׂר, ועוד שֵׁשׁ.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_c_01.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד שֵׁשׁ.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד שֵׁשׁ.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1868,20 +1940,23 @@
     {
      "role": "open",
      "vo": "vo:host.pnina.show.math_c_02.open",
-     "text": "חֲמֵשׁ עֶשְׂרֵה פָּחוֹת כַּמָּה שָׁוֶה תֵּשַׁע?",
-     "review": "needs-editor"
+     "text": "חֲמֵשׁ עֶשְׂרֵה מוּל תֵּשַׁע.",
+     "voice": "חֲמֵשׁ עֶשְׂרֵה מול תֵּשַׁע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_c_02.key",
-     "text": "תֵּשַׁע וְעוֹד כַּמָּה שָׁוֶה חֲמֵשׁ עֶשְׂרֵה.",
-     "review": "needs-editor"
+     "text": "מוֹסִיפִים לְתֵשַׁע עַד חֲמֵשׁ עֶשְׂרֵה.",
+     "voice": "מוסיפים לְתֵשַׁע עד חֲמֵשׁ עֶשְׂרֵה.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_c_02.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד שָׁלוֹשׁ.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד שָׁלוֹשׁ.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1937,19 +2012,22 @@
      "role": "open",
      "vo": "vo:host.pnina.show.math_c_03.open",
      "text": "עֶשְׂרִים וְעוֹד עֶשְׂרִים.",
-     "review": "needs-editor"
+     "voice": "עֶשְׂרִים ועוד עֶשְׂרִים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.pnina.show.math_c_03.key",
      "text": "שְׁתֵּי עֲשָׂרוֹת וְעוֹד שְׁתֵּי עֲשָׂרוֹת.",
-     "review": "needs-editor"
+     "voice": "שְׁתֵּי עֲשָׂרוֹת ועוד שְׁתֵּי עֲשָׂרוֹת.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.pnina.show.math_c_03.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד עֲשָׂרָה.",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד עֲשָׂרָה שְׁקָלִים.",
+     "voice": "עכשיו תורכם: עוד עֲשָׂרָה שקלים.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1969,94 +2047,108 @@
    "role": "together_lead",
    "template": "sort_drag",
    "vo": "vo:host.pnina.together.sort",
-   "text": "אֲנִי שָׂמָה אֶת הָרִאשׁוֹן. אַתֶּם מַמְשִׁיכִים.",
-   "review": "needs-editor"
+   "text": "נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחָה אֶת הָרִאשׁוֹן.",
+   "voice": "נַעֲשֶׂה יחד. אני מניחה את הראשון.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "number_line",
    "vo": "vo:host.pnina.together.line",
    "text": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל.",
-   "review": "needs-editor"
+   "voice": "סופרים כל קפיצה בקול.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "balance",
    "vo": "vo:host.pnina.together.scale",
-   "text": "מִסְתַּכְּלִים עַל הַמֹּאזְנַיִם, וּמוֹסִיפִים לְאַט.",
-   "review": "needs-editor"
+   "text": "מִסְתַּכְּלִים עַל הַמֹּאזְנַיִם לְאַט.",
+   "voice": "מסתכלים על המאזניים לאט.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "build_pattern",
    "vo": "vo:host.pnina.together.build",
-   "text": "מַה קֹּדֶם, וּמָה אַחַר כָּךְ?",
-   "review": "needs-editor"
+   "text": "מַתְחִילִים מֵהָרִאשׁוֹן, לְפִי הַסֵּדֶר.",
+   "voice": "מתחילים מהראשון, לפי הסדר.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "shop_pay",
    "vo": "vo:host.pnina.together.pay",
    "text": "סוֹפְרִים אֶת הַמַּטְבְּעוֹת בְּקוֹל.",
-   "review": "needs-editor"
+   "voice": "סופרים את המטבעות בקול.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "give_n",
    "vo": "vo:host.pnina.together.give",
-   "text": "מַטְבֵּעַ אֶחָד לְכׇל תַּפּוּחַ.",
-   "review": "needs-editor"
+   "text": "נוֹתְנִים אֶחָד אֶחָד, וְסוֹפְרִים.",
+   "voice": "נותנים אֶחָד אֶחָד, וסופרים.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "clock_set",
    "vo": "vo:host.pnina.together.clock",
    "text": "מִסְתַּכְּלִים עַל הַמַּחֲוָג הַקָּצָר.",
-   "review": "needs-editor"
+   "voice": "מסתכלים על המחוג הקצר.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "tap_answer",
    "vo": "vo:host.pnina.together.tap",
    "text": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים.",
-   "review": "needs-editor"
+   "voice": "נחשוב יחד. אתם בוחרים.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "count_tap",
    "vo": "vo:host.pnina.together.count",
    "text": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת.",
-   "review": "needs-editor"
+   "voice": "נוגעים בכל אֶחָד פעם אַחַת.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.pnina.handover.1",
    "text": "עַכְשָׁו אַתֶּם עוֹזְרִים לִי בַּשּׁוּק.",
-   "review": "needs-editor"
+   "voice": "עכשיו אתם עוזרים לי בשוק.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.pnina.handover.2",
-   "text": "יֹפִי. עַכְשָׁו תּוֹרְכֶם.",
-   "review": "needs-editor"
+   "text": "עַכְשָׁו תּוֹרְכֶם. אֲנִי כָּאן.",
+   "voice": "עכשיו תורכם. אני כאן.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.pnina.handover.3",
    "text": "אֲנִי מִסְתַּכֶּלֶת. עַכְשָׁו אַתֶּם.",
-   "review": "needs-editor"
+   "voice": "אני מסתכלת. עכשיו אתם.",
+   "review": "text-ready"
   },
   {
    "role": "show_me",
    "vo": "vo:host.pnina.showme.1",
    "text": "בּוֹאוּ נִרְאֶה שׁוּב, לְאַט.",
-   "review": "needs-editor"
+   "voice": "בואו נראה שוב, לאט.",
+   "review": "text-ready"
   },
   {
    "role": "show_me",
    "vo": "vo:host.pnina.showme.2",
-   "text": "אֲנִי מַרְאָה עוֹד פַּעַם.",
-   "review": "needs-editor"
+   "text": "אֲנִי אַרְאֶה עוֹד פַּעַם.",
+   "voice": "אני אראה עוד פעם.",
+   "review": "text-ready"
   }
  ],
  "lessons": [

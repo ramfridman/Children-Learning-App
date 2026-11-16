@@ -192,6 +192,9 @@ void main() {
           while (spent < 60000) {
             await tester.pump(const Duration(milliseconds: 100));
             spent += 100;
+            // (a Show that asks for a guess waits for the child's touch, which is not the host's time: the scripted child guesses at once)
+            final ShowPredict? asked = s.predicting.value;
+            if (asked != null) s.guess(asked.choices.first.id);
             if (!s.hosting) break;
           }
           expect(s.hosting, isFalse, reason: '${show.id} is over');
@@ -212,4 +215,4 @@ void main() {
 
 /// The Shows that take longer than the spec allows (M11-stage2 section 2.4: 25 seconds at P1 and P2, 30 at P3 and P4, 8 for a reminder), as `show look look`;
 /// each is for the curriculum-expert to shorten (fewer host moves, or shorter lines). A Show that is shortened comes off the list.
-const Set<String> _showsOverTheirTime = <String>{'show.log-b-06 full p2', 'show.log-b-06 full p4'};
+const Set<String> _showsOverTheirTime = <String>{};

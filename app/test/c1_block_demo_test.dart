@@ -34,7 +34,18 @@ void main() {
   setUpAll(() async {
     await loadAppFonts();
     useTolerantGoldens(0.03);
-    content = await loadSourcePack();
+    // The lesson of the demonstration is played flat here, as it was before the lands' arc (a Show and a Together item come first in its parts, and
+    // the demonstration is of the first item with rods): the test is of the demonstration, not of the visit.
+    content = await loadSourcePack(
+      edit: (Map<String, Object?> docs) {
+        final Map<String, Object?> lesson = docs['lesson.blocks-tens-and-ones.json']! as Map<String, Object?>;
+        lesson.remove('parts');
+        lesson['items'] = <Object?>[
+          for (final Object? i in lesson['items']! as List<Object?>)
+            if (i != 'c.numc03.1') i,
+        ];
+      },
+    );
   });
 
   group('the timeline', () {

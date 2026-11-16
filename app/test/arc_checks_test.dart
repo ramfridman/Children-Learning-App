@@ -70,33 +70,18 @@ void main() {
       for (final String p in run(tagWaived: const <String, String>{}))
         if (RegExp(r'activity\.(.+)\.json ').firstMatch(p) case final RegExpMatch m) m.group(1)!,
     };
-    // the lands that are under the rules: the waivers are exactly the failing items
-    final Set<String> inShapes = <String>{
-      for (final String id in tagWaivers.keys)
-        if (id.startsWith('b.shpb') || id.startsWith('shp')) id,
-    };
-    expect(failing, inShapes);
-    // the lands that are not yet: each waiver of theirs (M11-stage2 section 11.5) is a tap that fails the rule without it
-    final Set<String> failingEverywhere = <String>{};
-    final List<String> found = <String>[];
-    checkArc(
-      activities: activities,
-      lessons: lessons,
-      skills: skills,
-      say: (String file, String path, String message) => found.add('$file $path $message'),
-      tagWaived: const <String, String>{},
-      domains: allArcDomains,
-    );
-    for (final String p in found) {
-      if (RegExp(r'activity\.(.+)\.json ').firstMatch(p) case final RegExpMatch m) {
-        failingEverywhere.add(m.group(1)!);
-      }
-    }
-    expect(
-      failingEverywhere.containsAll(tagWaivers.keys),
-      isTrue,
-      reason: 'a waived tap that no longer fails comes off the list',
-    );
+    // all six lands are under the rules: the waivers are exactly the failing items
+    expect(failing, tagWaivers.keys.toSet());
+  });
+
+  test('every waiver the curriculum-expert lists in the pending data is in tagWaivers', () {
+    final Map<String, Object?> data = jsonDecode(
+      File('../content/units/pending/stage2-recuts.json').readAsStringSync(encoding: utf8),
+    ) as Map<String, Object?>;
+    final Set<String> listed = (data['waivers']! as Map<String, Object?>).keys
+        .where((String k) => k != 'note')
+        .toSet();
+    expect(listed.difference(tagWaivers.keys.toSet()), isEmpty);
   });
 
   test('V5: the waived hint 2s are exactly those whose family draws the own question representation', () {
@@ -379,7 +364,7 @@ void main() {
     expect(warnings, everyElement(startsWith('W1:')));
   });
 
-  test('the five lands under the rules: what is left before they join arcDomains (the pinned count falls to 0, then the switch is one line)', () {
+  test('the five lands under the rules: V1 to V7 clean, W1 at most 380 (a warning)', () {
     final List<String> found = <String>[];
     checkArc(
       activities: activities,
@@ -416,10 +401,10 @@ void main() {
     print('FIVE LANDS ${byRule.entries.map((MapEntry<String, int> e) => '${e.key}=${e.value}').join(' ')}');
     // ignore: avoid_print
     print(found.take(400).join('\n'));
-    // 2026-11-16: V4 2 (LOG-A-04 is all picks until its strips are drawn; Riddle Grotto A is over 50%), V6 124 (taps that stay with one tagged distractor, hands-on
-    // items with one honest tag: curriculum-expert), V7 2 (NUM-B-14 and NUM-B-09 pools), W1 381 (number words and shade words no Show teaches: curriculum-expert).
-    // V1, V2, V3 and V5 are clean. When this is empty the five lands join `arcDomains`.
-    expect(byRule, <String, int>{'V4': 2, 'V6': 124, 'V7': 2, 'W1': 381});
+    // The five lands joined `arcDomains` on 2026-11-16: V1 to V7 are clean for all six. W1 (number words and shade words that no Show teaches) is still a
+    // warning for the five, pending the owner's two provisional rules: its count may only fall (380 on 2026-11-16).
+    expect(byRule.keys.where((String r) => r != 'W1'), isEmpty, reason: '$byRule');
+    expect(byRule['W1'] ?? 0, lessThanOrEqualTo(380));
   });
 }
 

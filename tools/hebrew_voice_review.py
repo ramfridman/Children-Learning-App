@@ -98,6 +98,7 @@ MASC_SG -= {'כֵּן', 'לֹא', 'גֶּרֶב'}
 FEM_SG |= {'צִפּוֹר', 'צַלַּחַת', 'קֻבִּיָּה', 'חִפּוּשִׁית', 'בָּנָנָה', 'כַּף', 'מִשְׁחָה', 'נַעַל', 'פִּירָמִידָה', 'תֵּבָה',
            'מַגֶּבֶת', 'מִבְרֶשֶׁת', 'מַדֵּלְיָה', 'צוּרָה', 'תְּמוּנָה', 'גֶּרֶב', 'קֻפְסָה'}
 FEM_PL.add('גַּרְבַּיִם')
+MASC_PL.discard('גַּרְבַּיִם')  # a sock is feminine in this app (owner Q5); M11 Stage 2 (section 19): "אַרְבַּע גַּרְבַּיִם" is not a gender clash
 MASC_PL |= {'צְבָעִים', 'גְּבִיעִים', 'חֲלָקִים', 'רְמָזִים'}
 # the singular of a counted plural noun (to say the noun again with its number: "וְעוֹד תַּפּוּחַ אֶחָד")
 NOUN_ONE = {_o['many']: _o['one'] for _o in OBJECTS.values()}
@@ -494,6 +495,7 @@ Q8_NOUN = 'number (owner Q8, 2026-10-29): never a masculine number without its n
 
 
 ONE_MORE = {'עוֹד', 'קְחוּ'}
+STEP_NOUNS = {canon(x) for x in ('צַעַד', 'צְעָדִים')}
 TEN_AS_NOUN_NEXT = {canon(x) for x in ('חֲדָשָׁה', 'מַגִּיעָה', 'מַתְחִילָה')}
 FEM_NUM = {w for _i in range(2, 21) for w in F[_i].split()} - {'עֶשְׂרֵה'}
 
@@ -532,6 +534,8 @@ def numbers_alone(t):
             continue
         if w == 'אֶחָד' and not (pw in SUM_WORDS or nw in SUM_WORDS - {'פָּחוֹת'}) and not one_num:
             continue  # "פִּסְפַּסְנוּ אֶחָד", "אֶחָד אֶחָד", "לוֹקְחִים אֶחָד" (an apple): a pronoun for a thing
+        if pw == 'וְעוֹד' and any(canon(toks[j].group(0)) in STEP_NOUNS for j in range(k)):
+            continue  # M11 Stage 2 (hebrew-notes.md section 19): "מִתֵּשַׁע קוֹפְצִים צַעַד אֶחָד עַד עֶשֶׂר, וְעוֹד שְׁלוֹשָׁה" says three more steps: the number takes the noun said earlier in the sentence (צַעַד is masculine)
         if pw == 'וְעוֹד' and k >= 3 and toks[k - 2].group(0) in NOUN_ONE and toks[k - 3].group(0) in MASC2FEM.keys() | {'שְׁנֵי'}:
             noun = toks[k - 2].group(0)
             repl = NOUN_ONE[noun] + ' אֶחָד' if w == 'אֶחָד' else ('שְׁנֵי ' + noun if w == 'שְׁנַיִם' else w + ' ' + noun)
@@ -637,6 +641,13 @@ def ktiv_token(tok):
     p = ''.join(out)
     if tok == 'שִׁנַּיִם':
         return 'שיניים'
+    # M11 Stage 2 (hebrew-notes.md section 19): two words whose plain form is read as another word. "גַּרְבַּיִם" has a dagesh before its dual ending,
+    # so the dual rule below misses it ("גרבים" would be read as a plural of a word that is not there); "עֲדַיִן" (still) loses its yod, and
+    # "עדין" is read "adin" (gentle).
+    if canon(tok) == canon('גַּרְבַּיִם'):
+        return 'גרביים'
+    if canon(tok) == canon('עֲדַיִן'):
+        return 'עדיין'
     if tok.startswith('מִ') and n > 1 and DAGESH in cl[1][1]:
         cand = 'מי' + p[1:]
         if cand in YES_YOD_M:
@@ -949,7 +960,15 @@ REVIEWED = [
 B26 = 'B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. '
 B39 = 'B-39 (docs/curriculum/todays-adventure-rule.md section 8, docs/agents/hebrew-notes.md): new, worded by the editor, not yet read by the owner. '
 B15 = 'B-15 part 2 (docs/knowledge/b15-hebrew.md): new, not yet read by the owner. '
+STAGE2_FIX = ('M11 Stage 2 (hebrew-notes.md section 19): read by the editor on 2026-11-16; the wording must change in the generator (tools/band_b*.py, tools/band_c.py, '
+              'tools/author.py), which the editor does not edit: ')
 PENDING = [
+    # M11 Stage 2 (2026-11-16): lines of the generators that the editor read and wants worded differently. Matched by the text alone, so that every row of a
+    # shared line (one voice id) waits together. When the generator has the new wording the row is a new row, and the READ entries of Stage 2 make it text-ready.
+    ('3', r'', r'^activity\.', STAGE2_FIX + 'for two numbers the question is "אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר, X אוֹ Y?" / "אֵיזֶה מִסְפָּר קָטָן יוֹתֵר, X אוֹ Y?" (as the 18 approved '
+     'rows of the pack), not "מִי" (a person or an animal).', r'^מִי (גָּדוֹל|קָטָן) יוֹתֵר, '),
+    ('3', r'', r'^activity\.', STAGE2_FIX + '"עַל הַצִּיר הַמִּסְפָּרִים גְּדֵלִים" lacks its comma: "עַל הַצִּיר, הַמִּסְפָּרִים גְּדֵלִים לְכִוּוּן הַחֵץ."',
+     r'^כֵּן! \S+\. עַל הַצִּיר הַמִּסְפָּרִים גְּדֵלִים'),
     # 2026-11-06: the editor read the B-26, B-39 and B-15 part 2 rows that were here (the island, the bottle and land lines, the
     # screen-reader labels, the fish and star correct line, the tick hint): all `text-ready`, waiting for the owner's approval.
     # The 20 he.dart strings that arrived with the Languages screens (L1 to L4) were read in the same pass.
@@ -981,7 +1000,18 @@ SHAPE_FOREST_PILOT_READ = ('M11 Stage 2 pilot, Shape Forest (docs/agents/hebrew-
 SHAPE_FOREST_QA_READ = ('M11 Stage 2 pilot, Shape Forest (docs/agents/hebrew-notes.md section 18): new in the QA round of 2026-11-16 (M11-stage2 section 11.4), '
                         'read by the editor on 2026-11-16 (grammar, nikud, agreement, plural address, vocabulary for ages 3 to 8, the shape words of '
                         'docs/curriculum.md); the curriculum-expert\'s draft, corrected where the table says; waits for the owner.')
+STAGE2_READ = ('M11 Stage 2, the five other lands (docs/agents/hebrew-notes.md section 19): read by the editor on 2026-11-16 (grammar, nikud, agreement with the host and '
+               'the child-neutral plural, vocabulary for ages 3 to 8, the spoken form); the curriculum-expert\'s draft, corrected where the table says; waits for the owner.')
+STAGE2_READ_ITEMS = ('M11 Stage 2, the re-cut items of the five other lands (docs/agents/hebrew-notes.md section 19): the narrator lines read by the editor on 2026-11-16, every distinct '
+                     'text (grammar, nikud, number and noun agreement, plural address, vocabulary for ages 3 to 8, the spoken form); waits for the owner.')
 READ = [
+    # M11 Stage 2, the five other lands (2026-11-16): the Show activities that tools/arc_build.py writes from content/units/arc/{counting-hills,market,riddle-grotto,
+    # colour-bay,robot-harbour}.arc.json (the hosts' lines are in those files, read and final), and the narrator lines of the items the closing content pass re-cut
+    # (the families below; every distinct text of them was read). First, so that these rows carry the reading of this round.
+    ('3', r'', r'^activity\.show\.(num|math|col|log|cs)-[abc]-\d+\.json$', STAGE2_READ),
+    ('3', r'', r'^activity\.(b\.(colb0[23]|logb0[1469]|mathb(0[12368]|1[0458])|numb(0[1-48]|1[0-8]))\.\d+|b15\.(cola05|loga06|loga10|matha0[47])\.\d+|col\.|cs\.(routine|wrong)\.|log\.|math\.(graph|size|time)\.|count\.(birds|ladybugs)\.10\.|show\.(apples|birds)\.\d+\.|flash\.|next\.(after|before)\.\d+|numeral\.|pick\.numeral\.|x\.mathb(16|19)\.\d+)',
+     STAGE2_READ_ITEMS),
+    ('3', r'', r'^activity\.c\.(mathb04\.[13]|mathc0[123]\.\d+|numb0[69]\.\d+|numc0[1-46-9]\.\d+)\.json$', STAGE2_READ_ITEMS),
     # M11 Stage 2 pilot (2026-11-15): the 61 re-cut and new Shape Forest items, SHP-B-05 and B-06 and their two lessons, and the 17 Show
     # activities that tools/arc_build.py writes from content/units/arc/shape-forest.arc.json (Kubi's lines are in that file, read and final).
     # The QA round of 2026-11-16 (M11-stage2 section 11.4): the eight activities that are new in it are NOT covered by the entry after this one
@@ -994,6 +1024,8 @@ READ = [
     # 10 texts as hostLines of the arc file, read and final)
     ('3', r'^parts\.', r'^lesson\.(any-shape|any-shape-again|build-with-shapes|closed-shapes|closed-shapes-more|count-sides|count-sides-more|draw-the-shapes|one-shadow|polygon-detectives|polygon-detectives-more|rectangle|rectangle-again|roll-or-stack|roll-or-stack-again|shape-friends|shape-friends-again|shape-friends-again-1-b15|shapes-around-us|shapes-around-us-again|shapes-around-us-again-1-b15|shapes-make-shapes|solid-and-face|solids|solids-more|square-or-rectangle|trace-the-shapes|where-is-it|where-is-it-again)\.json$',
      SHAPE_FOREST_PILOT_READ),
+    # the host lines that tools/arc_build.py copies into the parts of the lessons of the five other lands (their hand-overs and Together lead-ins: texts of the arc files)
+    ('3', r'^parts\.', r'^lesson\.[a-z0-9-]+\.json$', STAGE2_READ),
     # The sweep of 2026-11-08: the 17 he.dart strings that were NOT READ (screen-reader labels of the L5 screens and the division setting)
     # and the texts the sweep corrected. These entries come first so that they win over the C1 entries below.
     ('1', r'^(boxBowl|boxStampVowel|boxStampHard|boxStampSoft|boxSound|boxPlace|changeTarget|changeThatsIt|wheelHub|wheelLetter|wheelSign|stripTile|stripWindow|slideKnob|mergeTile)Semantics$|^division(Heading|Help)$|^(medalExplainerHow|medalBugFixerHow|tutorLogHelp)$',
@@ -1151,7 +1183,9 @@ OWNER_APPROVED = [
     (r'', r'וִיחִידָה אַחַת',
      'M10 C1 (notes 11.7): the owner approved "שְׁמוֹנֶה עֲשָׂרוֹת וִיחִידָה אַחַת" for one unit (owner-approved 2026-11-07).'),
     # The owner's answers of 2026-11-07 (in chat; hebrew-notes.md 11.8). (1) the dagesh after מִ on a letter with a shva (`from_`).
-    (r'^activity\.(?!b\.shpb06\.3\.json)', r'(^|[^֐-׿])מִשְּׁ',
+    # (M11 Stage 2, 2026-11-16: the owner approved a pointing, not a line. The new hint 3 of the count-on jumps of NUM-B-08 and MATH-C-01,
+    # "מִשְּׁמוֹנֶה קוֹפְצִים שְׁנֵי צְעָדִים עַד עֶשֶׂר, וְעוֹד …", is a new sentence the editor read in this round: it is text-ready, not approved by this rule.)
+    (r'^activity\.(?!b\.shpb06\.3\.json)', r'^(?!.*עַד עֶשֶׂר, וְעוֹד).*(^|[^֐-׿])מִשְּׁ',
      'M10 C1 (notes 11.8): the owner confirmed the dagesh after מִ on a letter with a shva, "מִשְּׁלוֹשִׁים" (owner-approved 2026-11-07).'),
     # (2) NUM-C-04 hint 3 says both tens in full, with no "עַכְשָׁו תּוֹרְכֶם" (14 words).
     (r'^activity\.c\.numc04\.(7|8|9|10|11|12)\.json$', r'עֲשָׂרוֹת\. הַצַּד הַפָּתוּחַ פּוֹנֶה לַגָּדוֹל\.$',

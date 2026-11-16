@@ -2,8 +2,8 @@
  "schema": "lesson-arc-source/v0",
  "land": "numbers",
  "host": "nekudi",
- "review": "needs-editor",
- "status": "M11 Stage 2, step 2.4c (Counting Hills), authored by the curriculum-expert on 2026-11-16. Host lines are plain drafts for the hebrew-text-editor. Only the Show of NUM-B-07 (trace) plays today; the others wait for the Show and lead players of number_line, give_n, count_tap, shop_pay and the share mode of sort_drag (step 2.1 for the templates the pilot did not need), or for Stage 3 (NUM-A-11 to A-14); a lesson whose Show waits stays a flat list (arc_build.py).",
+ "review": "text-ready",
+ "status": "M11 Stage 2, step 2.4c (Counting Hills), authored by the curriculum-expert on 2026-11-16. Host lines are plain drafts for the hebrew-text-editor. Only the Show of NUM-B-07 (trace) plays today; the others wait for the Show and lead players of number_line, give_n, count_tap, shop_pay and the share mode of sort_drag (step 2.1 for the templates the pilot did not need), or for Stage 3 (NUM-A-11 to A-14); a lesson whose Show waits stays a flat list (arc_build.py). Hebrew finalised by the hebrew-text-editor on 2026-11-16 (pointed text, voice text, text-ready; waits for the owner; docs/agents/hebrew-notes.md section 19).",
  "spec": "docs/milestones/M11-stage2.md §2, §3.1, §7.4 and §8",
  "howToRead": [
   "As shape-forest.arc.json. Steps of the templates that have no Show player yet are written in the move words the player will need (the hand-off to the app-developer): number_line `hop` (one hop of that size from where the marker stands) and `point` (the host points to a tick and says its number) with the child's `place` (the frog put on a tick); count_tap `touch` (that many objects touched in one run of the hand, each counted aloud); give_n `move` (that many objects moved to the target in one run, counted aloud); shop_pay `coin` (one coin of that kind laid on the counter); sort_drag share `item` and `bin` (the card dealt to that bin).",
@@ -82,19 +82,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_01.open",
      "text": "סוֹפְרִים יַחַד עִם הַצְּפַרְדֵּעַ.",
-     "review": "needs-editor"
+     "voice": "סופרים יחד עם הצפרדע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_a_01.key",
      "text": "קְפִיצָה אַחַת, מִסְפָּר אֶחָד.",
-     "review": "needs-editor"
+     "voice": "קפיצה אַחַת, מספר אֶחָד.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_a_01.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַקְּפִיצָה הָאַחֲרוֹנָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הקפיצה האחרונה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -169,19 +172,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_02.open",
      "text": "הַצְּפַרְדֵּעַ מַמְשִׁיכָה עַד עֶשֶׂר.",
-     "review": "needs-editor"
+     "voice": "הצפרדע ממשיכה עד עֶשֶׂר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_a_02.key",
      "text": "שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה, תֵּשַׁע.",
-     "review": "needs-editor"
+     "voice": "שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה, תֵּשַׁע.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_a_02.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד קְפִיצָה אַחַת.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד קפיצה אַחַת.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -245,19 +251,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_03.open",
      "text": "סוֹפְרִים אֶת הַחִפּוּשִׁיּוֹת.",
-     "review": "needs-editor"
+     "voice": "סופרים את החיפושיות.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_a_03.key",
      "text": "נוֹגְעִים בְּכׇל אַחַת פַּעַם אַחַת.",
-     "review": "needs-editor"
+     "voice": "נוגעים בכל אַחַת פעם אַחַת.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_a_03.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הָאַחֲרוֹנָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: האחרונה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -319,20 +328,23 @@
     {
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_04.open",
-     "text": "כַּמָּה פַּרְפָּרִים יֵשׁ?",
-     "review": "needs-editor"
+     "text": "סוֹפְרִים אֶת הַפַּרְפָּרִים.",
+     "voice": "סופרים את הפרפרים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_a_04.key",
      "text": "הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה.",
-     "review": "needs-editor"
+     "voice": "המספר האחרון אומר כמה.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_a_04.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַפַּרְפַּר הָאַחֲרוֹן.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הפרפר האחרון.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -387,20 +399,23 @@
     {
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_05.open",
-     "text": "שָׂמִים כּוֹכָבִים בַּמִּסְגֶּרֶת.",
-     "review": "needs-editor"
+     "text": "מַנִּיחִים כּוֹכָבִים בַּמִּסְגֶּרֶת.",
+     "voice": "מניחים כוכבים במסגרת.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_a_05.key",
-     "text": "רוֹאִים שְׁלוֹשָׁה בְּלִי לִסְפֹּר.",
-     "review": "needs-editor"
+     "text": "רוֹאִים שָׁלוֹשׁ בְּלִי לִסְפֹּר.",
+     "voice": "רואים שָׁלוֹשׁ בלי לספור.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_a_05.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַכּוֹכָב הַשְּׁלִישִׁי.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הכוכב השלישי.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -454,19 +469,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_06.open",
      "text": "צָרִיךְ לָתֵת שְׁלוֹשָׁה תַּפּוּחִים.",
-     "review": "needs-editor"
+     "voice": "צריך לתת שְׁלוֹשָׁה תפוחים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_a_06.key",
      "text": "סוֹפְרִים, וְעוֹצְרִים בְּשָׁלוֹשׁ.",
-     "review": "needs-editor"
+     "voice": "סופרים, ועוצרים בְּשָׁלוֹשׁ.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_a_06.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הַשְּׁלִישִׁי.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: התפוח השלישי.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -523,20 +541,23 @@
     {
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_07.open",
-     "text": "כַּמָּה תַּפּוּחִים? וְאֵיזֶה מִסְפָּר?",
-     "review": "needs-editor"
+     "text": "סוֹפְרִים, וְרוֹאִים אֶת הַמִּסְפָּר.",
+     "voice": "סופרים, ורואים את המספר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_a_07.key",
      "text": "שְׁלוֹשָׁה תַּפּוּחִים. זֶה הַמִּסְפָּר שָׁלוֹשׁ.",
-     "review": "needs-editor"
+     "voice": "שְׁלוֹשָׁה תפוחים. זה המספר שָׁלוֹשׁ.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_a_07.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הָאַחֲרוֹן.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: התפוח האחרון.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -597,19 +618,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_08.open",
      "text": "לְכׇל מִסְפָּר יֵשׁ צוּרָה.",
-     "review": "needs-editor"
+     "voice": "לכל מספר יש צורה.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_a_08.key",
      "text": "זֶה אַחַת. זֶה שְׁתַּיִם. זֶה שָׁלוֹשׁ.",
-     "review": "needs-editor"
+     "voice": "זה אַחַת. זה שְׁתַּיִם. זה שָׁלוֹשׁ.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_a_08.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: אֵיפֹה אַרְבַּע?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַצְּפַרְדֵּעַ עַל אַרְבַּע.",
+     "voice": "עכשיו תורכם: הצפרדע על אַרְבַּע.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -664,19 +688,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_09.open",
      "text": "סוֹפְרִים עַד עֶשֶׂר.",
-     "review": "needs-editor"
+     "voice": "סופרים עד עֶשֶׂר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_a_09.key",
      "text": "חָמֵשׁ, וְעוֹד אַחַת: שֵׁשׁ.",
-     "review": "needs-editor"
+     "voice": "חָמֵשׁ, ועוד אַחַת: שֵׁשׁ.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_a_09.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הָאַחֲרוֹנָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: האחרונה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -731,19 +758,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_10.open",
      "text": "מְמַלְּאִים שׁוּרָה בַּמִּסְגֶּרֶת.",
-     "review": "needs-editor"
+     "voice": "ממלאים שורה במסגרת.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_a_10.key",
-     "text": "שׁוּרָה מְלֵאָה זֶה חָמֵשׁ.",
-     "review": "needs-editor"
+     "text": "שׁוּרָה מְלֵאָה — חָמֵשׁ.",
+     "voice": "שורה מלאה — חָמֵשׁ.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_a_10.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: הַחֲמִישִׁי.",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הַחֲמִישִׁי.",
+     "voice": "עכשיו תורכם: התפוח החמישי.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -772,20 +802,23 @@
     {
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_11.open",
-     "text": "לְמִי יֵשׁ יוֹתֵר?",
-     "review": "needs-editor"
+     "text": "יֵשׁ שְׁתֵּי שׁוּרוֹת שֶׁל חִפּוּשִׁיּוֹת.",
+     "voice": "יש שְׁתֵּי שורות של חיפושיות.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_a_11.key",
-     "text": "שָׂמִים אֶחָד מוּל אֶחָד.",
-     "review": "needs-editor"
+     "text": "מַנִּיחִים אֶחָד מוּל אֶחָד.",
+     "voice": "מניחים אֶחָד מול אֶחָד.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_a_11.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: מִי נִשְׁאָר בְּלִי זוּג?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַחִפּוּשִׁית בְּלִי זוּג.",
+     "voice": "עכשיו תורכם: החיפושית בלי זוג.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -794,8 +827,8 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "יותר",
-    "פחות"
+    "יוֹתֵר",
+    "פָּחוֹת"
    ],
    "picture": "two rows of ladybugs matched one to one by lines; the one left over shows \"more\"",
    "status": "waits for Stage 3.1 (two ten-frames as rows), as the exempt list says"
@@ -814,20 +847,23 @@
     {
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_12.open",
-     "text": "גְּדוֹלִים זֶה לֹא יוֹתֵר.",
-     "review": "needs-editor"
+     "text": "כּוֹכָבִים גְּדוֹלִים, אֲבָל לֹא יוֹתֵר.",
+     "voice": "כוכבים גדולים, אבל לא יותר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_a_12.key",
      "text": "סוֹפְרִים, לֹא מִסְתַּכְּלִים עַל הַגֹּדֶל.",
-     "review": "needs-editor"
+     "voice": "סופרים, לא מסתכלים על הגודל.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_a_12.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: אֵיפֹה יֵשׁ יוֹתֵר?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַשּׁוּרָה עִם יוֹתֵר.",
+     "voice": "עכשיו תורכם: השורה עם יותר.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -836,7 +872,7 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "יותר"
+    "יוֹתֵר"
    ],
    "picture": "three big stars and five small stars matched one to one; the five small have more",
    "status": "waits for Stage 3.1"
@@ -856,19 +892,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_13.open",
      "text": "הַחַיּוֹת עוֹמְדוֹת בַּתּוֹר.",
-     "review": "needs-editor"
+     "voice": "החיות עומדות בַּתּוֹר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_a_13.key",
      "text": "רִאשׁוֹן, שֵׁנִי, שְׁלִישִׁי.",
-     "review": "needs-editor"
+     "voice": "ראשון, שֵׁנִי, שלישי.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_a_13.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: מִי הָאַחֲרוֹן?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הָאַחֲרוֹן בַּתּוֹר.",
+     "voice": "עכשיו תורכם: האחרון בַּתּוֹר.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -877,10 +916,10 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "ראשון",
-    "שני",
-    "שלישי",
-    "אחרון"
+    "רִאשׁוֹן",
+    "שֵׁנִי",
+    "שְׁלִישִׁי",
+    "אַחֲרוֹן"
    ],
    "picture": "animals join a queue facing its front, which is marked; Nekudi counts them from the front",
    "status": "waits for Stage 3.2 (order cards)"
@@ -900,19 +939,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_a_14.open",
      "text": "הַצִּפֳּרִים עָפוֹת מֵהַקֵּן.",
-     "review": "needs-editor"
+     "voice": "הציפורים עפות מהקן.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_a_14.key",
      "text": "לֹא נִשְׁאֲרָה אַף אַחַת: אֶפֶס.",
-     "review": "needs-editor"
+     "voice": "לא נשארה אף אַחַת: אֶפֶס.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_a_14.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: כַּמָּה נִשְׁאֲרוּ?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: לִסְפֹּר כַּמָּה נִשְׁאֲרוּ.",
+     "voice": "עכשיו תורכם: לספור כמה נשארו.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -921,7 +963,7 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "אפס"
+    "אֶפֶס"
    ],
    "picture": "three birds fly from the nest one by one; the empty nest and the numeral 0",
    "status": "waits for Stage 3.1"
@@ -976,19 +1018,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_01.open",
      "text": "הַצְּפַרְדֵּעַ קוֹפֶצֶת אַחֲרֵי עֶשֶׂר.",
-     "review": "needs-editor"
+     "voice": "הצפרדע קופצת אחרי עֶשֶׂר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_01.key",
      "text": "אַחַת עֶשְׂרֵה, שְׁתֵּים עֶשְׂרֵה, שְׁלֹשׁ עֶשְׂרֵה.",
-     "review": "needs-editor"
+     "voice": "אַחַת עֶשְׂרֵה, שְׁתֵּים עֶשְׂרֵה, שְׁלֹשׁ עֶשְׂרֵה.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_01.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַקְּפִיצָה הָאַחֲרוֹנָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הקפיצה האחרונה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1050,19 +1095,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_02.open",
      "text": "קוֹפְצִים מֵעַל עֶשְׂרִים.",
-     "review": "needs-editor"
+     "voice": "קופצים מעל עֶשְׂרִים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_02.key",
      "text": "אַחֲרֵי תְּשַׁע עֶשְׂרֵה בָּא עֶשְׂרִים.",
-     "review": "needs-editor"
+     "voice": "אחרי תְּשַׁע עֶשְׂרֵה בא עֶשְׂרִים.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_02.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: מָה אַחֲרֵי עֶשְׂרִים?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: עֶשְׂרִים וְאַחַת.",
+     "voice": "עכשיו תורכם: עֶשְׂרִים וְאַחַת.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1127,19 +1175,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_03.open",
      "text": "סוֹפְרִים אֲחוֹרָה, כְּמוֹ בַּחֲלָלִית.",
-     "review": "needs-editor"
+     "voice": "סופרים אחורה, כמו בחללית.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_03.key",
      "text": "קְפִיצָה אֲחוֹרָה: אֶחָד פָּחוֹת.",
-     "review": "needs-editor"
+     "voice": "קפיצה אחורה: אֶחָד פחות.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_03.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד קְפִיצָה אֲחוֹרָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד קפיצה אחורה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1203,19 +1254,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_04.open",
      "text": "סוֹפְרִים הַרְבֵּה כּוֹכָבִים.",
-     "review": "needs-editor"
+     "voice": "סופרים הרבה כוכבים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_04.key",
      "text": "קֹדֶם עֶשֶׂר, וְאָז מַמְשִׁיכִים לִסְפֹּר.",
-     "review": "needs-editor"
+     "voice": "קודם עֶשֶׂר, ואז ממשיכים לספור.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_04.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הָאַחֲרוֹן.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: האחרון.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1274,19 +1328,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_05.open",
      "text": "צָרִיךְ לָתֵת שְׁלוֹשָׁה עָשָׂר דָּגִים.",
-     "review": "needs-editor"
+     "voice": "צריך לתת שְׁלוֹשָׁה עָשָׂר דגים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_05.key",
-     "text": "עֲשָׂרָה, וְעוֹד שְׁלוֹשָׁה. וְעוֹצְרִים.",
-     "review": "needs-editor"
+     "text": "עֶשֶׂר, וְעוֹד שָׁלוֹשׁ. וְעוֹצְרִים.",
+     "voice": "עֶשֶׂר, ועוד שָׁלוֹשׁ. ועוצרים.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_05.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הָאַחֲרוֹן, וְעוֹצְרִים.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: האחרון, ועוצרים.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1350,19 +1407,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_06.open",
      "text": "מִסְפָּרִים שֶׁנִּרְאִים דּוֹמִים.",
-     "review": "needs-editor"
+     "voice": "מספרים שנראים דומים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_06.key",
      "text": "זֶה שֵׁשׁ. וְזֶה תֵּשַׁע.",
-     "review": "needs-editor"
+     "voice": "זה שֵׁשׁ. וזה תֵּשַׁע.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_06.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: אֵיפֹה שֵׁשׁ?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַצְּפַרְדֵּעַ עַל שֵׁשׁ.",
+     "voice": "עכשיו תורכם: הצפרדע על שֵׁשׁ.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1438,19 +1498,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_07.open",
      "text": "כּוֹתְבִים אַרְבַּע מֵהַנְּקֻדָּה.",
-     "review": "needs-editor"
+     "voice": "כותבים אַרְבַּע מהנקודה.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_07.key",
-     "text": "קַו לְמַטָּה, וְאָז קַו יָשָׁר.",
-     "review": "needs-editor"
+     "text": "קַו לְמַטָּה, וְאָז קַו לַצַּד.",
+     "voice": "קו למטה, ואז קו לצד.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_07.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַקַּו הָאָרֹךְ.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הקו הארוך.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1515,19 +1578,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_08.open",
      "text": "קוֹרְאִים מִסְפָּרִים אַחֲרֵי עֶשֶׂר.",
-     "review": "needs-editor"
+     "voice": "קוראים מספרים אחרי עֶשֶׂר.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_08.key",
      "text": "אַחַת עֶשְׂרֵה, שְׁתֵּים עֶשְׂרֵה, שְׁלֹשׁ עֶשְׂרֵה.",
-     "review": "needs-editor"
+     "voice": "אַחַת עֶשְׂרֵה, שְׁתֵּים עֶשְׂרֵה, שְׁלֹשׁ עֶשְׂרֵה.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_08.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: אֵיפֹה אַרְבַּע עֶשְׂרֵה?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: אַרְבַּע עֶשְׂרֵה.",
+     "voice": "עכשיו תורכם: אַרְבַּע עֶשְׂרֵה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1587,19 +1653,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_09.open",
      "text": "מִסְגֶּרֶת שֶׁל עֶשֶׂר מִשְׁבָּצוֹת.",
-     "review": "needs-editor"
+     "voice": "מסגרת של עֶשֶׂר משבצות.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_09.key",
      "text": "שׁוּרָה מְלֵאָה חָמֵשׁ, וְעוֹד שָׁלוֹשׁ.",
-     "review": "needs-editor"
+     "voice": "שורה מלאה חָמֵשׁ, ועוד שָׁלוֹשׁ.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_09.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: הַשְּׁמִינִי.",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: הַתַּפּוּחַ הַשְּׁמִינִי.",
+     "voice": "עכשיו תורכם: התפוח השמיני.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1653,20 +1722,23 @@
     {
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_10.open",
-     "text": "מִי גָּדוֹל יוֹתֵר, אַרְבַּע אוֹ שֶׁבַע?",
-     "review": "needs-editor"
+     "text": "מַשְׁוִים בֵּין אַרְבַּע לְשֶׁבַע.",
+     "voice": "משווים בין אַרְבַּע לְשֶׁבַע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_10.key",
      "text": "לְכִוּוּן הַחֵץ, הַמִּסְפָּרִים גְּדֵלִים.",
-     "review": "needs-editor"
+     "voice": "לכיוון החץ, המספרים גְּדֵלִים.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_10.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: שִׂימוּ עַל הַגָּדוֹל.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: שימו על הגדול.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1726,19 +1798,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_11.open",
      "text": "אֶחָד יוֹתֵר, אֶחָד פָּחוֹת.",
-     "review": "needs-editor"
+     "voice": "אֶחָד יותר, אֶחָד פחות.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_11.key",
      "text": "קָדִימָה זֶה יוֹתֵר, אֲחוֹרָה פָּחוֹת.",
-     "review": "needs-editor"
+     "voice": "קדימה זה יותר, אחורה פחות.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_11.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד אֶחָד פָּחוֹת.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד אֶחָד פחות.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1804,19 +1879,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_13.open",
      "text": "קוֹפְצִים עַל צִיר הַמִּסְפָּרִים.",
-     "review": "needs-editor"
+     "voice": "קופצים על ציר המספרים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_13.key",
      "text": "כׇּל הַקְּפִיצוֹת בְּאוֹתוֹ אֹרֶךְ.",
-     "review": "needs-editor"
+     "voice": "כל הקפיצות באותו אורך.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_13.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד קְפִיצָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד קפיצה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1872,19 +1950,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_14.open",
      "text": "יֵשׁ חָמֵשׁ. רוֹצִים שְׁמוֹנֶה.",
-     "review": "needs-editor"
+     "voice": "יש חָמֵשׁ. רוצים שְׁמוֹנֶה.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_14.key",
-     "text": "חָמֵשׁ וְעוֹד שָׁלוֹשׁ זֶה שְׁמוֹנֶה.",
-     "review": "needs-editor"
+     "text": "חָמֵשׁ וְעוֹד שָׁלוֹשׁ הֵם שְׁמוֹנֶה.",
+     "voice": "חָמֵשׁ ועוד שָׁלוֹשׁ הם שְׁמוֹנֶה.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_14.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד אֶחָד.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד אֶחָד.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -1951,20 +2032,23 @@
     {
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_16.open",
-     "text": "עֶשֶׂר, וְעוֹד כַּמָּה?",
-     "review": "needs-editor"
+     "text": "עֶשֶׂר, וְעוֹד קְצָת.",
+     "voice": "עֶשֶׂר, ועוד קצת.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_16.key",
      "text": "עֶשֶׂר, וְעוֹד אַרְבַּע: אַרְבַּע עֶשְׂרֵה.",
-     "review": "needs-editor"
+     "voice": "עֶשֶׂר, ועוד אַרְבַּע: אַרְבַּע עֶשְׂרֵה.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_16.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַקְּפִיצָה הָאַחֲרוֹנָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הקפיצה האחרונה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -2028,19 +2112,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_17.open",
      "text": "קוֹפְצִים בִּשְׁתַּיִם.",
-     "review": "needs-editor"
+     "voice": "קופצים בִּשְׁתַּיִם.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_17.key",
      "text": "שְׁתַּיִם, אַרְבַּע, שֵׁשׁ.",
-     "review": "needs-editor"
+     "voice": "שְׁתַּיִם, אַרְבַּע, שֵׁשׁ.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_17.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד שְׁתַּיִם.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד שְׁתַּיִם.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -2132,19 +2219,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_b_18.open",
      "text": "מְחַלְּקִים גַּרְבַּיִם לֶחָתוּל וְלַכֶּלֶב.",
-     "review": "needs-editor"
+     "voice": "מחלקים גרביים לחתול ולכלב.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_b_18.key",
-     "text": "גֶּרֶב לָזֶה, גֶּרֶב לָזֶה.",
-     "review": "needs-editor"
+     "text": "גֶּרֶב לָזֶה, גֶּרֶב לָזֶה: זֶה זוּג.",
+     "voice": "גרב לזה, גרב לזה: זה זוג.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_b_18.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַגֶּרֶב הָאַחֲרוֹנָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: הגרב האחרונה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -2210,19 +2300,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_c_01.open",
      "text": "סוֹפְרִים עַד מֵאָה.",
-     "review": "needs-editor"
+     "voice": "סופרים עד מֵאָה.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_c_01.key",
      "text": "אַחֲרֵי שְׁלוֹשִׁים וְתֵשַׁע: אַרְבָּעִים.",
-     "review": "needs-editor"
+     "voice": "אחרי שְׁלוֹשִׁים וְתֵשַׁע: אַרְבָּעִים.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_c_01.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד קְפִיצָה.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד קפיצה.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -2277,20 +2370,23 @@
     {
      "role": "open",
      "vo": "vo:host.nekudi.show.num_c_02.open",
-     "text": "אֵיפֹה אַרְבָּעִים וְשֶׁבַע?",
-     "review": "needs-editor"
+     "text": "מוֹצְאִים אֶת אַרְבָּעִים וְשֶׁבַע.",
+     "voice": "מוצאים את אַרְבָּעִים וְשֶׁבַע.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_c_02.key",
      "text": "אַרְבָּעִים, וְעוֹד שֶׁבַע: קָרוֹב לַחֲמִשִּׁים.",
-     "review": "needs-editor"
+     "voice": "אַרְבָּעִים, ועוד שֶׁבַע: קרוב לַחֲמִשִּׁים.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_c_02.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: שִׂימוּ אֶת הַצְּפַרְדֵּעַ.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: שימו את הצפרדע.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -2354,19 +2450,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_c_03.open",
      "text": "מְשַׁלְּמִים שְׁלוֹשִׁים וְאֶחָד שְׁקָלִים.",
-     "review": "needs-editor"
+     "voice": "משלמים שְׁלוֹשִׁים וְאֶחָד שקלים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_c_03.key",
-     "text": "שָׁלוֹשׁ עֲשָׂרוֹת, וְעוֹד אֶחָד.",
-     "review": "needs-editor"
+     "text": "שָׁלוֹשׁ עֲשָׂרוֹת, וְעוֹד שֶׁקֶל אֶחָד.",
+     "voice": "שָׁלוֹשׁ עֲשָׂרוֹת, ועוד שֶׁקֶל אֶחָד.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_c_03.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: הַשֶּׁקֶל הָאַחֲרוֹן.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: השקל האחרון.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -2375,8 +2474,8 @@
     "maxSeconds": 8
    },
    "teaches": [
-    "עשרות",
-    "אחד"
+    "עֲשָׂרוֹת",
+    "אֶחָד"
    ],
    "picture": "the price 31 on the fish; Nekudi lays three ten-shekel coins, counting \"ten, twenty, thirty\"; the child lays the one shekel; upgrade: base-ten rods first (Stage 3.3)",
    "status": "waits for the Show and lead player of shop_pay (step 2.1)"
@@ -2420,20 +2519,23 @@
     {
      "role": "open",
      "vo": "vo:host.nekudi.show.num_c_04.open",
-     "text": "מִי גָּדוֹל יוֹתֵר?",
-     "review": "needs-editor"
+     "text": "מַשְׁוִים שְׁנֵי מִסְפָּרִים.",
+     "voice": "משווים שְׁנֵי מספרים.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_c_04.key",
      "text": "מַשְׁוִים קֹדֶם אֶת הָעֲשָׂרוֹת.",
-     "review": "needs-editor"
+     "voice": "משווים קודם את הָעֲשָׂרוֹת.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_c_04.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: שִׂימוּ עַל הַגָּדוֹל.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: שימו על הגדול.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -2487,20 +2589,23 @@
     {
      "role": "open",
      "vo": "vo:host.nekudi.show.num_c_06.open",
-     "text": "צִיר מֵאֶפֶס עַד מֵאָה.",
-     "review": "needs-editor"
+     "text": "זֶה צִיר מֵאֶפֶס עַד מֵאָה.",
+     "voice": "זה ציר מֵאֶפֶס עד מֵאָה.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_c_06.key",
      "text": "בָּאֶמְצַע: חֲמִשִּׁים.",
-     "review": "needs-editor"
+     "voice": "באמצע: חֲמִשִּׁים.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_c_06.handover",
-     "text": "עַכְשָׁו תּוֹרְכֶם: אֵיפֹה עֶשְׂרִים וְשָׁלוֹשׁ?",
-     "review": "needs-editor"
+     "text": "עַכְשָׁו תּוֹרְכֶם: עֶשְׂרִים וְשָׁלוֹשׁ.",
+     "voice": "עכשיו תורכם: עֶשְׂרִים וְשָׁלוֹשׁ.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -2563,19 +2668,22 @@
      "role": "open",
      "vo": "vo:host.nekudi.show.num_c_09.open",
      "text": "קוֹפְצִים עֶשֶׂר קָדִימָה.",
-     "review": "needs-editor"
+     "voice": "קופצים עֶשֶׂר קדימה.",
+     "review": "text-ready"
     },
     {
      "role": "key",
      "vo": "vo:host.nekudi.show.num_c_09.key",
      "text": "עֶשֶׂר יוֹתֵר: הַיְּחִידוֹת נִשְׁאָרוֹת.",
-     "review": "needs-editor"
+     "voice": "עֶשֶׂר יותר: היחידות נשארות.",
+     "review": "text-ready"
     },
     {
      "role": "handover",
      "vo": "vo:host.nekudi.show.num_c_09.handover",
      "text": "עַכְשָׁו תּוֹרְכֶם: עוֹד עֶשֶׂר.",
-     "review": "needs-editor"
+     "voice": "עכשיו תורכם: עוד עֶשֶׂר.",
+     "review": "text-ready"
     }
    ],
    "predict": null,
@@ -2599,79 +2707,91 @@
    "template": "number_line",
    "vo": "vo:host.nekudi.together.line",
    "text": "סוֹפְרִים כׇּל קְפִיצָה בְּקוֹל.",
-   "review": "needs-editor"
+   "voice": "סופרים כל קפיצה בקול.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "give_n",
    "vo": "vo:host.nekudi.together.give",
-   "text": "סוֹפְרִים בִּזְמַן שֶׁנּוֹתְנִים, וְעוֹצְרִים.",
-   "review": "needs-editor"
+   "text": "סוֹפְרִים כְּשֶׁנּוֹתְנִים, וְעוֹצְרִים.",
+   "voice": "סופרים כשנותנים, ועוצרים.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "count_tap",
    "vo": "vo:host.nekudi.together.count",
    "text": "נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת.",
-   "review": "needs-editor"
+   "voice": "נוגעים בכל אֶחָד פעם אַחַת.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "tap_answer",
    "vo": "vo:host.nekudi.together.tap",
    "text": "נַחְשֹׁב יַחַד. אַתֶּם בּוֹחֲרִים.",
-   "review": "needs-editor"
+   "voice": "נחשוב יחד. אתם בוחרים.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "trace",
    "vo": "vo:host.nekudi.together.trace",
-   "text": "אֲנִי מַתְחִיל. אַתֶּם מַמְשִׁיכִים.",
-   "review": "needs-editor"
+   "text": "אֲנִי מַתְחִילָה. אַתֶּם מַמְשִׁיכִים.",
+   "voice": "אני מתחילה. אתם ממשיכים.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "sort_drag",
    "vo": "vo:host.nekudi.together.sort",
    "text": "אֶחָד לָזֶה, אֶחָד לָזֶה.",
-   "review": "needs-editor"
+   "voice": "אֶחָד לזה, אֶחָד לזה.",
+   "review": "text-ready"
   },
   {
    "role": "together_lead",
    "template": "shop_pay",
    "vo": "vo:host.nekudi.together.pay",
    "text": "סוֹפְרִים אֶת הַמַּטְבְּעוֹת בְּקוֹל.",
-   "review": "needs-editor"
+   "voice": "סופרים את המטבעות בקול.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.nekudi.handover.1",
-   "text": "עַכְשָׁו אַתֶּם סוֹפְרִים לְבַד.",
-   "review": "needs-editor"
+   "text": "עַכְשָׁו אַתֶּם סוֹפְרִים.",
+   "voice": "עכשיו אתם סופרים.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.nekudi.handover.2",
-   "text": "יֹפִי. עַכְשָׁו תּוֹרְכֶם.",
-   "review": "needs-editor"
+   "text": "עַכְשָׁו תּוֹרְכֶם. אֲנִי כָּאן.",
+   "voice": "עכשיו תורכם. אני כאן.",
+   "review": "text-ready"
   },
   {
    "role": "handover",
    "vo": "vo:host.nekudi.handover.3",
-   "text": "אֲנִי מַקְשִׁיב. עַכְשָׁו אַתֶּם.",
-   "review": "needs-editor"
+   "text": "אֲנִי מַקְשִׁיבָה. עַכְשָׁו אַתֶּם.",
+   "voice": "אני מקשיבה. עכשיו אתם.",
+   "review": "text-ready"
   },
   {
    "role": "show_me",
    "vo": "vo:host.nekudi.showme.1",
    "text": "בּוֹאוּ נִרְאֶה שׁוּב, לְאַט.",
-   "review": "needs-editor"
+   "voice": "בואו נראה שוב, לאט.",
+   "review": "text-ready"
   },
   {
    "role": "show_me",
    "vo": "vo:host.nekudi.showme.2",
-   "text": "אֲנִי סוֹפֵר אִתְּכֶם עוֹד פַּעַם.",
-   "review": "needs-editor"
+   "text": "אֲנִי סוֹפֶרֶת אִתְּכֶם עוֹד פַּעַם.",
+   "voice": "אני סופרת איתכם עוד פעם.",
+   "review": "text-ready"
   }
  ],
  "lessons": [

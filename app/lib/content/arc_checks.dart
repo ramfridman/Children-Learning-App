@@ -32,11 +32,15 @@ List<String> _strings(Object? v) => <String>[
 /// The domains whose lessons are played in parts. A land is added when its re-cut and its Shows are done (2.4a Shape Forest; 2.4b to 2.4e the
 /// others): from then on every rule below holds for all of its lessons and skills.
 ///
-/// THE SWITCH: the five lands that are built but not yet asked for the rules are `numbers` (Counting Hills), `math` (Market), `colors` (Colour Bay), `logic`
-/// (Riddle Grotto) and `cs` (Robot Harbour); put them in this set (one line) once `arc_checks_test.dart` ("the five lands under the rules") says they are clean.
-const Set<String> arcDomains = <String>{'shapes'};
+/// All six lands are in since 2026-11-16: `numbers` (Counting Hills), `math` (Market), `colors` (Colour Bay), `logic` (Riddle Grotto) and `cs` (Robot Harbour) joined
+/// Shape Forest once V1 to V7 were clean for them (W1 is a warning: see [metBeforeAsked]).
+const Set<String> arcDomains = <String>{'shapes', 'numbers', 'math', 'colors', 'logic', 'cs'};
 
-/// Every land that has a room (the six): what the rules would see once all of them are switched in.
+/// The lands where W1 (a word asked before a Show teaches it) refuses a pack: Shape Forest only. For the other five it is a warning that the tests count
+/// (the pin falls, never rises) until the owner confirms the two provisional rules of `w1_words.dart`; then they join this set.
+const Set<String> w1Domains = <String>{'shapes'};
+
+/// Every land that has a room (the six).
 const Set<String> allArcDomains = <String>{'shapes', 'numbers', 'math', 'colors', 'logic', 'cs'};
 
 /// The lessons of the arc domains that stay a flat list for now, each with what it waits for: a lesson whose Show waits says so itself (`partsWait`,
@@ -90,7 +94,7 @@ const Map<String, String> tagWaivers = <String, String>{
   // The other five lands (M11-stage2 section 11.5, content/units/pending/stage2-recuts.json `waivers`): taps that stay with no second honest tag.
   'b.colb03.6':
       'light red asked; no shade of a hue near red exists; the plain purple shows no catalogued error',
-  'b.mathb10.4': 'equal groups, how many in all: one group\'s size or a wrong group count has no catalogue tag (a proposal: M-GRP-ONE)',
+  'b.mathb10.4': "equal groups, how many in all: one group's size or a wrong group count has no catalogue tag (a proposal: M-GRP-ONE)",
   'b.mathb10.5': 'as b.mathb10.4',
   'b.mathb10.6': 'as b.mathb10.4',
   'b.mathb10.8': 'as b.mathb10.4 (how many plates)',
@@ -103,6 +107,21 @@ const Map<String, String> tagWaivers = <String, String>{
   'math.graph.stars': 'as math.graph.apples',
   'math.graph.stars2': 'as math.graph.apples',
   'pick.red.flower': 'a hand-made butterflies item: the yellow flower shows no catalogued error',
+  // The closing pass (M11-stage2 section 11.5, the same data file): a number or an object asked in a form with no honest second tag.
+  'b.numb08.2': "a numeral found among the labelled ticks of a line: the reversal it would show is not on the line (13 and 31 are not on one line from 10 to 20), so the line item checks recognition and the skill's taps carry M-NUM-REV",
+  'b.numb08.5': "a numeral found among the labelled ticks of a line: the reversal it would show is not on the line (13 and 31 are not on one line from 10 to 20), so the line item checks recognition and the skill's taps carry M-NUM-REV",
+  'b.numb08.7': "a numeral found among the labelled ticks of a line: the reversal it would show is not on the line (13 and 31 are not on one line from 10 to 20), so the line item checks recognition and the skill's taps carry M-NUM-REV",
+  'c.numb06.1': "a numeral found among the labelled ticks of a line: the reversal it would show is not on the line (6 and 9 are a turn, not a reversal the line classifiers read), so the line item checks recognition and the skill's taps carry M-NUM-REV",
+  'c.numb06.3': "a numeral found among the labelled ticks of a line: the reversal it would show is not on the line (6 and 9 are a turn, not a reversal the line classifiers read), so the line item checks recognition and the skill's taps carry M-NUM-REV",
+  'c.numb06.5': "a numeral found among the labelled ticks of a line: the reversal it would show is not on the line (6 and 9 are a turn, not a reversal the line classifiers read), so the line item checks recognition and the skill's taps carry M-NUM-REV",
+  'b.numb10.9': 'the symbolic form of NUM-B-10 (two numerals, which is bigger), kept so the core skill has two representations; picking the smaller shows no catalogued error',
+  'b.numb10.10': 'the symbolic form of NUM-B-10 (two numerals, which is bigger), kept so the core skill has two representations; picking the smaller shows no catalogued error',
+  'c.mathc01.32': "a weighing ends level by construction (the child adds blocks until the scale is level), so a wrong move cannot be told apart: the item carries the idea of \"the same as\" as a concrete rung, and the skill's diagnosis is in its typed and tap items (third pass decision, M11-stage2 §11.7)",
+  'c.mathc01.33': "a weighing ends level by construction (the child adds blocks until the scale is level), so a wrong move cannot be told apart: the item carries the idea of \"the same as\" as a concrete rung, and the skill's diagnosis is in its typed and tap items (third pass decision, M11-stage2 §11.7)",
+  'c.mathc02.11': "a weighing ends level by construction (the child adds blocks until the scale is level), so a wrong move cannot be told apart: the item carries the idea of \"the same as\" as a concrete rung, and the skill's diagnosis is in its typed and tap items (third pass decision, M11-stage2 §11.7)",
+  'c.mathc02.12': "a weighing ends level by construction (the child adds blocks until the scale is level), so a wrong move cannot be told apart: the item carries the idea of \"the same as\" as a concrete rung, and the skill's diagnosis is in its typed and tap items (third pass decision, M11-stage2 §11.7)",
+  'c.mathc02.4': "a weighing ends level by construction (the child adds blocks until the scale is level), so a wrong move cannot be told apart: the item carries the idea of \"the same as\" as a concrete rung, and the skill's diagnosis is in its typed and tap items (third pass decision, M11-stage2 §11.7)",
+  'c.mathc02.5': "a weighing ends level by construction (the child adds blocks until the scale is level), so a wrong move cannot be told apart: the item carries the idea of \"the same as\" as a concrete rung, and the skill's diagnosis is in its typed and tap items (third pass decision, M11-stage2 §11.7)",
 };
 
 /// Skills whose hands-on items have no honest tag to record beyond the one they carry (M11-stage2 section 11.2 item 3).
@@ -817,7 +836,7 @@ List<String> metBeforeAsked({
   required Map<String, Map<String, Object?>> activities,
   required Map<String, Map<String, Object?>> lessons,
   required Map<String, Map<String, Object?>> skills,
-  Set<String> domains = arcDomains,
+  Set<String> domains = w1Domains,
 }) {
   String plain(String w) => withoutNiqqud(w).trim();
   final Map<String, Set<String>> taught = <String, Set<String>>{};

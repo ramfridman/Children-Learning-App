@@ -1170,10 +1170,10 @@ All 433 rows (and the 201 rows of the 17 Show activities that `tools/arc_build.p
 
 Nothing is voiced. Three notes: (1) the hand-overs start `עַכְשָׁו תּוֹרְכֶם.` and the full stop is the beat before the instruction; (2) the key line of SHP-B-01 is a count, `שָׁלוֹשׁ צלעות: משולש. אַרְבַּע: מרובע…`, said slowly like the count-on lines; (3) `הַתֵּבָה` comes out as plain `התיבה` (the same as the approved SHP-B-08 line); if it is misread, add `הַתֵּבָה` to `KEEP_POINTED`.
 
-### 17.7 The owner's three answers (2026-11-15)
-
-1. Yes: `מַטְבִּיעִים צַד שָׁטוּחַ שֶׁל הַגּוּף` stays; `x.shpb09.1`, `.4`, `.5` hint 3 are `owner-approved` again (`OWNER_APPROVED`, exactly those three rows, "owner approved in chat, 2026-11-15"). 2. The oval is `אֶלִיפְּסָה`. 3. SHP-B-06 is retitled `צורות קטנות עושות צורה גדולה` (child line `צוּרוֹת קְטַנּוֹת עוֹשׂוֹת צוּרָה גְּדוֹלָה`); the lesson `צוּרוֹת עוֹשׂוֹת צוּרוֹת` is unchanged. The first-pass questions follow.
-
+### 17.7 The owner's three answers (2026-11-15)
+
+1. Yes: `מַטְבִּיעִים צַד שָׁטוּחַ שֶׁל הַגּוּף` stays; `x.shpb09.1`, `.4`, `.5` hint 3 are `owner-approved` again (`OWNER_APPROVED`, exactly those three rows, "owner approved in chat, 2026-11-15"). 2. The oval is `אֶלִיפְּסָה`. 3. SHP-B-06 is retitled `צורות קטנות עושות צורה גדולה` (child line `צוּרוֹת קְטַנּוֹת עוֹשׂוֹת צוּרָה גְּדוֹלָה`); the lesson `צוּרוֹת עוֹשׂוֹת צוּרוֹת` is unchanged. The first-pass questions follow.
+
 ### 17.8 First-pass questions (answered above)
 
 1. **Three approved rows changed** (`x.shpb09.1`, `.4`, `.5`, hint 3): `מַטְבִּיעִים צַד שָׁטוּחַ שֶׁל הַגּוּף` instead of `מַטְבִּיעִים אֶת הַגּוּף`, because the pyramid does not leave a triangle on its base. OK?
@@ -1222,3 +1222,77 @@ Read and left as drafted: the tracing Show (`אֲנִי מְצַיֵּר מְש�
 
 - **curriculum-expert:** `show.shp-a-03` teaches `רִבּוּעַ` but no line of the Show says it (Kubi turns the tilted square silently; the word comes from SHP-A-01's Show); `show.shp-b-02` teaches `חָמֵשׁ צְלָעוֹת` which is only a bin label (allowed: counting words 1 to 10 once NUM-A-02 holds). The `יָשָׁר` / `עָקֹם` bins of `shp.line.shapes` take whole shapes (the trapezoid, the oval): "straight" there means straight sides; the hint 2 line `הוֹלְכִים יָשָׁר, אוֹ מִתְעַקְּמִים?` fits an outline.
 - **voice director:** the B-01 key line is a count with a beat at each dash, said slowly like the count-on lines; the hand-overs begin `עכשיו תורכם` and the colon or full stop is the beat before the instruction.
+
+## 19. M11 Stage 2, the five other lands: Counting Hills, Market Village, Riddle Grotto, Colour Bay, Robot Harbour (hebrew-text-editor, 2026-11-16)
+
+Scope: the curriculum-expert's drafts (`needs-editor`) of `content/units/arc/{counting-hills,market,riddle-grotto,colour-bay,robot-harbour}.arc.json` (97 Shows, 51 host lines, 13 predict questions, 355 lines in all), the narrator and companion lines of the items the closing content pass re-cut, and the draft strings of `content/units/pending/stage2-recuts.json`. Nothing was voiced or paid (one free `voice_gen plan` for the counts). Files changed: the five arc files (every line has `voice` and is `text-ready`; nine `teaches` words pointed), `content/units/colours.json` (14 strings, 19.3), `tools/hebrew_voice_review.py` (rules, READ and PENDING entries), this file, and what `tools/regen_content.py`, `tools/export-hebrew-review.py` and the tool regenerate (`docs/review/*`, `content/starter`, `content/units/band-b-*.json`). Not changed: generators, `tools/author.py`, ids, answers, tags, structure.
+
+### 19.1 What the 355 host lines follow
+
+- **Who speaks.** Nekudi, Timi and Pnina are she (design-spec 4.2, 4.5, 4.7); Goni and Tza'adon are he (4.3, 4.6). Their own verbs agree: `אֲנִי מַנִּיחָה`, `אֲנִי מַקְשִׁיבָה`, `אֲנִי סוֹפֶרֶת`, `אֲנִי מַתְחִילָה` (the three), `אֲנִי מַנִּיחַ` (Goni). The children are always in the plural (`עַכְשָׁו תּוֹרְכֶם`, `סוֹפְרִים`). Pnina's `אֲנִי שָׂמָה` and `אֲנִי מַרְאָה` are gone: plain `שמה` is read "sama" or "shama", and `מַרְאָה` is also a mirror; `אֲנִי מַנִּיחָה` and `אֲנִי אַרְאֶה` say the same without the doubt. Nekudi's `אֲנִי מַקְשִׁיב`, `אֲנִי מַתְחִיל`, `אֲנִי סוֹפֵר` were masculine.
+- **A Show never asks and never praises** (17.1). The drafts had 45 lines that asked (42) or were over 24 letters (3); all are statements or instructions now: `עַכְשָׁו תּוֹרְכֶם: מַה בַּסּוֹף?` → `עַכְשָׁו תּוֹרְכֶם: הַצַּעַד הָאַחֲרוֹן.`, `מִי גָּדוֹל יוֹתֵר?` → `מַשְׁוִים שְׁנֵי מִסְפָּרִים.`, `אֵיפֹה אַרְבַּע?` → `הַצְּפַרְדֵּעַ עַל אַרְבַּע.`. The only questions are the 13 predict lines.
+- **A predict Show opens with a statement, not with the question** (the player says the open line, then the predict line, then the choices): `בִּיפּ! מָה עוֹשִׂים קֹדֶם?` (open) and `מָה עוֹשִׂים קֹדֶם?` (predict) were the same words twice. Now `בִּיפּ! מְצַחְצְחִים שִׁנַּיִם.`; `מְמַיְּנִים אֶת הַצּוּרוֹת.` then `מְמַיְּנִים לְפִי מָה?`; `מַמְשִׁיכִים אֶת הַסֵּדֶר.` then `מַה בָּא אַחַר כָּךְ?`; `יֵשׁ טָעוּת בַּסֵּדֶר.` then `אֵיפֹה הַטָּעוּת?`. Every predict line and every choice is pointed (13 of 13: none is left out of the build; the files already had them pointed when I read them, only their voice text is plain, by design); `הַאִם זֶה חוֹזֵר?` is `זֶה חוֹזֵר?` (`הַאִם` is written Hebrew), `אֵיךְ מִיַּנְתִּי?` is `מְמַיְּנִים לְפִי מָה?` (the question comes before the host acts, so it is not "how did I").
+- **Hand-overs.** The Together hand-overs lost `יֹפִי.` (praise before the child acts, as 17.1) and `לְבַד` (heard as "alone"): `עַכְשָׁו תּוֹרְכֶם. אֲנִי כָּאן.`, `עַכְשָׁו אַתֶּם סוֹפְרִים.`, `הָרוֹבּוֹט מוּכָן. עַכְשָׁו אַתֶּם.` (`מְחַכֶּה לָכֶם` could press). The lead-in of a sort is `נַעֲשֶׂה יַחַד. אֲנִי מַנִּיחַ / מַנִּיחָה אֶת הָרִאשׁוֹן.` (`שָׂמִים` is a V1 word, `מַנִּיחִים` needs no nikud).
+- **Imperatives that a plain voice text reads wrong** are infinitives: `לְתַקֵּן אֶת הַחֵץ` (plain `תקנו` is also "you will buy"), `לִבְנוֹת אֶת הַחֵלֶק` (`בנו` is "his son"), `לְעַרְבֵּב`, `לִסְפֹּר`. `שִׂימוּ` and `קְחוּ` stay (the pack's precedent).
+- **Numbers.** A bare number is feminine (`שָׁלוֹשׁ, וְעוֹד אַחַת: אַרְבַּע.`, `יֵשׁ שֵׁשׁ. רוֹצִים עֶשֶׂר.`, the predict choices of CS-B-01 `שָׁלוֹשׁ / אַרְבַּע / חָמֵשׁ`, `רוֹאִים שָׁלוֹשׁ בְּלִי לִסְפֹּר`); a number next to its noun takes the noun (`עֲשָׂרָה שְׁקָלִים`, `שֶׁקֶל אֶחָד`, `שְׁתֵּי עֲשָׂרוֹת`). `שָׁלוֹשׁ זֶה הַהַתְחָלָה` is `שָׁלוֹשׁ — הַהַתְחָלָה, אַרְבַּע — הַקְּפִיצוֹת` (no `זֶה` before a feminine predicate); `חָמֵשׁ וְעוֹד שָׁלוֹשׁ זֶה שְׁמוֹנֶה` is `… הֵם שְׁמוֹנֶה`.
+- **Bubble.** All 355 lines are at most 6 words and 24 letters (script check).
+- **`teaches`.** Nine plain words of the curriculum-expert (`יותר`, `פחות`, `ראשון`, `שני`, `שלישי`, `אחרון`, `אפס`, `עשרות`, `אחד`) are pointed as the items point them (the W1 check compares them unpointed). Two keys now say a word the Show teaches and did not say (`הַצַּד הַכָּבֵד יוֹרֵד, הַצַּד הַקַּל עוֹלֶה`; `בֹּקֶר, צָהֳרַיִם, וְאָז עֶרֶב`).
+
+### 19.2 Old to new (the lines that matter; the whole list is the diff of the arc files: 116 of 355 lines changed)
+
+| Where | Draft | Now | Why |
+|---|---|---|---|
+| Robot, `show.cs-a-03` open | `בִּיפּ! אֵיפֹה אֶעֱצֹר?` | `בִּיפּ! הָרוֹבּוֹט הוֹלֵךְ לַדֶּגֶל.` | Tza'adon is not the robot that runs the child's path (design-spec 4.6): he does not stop. The question is the predict line. |
+| Robot, `show.cs-a-05` key | `סַבּוֹן? לֹא בְּצִחְצוּחַ שִׁנַּיִם.` | `לֹא מְצַחְצְחִים שִׁנַּיִם בְּסַבּוֹן.` | a whole sentence, no question; replayed alone it still makes sense |
+| Robot, `show.cs-b-04` | `…הַחֵץ הַלֹּא נָכוֹן.` / `תַּקְּנוּ אוֹתוֹ.` | `…הַחֵץ שֶׁלֹּא נָכוֹן.` / `לְתַקֵּן אֶת הַחֵץ.` | `הַלֹּא נָכוֹן` is not Hebrew; the plain imperative is ambiguous |
+| Colour, `show.col-a-04` key | `רִבּוּעַ, אֲבָל אָדֹם.` | `רִבּוּעַ אָדֹם הוֹלֵךְ עִם הָאָדֹם.` | the elliptical key said alone does not say what happens |
+| Colour, `show.col-a-05` key | `יְרֻקָּה, וְהִיא עֲדַיִן בָּנָנָה.` | `בָּנָנָה יְרֻקָּה — עֲדַיִן בָּנָנָה.` | the subject first; `עֲדַיִן` is voiced `עדיין` (a rule in `ktiv_token`) |
+| Colour, `show.col-b-04` key | `הַצּוּרָה לֹא מְשַׁנָּה. הַצֶּבַע כֵּן.` | `הַצּוּרָה לֹא חֲשׁוּבָה. הַצֶּבַע חָשׁוּב.` | `לֹא מְשַׁנָּה` is an idiom of the 8-year-old; for 5 to 6 |
+| Riddle, `show.log-a-07` | `מִישֶׁהוּ טָעָה בַּסֵּדֶר.` / `תַּקְּנוּ אֶת הַשֵּׁנִי.` | `יֵשׁ טָעוּת בַּסֵּדֶר.` / `לְתַקֵּן עוֹד אֶחָד.` | nobody is blamed; no ordinal to work out |
+| Riddle, `show.log-a-09` open | `מָה הוֹלֵךְ עִם מַה?` | `יֵשׁ דְּבָרִים שֶׁהוֹלְכִים יַחַד.` | a statement |
+| Market, `show.math-b-10` | `מְחַלְּקִים לְצַלָּחוֹת שָׁווֹת.` | `מְחַלְּקִים תַּפּוּחִים לִשְׁתֵּי צַלָּחוֹת.` | `צַלָּחוֹת שָׁווֹת` are plates that are equal, not a fair share |
+| Market, `show.math-a-07`, `-b-19` | `מְמַיְּנִים לַעֲמוּדוֹת.` | `מְמַיְּנִים לָעַמּוּדוֹת.` | `עַמּוּדָה` has the plural `עַמּוּדוֹת`; `עֲמוּדוֹת` is not a word |
+| Market, `show.math-c-02` | `חֲמֵשׁ עֶשְׂרֵה פָּחוֹת כַּמָּה שָׁוֶה תֵּשַׁע?` | `חֲמֵשׁ עֶשְׂרֵה מוּל תֵּשַׁע.` / `מוֹסִיפִים לְתֵשַׁע עַד חֲמֵשׁ עֶשְׂרֵה.` | the draft is a 6-word question with the sum in it; the key says what the pans do |
+| Counting, `show.num-a-07` open | `כַּמָּה תַּפּוּחִים? וְאֵיזֶה מִסְפָּר?` | `סוֹפְרִים, וְרוֹאִים אֶת הַמִּסְפָּר.` | a statement |
+| Counting, `show.num-b-07` key | `קַו לְמַטָּה, וְאָז קַו יָשָׁר.` | `קַו לְמַטָּה, וְאָז קַו לַצַּד.` | the 4 is a slant and a bar: both are straight, the second goes sideways (no left or right word) |
+| Counting, `show.num-b-18` key | `גֶּרֶב לָזֶה, גֶּרֶב לָזֶה.` | `…: זֶה זוּג.` | the Show teaches `זוּג` and never said it |
+
+### 19.3 The narrator and companion lines (2,917 rows read)
+
+- **What was read.** Every distinct text of the 1,737 narrator rows (the re-cut items of NUM, MATH, COL, LOG, CS in Bands A to C, and the pending strings) and of the 1,180 rows that `tools/arc_build.py` writes from the arc files (Show activities, hand-overs and lead-ins of the lessons). Three Stage 2 entries (`STAGE2_READ`, `STAGE2_READ_ITEMS`) come first in `READ`, so that a row of a re-cut item no longer takes the blanket entry of M10 C1 ("read 2026-11-06"): 353 Band C rows of the closing pass had been `text-ready` under that comment without being read.
+- **Read and left as written:** the `אֵיפֹה הִיא תִּנְחַת?` prompts (`תִּנְחַת` is what a bird or a plane does when it comes down, which a child at gan knows; the feedback already says `נָחֲתָה`; the frog is feminine, so `הִיא`, `עוֹמֶדֶת`, `קוֹפֶצֶת` agree; the longest prompt is exactly 14 words); `שֶׁלֹּא`, `מִתֵּשַׁע`, `בֵּינוֹנִי`, the sum lines with `שָׁוֶה`; `זֶה הַמִּסְפָּר שֶׁהִתְחַלְנוּ בּוֹ. עַכְשָׁו מוֹרִידִים מִמֶּנּוּ.` (the new `vo:fb.take_card`: correct, calm, plural address, no "wrong"); the pending count-on, prefilled-frame and pattern strings (`מַשְׁלִימִים עַד עֶשֶׂר.`, `חָסֵר אֶחָד בַּסֵּדֶר.`).
+- **The sock (`גֶּרֶב`).** Feminine: the objects table, the tool's lists (owner, Q5, 2026-10-29) and `הַגֶּרֶב הָאַחֲרוֹנָה` agree. The Academy decided on 21 June 2021 that `גֶּרֶב` may be masculine or feminine; the feminine is the spoken form. The plural `גַּרְבַּיִם` is feminine too (`אַרְבַּע גַּרְבַּיִם`): it was in both lists of the tool and made a REVIEW flag; fixed. Voice: `גרביים` (the dual rule missed it: a dagesh stands before the ending).
+- **COL-A-07, singular or plural.** `שָׂמִים כָּאן רַק כַּדּוּר כָּחֹל.` → `שָׂמִים כָּאן רַק כַּדּוּרִים כְּחֻלִּים.` (and `כֵּן! רַק כַּדּוּרִים כְּחֻלִּים.`; the same for `בָּלוֹנִים אֲדֻמִּים`, `בָּלוֹנִים יְרֻקִּים`, `פְּרָחִים צְהֻבִּים`): two blue balls are to be put, and the pack already says `אוֹסְפִים רַק כַּדּוּרִים אֲדֻמִּים`. The bin labels stay singular (`כַּדּוּר כָּחֹל` under its picture, like every bin). In `content/units/colours.json`. The Show opens `רַק פְּרָחִים כְּחֻלִּים נִכְנָסִים.`
+- **Fixed at the source (content, not a generator):** `וְכָּחֹל` and `וְכָּתֹם` (a dagesh after the conjunctive vav) in six prompts of `colours.json`.
+- **Tool rules (data only):** `מִתֵּשַׁע קוֹפְצִים צַעַד אֶחָד עַד עֶשֶׂר, וְעוֹד שְׁלוֹשָׁה` is right (the number takes the `צַעַד` or `צְעָדִים` said earlier in the sentence): the Q8 rule no longer makes it feminine (`STEP_NOUNS`), and the owner's pointing rule of `מִשְּׁ` no longer approves this new sentence by itself. `גַּרְבַּיִם` is feminine in the lists; `גַּרְבַּיִם` and `עֲדַיִן` have their voice spelling in `ktiv_token`.
+
+### 19.4 What waits on a generator (the editor does not edit them)
+
+| File and line | Now | Wanted | Rows |
+|---|---|---|---|
+| `tools/band_b_recuts.py` 69 and 176 (the NUM-B-10 and NUM-C-04 prompts) | `מִי גָּדוֹל יוֹתֵר, X אוֹ Y?` | `אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר, X אוֹ Y?` (as the 18 approved rows; `מִי` is for a person or an animal) | `proposed` (PENDING), so that they are not voiced as they are |
+| `tools/band_b_recuts.py` 70 | `עַל הַצִּיר הַמִּסְפָּרִים גְּדֵלִים …` | `עַל הַצִּיר, הַמִּסְפָּרִים גְּדֵלִים …` (a comma) | `proposed` (PENDING) |
+| `tools/band_b_recuts.py` 529 | `וְ%s` before `כָּחֹל` | `vav(HUE[b])` (the helper of `author.py`) | 2 rows of `b.colb03.5` (`text-ready`; the table shows `וְכָחֹל`; `test_done_rows_have_ui_text` is red for them until the generator says it) |
+| `tools/band_b_recuts.py` 154 | `וְעוֹד שְׁנַיִם שְׁקָלִים` | `וְעוֹד שְׁנֵי שְׁקָלִים` | 1 row, `c.numc03.4` hint 3 (the same signal) |
+
+Left as it is, for the curriculum-expert: the tag line `M-SHARE-UNEQ` (`לְכׇל חָבֵר לְפִי הַתּוֹר`) is shared by the friends of Band A (right) and the plates of MATH-B-10 (no friend there); its two Band A rows are owner-approved, so it was not changed. A Band B line of its own (`TAG_ID_BY_BAND`) could say `לְכׇל צַלַּחַת`.
+
+### 19.5 The table and its three checks
+
+- **Rows:** 17,110 (16,309 before: 801 new). Owner-approved 12,333; text-ready 3,979; proposed 149 (the 64 he.dart rows of the other agents, 49 rows of voice rule V1 that wait for the owner's word on `שָׂמִים`, `בַּתּוֹר`, `גְּדֵלִים`, and 36 rows of 19.4); unchanged 649. `voice_word_mismatches` 0. Of the 14,756 owner-approved rows of the last table, 831 are gone (their item was re-cut) and 874 rows (467 distinct texts) hold a new text now and wait for the owner again (795 `text-ready`, 79 `proposed`); about 1,000 more rows hold a text the owner approved elsewhere and are approved again.
+- **`test_done_rows_have_ui_text`:** it failed for 2,140 rows because the committed table held the old tap texts. After `regen_content`, `export-hebrew-review` and `hebrew_voice_review` it fails for 3 rows only, all in 19.4 (generator wording).
+- **`test_table_counts`:** two pins. (1) the rows: 17,110. (2) the done rows whose pack text differs from the table's original: 963 now, 960 when the three rows of 19.4 are fixed in the generators (1,209 before; 249 of those pairs left because their item was re-cut). The proposed rows with a change stay 0.
+- **The 1,212 to 1,209 pin of the pilot round (2026-11-16).** The three rows were `b.shpb01.2` and `b.shpb01.6` `feedback.incorrect.0` (the old line `צוּרָה סְגוּרָה אֵין בָּהּ פֶּתַח…` now sits on other rows; their id holds the generic `אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם?`) and `b.shpb06.3` `hints.2` (the generator now writes my `מַנִּיחִים אֶחָד לְיַד אֶחָד` itself). It is right: no row changed its text on the screen, three rows no longer need a correction.
+- **The Dart `voice_text_test`:** `flutter test` was not run. The same checks by script on the regenerated table: 11,630 pack lines, every one has a row, none has a caption that differs from its row, no key appears twice with a different voice or status (the 25 duplicates are tutor-line ids, not pack lines), every voice text passes the character allowlist (no `ֳ`, no digit, no Latin letter).
+
+### 19.6 Voice characters (Unicode code points of the voice text, spaces included; the free `voice_gen plan --as-if-approved`)
+
+- **Hosts (one voice each), in the pack today:** Nekudi 95 clips, 2,484; Pnina 69, 1,818; Timi 53, 1,123; Goni 35, 765; Tza'adon 20, 443 (together 272 clips, 6,633); Kubi (the pilot, re-cut) 56, 1,469. **Every line the arc files carry** (Shows that do not play yet, the "show me" replies, the lead-ins no lesson uses): Nekudi 114 texts, 2,954; Pnina 85, 2,190; Timi 64, 1,379; Goni 44, 972; Tza'adon 28, 633 (335 texts, 8,128).
+- **Narrator and companion (nitzi and hero-son say the same lines; each voice):** 612 clips, 32,809 characters still to say (with 6 shared feedback lines); 450 clips and 24,320 characters of them are texts read in this round (numbers 12,473, math 7,661, logic 2,447, colours 1,415, robots 324), 162 clips and 8,489 are the older backlog (sweeps, the Shape Forest pilot). Nitzi is on `eleven_v4`, hero-son on `eleven_v4_turbo`.
+- None of it is owner-approved yet.
+
+### 19.7 For the others
+
+- **curriculum-expert:** (1) `teaches` words that no line says: the counting words 2 to 5 of the NUM Shows (said by the player's count, not by a line: allow it or add a line), the bin names `הַסַּל` / `הַדֶּשֶׁא` of LOG-A-01, A-02, B-09, `נַעַל` / `מַנְעוּל` of LOG-A-09, `חָתוּל` / `כֶּלֶב` of MATH-A-03, `אָדֹם` of COL-B-04 and LOG-B-06. (2) A key said at step 1 that names more than that step does (`log-a-05`, `col-b-06`, `math-b-14`, `num-b-01`): say the key at the last host step, or keep it short. (3) `show.num-a-09` opens `סוֹפְרִים עַד עֶשֶׂר` and counts to six. (4) `show.log-b-06` is not in the predict list of 2.1 but has a predict. (5) The tag line `M-SHARE-UNEQ` (19.4).
+- **app-developer:** the four generator wordings of 19.4; the pins of `test_table_counts` (17,110 and 960); `tools/test_generators.py` `BandCTest.test_the_bubble_shows_the_sentence_a_question_says_over_blocks` is red for `show.apples.3` and `show.birds.4` (they carry `prompt.math` in the pack that the working copy of `tools/author.py` makes: not a wording matter).
+- **voice director:** the Show lines are short (a key said alone for the reminder); `בִּיפּ` is Tza'adon's one-beat opening, then a full stop; `גְּדֵלִים` and `בַּתּוֹר` keep their nikud (V1); the keys that count (`אָדֹם. צָהֹב. יָרֹק.`, `רִאשׁוֹן, שֵׁנִי, שְׁלִישִׁי.`) are said one beat each.
