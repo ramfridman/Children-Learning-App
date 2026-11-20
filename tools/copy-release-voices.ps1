@@ -3,6 +3,8 @@
 #   powershell -ExecutionPolicy Bypass -File tools\copy-release-voices.ps1
 #   powershell -ExecutionPolicy Bypass -File tools\copy-release-voices.ps1 -NoLanguages   (Nitzi only)
 #   powershell -ExecutionPolicy Bypass -File tools\copy-release-voices.ps1 -Clean         (remove them again)
+#   powershell -ExecutionPolicy Bypass -File tools\copy-release-voices.ps1 -Source "$env:USERPROFILE\nitznutz-voice-loud"
+#       (the level packs that `voice_gen normalise` and `normalise-lang` made: the same folders, one newer version of each pack)
 #
 # What it does (it reads files and copies files; it needs no key, sends nothing and builds nothing):
 #   1. Takes the packs voice-nitzi-<version>.nnpack and voice-nitzi-<N>-<version>.nnpack (N from 2 to 9) of the NEWEST version
