@@ -72,10 +72,10 @@ when every element is above its floor.
 
 | # | Element | Phone and SE floor | Tablet floor | Tablet target | Notes |
 |---|---|---|---|---|---|
-| R1 | **Picture to identify**: an object whose identity is the content or the answer (which animal, which shape, which solid, a picture on a tile, a bin's sample, a cloze's context picture) | **40** | 40 | **56** | `stagePicture.min`. A size item that is small on purpose (seriation, "small") keeps its smallest at **24** or more. |
+| R1 | **Picture to identify**: an object whose identity is the content or the answer (which animal, which shape, which solid, a picture on a tile, a bin's sample, a cloze's context picture) | **40** | 40 | **56** | `stagePicture.min`. A size item that is small on purpose (seriation, "small") keeps its smallest at **24** or more (32 on tablets); the exact family, its big-member floor and the tower cube are in **9.2 D1** (replaces this note's open end, 2026-11-20). |
 | R2 | **Detail inside a composite**: one animal or ball of a pattern strip, one counted thing that is not touched one by one (a set on a tile, apples on a stall, pictures in a chart, things on a balance pan, a ten-frame dot) | **24** | 24 | **32** | Base-ten cubes keep c1-blocks' 12.7 / 19 (they are counted by rods); see owner decision 3. |
 | R3 | **Counted object that is touched one by one** | drawn **40**, touch square **64** (A) / 56 (B, C) | same | drawn 56, touch 80 | The touch square is the object's cell, never `max(object, 48)`. |
-| R4 | **Draggable tile** | the look's tile (`StageSpec.tile`): 96 / 88 / 80; never under the band's `minControl` | 112 / 104 / 96 | same | A wide card keeps the tile's height and grows in width until its detail meets R2. |
+| R4 | **Draggable tile** | the look's tile (`StageSpec.tile`): 96 / 88 / 80; never under the band's `minControl` | 112 / 104 / 96 | same | A wide card keeps the tile's height and grows in width until its detail meets R2. A **word tile of a language course read at Band C** follows the course band's token, 64 / 80 (9.2 D2, 2026-11-20). P0 (M12): 112 on every board. |
 | R5 | **Item shown inside a bin / plate / slot** (what has been sorted or placed) | square **40**; a wide card at the size where its detail meets R2 (a 2.5:1 strip: **170 × 68**) | same | square 56; strip 250 × 100 | When the bin cannot show all at that size, it shows the newest one(s) at that size and **piles** the rest under the newest with a **count badge** (3.4). It never shrinks them. |
 | R6 | **Label in Hebrew with nikud** (a bin's or zone's label, a card's word) | **18**, weight **500**, line height 1.7 (`type.label`) | 20 | **24** | `font.niqqudRules.maxWeightBelow24pt` = 500. Pre-readers read the mark (R9), and the label is voiced. |
 | R7 | **Numeral the child reads** on a number line, clock face, coin, price tag, counter or badge | **20** (a coin's own digit **18**) | 24 | **28** (clock 32) | Weight 800, LTR. Dots under a numeral (a quantity hint): dot **7** or more with a gap of 3, groups of five. |
@@ -109,6 +109,9 @@ when every element is above its floor.
   tablet landscape 205, tablet portrait 295). Exceptions are a celebration and a Show greeting whose stage is the room's window.
 - **S5:** inside a stage, a template's content (its bins, its line, its clock, its group) fills at least **70 %** of the stage's
   shorter side. It never sits at a fixed phone size in the middle of a tablet card.
+- **S6 (added 2026-11-20, 9.3 T1):** a stage that would hold **only the backdrop** while the answers wait outside it gives its room to
+  the answers: they stand **in** the stage (phone picture stage 377 × 253: three tiles of 112, two of 144; SE: two over one at the look's tile, or two of 120; tablet L card: three of 200;
+  tablet P card: three of 208), and nothing stands under it.
 
 ---
 
@@ -171,8 +174,8 @@ The first bin (the language's first) is at the top on phones and at the right on
 
 ### 3.4 Every `sort_drag`, not only strips (square pictures)
 The same boards serve every sort, so no template has a 26-pt picture in a bin.
-- **Phone:** the shelves for two bins. For three bins, three shelves 361 × 76 (a 40-pt sample in the sign column, items 48 in the
-  well). Items in a shelf are **48** (R5 × 1.2), 8 apart, in one row, then a pile with the badge. The deck tile is the look's tile
+- **Phone:** the shelves for two bins. For three bins, three shelves 361 × 76 with **one** sample in a 52 box and the label
+  **beside** it (9.2 D3 replaces "a 40-pt sample in the sign column", 2026-11-20), items 48 in the well. Items in a shelf are **48** (R5 × 1.2), 8 apart, in one row, then a pile with the badge. The deck tile is the look's tile
   (96 / 88 / 80) in the column under the bubble.
 - **SE:** shelves 252 wide; items 44.
 - **Tablet L:** bins side by side (2 or 3) on the 848 card. Sample 96, items **64** in rows. The tray is one row of the look's tiles
@@ -295,6 +298,7 @@ tabletL 1180 × 820, tabletP 820 × 1180) at text size 1.0 and 1.3 (`MediaQuery.
 - **Room use (S4):** the union of the rects of `Key('…-stage')` and the tile row ends no more than 25 % of the board's height above
   the board's bottom safe line (phone 98, tabletL 205, tabletP 295), except the celebration and Show greeting.
 - **Tablet card (S2, S3):** the stage rect is ≥ 848 wide on tabletL, and ≥ 520 tall on tabletP (≥ 420 with two rows of tiles).
+  Amended 2026-11-20 (9.6): "two rows" is read at the item's **start** (D4); Layout T has no card and is measured on its tile row (D12).
 
 ### 5.2 Per template (keys exist today unless marked new)
 
@@ -474,6 +478,8 @@ out by its count:
   answer: the cards sorted into a bin, the things already bought, the plates of a share (where the badge is the point).
 - `tileGroup` (`sprite_group.dart`) changes: cell from the table, not `inner / 3`; the tile's width comes from its count. In a row
   of tiles, all tiles take the width of the widest one.
+- 2026-11-20 (9.2 D9): the 5 × 2 frame is also the layout of a **group of 7 to 10 on the stage** ("line" arrangement), on every board,
+  and the hint hand reads the object centres from the same layout function.
 
 ### 8.4 design-spec §7.4 and §8: the robot program strip (B2)
 Updated in `docs/design-spec.md` (§7.4 "Robot coding" row and §8 "Robot program strip" row): horizontal, left to right from a start dot,
@@ -584,3 +590,241 @@ in phone-size cards, for example `hint_qa_teens_l2_tablet_portrait` with 16-pt t
   language SE goldens. `hall_friend_phone`, `alerts_view` and `parent_language*`, seen only on a sheet. The hint goldens below level 3
   on the phone, except the ones on the round-1 sheets. **Placeholder art seen:** the friend figure on `ceremony_*` / `hall_friend` is a
   head-and-body stand-in. The balance, arcs, cubes and signs in the mocks are plain shapes for size, not final art.
+
+---
+
+## 9. Rulings of 2026-11-20 on round 3
+
+Design director, branch `lands-ux` at 4a4a39bf, after the developer's round 3 (`docs/agents/dev-report-2026-11-20.md`, section D). A
+spec only; nothing in `app/` changed. Each ruling has one answer and the numbers a developer builds and the size test measures. Where
+it replaces an earlier rule, the earlier rule now points here (R1, R4, 2.3 S6, 3.4, 5.1, 8.3).
+
+**What I looked at.** The 16 rebuilt sheets `after/<board>_templates_00..03.png` at full size. Then the same 42 shots re-rendered from
+the round-3 tree at 1 pixel = 1 point (`min_sizes_shots_test.dart` with `SHOTS_DIR` in a scratch folder, no file in `app/` changed),
+opened 1:1: phone `drag_sort_three`, `logic_size`, `shape_small`, `match_numbers`, `shop_pay`, `builder_train`, `build_pattern`,
+`match_coins`; SE `builder_train`; tablet L `colour_find`, `drag_sort`; tablet P `match_coins`. Goldens 1:1: `c1_chart_picture_start_phone`,
+`c1_chart_picture_start_phoneSE`, `c1_blocks_on_tiles_start_phone`. Sheet only: the round-2 `phoneSE_language_00`. The numbers of the map
+(`app/test/support/min_sizes_known.dart`) and the content (`content/starter/activity.*.json`) were read for every ruling that cites them.
+**Not looked at:** a real device; `sing_along`, `puppet_talk`, `listen_do`, `story` screens (no shot of them exists in round 3); the
+`_shows_` and most `_language_` sheets (round 2).
+
+Mocks (script `min-sizes/rulings/make_rulings_mocks.py`, bases in `rulings/base/` are the round-3 shots):
+`rulings/ruling_d3_three_shelf_phone.png`, `rulings/ruling_t2_match_card_tabletP.png`, `rulings/ruling_t2_match_card_tabletL.png`,
+`rulings/ruling_t1_empty_stage_tabletL.png`. Each is "before" (the build) beside "after" at 1:1. I checked all four PNGs.
+
+**[CB]** marks a ruling that touches Colour Bay's templates (tap_answer, sort_drag, build_pattern; spot_error is listed once). These are
+built first, because M12's pilot is Colour Bay (`docs/milestones/M12.md`).
+
+### 9.1 How the rulings keep room for M12
+- **P0 (under 3):** two answers of **112 or more on every board**. Wherever a ruling below says "the look's tile", P0 means 112; on the
+  picture stage of S6 a P0 answer is **144** (phone), 240 (tablets).
+- **The S burst** (delight 4.1.3) flies 100 pt (140 tablets) from the tile over whatever is near. Nothing here puts a control within
+  12 of an answer tile, and nothing here moves into the guide column (phone x 617..793 above y 245): the companion's jump and Goni (M12
+  pilot, in the guide's place) keep it. The one new control under the guide (D8, the shop's ✓) is Band B/C only, never in Colour Bay.
+- The tablet sort bin's ghost (T3) is not drawn for M12's "colour houses": there the house is the drawing.
+
+### 9.2 The conflicts D1 to D12
+
+**D1 The size family against the floor of 40. Ruling: the rule changes, with an exact family, and the art layout changes for towers and
+for count-against-size items.**
+- *Why not "draw the biggest at 120":* a 96 tile cannot hold it, and the size is the content: a small ball **must** look small next to a
+  big one. A small ball of 24 pt ink is 3.7 mm at 30 cm (42 minutes of arc): a whole ball, no fine feature to read, clearly seen. That
+  is R2's detail floor, and it is enough for an object whose identity is "a ball, red, small".
+- **The family** (what the test treats as size-on-purpose): a sprite named `*_size_s`, `*_size_m`, `*_size_l` or `tower_<n>`, and a
+  `group`/`group2` whose `scale` differs from the other group of the same item with the same sprite (`c.numb10.*`). Nothing else.
+- **SIZE_SMALL** (replaces PIC_ID / BIN_INK for the family's smaller members): ink ≥ **24** phone and SE, ≥ **32** tablets.
+- **SIZE_BIG:** the family's largest member on the same screen has ink ≥ **56** phone and SE, ≥ **80** tablets, and ≥ **1.6 ×** the
+  smallest's ink (the difference stays visible; it also catches a fit that flattens the sizes). The largest is held to PIC_ID as well.
+- **Geometry:** a size item keeps the tray's scale (8.2). Its box on phones is the look's tile (96 / 88): `ball_size_s` draws its ink at
+  about 0.27 of the box, so 24 to 26 ink, and `_l` 66 to 72. On tablets the box of a size item is **120** (small ink 32, big 90), also in a
+  well. `InkFit` is never used on a family member (it is not today: keep it so).
+- **Towers** (`tower_1` … `tower_7`, `b.logb04.*`, `b.logb11.*`): the detail is the cube. **TOWER_U:** one cube's side u ≥ **14** phone
+  and SE, ≥ **16** tablets, the same u for every tower of the item. A tower tile is the look's width and `max(look tile, tallest × u + 16)`
+  high: seven cubes are a tile 114 high on a phone (band 250..364, under 369) and 128 on a tablet; on tablet L the card of such an item is
+  848 × **392** so the tiles stand at 646 and end at 774. `tower_1` (one cube) is then a 14 / 16 square, held to TOWER_U, not to PIC_ID.
+- **Count against size** (`c.numb10.*`: eight small stars against five big, M-CNT-SIZE): the two groups stand **one above the other** on
+  the stage. Small set: the 5 × 2 frame of 8.3, cell **32** (ink 24), 160 × 64. Big set: one row, cell **52** (ink 40), 5 × 52 = 260 wide,
+  so the big set is still the *longer* row (the misleading cue the item is about). 64 + 8 + 52 = 124 fits the phone's 128 stage. SE: the
+  stage grows to 140 (`withStageAtLeast`, tiles lower, last row ends 351). Tablets: cells 44 / 72 (ink 32 / 56).
+- **The one-star tile of `fewer.stars.*`:** a set of one that stands beside sets of more, in one comparison, is a **set** (R2, 24 / 32),
+  not a lone picture (R1). All sets of a comparison use the cell of the largest set (fair size, as drawn today). 29 passes.
+
+**D2 Language Band C tiles, token 64 / 80 against the look's 88 / 104. Ruling: the rule changes (R4 amended).** A tile whose content is a
+**word or a letter chip** in a language course read at Band C (parent band 2) is **64** high on phones and SE, **80** on tablets
+(`TokenTouch.band[C]`), as wide as its word + 2 × 16 (at least 64), touch ≥ 56, and its word at the band's word size (**34** phone / **40**
+tablet, line height 1.7 where it has nikud). Why a child still reads it: the reader is 6 to 8, the word is the content and it is at its
+reading size, and 64 is 10 mm, above the 56 floor of Bands B and C. Five word tiles of 88 do not fit the SE's 484 zone; five of 64 do. A
+language tile that carries a **picture** keeps the look's tile (88 / 104).
+
+**D3 The phone's three-shelf sort. Ruling: the layout changes. Mock: `rulings/ruling_d3_three_shelf_phone.png`.**
+- A shelf of a three-bin sort on a phone (361 × 76, at y 104 / 186 / 268, gap 6) shows **one** sample, whatever the bin's `count`: box
+  **52** (ink ≥ 40; `InkFit` may widen it for a flat picture, up to 64 wide), at inset 8 from the start edge, vertically centred.
+- The **label beside the sample** on its end side, 18 w500 h1.7 (30.6 high fits the 76), in a box as wide as the word (max 96; at text
+  1.3 the box grows to 120 and the well gives way), then a hairline 2 × 56.
+- The well (about 199 wide): items **48**, gap 8, four shown, then the pile with the badge (32 / 20).
+- A sample's `count` is a category marker in every three-bin sort of the pack (`log.sortdrag.three`, `x.mathb19.*`). **Content rule
+  (curriculum-expert, validator):** a sort whose bins differ only by how many things the sample shows never has three bins on a phone.
+- SE: the same with shelves 252 × 76, sample 48, items 44. Tablets keep their bins (T3).
+
+**D4 Portrait tablet sort, card 420 against 520. Ruling: the rule changes (5.1 amended) and the card never changes height in an item.**
+- The tray on tablet P is **one row** when `n × tile + (n − 1) × 12 ≤ 772` (six squares of 112 = 732; six of 104 = 684), and the card
+  is then **772 × 520**. Square trays of seven or more and every strip tray (2 × 2 grid of 340 × 128) are two rows, and the card is
+  **772 × 420 for the whole item**, also after the tray has emptied to one row. A card that shrinks or grows mid-item moves the bins
+  under a dragging finger.
+- Test: STAGE_CARD on tabletP reads the tray's rows **at the item's start** (the `item` slice) and applies that floor to the `sorted`
+  slice of the same item.
+
+**D5 Shape-builder pieces of 19 to 25; palettes of six or seven on a phone. Ruling: layout and content change; the slot is a detail.**
+- **Shape builder tray: one tile per kind.** Pieces of the same sprite are **one tile** with a count badge (32 / 20) while more than one
+  is left (the deck and pile language of the sort). Decoys are tiles too. The pack's largest tray is then **5** (`shp.build.face`,
+  `b15.shpa06.1`; the train has 4: rectangle, two squares, circle × 4). **Content rule:** at most 5 tray kinds.
+- **Placing:** a drag that ends anywhere on the stage snaps to the **nearest free slot of that kind** (the silhouette's place is shown by
+  the snap; precision is not the skill). P0 (M12): one tap places it. The engine's answer is unchanged (the app-developer's code).
+- **Phone stage:** 24,96 **377 × 148** (`withStageAtLeast`, the tray row at 256..352 in the wide band 24..605); SE 8,86 **278 × 157**
+  (tray 255..351 in 8..651). The composite fills the stage less an 8 inset. The train's wheel is then a 48 box (ink about 38).
+- **A slot or a placed piece is a detail of a composite** (R2): **BUILD_SLOT** ink ≥ 24 phone and SE, ≥ 32 tablets (replaces PIC_ID on
+  the stage of `shape_builder`). The tray tile is the look's tile (TILE_H unchanged).
+- **build_pattern palettes [CB]** (`b.colb06.*`: six colour balls): the palette uses the **wide band** (phone 24..605, SE 8..651) at the
+  look's tile with gap **10** (phone: 6 × 88 + 5 × 10 = 578) or 12 (SE: 588). Band A (P1, 96) palettes are at most 5 on phones (528).
+  **Content rule:** a palette has at most 6 (B, C) and 4 (A) pictures (the pack holds this today; the validator should keep it).
+
+**D6 The smallest phone's count of ten. Ruling: the layout changes; the floor stays 64.** While counting, the SE stage is 8,86 **282 × 245**.
+Seven to ten objects stand in a **4 × 3 grid of rectangular cells** (after an 8 inset: 66.5 × 76.3), rows left to right, top row first;
+each object's touch square is **64**, centred in its cell, its box 54 (ink ≥ 40). The **target** (flower, basket) is **in the grid**, in
+cell 12 (bottom row, right end), drawn 72 high; it no longer takes a column of the stage's width. Five and six: 3 × 2 + the target in a
+third column of the bottom row (3 × 3 when it is closer to square). The phone keeps its layout (it passes). `CountLayout._cells` gets
+rectangular cells and the target as a cell; the touch square is `min(cell w, cell h, 96)`.
+
+**D7 The hundred chart's numerals of 12 to 17. Ruling: the layout changes.**
+- Every numeral in a chart cell (the given number, the "?" slot, a hint's number) is a **chip centred on its cell**, larger than the
+  cell where it must be: phone and SE chip **40 × 32** (48 × 32 for three digits), numeral **20** w800 LTR; tablets chip 52 × 40, numeral
+  **24**, with cells of 56 or more (numeral 28). The chip covers the edges of its blank neighbours; it never covers another chip.
+- The phone's window is **10 × 3 rows** (the given number's row, the target's, and one more for context) in the 330 × 128 stage: cells 31
+  × 37. SE: the stage widens to 8..290 (282), cells 26.6 × 34. Tablets: 10 × 4 rows or more in the card (848 → cells 80).
+- The blank grid lines keep their size: they are a structure, not something read.
+- **Curriculum-expert to confirm** a 3-row window on phones (the 4-row window of today does not fit 32-high chips).
+
+**D8 Coins shrunk in the purse. Ruling: a second row, by kind; no fewer coins.** The 16-coin purses are Band C's tens and ones
+(`c.numc03.*`: eight 10 ₪ and eight 1 ₪).
+- **Phone:** the purse is two rows, the larger kind on top: 10 ₪ at **61** (gap 6), 1 ₪ at **48** (gap 8): 8 × 61 + 7 × 6 = 530, from x 24,
+  rows at y 248 and 317, ending 365. The ✓ moves **under the guide**: the look's tile (80 Band C, 88 Band B) at x 580, y 262. A Band B purse
+  of mixed coins (at most 7) stays one row at the real ratio (1 ₪ 48, 2 ₪ 58, 5 ₪ 64, 10 ₪ 61: 420 wide plus the ✓ at its end).
+- **SE:** the same rows from x 8, 8 × 61 + 7 × 4 = 516; rows at 222 and 291, ending 339; the ✓ at 548,236.
+- **Tablets:** the purse stands **inside the card**, in its bottom band (item and price over it): 10 ₪ **81**, 1 ₪ **64** (5 ₪ 85, 2 ₪ 77),
+  8 × 81 + 7 × 8 = 704, the two rows 157 high; the ✓ is the look's tile under the card, centred. The Show `blocks-tens-and-ones` too.
+- **Content rule (curriculum-expert, validator):** at most **8 coins of a kind** and at most **2 kinds** in a Band C purse; a Band B
+  purse at most 7 coins. The pack holds this today.
+
+**D9 Sets of seven to ten in a line (22 pt on SE). Ruling: build the 5 × 2 frame of 8.3 everywhere, and the hint follows the layout.**
+A group of 7 to 10 with arrangement `line` is a 5 × 2 frame on tiles **and on the stage** (phone cell 32, SE 32 in a 172 tile, stage SE
+cell 48 when it is the only group). The hint never computes positions from a line: it asks the group's layout for each object's centre
+(one function, used by the picture and the hint), and its hand tip stops 8 under the object (it comes from below, V4). **Curriculum-expert
+to confirm** the order of a frame for counting hints: top row 1 to 5 left to right, then the bottom row (the ten-frame's fill order).
+
+**D10 Captions under the floor (the hebrew-text-editor's). The layout help I give:**
+- **Phone:** the bubble may grow **down to y 244** (the tiles of a row under the bubble start at 256), so its largest box is 413..603 ×
+  96..244: three lines at the floor (24 × 1.7) and the padding. **SE:** down to the top of the tiles − 12. **Tablets:** two lines, the
+  bubble up to 560 wide.
+- The bubble never covers the stage, the guide or the companion, and the caption never shrinks under its floor: a line that needs more
+  than **three lines at the floor on a phone** (two on a tablet) goes on a list the test prints (CAPTION_LINES), and the editor shortens
+  it. As a rough budget for the editor: about **13 letters a line** at 24 pt on a phone (nikud marks not counted), so about **38** for
+  a question.
+- P0 (M12) has no caption at all.
+
+**D11 The hand over the bubble (level 3 of the clock, the balance, a chart). Ruling: V4 stands, built exactly.** The hint hand's box never
+intersects the bubble's box; its tip stops 8 outside the target's edge; when the target is under the bubble or in the tile column, the hand
+comes **from below**, tip up. The test keeps HAND_BUBBLE as it is (150 square points over the bubble's text).
+
+**D12 The Band C blocks-on-tiles card (Layout T, `c.numc02.*`, 584 × 264). Ruling: on tablets Layout T has no card; the tiles take its
+place.** Landscape: three tiles **264 × 400** from 24,230 (gap 28; 848 wide). Portrait: three tiles **236 × 520** from 24,372 (gap 32).
+The cube u follows c1-blocks (≥ 19, at most 26; today's u where it is larger). Nothing under them (S4 holds: L 190, P 288). STAGE_CARD is
+replaced for Layout T by "the tile row is ≥ 800 wide (L) / 740 (P) and ≥ 400 / 520 high".
+
+### 9.3 What the sheets show that the test does not catch
+
+| # | Where | What I see | Ruling |
+|---|---|---|---|
+| T1 [CB] | tablet L and P `colour_find`, `shape_small`, `shape_where`, `next_number`, `ordinal`, `math_time`, `more_big_things`, the first step of a seriation `build_pattern` (`b.colb02.*`: "which is darkest?"); the same on phones, smaller | An **empty landscape** of 848 × 400 (772 × 520) with three 104 tiles under it. On a phone a 330 × 128 strip of sky. The eye goes to the empty picture. | **Fix (S6, mock `ruling_t1_empty_stage_tabletL.png`).** When the stage holds only its backdrop, the answers stand **in** it. Phone: picture stage 24,96 377 × 253, three tiles **112** (gap 12, centred, 360 wide) or two of **144** (P0 included); SE (picture stage 24,86 264 × 245): three answers stand **two over one** at the look's tile (96 / 88, gap 12, 204 × 204), two answers side by side at **120**. Tablet L: three of **200** (gap 40) in the 848 × 400 card; P: three of **208** (gap 32). Picture 0.72 of the tile. Nothing under the stage. The answers keep their keys and their order. Test: **EMPTY_STAGE** (S3): a stage whose pieces are only the backdrop while answer tiles stand outside it. |
+| T2 | tablet `match_coins`, `match_numbers`, `match_solids` (match_pairs) | Three 136 faces in the middle of a big white card, coins 42 to 56 in them, the answers under the card. | **Fix (mocks `ruling_t2_match_card_tabletP.png`, `…_tabletL.png`).** Both rows inside one card. P: card 24,372 **772 × 600**, faces **216** (gap 24) over answers **176**, rows 64 apart, the block centred. L: card 24,230 **848 × 534**, faces **200** over **160**, rows 48 apart. Four pairs: `min(216, (inner − 3 × 24) / 4)`. Coins on faces at the real ratio with 5 ₪ = 0.74 × face (P 160 / 144 / 120). Sets on faces by the 8.3 table × face / 112. Phones keep their layout, with the coins on a face at V7 (5 ₪ 80, 1 ₪ 60). Test: MATCH_FACE, a tablet face ≥ 160. |
+| T3 [CB] | tablet `drag_sort`, `drag_share`, `drag_sort_three` | Large empty bins, the sample a 44 pair in a corner, the label beside it. | **Fix.** Header row 88: sample **72** (one picture; a pair of 56 only when the count is the rule), label 24 w500 beside it. Well: items **96** when the sort has 8 items or fewer (64 for more), rows of 3 (L bin inner 378: 336), two rows then the pile. Until the first card lands, the empty well shows the sample as a **ghost**, 120, opacity 0.18, centred (key `bin-ghost`, exempt from BIN_INK; not drawn for M12's colour houses). The big bin stays: it is a forgiving drop target. |
+| T4 | every tablet screen with content on the stage | The answer tiles (112 / 104 / 96) look small on the sheet under the big card. | **Fine.** At 1:1 a 112 tile is 21.5 mm at 40 cm (3.1 degrees), more than a phone's 96 at 30 cm (2.9). Only the picture in it must be 0.72 of the tile. |
+| T5 | tablet `shop_pay` | A 220 apple and a big empty purse place; the coins 46 to 56 in a row under the card. | **Fix with D8:** the purse in the card's bottom band; the item for sale 120 (L) / 140 (P) in the card's top start corner with its price (32). |
+| T6 | phone, SE, tablets `same_or_not` | Apples of 14 (phone) scattered; the right-hand set in a row of 6 at about 14. | **Fix (A6, still open):** each set in a two-row group (3 + 2, or 3 + 3), cell 48 (thing 36), the two groups 144 wide each with 24 between, on the 330 stage; SE cell 40; tablets cell 80. |
+| T7 | phone `math_add` | Apples of about 22 on a big empty sky. | **Fix (A7, still open):** apples 32 phone, 48 tablets, in the 8.3 numeral-to-set cells (phone cell 52 for one group). |
+| T8 [CB] | phone, SE `b.colb01.*` ("red and yellow make…"): two single balls on the stage at 35 (SE 23) | A single picture per group is a picture to identify. | **Fix:** a group of **one** on the stage is drawn as a stage picture: box 72 (ink ≥ 56) phone, 64 SE, 120 tablets. |
+| T9 [CB] | SE `b15.cola06.*`, `b.colb04.*` (spot_error, 26 to 30) | Four cells in one row of the SE stage. | **Fix:** on SE, four cells stand **2 × 2** in the start-column stage (cells 110, picture ink ≥ 56). |
+| T10 | phone and SE `builder_train` | Seven tray tiles squeezed to 73 / 64; the gray train in a strip. | D5 (one tile per kind, stage 377 × 148). |
+
+### 9.4 The untouched templates and the unbuilt addendum: confirmed, with changes
+
+| Item | Still wanted? | Change |
+|---|---|---|
+| **8.1 lying rods** (B9 hint card) | Yes, as written (the owner chose it, 8.8). | None. |
+| **8.2 size signs with both sizes** | Yes. | The tablet well box is **120** (D1), not 112. |
+| **8.3 number sign** (phone 160 × 132, tablet 220 × 160) | Yes. | None; the curriculum-expert's yes on showing the target is still open. |
+| **8.3 refined balance** | Yes. | Band A (P1) tiles are **96** (`math.size.heavy`, TILE_H 88): phone 413 / 521 / 629, y 262; SE 300 / 404 / 508, y 236. A lone thing on a pan is a stage picture (box 52, ink ≥ 40: `b.mathb13.11`, 21 / 30 today); two or more are details (30 box, ink ≥ 24). |
+| **8.3 5 × 2 frame** | Yes, and wider (D9: also on the stage). | None. |
+| balance (116) | Yes: the refined balance. | As above. |
+| match_pairs (85) | Yes. | T2 on tablets; V7 coins on phone faces; D2 for language word tiles; 8.3 cells for sets on faces. |
+| flash (77) | Yes. | Phone and SE: the **picture stage** (377 × 253 / 264 × 245) while the group shows, as count does while counting; the answer tiles come into the band after the cover. The hint pictures read the stage rect from the layout (never a hard-coded 128). |
+| sing_along (93) | Yes, not viewed by me. | L2's rule: the verse pictures stand on the picture stage, each ≥ 110 wide and ink ≥ 40 (SE today 12.8). |
+| puppet_talk (24) | Yes, not viewed by me. | L1's rule: the puppet's pictures 56 / 72 on tiles of 88 / 104. |
+| listen_do (6), story (6) | Yes, small. | listen_do: captions (D10). story on SE: `withTallStage` (A11's zones), empty band 96 against 94. |
+
+### 9.5 What the size test must change (for the qa-engineer)
+
+| # | Rule | Change | Boards and floors |
+|---|---|---|---|
+| 1 | PIC_ID, BIN_INK on the size family | Family members (D1's list) are measured by **SIZE_SMALL** (the smaller) and **SIZE_BIG** (the largest; also PIC_ID) | SMALL ≥ 24 phone/SE, ≥ 32 tablets; BIG ≥ 56 / 80 and ≥ 1.6 × the smallest |
+| 2 | new **TOWER_U** | `tower_<n>` sprites: one cube's side, same for all towers of the item; replaces PIC_ID on towers | ≥ 14 phone/SE, ≥ 16 tablets |
+| 3 | PIC_ID on a set of one | A set of one in a comparison of sets is PIC_DETAIL (R2) | 24 / 32 |
+| 4 | TILE_H for language word tiles | A word or letter tile of a course read at Band C is held to `TokenTouch.band[C]` | 64 phone/SE, 80 tablets; word size ≥ 34 / 40; touch ≥ 56 |
+| 5 | STAGE_CARD, tablet P sort | "Two rows of tiles" read at the item's start; the `sorted` slice takes the start's floor | 420 or 520 |
+| 6 | STAGE_CARD, Layout T | Replaced by the tile row: width and height | ≥ 800 × 400 (L), ≥ 740 × 520 (P) |
+| 7 | new **BUILD_SLOT** | A slot or placed piece in a `shape_builder` stage; replaces PIC_ID there | ≥ 24 phone/SE, ≥ 32 tablets |
+| 8 | new **EMPTY_STAGE** (S3) | A stage that holds only its backdrop while answer tiles stand outside it | fails on every board |
+| 9 | new **MATCH_FACE** | A match_pairs face on a tablet | ≥ 160 |
+| 10 | new **CAPTION_LINES** (report, not a failure) | Lines that need more than 3 lines at the floor on a phone (2 on a tablet) | printed list for the editor |
+| 11 | TILE_H for P0 | When the P0 look exists (M12) | ≥ 112 on every board |
+| 12 | BIN_INK exemption | The ghost of an empty tablet bin (`bin-ghost`) | exempt |
+| 13 | unchanged | COUNT_TOUCH (64), COIN (48 / 64), NUMERAL (20 / 24), HAND_BUBBLE, CAPTION, BIN_ITEM | as they are; D6, D7, D8, D11 are built to meet them |
+
+### 9.6 What to build, in order (for the app-developer)
+
+Colour Bay first (M12's pilot), then by how many children see it and how far under the floor it is.
+
+| Step | What | Rulings | Templates |
+|---|---|---|---|
+| 1 [CB] | An empty stage gives its room to the answers (S6), with P0's 144 / 240 | T1 | tap_answer (and the seriation first step of build_pattern) |
+| 2 [CB] | Single pictures on the stage are stage pictures | T8 | tap_answer |
+| 3 [CB] | Palettes of six in the wide band, gap 10 / 12 | D5 (palette) | build_pattern |
+| 4 [CB] | Tablet bins: header 88, sample 72, items 96, the ghost; the tablet P card fixed per item | T3, D4 | sort_drag |
+| 5 [CB] | Three shelves on phones: one sample, label beside | D3 | sort_drag |
+| 6 [CB] | SE spot cells 2 × 2 | T9 | spot_error |
+| 7 | The size family: tray scale, tablet box 120, towers by cube, count-against-size stacked | D1, 8.2 | sort_drag, build_pattern, tap_answer, spot_error |
+| 8 | Coins in two rows by kind; ✓ under the guide; tablet purse in the card | D8, T5, V6 | shop_pay |
+| 9 | The tablet match board | T2, V7 | match_pairs |
+| 10 | The SE count grid with the target in it | D6 | count_tap |
+| 11 | The 5 × 2 frame on tiles and stage; the hint reads the layout | D9, 8.3 | tap_answer, flash, balance_b |
+| 12 | Sets and apples still small: same_or_not, math_add | T6, T7 | tap_answer |
+| 13 | The shape builder: one tile per kind, snap, stage 377 × 148 | D5 | shape_builder |
+| 14 | Chart chips and the 3-row window | D7 | number_line (Band C), tap_answer charts |
+| 15 | Layout T without a card on tablets | D12 | tap_answer (Band C) |
+| 16 | Hands from below; the bubble grows to 244 | D11, D10 | hints, frame |
+| 17 | The refined balance (with the P1 tiles of 96), the number sign, the lying rods | 8.3, 8.1, 9.4 | balance, number_line, hints |
+| 18 | flash picture stage; sing_along, puppet_talk, story (L1, L2, A11) | 9.4 | flash, language templates |
+
+Each step updates its goldens and re-runs the four board files with `MIN_SIZES_OUT` (QA note section 11). QA runs once at the end of
+steps 1 to 6 (the Colour Bay set) and once at the end.
+
+### 9.7 For the owner, the hand-offs, and what is open
+- **Needs the owner (one look):** T1 changes how a plain question looks on every board: the answer pictures move up into the empty
+  picture and become large (tablet 200). Open `docs/design/m11/min-sizes/rulings/ruling_t1_empty_stage_tabletL.png`. Recommendation: yes.
+- **curriculum-expert:** D3 (no three-bin sort by count on phones); D5 (a drop snaps to the nearest slot of its kind; at most 5 tray kinds;
+  palettes ≤ 6 / 4); D7 (a 3-row window of the hundred chart on phones); D8 (≤ 8 coins of a kind, ≤ 2 kinds); D9 (the frame's counting
+  order); D1 (count against size: the big set at 1.6 to 1.75 × the small, still the longer row).
+- **hebrew-text-editor:** D10 (the CAPTION_LINES list, about 13 letters a line on a phone).
+- **qa-engineer:** 9.5.
+- **app-developer:** 9.6.
+- **Open, not decided here:** whether the tablet target sizes of 1.4 (R1 56, R2 32) should be asserted as warnings (QA decision 3 of
+  its note): not needed for these rulings; I would leave it for after step 18.
