@@ -553,7 +553,7 @@ class _GiveStage extends StatelessWidget {
                   top: l.slots[j].dy - l.slotSize / 2,
                   width: l.slotSize,
                   height: l.slotSize,
-                  child: IgnorePointer(child: PackSvg(a.assets.svg(a.sourceSprite))),
+                  child: IgnorePointer(child: PackSvg(inkedSvg(a.assets.svg(a.sourceSprite)).$1)),
                 ),
               for (int i = 0; i < a.sourceCount; i++) _butterfly(a, l, i),
               Positioned.fill(child: s._hint.body(size)),

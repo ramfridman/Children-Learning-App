@@ -145,7 +145,7 @@ void main() {
         kind: SortKind.phone,
         stage: laid.stage.size,
         labels: <String>[for (final SortBin b in a.bins) b.label],
-        marks: <BinMark>[for (final SortBin b in a.bins) (count: b.count, tally: false)],
+        marks: <BinMark>[for (final SortBin b in a.bins) (count: b.count, tally: false, fit: null)],
         wide: false,
       ),
       laid.stage.topLeft,
@@ -179,7 +179,10 @@ void main() {
       );
       expect(s.hintCell, a.wrong);
       // The card stands over the mistake, not over another cell.
-      final Offset mistake = SpotErrorSession.cellCentres(spec.stage.size, a.cells.length)[a.wrong];
+      final Offset mistake = SpotErrorSession.cellCentres(
+        s.layoutFor(spec).stage.size,
+        a.cells.length,
+      )[a.wrong];
       expect(inStage(t.getCenter(find.byKey(const Key('hint-card')))).dx, closeTo(mistake.dx, 1));
       await end(t, s);
     });
@@ -401,7 +404,7 @@ void main() {
           kind: SortKind.tabletL,
           stage: const Size(816, 238),
           labels: <String>[for (int i = 0; i < n; i++) 'b$i'],
-          marks: <BinMark>[for (int i = 0; i < n; i++) (count: 1, tally: false)],
+          marks: <BinMark>[for (int i = 0; i < n; i++) (count: 1, tally: false, fit: null)],
           wide: false,
         );
         final List<Rect> bins = board.bins;

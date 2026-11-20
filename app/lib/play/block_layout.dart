@@ -7,6 +7,7 @@ import '../content/models.dart';
 import '../design/token_types.dart' show Band;
 import '../design/tokens.g.dart';
 import 'activity_frame.dart' show ActivityFrame;
+import 'choice_row.dart' show withBigStage;
 import 'hints/tap_geometry.dart';
 import 'math_run.dart';
 import 'stage_pictures.dart';
@@ -69,11 +70,13 @@ abstract final class BlockLayout {
   static ActivitySpec forStage(ActivitySpec base) {
     final double? top = base.blocksStageTop;
     if (top == null) {
-      return base.withStageAndTiles(
-        stage: base.stage,
-        tilesLeft: base.tilesLeft,
-        tilesTop: base.tilesTop,
-        tilesWidth: base.tilesWidth,
+      // A tablet's card is the grown one, as on every tablet screen (docs/design/m11/min-sizes.md C1, C2).
+      final ActivitySpec grown = withBigStage(base);
+      return grown.withStageAndTiles(
+        stage: grown.stage,
+        tilesLeft: grown.tilesLeft,
+        tilesTop: grown.tilesTop,
+        tilesWidth: grown.tilesWidth,
         tailAtMouth: true,
       );
     }

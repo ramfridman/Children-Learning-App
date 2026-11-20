@@ -607,9 +607,10 @@ class RobotPathSession extends TemplateSession {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Padding(
+        // The strip is this padded box: 44 high with one row of steps (56 on a tablet), as min-sizes.md B2 asks.
+        key: const Key('robot-program'),
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
         child: Row(
-          key: const Key('robot-program'),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
@@ -635,10 +636,19 @@ class RobotPathSession extends TemplateSession {
                       child: Icon(_icon(d), size: icon, color: TokenColors.ink),
                     ),
                   for (int i = program.length; i < activity.maxSteps; i++)
+                    // An empty place is a ring of 20 (28 on a tablet), not an arrow: min-sizes.md B2.
                     SizedBox(
                       width: icon,
                       height: icon,
-                      child: Icon(Icons.circle_outlined, size: icon * 0.7, color: TokenColors.hairline),
+                      child: Center(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: TokenColors.hairline, width: 3),
+                          ),
+                          child: SizedBox.square(dimension: icon * 0.7),
+                        ),
+                      ),
                     ),
                 ],
               ),
@@ -666,7 +676,7 @@ class RobotPathSession extends TemplateSession {
     slop: _ts,
     state: hintStep == 'undo' ? AnswerState.selected : AnswerState.idle,
     onPressed: undo,
-    child: Icon(Icons.backspace_outlined, size: _t > 60 ? 36 : 28, color: TokenColors.ink),
+    child: Icon(Icons.backspace_outlined, size: _t > 60 ? 44 : 32, color: TokenColors.ink),
   );
 
   Widget get _goButton => Padding(

@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 import '../../design/app_text.dart';
+import '../../design/layout.dart' show SizeClass, sizeClassFor;
 import '../../design/tokens.g.dart';
 import '../../child/activity_shell.dart' show ActivitySpec;
 import '../hint_hand.dart';
@@ -119,7 +120,7 @@ class HintOverlay extends StatelessWidget {
           child: SeenDot(key: const Key('seen-dot'), radius: 4 * k),
         );
       case BadgeMark():
-        return m.big ? _bigBadge(key, m, k) : _badge(key, m, k);
+        return m.big ? _bigBadge(key, m, k) : _badge(context, key, m);
       case PairsMark():
         return Positioned.fill(
           key: key,
@@ -359,18 +360,15 @@ class HintOverlay extends StatelessWidget {
   /// with the same short fade as everything else.
   Widget _glide(Key key, Rect rect, Widget child) => _Glide(key: key, rect: rect, child: child);
 
-  Widget _badge(Key key, BadgeMark m, double k) {
-    final double r = 11 * k;
+  Widget _badge(BuildContext context, Key key, BadgeMark m) {
+    final double r = HintBadge.sideOf(context) / 2;
     return Positioned(
       key: key,
       left: m.at.dx - r,
       top: m.at.dy - r,
       width: 2 * r,
       height: 2 * r,
-      child: Appear(
-        scaleFrom: 0.7,
-        child: HintBadge(n: m.n, scale: k),
-      ),
+      child: Appear(scaleFrom: 0.7, child: HintBadge(n: m.n)),
     );
   }
 
@@ -536,32 +534,42 @@ class _Glide extends StatelessWidget {
   }
 }
 
-/// The number badge of a hint (paper, a sky ring, a numeral read left to right): [n] things counted so far, or a place in a queue.
-/// 22 across on a phone, [scale] times that on a bigger board. Keyed `hint-badge`.
+/// The number badge of a hint (paper, a sky ring, a numeral read left to right): [n] things counted so far, or a place in a queue. A chip of 32 across
+/// with a numeral of 20 on a phone, 40 and 24 on a tablet (docs/design/m11/min-sizes.md R7, V13: a numeral a child reads is never under 20). Keyed `hint-badge`.
 class HintBadge extends StatelessWidget {
-  const HintBadge({super.key, required this.n, this.scale = 1});
+  const HintBadge({super.key, required this.n});
 
   final int n;
-  final double scale;
+
+  /// The side of the chip on the board [context] is on.
+  static double sideOf(BuildContext context) =>
+      sizeClassFor(MediaQuery.sizeOf(context)) == SizeClass.tablet ? 40 : 32;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    width: 22 * scale,
-    height: 22 * scale,
-    child: Container(
-      key: const Key('hint-badge'),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: TokenColors.paper,
-        shape: BoxShape.circle,
-        border: Border.all(color: TokenColors.skyDeep, width: 2.5),
+  Widget build(BuildContext context) {
+    final double side = sideOf(context);
+    return SizedBox(
+      width: side,
+      height: side,
+      child: Container(
+        key: const Key('hint-badge'),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: TokenColors.paper,
+          shape: BoxShape.circle,
+          border: Border.all(color: TokenColors.skyDeep, width: 2.5),
+        ),
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: Text(
+            '$n',
+            textScaler: TextScaler.noScaling,
+            style: AppText.fixed(size: side >= 40 ? 24 : 20, weight: 800, lineHeight: 1),
+          ),
+        ),
       ),
-      child: Directionality(
-        textDirection: TextDirection.ltr,
-        child: Text('$n', style: AppText.fixed(size: 14 * scale, weight: 800, lineHeight: 1)),
-      ),
-    ),
-  );
+    );
+  }
 }
 
 /// The start flag of a hint: a pole and a pennant in sky, in a box 24 by 26 (times [scale]) with the pole's foot at the bottom

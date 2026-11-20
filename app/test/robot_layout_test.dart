@@ -105,7 +105,8 @@ void main() {
             final Rect stage = t.getRect(find.byKey(const Key('robot-stage')));
             final Rect steps = t.getRect(find.byKey(const Key('robot-program')));
             expect(stage.contains(steps.topLeft) && stage.contains(steps.bottomRight), isTrue, reason: a.id);
-            final double gridBottom = stage.top + (stage.height - 30 - cell * a.rows) / 2 + cell * a.rows;
+            final double strip = RobotPathSession.stripOf(a, spec);
+            final double gridBottom = stage.top + (stage.height - strip - cell * a.rows) / 2 + cell * a.rows;
             expect(
               steps.top,
               greaterThanOrEqualTo(gridBottom - 0.01),

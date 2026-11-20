@@ -407,14 +407,14 @@ class NumberLineSession extends TemplateSession {
   Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
 
   /// The line is drawn as wide as the board lets it be (min-sizes.md B1, R10): a phone's stage is the answer band, from the start margin to the
-  /// guide (581 wide, the smallest phone's 472), so that the ticks of a line from 0 to 20 are 26 apart (they were 14); a tablet's card is 848 wide
+  /// guide (581 wide; the smallest phone's guide stands above it, so its line is 635 wide), so that the ticks of a line from 0 to 20 are 26 apart (they were 14); a tablet's card is 848 wide
   /// and 400 tall (a portrait 520), the ticks 38 apart.
   @override
   ActivitySpec layoutFor(ActivitySpec base) {
     if (base.stageIsCard) return withBigStage(base);
     final bool se = base.boardHeight < 380;
     return base.withStageAndTiles(
-      stage: se ? const Rect.fromLTWH(16, 218, 472, 124) : const Rect.fromLTWH(24, 244, 581, 112),
+      stage: se ? const Rect.fromLTWH(16, 218, 635, 124) : const Rect.fromLTWH(24, 244, 581, 112),
       tilesLeft: base.tilesLeft,
       tilesTop: base.tilesTop,
       tilesWidth: base.tilesWidth,
@@ -546,9 +546,10 @@ class _LineStage extends StatelessWidget {
         ? TokenColors.notYetRing
         : (right ? TokenColors.correctGlow : (lit ? TokenColors.hintHalo : TokenColors.ink));
     return Positioned(
-      left: _x(n) - 30,
+      // A label is one line, however large the text size makes it (a number of five digits at 1.3 on a tablet would break in 60 points).
+      left: _x(n) - 60,
       top: lineY - 12,
-      width: 60,
+      width: 120,
       height: 80,
       child: Column(
         children: <Widget>[
@@ -561,6 +562,8 @@ class _LineStage extends StatelessWidget {
           if (labelled)
             Text(
               '$n',
+              maxLines: 1,
+              softWrap: false,
               style: AppText.fixed(size: s.tablet ? 28 : 20, weight: 800, lineHeight: 1.1),
               textAlign: TextAlign.center,
             ),

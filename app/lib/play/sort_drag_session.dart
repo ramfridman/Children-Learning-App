@@ -16,6 +16,7 @@ import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
 import 'activity_frame.dart' show ActivityFrame;
 import 'lesson_arc.dart' show ArcPart, ArcStep;
+import 'ink_fit.dart';
 import 'show_solids.dart';
 import 'show_stage.dart';
 import 'size_scale.dart';
@@ -116,11 +117,33 @@ class SortDragSession extends TemplateSession {
   /// What a bin's sample picture is, for the board's room: one picture, a few of them, or a tally of sticks.
   List<BinMark> get _marks => <BinMark>[
     for (final SortBin b in activity.bins)
-      (count: b.count, tally: b.count > 1 && b.sprite == 'asset:stick_long'),
+      (
+        count: b.count,
+        tally: b.count > 1 && b.sprite == 'asset:stick_long',
+        fit: _inked && b.sprite != 'asset:stick_long' ? InkFit.of(activity.assets.svg(b.sprite!)) : null,
+      ),
+  ];
+
+  /// The pictures are drawn cut to their ink (docs/design/m11/min-sizes.md R1, R5): not the strips (their animals are the detail) and not a size rule's
+  /// pictures (the small one is small on purpose).
+  late final bool _inked = !wide && !_bigMark;
+
+  /// The picture of a card, cut to its ink where the pictures are.
+  String _cardSvg(SortItem i) {
+    final String svg = activity.assets.svg(i.sprite!);
+    return _inked ? InkFit.of(svg).svg : svg;
+  }
+
+  /// The pictures of the cards, for the board's card size.
+  List<InkFit> get _itemFits => <InkFit>[
+    if (_inked)
+      for (final SortItem i in activity.items) InkFit.of(activity.assets.svg(i.sprite!)),
   ];
 
   /// The bins show a size rule's samples (a big and a small one): the small one is a third of its box, so the box is drawn larger.
-  late final bool _bigMark = sampleBoxShares.any((double s) => s < 1);
+  late final bool _bigMark =
+      activity.bins.any((SortBin b) => RegExp(r'^asset:.+_size_[sml]$').hasMatch(b.sprite ?? '')) &&
+      sampleBoxShares.any((double s) => s < 1);
 
   List<String> get _labels => <String>[for (final SortBin b in activity.bins) b.label];
 
@@ -136,6 +159,7 @@ class SortDragSession extends TemplateSession {
     wide: wide,
     share: activity.share,
     bigMark: _bigMark,
+    itemFits: _itemFits,
     scale: scale,
   );
 
@@ -206,9 +230,19 @@ class SortDragSession extends TemplateSession {
         final double width = land ? 848 : 772;
         // The card: a strip's tray is two rows of wide tiles; a square's is one row (two from six or seven), so the card takes what is left.
         final bool oneRow = !wide && tray.rowsFor(activity.items.length, width) == 1;
-        final double height = wide
-            ? (land ? 270 : 420)
-            : (land ? (oneRow ? 400 : 300) : (oneRow ? 520 : 420));
+        double height = wide ? (land ? 270 : 420) : (land ? (oneRow ? 400 : 300) : (oneRow ? 520 : 420));
+        // Under the card the tray's rows of the look's tile, ending over the edge where no hotspot may be.
+        if (!wide) {
+          height = math.min(
+            height,
+            base.boardHeight -
+                TokenTouch.bottomNoHotspot -
+                tray.boxHeight(activity.items.length, width) -
+                24 -
+                (base.tileSlop - 4) -
+                base.stage.top,
+          );
+        }
         return base.withStageAndTiles(
           stage: Rect.fromLTWH(left, base.stage.top, width, height),
           tilesLeft: left,
@@ -593,8 +627,8 @@ class SortDragSession extends TemplateSession {
     const int step = 700;
     if (withItem && tray.isNotEmpty && _canDraw) {
       // P9: a copy of the next picture glides past the sample of each bin, and stops at none (the bins are compared, none is chosen).
-      final double side = 34 * hintScale(_size);
-      final String svg = activity.assets.svg(tray.first.sprite!);
+      final double side = math.max(44, 34 * hintScale(_size));
+      final String svg = _cardSvg(tray.first);
       final int n = activity.bins.length;
       _hint.play(
         HintPlan(<HintFrame>[
@@ -820,7 +854,7 @@ class SortDragSession extends TemplateSession {
         child: SizedBox(
           width: plan.card.width,
           height: plan.card.height,
-          child: Opacity(opacity: 0.9, child: PackSvg(activity.assets.svg(i.sprite!))),
+          child: Opacity(opacity: 0.9, child: PackSvg(_cardSvg(i))),
         ),
       ),
     ),
@@ -839,7 +873,7 @@ class SortDragSession extends TemplateSession {
       key: Key('tray-card-${i.id}'),
       width: plan.card.width,
       height: plan.card.height,
-      child: PackSvg(activity.assets.svg(i.sprite!)),
+      child: PackSvg(_cardSvg(i)),
     ),
   );
 }
@@ -881,8 +915,7 @@ class _SortStage extends StatelessWidget {
     // The cards in the order they went in: the newest is last, and it is the one a shelf shows at full size.
     final List<({String id, String svg})> inside = <({String id, String svg})>[
       for (final MapEntry<String, String> e in s.placed.entries)
-        if (e.value == b.id)
-          (id: e.key, svg: a.assets.svg(a.items.firstWhere((SortItem i) => i.id == e.key).sprite!)),
+        if (e.value == b.id) (id: e.key, svg: s._cardSvg(a.items.firstWhere((SortItem i) => i.id == e.key))),
     ];
     return DragTarget<String>(
       onWillAcceptWithDetails: (DragTargetDetails<String> d) => true,

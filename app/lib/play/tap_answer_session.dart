@@ -344,15 +344,23 @@ class TapAnswerSession extends TemplateSession {
   }
 
   /// A chart to read stands on the whole start column of a phone (a column of 7 pictures is then 33 high, not 13: docs/design/m11/min-sizes.md A4) and
-  /// its answers are three tiles of 56 in the column under the bubble, where a clock's controls stand (a tile of the look's size does not fit
-  /// beside it). A tablet's card is the grown one, with the look's tiles under it.
+  /// its answers are the look's tiles in a row under the bubble (see [_tilesInARow]). A tablet's card is the grown one, with the look's tiles under it.
   ActivitySpec _chartLayout(ActivitySpec base) =>
-      base.stageIsCard ? base : withMeetStage(base).withTiles(size: 56, slop: 4, numeralFont: 36);
+      base.stageIsCard ? base : _tilesInARow(withMeetStage(base), activity.options.length);
+
+  /// The answers of a screen whose stage has the start column stand in a row under the bubble and the guide, as wide as the row needs: each tile is the look's
+  /// (the guide's figure ends by y 245 on a phone, 205 on the smallest, and the band under it is empty), not a column of 56 (min-sizes.md 5.1).
+  ActivitySpec _tilesInARow(ActivitySpec meet, int n) => meet.withStageAndTiles(
+    stage: meet.stage,
+    tilesLeft: meet.tilesLeft,
+    tilesTop: meet.tilesTop,
+    tilesWidth: n * (meet.tileSize + 8),
+    tileSlop: 4,
+  );
 
   /// A group (or two) to count, add or compare, with up to three numerals or ticks to answer with: on a phone the group takes the whole start column
-  /// (stars and apples 36 or more across, not 20: docs/design/m11/min-sizes.md A6, A7, B7) and the tiles stand in the column under the bubble, each
-  /// as wide as the column allows (88 at most, 56 for three; with a tap margin of 4 that is 64 to touch). A lone thing to find (`loneThingOf`) and a
-  /// set to choose from keep their layouts.
+  /// (stars and apples 36 or more across, not 20: docs/design/m11/min-sizes.md A6, A7, B7) and the tiles stand in a row under the bubble (see
+  /// [_tilesInARow]). A lone thing to find (`loneThingOf`) and a set to choose from keep their layouts.
   bool get _groupWithSmallTiles =>
       activity.group != null &&
       activity.optionsInTiles &&
@@ -364,9 +372,7 @@ class TapAnswerSession extends TemplateSession {
 
   ActivitySpec _groupLayout(ActivitySpec base) {
     if (base.stageIsCard) return base;
-    final ActivitySpec meet = withMeetStage(base);
-    final double side = math.min(base.tileSize, meet.tilesWidth / activity.options.length - 8);
-    return meet.withTiles(size: side, slop: 4, numeralFont: side * 0.64);
+    return _tilesInARow(withMeetStage(base), activity.options.length);
   }
 
   /// A row of six cells or more, or of pictures that compare sizes: a tablet gives it the whole width the board has (see [withWideStage]).
@@ -621,13 +627,15 @@ class TapAnswerSession extends TemplateSession {
                         if (m.tile == i)
                           switch (m) {
                             TileBadgeMark() => Positioned(
-                              top: 12 - 23 * hintScale(_stageSize ?? Size.zero),
+                              // The chip's middle is where the old badge's was.
+                              top:
+                                  12 -
+                                  12 * hintScale(_stageSize ?? Size.zero) -
+                                  HintBadge.sideOf(context) / 2,
                               left: 0,
                               right: 0,
                               child: IgnorePointer(
-                                child: Center(
-                                  child: HintBadge(n: m.n, scale: hintScale(_stageSize ?? Size.zero)),
-                                ),
+                                child: Center(child: HintBadge(n: m.n)),
                               ),
                             ),
                             TileFlagMark() => Positioned(
@@ -1313,7 +1321,10 @@ class _TapStage extends StatelessWidget {
     // (Min-sizes A6, A7, B7: so is a line of apples, or two sets of one sort that are compared, as they are the same size on both sides.)
     final bool inked =
         a.group!.scale == 1 &&
-        (a.group2 == null || (a.group2!.scale == 1 && a.group2!.sprite == a.group!.sprite)) &&
+        (a.group2 == null ||
+            (a.group2!.scale == 1 &&
+                (a.group2!.sprite == a.group!.sprite ||
+                    _sameInk(a.assets.svg(a.group!.sprite), a.assets.svg(a.group2!.sprite))))) &&
         !drawsTenFrame(a.group!.arrangement, a.group!.count);
     Widget one(SpriteSet g) => SpriteGroup(
       svg: inked ? inkedSvg(a.assets.svg(g.sprite)).$1 : a.assets.svg(g.sprite),
@@ -1410,4 +1421,12 @@ class _TapStage extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Two pictures (a red ball and a yellow one) whose ink fills the same share of their boxes: cut to their ink they stay as big as each other, so two
+/// sets of them can be compared fairly.
+bool _sameInk(String x, String y) {
+  final Rect a = inkBoxOf(x);
+  final Rect b = inkBoxOf(y);
+  return (a.width - b.width).abs() < 0.03 && (a.height - b.height).abs() < 0.03;
 }

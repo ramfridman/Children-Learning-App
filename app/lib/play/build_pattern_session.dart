@@ -77,7 +77,9 @@ class BuildPatternSession extends TemplateSession {
   ActivitySpec layoutFor(ActivitySpec base) => withStageAtLeast(
     _widerOnPhone(activity.slots >= 6 || look != null ? withWideStage(base) : base),
     ActivitySpec.phone.stage.height,
-    tilesBox: (tall ? tallTileHeight : math.min(96, base.tilesWidth / activity.palette.length - 16)) + 12,
+    tilesBox:
+        (tall ? tallTileHeight : math.min(base.tileSize, base.tilesWidth / activity.palette.length - 16)) +
+        12,
   );
 
   /// A phone's stage reaches the board's margin (x 24, as a picture stage does) and is 377 wide, not 330, so that a row of six cells has cells of 60 and
@@ -155,7 +157,7 @@ class BuildPatternSession extends TemplateSession {
   /// The fingertip place on the top edge of the palette picture [sprite].
   Offset _paletteTip(ActivitySpec spec, String sprite) {
     final int n = activity.palette.length;
-    final double side = math.min(96, spec.tilesWidth / n - 16);
+    final double side = math.min(spec.tileSize, spec.tilesWidth / n - 16);
     return spec.tileTip(n, math.max(0, activity.palette.indexOf(sprite)), slot: side + 12, slop: 6);
   }
 
@@ -521,7 +523,7 @@ class BuildPatternSession extends TemplateSession {
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
     listenable: this,
     builder: (BuildContext c, Widget? _) {
-      final double side = math.min(96, spec.tilesWidth / activity.palette.length - 16);
+      final double side = math.min(spec.tileSize, spec.tilesWidth / activity.palette.length - 16);
       return Row(
         key: const Key('pattern-palette'),
         mainAxisAlignment: MainAxisAlignment.center,

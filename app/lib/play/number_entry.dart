@@ -106,11 +106,13 @@ class NumberKeypad extends StatelessWidget {
 
   Widget _key(BuildContext context, String k) {
     final bool done = k == 'done';
+    // The glyph of a control key is 32 on a phone and 44 on a tablet (min-sizes.md R9: never under 32, 40).
+    final double glyph = layout.key >= 80 ? 44 : 32;
     final Widget face = switch (k) {
-      'back' => const Icon(Icons.backspace_outlined, size: 26, color: TokenColors.ink),
+      'back' => Icon(Icons.backspace_outlined, size: glyph, color: TokenColors.ink),
       'done' => Icon(
         Icons.check_rounded,
-        size: 32,
+        size: glyph,
         color: canCheck ? TokenColors.ink : TokenColors.inkSoft.withValues(alpha: 0.5),
       ),
       _ => Text(k, style: AppText.fixed(size: layout.key * 0.55, weight: 800, lineHeight: 1)),

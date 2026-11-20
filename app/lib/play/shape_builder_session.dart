@@ -59,6 +59,20 @@ class ShapeBuilderSession extends TemplateSession {
 
   bool get _canDraw => _spec != null && !_size.isEmpty;
 
+  /// A phone's tray takes the wide answer band, from the board's margin to under the guide (x 24 to 605; the small phone's 8 to 651), so that its pieces
+  /// are the look's tile and not squeezed to fit 534 points (docs/design/m11/min-sizes.md 5.1).
+  @override
+  ActivitySpec layoutFor(ActivitySpec base) {
+    if (base.stageIsCard) return base;
+    final bool se = base.boardHeight < 380;
+    return base.withStageAndTiles(
+      stage: base.stage,
+      tilesLeft: se ? 8 : 24,
+      tilesTop: base.tilesTop,
+      tilesWidth: se ? 643 : 581,
+    );
+  }
+
   /// The box the picture of the stage is drawn in (centred, as high as the stage allows), and the place of a slot in it.
   Rect pictureBox(Size size) {
     final double w = math.min(size.width - 16, (size.height - 12) * activity.aspect);
@@ -230,7 +244,10 @@ class ShapeBuilderSession extends TemplateSession {
     notify();
     final ActivitySpec? spec = _spec;
     if (spec != null && _canDraw) {
-      final double side = math.max(44, math.min(84, spec.tilesWidth / math.max(1, pieces.length) - 8));
+      final double side = math.max(
+        44,
+        math.min(spec.tileSize, spec.tilesWidth / math.max(1, pieces.length) - 8),
+      );
       _hint.play(
         handTourPlan(<HandStop>[
           HandStop(spec.tileTip(pieces.length, fit, slot: side + 8, slop: 4), taken),
@@ -438,7 +455,10 @@ class ShapeBuilderSession extends TemplateSession {
     const int over = 2800;
     final ActivitySpec? spec = _spec;
     if (spec != null && _canDraw) {
-      final double side = math.max(44, math.min(84, spec.tilesWidth / math.max(1, pieces.length) - 8));
+      final double side = math.max(
+        44,
+        math.min(spec.tileSize, spec.tilesWidth / math.max(1, pieces.length) - 8),
+      );
       _hint.play(
         handTourPlan(<HandStop>[
           HandStop(spec.tileTip(pieces.length, fit, slot: side + 8, slop: 4), taken),
@@ -486,7 +506,10 @@ class ShapeBuilderSession extends TemplateSession {
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
     listenable: this,
     builder: (BuildContext c, Widget? _) {
-      final double side = math.max(44, math.min(84, spec.tilesWidth / math.max(1, pieces.length) - 8));
+      final double side = math.max(
+        44,
+        math.min(spec.tileSize, spec.tilesWidth / math.max(1, pieces.length) - 8),
+      );
       return Row(
         key: const Key('shape-tray'),
         mainAxisAlignment: MainAxisAlignment.center,

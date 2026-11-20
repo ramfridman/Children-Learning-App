@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../child/activity_shell.dart';
 import '../design/app_text.dart';
 import '../design/tokens.g.dart';
+import 'ink_fit.dart';
 import 'sprite_group.dart';
 import 'template_session.dart' show PackSvg;
 
@@ -23,8 +24,10 @@ enum SortKind {
   bool get tablet => this == tabletL || this == tabletP;
 }
 
-/// What a bin's sample picture is: one picture, a few of them in a line, or sticks that count the sides of a shape (a tally).
-typedef BinMark = ({int count, bool tally});
+/// What a bin's sample picture is: one picture, a few of them in a line, or sticks that count the sides of a shape (a tally). [fit] is the picture cut
+/// to its ink, so that its box can be as big as it needs for the ink to be seen; null for a tally and for the samples of a size rule (a big and a
+/// small ball: the small one is small on purpose, and cutting it to its ink would draw it as big as the big one).
+typedef BinMark = ({int count, bool tally, InkFit? fit});
 
 /// Where everything of a sort board stands, in the stage's own points: the bins (shelves on a phone, bins on a tablet), the sign of each (its
 /// sample picture and its label), the well where the cards that were sorted lie, and the slots of the cards in it.
@@ -43,6 +46,7 @@ class SortBoard {
     required this.wide,
     this.share = false,
     this.bigMark = false,
+    this.itemFits = const <InkFit>[],
     this.scale = 1,
   });
 
@@ -60,6 +64,10 @@ class SortBoard {
   /// The samples are of a size rule (a big and a small ball): the small one's ink is a third of its box, so the box is as large as the room lets it be.
   final bool bigMark;
 
+  /// The pictures of the cards that are sorted (square ones), cut to their ink: the card of the board is as big as the flattest, tallest or thinnest of them
+  /// needs for its ink to be seen (empty: the card is a square).
+  final List<InkFit> itemFits;
+
   /// The size the labels are drawn at, as a multiple of their own size.
   final double scale;
 
@@ -71,6 +79,9 @@ class SortBoard {
   static const double pileRoom = 12;
   static const double stripAspect = 2.5;
 
+  /// The ink a picture in a bin is drawn to have (the floor is 40, and a measure is good to a point): a little over it.
+  static const double inkTarget = 42;
+
   bool get tablet => kind.tablet;
   bool get small => kind == SortKind.phoneSE;
   int get n => labels.length;
@@ -81,9 +92,38 @@ class SortBoard {
   double get pad => small ? 6 : 8;
 
   /// The side of a bin's sample picture.
-  double get markSide => tablet
-      ? (wide ? 48 : (bigMark ? 96 : 72))
-      : (n == 2 ? (bigMark ? (small ? 60 : 64) : (small ? 40 : 44)) : 40);
+  double get markSide =>
+      tablet ? (wide ? 56 : (bigMark ? 96 : 72)) : (n == 2 ? (bigMark ? (small ? 60 : 64) : 44) : 41.5);
+
+  /// Three or more shelves on a phone are 76 high: the label stands beside the sample (as high as the shelf), not under it.
+  bool get sideLabel =>
+      !tablet &&
+      !wide &&
+      n >= 3 &&
+      marks.every((BinMark m) => m.count <= 1 || m.tally) &&
+      _single.every((double w) => w <= 84);
+
+  /// The least a picture of a bin's sample takes when it is a few of them in a line: the item of a bin is 48 (44 on the smallest phone, 64 on a tablet).
+  double get itemFloor => tablet ? 64 : (small ? 44 : 48);
+
+  /// The room for a label of its natural lines (at most two) under (or beside) the sign's mark, whatever the mark's size: what a mark may grow into.
+  int get _labelLines {
+    int lines = 1;
+    final double room = (tablet ? _binW / 2 : _colMax) - 12;
+    for (final double w in _single) {
+      lines = math.max(lines, (w / math.max(1, room)).ceil());
+    }
+    return math.min(lines, 2);
+  }
+
+  /// The tallest a sample's box may be: a phone's shelf less its label and the room round them; a tablet's header is a little taller than the mark's side.
+  double get _markMaxH => tablet
+      ? markSide + 24
+      : math.max(markSide, _binH - 2 * border - 8 - (sideLabel ? 0 : _labelLines * line));
+
+  /// The tallest of the sample boxes (what a shelf's sign or a bin's header has to hold).
+  late final double _markH = <double>[for (int i = 0; i < n; i++) markSize(i).height]
+      .fold(markSide, math.max);
 
   static TextStyle labelStyle(double font) => AppText.fixed(size: font, weight: 500);
 
@@ -116,11 +156,12 @@ class SortBoard {
   }
 
   /// The most lines a label of a phone's shelf may take: what the shelf leaves under the mark.
-  int get _linesMax => tablet ? 2 : math.max(1, ((_binH - 2 * border - markSide - 4) / line).floor());
+  int get _linesMax =>
+      tablet ? 2 : math.max(1, ((_binH - 2 * border - (sideLabel ? 0 : _markH) - 4) / line).floor());
 
   // ---- the card ----
 
-  late final double _headerBase = tablet ? math.max(markSide, _linesIn() * line) + 12 : 0;
+  late final double _headerBase = tablet ? math.max(_markH, _linesIn() * line) + 12 : 0;
 
   int _linesIn() {
     int lines = 1;
@@ -139,8 +180,20 @@ class SortBoard {
 
   Size _card() {
     if (!wide) {
-      final double side = share ? (tablet ? 56 : 40) : (tablet ? 64 : (small ? 44 : 48));
-      return Size.square(side);
+      // A share's plates show their cards at the item's floor too (a plate's count is what the badge says, and the cards are what a child touches).
+      final double side = itemFloor;
+      if (itemFits.isEmpty) return Size.square(side);
+      // The card is as big as the flattest, tallest or thinnest picture of the sort needs (the shelf's well less its pile's room), and never under the floor.
+      final Rect room = well(0);
+      final double maxW = math.max(side, room.width - pileRoom);
+      final double maxH = math.max(side, room.height - pileRoom);
+      double w = side, h = side;
+      for (final InkFit f in itemFits) {
+        final Size b = f.boxFor(side, target: inkTarget, maxW: maxW, maxH: maxH);
+        w = math.max(w, b.width);
+        h = math.max(h, b.height);
+      }
+      return Size(w, h);
     }
     double h = tablet ? (kind == SortKind.tabletL ? 120 : 112) : (small ? 68 : 76);
     if (tablet) {
@@ -157,21 +210,47 @@ class SortBoard {
   double get _colMin => small ? 60 : 72;
   late final double _colMax = math.max(
     _colMin,
-    wide ? math.min(120.0, _binW - pad - border - (card.width + pileRoom)) : 0.45 * _binW,
+    wide
+        ? math.min(120.0, _binW - pad - border - (card.width + pileRoom))
+        : math.max((sideLabel ? 0.62 : 0.45) * _binW, _lineOfSamples),
   );
+
+  /// The sign column that a line of the most pictures a sample shows at the item's floor needs (at most 0.62 of the shelf).
+  double get _lineOfSamples {
+    int most = 0;
+    for (final BinMark m in marks) {
+      if (!m.tally && m.count > 1) most = math.max(most, m.count);
+    }
+    return math.min(0.62 * _binW, most * itemFloor / groupCellFill + 12 + 12);
+  }
 
   /// The box of bin [i]'s sample picture: [markSide] square, or wider for a few pictures or a tally.
   Size markSize(int i) {
     final BinMark m = marks[i];
-    final double cap = (tablet ? _binW / 2 : _colMax) - 12;
-    if (m.count <= 1) return Size.square(markSide);
+    // Beside a label of up to 84 points a sample may take what is left of the sign column.
+    final double cap = (tablet ? _binW / 2 : _colMax) - 12 - (sideLabel ? 84 + 12 : 0);
+    final InkFit? fit = m.fit;
+    if (m.count <= 1) {
+      return fit == null
+          ? Size.square(markSide)
+          : fit.boxFor(markSide, target: inkTarget, maxW: math.max(markSide, cap), maxH: _markMaxH);
+    }
     if (m.tally) {
       final double s = tablet ? 12 : 9;
       return Size(math.min(cap, m.count * s + (m.count - 1) * 0.7 * s), markSide);
     }
-    final double cell = m.count <= 3 ? markSide : math.max(28, markSide * 0.7);
+    // A few pictures in a line: each picture (a group's picture fills a part of its cell) is a box of the item's floor at least, as many as the sign's room
+    // allows at that size.
+    double cell = math.max(markSide, itemFloor / groupCellFill);
+    // On a shelf of 76 (three or more) a box that big and a label do not both fit: the pictures keep the sign's size, and are under the item's floor.
+    if (!tablet && n >= 3) cell = markSide;
+    if (fit != null && !(!tablet && n >= 3)) {
+      // A narrow or a flat picture needs a bigger square for its ink to be seen.
+      final Size need = fit.boxFor(itemFloor, target: inkTarget, maxW: 120, maxH: 120);
+      cell = math.max(cell, math.max(need.width, need.height) / groupCellFill);
+    }
     final double w = math.min(cap, m.count * cell);
-    return Size(w, math.min(markSide, w / m.count));
+    return Size(w, math.min(cell, w / m.count));
   }
 
   /// The width of a phone's sign column (the start side of a shelf): the widest of its marks and labels, between the least and what the card leaves.
@@ -181,19 +260,24 @@ class SortBoard {
     if (tablet) return 0;
     double need = _colMin;
     for (int i = 0; i < n; i++) {
-      need = math.max(need, math.max(markSize(i).width, math.min(_single[i], _colMax - 12)) + 12);
+      need = sideLabel
+          ? math.max(need, markSize(i).width + _single[i] + 24)
+          : math.max(need, math.max(markSize(i).width, math.min(_single[i], _colMax - 12)) + 12);
     }
     return math.min(_colMax, need);
   }
 
   /// The lines bin [i]'s label takes in its room.
-  int linesOf(int i) =>
-      _width(labels[i], tablet ? _tabletLabelRoom(i) : signW - 12).lines.clamp(1, _linesMax);
+  int linesOf(int i) => _width(labels[i], _labelRoom(i)).lines.clamp(1, _linesMax);
+
+  /// The width bin [i]'s label has: a tablet's header less the mark, a shelf's sign column (less the mark where the label stands beside it).
+  double _labelRoom(int i) =>
+      tablet ? _tabletLabelRoom(i) : (sideLabel ? signW - markSize(i).width - 18 : signW - 12);
 
   /// True when every label fits its room in the lines the box has: otherwise the label is drawn smaller (see [scaleFor]).
   bool get fits {
     for (int i = 0; i < n; i++) {
-      if (_width(labels[i], tablet ? _tabletLabelRoom(i) : signW - 12).lines > _linesMax) return false;
+      if (_width(labels[i], _labelRoom(i)).lines > _linesMax) return false;
     }
     return true;
   }
@@ -238,6 +322,9 @@ class SortBoard {
     final Rect s = sign(i);
     final Size m = markSize(i);
     if (tablet) return Rect.fromLTWH(s.right - m.width, s.top + (s.height - m.height) / 2, m.width, m.height);
+    if (sideLabel) {
+      return Rect.fromLTWH(s.right - 6 - m.width, s.top + (s.height - m.height) / 2, m.width, m.height);
+    }
     final double content = m.height + 4 + linesOf(i) * line;
     final double top = s.top + math.max(0, (s.height - content) / 2);
     return Rect.fromLTWH(s.center.dx - m.width / 2, top, m.width, m.height);
@@ -248,6 +335,10 @@ class SortBoard {
     final Rect s = sign(i);
     final Rect m = markRect(i);
     if (tablet) return Rect.fromLTRB(s.left, s.top, m.left - 12, s.bottom);
+    if (sideLabel) {
+      final double h = linesOf(i) * line;
+      return Rect.fromLTRB(s.left + 6, s.top + (s.height - h) / 2, m.left - 6, s.top + (s.height + h) / 2);
+    }
     return Rect.fromLTWH(s.left + 6, m.bottom + 4, s.width - 12, linesOf(i) * line);
   }
 
@@ -330,7 +421,9 @@ class SortBinBody extends StatelessWidget {
         Positioned.fromRect(
           rect: local(board.labelRect(index)),
           child: Align(
-            alignment: board.tablet ? AlignmentDirectional.centerStart : Alignment.topCenter,
+            alignment: board.tablet
+                ? AlignmentDirectional.centerStart
+                : (board.sideLabel ? Alignment.center : Alignment.topCenter),
             child: Text(
               board.labels[index],
               key: Key('bin-label-$binId'),
@@ -456,8 +549,12 @@ Widget sortMark({
   final BinMark m = board.marks[index];
   final Size box = board.markSize(index);
   if (m.count <= 1) {
+    // A picture cut to its ink fills a box of its own shape; a size rule's sample is a square of its share of the room.
+    final InkFit? fit = m.fit;
     return Center(
-      child: SizedBox.square(key: const Key('bin-sample'), dimension: box.width * share, child: PackSvg(svg)),
+      child: fit == null
+          ? SizedBox.square(key: const Key('bin-sample'), dimension: box.width * share, child: PackSvg(svg))
+          : SizedBox.fromSize(key: const Key('bin-sample'), size: box, child: PackSvg(fit.svg)),
     );
   }
   if (tally) {
@@ -472,7 +569,7 @@ Widget sortMark({
   return Center(
     child: SizedBox.fromSize(
       size: box,
-      child: SpriteGroup(svg: svg, count: m.count, arrangement: 'line', lineSlots: m.count),
+      child: SpriteGroup(svg: m.fit?.svg ?? svg, count: m.count, arrangement: 'line', lineSlots: m.count),
     ),
   );
 }
@@ -500,7 +597,8 @@ class SortTray {
     if (!kind.tablet) {
       if (wide) {
         final double w = kind == SortKind.phoneSE ? 196 : 184;
-        final double h = kind == SortKind.phoneSE ? 86 : 88;
+        // The look's tile is the least an answer tile is (96 for the youngest); the deck's own is 88 (86 on the smallest phone) where that is more.
+        final double h = math.max(look, kind == SortKind.phoneSE ? 86 : 88);
         return SortTray._(
           deck: true,
           tile: Size(w, h),
@@ -533,11 +631,11 @@ class SortTray {
         runSpacing: 8,
       );
     }
-    final double side = count >= (kind == SortKind.tabletL ? 7 : 6) ? look - 8 : look;
+    // The look's tile at any count: where the cards do not fit one row they stand in two, and the card above is as tall as that leaves (see `layoutFor`).
     return SortTray._(
       deck: false,
-      tile: Size.square(side),
-      card: Size.square(side - 12),
+      tile: Size.square(look),
+      card: Size.square(look - 12),
       spacing: 4,
       runSpacing: 4,
     );

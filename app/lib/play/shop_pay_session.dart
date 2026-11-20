@@ -724,6 +724,7 @@ class _Counter extends StatelessWidget {
                         svg: inkedSvg(a.assets.svg(a.itemSprite)).$1,
                         count: a.itemCount,
                         arrangement: 'line',
+                        lineSlots: a.itemCount,
                         scale: 1.6,
                       ),
                     ),

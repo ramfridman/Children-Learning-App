@@ -18,9 +18,10 @@ import '../strings/he.dart';
 import 'hint_widgets.dart';
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
+import 'hints/tap_plans.dart' show inkedSvg;
 import 'host_moves.dart';
 import 'lesson_arc.dart' show ArcPart, ArcStep;
-import 'choice_row.dart' show withBigStage, withTallStage;
+import 'choice_row.dart' show withBigStage, withWideTallStage;
 import 'lesson_controller.dart';
 import 'listen_do_session.dart' show ListenDoSession;
 import 'option_faces.dart';
@@ -35,24 +36,33 @@ class CountLayout {
       _language(size, a);
       return;
     }
-    // The target to fly to is the size the 128-point stage gave it (110 high at most): a taller stage gives the room to the objects.
-    final double flowerH = math.min(h * 0.86, 110);
+    // The target to fly to is the size the 128-point stage gave it (110 high at most; 80 where seven or more objects are to have the room): a taller
+    // stage gives the room to the objects.
+    final double flowerH = math.min(h * 0.86, a.count >= 7 ? 80 : 110);
     final double flowerW = flowerH * 0.8;
     flower = Rect.fromLTWH(size.width - flowerW - 10, (h - flowerH) / 2, flowerW, flowerH);
     final Rect region = Rect.fromLTRB(10, 8, flower.left - 8, h - 8);
-    _cells(region, a.count, oneRow: a.arrangement == 'line', shuffle: a.arrangement != 'line', seed: a.seed);
+    _cells(
+      region,
+      a.count,
+      shuffle: a.arrangement != 'line',
+      fewestRows: a.arrangement == 'line',
+      seed: a.seed,
+    );
   }
 
   /// The objects of a count (min-sizes.md A9, R3): each has a cell of its own, in one row or in two to four, whichever makes the cells largest; the
   /// object is drawn 0.84 of its cell (at most 96) and its touch square is the cell (at most 96): two touch squares never overlap, and a Band A child
-  /// control is 64 or more where the stage has the room (the phone's tall stage up to eight objects). The cells are taken in a seeded order, so a
-  /// scattered scene is the same every time.
-  void _cells(Rect region, int count, {required bool oneRow, required bool shuffle, int seed = 0}) {
+  /// control is 64 or more where the stage has the room. A line keeps its objects in the order of the line, row after row ([shuffle] false), and takes
+  /// the fewest rows that give a cell of 64 ([fewestRows]): a row of ten is 21 points to a thing, two rows of five 43, and three rows of four 71. The
+  /// others are taken in a seeded order, so a scattered scene is the same every time.
+  void _cells(Rect region, int count, {required bool shuffle, bool fewestRows = false, int seed = 0}) {
     final int n = math.max(1, count);
     int rows = 1;
     double cell = 0;
-    for (int r = 1; r <= (oneRow ? 1 : math.min(4, n)); r++) {
+    for (int r = 1; r <= math.min(4, n); r++) {
       final double c = math.min(region.width / (n / r).ceil(), region.height / r);
+      if (fewestRows && cell >= _touchCell) break;
       if (c > cell + 0.5) {
         cell = c;
         rows = r;
@@ -76,6 +86,9 @@ class CountLayout {
     ];
   }
 
+  /// The cell a Band A child control needs: the touch square of an object is never under it where the stage has the room.
+  static const double _touchCell = 64;
+
   /// A count whose target is the blank picture: nothing is there to fly to, so the objects are counted where they stand.
   static bool countsInPlace(CountTapActivity a) => a.targetSprite.split(':').last == 'blank';
 
@@ -88,7 +101,7 @@ class CountLayout {
     // The strip ends 10 above the stage's bottom, so the counter (40 high, 34 above the strip's bottom) stays inside the stage.
     flower = Rect.fromLTWH(size.width - strip - 4, 0, strip, size.height - 10);
     final Rect region = Rect.fromLTRB(8, 6, flower.left - 4, size.height - 6);
-    _cells(region, a.count, oneRow: false, shuffle: false);
+    _cells(region, a.count, shuffle: false);
   }
 
   late final Rect flower;
@@ -143,15 +156,12 @@ class CountTapSession extends TemplateSession {
 
   bool get flies => activity.onTap == 'fly_to_target';
 
-  /// Five or more objects counted in place in a course: on a phone they have the tall stage while they are counted, so that each has a cell
-  /// of 58 points or more (Band A: a child control is at least 64, the SE's ten objects 58); at the question the stage is the usual one
-  /// again, to leave the room to the answers (docs/design/languages-band-a-qa.md section 3).
-  bool get _tallWhileCounting =>
-      activity.isLanguage ? CountLayout.countsInPlace(activity) && activity.count >= 5 : activity.count >= 4;
-
+  /// A phone's stage is the whole start column (a picture stage's) while the objects are counted, so that each has a cell of 64 points or more where the
+  /// room allows (Band A: a child control is at least 64) and nothing is left empty under it; at the question it is the usual one again, to leave the room
+  /// to the answers (docs/design/m11/min-sizes.md A9, 2.3 S1).
   @override
   ActivitySpec layoutFor(ActivitySpec base) =>
-      base.stageIsCard ? withBigStage(base) : (_tallWhileCounting && !answering ? withTallStage(base) : base);
+      base.stageIsCard ? withBigStage(base) : (answering ? base : withWideTallStage(base));
   int get counter => counted.length;
 
   // ---- the host's part (a Show, the lead of a Together item) ----
@@ -502,9 +512,9 @@ class CountTapSession extends TemplateSession {
             ),
           ),
         ),
-        // While the objects are being counted the answer area is free: hint 2 opens its card there, beside the scene. (Under the tall stage
-        // the stage has taken it: the card stands in the close-up slot, see [buildBoardLayer].)
-        if (fingers > 0 && !answering && !(_tallWhileCounting && !spec.stageIsCard))
+        // While the objects are being counted the answer area is free on a tablet: hint 2 opens its card there, beside the scene. (On a phone the stage
+        // has taken it: the card stands in the close-up slot, see [buildBoardLayer].)
+        if (fingers > 0 && !answering && spec.stageIsCard)
           AnswerAreaCard(
             spec: spec,
             child: CountingAid(n: activity.count, shown: fingers, scale: AnswerAreaCard.scaleOf(spec)),
@@ -513,11 +523,11 @@ class CountTapSession extends TemplateSession {
     ),
   );
 
-  /// Hint 2's counting card under the tall stage (a phone, five or more objects): in the slot outside the stage that a close-up card of
-  /// a listen-and-do has, so that it never covers an object.
+  /// Hint 2's counting card under the tall stage of a phone: in the slot outside the stage that a close-up card of a listen-and-do has, so that it never
+  /// covers an object.
   @override
   Widget? buildBoardLayer(BuildContext context, ActivitySpec spec) {
-    if (!_tallWhileCounting || spec.stageIsCard) return null;
+    if (spec.stageIsCard) return null;
     final BoardClass board = AppLayout.of(context).board;
     return Positioned.fill(
       child: IgnorePointer(
@@ -682,7 +692,8 @@ class _CountStage extends StatelessWidget {
                   alignment: Alignment.center,
                   children: <Widget>[
                     PackSvg(
-                      a.assets.svg(lit ? a.litSprite : a.sprite),
+                      // Cut to its ink, so that the object fills the cell it is drawn in (min-sizes.md R3: an object a child touches is 40 or more).
+                      inkedSvg(a.assets.svg(lit ? a.litSprite : a.sprite)).$1,
                       width: layout.objectSize * (lit ? 1.15 : 1),
                       height: layout.objectSize * (lit ? 1.15 : 1),
                     ),

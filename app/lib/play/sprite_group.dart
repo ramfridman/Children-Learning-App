@@ -117,6 +117,9 @@ List<Offset> _dice(int n) {
 const double _frameFill = 0.78;
 const double _cellFill = 0.85;
 
+/// How much of its cell a picture of a group fills (see [groupRects]): a group's cell is its picture's side over this.
+const double groupCellFill = _cellFill;
+
 /// The place of each picture of a group inside a box of [box] (the same numbers [SpriteGroup] draws with, so that a hint can ring
 /// a picture it did not draw itself). A picture is never larger than its cell, whatever [scale] asks (QA-38-3). With [framed]
 /// false a ten-frame is not drawn: its pictures stand on the same grid with no board under them.

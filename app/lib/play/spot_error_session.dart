@@ -9,7 +9,7 @@ import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/token_types.dart' show Band;
 import '../design/tokens.g.dart';
-import 'choice_row.dart' show withTallStage;
+import 'choice_row.dart' show withWideTallStage;
 import 'hint_widgets.dart';
 import 'hints/hint_marks.dart';
 import 'hints/hint_pictures.dart' show hintScale;
@@ -139,14 +139,11 @@ class SpotErrorSession extends TemplateSession {
     ];
   }
 
-  /// A row that stands in two lines wants a stage as tall as the board lets it be (the phones: the stage's own 104 or 128 points
-  /// are too low for two lines of cells that a child can read); the tablets' stage is a card with room already.
+  /// A phone's stage is the whole start column, as a picture stage is (x 24 to 401, down to the edge where no hotspot may be): the row of cells is as
+  /// wide as that allows, in one line or two, and nothing is left empty under it (docs/design/m11/min-sizes.md 2.3 S1). The tablets' stage is a card
+  /// with room already.
   @override
-  ActivitySpec layoutFor(ActivitySpec base) =>
-      !base.stageIsCard &&
-          linesOf(base.stage.size, activity.cells.length, minCell: minCell, text: textRow) > 1
-      ? withTallStage(base)
-      : base;
+  ActivitySpec layoutFor(ActivitySpec base) => withWideTallStage(base);
 
   Future<void> choose(int i) async {
     if (_busy || ring == AnswerState.correct) return;
@@ -452,8 +449,16 @@ class _RowStage extends StatelessWidget {
           decoration: BoxDecoration(
             color: TokenColors.paper.withValues(alpha: 0.92),
             borderRadius: BorderRadius.circular(TokenRadius.lg),
-            border: Border.all(color: ring ?? TokenColors.hairline, width: ring == null ? 3 : 5),
+            border: Border.all(color: ring ?? TokenColors.hairline, width: 3),
           ),
+          // The ring is wider than the hairline, but it is painted over the picture's margin: the room of the picture does not change with the ring (a
+          // picture that shrinks when the hint lights its cell is under its floor by that much: min-sizes.md R1).
+          foregroundDecoration: ring == null
+              ? null
+              : BoxDecoration(
+                  borderRadius: BorderRadius.circular(TokenRadius.lg),
+                  border: Border.all(color: ring, width: 5),
+                ),
           child: Stack(
             fit: StackFit.passthrough,
             alignment: Alignment.center,

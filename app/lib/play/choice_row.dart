@@ -212,6 +212,13 @@ ActivitySpec withPictureStage(ActivitySpec base) {
   );
 }
 
+/// The board of a template whose picture takes the whole start column while nothing stands under it: a phone's stage is a picture stage (x 24 to 401); the
+/// smallest phone's is its own width (16 to 286) made tall, so that the bubble beside it keeps the room it had.
+ActivitySpec withWideTallStage(ActivitySpec base) {
+  if (base.stageIsCard) return base;
+  return base.boardHeight > 380 ? withPictureStage(base) : withTallStage(base);
+}
+
 /// The board of a phone whose stage is under [height] (the small phone's is 104, the phone's 128) for a template that needs the room, as
 /// the bins to sort into or the two rows of a pattern to copy: the stage grows to [height] and the tiles stand lower by what it takes,
 /// as far as the edge where no hotspot may be ([tilesBox] is the height of a tile with its tap margin). A tablet's card and a stage that
